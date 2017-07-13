@@ -34,20 +34,36 @@
         </sam-checkbox>
       </ng-container>
 
+      <ng-container *ngIf="requestType == 'program_number_request'">
+        <strong>New Assistance Listing Number:</strong> {{ toJSON(programRequest.data).programNumber }}
+      </ng-container>
+
       <div class="sam-ui hidden divider"></div>
 
       <div class="usa-grid-full">
+        <div *ngIf="requestType == 'title_request'">
+          <h4>Proposed Title</h4>
+          <strong>{{ programRequestData.title}}</strong>
+        </div>
         <h4>Comments</h4>
-        <strong>{{ programRequest.createdBy }}</strong> {{ programRequest.reason }}
+        <strong>{{ programRequest.createdBy }}:</strong> {{ programRequest.reason }}
 
         <div class="sam-ui hidden divider"></div>
 
-        <sam-text-area [label]="'Comment*'"
-          [name]="'comment-input'"
-          [control]="falChangeRequestActionForm.controls['comment']"
-          [required]="true"
-          formControlName="comment"
-          >
+        <sam-text-area *ngIf="isPermissionType('cancel')"
+                       [label]="'Comment'"
+                       [name]="'comment-input'"
+                       [control]="falChangeRequestActionForm.controls['comment']"
+                       formControlName="comment"
+                       >
+        </sam-text-area>
+        <sam-text-area *ngIf="!isPermissionType('cancel')"
+                        [label]="'Comment*'"
+                        [name]="'comment-input'"
+                        [control]="falChangeRequestActionForm.controls['comment']"
+                        [required]="true"
+                        formControlName="comment"
+                        >
         </sam-text-area>
       </div>
 
@@ -86,9 +102,15 @@
     <!--Display view request-->
     <ng-container *ngIf="programRequest && programRequestAction && programRequest.completed===true">
       <div class="usa-grid-full">
+
+        <div *ngIf="requestType == 'title_request'">
+          <h4>Proposed Title</h4>
+          <strong>{{ programRequestData.title}}</strong>
+        </div>
+
         <h4>Comments</h4>
-        <p><strong>{{ programRequest.createdBy }}</strong> {{ programRequest.reason }}</p>
-        <p><strong>{{ programRequestAction.createdBy }}</strong> {{ programRequestAction.reason }}</p>
+        <p><strong>{{ programRequest.createdBy }}:</strong> {{ programRequest.reason }}</p>
+        <p><strong>{{ programRequestAction.createdBy }}:</strong> {{ programRequestAction.reason }}</p>
       </div>
 
       <div class="sam-ui hidden divider"></div>

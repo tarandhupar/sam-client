@@ -19,22 +19,38 @@
                       formControlName="activeAwards"
         ></sam-checkbox>
       </ng-container>
-        <sam-text-area [label]="'Comment*'"
-                       [name]="'comment-input'"
-                       [control]="falChangeRequestForm.controls['comment']"
-                       [required]="true"
-                       formControlName="comment"
-        ></sam-text-area>
-        <sam-button [buttonType]="buttonType"
-                    [buttonText]="submitButtonText"
-                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                    (onClick)="submitChangeRequest()">
-        </sam-button>
-        <sam-button [buttonType]="buttonType"
-                    [buttonText]="'Cancel'"
-                    [buttonClass]="'usa-button-primary usa-search-submit'"
-                    (onClick)="cancelChangeRequest()">
-        </sam-button>
-      </div>
+      <sam-text *ngIf="requestType == 'program_number_request'"
+                [maxlength]="3"
+                [control]="falChangeRequestForm.controls['programNumber']"
+                [name]="'program-number-input'"
+                [label]="'Program Number*'"
+                [required]="true"
+                [errorMessage]="falChangeRequestForm.controls['programNumber'].hasError('duplicateProgram') ? 'Program Number already exists. Please enter a valid Number.' : '' "
+                formControlName="programNumber"></sam-text>
+      <sam-text *ngIf="requestType == 'title_request'"
+                [maxlength]="144"
+                [control]="falChangeRequestForm.controls['newTitle']"
+                [name]="'new-title-input'"
+                [label]="'New Title*'"
+                [required]="true"
+                formControlName="newTitle"></sam-text>
+
+      <sam-text-area [label]="'Comment*'"
+                     [name]="'comment-input'"
+                     [control]="falChangeRequestForm.controls['comment']"
+                     [required]="true"
+                     formControlName="comment"
+      ></sam-text-area>
+      <sam-button [buttonType]="buttonType"
+                  [buttonText]="submitButtonText"
+                  [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                  (onClick)="submitChangeRequest()">
+      </sam-button>
+      <sam-button [buttonType]="buttonType"
+                  [buttonText]="'Cancel'"
+                  [buttonClass]="'usa-button-primary usa-search-submit'"
+                  (onClick)="cancelChangeRequest()">
+      </sam-button>
+    </div>
   </form>
 </div>

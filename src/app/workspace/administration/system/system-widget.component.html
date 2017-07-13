@@ -1,6 +1,6 @@
 <div class="system-widget">
   <div class="widget-body">
-    <span class="system-accounts">&nbsp;
+    <span class="system-accounts">
       <ul class="list-accounts">
         <li *ngFor="let account of accounts; let $index = index;">
           <a [routerLink]="['system/profile', account._id]" [innerText]="account.systemName"></a>

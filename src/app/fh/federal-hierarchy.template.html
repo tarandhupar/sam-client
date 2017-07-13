@@ -25,7 +25,7 @@
 
     <!--fh search filter -->
     <div *ngIf="!isDefaultResult()" class="usa-width-one-fourth p_T-4x p_R-2x">
-      <fh-sidenav [userRole]="userRole" (orgTypeChange)="updateOrgType($event)" (orgStatusChange)="onSearchOrgStatusChange($event)" (myOrgCbxChange)="onSelectAdminOrg($event)"></fh-sidenav>
+      <fh-sidenav [userRole]="userRole" [types]="filterTypes" (orgTypeChange)="updateOrgType($event)" (orgStatusChange)="onSearchOrgStatusChange($event)" (myOrgCbxChange)="onSelectAdminOrg($event)"></fh-sidenav>
     </div>
 
     <div class="p_L-3x p_T-2x" [ngClass]="{'usa-width-one-whole':isDefaultResult(),'usa-width-three-fourths':!isDefaultResult()}">
@@ -88,7 +88,7 @@
         </div>
       </div>
 
-    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgs.length > 0 && !showAdminOrg">
+    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgs.length > 0">
         <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
     </div>
   </div>

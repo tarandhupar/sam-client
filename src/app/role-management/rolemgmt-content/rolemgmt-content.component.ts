@@ -59,8 +59,9 @@ export class RoleMgmtContent implements OnInit{
     let pc: PropertyCollector = new PropertyCollector(this.requestDetails);
 
     // ids = ['1,2,3', '3,4,5']
-    let allOrgIds: any = pc.collect([[], 'organizationID']);
+    let allOrgIds: any = pc.collect([[], 'organizationId']);
     // ids = [[1,2,3],[3,4,5]]
+    console.log(allOrgIds);
     allOrgIds = allOrgIds.map(commaSeperated => commaSeperated.split(','));
     // ids = [1, 2, 3, 3, 4, 5]
     allOrgIds = allOrgIds.reduce((accum, curr) => {
@@ -124,7 +125,7 @@ export class RoleMgmtContent implements OnInit{
   }
 
   classForRequest(request) {
-    switch (request.status.toLowerCase()) {
+    switch (request.status.val.toLowerCase()) {
       case 'pending': return 'fa-spinner pending-icon';
       case 'approved': return 'fa-check-circle-o approved-icon';
       case 'rejected': return 'fa-user-times rejected-icon';
@@ -133,7 +134,7 @@ export class RoleMgmtContent implements OnInit{
   }
 
   shouldShowRespondButton(content) {
-    return content.status === 'PENDING' || content.status === 'ESCALATED';
+    return content.status.val === 'PENDING' || content.status.val === 'ESCALATED';
   }
 
   showingCountText() {
@@ -150,7 +151,10 @@ export class RoleMgmtContent implements OnInit{
   }
 
   getOrganizations(request) {
-    const orgIds = request.organizationID.split(',');
+    if (!request.organizationId || !request.organizationId.length) {
+      return 'Organization not found';
+    }
+    const orgIds = request.organizationId.split(',');
     const names = orgIds.map(oid => {
       return this.organizationNameForId(oid);
     }).filter(oname => oname);

@@ -10,8 +10,8 @@ import { AgencyPickerComponent } from "../../app-components/agency-picker/agency
 })
 export class UserRolesDirectoryPage {
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb: 'Back to my workspace', url: '/workspace' },
-    { breadcrumb: '...'}
+    { breadcrumb: 'Workspace', url: '/workspace' },
+    { breadcrumb: 'Role Management'}
   ];
 
   allDomains: Array<any> = [];

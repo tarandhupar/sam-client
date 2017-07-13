@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserAccessService } from "api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 
@@ -6,16 +6,20 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
   selector: 'pending-requests',
   templateUrl:'pending-requests.template.html'
 })
-export class PendingRequestsComponent {
+export class PendingRequestsComponent  implements OnInit {
   @Input() requests: Array<PendingRequest> = [];
   @Input() hideCancel: boolean = false;
 
-  public areRequestsVisible = false;
+  public areRequestsVisible = true;
 
   constructor(
     private userAccessService: UserAccessService,
     private footerAlert: AlertFooterService
   ){ }
+
+  ngOnInit( ){
+    //console.log(this.requests);
+  }
 
   trimRequest(message) {
     if (message.length > 70) {

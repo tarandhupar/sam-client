@@ -11,6 +11,50 @@
 }
 
 .access-page {
+  .pd-l-1em{
+    padding-left: 1em;
+  }
+  .pd-tb-0d5em{
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+  .pd-l-0d5em{
+    padding-left: 0.5em;
+  }
+  .pd-l-1d8em{
+    padding-left: 1.8em;
+  }
+  .pd-l-1d3em{
+    padding-left: 1.3em;
+  }
+  .pd-l-1d1em{
+    padding-left: 1.1em;
+  }
+  .pd-r-1em{
+    padding-right: 1em;
+  }
+  .pd-b-3em{
+    padding-bottom: 3em;
+  }
+  .perm-border{
+    border-style: solid;
+    margin-left: 1em;
+    border-width: thin;
+    margin-bottom:1em;
+  }
+  .m-l-1em{
+    margin-left: 1em;
+  }
+  .role-border{
+    border-style: solid;
+    border-width: thin
+  }
+  .m-b-03em{
+    margin-bottom: 3em;
+  }
+  .main-width{
+    width: 90%;
+  }
   .fa.fa-user {
     border: 2px solid black;
     width: 1em;
@@ -157,7 +201,34 @@
   .organizations-row {
     margin-top: 1em;
   }
-
+  .user-access{
+    &.usa-grid-full{
+      max-width: initial;
+    }
+  }
+  .pending-requests{
+    &.usa-grid-full{
+      max-width: initial;
+    }
+    .m-b-04{
+      margin-bottom: -0.4em;
+    }
+    .req-width{
+      width: 100%
+    }
+    .request-content{
+      margin-left: 0em;
+      margin-right: 0em;
+      padding-bottom: 0.25em;
+    }
+    .request-border {
+      border-style: solid;
+      border-width: thin;
+    }
+    .text-alignm{
+      padding-top: 0.2em;
+    }
+  }
   .requests-container {
     .usa-button-transparent {
       padding: .2em;
@@ -178,5 +249,13 @@
 
   .no-underline {
     text-decoration: none;
+  }
+  .nav-links{
+    padding-top: 7em;
+    padding-bottom: 2em;
+    padding-left: 1em;
+  }
+  .pd-t-1em{
+    padding-top: 1em;
   }
 }

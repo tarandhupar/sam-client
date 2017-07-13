@@ -1,6 +1,8 @@
 @import "workspace/administration";
+@import 'workspace/fsd';
 @import "workspace/system";
 @import "workspace/workspace-widget";
+@import "workspace/data-entry";
 
 .workspace {
   .usa-sidenav-list li {
@@ -48,6 +50,16 @@
   min-height: 250px;
   background: url('../assets/img/help-main.png');
   background-size: cover;
+}
+
+.usa-workspace {
+  &.usa-authentication {
+    padding-top: 60px;
+  }
+
+  .sam-breadcrumbs {
+    margin-top: 1em;
+  }
 }
 
 .pending-button {

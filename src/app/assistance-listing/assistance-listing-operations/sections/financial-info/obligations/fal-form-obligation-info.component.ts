@@ -399,4 +399,8 @@ export class FALFormObligationsInfoComponent {
       section: 'financial-information-obligations'
     });
   }
+
+  public beforeSaveAction() {
+    this.obligationSubForm.onObligationCancelClick(this.obligationSubForm.obligationIndex);
+  }
 }

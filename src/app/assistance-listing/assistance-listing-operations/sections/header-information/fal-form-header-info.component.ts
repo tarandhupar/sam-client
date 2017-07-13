@@ -44,12 +44,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
   public falNo = '';
   public organizationId: string;
   public organizationData: any;
-  formErrorArr = [];
-  review: boolean = false;
 
   // Related Program multi-select
   rpNGModel: any;
-  rpListDisplay = [];
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
     placeholder: 'None Selected',
@@ -75,7 +72,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
       'alternativeNames': [''],
       'programNumber': null,
       'relatedPrograms': '',
-      'rpListDisplay': [''],
       'federalAgency': ''
     });
 
@@ -96,12 +92,13 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   parseRelatedPrograms(data: any) {
+    let rpListDisplay = [];
     for (let dataItem of data) {
-      this.rpListDisplay.push({code: dataItem.id, name: dataItem.value});
+      rpListDisplay.push({code: dataItem.id, name: dataItem.value});
     }
     this.relProAutocompleteConfig.placeholder = this.placeholderMsg(data);
     this.falHeaderInfoForm.patchValue({
-      rpListDisplay: this.rpListDisplay
+      relatedPrograms: rpListDisplay
     }, {
       emitEvent: false
     });
@@ -116,7 +113,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     let alternativeNames = [];
     let relatedPrograms = [];
 
-    relatedPrograms = this.updateViewModelRelatedPrograms(data['rpListDisplay']);
+    relatedPrograms = this.updateViewModelRelatedPrograms(data['relatedPrograms']);
     alternativeNames.push(data.alternativeNames);
 
     if (data['programNumber'] === 'undefined')
@@ -177,9 +174,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
       emitEvent: false
     });
 
-    this.markAndUpdateFieldStat('title');
-    this.markAndUpdateFieldStat('programNumber');
-    this.markAndUpdateFieldStat('federalAgency');
+    this.updateErrors();
   }
 
   public onOrganizationChange(org: any) {
@@ -200,7 +195,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   relatedProglistChange() {
-    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
+    //this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
   }
 
   placeholderMsg(multiArray: any) {
@@ -234,7 +229,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
     this.markAndUpdateFieldStat('federalAgency');
 
-    this.showErrors.emit(this.errorService.errors);
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 
   private markAndUpdateFieldStat(fieldName){

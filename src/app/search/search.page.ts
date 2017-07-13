@@ -85,27 +85,30 @@ export class SearchPage implements OnInit {
 
   // Select State Component
   wdStateModel = '';
+  wdStateObject;
   selectStateConfig = {
-    options: [
-      {value: '', label: 'Default option', name: 'empty', disabled: true},
-    ],
+    options: [],
     disabled: false,
     label: 'Select State',
     name: 'state',
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
   };
 
   // Select County Component
+  countyObject;
   wdCountyModel = '';
   selectCountyConfig = {
-    options: [
-      {value: '', label: 'Default option', name: 'empty', disabled: true},
-    ],
+    options: [],
     disabled: false,
-    label: 'Select County',
+    label: 'Select County/Independent City',
     name: 'county',
   };
 
   // Select Construct Type Component drop-down
+  wdConstructObject;
   wdConstructModel = '';
   selectConstructConfig = {
     options: [
@@ -114,6 +117,10 @@ export class SearchPage implements OnInit {
     disabled: false,
     label: 'Select Construction Type',
     name: 'constructionType',
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
   };
 
   // Select SCA Previously Performed Radio Buttons
@@ -170,14 +177,17 @@ export class SearchPage implements OnInit {
   };
 
   // Select NonStandard Service, Service - drop down
+  wdNonStandardSelectObject;
   wdNonStandardSelectModel = '';
   wdNonStandardSelectConfig = {
-    options: [
-      {value: '', label: 'Default option', name: 'empty', disabled: true},
-    ],
+    options: [],
     disabled: false,
     label: 'If a service is chosen, "Yes" will automatically be selected',
     name: 'constructionType',
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
   };
 
   // scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
@@ -747,7 +757,7 @@ export class SearchPage implements OnInit {
         // formatting the array data according to api type to match what UI elements expect
         // state data
         if (id === 'wdStates') {
-          var reformattedArray = data._embedded.dictionaries[0].elements.map(function (stateItem) {
+          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (stateItem) {
             let newObj = {label: '', value: ''};
 
             newObj.label = stateItem.value;
@@ -755,38 +765,58 @@ export class SearchPage implements OnInit {
             return newObj;
           });
           // adding the default selection row to the array
-          reformattedArray.unshift(defaultSelection);
           this.selectStateConfig.options = reformattedArray;
+
+          if (this.wdStateModel !== "" && this.initLoad) {
+            this.wdStateObject = reformattedArray.filter((option) => {
+              if (this.wdStateModel.toString() === option.value.toString()) {
+                return option;
+              }
+            })[0];
+          }
         }
 
         // construction type data
         else if (id === 'dbraConstructionTypes') {
-          var reformattedArray = data._embedded.dictionaries[0].elements.map(function (constructionItem) {
+          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (constructionItem) {
             let newObj = {label: '', value: ''};
 
             newObj.label = constructionItem.value;
             newObj.value = constructionItem.value;
             return newObj;
           });
-          // adding the default selection row to the array
-          reformattedArray.unshift(defaultSelection);
+
           this.selectConstructConfig.options = reformattedArray;
+
+          if (this.wdConstructModel !== "" && this.initLoad) {
+            this.wdConstructObject = reformattedArray.filter((option) => {
+              if (option.value.toString() === this.wdConstructModel.toString()) {
+                return option;
+              }
+            })[0];
+          }
         }
 
         // scaServices type data
         else if (id === 'scaServices') {
-          var reformattedArray = data._embedded.dictionaries[0].elements.map(function (serviceItem) {
+          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (serviceItem) {
             let newObj = {label: '', value: ''};
 
             newObj.label = serviceItem.value;
             newObj.value = serviceItem.elementId;
             return newObj;
           });
-          // adding the default selection row to the array
-          reformattedArray.unshift(defaultSelection);
-          this.wdNonStandardSelectConfig.options = reformattedArray;
-        }
 
+          this.wdNonStandardSelectConfig.options = reformattedArray;
+
+          if (this.wdNonStandardSelectModel !== "" && this.initLoad) {
+            this.wdNonStandardSelectObject = reformattedArray.filter((option) => {
+              if (parseInt(option.value) === parseInt(this.wdNonStandardSelectModel)) {
+                return option;
+              }
+            })[0];
+          }
+        }
       },
       error => {
         console.error("Error!!", error);
@@ -796,8 +826,6 @@ export class SearchPage implements OnInit {
 
   // gets county data back depending on state provided
   getCountyByState(state) {
-
-
     this.wageDeterminationService.getWageDeterminationFilterCountyData({
       state: state
     }).subscribe(
@@ -814,9 +842,15 @@ export class SearchPage implements OnInit {
 
         reformattedArray = new SortArrayOfObjects().transform(reformattedArray, 'label');
 
-        // adding the default selection row to the array
-        reformattedArray.unshift(defaultSelection);
         this.selectCountyConfig.options = reformattedArray;
+
+        if (this.wdCountyModel !== "" && this.initLoad) {
+          this.countyObject = reformattedArray.filter((option) => {
+            if (this.wdCountyModel.toString() === option.value.toString()) {
+              return option;
+            }
+          })[0];
+        }
       },
       error => {
         console.error("Error!!", error);
@@ -963,55 +997,36 @@ export class SearchPage implements OnInit {
 
   registrationExclusionCheckboxFilter(event){
     this.registrationExclusionCheckboxModel = event;
-    this.pageNum=0;
+    this.pageNum = 0;
     this.searchResultsRefresh();
   }
 
-  checkValidEntityTypeFilter(){
-    return this.checkValidRegistrationFilter() || this.checkValidExclusionFilter() || this.checkMultipleFiltersEntityType();
-  }
-
-  checkValidExclusionFilter(){
-    return this.registrationExclusionCheckboxModel.indexOf('ex') > -1 && this.registrationExclusionCheckboxModel.length == 1 && this.checkValidFilterExists();
-  }
-
-  checkValidRegistrationFilter(){
-    return this.registrationExclusionCheckboxModel.indexOf('ent') > -1 && this.registrationExclusionCheckboxModel.length == 1 && this.organizationId.length > 0;
-  }
-
-  checkMultipleFiltersEntityType(){
-    if(this.registrationExclusionCheckboxModel.length == 0 || this.registrationExclusionCheckboxModel.length ==2){
-      return this.organizationId.length > 0 && (this.pscTypeModel.length > 0 || this.naicsTypeModel.length > 0 || this.dunsListString.length > 0);
-    }
-    return false;
-  }
-
-
-  checkValidFilterExists(){
-    return this.dunsListString.length > 0 || this.naicsTypeModel.length >0 || this.pscTypeModel.length > 0;
-
-  }
   // event for wdFilter Change
   wdFilterChange(event) {
 
     // set the models equal to empty if the opposite wd type is selected
     if (this.wdTypeModel === 'sca') {
       this.wdConstructModel = '';
+      this.wdConstructObject = null;
     }
     else {
       this.wdNonStandardRadModel = '';
       this.wdNonStandardSelectModel = '';
+      this.wdNonStandardSelectObject = null;
       this.wdPreviouslyPerformedModel = '';
       this.wdSubjectToCBAModel = '';
     }
     this.pageNum = 0;
     this.getDictionaryData('dbraConstructionTypes');
 
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
   }
 
   // event for construction type change
   constructionTypeChange(event) {
+    this.wdConstructObject = event;
+    this.wdConstructModel = this.wdConstructObject ? this.wdConstructObject.value : '';
+
     this.pageNum = 0;
 
     if (this.wdConstructModel) {
@@ -1023,34 +1038,33 @@ export class SearchPage implements OnInit {
       });
     }
 
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
   }
 
   // event for state change
   stateChange(event) {
-
+    this.wdStateObject = event;
+    this.wdStateModel = this.wdStateObject ? this.wdStateObject.value : '';
     // reset county model on state change
     this.wdCountyModel = '';
     this.pageNum = 0;
-
     // enable county select if needed
     this.determineEnableCountySelect();
-
     // call method to get county data per state
     this.getCountyByState(this.wdStateModel);
-
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
   }
 
   countyChange(event) {
+    this.countyObject = event;
+    this.wdCountyModel = this.countyObject ? this.countyObject.value : '';
     this.pageNum = 0;
-
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
   }
 
   // determines if state is populated and if not disables county select
   determineEnableCountySelect() {
-    if (this.wdStateModel !== '') {
+    if (this.wdStateModel !== "") {
       this.selectCountyConfig.disabled = false;
     }
     else {
@@ -1103,6 +1117,7 @@ export class SearchPage implements OnInit {
     // if the non standard rad selection does not equal yes, services filter must be removed
     if (this.wdNonStandardRadModel !== 'yesNSS') {
       this.wdNonStandardSelectModel = '';
+      this.wdNonStandardSelectObject = null;
     }
 
     // determine isStandard filter
@@ -1136,9 +1151,11 @@ export class SearchPage implements OnInit {
 
   // non standard services drop down selection
   wdNonStandardSelectChanged(event) {
+    this.wdNonStandardSelectObject = event;
+      this.wdNonStandardSelectModel = this.wdNonStandardSelectObject ? this.wdNonStandardSelectObject.value : '';
     // if drop down selection made, auto-select yes rad button
     if (this.wdNonStandardSelectModel !== '') {
-      this.wdNonStandardRadModel = 'yesNSS'
+      this.wdNonStandardRadModel = 'yesNSS';
     }
 
     // show end of filters notification
@@ -1234,9 +1251,10 @@ export class SearchPage implements OnInit {
 
   wdConstructionClear() {
     this.wdConstructModel = '';
+    this.wdConstructObject = null;
     this.pageNum = 0;
 
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
   }
 
   wdPreviouslyPerformedClear() {
@@ -1257,6 +1275,7 @@ export class SearchPage implements OnInit {
 
   wdNonStandardServicesSelectClear() {
     this.wdNonStandardSelectModel = '';
+    this.wdNonStandardSelectObject = null;
     this.wdNonStandardRadModel = '';
     this.pageNum = 0;
 
@@ -1311,7 +1330,9 @@ export class SearchPage implements OnInit {
     this.isActive = true;
 
     // call wd clear filters
+    this.wdStateObject = null;
     this.wdStateModel = '';
+    this.countyObject = null;
     this.wdCountyModel = '';
 
     // each clear calls the clear method beneath it, so all depencies are cleared
@@ -1357,7 +1378,6 @@ export class SearchPage implements OnInit {
     if(this.index == 'ei'){
       this.registrationExclusionCheckboxModel=["ent","ex"];
     }
-
 
     this.searchResultsRefresh();
 

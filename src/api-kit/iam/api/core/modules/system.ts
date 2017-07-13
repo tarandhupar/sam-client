@@ -328,8 +328,14 @@ const account = {
             $success(response);
           }
         });
-    } else if(isDebug()) {
-      $error({ message: `Please pass the id of the system account you are deactivating!`});
+    } else {
+      if(isDebug()) {
+        $success();
+      } else if(!id) {
+        $error({ message: 'Please pass the id of the system account you are deactivating!' });
+      } else {
+        $error({ message: 'Please sign in' });
+      }
     }
   },
 

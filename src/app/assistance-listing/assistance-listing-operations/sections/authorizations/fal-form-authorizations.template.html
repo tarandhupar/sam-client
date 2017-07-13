@@ -6,10 +6,10 @@
   <authInfoTable
     [hideAddButton]="hideAddButton"
     [displayAuthInfo]="displayAuthInfo"
-    [formErrorArr]="formErrorArr"
+    [subFormErrorIndex]="subFormErrorIndex"
     (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
 
-  <authSubform [hideAddButton]="hideAddButton"  [formErrorArr]="formErrorArr" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
+  <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
   </sam-fieldset-wrapper>
   <sam-text-area
     [control]="falAuthForm.controls['description']"

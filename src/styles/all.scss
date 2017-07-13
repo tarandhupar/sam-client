@@ -188,6 +188,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/parent-orgs.scss';
 @import 'components/card';
 @import 'components/complex-form-template';
+@import 'components/date-range-filter';
 @import 'components/date-entry';
 @import 'components/date-range';
 @import 'components/download';
@@ -350,4 +351,9 @@ select {
   width: 48em;
   background:white;
   padding-left: 32em;
+}
+
+.overflow-ellipsis {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }

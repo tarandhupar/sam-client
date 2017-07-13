@@ -30,15 +30,6 @@ export class ProgramFormModel{
           hint: 'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)',
           required: true,
           errorMessage: 'This number falls outside the range defined for this organization.'
-        },
-        {
-          name: 'relatedTo',
-          type: 'sam-list-input',
-          label: 'Related Federal Assistance Listing',
-          hint: 'Are there any related federal assistance listings?',
-          required: false,
-          options: [],
-          parent: 'relatedPrograms'
         }
       ]
     },

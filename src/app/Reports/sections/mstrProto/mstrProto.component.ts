@@ -118,6 +118,7 @@ export class MstrProtoComponent implements OnInit {
 
     reportExecuteUrl() {
         let vm = this;
+        vm.showReport = true;
         this.urlPassed = this.customUrl.nativeElement.value;
         vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(this.customUrl.nativeElement.value);
     }

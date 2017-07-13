@@ -24,7 +24,7 @@ interface ChangeRequestActionModel {
   requestId: string,
   reason: string,
   actionType: string,
-  programNumber?: string
+  programNumber?: string,
 }
 
 @Component({
@@ -41,6 +41,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
   requestType: string;
   requestStatus: ChangeRequestStatus;
   programRequest: any;
+  programRequestData:any;
   programRequestAction: any;
   cookieValue: string;
   public permissions: any;
@@ -79,7 +80,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     this.changeRequestService.getRequest(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(data => {
       this.programRequest = data;
       this.requestType = this.programRequest.requestType.value;
-
+      this.programRequestData = JSON.parse(this.programRequest.data);
       //load permission
       this.loadPermission();
 
@@ -103,11 +104,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     this.changeRequestService.getRequestActionByRequestId(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(data => {
       this.programRequestAction = data;
       //set up the right requestStatus
-      if (this.programRequestAction.actionType == 'archive_cancel' || this.programRequestAction.actionType == 'unarchive_cancel') {
+      if (this.programRequestAction.actionType == 'archive_cancel' || this.programRequestAction.actionType == 'unarchive_cancel' || this.programRequestAction.actionType == 'title_cancel' || this.programRequestAction.actionType == 'program_number_cancel') {
         this.requestStatus = ChangeRequestStatus.CANCELLED;
-      } else if (this.programRequestAction.actionType == 'archive_reject' || this.programRequestAction.actionType == 'unarchive_reject') {
+      } else if (this.programRequestAction.actionType == 'archive_reject' || this.programRequestAction.actionType == 'unarchive_reject' || this.programRequestAction.actionType == 'title_reject' || this.programRequestAction.actionType == 'program_number_reject') {
         this.requestStatus = ChangeRequestStatus.REJECTED;
-      } else if (this.programRequestAction.actionType == 'archive' || this.programRequestAction.actionType == 'unarchive') {
+      } else if (this.programRequestAction.actionType == 'archive' || this.programRequestAction.actionType == 'unarchive' || this.programRequestAction.actionType == 'title' || this.programRequestAction.actionType == 'program_number') {
         this.requestStatus = ChangeRequestStatus.APPROVED;
       }
     });
@@ -117,10 +118,12 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     //validate the request type
     if (this.validateRequestType(this.requestType)) {
       if ((this.requestType === 'archive_request' && (this.permissions['INITIATE_CANCEL_ARCHIVE_CR'] || this.permissions['APPROVE_REJECT_ARCHIVE_CR'])) ||
-        (this.requestType === 'unarchive_request' && (this.permissions['INITIATE_CANCEL_UNARCHIVE_CR'] || this.permissions['APPROVE_REJECT_UNARCHIVE_CR']))) {
+        (this.requestType === 'unarchive_request' && (this.permissions['INITIATE_CANCEL_UNARCHIVE_CR'] || this.permissions['APPROVE_REJECT_UNARCHIVE_CR'])) ||
+        (this.requestType === 'program_number_request' && (this.permissions['INITIATE_CANCEL_NUMBER_CR'] || this.permissions['APPROVE_REJECT_NUMBER_CR'])) ||
+        (this.requestType === 'title_request' && (this.permissions['INITIATE_CANCEL_TITLE_CR'] || this.permissions['APPROVE_REJECT_TITLE_CR']))) {
         this.createForm(this.requestType);
         this.pageReady = true;
-      } else { //implement the rest of request types
+      } else {
         this.router.navigate(["accessrestricted"]);
       }
     } else {
@@ -152,6 +155,28 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       } else if (this.permissions['INITIATE_CANCEL_UNARCHIVE_CR']) {
         this.permissionType = ChangeRequestActionPermissionType.CANCEL;
       }
+    } else if (type == 'title_request') {
+      this.pageTitle = "Assistance Listing Title Change";
+      this.falChangeRequestActionForm = this.fb.group({
+        comment: ''
+      });
+
+      if (this.permissions['APPROVE_REJECT_TITLE_CR']) {
+        this.permissionType = ChangeRequestActionPermissionType.APPROVE_REJECT;
+      } else if (this.permissions['INITIATE_CANCEL_TITLE_CR']) {
+        this.permissionType = ChangeRequestActionPermissionType.CANCEL;
+      }
+    } else if (type == 'program_number_request') {
+      this.pageTitle = "Change an Assistance Listing Number";
+      this.falChangeRequestActionForm = this.fb.group({
+        comment: ''
+      });
+
+      if (this.permissions['APPROVE_REJECT_NUMBER_CR']) {
+        this.permissionType = ChangeRequestActionPermissionType.APPROVE_REJECT;
+      } else if (this.permissions['INITIATE_CANCEL_NUMBER_CR']) {
+        this.permissionType = ChangeRequestActionPermissionType.CANCEL;
+      }
     }
   }
 
@@ -164,7 +189,15 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       unarchive_request: {
         action: 'unarchive',
         success: 'Program Unarchived'
-      } 
+      },
+      title_request: {
+        action: 'title',
+        success: 'Title Changed'
+      },
+      program_number_request: {
+        action: 'program_number',
+        success: 'Program Number Changed'
+      }
     };
 
     this.submitChangeRequestAction(actionTypes[this.requestType]);
@@ -179,6 +212,14 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       unarchive_request: {
         action: 'unarchive_reject',
         success: 'The unarchive request has been rejected successfully'
+      },
+      title_request: {
+        action: 'title_reject',
+        success: 'The title change request has been rejected successfully'
+      },
+      program_number_request: {
+        action: 'program_number_reject',
+        success: 'The program number change request has been rejected successfully'
       }
     };
 
@@ -194,6 +235,14 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       unarchive_request: {
         action: 'unarchive_cancel',
         success: 'The unarchive request has been cancelled successfully',
+      },
+      title_request: {
+        action: 'title_cancel',
+        success: 'The title change request has been cancelled successfully'
+      },
+      program_number_request: {
+        action: 'program_number_cancel',
+        success: 'The program number change request has been cancelled successfully'
       }
     };
 
@@ -201,6 +250,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
   }
 
   private submitChangeRequestAction(actionType: any) {
+
     if (this.falChangeRequestActionForm.valid) {
       //disable button's event
       this.buttonType = 'disabled';
@@ -241,12 +291,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
         preparedData.programNumber = this.falChangeRequestActionForm.get('programNumber').value;
       }
     }
-
     return preparedData;
   }
 
   private validateRequestType(type: string) {
-    return (['archive_request', 'unarchive_request', 'agency_request', 'number_request', 'title_request'].indexOf(type) != -1);
+    return (['archive_request', 'unarchive_request', 'agency_request', 'number_request', 'title_request', 'program_number_request'].indexOf(type) != -1);
   }
 
   public isRequestStatus(status: string): boolean {
@@ -271,5 +320,9 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  public toJSON(json: string) {
+    return JSON.parse(json);
   }
 }

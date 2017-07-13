@@ -28,21 +28,23 @@ function isRequired(c: FormControl) {
 })
 export class OrgCreatePage {
 
-  orgFormConfig:any;
-  orgType:string = "";
-  orgParentId:string = "";
+  orgFormConfig: any;
+  orgType: string = "";
+  orgParentId: string = "";
 
-  fhRoleModel:FHRoleModel;
+  fhRoleModel: FHRoleModel;
+  loadData: boolean = false;
 
   constructor(private builder: FormBuilder,
               private _router: Router,
               private route: ActivatedRoute,
               private fhService: FHService,
-              public flashMsgService:FlashMsgService,
+              public flashMsgService: FlashMsgService,
               private location: Location,
-              private iamService: IAMService) {}
+              private iamService: IAMService) {
+  }
 
-  ngOnInit(){
+  ngOnInit() {
 
     this.route.queryParams.subscribe(queryParams => {
       this.orgType = queryParams["orgType"];
@@ -52,23 +54,37 @@ export class OrgCreatePage {
         parentId: this.orgParentId,
         orgType: this.orgType,
       };
-      // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-      this.iamService.iam.checkSession(this.checkAccess, this.checkAccess);
+      this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
 
     });
 
   }
 
   checkAccess = (user) => {
-    this.fhService.getAccess(this.orgParentId).subscribe(
-      (data)=> {
-        this.fhService.getOrganizationById(this.orgParentId,false,true).subscribe(
-          val => {
-            this.fhRoleModel = FHRoleModel.FromResponse(val);
-            if(!this.fhRoleModel.hasPermissionType("POST",this.orgType)) this.redirectToForbidden();
-          });
+    let accessOrg = "";
+    if (this.orgType.toLowerCase() !== "department") accessOrg = this.orgParentId;
+    this.fhService.getAccess(accessOrg).subscribe(
+      (data) => {
+        if(accessOrg === ""){
+          this.loadData = true;
+        }else {
+          this.fhService.getOrganizationDetail(accessOrg).subscribe(
+            val => {
+              this.fhRoleModel = FHRoleModel.FromResponse(val);
+              let checkPermissionType = this.orgType.toLowerCase();
+              if(checkPermissionType === "majcommand" || checkPermissionType === "subcommand") checkPermissionType = "office";
+              if (!this.fhRoleModel.hasPermissionType("POST", checkPermissionType)) {
+                this.redirectToForbidden();
+              } else {
+                this.loadData = true;
+              }
+            });
+        }
+
       },
-      (error) => { if(error.status === 403) this.redirectToForbidden();}
+      (error) => {
+        if (error.status === 403) this.redirectToForbidden();
+      }
     );
   };
 

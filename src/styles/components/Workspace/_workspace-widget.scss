@@ -19,6 +19,10 @@
       position: absolute;
       right: 5px;
       top: 4px;
+
+      .fa::before {
+        z-index: -1;
+      }
     }
   }
 

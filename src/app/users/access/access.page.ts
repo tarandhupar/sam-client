@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-
+import {Router} from '@angular/router';
+import 'rxjs/add/operator/pairwise';
 import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
 import { Cookie } from 'ng2-cookies';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
@@ -21,15 +22,16 @@ export class UserAccessPage implements OnInit {
 
   private myCrumbs: Array<IBreadcrumb> = [
     { url: '/profile/details', breadcrumb: 'Profile' },
-    { breadcrumb: 'Access' }
+    { breadcrumb: 'My Access' }
   ];
 
   private adminCrumbs: Array<IBreadcrumb> = [
-    { url: '/role-management', breadcrumb: 'Role Management' },
-    { breadcrumb: 'User Access' }
+    { url: '/workspace', breadcrumb: 'Workspace' },
+    { url: '/access/user-roles-directory', breadcrumb: 'Role Management'}
   ];
 
-  private title: string = 'My Access';
+  private title: string = 'PROFILE';
+  private subTitle : string = 'My Access';
 
   private crumbs: Array<IBreadcrumb>;
 
@@ -61,11 +63,14 @@ export class UserAccessPage implements OnInit {
 
   constructor(
     private userService: UserAccessService,
-    private route: ActivatedRoute)
+    private route: ActivatedRoute,
+    private router: Router,
+    )
   {
+
     this.isAdmin = this.route.snapshot.data['isAdminView'];
     this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
-    this.title = this.isAdmin ? 'User Access' : 'My Access';
+    this.title = this.isAdmin ? 'ROLE MANAGEMENT' : 'PROFILE';
   }
 
   ngOnInit( ) {
@@ -85,8 +90,9 @@ export class UserAccessPage implements OnInit {
   }
 
   getPendingRequests() {
-    this.userService.getPendingRequests(this.userName, { status: 'pending' }).subscribe(reqs => {
-      this.requests = reqs;
+    this.userService.getOpenRequests(this.userName).subscribe(reqs => {
+      this.requests = reqs.userAccessRequestList;
+      //console.log(this.requests);
     });
   }
 
@@ -130,8 +136,12 @@ export class UserAccessPage implements OnInit {
         name: `${res.user.firstName} ${res.user.lastName}`,
         email: res.user.email,
       };
+      if (this.adminCrumbs.length < 3) {
+        this.adminCrumbs.push({breadcrumb: this.user.name == "undefined undefined" ? " " : this.user.name});
+      }
       this.roles = res.access.map(acc => {
-        let path = this.isAdmin ? `/users/${this.userName}/role-details` : '/profile/role-details';
+        let path = this.isAdmin ? `/users/${this.userName}/edit-access` : '';
+        this.subTitle = this.isAdmin ? this.user.name : 'My Access';
         return {
           organization: acc.organization.val,
           organizationId: acc.organization.id,
@@ -140,7 +150,7 @@ export class UserAccessPage implements OnInit {
           path: path,
           queryParams: {
             domain: acc.domain.id,
-            org: acc.organization.id,
+            orgs: acc.organization.id,
             role: acc.role.id,
           },
           role: acc.role.val,

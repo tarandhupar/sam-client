@@ -33,7 +33,8 @@ export class GrantAccessPage implements OnInit {
   };
 
   private userName: string = "";
-  public orgs = [];
+  public org;
+  private initialOrg;
   private domain;
   private domainOptions = [];
   private role;
@@ -101,7 +102,7 @@ export class GrantAccessPage implements OnInit {
     return this.userService.getAccess(this.userName, {
       domainKey: this.domain,
       roleKey: this.role,
-      orgKey: this.orgs.join(',')
+      orgKey: this.org.value,
     });
   }
 
@@ -131,7 +132,6 @@ export class GrantAccessPage implements OnInit {
     let queryParams = this.route.snapshot.queryParams;
     this.role = parseInt(queryParams["role"]);
     this.domain = parseInt(queryParams["domain"]);
-    this.orgs = queryParams["orgs"].split(',');
     let obsAccess = this.getAccess();
     this.getRoles().switchMap(() => obsAccess).subscribe(
       res => {
@@ -149,34 +149,32 @@ export class GrantAccessPage implements OnInit {
     );
 
     if (queryParams['orgs']) {
-      let orgIds = queryParams["orgs"].split(',');
-      if (orgIds.length) {
-        this.prePopulateOrgs(orgIds);
-      }
+      let oid = queryParams["orgs"]
+      this.org = { value: oid };
+      this.initialOrg = [oid];
     }
   }
 
-  prePopulateOrgs(orgIds) {
-    let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
-    Observable.forkJoin(sources).subscribe(
-      orgs => {
-        this.orgs = orgs.map(org => Organization.FromResponse(org)).map(org => {
-          return {
-            name: org.orgName,
-            value: org.id
-          };
-        });
-      },
-      err => {
-        this.footerAlert.registerFooterAlert({
-          title:"Unable to get organization data",
-          description:"",
-          type:'error',
-          timer:2000
-        });
-      }
-    );
-  }
+  // prePopulateOrgs() {
+  //   this.fhService.getOrganizationById(this.initialOrg, false, true).subscribe(
+  //     orgs => {
+  //       this.orgs = orgs.map(org => Organization.FromResponse(org)).map(org => {
+  //         return {
+  //           name: org.orgName,
+  //           value: org.id
+  //         };
+  //       });
+  //     },
+  //     err => {
+  //       this.footerAlert.registerFooterAlert({
+  //         title:"Unable to get organization data",
+  //         description:"",
+  //         type:'error',
+  //         timer:2000
+  //       });
+  //     }
+  //   );
+  // }
 
   public scrollToHead(): void {
     let pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, '#form-top');
@@ -199,8 +197,8 @@ export class GrantAccessPage implements OnInit {
     }
   }
 
-  onOrganizationsChange(orgs) {
-    this.orgs = orgs;
+  onOrganizationsChange(org) {
+    this.org = org;
   }
 
   onRoleChange(role) {
@@ -209,7 +207,9 @@ export class GrantAccessPage implements OnInit {
 
     let userRole;
     if (this.userAccess) {
-      userRole = this.userAccess.raw().domainMapContent[0].roleMapContent[0];
+      let userRL = JSON.parse(this.userAccess.raw()._body);
+      userRole = userRL.domainMapContent[0].roleMapContent[0];
+
       if (+userRole.role.id === +this.role) {
         roleIsCurrentRole = true;
       }
@@ -308,13 +308,13 @@ export class GrantAccessPage implements OnInit {
 
   isFormValid() {
     if (this.userCameFromRoleWorkspace) {
-      return this.orgs && this.orgs.length && this.domain && this.role && this.messages;
+      return this.org && this.domain && this.role && this.messages;
     }
 
     switch (this.mode) {
       case 'edit':
       case 'grant':
-        return this.orgs && this.orgs.length  && this.domain && this.role;
+        return this.org && this.domain && this.role;
       case 'request':
         return this.domain
           && this.messages
@@ -326,7 +326,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   showErrors() {
-    if (!this.orgs || !this.orgs.length) {
+    if (!this.org) {
       this.errors.org = 'Organization is required';
     }
 
@@ -396,6 +396,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   onGrantClick() {
+    console.log('grant clicked');
     if (!this.isFormValid()) {
       this.showErrors();
       return;
@@ -426,7 +427,8 @@ export class GrantAccessPage implements OnInit {
       return;
     }
 
-    let orgIds = this.orgs.map(org => ''+org.value);
+    //let orgIds = this.orgs.map(org => ''+org.value);
+    let orgId = this.org.value;
     let funcs: any = this.objects.map(obj => {
       let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
       return {
@@ -445,7 +447,7 @@ export class GrantAccessPage implements OnInit {
           this.userName,
           role,
           domain,
-          orgIds,
+          [orgId],
           funcs,
           this.messages,
         );
@@ -461,7 +463,7 @@ export class GrantAccessPage implements OnInit {
         params = {
           userAccessRequestId: this.requestId
         };
-        access = UserAccessModel.CreateGrantAndAcceptObject(this.messages, this.userName, domain, role, orgIds, funcs2);
+        access = UserAccessModel.CreateGrantAndAcceptObject(this.messages, this.userName, domain, role, [orgId], funcs2);
       }
 
     } else if (this.mode === 'edit') {
@@ -469,7 +471,7 @@ export class GrantAccessPage implements OnInit {
         this.userName,
         role,
         domain,
-        orgIds,
+        [orgId],
         funcs,
         this.messages,
         this.userAccess

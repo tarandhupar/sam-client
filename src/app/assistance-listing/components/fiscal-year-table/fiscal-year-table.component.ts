@@ -1,12 +1,14 @@
-import { Component, Input, forwardRef, ViewChild } from "@angular/core";
+import { Component, Input, forwardRef, ViewChild } from '@angular/core';
 import {
-  ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, AbstractControl,
-  NG_VALIDATORS, Validator
+  ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { OptionsType } from "sam-ui-kit/types";
 import * as moment from "moment";
-import { ValidationErrors } from "../../../app-utils/types";
+import {
+  FieldErrorList, FALFormErrorService,
+  FieldError
+} from '../../assistance-listing-operations/fal-form-error.service';
 
 
 /** Interfaces **/
@@ -81,19 +83,18 @@ export interface FiscalYearTableConfig {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALFiscalYearTableComponent),
       multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => FALFiscalYearTableComponent),
-      multi: true
     }
   ]
 })
-export class FALFiscalYearTableComponent implements ControlValueAccessor, Validator {
+export class FALFiscalYearTableComponent implements ControlValueAccessor {
+  @Input() control: FormControl;
+
   // all parameters are passed in a single config object for convenience
   // see FiscalYearTableConfig interface for supported parameters
   @Input() config: FiscalYearTableConfig;
-  @Input() control: FormControl;
+
+  // manually set the errors for the component; error ids should match with field ids
+  @Input() errors: FieldErrorList;
 
   // the model serves as the single source of truth for this component's data
   // whenever data is input or actions are taken that modify the form, the model should also be updated
@@ -116,6 +117,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
 
   // controls
   public fyTableGroup: FormGroup;
+  public checkboxControl: FormControl;
 
   // label wrapper
   @ViewChild('fyTableWrapper') fyTableWrapper: LabelWrapper;
@@ -147,6 +149,30 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
     this.addYearOption(currentFY + 1); // next FY
   }
 
+  private updateErrors(): void {
+    if (!this.errors) {
+      return;
+    }
+
+    let currentErrors = FALFormErrorService.findErrorById(this.errors, this.config.name + this.currentIndex) as FieldError;
+
+    if (currentErrors && currentErrors.errors['missingYear']) {
+      this.fyTableGroup.get('year').setValidators((control) => { return control.errors });
+      this.fyTableGroup.get('year').markAsDirty();
+      this.fyTableGroup.get('year').setErrors({
+        required: currentErrors.errors['missingYear']
+      });
+    }
+
+    if (currentErrors && currentErrors.errors['missingDescription']) {
+      this.fyTableGroup.get('textarea').setValidators((control) => { return control.errors });
+      this.fyTableGroup.get('textarea').markAsDirty();
+      this.fyTableGroup.get('textarea').setErrors({
+        required: currentErrors.errors['missingDescription']
+      });
+    }
+  }
+
   private setCheckboxOptions() {
     this.checkboxOptions = [
       { value: 'na', label: 'Not Applicable', name: this.config.name + '-checkbox-na' }
@@ -161,10 +187,12 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
 
   private createFormControls() {
     this.fyTableGroup = new FormGroup({
-      naCheckbox: new FormControl([]),
       textarea: new FormControl(null),
       year: new FormControl(null)
     });
+
+    this.checkboxControl = new FormControl([]);
+
 
     if(this.control) {
       this.control.statusChanges.subscribe(status => {
@@ -172,8 +200,11 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
       });
     }
 
-    this.fyTableGroup.get('naCheckbox').valueChanges.subscribe(value => {
+    this.checkboxControl.valueChanges.subscribe(value => {
       this.model.isApplicable = value.indexOf('na') === -1;
+      if(!this.model.isApplicable) {
+        this.resetForm();
+      }
       this.onChange();
     });
 
@@ -207,6 +238,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
 
     this.removeYearOption(this.model.current.year); // each year can only be selected once
     this.resetForm(); // after adding, close the form
+    this.onChange();
   }
 
   public editEntry(index: number) {
@@ -220,6 +252,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
     this.isEditing = true;
 
     this.onChange();
+    this.updateErrors();
   }
 
   public removeEntry(index: number) {
@@ -302,19 +335,24 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
   }
 
   public displayForm() {
+    this.resetForm();
     this.isEditing = true;
   }
 
   public resetForm() {
-    if(this.currentIndex != this.model.entries.length) { // if currently editing an entry, any changes will be canceled
+    if(this.currentIndex !== this.model.entries.length) { // if currently editing an entry, any changes will be canceled
       this.removeYearOption(this.model.current.year); // so remove its year from the pool of available options
     }
 
-    this.fyTableGroup.reset();
+    this.fyTableGroup.get('year').clearValidators();
+    this.fyTableGroup.get('textarea').clearValidators();
+
+    this.fyTableGroup.reset({}, {emitEvent: false});
+    this.model.current.year = null;
+    this.model.current.description = null;
+
     this.currentIndex = this.model.entries.length;
     this.isEditing = false;
-
-    this.onChange();
   }
 
   private addYearOption(year: number) {
@@ -349,27 +387,6 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
   }
 
 
-  /** Validation **/
-
-  public validate(c: AbstractControl): ValidationErrors {
-    let error: ValidationErrors = {
-      atLeastOneEntry: {
-        message: this.config.errorMessage ? this.config.errorMessage : 'At least one ' + this.config.itemName + ' is required.'
-      }
-    };
-
-    if (this.config.required && this.config.required === true) {
-      if (this.model.isApplicable === true) {
-        if (this.model.entries.length === 0) {
-          return error;
-        }
-      }
-    }
-
-    return null;
-  }
-
-
   /** Implement ControlValueAccessor interface **/
 
   private onChangeCallback: any = (_: any) => {};
@@ -386,12 +403,13 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
   public writeValue(obj: any) : void {
     this.model = FALFiscalYearTableComponent.constructModelFrom(obj);
 
+    this.setYearOptions();
     for(let entry of this.model.entries) {
       this.removeYearOption(entry.year)
     }
     this.currentIndex = this.model.entries.length;
 
-    this.fyTableGroup.get('naCheckbox').setValue(this.model.isApplicable ? [] : ['na']);
+    this.checkboxControl.setValue(this.model.isApplicable ? [] : ['na']);
     this.fyTableGroup.get('textarea').setValue(this.model.current.description);
     this.fyTableGroup.get('year').setValue(this.model.current.year);
   }

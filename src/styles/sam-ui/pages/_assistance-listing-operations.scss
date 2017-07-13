@@ -113,8 +113,26 @@
   }
 
 }
+.header-history{
+  display: inline;
+}
+.checkbox-history{
+  float: right;
+}
 .requestLink{
   text-decoration: none;
   color: black;
   font-weight: normal;
+}
+
+.section-pristine {
+  color: gray;
+}
+
+.section-updated {
+  color: green;
+}
+
+.section-invalid {
+  color: red;
 }

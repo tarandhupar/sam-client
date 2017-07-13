@@ -27,16 +27,16 @@
 
     <div class="four wide column">
       <ul class="sam-ui small list">
-        <!--<li>-->
-          <!--<sam-select-->
-            <!--[hint]="actionsDropdown.config.hint"-->
-            <!--[name]="actionsDropdown.config.name"-->
-            <!--[disabled]="actionsDropdown.config.disabled"-->
-            <!--[options]="actionsDropdown.config.options"-->
-            <!--[ngModel]="actionsDropdown.defaultOption"-->
-            <!--(ngModelChange)="actionsDropdownSelect($event)"-->
-          <!--&gt;</sam-select>-->
-        <!--</li>-->
+        <li>
+          <sam-select
+            [hint]="actionsDropdown.config.hint"
+            [name]="actionsDropdown.config.name"
+            [disabled]="actionsDropdown.config.disabled"
+            [options]="actionsDropdown.config.options"
+            [ngModel]="actionsDropdown.defaultOption"
+            (ngModelChange)="actionsDropdownSelect($event)"
+          ></sam-select>
+        </li>
         <li>
           <span class="sam-ui mini label">Regional Agency Location</span>
         </li>
@@ -46,26 +46,27 @@
         </li>
         <li>
           <strong>Division</strong><br>
-          <span>{{data.divison}}</span>
+          <span>{{data.division}}</span>
         </li>
         <li>
           <strong>Created By: </strong><span>{{data.createdBy}}</span><br>
-          <strong>On: </strong> <span>{{data.createdDate|date: 'MMM d, yyyy h:m a '}}</span>
+          <strong>On: </strong> <span>{{data.createdDate|date: 'MMM d, yyyy h:mm a'}}</span>
         </li>
         <li>
           <strong>Last Modified By: </strong><span>{{data.modifiedBy}}</span><br>
-          <strong>On: </strong> <span>{{data.modifiedDate|date: 'MMM d, yyyy h:m a '}}</span>
+          <strong>On: </strong> <span>{{data.modifiedDate|date: 'MMM d, yyyy h:mm a'}}</span>
         </li>
       </ul>
 
-      <!--<sam-modal #modal1-->
-        <!--[type]="'info'"-->
-        <!--[title]="'Are You Sure?'"-->
-        <!--[cancelButtonLabel]="'No'"-->
-        <!--[submitButtonLabel]="'Yes'"-->
-        <!--(onClose)="onModalClose($event)"-->
-        <!--(onSubmit)="deleteRAO($event)"-->
-      <!--&gt;</sam-modal>-->
+      <sam-modal #modal1
+        [type]="'info'"
+        [title]="'Are You Sure?'"
+        [cancelButtonLabel]="'No'"
+        [submitButtonLabel]="'Yes'"
+        [description]="'Are you sure you want to delete this location? Note: Any updates made in this space will not be reflected in the public view.'"
+        (onClose)="onModalClose($event)"
+        (onSubmit)="deleteRAO($event)"
+      ></sam-modal>
     </div>
   </div>
 </div>

@@ -12,6 +12,7 @@
   ></sam-text-area>
 
   <falFYTable [config]="fundedProjectsConfig"
+              [errors]="fpErrors"
               [formControlName]="'fundedProjects'"
               [control]="falOverviewForm.get('fundedProjects')"
               #fundedProjects
@@ -25,41 +26,26 @@
     formControlName="description"
   ></sam-text-area>
 
-  <sam-list-display [newValue]="fcNGModel" formControlName="fcListDisplay"
-                    (ngModelChange)="fcTypeChange($event)" (modelChange)="fclistChange()"
-                    [config]="fcAutocompleteConfig">
+  <sam-autocomplete-multiselect 
+    [options]="fcTypeOptions"
+    [name]="'functional-codes-control'"
+    formControlName="functionalTypes"
+    [control]="falOverviewForm.controls['functionalTypes']"
+    [keyValueConfig]="fcAutocompleteConfig.keyValueConfig"
+    [required]="true"
+    [label]="'Functional Codes'"
+    [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
+  </sam-autocomplete-multiselect>
 
-      <sam-autocomplete
-        [options]="fcTypeOptions"
-        [name]="'functional-codes-control'"
-        formControlName="functionalTypes"
-        [(ngModel)]="fcNGModel"
-        [config]="fcAutocompleteConfig"
-        [required]="true"
-        [labelText]="'Functional Codes'"
-        [hint]="'Select one or more Functional Codes to help public users search for this listing.'"
-        [control]="falOverviewForm.controls['fcListDisplay']"
-        ></sam-autocomplete>
-
-  </sam-list-display>
-
-  <sam-list-display [newValue]="stNGModel"
-                    formControlName="stListDisplay"
-                    (ngModelChange)="stTypeChange($event)"
-                    (modelChange)="stlistChange()"
-                    [config]="stAutocompleteConfig">
-
-      <sam-autocomplete autofill-falProgram
-                        formControlName="subjectTermsTypes"
-                        [(ngModel)]="stNGModel"
-                        name="subjectTermsSearch"
-                        [config]="stAutocompleteConfig"
-                        [required]="true"
-                        [labelText]="'Subject Terms'"
-                        [hint]="'Select one or more Subject Terms to help public users search for this listing.'"
-                        [control]="falOverviewForm.controls['stListDisplay']"
-                        ></sam-autocomplete>
-
-  </sam-list-display>
-
+  <sam-autocomplete-multiselect 
+      autofill-falProgram
+      [name]="'subjectTermsSearch'"
+      formControlName="subjectTermsTypes"
+      [control]="falOverviewForm.controls['subjectTermsTypes']"
+      [keyValueConfig]="stAutocompleteConfig.keyValueConfig"
+      [serviceOptions]="{index:'D'}"
+      [required]="true"
+      [label]="'Subject Terms'"
+      [hint]="'Select one or more Subject Terms to help public users search for this listing.'">
+    </sam-autocomplete-multiselect>
 </form>

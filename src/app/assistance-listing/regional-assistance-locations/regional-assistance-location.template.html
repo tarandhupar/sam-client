@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="row" *ngIf="permissions['CREATE_RAO']">
-        <span *ngIf="!raoExists">There are no Regional Agency Offices associated with user's department</span>
+        <span *ngIf="!raoExists && !initLoad">There are no Regional Agency Offices associated with user's department</span>
       </div>
     </div>
 

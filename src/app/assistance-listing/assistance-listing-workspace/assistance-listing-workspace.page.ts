@@ -42,54 +42,13 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
-    if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
-    }
-
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(res => {
-      this.permissions = res;
-      if (!this.permissions['FAL_LISTING']) {
-        this.router.navigate['accessrestricted'];
-      } else {
-        //this.setupQS();
-        this.activatedRoute.queryParams.subscribe(
-          data => {
-            this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
-            this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-            this.runProgram();
-          });
-      }
-    });
-
     let userPermissionsAPI = this.loadUserPermissions();
     this.loadCountPendingRequest(userPermissionsAPI);
-    // this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS').subscribe(res => {
-    //   this.permissions = res;
-    //   if (!this.permissions['FAL_LISTING']) {
-    //     this.router.navigate['accessrestricted'];
-    //   } else {
-    //     //this.setupQS();
-    //     this.activatedRoute.queryParams.subscribe(
-    //       data => {
-    //         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
-    //         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-    //         this.runProgram();
-    //       });
-    //   }
-    // });
   }
 
   ngOnDestroy() {
-
     if (this.runProgSub)
       this.runProgSub.unsubscribe();
-
-
   }
 
   setupQS() {
@@ -178,21 +137,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   private loadUserPermissions(){
     let apiSubject = new ReplaySubject();
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(apiSubject);
+    this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(apiSubject);
 
     apiSubject.subscribe(res => {
       this.permissions = res;
-      if (!this.permissions['FAL_LISTING']) {
-        this.router.navigate['accessrestricted'];
-      } else {
-        //this.setupQS();
         this.activatedRoute.queryParams.subscribe(
           data => {
             this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
             this.runProgram();
           });
-      }
     });
 
     return apiSubject;

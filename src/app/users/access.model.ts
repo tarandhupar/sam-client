@@ -181,7 +181,7 @@ export class UserAccessModel {
     };
   }
 
-  public raw(): UserAccessInterface {
+  public raw(): any {
     return this._raw;
   }
 

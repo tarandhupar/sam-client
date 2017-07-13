@@ -1,0 +1,22 @@
+<div class="fsd-widget">
+  <div class="widget-body">
+    <span class="fsd-accounts">
+      <ul class="list-accounts">
+        <li *ngFor="let account of accounts; let $index = index;">
+          <a [routerLink]="['fsd/user', account._id]" [innerText]="account.fullName"></a>
+        </li>
+      </ul>
+    </span>
+
+    <span class="fsd-controls text-center">
+      <sam-autocomplete id="fsd-user-search"
+                        name="fsd-user-search"
+                        [config]="store.picker"
+                        (enterEvent)="search($event)"
+                        peoplepicker-autofill></sam-autocomplete>
+    </span>
+  </div>
+  <a class="widget-footer text-right" [routerLink]="['fsd/users']" *ngIf="accounts.length">
+    Go to Directory <span class="fa fa-chevron-circle-right"></span>
+  </a>
+</div>

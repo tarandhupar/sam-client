@@ -17,12 +17,12 @@
               [hint]="config.hint"
               [required]="config.required">
 
-  <div *ngIf="fyTableGroup" [formGroup]="fyTableGroup">
-    <sam-checkbox [name]="config.name + '-checkbox'"
-                 [options]="checkboxOptions"
-                 [formControlName]="'naCheckbox'"
-    ></sam-checkbox>
+  <sam-checkbox [name]="config.name + '-checkbox'"
+                [options]="checkboxOptions"
+                [formControl]="checkboxControl"
+  ></sam-checkbox>
 
+  <div *ngIf="fyTableGroup" [formGroup]="fyTableGroup">
     <div [hidden]="!model.isApplicable">
       <table class="sam-ui table celled" *ngIf="model.entries && containsDisplayedEntries()">
         <thead>

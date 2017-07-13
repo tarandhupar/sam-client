@@ -34,9 +34,9 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   oFilterParam: {};
   optionsHalLink: boolean;
   public permissions: any;
-  raoExists: boolean = false;
+  raoExists: boolean = true;
   regionalLocationSearchConfig: any = {
-    placeholder: "Search Workspace"
+    placeholder: "Search Regional Assistance Locations"
   };
 
 
@@ -54,7 +54,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
       this.router.navigate(['accessrestricted']);
     }
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, CREATE_RAO').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, CREATE_RAO, ORG_ID').subscribe(res => {
       this.permissions = res;
       if (!this.permissions['CREATE_RAO']) {
         this.router.navigate(['accessrestricted']);
@@ -152,7 +152,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   }
 
   createNewLocation() {
-    this.router.navigate(['fal/myRegionalOffices/']);
+    this.router.navigate(['fal/myRegionalOffices/add']);
   }
 
   regionalLocationSearchModel(event) {

@@ -22,6 +22,8 @@
 
   <sam-agency-picker *ngIf="!viewModel.isRevision"
                 [label]="'Federal Agency'"
+                [showToggle]="true"
+                [hint]="'List the administering department or independent agency. For Cabinet-level departments, the National Foundation on the Arts and the Humanities, Environmental Protection Agency, and the Federal Emergency Management Agency, the primary organizational subunit name should precede the departmental name.'"
                 [multimode]="false"
                 [advancedMode]="false"
                 [required]="true"
@@ -49,23 +51,14 @@
     CFDA Number: {{ falNo }}
   </div>
 
-  <sam-list-display  [newValue]="rpNGModel"
-                     formControlName="rpListDisplay"
-                     (ngModelChange)="relatedProgramTypeChange($event)"
-                     (modelChange)="relatedProglistChange()"
-                     [config]="relProAutocompleteConfig">
-
-    <sam-label-wrapper [label]="'Related Federal Assistance Listing'"
-                  [hint]="relatedFalHint">
-
-      <sam-autocomplete autofill-falProgram
-                        [(ngModel)] = "rpNGModel"
-                        formControlName="relatedPrograms"
-                        name="relatedProgramSearch"
-                        [config]="relProAutocompleteConfig"
-                        class="search-bar sam-autocomplete-width">
-
-      </sam-autocomplete>
-    </sam-label-wrapper>
-  </sam-list-display>
+  <sam-autocomplete-multiselect
+      autofill-falProgram
+      [name]="'relatedProgramSearch'"
+      formControlName="relatedPrograms"
+      [control]="falHeaderInfoForm.controls['relatedPrograms']"
+      [keyValueConfig]="relProAutocompleteConfig.keyValueConfig"
+      [serviceOptions]="{index:'RP'}"
+      [label]="'Related Federal Assistance Listing'"
+      [hint]="relatedFalHint">
+    </sam-autocomplete-multiselect>
 </form>

@@ -1,55 +1,54 @@
-<div class="assistance-listing-operations" [hidden]="createPermissions === undefined">
-  <div class="usa-grid">
-    <fal-form-side-nav class="usa-width-one-fourth"></fal-form-side-nav>
-
-    <div class="usa-width-three-fourths">
-      <div class="usa-width-one-whole m_L-4x">
-        <fal-error-display #errorDisplay></fal-error-display>
+<sam-complex-form-template 
+  [hidden]="createPermissions === undefined"
+  [crumbs]="crumbs"
+  pageTitle="Assistance Listing" 
+  [sectionTitle]="falFormViewModel.title"
+  [sideNavSelection]="sidenavSelection" 
+  [sideNavModel]="sidenavModel"
+  [sectionIndex]="currentSection"
+  [numberOfSections]="sections.length"
+  [statusBannerLeadingText]="leadingErrorMsg"
+  statusBannerType="warning"
+  (action)="formActionHandler($event)"
+  (sideNavOutput)="navHandler($event)"
+  >
+  <div status-banner>
+    <fal-error-display #errorDisplay (message)="updateLeadingMsg($event)"></fal-error-display>
+  </div>
+  <div form-sections>
 
         <fal-form-header-information *ngIf="isSection('header-information')"
                                      [viewModel]="falFormViewModel"
-                                     (showErrors)="showErrors($event)"></fal-form-header-information>
+                                     (showErrors)="showErrors($event)" #form></fal-form-header-information>
 
         <fal-form-overview *ngIf="isSection('overview')"
                            [viewModel]="falFormViewModel"
-                           (showErrors)="showErrors($event)"></fal-form-overview>
+                           (showErrors)="showErrors($event)" #form></fal-form-overview>
 
         <fal-form-authorization *ngIf="isSection('authorization')"
-                                [viewModel]="falFormViewModel"></fal-form-authorization>
+                                [viewModel]="falFormViewModel" 
+                                (showErrors)="showErrors($event)" #form></fal-form-authorization>
 
         <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')"
-                                  [viewModel]="falFormViewModel"></fal-form-obligation-info>
+                                  [viewModel]="falFormViewModel" #form></fal-form-obligation-info>
 
         <fal-form-financial-info-other *ngIf="isSection('financial-information-other')"
-                                       [viewModel]="falFormViewModel"></fal-form-financial-info-other>
+                                       [viewModel]="falFormViewModel" #form></fal-form-financial-info-other>
 
         <fal-form-criteria-info *ngIf="isSection('criteria-information')"
-                                [viewModel]="falFormViewModel"></fal-form-criteria-info>
+                                [viewModel]="falFormViewModel"
+                                (showErrors)="showErrors($event)" #form></fal-form-criteria-info>
 
         <fal-form-assistance *ngIf="isSection('applying-for-assistance')"
-                             [viewModel]="falFormViewModel"></fal-form-assistance>
+                             [viewModel]="falFormViewModel" 
+                             (showErrors)="showErrors($event)" #form></fal-form-assistance>
 
         <fal-form-compliance-requirements *ngIf="isSection('compliance-requirements')"
-                                          [viewModel]="falFormViewModel"></fal-form-compliance-requirements>
+                                          [viewModel]="falFormViewModel"
+                                          (showErrors)="showErrors($event)" #form></fal-form-compliance-requirements>
 
         <fal-form-contact-info *ngIf="isSection('contact-information')"
-                               [viewModel]="falFormViewModel"></fal-form-contact-info>
+                               [viewModel]="falFormViewModel" #form></fal-form-contact-info>
 
-        <div>
-          <div class="pull-left">
-            <sam-button buttonText="Cancel"
-                        (onClick)="onCancelClick($event)"></sam-button>
-              <sam-button *ngIf="currentSection - 1 >= 0"
-                          buttonText="Previous"
-                          (onClick)="onSaveBackClick($event)"></sam-button>
-            <sam-button buttonText="Done"
-                        (onClick)="onSaveExitClick($event)"></sam-button>
-              <sam-button
-                *ngIf="currentSection + 1 < sections.length"
-                buttonText="Next" (onClick)="onSaveContinueClick($event)"></sam-button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-</div>
+</sam-complex-form-template>

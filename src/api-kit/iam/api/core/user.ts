@@ -1,22 +1,24 @@
-import { clone, indexOf, merge, values } from 'lodash';
+import { clone, indexOf, merge } from 'lodash';
 import { isDebug } from './modules/helpers';
 
 import * as moment from 'moment';
 
 const LDAP_MAPPINGS = {
-  'dn':               'dn',
-  'cn':               'fullName',
-  'sn':               'lastName',
-  'givenName':        'firstName',
-  'mobilePhone':      'mobilePhoneNumbers',
-  'phone':            'workPhone',
-  'mail':             'email',
-  'uid':              '_id'
+  // Reverse Mappings
 };
 
 const ROLE_MAPPINGS = {
-  systemAccount: 'GSA_IAM_CWS_SFA_R_SrvAcct',
-  fsd:           'FSD_Agent'
+  systemAccount: [
+    'system-accounts.management',
+    'system-accounts.migration'
+  ],
+
+  fsd: [
+    'fsd.profile',
+    'fsd.kba',
+    'fsd.deactivate',
+    'fsd.passreset'
+  ],
 };
 
 export class User {
@@ -25,9 +27,13 @@ export class User {
   public firstName = '';
   public initials = '';
   public lastName = '';
+  public _links = {};
 
-  public status: 'Active';
+  public status = 'Active';
   public lastLogin = moment();
+
+  public systemAccount = false;
+  public fsd = false;
 
   constructor(params) {
     params = params || {};
@@ -37,7 +43,16 @@ export class User {
   set(user) {
     let roles = user.gsaRAC,
         role,
-        mapping;
+        mapping,
+        setRoles = (() => {
+          let role,
+              roles;
+
+          for(role in ROLE_MAPPINGS) {
+            roles = ROLE_MAPPINGS[role];
+            this[role] = this.contains(this._links, roles);
+          }
+        });
 
     user = this.reverseMappings(user || {});
 
@@ -49,11 +64,7 @@ export class User {
       this._id = this.email;
     }
 
-    // Map Roles Array
-    for(role in ROLE_MAPPINGS) {
-      mapping = ROLE_MAPPINGS[role];
-      this[role] = indexOf(roles, mapping) > -1 ? true : false;
-    }
+    setRoles();
   }
 
   toBoolean(value) {
@@ -92,13 +103,26 @@ export class User {
       }
     }
 
-    data.gsaRAC = data.gsaRAC || [];
-
-    if(isDebug()) {
-      data.gsaRAC = values(ROLE_MAPPINGS);
-    }
+    data._links = params._links || {};
 
     return data;
+  }
+
+  contains(haystack: { [key: string]: any }, needles: string[]) {
+    let needle,
+        intNeedle,
+        hasNeedle = true;
+
+    for(intNeedle = 0; intNeedle < needles.length; intNeedle++) {
+      needle = needles[intNeedle];
+
+      if(!haystack[needle]) {
+        hasNeedle = false;
+        break;
+      }
+    }
+
+    return hasNeedle;
   }
 
   get fullName(): string {
@@ -108,6 +132,9 @@ export class User {
       this.lastName || ''
     ];
 
-    return fullName.join(' ').trim();
+    return fullName
+      .join(' ')
+      .trim()
+      .replace(/ +/g, ' ');
   }
 }

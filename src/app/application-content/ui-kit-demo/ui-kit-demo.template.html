@@ -17,6 +17,19 @@
   </div>
 
   <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <h2>Date Range Filter &lt;sam-date-range-filter&gt;</h2>
+      <sam-date-range-filter #dateRangeFilterVar="ngModel" [control]="dateRangeFilterVar.control" [(ngModel)]="samDateRangeAdvModel"></sam-date-range-filter>
+      <br/>
+      <sam-date-range-filter radioName="select-filter2" rangeType="date-time" [(ngModel)]="samDateRangeAdvModel2"></sam-date-range-filter>
+    </div>
+    <div class="usa-width-one-half">
+      {{ samDateRangeAdvModel | json }}<br/>
+      {{ samDateRangeAdvModel2 | json }}
+    </div>
+  </div>
+
+  <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM status banner &lt;sam-status-banner&gt;</h2>
       <sam-status-banner type="error">

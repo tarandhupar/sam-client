@@ -14,6 +14,11 @@ import { AdminLevelResolve } from "../application-content/403/admin-level.resolv
 import { UserNameResolve } from "../application-content/403/user-name.resolve";
 import {ProfileGuard} from "../authentication/profile/profile.guard";
 import {IsLoggedInGuard} from "../application-content/403/is-logged-in.guard";
+import { RequestAccessPage } from "./request-access/request-access.page";
+import { RoleCategoriesResolve } from "./roles-categories.resolve";
+import { ViewRequestPage } from "./view-request/view-request.page";
+import { RequestStatusNamesResolve } from "../role-management/request-statuses.resolve";
+import { RequestResponsePage } from "./request-response/request-response.page";
 
 export const routes: Routes = [];
 
@@ -53,17 +58,40 @@ routes.unshift(
     ]
   },
   {
+    path: 'access-requests/:requestId',
+    component: ViewRequestPage,    
+    canActivate: [ IsLoggedInGuard ],
+    resolve: {
+      request: RequestAccessResolve,
+    },
+  },
+  {
+    path: 'access-requests/:requestId/respond',
+    component: RequestResponsePage,    
+    canActivate: [IsLoggedInGuard, DeptAdminGuard],
+    resolve: {
+      request: RequestAccessResolve,
+    },
+  },
+  {
     path: 'profile/access',
     component: UserAccessPage,
     data: { isAdminView: false },
     resolve: { userName: UserNameResolve },
     canActivate: [ IsLoggedInGuard ]
   },
+  // {
+  //   path: 'profile/request-access',
+  //   component: GrantAccessPage,
+  //   data: { mode: 'request', isAdminView: false },
+  //   resolve: { userName: UserNameResolve },
+  //   canActivate: [ IsLoggedInGuard ]
+  // },
   {
     path: 'profile/request-access',
-    component: GrantAccessPage,
-    data: { mode: 'request', isAdminView: false },
-    resolve: { userName: UserNameResolve },
+    component: RequestAccessPage,
+    data: { },
+    resolve: { roleCategories: RoleCategoriesResolve },
     canActivate: [ IsLoggedInGuard ]
   },
   {

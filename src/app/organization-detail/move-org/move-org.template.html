@@ -21,7 +21,7 @@
     <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-whole" [label]="'Start Date'" [name]="'start-date'">
       <sam-date [label]="''" name='start-date' [value]="startDate" [disabled]="true"></sam-date>
     </sam-label-wrapper>
-    <p class="usa-width-one-whole p_T-2x hint-text m_B-3x">Start date of the office must be the same as the date of original office.</p>
+    <p class="usa-width-one-whole p_T-2x hint-text m_B-3x">Start date of the new office must be same as the end date of the original office.</p>
     <div class="usa-width-one-whole m_B-6x">
       <sam-agency-picker (organization)="getFederalOrgName($event)"
                          [label]="'New parent Sub-tier'"

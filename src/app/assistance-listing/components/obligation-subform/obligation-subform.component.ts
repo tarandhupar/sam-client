@@ -71,6 +71,7 @@ export class FALObligationSubFormComponent {
       {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY', flag: 'text'}
     ],
     name: 'Past Fiscal year - 2016',
+    id: 'obligations-past-fiscal-year-number-input',
     label: '',
     errorMessage: '',
     hint: ''
@@ -84,6 +85,7 @@ export class FALObligationSubFormComponent {
       {value: 'cFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-cFY', flag: 'text'}
     ],
     name: 'Current Fiscal year - 2016',
+    id: 'obligations-current-fiscal-year-number-input',
     label: '',
     errorMessage: '',
     hint: ''
@@ -97,6 +99,7 @@ export class FALObligationSubFormComponent {
       {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY', flag: 'text'}
     ],
     name: 'Budget Fiscal year - 2016',
+    id: 'obligations-budget-fiscal-year-number-input',
     label: '',
     errorMessage: '',
     hint: ''
@@ -286,6 +289,10 @@ export class FALObligationSubFormComponent {
   }
 
   onObligationCancelClick(i) {
+    if(this.hideAddButton === false) {
+      return; // clicking cancel has no effect if nothing is being edited or added
+    }
+
     if (this.mode == 'Add') {
       this.removeObligation(i);
     }

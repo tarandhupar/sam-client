@@ -4,6 +4,12 @@ import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
 import { FALFormService } from "../../fal-form.service";
 import { FALFormViewModel } from "../../fal-form.model";
+//import { FALFormErrorService } from '../../fal-form-error.service';
+
+import {
+  FieldErrorList, FALFormErrorService,
+  FieldError
+} from '../../fal-form-error.service';
 
 @Component({
   providers: [ProgramService, DictionaryService, FALFormService],
@@ -12,11 +18,12 @@ import { FALFormViewModel } from "../../fal-form.model";
 })
 export class FALFormComplianceRequirementsComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
 
   @ViewChild('reportsComp') reportsComp;
   @ViewChild('auditsComp') auditsComp;
   @ViewChild('additionalDocumentationComp') additionalDocumentationComp;
+
+  @Output() public showErrors = new EventEmitter();
 
   public program: any;
   public complianceRequirementsGroup: FormGroup;
@@ -115,7 +122,8 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
   };
 
   constructor(private fb: FormBuilder,
-              private dictService: DictionaryService) {
+              private dictService: DictionaryService,
+              private errorService: FALFormErrorService) {
 
     dictService.getDictionaryById('cfr200_requirements').subscribe(data => {
       for(let requirement of data['cfr200_requirements']) {
@@ -149,7 +157,6 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
     this.complianceRequirementsGroup.valueChanges.subscribe(data => {
       this.updateViewModel(data);
-      this.collectErrors();
     });
   }
 
@@ -167,6 +174,10 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     }, {
       emitEvent: false
     });
+
+    setTimeout(() => {
+      this.updateErrors();
+    });
   }
 
   private updateViewModel(data: Object) {
@@ -181,6 +192,10 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     this.viewModel.records = this.saveRecords(data['records']);
     this.viewModel.documents = this.saveDocuments(data['additionalDocumentation']);
     this.viewModel.formulaAndMatching = this.saveFormulaMatching(data['formulaMatching']);
+
+    setTimeout(() => {
+      this.updateErrors();
+    });
   }
 
   private saveCFR200(CFR200Model: any) {
@@ -489,41 +504,70 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     return model;
   }
 
+  private updateErrors() {
 
-  public validateSection() {
-    this.reportsComp.markChildrenAsDirty();
-    this.auditsComp.markChildrenAsDirty();
-    this.additionalDocumentationComp.markChildrenAsDirty();
+    this.errorService.viewModel = this.viewModel;
 
-    //mark all controls as dirty
-    for (let control in this.complianceRequirementsGroup.controls) {
-      this.complianceRequirementsGroup.controls[control].markAsDirty();
-      this.complianceRequirementsGroup.controls[control].updateValueAndValidity();
-    }
+    this.updateReportErrors(this.errorService.validateComplianceReports());
+    this.updateAuditErrors(this.errorService.validateComplianceAudits());
+    this.updateAddDocumentationErrors(this.errorService.validateAdditionDocumentation());
 
-    this.collectErrors();
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  private collectErrors() {
-    let size = this.formErrors.size;
+  updateReportErrors(reportErrors){
+    for (let id in this.reportsComp.validationGroup.controls) {
+      let fcontrol =  this.reportsComp.validationGroup.get(id);
+      let wrapperControl = this.reportsComp.compTextarea._results[id.substr(id.length - 1)];
+      if(reportErrors) {
+        let currentErrors = FALFormErrorService.findErrorById(reportErrors, 'compliance-reports-' + id) as FieldError;
+        if(currentErrors){
+          this.setControlErrors(fcontrol, currentErrors);
+          wrapperControl.wrapper.formatErrors(fcontrol);
+        } //end of if
+        else {
+          this.resetControlErrors(fcontrol);
+          wrapperControl.wrapper.formatErrors(fcontrol);
+        }
+      }
+      else {
+        this.resetControlErrors(fcontrol);
+        wrapperControl.wrapper.formatErrors(fcontrol);
+      }
+    } //end of for
+  }
 
-    for(let key in this.complianceRequirementsGroup.controls) {
-      if(this.complianceRequirementsGroup.controls[key].errors && this.complianceRequirementsGroup.controls[key].dirty) {
-        this.formErrors.add(key);
-      } else {
-        this.formErrors.delete(key);
+  updateAuditErrors(auditErrors) {
+    if(auditErrors) {
+      for (let id in this.auditsComp.validationGroup.controls) {
+        let fcontrol =  this.auditsComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, auditErrors);
+        this.auditsComp.wrapper.formatErrors(fcontrol);
       }
     }
+  }
 
-    if(this.formErrors.size !== size) {
-      this.emitEvent();
+  updateAddDocumentationErrors(addDocErrors){
+    if(addDocErrors){
+      for (let id in this.additionalDocumentationComp.validationGroup.controls) {
+        let fcontrol =  this.additionalDocumentationComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, addDocErrors);
+        this.additionalDocumentationComp.wrapper.formatErrors(fcontrol);
+      }
     }
   }
 
-  private emitEvent() {
-    this.onError.emit({
-      formErrorArr: Array.from(this.formErrors.values()),
-      section: 'compliance-requirements'
-    });
+  setControlErrors(fcontrol, ferrors){
+    fcontrol.clearValidators();
+    fcontrol.markAsPristine();
+    fcontrol.setValidators((control) => { return control.errors });
+    fcontrol.setErrors(ferrors.errors);
+    fcontrol.markAsDirty();
+  }
+
+  resetControlErrors(fcontrol){
+    fcontrol.clearValidators();
+    fcontrol.markAsPristine();
+    fcontrol.setErrors(null);
   }
 }

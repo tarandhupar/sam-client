@@ -9,6 +9,18 @@ import { IPermissions } from "./permissions.interface";
 import { IFunction } from "./function.interface";
 import { Cookie } from "ng2-cookies";
 import { Router } from "@angular/router";
+import {QueryEncoder} from "@angular/http";
+
+// In order to support '+' in query params...
+class EmailAddressQueryEncoder extends QueryEncoder {
+  encodeKey(k: string): string {
+    return encodeURIComponent(k);
+  }
+
+  encodeValue(v: string): string {
+    return encodeURIComponent(v);
+  }
+}
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -25,10 +37,10 @@ export class UserAccessService {
 
   }
 
-  callApi(oApiParam: any, convertToJSON: boolean = true) {
+  callApi(oApiParam: any, convertToJSON: boolean = true, queryEncoder: QueryEncoder = null) {
     this.addAuthHeader(oApiParam);
     return this.apiService
-      .call(oApiParam, convertToJSON)
+      .call(oApiParam, convertToJSON, queryEncoder)
       .catch(res => {
         if (res.status === 401 || res.status === 403) {
           this.router.navigate(['/signin']);
@@ -73,7 +85,7 @@ export class UserAccessService {
     }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   getDomains(): Observable< IDomain > {
@@ -189,7 +201,7 @@ export class UserAccessService {
     return this.callApi(apiOptions, false);
   }
 
-  requestAccess(req: any, userName) {
+  requestAccess(req: any, userName?) {
     let apiOptions: any = {
       name: 'requestaccess',
       suffix: '/',
@@ -234,7 +246,7 @@ export class UserAccessService {
 
     apiOptions.oParam.user = userId;
 
-    return this.callApi(apiOptions, false).map(res => {
+    return this.callApi(apiOptions, false, new EmailAddressQueryEncoder()).map(res => {
       if (res.status === 204) {
         return [];
       } else {
@@ -334,7 +346,7 @@ export class UserAccessService {
     apiOptions.oParam.order = order;
     apiOptions.oParam.page = page;
 
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   // Get an array of users and show the access and show the Org, domains for that org, and roles for that domains
@@ -399,6 +411,17 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
+  getDomainCategoriesAndRoles() {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/requestaccess/roles/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions);
+  }
+
   addAuthHeader(options) {
     let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
 
@@ -408,5 +431,31 @@ export class UserAccessService {
 
     options.headers = options.headers || {};
     options.headers['X-Auth-Token'] = iPlanetCookie;
+  }
+
+  getOpenRequests(userId: string){
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/openrequests/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    apiOptions.oParam.user = userId;
+
+    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
+  }
+
+  getUserAutoComplete(query : string){
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/autocomplete/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    apiOptions.oParam.query = query;
+
+    return this.callApi(apiOptions);
   }
 }

@@ -57,13 +57,13 @@
   <div *ngIf = "currCount > 0">
     <div  *ngFor = "let content of requestDetails" >
       <section class = "sec-bor">
-        <div><span class="usa-label-big">{{content.domain}}</span></div>
+        <div><span class="usa-label-big">{{content.domain.val}}</span></div>
         <div class="request-block">
           <div class="request-top-block">
             <div class="usa-grid-full clearfix">
               <div class="pull-right icon-and-respond">
                 <i class="fa fa-2x" [ngClass]="classForRequest(content)"></i>
-                <button *ngIf = "shouldShowRespondButton(content)" routerLink = "../requests/{{content.id}}" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
+                <button *ngIf = "shouldShowRespondButton(content)" routerLink = "/access-requests/{{content.id}}/respond" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
               </div>
               <div class="usa-width-one-third">
                 <div><strong>Requested By</strong></div>
@@ -77,13 +77,13 @@
                 <div>
                   <strong>Status</strong>
                 </div>
-                <div>{{content.status}}</div>
+                <div>{{content.status.val}}</div>
               </div>
             </div>
 
             <div class="usa-grid-full m_T-2x">
               <!-- Pending -->
-              <ng-container *ngIf="content.status.toLowerCase() === 'pending'">
+              <ng-container *ngIf="content.status.val.toLowerCase() === 'pending'">
                 <div class="usa-width-one-third">
                   <div><strong>Supervisor Name</strong></div>
                   <div>{{content.supervisorName.toUpperCase()}}</div>
@@ -95,7 +95,7 @@
               </ng-container>
 
               <!-- Escalated -->
-              <ng-container *ngIf="content.status.toLowerCase() === 'escalated'">
+              <ng-container *ngIf="content.status.val.toLowerCase() === 'escalated'">
                 <div class="usa-width-one-third">
                   <div><strong>Escalated By</strong></div>
                   <div>{{content.escalatedTo}}</div>
@@ -111,7 +111,7 @@
               </ng-container>
 
               <!-- Rejected -->
-              <ng-container *ngIf="content.status.toLowerCase() === 'rejected'">
+              <ng-container *ngIf="content.status.val.toLowerCase() === 'rejected'">
                 <div class="usa-width-one-third">
                   <div><strong>Rejected By</strong></div>
                   <div>---</div>
@@ -127,7 +127,7 @@
               </ng-container>
 
               <!-- Approved -->
-              <ng-container *ngIf="content.status.toLowerCase() === 'approved'">
+              <ng-container *ngIf="content.status.val.toLowerCase() === 'approved'">
                 <div class="usa-width-one-third">
                   <div><strong>Approved By</strong></div>
                   <div>{{content.updatedBy}}</div>
@@ -170,7 +170,7 @@
               </section>
             </sam-accordion-section>
           </sam-accordion>
-          <sam-accordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
+          <sam-accordion *ngIf='content.status.val.toLowerCase() === "approved"' class="details-accordion">
             <sam-accordion-section [name]="'details'" [headerText]="'Details'">
               <div class="usa-grid-full">
                 <div class="usa-width-one-third">

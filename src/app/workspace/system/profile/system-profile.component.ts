@@ -33,6 +33,7 @@ export class SystemProfileComponent {
       email: 'Enter a valid email address',
     },
 
+    systemCount: 1,
     search: {
       duns: '',
       users: ''
@@ -49,6 +50,7 @@ export class SystemProfileComponent {
     gov: true,
     system: false,
     cancel: '/workspace',
+    deactivate: '/workspace',
     submitted: false,
     edit: false,
     loading: false,
@@ -118,6 +120,10 @@ export class SystemProfileComponent {
       this.api.iam.system.account.get((accounts) => {
         if(accounts.length) {
           this.states.cancel = '/workspace/system';
+
+          if(accounts.length > 1) {
+            this.states.deactivate = '/workspace/system';
+          }
         }
       });
 
@@ -312,8 +318,8 @@ export class SystemProfileComponent {
 
       this.reconfirmModal.closeModal();
 
-      // Refresh System Account Profile
-      window.location.reload();
+      // Redirect to either /workspace or /workspace/system (accounts.length > 1)
+      this.router.navigate([this.states.deactivate]);
     }, (error) => {
       this.alert('error', error.message);
 

@@ -38,7 +38,9 @@
   </div>
   <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.assistanceListings || toggleControl.award">
     <div class="usa-width-one-half" *ngIf="toggleControl.assistanceListings">
-      <workspace-widget [isExpand]="configObj[2]['assistanceListings'].isExpand" [title]="'Assistance Listings'" (onToggleChange)="toggleHelpDetail('assistanceListings',$event, 2)"></workspace-widget>
+      <workspace-widget [isExpand]="configObj[2]['assistanceListings'].isExpand" [title]="'Assistance Listings'" (onToggleChange)="toggleHelpDetail('assistanceListings',$event, 2)">
+        <assistance-listing-widget></assistance-listing-widget>
+      </workspace-widget>
     </div>
     <div class="usa-width-one-half" *ngIf="toggleControl.award">
       <workspace-widget [isExpand]="configObj[2]['award'].isExpand" [title]="'Award'" (onToggleChange)="toggleHelpDetail('award',$event, 2)"></workspace-widget>

@@ -65,8 +65,8 @@ export class FALFormService {
   submitFAL(programId: string, data: {}) {
     return this.programService.submitProgram(programId, data, FALFormService.getAuthenticationCookie());
   }
-  rejectFAL(programId: string, data: {}) {
-    return this.programService.rejectProgram(programId, data, FALFormService.getAuthenticationCookie());
+  falWFRequestTypeProgram(programId: string, data: {}, workflowRequestType: string) {
+    return this.programService.falWFRequestTypeProgram(programId, data, FALFormService.getAuthenticationCookie(), workflowRequestType);
   }
   getSubmitReason(programId: string) {
     return this.programService.getReasons(programId,FALFormService.getAuthenticationCookie());

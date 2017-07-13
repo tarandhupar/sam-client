@@ -15,7 +15,7 @@ export class RequestAccessResolve implements Resolve<any> {
   }
 
   resolve(route: ActivatedRouteSnapshot) {
-    let rid = route.queryParams['request'];
+    let rid = route.queryParams['request'] || route.params['requestId'];
 
     if (!rid) {
       return Observable.of(null);
@@ -24,7 +24,7 @@ export class RequestAccessResolve implements Resolve<any> {
     return this.accessService.getPendingRequestById(rid)
       .catch(() => {
         this.footerAlerts.registerFooterAlert({
-          description: "The request ID was not found or there was an error with a required service.",
+          description: "There was an error with a required service.",
           type: 'error',
           timer: 3200,
         });

@@ -54,8 +54,14 @@
       </a>
       <div class="sam-ui divider"></div>
     </ng-container>
-
-   <fal-error-display [validationErrors]="reviewErrorList"></fal-error-display>
+   
+   <sam-status-banner [type]="'warning'" *ngIf="checkForErrors()">
+      <div leading-content>{{statusBannerLeadingText}}</div>
+      <div main-content>
+        <fal-error-display [validationErrors]="reviewErrorList" (message)="updateBannerText($event)"></fal-error-display>
+      </div>
+    </sam-status-banner>
+    
     <!-- Alerts -->
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
@@ -1063,20 +1069,33 @@
 
       <div class="sam-ui hidden section divider"></div>
       <div *ngIf="toggleButton" class="sam-ui section divider"></div>
-      <div class="sticky-element" sticky-element>
-        <sam-button *ngIf="toggleButton" [buttonText]="buttonText"
-                    (onClick)="onButtonClick($event)"
+      <div *ngIf="historyElement" class="sticky-element" sticky-element [element]="historySection">
+        <ng-container  *ngFor="let text of buttonText; let i=index;">
+        <sam-button *ngIf="toggleButton" [buttonText]="text"
+                    (onClick)="onButtonClick(text)"
                     [buttonType]="(!enableDisableBtn ? 'default' : 'disabled')"></sam-button>
+        </ng-container>
 
       </div>
     </section>
 
     <!--History Section-->
-    <section id="program-history" *ngIf="historicalIndex">
-      <a name="#/programs/{{programID}}/review#history"></a>
-      <h2 class="sam-ui header" id="history">History</h2>
-      <sam-history [data]="history"></sam-history>
-
+    <section #historySection id="program-history" class="program-history" *ngIf="historicalIndex">
+      <a name="#/programs/{{programID}}/view#history"></a>
+      <div><h2 class="sam-ui header header-history" id="history">{{actionHistoryAndNote && !publicHistoryIsVisible ? "Action History" : "History"}}</h2>
+        <sam-checkbox
+          class="checkbox-history"
+          *ngIf="actionHistoryAndNote"
+          [(model)]="checkboxModel"
+          [name]="checkboxConfig.name"
+          [options]="checkboxConfig.options"
+          (modelChange)="showHidePublicHistory($event)">
+        </sam-checkbox></div>
+      <div *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">This history is only visible to managers of this listing</div>
+      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Created By: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}<b> On: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "None" }}</div>
+      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Last Submitted By: </b>{{ actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "None" }} <b>On: </b>{{ actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "None" }}</div>
+      <sam-history *ngIf="publicHistoryIsVisible" [data]="history"></sam-history>
+      <sam-history *ngIf="!publicHistoryIsVisible" [data]="actionHistoryAndNote"></sam-history>
     </section>
 
     <div class="sam-ui hidden section divider"></div>

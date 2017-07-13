@@ -73,11 +73,13 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
               </span>
             </li>
             <li>
-              <span class="sam-ui mini label">
-                {{data._type=='wdSCA' ? 'SCA Wage Determination': 'DBA Wage Determination'}}
-              </span>
+              <span class="sam-ui mini label">Wage Determination</span>
             </li>
-            <li class="wd-revision-number">
+            <li class="wd-revision-number" *ngIf="data._type=='wdDBRA'">
+              <strong>Modification #</strong><br>
+              <span>{{ data.revisionNumber }}</span>
+            </li>
+             <li class="wd-revision-number" *ngIf="data._type=='wdSCA'">
               <strong>Revision #</strong><br>
               <span>{{ data.revisionNumber }}</span>
             </li>
@@ -92,7 +94,9 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
             </li>
             <li class="wd-construction-types" *ngIf="data._type=='wdDBRA'">
               <strong>Construction Type</strong><br>
-              <span>{{ data.constructionTypes }}</span>
+              <span *ngFor="let conType of data.constructionTypes; let isLast=last">
+                {{conType}}{{ isLast ? '':', '}}
+              </span>
             </li>
             <li class="wd-date">
               <ng-container *ngIf="data._type=='wdDBRA'">

@@ -186,4 +186,15 @@ $usa-btn-big-width:     4.5rem;
   .secondary.menu{
     margin-top: 0px;
   }
+  .usa-form-hint-showmore-toggler{
+    display:block;
+    text-align:right;
+    max-width: 46rem;
+    a{
+      &:hover{
+        cursor:pointer;
+      }
+    }
+  }
 }
+

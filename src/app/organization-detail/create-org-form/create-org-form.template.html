@@ -3,9 +3,16 @@
     <h2 class="p_T-3x" *ngIf="isCreateMode()">Create New {{orgType}}</h2>
     <p class="p_T-3x" *ngIf="isCreateMode()">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
+      <sam-label-wrapper class="usa-width-one-whole m_B-2x" [label]="'Sub-Tier Name'" [name]="'Sub Tier Name'" *ngIf="!isCreateMode()">
+        <span>{{ parentName}}</span>
+      </sam-label-wrapper>
       <sam-text #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></sam-text>
       <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
-        <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date' [value]="startDateInitVal"></sam-date>
+        <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date' [value]="startDateInitVal" *ngIf="isCreateMode()"></sam-date>
+        <span *ngIf="!isCreateMode()">{{startDateInitVal}}</span>
+      </sam-label-wrapper>
+      <sam-label-wrapper #orgEndDateWrapper class="usa-width-one-half" [label]="'End Date'" [name]="'end-date'">
+        <sam-date (valueChange)="setOrgEndDate($event)" [label]="''" name='end-date' [value]="endDateInitVal"></sam-date>
       </sam-label-wrapper>
       <sam-text-area #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></sam-text-area>
       <sam-text #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></sam-text>

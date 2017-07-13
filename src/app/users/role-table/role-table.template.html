@@ -1,4 +1,4 @@
-<table class="role-table">
+<!--<table class="role-table">
   <thead>
     <th>Organization</th>
     <th>Domain</th>
@@ -18,9 +18,61 @@
       </td>
     </tr>
   </tbody>
-</table>
+</table>-->
 
 <!-- Delete role modal -->
-<sam-modal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+<!--<sam-modal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
   <p>Are you sure you want to delete this role from the user&apos;s profile? This action cannot be undone.</p>
-</sam-modal>
+</sam-modal>-->
+
+<div class = "usa-grid-full m-l-1em">
+  <div class = "usa-width-one-half pd-l-1d8em">
+    <b>Organization</b>
+  </div>
+  <div class = "usa-grid-full usa-width-one-half">
+    <div class = "usa-width-one-half">
+      <b>Domain</b>
+    </div>
+    <div class = "usa-width-one-half">
+      <b>Role</b>
+    </div>
+  </div>
+</div>
+<div>  
+  <div *ngFor = "let role of roles">
+    <div class = "usa-grid-full m-l-1em pd-tb-0d5em" [ngClass] = "role.testFlag ? 'role-border' : ''" >
+      <div class = "usa-width-one-half pd-l-0d5em">      
+        <div *ngIf = "role.organization">
+          <span (click) = "clickfuncPerm(role)"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i></span>
+          &nbsp;&nbsp;{{role.organization}}
+        </div>
+        <div *ngIf = "!role.organization">
+          <span (click) = "clickfuncPerm(role)"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i></span>
+        <i>&nbsp;&nbsp;Organization name unavailable</i>
+        </div>
+      </div>      
+      <div class = "usa-width-one-half">
+        <div class = "usa-width-one-half">
+          {{role.domain}}
+        </div>
+        <div class = "usa-width-one-half">
+          <span class = "pull-left">{{role.role}}</span><div *ngIf = "isAdmin"><span class = "pull-right pd-r-1em"><i class="fa fa-pencil" aria-hidden="true" [routerLink]="role.path" [queryParams]="role.queryParams"></i></span></div>
+        </div>
+      </div>
+    </div>    
+  
+  <div class = "usa-grid-full perm-border" *ngIf = "role.testFlag">
+    <h4 class="pd-l-1d1em text-lighter">OBJECTS AND PERMISSIONS</h4>
+      <div class = "pd-l-1d3em">
+        <div *ngFor = "let func of role.funcperm">
+          <div class = "usa-width-one-third"><i>{{func.function.val}}</i></div>
+          <div class = "usa-width-two-thirds">
+            <span *ngFor = "let perm of func.permission; let isLast = last">
+                {{perm.val}} {{isLast ? '' : ', '}}
+            </span>              
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+</div>

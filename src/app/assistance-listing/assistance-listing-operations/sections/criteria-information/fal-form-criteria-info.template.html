@@ -7,19 +7,16 @@
     ></samCheckboxToggledTextarea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
-  <sam-list-display [newValue]="appNGModel" formControlName="appListDisplay"
-                    (ngModelChange)="applicantTypeChange($event)" (modelChange)="applicantlistChange()"
-                    [config]="appAutocompleteConfig">
-      <sam-autocomplete #appauto [options]="applicantTypeOptions"
-                        [name]="applicantTypes-control"
-                        formControlName="applicantType"
-                        [(ngModel)]="appNGModel"
-                        [config]="appAutocompleteConfig"
-                        [required]="true"
-                        [labelText]="'Applicant Eligibility'"
-                        [hint]="applicantEligibilityHint"
-                        [control]="falCriteriaForm.controls['appListDisplay']"></sam-autocomplete>
-  </sam-list-display>
+  <sam-autocomplete-multiselect
+    [options]="applicantTypeOptions"
+    [name]="'applicantTypes-control'"
+    formControlName="applicantType"
+    [control]="falCriteriaForm.controls['applicantType']"
+    [keyValueConfig]="appAutocompleteConfig.keyValueConfig"
+    [required]="true"
+    [label]="'Applicant Eligibility'"
+    [hint]="applicantEligibilityHint">
+  </sam-autocomplete-multiselect>
   <sam-text-area
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
@@ -35,19 +32,15 @@
     [hint]="beneficiaryEligibilityHint"
     (modelChange)="chkSameAsApp($event)"></sam-checkbox>
   <div [hidden]="toggleBenSection">
-    <sam-list-display [newValue]="benNGModel" formControlName="benListDisplay"
-                      (ngModelChange)="benTypeChange($event)" (modelChange)="benlistChange()"
-                      [config]="benAutocompleteConfig">
-        <sam-autocomplete
-          [options]="benTypeOptions"
-          [name]="benificiaryTypes-control"
-          formControlName="benType"
-          [(ngModel)]="benNGModel"
-          [config]="benAutocompleteConfig"
-          [required]="true"
-          [labelText]="'Beneficiary Eligibility'"
-          [control]="falCriteriaForm.controls['benListDisplay']"></sam-autocomplete>
-    </sam-list-display>
+    <sam-autocomplete-multiselect
+      [options]="benTypeOptions"
+      [name]="'benificiaryTypes-control'"
+      formControlName="benType"
+      [control]="falCriteriaForm.controls['benType']"
+      [keyValueConfig]="benAutocompleteConfig.keyValueConfig"
+      [required]="true"
+      [label]="'Beneficiary Eligibility'">
+    </sam-autocomplete-multiselect>
     <sam-text-area
       [control]="falCriteriaForm.controls['benDesc']"
       [name]="'beneficiary-description-input'"
@@ -80,19 +73,16 @@
       formControlName="awardedDesc"></sam-text-area>
   </div>
   <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
-  <sam-list-display  [newValue]="assUsageNGModel" formControlName="assListDisplay"
-                     (ngModelChange)="assUsageTypeChange($event)" (modelChange)="assUsagelistChange()" [config]="assUsageAutocompleteConfig">
-      <sam-autocomplete
-        [options]="assUsageTypeOptions"
-        [name]="assUsageTypes-control"
-        formControlName="assUsageType"
-        [(ngModel)]="assUsageNGModel"
-        [config]="assUsageAutocompleteConfig"
-        [required]="true"
-        [labelText]="'Use of Assistance'"
-        [hint]="useOfAssistanceHint"
-        [control]="falCriteriaForm.controls['assListDisplay']"></sam-autocomplete>
-  </sam-list-display>
+  <sam-autocomplete-multiselect
+      [options]="assUsageTypeOptions"
+      [name]="'assUsageTypes-control'"
+      formControlName="assUsageType"
+      [control]="falCriteriaForm.controls['assUsageType']"
+      [keyValueConfig]="assUsageAutocompleteConfig.keyValueConfig"
+      [required]="true"
+      [label]="'Use of Assistance'"
+      [hint]="useOfAssistanceHint">
+    </sam-autocomplete-multiselect>
   <sam-text-area
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"

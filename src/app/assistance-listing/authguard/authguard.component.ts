@@ -45,6 +45,11 @@ export class AuthGuard implements CanActivate {
             this.router.navigate(['accessrestricted']);
           }
           break;
+        case 'publish':
+          if (program && program._links && !program._links['program:request:approve']) {
+            this.router.navigate(['accessrestricted']);
+          }
+          break;
         case 'addoredit':
           if (this.router.url.indexOf('add') >= 0) {
             if (program && !program['CREATE_FALS']) {
@@ -55,6 +60,11 @@ export class AuthGuard implements CanActivate {
               this.router.navigate(['accessrestricted']);
             }
           }
+          break;
+        case 'addoreditrao':
+          if (program && !program['CREATE_RAO']) {
+          this.router.navigate(['accessrestricted']);
+        }
 
           break;
       }

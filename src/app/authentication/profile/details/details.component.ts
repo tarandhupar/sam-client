@@ -642,11 +642,15 @@ export class DetailsComponent {
       key = keys[intKey];
       controlValue = controls[key] ? controls[key].value : this.user[key];
 
-      if(controlValue.toString().length) {
+      if(controlValue.toString().length || key.match(/^(initials)$/)) {
         userData[key] = controlValue;
       }
 
       switch(key) {
+        case 'initials':
+          userData[key] = userData[key].length ? userData[key] : null;
+          break;
+
         case 'workPhone':
           userData[key] = this.user.workPhone;
           break;

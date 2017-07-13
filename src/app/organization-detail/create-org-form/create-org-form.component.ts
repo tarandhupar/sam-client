@@ -32,6 +32,7 @@ export class OrgCreateForm {
 
   @ViewChild('orgName') orgName: SamTextComponent;
   @ViewChild('orgStartDateWrapper') orgStartDateWrapper: LabelWrapper;
+  @ViewChild('orgEndDateWrapper') orgEndDateWrapper: LabelWrapper;
 
   @Input() orgFormConfig:any;
   @Output() onCancelClick: EventEmitter<any> = new EventEmitter<any>();
@@ -64,6 +65,8 @@ export class OrgCreateForm {
   fullParentPath:string = "";
   fullParentPathName:string = "";
   startDateInitVal:string = "";
+  endDateInitVal:string = "";
+  parentName:string = "";
 
   reviewOrgPage:boolean = false;
   createOrgPage:boolean = true;
@@ -86,6 +89,7 @@ export class OrgCreateForm {
     this.basicInfoForm = this.builder.group({
       orgName: ['', []],
       orgStartDate: ['', [validDateTime, isRequired]],
+      orgEndDate: ['', [validDateTime]],
       orgDescription: ['', []],
       orgShortName: ['', []],
     });
@@ -101,7 +105,7 @@ export class OrgCreateForm {
     } else{
       this.orgType = this.orgFormConfig.org.type.split(" ").join('').toLowerCase();
       this.setupOrgForms(this.orgType);
-      this.populateOrgBasicForm(this.orgFormConfig.org);
+      this.populateOrgBasicForm(this.orgFormConfig.org, this.orgFormConfig.endDate);
       this.populateOrgForms(this.orgFormConfig.org);
       this.orgParentId = this.orgFormConfig.parentId;
       if(!!this.orgParentId) this.getOrgDetail(this.orgParentId);
@@ -142,6 +146,7 @@ export class OrgCreateForm {
         let orgDetail = val._embedded[0].org;
         this.fullParentPath = orgDetail.fullParentPath;
         this.fullParentPathName = orgDetail.fullParentPathName;
+        this.parentName = orgDetail.name;
       });
   }
 
@@ -175,13 +180,13 @@ export class OrgCreateForm {
     }
   }
 
-  populateOrgBasicForm(org){
+  populateOrgBasicForm(org, endDate){
     this.basicInfoForm.get("orgName").setValue(org.name);
     this.basicInfoForm.get("orgDescription").setValue(org.summary?org.summary:'');
     this.basicInfoForm.get("orgShortName").setValue(org.shortName?org.shortName:'');
 
-    this.startDateInitVal = moment(org.startDate).format('Y-M-D');
-    this.basicInfoForm.get("orgStartDate").setValue(this.startDateInitVal);
+    this.startDateInitVal = moment(endDate).format('MMM DD, YYYY');
+    this.basicInfoForm.get("orgStartDate").setValue(endDate);
 
     if(this.orgType.toLowerCase() === 'office'){
       if(org.newIsFunding){
@@ -247,6 +252,7 @@ export class OrgCreateForm {
     if(!this.isCreateMode()) this.orgObj = this.orgFormConfig.org;
     this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
     this.orgObj['startDate'] = this.basicInfoForm.get('orgStartDate').value;
+    if(this.basicInfoForm.get('orgEndDate').value !== "") this.orgObj['endDate'] = this.basicInfoForm.get('orgEndDate').value;
     this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
     this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
     let type = this.orgType.toUpperCase();
@@ -300,17 +306,20 @@ export class OrgCreateForm {
     })
   }
 
-  setOrgStartDate(val){
-    this.basicInfoForm.get('orgStartDate').setValue(val);
-  }
+  setOrgStartDate(val){this.basicInfoForm.get('orgStartDate').setValue(val);}
+  setOrgEndDate(val){this.basicInfoForm.get('orgEndDate').setValue(val);}
 
 
   onReviewFormClick(){
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
+    this.basicInfoForm.get('orgEndDate').markAsDirty();
     this.orgName.wrapper.formatErrors(this.basicInfoForm.get('orgName'));
     this.orgStartDateWrapper.formatErrors(this.basicInfoForm.get('orgStartDate'));
+    if(this.basicInfoForm.get('orgEndDate').value != ""){
+      this.orgEndDateWrapper.formatErrors(this.basicInfoForm.get('orgEndDate'));
+    }
     if(this.isAddressNeeded()){
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
@@ -410,8 +419,13 @@ export class OrgCreateForm {
     this.createOrgPage = false;
     this.reviewOrgPage = true;
     this.orgInfo = [];
+    if(!this.isCreateMode()){
+      this.orgInfo.push({des: "Department Name", value: this.fullParentPathName.split('.')[0].split('_').join(" ")});
+      this.orgInfo.push({des: "Sub-Tier Name", value: this.fullParentPathName.split('.')[1].split('_').join(" ")});
+    }
     this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
     this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
+    this.orgInfo.push({des: "End Date", value: this.basicInfoForm.get('orgEndDate').value});
     this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
     this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
   }

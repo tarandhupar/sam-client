@@ -43,6 +43,10 @@ export class SamTextRadioButtonComponent  implements ControlValueAccessor {
    */
   @Input() name: string;
   /**
+   * Sets the id attribute for the component
+   */
+  @Input() id: string;
+  /**
    * Sets the helpful text for the using the component
    */
   @Input() hint: string;

@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
+import {
+  Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams,
+  QueryEncoder
+} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Observable} from "rxjs";
 
@@ -11,8 +14,9 @@ export class WrapperService {
         "featuredSearch": "/sgs/v1/search/featured",
         "program": "/fac/v1/programs",
         "fh" : "/federalorganizations/v1",
+        "fhDetail": "/federalorganizations/v2",
         "federalHierarchy": "/federalorganizations/v1/organizations",
-        "federalCreateOrg": "/fh/v1/organization",
+        "federalCreateOrg": "/federalorganizations/v1/organization",
         "federalHierarchyActive": "/federalorganizations/v1/activeorganizations",
         "entities": "/entities",
         "exclusions": "/exclusions",
@@ -54,10 +58,13 @@ export class WrapperService {
     *      }
     * @returns Observable
     */
-    call(oApiParam: any, convertToJSON: boolean = true) {
+      call(oApiParam: any, convertToJSON: boolean = true, queryEncoder: QueryEncoder = null) {
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();
+        if (queryEncoder) {
+          oURLSearchParams = new URLSearchParams('', queryEncoder);
+        }
 
         //add Headers
         if(typeof oApiParam.headers !== undefined && typeof oApiParam.headers === "object" && oApiParam.headers !== null) {

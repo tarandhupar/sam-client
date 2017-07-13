@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from "@angular/core";
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter} from "@angular/core";
 import {FALFormService} from "../../fal-form.service";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
 import {falCustomValidatorsComponent} from "../../../validators/assistance-listing-validators";
+import {FALFormErrorService} from "../../fal-form-error.service";
 
 @Component({
   providers: [FALFormService],
@@ -14,8 +15,9 @@ import {falCustomValidatorsComponent} from "../../../validators/assistance-listi
 export class FALFormCriteriaInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public onError = new EventEmitter();
+  @Output() public showErrors = new EventEmitter();
 
-  applicantEligibilityHint:string=`<p>Please select all that apply to help public users search for this listing.</p>
+  applicantEligibilityHint: string = `<p>Please select all that apply to help public users search for this listing.</p>
                                    <p>Who can apply to the Government and what criteria must the applicants) satisfy? Include also eligibility criteria required of subgrantees. The main purpose of this section is to inform potential applicants (particularly State and local governments, U.S. Territories, and federally recognized Indian tribal governments) that they can apply for a program. Some of the terms being used in this section are “public agency,” “public organizations,” and “public bodies” if these words mean the same as city, county, and State governments, use the latter more specific words.</p>
                                    <p>Specifically, are State and local governments, private, public, profit, nonprofit organizations and institutions or individuals eligible? Since State designate Indian tribal governments are considered units of local government, indicate those programs that include or exclude these entities as units of local government because of the nature of the program. If institutions of higher education are eligible, indicate whether they must be public, private, State colleges and universities, junior or community colleges, etc. Indicate who specifically is not eligible. Certain programs involve intermediate level of application processing, i.e., applications transmitted through governmental or nongovernmental units that are neither the direct applicants to the Federal government nor the ultimate beneficiary. If this is the case, what Federal criteria or general criteria must this intermediate level applicant satisfy? Who specifically at this intermediate level is not eligible?</p>
                                    <p>The information in the Applicant Eligibility Index is based on the information recorded in this section.</p>
@@ -39,7 +41,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
                                     <p>Anyone/general public - Any person(s), without regard to specified eligibility criteria.
                                     <p>Native American Organization - Groups of Indians to include urban Indian groups, cooperatives, corporations, partnerships, and associations. Also, include Indians as a minority group.</p>`;
 
-  beneficiaryEligibilityHint:string = `<p>Please select all that apply to help public users search for this listing.</p>
+  beneficiaryEligibilityHint: string = `<p>Please select all that apply to help public users search for this listing.</p>
                                        <p>Specify who will receive the ultimate benefits from the program. Programs that provide direct assistance from a Federal agency will generally have the same applicant and beneficiary. Do not use the statement "Same as Applicant Eligibility." In cases where assistance is provided through State and local governments, the applicants and beneficiaries may be different since the assistance is transmitted to private sector beneficiaries who do not have to request or apply for the benefits.</p>
                                        <p>In order to make the entries in the Beneficiary Eligibility section of the program descriptions consistent, select the beneficiary type from the terms below and also incorporate them into the narrative of the program description:</p>
                                       <ul><li>Federal</li>
@@ -110,11 +112,11 @@ export class FALFormCriteriaInfoComponent implements OnInit {
                                       <li>Education (9-12)</li>
                                       <li>Education (13+)</li></ul>`;
 
-  timePhasingHint:string = `<p>Describe the period of time when assistance is available. Also, the period of time when funding must be spent.</p>
+  timePhasingHint: string = `<p>Describe the period of time when assistance is available. Also, the period of time when funding must be spent.</p>
                             <p>First, for what period of time is the assistance normally available? Is there a restriction placed on the time permitted to spend the money awarded? 
                             Second, how is the assistance (particularly for grant programs) awarded and/or released; as a lump sum, quarterly, by letter of credit, etc.?</p>`;
 
-  useOfAssistanceHint:string =`<p>Please select all that apply from the dropdown list.</p>
+  useOfAssistanceHint: string = `<p>Please select all that apply from the dropdown list.</p>
                                <br>
                                <p>00 - No Functional Application/Unlimited Application 42 - Higher Education (includes Research)</p> 
                                 <p>12 - Agriculture/Forestry/Fish and Game 44 - Housing</p> 
@@ -147,7 +149,6 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   assMultiArrayValues = [];
   assUsageTypeOptions = [];
   assUsageKeyValue = [];
-  assListDisplay = [];
   assUsageNGModel: any;
 
   //Awarded Dropdown
@@ -158,14 +159,12 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   appMultiArrayValues = [];
   applicantTypeOptions = [];
   applicantKeyValue = [];
-  appListDisplay = [];
   appNGModel: any;
 
   //Beneficiary Multiselect
   benMultiArrayValues = [];
   benTypeOptions = [];
   benKeyValue = [];
-  benListDisplay = [];
   benNGModel: any;
   toggleBenSection: boolean = false;
 
@@ -256,7 +255,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
   };
 
-  constructor(private fb: FormBuilder, private service: FALFormService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
   }
 
   ngOnInit() {
@@ -269,9 +268,15 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
+    });
   }
 
   parseDictionariesList(data) {
+    let assListDisplay = [];
+    let benListDisplay = [];
+    let appListDisplay = [];
     if (data['phasing_assistance'] && data['phasing_assistance'].length > 0) {
       for (let paData of data['phasing_assistance']) {
         this.awardedTypeOptions.push({value: paData.element_id, label: paData.value});
@@ -296,25 +301,22 @@ export class FALFormCriteriaInfoComponent implements OnInit {
         this.benKeyValue[btData.element_id] = btData.value;
       }
     }
-    this.populateMultiSelect(this.viewModel.appListDisplay, this.appAutocompleteConfig, this.appListDisplay, this.applicantKeyValue);
-    this.populateMultiSelect(this.viewModel.benListDisplay, this.benAutocompleteConfig, this.benListDisplay, this.benKeyValue);
-    this.populateMultiSelect(this.viewModel.assListDisplay, this.assUsageAutocompleteConfig, this.assListDisplay, this.assUsageKeyValue)
+    this.populateMultiSelect(this.viewModel.appListDisplay, this.appAutocompleteConfig, appListDisplay, this.applicantKeyValue);
+    this.populateMultiSelect(this.viewModel.benListDisplay, this.benAutocompleteConfig, benListDisplay, this.benKeyValue);
+    this.populateMultiSelect(this.viewModel.assListDisplay, this.assUsageAutocompleteConfig, assListDisplay, this.assUsageKeyValue)
     this.falCriteriaForm.patchValue({
-      appListDisplay: this.appListDisplay.length > 0 ? this.appListDisplay : [],
-      benListDisplay: this.benListDisplay.length > 0 ? this.benListDisplay : [],
-      assListDisplay: this.assListDisplay.length > 0 ? this.assListDisplay : [],
+      applicantType: appListDisplay.length > 0 ? appListDisplay : [],
+      benType: benListDisplay.length > 0 ? benListDisplay : [],
+      assUsageType: assListDisplay.length > 0 ? assListDisplay : [],
     }, {
       emitEvent: false
     });
-
     this.falCriteriaForm.valueChanges.subscribe(data => {
       this.updateViewModel(data);
-      this.collectErrors();
-
     });
   }
 
-    populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
+  populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
     if (multiTypeData && multiTypeData.length > 0) {
       for (let id of multiTypeData) {
         listDisplay.push({code: id, name: keyValueArray[id]});
@@ -326,35 +328,33 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   createForm() {
     this.falCriteriaForm = this.fb.group({
       documentation: [''],
-      appListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       applicantType: [''],
       applicantDesc: [''],
       isSameAsApplicant: [''],
       benType: [''],
-      benListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       benDesc: [''],
       lengthTimeDesc: [''],
-      awardedType: ['na', falCustomValidatorsComponent.selectRequired],
+      awardedType: ['na'],
       awardedDesc: [''],
       assUsageType: [''],
-      assListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       assUsageDesc: [''],
       usageRes: [''],
       useDisFunds: [''],
       useLoanTerms: ['']
     });
   }
+
   updateViewModel(data) {
     let appListDisplay = [];
     let benListDisplay = [];
     let assListDisplay = [];
-    for(let appList of data['appListDisplay']){
+    for(let appList of data['applicantType']){
       appListDisplay.push(appList.code);
     }
-    for(let benList of data['benListDisplay']){
+    for(let benList of data['benType']){
       benListDisplay.push(benList.code);
     }
-    for(let assList of data['assListDisplay']){
+    for(let assList of data['assUsageType']){
       assListDisplay.push(assList.code);
     }
     this.viewModel.documentation = this.saveChkToggleTextarea(data['documentation']);
@@ -371,6 +371,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     this.viewModel.usageRes = this.saveChkToggleTextarea(data['usageRes']);
     this.viewModel.useDisFunds = this.saveChkToggleTextarea(data['useDisFunds']);
     this.viewModel.useLoanTerms = this.saveChkToggleTextarea(data['useLoanTerms']);
+      this.updateErrors();
   }
 
   updateForm() {
@@ -421,7 +422,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     if (data) {
       this.toggleBenSection = true;
     }
-    this.falCriteriaForm['controls']['benListDisplay'].updateValueAndValidity();
+    this.falCriteriaForm['controls']['benType'].updateValueAndValidity();
   }
 
   applicantTypeChange(event) {
@@ -429,7 +430,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   }
 
   applicantlistChange() {
-    this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.appListDisplay);
+    //this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.appListDisplay);
   }
 
   benTypeChange(event) {
@@ -437,8 +438,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   }
 
   benlistChange() {
-
-    this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.benListDisplay);
+    //this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.benListDisplay);
   }
 
   assUsageTypeChange(event) {
@@ -493,7 +493,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     if (model && model.checkbox) {
       data.isApplicable = model.checkbox.indexOf('na') < 0;
     } else {
-      data.isApplicable = false;
+      data.isApplicable = true;
     }
     if (model && model['textarea']) {
       data.description = model['textarea'][0];
@@ -501,45 +501,30 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     return data;
   }
 
-  validateSection(){
-    this.documentationComp.markChildrenAsDirty();
-    this.usageResComp.markChildrenAsDirty();
-    this.useDisFundsComp.markChildrenAsDirty();
-    this.useLoanTermsComp.markChildrenAsDirty();
-
-    for(let key of Object.keys(this.falCriteriaForm.controls)) {
-      this.falCriteriaForm.controls[key].markAsDirty();
-      this.falCriteriaForm.controls[key].updateValueAndValidity();
-    }
-
-    //this.collectErrors();
-    if(this.formErrors.size > 0)
-      this.emitEvent();
+  private updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateControlError(this.falCriteriaForm.get('documentation'), this.errorService.validateCriteriaDocumentation().errors);
+    this.updateControlError(this.falCriteriaForm.get('applicantType'), this.errorService.validateApplicantList().errors);
+    this.updateControlError(this.falCriteriaForm.get('benType'), this.errorService.validateBeneficiaryList().errors);
+    this.updateControlError(this.falCriteriaForm.get('lengthTimeDesc'), this.errorService.validateLengthTimeDesc().errors);
+    this.updateControlError(this.falCriteriaForm.get('awardedType'), this.errorService.validateAwardedType().errors);
+    this.updateControlError(this.falCriteriaForm.get('assUsageType'), this.errorService.validateAssistanceUsageList().errors);
+    this.updateControlError(this.falCriteriaForm.get('assUsageDesc'), this.errorService.validateAssUsageDesc().errors);
+    this.updateControlError(this.falCriteriaForm.get('usageRes'), this.errorService.validateCriteriaUsageRes().errors);
+    this.updateControlError(this.falCriteriaForm.get('useDisFunds'), this.errorService.validateCriteriaUseDisFunds().errors);
+    this.updateControlError(this.falCriteriaForm.get('useLoanTerms'), this.errorService.validateCriteriaUseLoanTerms().errors);
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
-
-  private collectErrors() {
-    let size = this.formErrors.size;
-
-    for(let key in this.falCriteriaForm.controls) {
-      if(['applicantType', 'benType', 'assUsageType'].indexOf(key) == -1){
-        if(this.falCriteriaForm.controls[key].errors && this.falCriteriaForm.controls[key].dirty) {
-          this.formErrors.add(key);
-        } else {
-          this.formErrors.delete(key);
-        }
-      }
-    }
-
-    if(this.formErrors.size !== size) {
-      this.emitEvent();
-    }
+  private updateControlError(control, errors){
+    control.clearValidators();
+    control.setValidators((control) => { return control.errors });
+    control.setErrors(errors);
+    this.markAndUpdateFieldStat(control);
   }
-
-  private emitEvent() {
-    this.onError.emit({
-      formErrorArr: Array.from(this.formErrors.values()),
-      section: 'criteria-information'
+  private markAndUpdateFieldStat(control){
+    setTimeout(() => {
+      control.markAsDirty();
+      control.updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
   }
-
 }

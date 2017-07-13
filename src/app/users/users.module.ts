@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
@@ -26,6 +26,11 @@ import { RoleTable } from "./role-table/role-table.component";
 import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
 import { UserRoleDetailsResolve } from "./user-role-details.resolve";
 import { AppTemplatesModule } from "../app-templates/index";
+import { RequestAccessPage } from "./request-access/request-access.page";
+import { RoleCategoriesResolve } from "./roles-categories.resolve";
+import { ViewRequestPage } from "./view-request/view-request.page";
+import { RequestResponsePage } from "./request-response/request-response.page";
+import {RMSUserServiceImpl, SamRMSUsersServiceAutoDirective} from "./request-access/username-autocomplete.component";
 
 @NgModule({
   imports: [
@@ -34,6 +39,7 @@ import { AppTemplatesModule } from "../app-templates/index";
     RouterModule,
     HttpModule,
     FormsModule,
+    ReactiveFormsModule,
     SamUIKitModule,
     SamAPIKitModule,
     PipesModule,
@@ -55,12 +61,18 @@ import { AppTemplatesModule } from "../app-templates/index";
     UserPic,
     PendingRequestsComponent,
     RoleTable,
-    UserRoleDetailsPage
+    UserRoleDetailsPage,
+    RequestAccessPage,
+    ViewRequestPage,
+    RequestResponsePage,
+    SamRMSUsersServiceAutoDirective,
   ],
   providers: [
     AlertFooterService,
     RequestAccessResolve,
     UserRoleDetailsResolve,
+    RoleCategoriesResolve,
+    RMSUserServiceImpl,
   ],
 })
 export class UserDirectoryModule { }

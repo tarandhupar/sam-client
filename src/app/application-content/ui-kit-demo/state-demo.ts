@@ -8,9 +8,7 @@ import { LocationService } from 'api-kit/location/location.service';
 export class StateServiceImpl implements AutocompleteService {
 
 		// Location Service Demo
-
 	  locationAllStateJSON;
-
 	  locationResultModel = "";
 	  locationResultConfig = {
 	    options: []
@@ -38,9 +36,7 @@ export class StateServiceImpl implements AutocompleteService {
 		return results;
 	}
   
-  setFetchMethod(_?: any): any {
-
-  }
+  setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean): Observable<any> {
   	return this.getAllStatesJSON(val).map(o => o);

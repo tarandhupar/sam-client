@@ -1,0 +1,70 @@
+<div class="request-access-page usa-grid">
+  <div class="usa-width-three-fourths">
+    <h1 class="m_T-4x">Request Access</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2 class="p_All-2x usa-bgcolor-gray-lighter">Role Request</h2>
+
+      <!-- Orgs -->
+      <sam-agency-picker
+        formControlName="org"
+        [label]="'Organization'"
+        [multimode]="false"
+        [required]="true"
+        [searchMessage]="errors.org"
+        [orgRoot]="user.departmentID"
+        style="max-width: 400px"
+      ></sam-agency-picker>
+
+      <!-- Role -->
+      <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" [required]="true">
+        <select formControlName="role" (change)="onRoleChange()">
+          <optgroup *ngFor="let group of roleCategories" [attr.label]="group.category">
+            <option *ngFor="let option of group.options" [value]="option.value">{{option.label}}</option>
+          </optgroup>
+        </select>
+      </sam-label-wrapper>
+
+      <!-- Domain -->
+      <!-- TODO: make domain multi-select per new requirement -->
+      <!--<sam-label-wrapper [label]="'Domain'" [errorMessage]="errors.domain" [required]="true">-->
+        <!--<sam-multiselect-dropdown formControlName="domain" name="domain" [options]="domainOptions" [required]="true"></sam-multiselect-dropdown>-->
+      <!--</sam-label-wrapper>-->
+      <sam-select formControlName="domain" [errorMessage]="errors.domain" name="domain" label="Domain" [options]="domainOptions" [required]="true"></sam-select>
+
+      <!-- SuperVisor -->
+      <h2 class="usa-bgcolor-gray-lighter">Supervisor Information</h2>
+      <div class="usa-grid-full">
+        <div class="usa-width-one-half">
+          <sam-text formControlName="superName" label="Supervisor Name" name="supervisor-name" [errorMessage]="errors.superName" [required]="true"></sam-text>
+        </div>
+        <div class="usa-width-one-half">
+          <sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail" [required]="true"></sam-text>
+        </div>
+      </div>
+      <!--<div class = "usa-grid-full">-->
+        <!--<div class = "usa-width-one-half">-->
+          <!--<sam-autocomplete rmsusers [ngModelOptions]="{standalone: true}" [allowAny]="false" [(ngModel)]="userDetail" [labelText]="'Supervisor Name'" [config]="userConfig" (enterEvent)="updateUserData($event)"></sam-autocomplete>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="usa-grid-full">-->
+        <!--<div class="usa-width-one-half">-->
+          <!--<sam-text formControlName="superName" label="Supervisor Name" name="supervisor-name" [errorMessage]="errors.superName" [required]="true"></sam-text>-->
+        <!--</div>-->
+        <!--<div class="usa-width-one-half">-->
+          <!--<sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail" [required]="true"></sam-text>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!-- Cancel / Confirm -->
+      <div>
+        <div class="pull-right clearfix m_T-4x m_B-4x">
+          <button routerLink="../access" class="pull-left usa-button usa-button-outline m_0" type="button">Cancel</button>
+          <button id="done-button" class="pull-left usa-button usa-button-primary" type="submit">Done</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+

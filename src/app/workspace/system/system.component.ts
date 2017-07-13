@@ -12,6 +12,11 @@ import { IAMService } from 'api-kit';
 export class SystemComponent {
   private store = {
     title: 'System Account',
+    subscriptions: {},
+    breadcrumbs: [
+      { breadcrumb: 'Workspace', url: '/workspace' },
+    ],
+
     nav: [
       { text: 'Profile',        routerLink: ['profile'],  routerLinkActive: 'usa-current', children: [
         { text: 'System Information',       routerLink: '#system-information',       anchor: true },
@@ -25,6 +30,7 @@ export class SystemComponent {
     ],
   };
 
+  private breadcrumbs = this.store.breadcrumbs;
   private states = {
     isProfile: false,
     nav: true,
@@ -47,12 +53,17 @@ export class SystemComponent {
 
 
   ngOnInit() {
+    this.store.subscriptions['data'] = this.route.children[0].data.subscribe(data => {
+      this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
+    });
+
     this.checkRoute();
     this.checkAccess();
   }
 
   ngOnDestroy() {
-    this.store['observer'].unsubscribe();
+    this.store.subscriptions['params'].unsubscribe();
+    this.store.subscriptions['data'].unsubscribe();
   }
 
   checkRoute() {
@@ -65,7 +76,7 @@ export class SystemComponent {
   }
 
   checkAccess() {
-    this.store['observer'] = this.route.firstChild.params.subscribe(params => {
+    this.store.subscriptions['params'] = this.route.firstChild.params.subscribe(params => {
       if(params['id']) {
         this.store.nav[0]['children'][3]['hidden'] = false;
         this.store.nav[1]['hidden'] = false;

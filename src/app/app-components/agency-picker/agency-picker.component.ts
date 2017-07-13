@@ -39,6 +39,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   @Input() initial: any[] = [];
   @Input() levelLimit: number = null;
   @Input() borderless: boolean = false;
+  @Input() showToggle: boolean = false;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -137,6 +138,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   dropdownLimit = 300;
   resetIconClass:string = "usa-agency-picker-search-reset";
   touched = false;
+  toggleOpen: boolean = false;
 
   setTouched(){
     this.touched = true;
@@ -969,6 +971,10 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     this.selectedSingleOrganizationName = "";
     this.selectedOrganizations.length = 0;
     this.emitSelectedOrganizations();
+  }
+
+  toggleHint(status) {
+    this.toggleOpen = !status;
   }
 
   resetBrowse() {

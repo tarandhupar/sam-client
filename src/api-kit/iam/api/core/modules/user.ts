@@ -10,7 +10,7 @@ import {
 
 import { User } from '../user';
 
-Cookies.defaults = config.cookies;
+Cookies.defaults = config.cookies(15);
 
 function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
@@ -41,6 +41,40 @@ function getMockUserAccount() {
     ],
 
     emailNotification: false,
+
+    _links: {
+      self: {
+        href: '/comp/iam/auth/v4/session'
+      },
+
+      'system-accounts.management': {
+        href: '/comp/iam/cws/api/system-accounts',
+      },
+
+      'system-accounts.migration': {
+        href: '/comp/iam/import/system-accounts',
+      },
+
+      'fsd.profile': {
+        href: '/comp/iam/auth/v4/fsd/users/doe.john@gsa.gov',
+        templated: true,
+      },
+
+      'fsd.kba': {
+        href: '/comp/iam/kba/fsd/qa/doe.john@gsa.gov',
+        templated: true
+      },
+
+      'fsd.deactivate': {
+        href: '/comp/iam/my-details/api/fsd/doe.john@gsa.gov/deactivate',
+        templated: true
+      },
+
+      'fsd.passreset': {
+        href: '/comp/iam/password/api/fsd/doe.john@gsa.gov/passwordReset',
+        templated: true
+      }
+    }
   };
 }
 
@@ -252,7 +286,7 @@ export const user = {
 
   get($success, $error) {
     let core = this,
-        endpoint = utilities.getUrl(config.session),
+        endpoint = utilities.getUrl(config.user),
         auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
@@ -267,8 +301,8 @@ export const user = {
           .get(endpoint)
           .set(auth)
           .then(function(response) {
-            let $user: User = new User(response.body.sessionToken);
-            Cookies.set('IAMSession', response.body.sessionToken, config.cookies);
+            let $user: User = new User(response.body);
+            Cookies.set('IAMSession', response.body, config.cookies(15));
             $success($user);
           }, function(response) {
             core.$base.removeSession();
@@ -339,7 +373,7 @@ export const user = {
         .then((response) => {
           let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
 
-          Cookies.set('IAMSession', $user, config.cookies);
+          Cookies.set('IAMSession', $user, config.cookies(15));
 
           $success(response.body);
         }, $error);

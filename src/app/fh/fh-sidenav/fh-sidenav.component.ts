@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 export class FHSideNav implements OnInit{
 
   @Input() userRole:string = "superAdmin";
+  @Input() types:any = [];
   @Output() orgTypeChange:EventEmitter<any> = new EventEmitter<any>();
   @Output() orgStatusChange:EventEmitter<any> = new EventEmitter<any>();
   @Output() myOrgCbxChange:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -15,15 +16,7 @@ export class FHSideNav implements OnInit{
   prevOrgType:any = [];
   orgTypeCbxModel: any = [];
   orgTypeCbxConfig = {
-    options: [
-      {value: '1', label: 'Dep/Ind Agency (L1)', name: 'Dep/Ind Agency'},
-      {value: '2', label: 'Sub-Tier (L2)', name: 'Sub-Tier'},
-      {value: '3', label: 'Office (L3)', name: 'Office'},
-      {value: '4', label: 'Maj Command(L4)', name: 'Maj Command'},
-      {value: '5', label: 'Sub-Command 1 (L5)', name: 'Sub-Command 1'},
-      {value: '6', label: 'Sub-Command 2 (L6)', name: 'Sub-Command 2'},
-      {value: '7', label: 'Sub-Command 3 (L7)', name: 'Sub-Command 3'},
-    ],
+    options: [],
     name: 'organization type',
     label: '',
   };
@@ -41,12 +34,12 @@ export class FHSideNav implements OnInit{
 
   constructor(private router: Router, private route: ActivatedRoute){ }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.orgTypeCbxConfig.options = this.types;
+  }
 
   orgSearchTypeChange(val){
-    let selected = val.filter(e => this.prevOrgType.indexOf(e) < 0 );
-    this.orgTypeCbxModel = selected;
-    this.prevOrgType = this.orgTypeCbxModel;
+    this.orgTypeCbxModel = val;
     this.orgTypeChange.emit(this.orgTypeCbxModel);
   }
 

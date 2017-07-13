@@ -24,7 +24,7 @@ export const routes: Routes = [
       { path: 'adhoc', component: AdhocComponent },
       { path: 'favorites', component: FavoritesComponent },
       { path: 'report/:id/:name/:desc', component: ReportComponent },
-      { path: 'reportProto/:id/:name/:desc', component: ReportProtoComponent },
+      { path: 'reportProto/:id/:name/:desc/:prompts', component: ReportProtoComponent },
       { path: 'mstrProto', component: MstrProtoComponent }
     ]
   },

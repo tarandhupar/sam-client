@@ -254,7 +254,7 @@ export class AlertsPage {
       title:"The alerts service encountered an error.",
       description:"",
       type:'error',
-      timer:0
+      timer:3200
     });
   }
 

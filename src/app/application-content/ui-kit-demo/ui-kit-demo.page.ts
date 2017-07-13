@@ -17,7 +17,8 @@ import { Observable } from 'rxjs';
   ]
 })
 export class UIKitDemoPage {
-
+  samDateRangeAdvModel;
+  samDateRangeAdvModel2;
   peoplePickerOptions = [{key:'uncategorized1', value: 'Uncategorized Data'},
     {key: 'uncategorized2', value: 'More Uncategorized Data'},
     {key: 'Carlos', value: 'Carlos', category: 'people'},
@@ -79,6 +80,7 @@ export class UIKitDemoPage {
      { key: 'Splendor', value: 'Splendor', category: 'Board Games'},
      { key: 'Ticket To Ride', value: 'Ticket to Ride', category: 'Board Games'}
    ]
+   
 
    multiselectConfigSelectable = {
      keyProperty: 'key',

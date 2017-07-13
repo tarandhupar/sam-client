@@ -1,16 +1,78 @@
 import * as _ from 'lodash';
 
+export interface SectionInfo { // todo: switch to string enum
+  id: string, // one of FALSectionNames
+  status: string // 'pristine' or 'updated', maybe 'invalid' as well ?
+}
+
 //  TODO:  If view model exceeds 250 LOC, abstract out different sections to preserve readability
 export class FALFormViewModel {
   private _programId: string;
   private _fal: any;
   private _data: any;
+  private _additionalInfo: any;
   private _reason: any;
 
   constructor(fal) {
     this._fal = fal ? fal : {};
     this._data = (fal && fal.data) ? fal.data : {};
     this._programId = (fal && fal.id) ? fal.id : null;
+    this._additionalInfo = (fal && fal.additionalInfo) ? fal.additionalInfo : { sections: [] };
+  }
+
+  // todo: switch to string enum
+  // todo: figure out how to handle null/undefined/etc.
+  private getSectionInfo(id: string): SectionInfo {
+    let sectionInfo: SectionInfo = null;
+
+    if (this._additionalInfo!.sections.length > 0) {
+      for (let section of this._additionalInfo.sections) {
+        if (section.id === id) {
+          sectionInfo = section;
+          break;
+        }
+      }
+    }
+
+    return sectionInfo;
+  }
+
+  // todo: switch to string enum
+  // todo: figure out how to handle null/undefined/etc.
+  public getSectionStatus(id: string): string {
+    let existing = this.getSectionInfo(id);
+    let status = 'pristine'; // all sections are pristine by default
+
+    if (existing) {
+      status = existing.status;
+    }
+
+    return status;
+  }
+
+  // todo: switch to string enum
+  public setSectionStatus(id: string, status: string): void {
+    let existing = this.getSectionInfo(id);
+
+    if (existing) {
+      existing.status = status;
+    } else {
+      this._additionalInfo!.sections.push({
+        id: id,
+        status: status
+      });
+    }
+  }
+
+  get data() {
+    return this._data;
+  }
+
+  get dataAndAdditionalInfo() {
+    return {
+      data: this._data,
+      additionalInfo: this._additionalInfo
+    };
   }
 
   set programId(programId: string) {
@@ -67,10 +129,6 @@ export class FALFormViewModel {
 
   set title(title) {
     this._data.title = title;
-  }
-
-  get data() {
-    return this._data;
   }
 
   //overview fields

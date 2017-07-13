@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
 import {SidenavHelper} from '../app-utils/sidenav-helper';
 import {RequestLabelPipe} from "./pipes/request-label.pipe";
+import {ActionHistoryPipe} from "./pipes/action-history.pipe";
 
 @Component({
   moduleId: __filename,
@@ -26,6 +27,16 @@ import {RequestLabelPipe} from "./pipes/request-label.pipe";
   ]
 })
 export class ProgramPage implements OnInit, OnDestroy {
+  // Checkboxes Component
+  checkboxModel: any = [];
+  checkboxConfig = {
+    options: [
+      {value: 'true', label: 'Show Public History', name: 'checkbox-action-history'},
+    ],
+    name: 'show-hide-action-history'
+  };
+  publicHistoryIsVisible:boolean = true;
+  actionHistoryAndNote: any;
   programRequest: any;
   program: any;
   programID: any;
@@ -126,6 +137,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     if(this.cookieValue) {
       let userPermissionsAPISource = this.loadUserPermissions(programAPISource);
       this.loadPendingRequests(userPermissionsAPISource);
+      this.loadActionHistoryAndNote(userPermissionsAPISource);
       //TODO check if this FAL has pending request, if so switch dropdown flag and add alert to link it to CR listing page
     }
   }
@@ -424,18 +436,18 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
   private loadPendingRequests(apiSource: Observable<any>){
     let apiSubject = new ReplaySubject(1);
-    
+
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true || 
+      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
         this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
         return this.programService.getPendingRequest(this.cookieValue, this.programID);
       }
@@ -448,6 +460,37 @@ Please contact the issuing agency listed under "Contact Information" for more in
       if (res.length > 0){
         this.programRequest = res[0];
       }
+    });
+  }
+
+  private loadActionHistoryAndNote(apiSource: Observable<any>){
+    let apiSubject = new ReplaySubject(1);
+
+    // construct a stream of federal hierarchy data
+    let apiStream = apiSource.switchMap(api => {
+      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
+        return this.programService.getActionHistoryAndNote(this.cookieValue, this.programID);
+      }
+      return Observable.empty<any[]>();
+    });
+
+    apiStream.subscribe(apiSubject);
+
+    apiSubject.subscribe((res: any[]) => {
+      let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
+      actionHistoryPipe.transform(res).subscribe(array => {
+        this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
+        this.actionHistoryAndNote = array;
+      });
     });
   }
 
@@ -595,5 +638,8 @@ Please contact the issuing agency listed under "Contact Information" for more in
     } else {
       return false;
     }
+  }
+  showHidePublicHistory(event) {
+    this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
   }
 }

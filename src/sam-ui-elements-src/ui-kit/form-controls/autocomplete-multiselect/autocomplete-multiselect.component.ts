@@ -4,11 +4,43 @@ import { LabelWrapper } from '../../wrappers/label-wrapper';
 
 import { AutocompleteService } from '../autocomplete/autocomplete.service';
 
+import { trigger, state, style, transition, animate, keyframes } from '@angular/core';
+
 @Component({
   selector: 'sam-autocomplete-multiselect',
   templateUrl: 'autocomplete-multiselect.template.html',
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SamAutocompleteMultiselectComponent), multi: true}
+  ],
+  animations: [
+    trigger('dropdown', [
+      transition('void => *', [
+        animate('.15s ease-in-out', keyframes([
+          style({filter:'blur(3px)', height: '0', opacity: '0.5',  offset: 0}),
+          style({filter:'blur(0px)', height: '*', opacity: '1',  offset: 1.0})
+        ]))
+      ]),
+      transition('* => void', [
+        animate('.1s ease-out', keyframes([
+          style({height: '*', opacity: '1', offset: 0}),
+          style({height: '0', opacity: '0', offset: 1.0})
+        ]))
+      ])
+    ]),
+    trigger('label', [
+      transition('void => *', [
+        animate('.15s ease-in-out', keyframes([
+          style({transform: 'scale(0)', filter:'blur(3px)', opacity: '0.5',  offset: 0}),
+          style({transform: 'scale(1)', filter:'blur(0px)', opacity: '1',  offset: 1.0})
+        ]))
+      ]),
+      transition('* => void', [
+        animate('.1s ease-out', keyframes([
+          style({filter:'blur(0px)', opacity: '1', offset: 0}),
+          style({filter:'blur(3px)', opacity: '0', offset: 1.0})
+        ]))
+      ])
+    ])
   ]
 })
 export class SamAutocompleteMultiselectComponent implements ControlValueAccessor {
@@ -72,6 +104,19 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
    * Provides the option to allow categories to be selected
    */
   @Input() categoryIsSelectable: boolean = false;
+  /**
+   * Optional: Provides a default search string to use with service
+   * in lieu of sending an empty string. If not provided, value
+   * defaults to an empty string.
+   * 
+   * WARNING: If your service overrides or manipulates the value
+   * passed to the fetch method, providing a default search string
+   * on the component may not produce the expected results.
+   * 
+   * Example:
+   * this.autocompleteService.fetch(this.defaultSearchString, pageEnd, options)
+   */
+  @Input() defaultSearchString: string = '';
 
   public searchText: string;
 
@@ -176,6 +221,17 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   }
 
   /**
+   * Clears list when escape is pressed
+   */
+  handleEscapeEvent(event) {
+    if (event.code === 'Escape' || event.keyIdentified === 'Escape') {
+      this.clearSearch();
+      this.blurTextArea();
+    }
+
+    return event;
+  }
+  /**
    * Checks if event key code was `Enter`. If so, prevents default
    * behavior.
    *
@@ -197,13 +253,14 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
    */
   selectOnEnter(event) {
     if (event.code === 'Enter' || event.keyIdentified === 'Enter') {
-      if (event.target.value) {
-        const results = this.getResults();
-        const selectedChildIndex = this.getSelectedChildIndex(results);
+      const results = this.getResults();
+      const selectedChildIndex = this.getSelectedChildIndex(results);
 
-        this.selectItem(this.getItem());
-        this.clearSearch();
-      }
+      this.selectItem(this.getItem());
+      this.clearSearch();
+      this.blurTextArea();
+
+      this.list = [];
     }
 
     return event;
@@ -235,10 +292,13 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   handleDownArrow(event) {
     if ( event.code === 'ArrowDown' || event.keyIdentified === 'Down' ) {
       const results = this.getResults();
-      this.setSelectedChild(this.getSelectedChildIndex(results),
+      const selectedIndex = this.setSelectedChild(this.getSelectedChildIndex(results),
                                 'Down',
                                 results);
       this.updateCachingServiceIndices(this.getSelectedChildIndex(results), results.length);
+
+
+      this.resultsList.nativeElement.scrollTop = (results[selectedIndex].offsetParent.offsetParent.offsetTop + results[selectedIndex].offsetTop) - this.resultsList.nativeElement.clientTop;
     }
 
     return event;
@@ -247,10 +307,12 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   handleUpArrow(event) {
     if ( event.code === 'ArrowUp' || event.keyIdentified === 'Up' ) {
       const results = this.getResults();
-      this.setSelectedChild(this.getSelectedChildIndex(results),
+      const selectedIndex = this.setSelectedChild(this.getSelectedChildIndex(results),
                                  'Up',
                                  results);
       this.updateCachingServiceIndices(this.getSelectedChildIndex(results), results.length);
+
+      this.resultsList.nativeElement.scrollTop = (results[selectedIndex].offsetParent.offsetParent.offsetTop + results[selectedIndex].offsetTop) - this.resultsList.nativeElement.clientTop;
     }
 
     return event;
@@ -321,10 +383,9 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
     if ( event.code !== "ArrowDown" && event.code !== "ArrowUp" ) {
       this.filterOptions(this.searchText);
     }
-
     this.ref.detectChanges();
 
-    event.target.style.width = event.target.value ? this.calculateTextAreaWidth(event.target) : 'initial';
+    event.target.style.width = this.calculateTextAreaWidth(event.target);
 
     return event;
   }
@@ -341,13 +402,20 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   calculateTextAreaWidth(element: HTMLElement): string {
     // Width by default should be its `initial` value
     let widthValue = 'initial';
-
-    const totalContentWidth = this.getInternalElementWidth(this.hiddenText.nativeElement) +
-                              this.getSelectedContentWidth(element);
-
-    if (totalContentWidth > this.getParentContentWidth(element.parentElement)) {
-      widthValue = '100%';
-    }
+    let containerWidth = this.getParentContentWidth(element.parentElement);
+    let elementsWidths = this.getSelectedContentWidth(element);
+    let enteredTextWidth = this.getInternalElementWidth(this.hiddenText.nativeElement)
+    let accumulatorRow = 0;
+    let spaceLeft = containerWidth;
+    
+    elementsWidths.forEach(function(element){
+      accumulatorRow += element;
+      if(accumulatorRow > containerWidth){ accumulatorRow = element; }
+      spaceLeft = ((containerWidth - accumulatorRow) - enteredTextWidth);
+    });
+    
+    // If there is 40px left move to the next line
+    widthValue = spaceLeft - 40 > 0 ? spaceLeft+'px' : '100%';
 
     return widthValue;
   }
@@ -360,10 +428,11 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
    *
    * Returns a float of the width
    */
-  getSelectedContentWidth(element: HTMLElement): number {
+  getSelectedContentWidth(element: HTMLElement): Array<number> {    
     const elementChildren = element.parentElement.children;
 
     let width = 0;
+    let elementsWidths = [];
     // Cannot use forEach here since children is not a Javascript array
     // and its data structure does not provide forEach on its
     // prototype.
@@ -371,13 +440,12 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
       if (elementChildren[i] !== element && !elementChildren[i].classList.contains('usa-sr-only')) {
         const childStyles = window.getComputedStyle(elementChildren[i]);
         let childWidth = parseFloat(childStyles.width);
-        width += ( childWidth +
+        elementsWidths.push(( childWidth +
                    parseFloat(childStyles["margin-right"]) +
-                   parseFloat(childStyles["margin-left"]) );
+                   parseFloat(childStyles["margin-left"]) ))
       }
     }
-
-    return width;
+    return elementsWidths;
   }
 
   /**
@@ -424,71 +492,81 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   /***************************************************************
    * Logic for filtering options                                 *
    ***************************************************************/
+  fetchFromService(searchString, options, context) {
+
+    return context.service.fetch(searchString, context.cachingService.hasReachedScrollEnd(), options)
+        .subscribe(
+          (data) => { 
+            context.list = context.handleEmptyList(context.sortByCategory(data));
+            context.cachingService.updateResults(context.list);
+          },
+          (err) => {
+            const errorObject = {
+              cannotBeSelected: true
+            }
+            errorObject[context.keyValueConfig.valueProperty] = 'An error occurred.';
+            errorObject[context.keyValueConfig.subheadProperty] = 'Please try again.';
+            context.list = context.handleEmptyList(context.sortByCategory([errorObject]));
+            context.cachingService.updateResults([]);
+            return [errorObject];
+          }
+        );
+  }
   /**
    * Filters `options` by returning items in array that include the
    * search term as a substring of the objects key or value
    */
   filterOptions(searchString: string) {
     const availableCategories = [];
-    if (searchString) {
-      searchString = searchString.toLowerCase();
-      let options = null;
-      if (this.serviceOptions) {
-        options = this.serviceOptions || null;
-      }
-      if (this.service && this.options.length === 0) {
-        this.cachingService.updateSearchString(searchString);
-        if (this.cachingService.shouldUseCachedResults()) {
-          return;
-        } else {
-          clearTimeout(this.inputTimer);
-          this.inputTimer = setTimeout(this.service.fetch(searchString, this.cachingService.hasReachedScrollEnd(), options)
-                            .subscribe(
-                              (data) => { 
-                                this.list = this.handleEmptyList(this.sortByCategory(data));
-                                this.cachingService.updateResults(this.list);
-                              },
-                              (err) => {
-                                const errorObject = {
-                                  cannotBeSelected: true
-                                }
-                                errorObject[this.keyValueConfig.valueProperty] = 'An error occurred.';
-                                errorObject[this.keyValueConfig.subheadProperty] = 'Please try again.';
-                                this.list = this.handleEmptyList(this.sortByCategory([errorObject]));
-                                this.cachingService.updateResults([]);
-                                return [errorObject];
-                              }
-                            ), 400);
-          return;
-            
-        }
+    // Checks if searchString is empty
+    // If so, use defaultSearchString
+    // If value is unset, defaultSearchString
+    // is initialized to empty string
+    if (searchString === '') {
+      searchString = this.defaultSearchString;
+    }
+    // Sets strig to lowercase for case-insensitive
+    // matching in filter function.
+    searchString = searchString ? searchString.toLowerCase() : '';
+
+    let options = null;
+    if (this.serviceOptions) {
+      options = this.serviceOptions || null;
+    }
+    if (this.service && this.options.length === 0) {
+      this.cachingService.updateSearchString(searchString);
+      if (this.cachingService.shouldUseCachedResults()) {
+        return;
       } else {
-        this.list = this.options.filter((option) => {
-          if (this.categoryIsSelectable) {
-            if (option[this.keyValueConfig.categoryProperty] &&
-                option[this.keyValueConfig.categoryProperty].toLowerCase().includes(searchString) &&
-                availableCategories.indexOf(option[this.keyValueConfig.categoryProperty]) === -1
-                ) {
-              availableCategories.push(option[this.keyValueConfig.categoryProperty]);
-            }
-          }
-          if ( option[this.keyValueConfig.keyProperty].toLowerCase().includes(searchString) ||
-                option[this.keyValueConfig.valueProperty].toLowerCase().includes(searchString) ) {
-            return option;
-          }
-        });
-        this.list = this.sortByCategory(this.list);
-        if (this.categoryIsSelectable) {
-          availableCategories.forEach((category) => {
-            if (this.list.categories.indexOf(category) === -1) {
-              this.list.categories.push(category);
-            }
-          });
-        }
-        this.list = this.handleEmptyList(this.list);
+        window.clearTimeout(this.inputTimer);
+        this.inputTimer = window.setTimeout(this.fetchFromService, 250, searchString, options, this);
+        return;
+          
       }
     } else {
-      this.list = this.handleEmptyList(this.sortByCategory([]));
+      this.list = this.options.filter((option) => {
+        if (this.categoryIsSelectable) {
+          if (option[this.keyValueConfig.categoryProperty] &&
+              option[this.keyValueConfig.categoryProperty].toLowerCase().includes(searchString) &&
+              availableCategories.indexOf(option[this.keyValueConfig.categoryProperty]) === -1
+              ) {
+            availableCategories.push(option[this.keyValueConfig.categoryProperty]);
+          }
+        }
+        if ( option[this.keyValueConfig.keyProperty].toLowerCase().includes(searchString) ||
+              option[this.keyValueConfig.valueProperty].toLowerCase().includes(searchString) ) {
+          return option;
+        }
+      });
+      this.list = this.sortByCategory(this.list);
+      if (this.categoryIsSelectable) {
+        availableCategories.forEach((category) => {
+          if (this.list.categories.indexOf(category) === -1) {
+            this.list.categories.push(category);
+          }
+        });
+      }
+      this.list = this.handleEmptyList(this.list);
     }
 
     return this.list;
@@ -571,9 +649,7 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   }
 
   displayList(): boolean {
-    if (!this.searchText) {
-      return false;
-    } else if (this.list && this.list.categories) {
+    if (this.list && this.list.categories) {
       if (this.list.categories.length > 1) {
         return true;
       } else if (this.list.categories.length === 1 && (this.list[0] && this.list[0].length > 0)) {
@@ -627,6 +703,7 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
 
       this.selectItem(categoryObject);
     }
+    this.list = [];
   }
 
   /**
@@ -638,6 +715,18 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
         return item;
       }
     });
+    this.focusTextArea();
+  }
+
+  deselectItemOnEnter(event, selectedItem): void {
+    if (event.code === 'Enter' || event.keyIdentified === 'Enter') {
+      this.value = this.value.filter((item) => {
+        if (item !== selectedItem) {
+          return item;
+        }
+      });
+      this.focusTextArea();
+    }
   }
 
   /**
@@ -653,6 +742,10 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
 
   focusTextArea() {
     this.textArea.nativeElement.focus();
+  }
+
+  blurTextArea() {
+    this.textArea.nativeElement.blur();
   }
 
   checkForFocus(event) {
@@ -682,6 +775,7 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
   setDisabledState(isDisabled: boolean) {
     this.isDisabled = isDisabled;
   }
+   
 }
 
 export interface KeyValueConfig {
@@ -691,3 +785,4 @@ export interface KeyValueConfig {
   categoryProperty?: string;
   parentCategoryProperty?: string;
 }
+

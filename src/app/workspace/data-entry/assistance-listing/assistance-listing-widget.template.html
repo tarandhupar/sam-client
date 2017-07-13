@@ -1,0 +1,16 @@
+<div class="assistance-widget">
+  <div class="usa-grid">
+  <div class="usa-width-two-thirds">
+      <div *ngIf="pendingApprovalCount!=null"><span class="usa-font-lead">{{pendingApprovalCount == 0 ? '0' : pendingApprovalCount}}&nbsp;</span><span class="al-text">Pending Review Requests</span></div>
+      <div *ngIf="pendingRequestCount!=null"><span class="usa-font-lead">{{pendingRequestCount == 0 ? '0' : pendingRequestCount}}&nbsp;</span><span class="al-text">Pending Change Requests</span></div>
+      <div *ngIf="rejectedCount!=null"><span class="usa-font-lead">{{rejectedCount == 0 ? '0' : rejectedCount}}&nbsp;</span><span class="al-text">Rejected Assistance Listings</span></div>
+  </div>
+  <div class="usa-width-one-third">
+      <a *ngIf="permissions['CREATE_FALS']" class="usa-button usa-button-primary al-button" [routerLink]="['/programs/add']">Create a New Listing</a>
+      <a *ngIf="permissions['CREATE_RAO']" class="usa-button usa-button-primary al-button" [routerLink]="['/fal/myRegionalOffices']">Manage Assistance Locations</a>
+  </div>
+  </div>
+  <a class="widget-footer text-right" [routerLink]="['/fal/workspace']">
+    Assistance Listings Workspace <span class="fa fa-chevron-circle-right"></span>
+  </a>
+</div>

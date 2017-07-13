@@ -12,11 +12,13 @@ import { globals } from '../../app/globals';
 import { FavoritePipe } from './favorite.pipe';
 import * as _ from 'lodash';
 import * as Cookies from 'js-cookie';
+import { ReportService } from '../../report.service';
+import { Report } from '../../report';
 
 export const REPORTS_PER_PAGE: number = 10;
 
 @Component({
-  providers: [ IAMService, ReportsService ],
+  providers: [ IAMService, ReportsService, ReportService ],
   templateUrl: './overviewProto.template.html',
 })
 export class OverviewProtoComponent implements OnInit, AfterViewInit {
@@ -56,23 +58,10 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
   item: any = [1, false];
   API_UMBRELLA_URL: string;
   mode = 'Observable';
+  reports;
 
   constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
-                private api: IAMService, private http: Http ) {
-    /*this.http.get('src/assets/dynamicMincReports.json')
-     .map(res => res.json())
-     .subscribe(data => {
-     this.data = data;
-     this.zone.runOutsideAngular(() => {
-     this.checkSession(() => {
-     this.zone.run(() => {
-     // Callback
-     });
-     });
-     });
-     },
-     err => console.log(err),
-     () => console.log('Completed'));*/
+                private api: IAMService, private http: Http, private reportService: ReportService ) {
   }
 
   ngAfterViewInit() {
@@ -129,7 +118,7 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
     this.currentReports = this.dbReports.slice(startIndex, endIndex);
   }
   ngOnInit() {
-    this.http.get('src/assets/dynamicMincReports.json')
+  this.http.get('src/assets/dynamicMincReports.json')
       .map(res => res.json())
       .subscribe(data => {
           this.data = data;

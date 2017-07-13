@@ -21,20 +21,22 @@ export class AdministrationComponent {
     isCreate: false,
     isEdit: false,
     expanded: {
-      profile: false,
-      system: false,
       aacRequest: false,
       fh: false,
+      fsd: false,
+      profile: false,
       rm: false,
+      system: false,
     }
   };
 
   @Input() toggleControl = {
-    profile: true,
-    system: false,
     aacRequest: true,
     fh: true,
+    fsd: false,
+    profile: true,
     rm: false,
+    system: false,
   };
 
   constructor(private _router:Router,
@@ -88,6 +90,7 @@ export class AdministrationComponent {
     });
 
     this.toggleControl.system = this.api.iam.user.isSystemAccount();
+    this.toggleControl.fsd = this.api.iam.user.isFSD();
   }
 
   getAlertStatistic(type, cb:(num)=>any){

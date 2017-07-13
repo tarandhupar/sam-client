@@ -60,9 +60,8 @@ export class ReportComponent implements OnInit {
         vm.states.isSignedIn = true;
         vm.user = user;
         vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
-        ('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
-          + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0]);
-
+        ('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=4001&src=mstrWeb.4001&visMode=0&reportViewMode=1&reportSubtype=768'
+          + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0] + 'reportSubtype=768');
         cb();
       });
     }

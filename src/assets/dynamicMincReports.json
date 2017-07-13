@@ -2,7 +2,7 @@
   "development": {
     "admin":  [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -13,7 +13,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -530,7 +531,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -543,7 +544,8 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "63AAC2FE47DB4E0515AAD48BAE7C8872",
@@ -562,7 +564,7 @@
     ],
     "user": [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -573,7 +575,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -1034,7 +1037,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -1047,7 +1050,8 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       }
 
     ]
@@ -1057,7 +1061,7 @@
   "test": {
     "admin":  [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -1068,7 +1072,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -1515,7 +1520,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -1528,12 +1533,13 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       }
     ],
     "user": [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -1544,7 +1550,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -1991,7 +1998,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -2004,7 +2011,8 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       }
 
     ]
@@ -2014,7 +2022,7 @@
   "production": {
     "admin":  [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -2025,7 +2033,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -2428,7 +2437,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -2441,12 +2450,13 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       }
     ],
     "user": [
       {
-        "id": "DDDE38ED469F690E030715A1C1F06F01",
+        "id": "20E9F6044BF63128AAAA01AE1E990864",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -2457,7 +2467,8 @@
         "reportType": "Dynamic Report",
         "dataSystem": "FPDS",
         "favorite": true,
-        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level."
+        "desc": "This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.",
+        "prompts": "dateRange, fHierarchy"
       },
       {
         "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
@@ -2846,7 +2857,7 @@
         "desc": "The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level."
       },
       {
-        "id": "765653484A5BD0ECC8C0CBA42AA625E3",
+        "id": "8504AAB24B482D5B31FB368C850C1FCC",
         "isAdmin": false,
         "isUser": true,
         "isComp": true,
@@ -2859,14 +2870,9 @@
         "dataSystem": "FPDS",
         "favorite": false,
         "desc": "This report reflects the number of Unique Vendors in a given Fiscal Year.",
-        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data."
+        "verb": "This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.",
+        "prompts": "dateRange, fHierarchy"
       }
-
     ]
-
-
   }
-
-
-
 }

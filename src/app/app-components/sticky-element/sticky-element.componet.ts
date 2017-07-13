@@ -27,7 +27,7 @@ export class StickyElementComponent {
 
   makeSticky(event: any) {
     let rect;
-    let element = document.getElementById('program-history');
+    let element = this.element.nativeElement;
     let pageOffset = window.pageYOffset;
     if(element) {
       rect = element.getBoundingClientRect();

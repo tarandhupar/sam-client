@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { UserAccessService } from "../../api-kit/access/access.service";
 import {RoleMgmtSidenav} from "./rolemgmt-sidenav/rolemgmt-sidenav.component";
 import {ActivatedRouteSnapshot, ActivatedRoute} from "@angular/router";
+import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 
 @Component({
   templateUrl: './rolemgmt-workspace.page.html'
@@ -19,6 +20,11 @@ export class RoleMgmtWorkspace implements OnInit{
   currCount : number = 0;
   pendingCount: number = 0;
   escalatedCount: number = 0;
+
+  private crumbs: Array<IBreadcrumb> = [
+      { url: '/workspace', breadcrumb: 'Workspace' },      
+      { breadcrumb: 'Access Requests' }
+    ];
 
   @ViewChild('sideNav') sideNav: RoleMgmtSidenav;
 

@@ -2,10 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
-import { ExclusionService } from 'api-kit';
+import { ExclusionService, FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
 import {CapitalizePipe} from "../app-pipes/capitalize.pipe";
 import { BackToSearch } from "../app-utils/back-to-search-helper";
+import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavHelper } from "../app-utils/sidenav-helper";
+import { LocationService } from 'api-kit/location/location.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -13,6 +16,7 @@ import * as _ from 'lodash';
   templateUrl: 'exclusion.page.html',
   providers: [
     ExclusionService,
+	SidenavHelper,
 	BackToSearch
   ]
 })
@@ -22,18 +26,35 @@ export class ExclusionsPage implements OnInit, OnDestroy {
   exclusion: any;
   qParams:any = {};
   linkedObjectView: any;
+  errorExclusion: any;
+  errorLogo: any;
+  public logoUrl: any;
+  public logoInfo: any;
+  pageRoute: string;
+  selectedPage: number = 0;
+  entitySideNavContent: any;
+  sidenavModel = {
+    "label": "Exclusion",
+    "children": []
+  };
+  error;
 
   constructor(
     private activatedRoute:ActivatedRoute,
     private router: Router,
     private location: Location,
     private ExclusionService: ExclusionService,
-	private backToSearch: BackToSearch) {}
+	private fhService: FHService,
+	private sidenavHelper: SidenavHelper,
+	private sidenavService: SidenavService,
+	private backToSearch: BackToSearch,
+	private locationService: LocationService) {}
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
     this.loadExclusion();
+	this.sidenavService.updateData(this.selectedPage, 0);
 	this.qParams = this.backToSearch.setqParams();
+	this.currentUrl = this.location.path();
   }
 
    private loadExclusion() {
@@ -47,10 +68,62 @@ export class ExclusionsPage implements OnInit, OnDestroy {
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
       this.exclusion = jsonData.exclusionDetails;
+    this.fhService.getOrganizationLogo(apiSubject,
+        (logoData) => {
+          if (logoData != null) {
+            this.logoUrl = logoData.logo;
+            this.logoInfo = logoData.info;
+          } else {
+            this.errorLogo = true;
+          }
+        }, (err) => {
+          this.errorLogo = true;
+        });
+		this.pageRoute = this.currentUrl;
+		this.entitySideNavContent = {
+        "label": "Exclusion",
+        "route": this.pageRoute,
+        "children": [
+			{
+				"label": "Exclusion Details",
+				"field": "#exclusion-details",
+			},
+			{
+			  "label": "Cross References",
+			  "field": "#cross-references",
+			}
+		]
+      };
+	if(this.exclusion.classificationType == 'Vessel')
+	{
+		let vesselSideNavChildren = {
+        "label": "Vessel Details",
+        "field": "#vessel-details",
+		};
+		this.entitySideNavContent.children.unshift(vesselSideNavChildren);
+	}
+	else if(this.exclusion.classificationType == 'Individual')
+	{
+		let individualSideNavChildren = {
+        "label": "Primary Address",
+        "field": "#primary-address",
+		};
+		this.entitySideNavContent.children.unshift(individualSideNavChildren);
+	}
+	this.sidenavHelper.updateSideNav(this, false, this.entitySideNavContent);
     }, err => {
+		this.errorExclusion = true;
       console.log('Error logging', err);
     });
    }
+   
+  sidenavPathEvtHandler(data){
+    this.sidenavHelper.sidenavPathEvtHandler(this, data);
+  }
+
+  selectedItem(item){
+    this.selectedPage = this.sidenavService.getData()[0];
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

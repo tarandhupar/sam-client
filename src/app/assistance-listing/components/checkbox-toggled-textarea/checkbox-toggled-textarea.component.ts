@@ -1,11 +1,11 @@
-import { Component, Input, ViewChild, forwardRef } from "@angular/core";
+import { Component, Input, ViewChild, forwardRef, ViewChildren } from "@angular/core";
 import {
-  ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators, FormGroup,
-  AbstractControl, NG_VALIDATORS, Validator
+  ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup,
+  AbstractControl
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { OptionsType } from "sam-ui-kit/types";
-import { ValidationErrors } from "../../../app-utils/types";
+
 
 @Component({
   selector: 'samCheckboxToggledTextarea',
@@ -15,15 +15,10 @@ import { ValidationErrors } from "../../../app-utils/types";
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => SamCheckboxToggledTextareaComponent),
       multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => SamCheckboxToggledTextareaComponent),
-      multi: true
     }
   ]
 })
-export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor, Validator {
+export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor {
   public model = {
     checkbox: [],
     textarea: []
@@ -56,6 +51,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   public validationGroup: FormGroup;
   public textareaControls: FormControl[];
   @ViewChild('checkboxToggledTextareaLabel') wrapper: LabelWrapper;
+  @ViewChildren('textarea') compTextarea;
 
   constructor() { }
 
@@ -141,10 +137,6 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
     for(let i = 0; i < this.checkboxOptions.length; i++) {
       let textareaControl = new FormControl(null);
-      if(this.required || this.textareaRequired[i]) {
-        textareaControl.setValidators(Validators.required);
-        textareaControl.updateValueAndValidity();
-      }
       textareaControl.valueChanges.subscribe(value => {
         // todo: figure out why this is being called twice on population
         this.model.textarea[i] = value;
@@ -155,11 +147,11 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       this.validationGroup.addControl('textarea' + i, textareaControl);
     }
 
-    // if(this.control) {
-    //   this.control.statusChanges.subscribe(status => {
-    //     this.wrapper.formatErrors(this.control);
-    //   });
-    // }
+     if(this.control) {
+       this.control.statusChanges.subscribe(status => {
+         this.wrapper.formatErrors(this.control);
+       });
+     }
 
     this.toggleTextarea();
   }
@@ -170,79 +162,20 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
     this.onChange();
   }
 
-  public markChildrenAsDirty() {
-    for (let control in this.validationGroup.controls) {
-      this.validationGroup.controls[control].markAsDirty();
-      this.validationGroup.controls[control].updateValueAndValidity();
-    }
-  }
-
   private toggleTextarea() {
     for (let i = 0; i < this.checkboxOptions.length; i++) {
       let isChecked = this.model.checkbox.indexOf(this.checkboxOptions[i].value) >= 0;
       if (isChecked && this.showWhenCheckbox === 'checked' || !isChecked && this.showWhenCheckbox === 'unchecked') {
         this.textareaHidden[i] = false;
-        if (this.required || this.textareaRequired[i]) {
-          this.textareaControls[i].setValidators(Validators.required);
-          this.textareaControls[i].updateValueAndValidity();
-        }
       } else {
         this.textareaHidden[i] = true;
-        this.textareaControls[i].setValidators(null);
-        this.textareaControls[i].updateValueAndValidity();
       }
     }
   }
 
   private onChange() {
     let errored: AbstractControl = new FormControl();
-
-    // if(this.validateComponentLevel) {
-    //   for (let key in this.validationGroup.controls) {
-    //     if (this.validationGroup.controls.hasOwnProperty(key)) {
-    //       let control = this.validationGroup.controls[key];
-    //       if (control.invalid && control.errors) {
-    //         errored = control;
-    //         break;
-    //       }
-    //     }
-    //   }
-    //
-    //   // Magic happens here
-    //   if (errored.pristine && !this.validationGroup.pristine) {
-    //     errored.markAsDirty({onlySelf: true});
-    //     this.wrapper.formatErrors(errored);
-    //     errored.markAsPristine({onlySelf: true});
-    //   } else {
-    //     this.wrapper.formatErrors(errored);
-    //   }
-    // }
-
     this.onChangeCallback(this.model);
-  }
-
-
-  /** Validation **/
-
-  public validate(c: AbstractControl): ValidationErrors {
-    let error: ValidationErrors = {
-      required: {
-        message: ''
-      }
-    };
-
-    for (let i = 0; i < this.checkboxOptions.length; i++) {
-      if ((this.showWhenCheckbox === 'checked' && this.model.checkbox.indexOf(this.checkboxOptions[i].value) !== -1)
-          || (this.showWhenCheckbox === 'unchecked' && this.model.checkbox.indexOf(this.checkboxOptions[i].value) === -1)) {
-        if ((this.required && this.required === true) || (this.textareaRequired && this.textareaRequired[i] && this.textareaRequired[i] === true)) {
-          if (!this.model.textarea[i]) {
-            return error;
-          }
-        }
-      }
-    }
-
-    return null;
   }
 
   private onChangeCallback: any = (_: any) => {};

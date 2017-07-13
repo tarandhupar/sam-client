@@ -8,13 +8,15 @@ import { ExclusionAddress } from './exclusion-address.component.ts';
 import { ExclusionIcon } from './exclusion-icon.component.ts';
 import { ExclusionNatureEffect } from './exclusion-nature-effect-component';
 import { ExclusionCrossReference } from './exclusion-cross-reference.component.ts';
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
     BrowserModule,
     routing,
     SamUIKitModule,
-    CommonModule
+    CommonModule,
+	AppComponentsModule
   ],
   exports: [
     ExclusionsPage,

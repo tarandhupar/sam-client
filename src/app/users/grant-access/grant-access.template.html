@@ -42,13 +42,20 @@
 
     <!-- Orgs -->
     <sam-agency-picker
-      *ngIf="mode !== 'request'"
+      *ngIf="initialOrg && mode !== 'request'"
       [label]="'Organizations'"
-      [multimode]="true"
+      [multimode]="false"
       (organization)="onOrganizationsChange($event)"
       [required]="true"
       [searchMessage]="errors.org"
-      [initial]="orgs"
+      [initial]="initialOrg"
+    ></sam-agency-picker>
+    <sam-agency-picker *ngIf="!initialOrg && mode !== 'request'"
+                       [label]="'Organizations'"
+                       [multimode]="false"
+                       (organization)="onOrganizationsChange($event)"
+                       [required]="true"
+                       [searchMessage]="errors.org"
     ></sam-agency-picker>
 
     <ng-container *ngIf="objects">

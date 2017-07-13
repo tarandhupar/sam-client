@@ -16,6 +16,15 @@
     </div>
   </div>
 
+  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.fsd">
+    <workspace-widget [isExpand]="states.expanded.fsd" title="Federal Service Desk" (onToggleChange)="toggleHelpDetail('fsd')">
+      <fsd-widget></fsd-widget>
+    </workspace-widget>
+    <div class="workspace-help-detail" *ngIf="states.expanded.fsd">
+      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
+    </div>
+  </div>
+
   <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.aacRequest">
     <workspace-widget [isExpand]="states.expanded.aacRequest" title="AAC Request" (onToggleChange)="toggleHelpDetail('aacRequest')"></workspace-widget>
     <div class="workspace-help-detail" *ngIf="states.expanded.aacRequest">

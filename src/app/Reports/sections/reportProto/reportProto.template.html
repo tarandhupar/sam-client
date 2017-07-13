@@ -7,21 +7,33 @@
     <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue>
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
-          <p class="p_L-1x">Date Range</p>
-          <p class="p_L-0x">"From Date" and "To Date" correspond to the "Date Signed" on the procurement awards</p>
           <div class="display-block">
-            <sam-date name="from-date" [(ngModel)]='dateFromModel'></sam-date>
-            <sam-date name="to-date" [(ngModel)]='dateToModel'></sam-date>
+            <sam-date-range *ngIf="usedPrompts.dateRange" 
+                            [(ngModel)]='dateRange' 
+                            name='dateRange'>
+            </sam-date-range>
           </div>
-          <sam-agency-picker #agencyPicker name="agency-picker"
-                             [label]="'Search Federal Organizations'"
-                             (organization)="onOrganizationChange($event)" [(ngModel)]="agencyPickerValue">
-          </sam-agency-picker>
+          <div class="display-block">
+            <sam-agency-picker *ngIf="usedPrompts.fHierarchy" 
+                               #agencyPicker name="agency-picker"
+                               [label]="'Search Federal Organizations'"
+                               [multimode]="false"
+                               (organization)="onOrganizationChange($event)"
+                               (orgFullpath)="showFullPath($event)" 
+                               [(ngModel)]="agencyPickerValue">
+            </sam-agency-picker>
+          </div> 
           <div class="usa-width-one-fourth">
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Clear'" [buttonType]="btnType"
-                        (click)="resetParameter()"></sam-button>
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType"
-                        (click)="reportExecute()"></sam-button>
+            <sam-button [buttonId]="'defaultBtn'" 
+                        [buttonText]="'Clear'" 
+                        [buttonType]="btnType"
+                        (click)="resetParameter()">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" 
+                        [buttonText]="'Execute'" 
+                        [buttonType]="btnType"
+                        (click)="reportExecute()">
+            </sam-button>
           </div>
         </form>
       </sam-accordion-section>

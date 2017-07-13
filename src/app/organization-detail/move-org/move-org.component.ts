@@ -31,6 +31,9 @@ export class OrgMovePage {
   orgFormConfig:any;
   fhRoleModel:FHRoleModel;
 
+  level;
+  orgType:string = "";
+
   constructor(private route: ActivatedRoute,
               private _router: Router,
               private iamService: IAMService,
@@ -40,19 +43,21 @@ export class OrgMovePage {
     this.route.parent.params.subscribe(
       params => {
         this.orgKey = params['orgId'];
-        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-        this.iamService.iam.checkSession(this.checkAccess, this.checkAccess);
-        this.setupOrg(params['orgId']);
+        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
       });
   }
 
   checkAccess = (user) => {
     this.fhService.getAccess(this.orgKey).subscribe(
       (data)=> {
-        this.fhService.getOrganizationById(this.orgKey,false,true).subscribe(
+        this.fhService.getOrganizationDetail(this.orgKey).subscribe(
           val => {
             this.fhRoleModel = FHRoleModel.FromResponse(val);
-            if(!this.fhRoleModel.hasPermissionType("PUT",this.orgKey)) this.redirectToForbidden();
+            if(!this.fhRoleModel.canMoveOffice() ) {
+              this.redirectToForbidden();
+            } else {
+              this.setupOrg(this.orgKey);
+            }
           });
       },
       (error) => { if(error.status === 403) this.redirectToForbidden();}
@@ -70,9 +75,9 @@ export class OrgMovePage {
           mode: 'update',
           org: this.org
         };
-
-        this.startDate = moment(this.org.startDate).format('Y-M-D');
-        this.endDate = moment(this.org.endDate).format('Y-M-D');
+        this.level = res._embedded[0].org.level;
+        this.orgType = res._embedded[0].org.type;
+        if(!this.isMoveOffice()) this.redirectToForbidden();
         this.dataLoaded = true;
       });
   }
@@ -81,14 +86,13 @@ export class OrgMovePage {
     //check end date and new parent sub-tier
     this.agencyPickerMsg = !!this.targetParentOrg?'':'This field cannot be empty';
     this.orgEndDateWrapper.errorMessage = !!this.endDate?'':'This field cannot be empty';
-    if(this.endDate && !moment(this.endDate,'Y-M-D').isValid()){
+    if(!this.isValidEndDate()){
       this.orgEndDateWrapper.errorMessage = "Date is invalid";
     }
 
-    if(this.targetParentOrg && this.endDate && moment(this.endDate,'Y-M-D').isValid()){
+    if(this.targetParentOrg && this.isValidEndDate()){
       this.updateDetail = true;
     }
-
   }
 
   getFederalOrgName(org){
@@ -98,5 +102,22 @@ export class OrgMovePage {
 
   setOrgEndDate(endDate){
     this.endDate = endDate;
+    this.startDate = this.endDate;
+    this.orgFormConfig['endDate'] = endDate;
+  }
+
+  isMoveOffice(){
+    return this.level === 3 && this.orgType.toLowerCase() === "office";
+  }
+
+  isValidEndDate(){
+    // End date should be the date count from today to a year from today
+    if(this.endDate && moment(this.endDate,'Y-M-D').isValid()){
+      if( moment().diff(moment(this.endDate)) <= 0 &&  moment().add(1, "years").diff(moment(this.endDate)) > 0){
+        return true;
+      }
+      return false;
+    }
+    return false;
   }
 }

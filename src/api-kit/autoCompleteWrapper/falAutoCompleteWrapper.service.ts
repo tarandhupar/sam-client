@@ -70,7 +70,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
 }
 
 @Directive({
-  selector: 'sam-autocomplete[autofill-falProgram]',
+  selector: 'sam-autocomplete[autofill-falProgram],sam-autocomplete-multiselect[autofill-falProgram]',
   providers: [
     {provide: AutocompleteService, useExisting: FALProgramAutoCompleteWrapper}
   ]

@@ -5,6 +5,7 @@ import {FALFormViewModel} from "../../fal-form.model";
 import * as moment from 'moment';
 import { FALAssistSubFormComponent } from '../../../components/applying-assistance-subform/applying-assistance-subform.component';
 import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
+import { FALFormErrorService } from '../../fal-form-error.service';
 
 @Component({
   providers: [FALFormService],
@@ -16,14 +17,13 @@ export class FALAssistanceComponent implements OnInit {
 
   @ViewChild('assistSubForm') assistSubForm:FALAssistSubFormComponent;
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
+  @Output() public showErrors = new EventEmitter();
 
   progTitle: string;
   hideAddButton: boolean = false;
   assistInfoDisp: any = [];
   falAssistanceForm: FormGroup;
-  formErrorArr = [];
-  review:boolean = false;
+
   deadlineHint:string =`<p>By what date(s) or between what dates must an application be received by the Federal agency? If the deadline for submission of application is not available, a statement such as the following should be entered: Contact the headquarters (or regional office, as appropriate) for application deadlines. Where this information is not available, agencies should inform GSA as soon as possible after it becomes available. The phrase "See the Federal Register for deadline dates" is not sufficient. 
                         Specific dates must be given. If there are no deadlines, select "None."</p>`;
   addDeadlineHint: string = `List all deadlines in the application process. Enter each deadline separately.`;
@@ -61,7 +61,7 @@ export class FALAssistanceComponent implements OnInit {
 
   public selectionCriteriaOptions = [{ label: 'There are criteria for selection proposals.', value: true }];
 
-  constructor(private fb: FormBuilder, private service: FALFormService) {}
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {}
 
   ngOnInit(){
 
@@ -69,10 +69,10 @@ export class FALAssistanceComponent implements OnInit {
     this.createForm();
 
     this.falAssistanceForm.valueChanges.subscribe(data => this.updateViewModel(data));
+
     this.falAssistanceForm.get('preApplicationCoordination').get('reports').valueChanges.subscribe(data => {
       if(data.indexOf('otherRequired') !== -1) {
         this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(Validators.required);
-        this.checkControlforErrors(this.falAssistanceForm.controls['preApplicationCoordination']['controls']['description'], 'preApplicationCoordination-description');
       } else {
         this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(null);
       }
@@ -81,7 +81,6 @@ export class FALAssistanceComponent implements OnInit {
     this.falAssistanceForm.get('selectionCriteria').get('isApplicable').valueChanges.subscribe(data => {
       if(data.length > 0){
         this.falAssistanceForm.get('selectionCriteria').get('description').setValidators(Validators.required);
-        this.checkControlforErrors(this.falAssistanceForm.controls['selectionCriteria']['controls']['description'], 'selectionCriteria-description');
       }
       else {
         this.falAssistanceForm.get('selectionCriteria').get('description').setValidators(null);
@@ -92,10 +91,6 @@ export class FALAssistanceComponent implements OnInit {
 
     if (!this.viewModel.isNew) {
       this.updateForm();
-
-      setTimeout(() => {
-        this.collectErrors();
-      }, 30);
     }
   }
 
@@ -182,7 +177,9 @@ export class FALAssistanceComponent implements OnInit {
     this.viewModel.renewalInterval = (data.renewal.interval == 'na' ? null : data.renewal.interval);
     this.viewModel.renewalDesc = data.renewal.description || null;
 
-    this.collectErrors();
+    setTimeout(() => {
+      this.updateErrors();
+    });
   }
 
   updateForm() {
@@ -245,6 +242,10 @@ export class FALAssistanceComponent implements OnInit {
      }
      }, {
       emitEvent: false
+    });
+
+    setTimeout(() => {
+      this.updateErrors();
     });
 
   }
@@ -313,62 +314,35 @@ export class FALAssistanceComponent implements OnInit {
     }
   }
 
-  public validateSection() {
+  private updateErrors() {
 
-    this.review = true;
+    this.errorService.viewModel = this.viewModel;
 
-    //mark all controls as dirty
-    for (let control in this.falAssistanceForm.controls) {
-      this.falAssistanceForm.controls[control].markAsDirty();
-      this.falAssistanceForm.controls[control].updateValueAndValidity();
+    this.updateControlError(this.falAssistanceForm.get('deadlines').get('flag'), this.errorService.validateDeadlinesFlag().errors);
+    this.updateControlError(this.falAssistanceForm.get('preApplicationCoordination').get('description'), this.errorService.validatePreAppCoordAddInfo().errors);
+    this.updateControlError(this.falAssistanceForm.get('selectionCriteria').get('description'), this.errorService.validateSelCritDescription().errors);
+    this.updateControlError(this.falAssistanceForm.get('awardProcedure').get('description'), this.errorService.validateAwardProcDescription().errors);
+    this.updateControlError(this.falAssistanceForm.get('approval').get('interval'), this.errorService.validateApprovalInterval().errors);
+    this.updateControlError(this.falAssistanceForm.get('renewal').get('interval'), this.errorService.validateRenewalInterval().errors);
+    this.updateControlError(this.falAssistanceForm.get('appeal').get('interval'), this.errorService.validateAppealInterval().errors);
 
-      for (let subControl in this.falAssistanceForm.controls[control]['controls']) {
-        this.falAssistanceForm.controls[control]['controls'][subControl].markAsDirty();
-        this.falAssistanceForm.controls[control]['controls'][subControl].updateValueAndValidity();
-      }
-    }
 
-    if(this.formErrorArr.length > 0)
-      this.emitEvent();
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  collectErrors(){
-
-    for (let key of Object.keys(this.falAssistanceForm.controls)) {
-      this.checkControlforErrors(this.falAssistanceForm.controls[key], key);
-
-      for (let subKey of Object.keys(this.falAssistanceForm.controls[key]['controls'])) {
-        this.checkControlforErrors(this.falAssistanceForm.controls[key]['controls'][subKey], key + '-' + subKey);
-      }
-    }
+  private updateControlError(control, errors){
+    control.clearValidators();
+    control.setValidators((control) => { return control.errors });
+    control.setErrors(errors);
+    this.markAndUpdateFieldStat(control);
   }
 
-  checkControlforErrors(control, key){
-
-    let len = this.formErrorArr.length;
-    let index = this.formErrorArr.indexOf(key);
-
-    if(control.errors){
-      if(index == -1) {
-        this.formErrorArr.push(key);
-      }
-    }
-    else {
-      if(index > -1) {
-        this.formErrorArr.splice(index, 1);
-      }
-    }
-
-    if(len !== this.formErrorArr.length && this.review){
-      this.emitEvent();
-    }
-  }
-
-  emitEvent(){
-
-    this.onError.emit({
-      formErrorArr: this.formErrorArr,
-      section: 'applying-for-assistance'
+  private markAndUpdateFieldStat(control){
+    setTimeout(() => {
+      control.markAsDirty();
+      control.updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
+
   }
+
 }

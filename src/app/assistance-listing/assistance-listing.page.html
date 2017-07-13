@@ -990,11 +990,24 @@
     </section>
 
     <!--History Section-->
-    <section id="program-history" *ngIf="historicalIndex">
+    <section class="program-history" *ngIf="historicalIndex">
       <a name="#/programs/{{programID}}/view#history"></a>
-      <h2 class="sam-ui header" id="history">History</h2>
-      <sam-history [data]="history"></sam-history>
+      <div class = "sam-ui header"><h2 class="sam-ui header header-history" id="history">{{actionHistoryAndNote && !publicHistoryIsVisible ? "Action History" : "History"}}</h2>
+      <sam-checkbox
+        class="checkbox-history"
+        *ngIf="actionHistoryAndNote"
+        [(model)]="checkboxModel"
+        [name]="checkboxConfig.name"
+        [options]="checkboxConfig.options"
+        (modelChange)="showHidePublicHistory($event)">
+      </sam-checkbox></div>
+      <div *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">This history is only visible to managers of this listing</div>
+      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Created By: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}<b> On: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "None" }}</div>
+      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Last Submitted By: </b>{{ actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "None" }} <b>On: </b>{{ actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "None" }}</div>
+      <sam-history *ngIf="publicHistoryIsVisible" [data]="history"></sam-history>
+      <sam-history *ngIf="!publicHistoryIsVisible" [data]="actionHistoryAndNote"></sam-history>
     </section>
+
 
     <div class="sam-ui hidden section divider"></div>
 

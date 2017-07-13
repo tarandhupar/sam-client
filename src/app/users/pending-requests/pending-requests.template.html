@@ -1,38 +1,26 @@
 <div class="pending-requests">
-  <div class="usa-alert usa-alert-warning  m_T-0">
-    <div class="usa-alert-body">
-      <div class="usa-alert-heading clearfix m_T-0">
-        <h3 class="pull-left">{{requests.length}} request{{requests.length > 2 ? 's' : ''}} {{requests.length > 2 ? 'are' : 'is'}} pending</h3>
-        <div class="pull-right"><button (click)="onCaretClick()" class="usa-button usa-button-transparent show-hide-button"><i class="fa fa-chevron-down"></i></button></div>
+  <div class="usa-alert usa-alert-info request-border req-width m_T-0 m-b-04">
+    <div class = "usa-alert-body">
+      <div class = "usa-alert-heading m_T-0">
+        <h3 class = "text-alignm pull-left">{{requests.length}} Request{{requests.length > 1 ? 's' : ''}} {{requests.length > 1 ? 'are' : 'is'}} pending</h3>
+        <div *ngIf = "requests.length > 1">
+          <div class="pull-right"><span (click)="onCaretClick()"><i class="fa " [ngClass] = "areRequestsVisible ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i></span></div>
+        </div>
       </div>
-      <div class="usa-alert-text" *ngIf="areRequestsVisible">
-        <div class="requests-container">
-          <div class="request-block" *ngFor="let req of requests; let i = index">
-            <div class="usa-grid-full">
-              <!-- Details Column -->
-              <div class="usa-width-five-sixths">
-                <div class="usa-grid-full">
-                  <div class="usa-width-one-fourth">
-                    <div><strong>Domain</strong></div>
-                    <div class="m_T-2x"><span>{{req.domain}}</span></div>
-                  </div>
-                  <div class="usa-width-one-fourth">
-                    <div><strong>Date Requested</strong></div>
-                    <div class="m_T-2x"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
-                  </div>
-                  <div class="usa-width-one-half">
-                    <div><strong>Message</strong></div>
-                    <div class="m_T-2x"><span>{{trimRequest(req.requestorMessage)}}</span></div>
-                  </div>
-                </div>
-              </div>
-              <!-- Cancel -->
-              <div class="usa-width-one-sixth clearfix" *ngIf="!hideCancel">
-                <button class="usa-button-transparent pull-right" (click)="onCancelRequestClick(req, i)">
-                  <a class="no-underline"><i class="fa fa-close"></i>&nbsp;Cancel</a>
-                </button>
-              </div>
-            </div>
+    </div>
+  </div>
+  <div *ngFor = "let request of requests">
+    <div class = "request-border" *ngIf = "areRequestsVisible">
+      <div class = "usa-grid-full request-content">
+        <div class = "usa-width-three-fourths pd-l-1em">
+          {{request.role ? request.role.val : 'Unspecified Role Assocaited'}} for {{request.domain ? request.domain.val  : 'Unspecified Domain'}} at the {{request.organization ? request.organization.val : 'Unspecified Organization'}}
+        </div>
+        <div class = "usa-width-one-fourth">
+          <div class = "usa-width-one-half">
+            {{request.createdDate | dateFormat: 'MMM DD, YYYY'}}
+          </div>
+          <div class = "usa-width-one-half">
+            <a [routerLink]="[hideCancel ? '/access-requests/' + request.id + '/respond' : '/access-requests/' + request.id ]">{{request.status.val}}</a>
           </div>
         </div>
       </div>

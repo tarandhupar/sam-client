@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, Input, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {Location} from '@angular/common';
 import * as Cookies from 'js-cookie';
@@ -19,6 +19,7 @@ import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.s
 import {FALFormErrorService} from "../../fal-form-error.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {RequestLabelPipe} from "../../../pipes/request-label.pipe";
+import {ActionHistoryPipe} from "../../../pipes/action-history.pipe";
 
 
 @Component({
@@ -35,7 +36,18 @@ import {RequestLabelPipe} from "../../../pipes/request-label.pipe";
   ]
 })
 export class FALReviewComponent implements OnInit, OnDestroy {
+  // Checkboxes Component
+  checkboxModel: any = [];
+  checkboxConfig = {
+    options: [
+      {value: 'true', label: 'Show Public History', name: 'checkbox-action-history'},
+    ],
+    name: 'show-hide-action-history'
+  };
+  publicHistoryIsVisible:boolean = true;
+  actionHistoryAndNote: any;
   @Input() viewModel: FALFormViewModel;
+  @ViewChild('historySection') historySection: ElementRef;
   programRequest: any;
   program: any;
   programID: any;
@@ -59,17 +71,16 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   private gotoPage;
   pageRoute: string;
   pageFragment: string;
-  buttonText: string;
+  buttonText: any[] = [];
   toggleButton: boolean = false;
   enableDisableBtn: boolean = false;
+  historyElement: any;
   sidenavModel = {
     "label": "AL",
     "children": []
   };
-  roles = [];
   roleFalg: boolean = false;
   qParams: any;
-  element: any;
   reviewErrorList = {};
   @ViewChild('deleteModal') deleteModal;
   modalConfig = {title: 'Delete Draft AL', description: ''};
@@ -89,8 +100,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   private federalHierarchySub: Subscription;
   private historicalIndexSub: Subscription;
   private relatedProgramsSub: Subscription;
-  private rolesSub: Subscription;
   private reasonSub: Subscription;
+  private statusBannerLeadingText;
 
   @ViewChild('editModal') editModal;
   notifySuccessFooterAlertModel = {
@@ -118,7 +129,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
               private dictionaryService: DictionaryService,
               private service: FALFormService,
               private alertFooterService: AlertFooterService,
-              private errorService: FALFormErrorService) {
+              private errorService: FALFormErrorService, private el: ElementRef) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -156,11 +167,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     if (this.cookieValue) {
       let userPermissionsAPISource = this.loadUserPermissions(programAPISource);
       this.loadPendingRequests(userPermissionsAPISource);
+      this.loadActionHistoryAndNote(userPermissionsAPISource);
     }
-
-  }
-
-  ngAfterViewChecked() {
 
   }
 
@@ -193,9 +201,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
     if (this.reasonSub) {
       this.reasonSub.unsubscribe();
-    }
-    if (this.rolesSub) {
-      this.rolesSub.unsubscribe();
     }
   }
 
@@ -285,21 +290,26 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     this.errorService.viewModel = this.viewModel;
     this.errorService.initFALErrors();
     let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
-    this.reviewErrorList = this.errorService.errors;
+    this.reviewErrorList = this.errorService.applicableErrors;
     if (program._links) {
       if (program._links['program:submit']) {
-        this.buttonText = 'Submit';
-        this.toggleButton = true;
+        this.toggleButtonTextOnPermissions('Submit', true);
         this.enableDisableButtons(errorFlag);
-      } else if (program._links['program:request:reject']) {
-        this.buttonText = 'Reject';
-        this.toggleButton = true;
+      } else if (program._links['program:request:reject'] || program._links['program:request:approve']) {
+        if (program._links['program:request:reject'])
+          this.toggleButtonTextOnPermissions('Reject', true);
+        if (program._links['program:request:approve'])
+          this.toggleButtonTextOnPermissions('Publish', true);
       } else if (program._links['program:notify:coordinator']) {
-        this.buttonText = 'Notify Agency Coordinator';
-        this.toggleButton = true;
+        this.toggleButtonTextOnPermissions('Notify Agency Coordinator', true);
         this.enableDisableButtons(errorFlag);
       }
     }
+  }
+
+  toggleButtonTextOnPermissions(buttonText: string, toggleFlag: boolean) {
+    this.buttonText.push(buttonText);
+    this.toggleButton = toggleFlag;
   }
 
   enableDisableButtons(errorFlag: boolean) {
@@ -395,7 +405,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         }
       });
       this.history = _.sortBy(this.history, ['index']);
-      this.element = document.getElementById("program-history");
+      setTimeout(() => {
+        this.historyElement = document.getElementById('program-history');
+      });
     });
 
     return historicalIndexStream;
@@ -471,7 +483,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
     document.body.scrollTop = 0;
   }
 
-  private loadUserPermissions(apiSource: Observable<any>){
+  private loadUserPermissions(apiSource: Observable<any>) {
     let apiSubject = new ReplaySubject(1);
 
     let apiStream = apiSource.switchMap(api => {
@@ -487,20 +499,20 @@ Please contact the issuing agency listed under "Contact Information" for more in
     return apiSubject;
   }
 
-  private loadPendingRequests(apiSource: Observable<any>){
+  private loadPendingRequests(apiSource: Observable<any>) {
     let apiSubject = new ReplaySubject(1);
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true || 
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true || 
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true || 
+      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
         this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
         return this.programService.getPendingRequest(this.cookieValue, this.programID);
       }
@@ -510,14 +522,46 @@ Please contact the issuing agency listed under "Contact Information" for more in
     apiStream.subscribe(apiSubject);
 
     apiSubject.subscribe((res: any[]) => {
-      if (res.length > 0){
+      if (res.length > 0) {
         this.programRequest = res[0];
       }
     });
   }
 
+  private loadActionHistoryAndNote(apiSource: Observable<any>){
+    let apiSubject = new ReplaySubject(1);
+
+    // construct a stream of federal hierarchy data
+    let apiStream = apiSource.switchMap(api => {
+      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
+        return this.programService.getActionHistoryAndNote(this.cookieValue, this.programID);
+      }
+      return Observable.empty<any[]>();
+    });
+
+    apiStream.subscribe(apiSubject);
+
+    apiSubject.subscribe((res: any[]) => {
+      let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
+      actionHistoryPipe.transform(res).subscribe(array => {
+        this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
+        this.actionHistoryAndNote = array;
+      });
+    });
+  }
+  
+
   public onChangeRequestSelect(event) {
-    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type='+event.value);
+    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type=' + event.value);
   }
 
   public canEdit() {
@@ -645,24 +689,29 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   pendingAlert() {
-    this.rolesSub = this.programService.getPermissions(this.cookieValue, 'ROLES').subscribe(res => {
-      if (res && res.ROLES && res.ROLES.length > 0) {
-        this.roles = res.ROLES;
-        if (this.program && this.program._links && this.program._links['program:request:action:submit'] && this.program._links['program:request:action:submit'].href) {
-          let href = this.program._links['program:request:action:submit'].href;
-          this.getReasons(href.substring(href.lastIndexOf("/") + 1), this.roles);
-        }
-      }
-    });
+    let href = '';
+    if (this.program && this.program._links && this.program._links['program:request:action:submit'] && this.program._links['program:request:action:submit'].href) {
+      href = this.program._links['program:request:action:submit'].href;
+      this.getReasons(href.substring(href.lastIndexOf("/") + 1), 'submit');
+    } else if (this.program && this.program._links && this.program._links['program:request:action:review'] && this.program._links['program:request:action:review'].href) {
+      href = this.program._links['program:request:action:review'].href;
+      this.getReasons(href.substring(href.lastIndexOf("/") + 1), 'review');
+    }
   }
 
-  getReasons(programId: any, roles: any) {
+  getReasons(programId: any, roleType: string) {
+    //roleType: roleType is to distinguish the roles to show two different pending messages based on logged in user that can be done by submit and review link
+    //(
+    //submit link: present means you logged in as 'AGENCY ADMINISTRATOR' || 'AGENCY SUBMITTER'
+    //review link: present means you logged in as OMB ANALYST' || 'OMB ADMINISTRATOR' || 'CFDASUPERUSER' 'CFDALIMITEDSUPERUSER'
+    //)
+
     this.reasonSub = this.programService.getReasons(programId, this.cookieValue).subscribe(res => {
       let reason = res.reason;
       if (this.cookieValue) {
 
         // show alert if viewing pending version with having Agency Submitters, Agency Coordinators, superuser and limiteduser
-        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && ((roles && roles.length > 0) && (roles[0] === 'AGENCY ADMINISTRATOR' || roles[0] === 'AGENCY SUBMITTER'))) {
+        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && roleType === 'submit') {
           let pendingAgencyAlertDesc = `This assistance listing is pending review/approval. Changes cannot be made at this time. Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + `.` +
             `<br><br><b>Submission Comment</b> <br>` + reason;
           let pendingAgencyAlert = {
@@ -676,8 +725,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
           this.alerts.push(pendingAgencyAlert);
         }
         // show alert if viewing pending version with having OMB Reviewers, superuser and limiteduser
-        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && ((roles && roles.length > 0) && (this.roles[0] === 'OMB ANALYST' || this.roles[0] === 'OMB ADMINISTRATOR'
-          || roles[0] === 'CFDASUPERUSER' || roles[0] === 'CFDALIMITEDSUPERUSER'))) {
+        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && roleType === 'review') {
           let pendingOMBAlertDesc = `This Assistance Listing revision is pending publication. The Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + ` unless you extend the review period, reject the Assistance Listing, or manually publish the Assistance Listing.
             You can use the buttons below to perform any one of the aforementioned actions.<br><br><b>Submission Comment</b><br>` + reason;
           let pendingOMBAlert = {
@@ -706,14 +754,17 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   onButtonClick(event) {
-    if (this.program._links) {
-      if (this.program._links['program:submit']) {
+    if (event) {
+      if (event === 'Submit') {
         let url = '/programs/' + this.program.id + '/submit';
         this.router.navigateByUrl(url);
-      } else if (this.program._links['program:request:reject']) {
+      } else if (event === 'Reject') {
         let url = '/programs/' + this.program.id + '/reject';
         this.router.navigateByUrl(url);
-      } else if (this.program._links['program:notify:coordinator']) {
+      } else if (event === 'Publish') {
+        let url = '/programs/' + this.program.id + '/publish';
+        this.router.navigateByUrl(url);
+      } else if (event === 'Notify Agency Coordinator') {
         this.notifyAgencyCoordinator();
       }
     }
@@ -729,5 +780,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
           console.error('error sending notification', error);
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyErrorFooterAlertModel)));
         });
+  }
+
+  showHidePublicHistory(event) {
+    this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
+  }
+
+  updateBannerText(msg){
+    this.statusBannerLeadingText = msg;
+  }
+  checkForErrors(){
+    return FALFormErrorService.hasErrors(this.errorService.errors);
   }
 }

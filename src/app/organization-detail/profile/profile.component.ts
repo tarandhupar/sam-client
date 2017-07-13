@@ -35,8 +35,10 @@ export class OrgDetailProfilePage {
   editedShortname:string = "";
   editedEndDate:string = "";
 
-  noneDodHierarchy = ["Department", "Agency", "Office"];
-  dodHierarchy = ["Department", "Agency", "Major Command", "Sub Command", "Office"];
+  noneDodHierarchy = ["Dept/Ind Agency", "Sub-Tier", "Office"];
+  dodHierarchy = ["Dept/Ind Agency", "Sub-Tier", "Maj Command", "Sub-Command 1", "Sub-Command 2","Sub-Command 3", "Office"];
+  adminTypeMap = {"Dept/Ind Agency":"Department", "Sub-Tier":"Agency", "Maj Command":"Office", "Sub-Command 1":"Office", "Sub-Command 2":"Office","Sub-Command 3":"Office", "Office":"Office"};
+  createTypeMap = {"Dept/Ind Agency":"Department", "Sub-Tier":"Agency", "Maj Command":"MajCommand", "Sub-Command 1":"SubCommand", "Sub-Command 2":"SubCommand","Sub-Command 3":"SubCommand", "Office":"Office"};
 
   selectConfig = {
     options:[],
@@ -61,8 +63,7 @@ export class OrgDetailProfilePage {
       params => {
         this.orgId = params['orgId'];
 
-        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-        this.iamService.iam.checkSession(this.checkAccess, this.checkAccess);
+        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
 
       });
   }
@@ -84,7 +85,7 @@ export class OrgDetailProfilePage {
 
   getOrgDetail = (orgId) => {
     this.isDataAvailable = false;
-    this.fhService.getOrganizationById(orgId,false,true).subscribe(
+    this.fhService.getOrganizationDetail(orgId).subscribe(
       val => {
         this.fhRoleModel = FHRoleModel.FromResponse(val);
         this.orgObj = val._embedded[0].org;
@@ -92,7 +93,6 @@ export class OrgDetailProfilePage {
         this.orgTypes = val._embedded[0].orgTypes;
         this.getSubLayerTypes();
         this.isDataAvailable = true;
-
       });
   };
 
@@ -181,7 +181,7 @@ export class OrgDetailProfilePage {
     this.editedShortname = shortName;
     this.editedEndDate = endDateStr;
 
-    if(org.type === "OFFICE"){
+    if(org.type.toLowerCase() === "office"){
       let fundingStrs = [];
       if(org.newIsFunding) fundingStrs.push("Funding");
       if(org.newIsAward) fundingStrs.push("Award");
@@ -198,11 +198,11 @@ export class OrgDetailProfilePage {
         this.orgCodes.push({code:"AAC Code", value:this.getOrgFieldData(org,"aacCode")});
         this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
         break;
-      case "AGENCY": case "MAJOR COMMAND": case "SUB COMMAND":
+      case "AGENCY": case "Sub-Tier": case "Maj Command": case "Sub-Command 1": case "Sub-Command 2": case "Sub-Command 3":
       this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
       this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
       break;
-      case "DEPARTMENT":
+      case "DEPARTMENT": case "Dept/Ind Agency":
         this.orgCodes.push({code:"TAS-2 Code", value:this.getOrgFieldData(org,"tas2Code")});
         this.orgCodes.push({code:"TAS-3 Code", value:this.getOrgFieldData(org,"tas3Code")});
         this.orgCodes.push({code:"A-11 Code", value:this.getOrgFieldData(org,"a11TacCode")});
@@ -225,7 +225,7 @@ export class OrgDetailProfilePage {
   }
 
   setCurrentHierarchyType(type){
-    this.currentHierarchyType = this.capitalizeFirstLetter(type);
+    this.currentHierarchyType = type;
   }
 
   setCUrrentHierarchyLevel(level){
@@ -275,39 +275,17 @@ export class OrgDetailProfilePage {
     let curHierarchyType = this.currentHierarchyType;
     let subLayers = [];
     let index = curHierarchy.indexOf(curHierarchyType);
-    let subCommandIndex = 0;
-    if(curHierarchyType === "Sub Command"){
-      subCommandIndex = this.currentHierarchyLevel - this.subCommandBaseLevel + 1;
-      if(subCommandIndex < 3){
-        let nextSubCommand = "Sub Command "+(subCommandIndex+1);
-        subLayers.push({value: 'SubCommand', label: nextSubCommand, name: nextSubCommand});
 
-      }
-    }else{
-      switch (this.currentHierarchyType) {
-        case "Department":
-          if(this.fhRoleModel.hasPermissionType("POST",'Agency')){
-            subLayers.push({value: 'Agency', label: 'Sub-Tier', name: 'Sub-Tier'});
-          }
-          break;
-        case "Agency":
-          if(this.fhRoleModel.hasPermissionType("POST",'Office')) {
-            if(this.isDoD()) subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
-          }
-          break;
-        case "Major Command":
-          if(this.fhRoleModel.hasPermissionType("POST",'Office')) {
-            subLayers.push({value: 'SubCommand', label: 'Sub Command 1', name: 'Sub Command 1'});
-          }
-          break;
-        default:
-          break;
+    if( index < curHierarchy.length - 1){
+      if(this.fhRoleModel.hasPermissionType("POST",this.adminTypeMap[curHierarchy[index + 1]])) {
+        subLayers.push({value: this.createTypeMap[curHierarchy[index + 1]], label: curHierarchy[index + 1], name: curHierarchy[index + 1]});
       }
     }
 
-    if(curHierarchyType !== "Office" && curHierarchyType !== "Department" && this.fhRoleModel.hasPermissionType("POST",'Office')){
+    if( index !== 0 && index < curHierarchy.length - 2 && this.fhRoleModel.hasPermissionType("POST",'Office')){
       subLayers.push({value: 'Office', label: 'Office', name: 'Office'});
     }
+
 
     this.selectConfig.options = subLayers;
     return subLayers;
@@ -338,7 +316,7 @@ export class OrgDetailProfilePage {
 
   dismissMoveOrgFlashAlert(){
     this.flashMsgService.hideFlashMsg();
-    // this.flashMsgService.resetFlags();
+    this.flashMsgService.resetFlags();
   }
 
   dismissCreateOrgInfoAlert(){

@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
+import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 
 @Component({
   selector : 'role-sidenav',
@@ -20,6 +21,11 @@ export class RoleSideNav implements OnInit{
     private filters = {
       domains: { options: [ ], value: [] },
     };
+
+    private crumbs: Array<IBreadcrumb> = [
+      { url: '/workspace', breadcrumb: 'Workspace' },
+      { breadcrumb: 'Definitions' }
+    ];
 
     ngOnInit() {
       this.determinePath();

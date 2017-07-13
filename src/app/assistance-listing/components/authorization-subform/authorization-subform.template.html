@@ -1,4 +1,4 @@
-<span class="usa-input-error-message" *ngIf="formErrorArr['authorizations'] && review"><sup>*</sup>You must add at least one authorization.</span>
+<span class="usa-input-error-message" *ngIf="authInfo.length == 0"><sup>*</sup>You must add at least one authorization.</span>
 <sam-button buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">

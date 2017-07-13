@@ -12,7 +12,6 @@ import { falCustomValidatorsComponent } from '../../validators/assistance-listin
 export class FALAuthSubFormComponent {
 
   @Input() hideAddButton: boolean;
-  @Input() formErrorArr: any = {};
   @Output() public authActionHandler = new EventEmitter();
 
   falAuthSubForm: FormGroup;
@@ -20,9 +19,6 @@ export class FALAuthSubFormComponent {
   authInfo=[];
   mode:string;
   subFormLabel:string;
-  review:boolean = false;
-
-  //errorExists:boolean = false;
 
   checkboxConfig = {
     options: [
@@ -115,11 +111,6 @@ export class FALAuthSubFormComponent {
 
     control.at(index).patchValue({authorizationId:uuid});
 
-    if(this.review) {
-      control.at(index)['controls'].authType.markAsDirty();
-      control.at(index)['controls'].authType.updateValueAndValidity();
-    }
-
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
 
@@ -133,6 +124,9 @@ export class FALAuthSubFormComponent {
   }
 
   onSubFormCancelClick(i: number){
+    if(this.hideAddButton === false) {
+      return; // clicking cancel has no effect if nothing is being edited or added
+    }
 
     if(this.mode == 'Add'){
       this.removeAuth(i);

@@ -1,14 +1,14 @@
 import { Routes, RouterModule } from '@angular/router';
 
 import { WorkspacePage } from "./workspace.page";
+import { FSDComponent, FSDGuard } from './fsd';
 import { SystemComponent, SystemGuard } from './system';
 
-import { IsAdminResolve } from "../application-content/403/admin.resolve";
 import { AdminLevelResolve } from "../application-content/403/admin-level.resolve";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
-import { DeptAdminGuard } from "../application-content/403/dept-admin.guard";
 
-import SystemRoutes from './system/system.routes';
+import FSDRouter from './fsd/fsd.route';
+import SystemRouter from './system/system.route';
 
 export const routes: Routes = [
   { path: 'workspace',
@@ -17,11 +17,18 @@ export const routes: Routes = [
     resolve: { adminLevel: AdminLevelResolve },
   },
   {
+    path: 'workspace/fsd',
+    component: FSDComponent,
+    canActivate: [ IsLoggedInGuard, FSDGuard ],
+    canActivateChild: [ IsLoggedInGuard, FSDGuard ],
+    children: FSDRouter,
+  },
+  {
     path: 'workspace/system',
     component: SystemComponent,
     canActivate: [ IsLoggedInGuard, SystemGuard ],
     canActivateChild: [ IsLoggedInGuard, SystemGuard ],
-    children: SystemRoutes
+    children: SystemRouter,
   },
 ];
 

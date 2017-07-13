@@ -1,5 +1,6 @@
-import { AbstractControl } from "@angular/forms";
+import {AbstractControl, FormControl} from "@angular/forms";
 import { ValidationErrors } from "../../app-utils/types";
+
 export class falCustomValidatorsComponent {
 
   constructor(){}
@@ -31,12 +32,74 @@ export class falCustomValidatorsComponent {
     return flag;
   }
 
+  static isProgramNumberInTheRange(rangeLow, rangeHigh){
+    let programRangeError = {message: "Program number not in the range: "+rangeLow+" - "+rangeHigh};
+    return (control) => {
+      let flag = falCustomValidatorsComponent.threeDigitNumberCheck(control);
+      if(flag == null) {
+        if(control.value < rangeLow || control.value > rangeHigh){
+          flag = {isProgramInTheRange: programRangeError};
+        }
+      }
+      else{
+        flag.threeDigitNumberCheck = {message:"Please enter a three digit number."};
+      }
+      return flag;
+    }
+  }
+
+  static isProgramNumberUnique(programService, cfdaCode, id, cookie ) {
+    return (control) => {
+      const q = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          let programNum = cfdaCode+'.'+control.value;
+          programService.isProgramNumberUnique(programNum, id, cookie).subscribe(res => {
+            if(!res['content']['isProgramNumberUnique']) {
+              resolve({'duplicateProgram': true});
+            } else {
+              resolve(null);
+            }
+          });
+        }, 1000);
+      });
+      return q;
+    }
+  }
+
+  static threeDigitNumberCheck(control){
+    let flag = null;
+    if (!control.value && control.value.length == 0) {
+      flag = {
+        required: true
+      };
+    }else if(control.value.length != 3 || isNaN(control.value)){
+      flag = {threeDigitNumberCheck: true};
+    }
+    return flag;
+  }
+
   static atLeastOneEntryCheck(control){
     let flag = null;
     if(control.value.length == 0){
       flag = {atLeastOneEntryCheck: true};
     }
     return flag;
+  }
+
+  static checkForDifferentTitle(title){
+    let titleError = {message:"Please select a different title"};
+    return (control) => {
+      let flag = falCustomValidatorsComponent.atLeastOneEntryCheck(control);
+      if(flag == null) {
+        if (control.value.toUpperCase().trim() === title.toUpperCase().trim()) {
+          flag = {checkForDifferentValue: titleError};
+        }
+      } else{
+        flag.atLeastOneEntryCheck = {message:"Title cannot be empty"};
+      }
+
+      return flag;
+    }
   }
 
   static radioButtonRequired(control: AbstractControl): ValidationErrors | null {
@@ -62,7 +125,7 @@ export class falCustomValidatorsComponent {
 
     return null;
   };
-  
+
   static checkforThe(control) {
     let flag = null;
     let val = control.value.toLowerCase();

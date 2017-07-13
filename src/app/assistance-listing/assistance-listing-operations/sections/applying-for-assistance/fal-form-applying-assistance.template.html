@@ -11,6 +11,7 @@
                       [required]="true"
                       [hint]="deadlineHint"
                       formControlName="flag"
+                      [attr.id] = "'fal-appForAssist-deadline'"
                       [control]="falAssistanceForm.get('deadlines').get('flag')"
     ></sam-radio-button>
 
@@ -38,6 +39,7 @@
                  [name]="'preAppCord-checkbox'"
                  [hint]="'Select all that apply'"
                  [options]="preAppCordOptions"
+                 [attr.id] = "'fal-appForAssist-pac-checkbox'"
                  formControlName="reports"
     ></sam-checkbox>
 
@@ -119,7 +121,7 @@
     <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
                 [label]="'Renewals'"
                 [hint]="renewalHint"
-                [name]="'approval-input'"
+                [name]="'renewal-input'"
                 [options]="dateRangeOptions"
                 [required]="true"
                 formControlName="interval"

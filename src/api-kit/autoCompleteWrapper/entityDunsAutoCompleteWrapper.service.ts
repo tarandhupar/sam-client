@@ -9,9 +9,10 @@ import { Observable, ReplaySubject } from "rxjs";
 @Injectable()
 export class DunsEntityAutoCompleteWrapper implements AutocompleteService {
   private target = "search";
-  autocompleteIndex = "";
-  constructor(private oSearchService:SearchDictionariesService) {}
+  private defaultResultSubscription;
+  public autocompleteIndex = "";
 
+  constructor(private oSearchService: SearchDictionariesService) {}
 
   getEntityDuns(q: string): ReplaySubject<any> {
     const results = new ReplaySubject();
@@ -34,14 +35,14 @@ export class DunsEntityAutoCompleteWrapper implements AutocompleteService {
   }
 
   fetch(val: string, pageEnd, options): Observable<any> {
-    if(val.length > 2) {
+    if (val.length > 2) {
       return this.getEntityDuns(val).map(o => o);
     } else {
-      return Observable.of([]);
+      return Observable.of([]).map(o => o);
     }
   }
 
-  setFetchMethod(newVal){
+  setFetchMethod(newVal) {
     this.target = newVal;
   }
 }

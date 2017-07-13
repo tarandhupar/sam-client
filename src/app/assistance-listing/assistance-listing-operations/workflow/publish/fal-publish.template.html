@@ -1,0 +1,23 @@
+<div class="usa-grid-full" *ngIf="data">
+  <sam-alert [attr.id]="publishAlertConfig.id" [type]="publishAlertConfig.type"
+             [title]="publishAlertConfig.title" [description]="publishAlertConfig.description">
+  </sam-alert>
+  <form [formGroup]="falPublishForm">
+    <br>
+    <h2>{{title}}</h2>
+    <div>Agency User Comment: {{submitReason}}</div>
+    <sam-text-area
+      [control]="falPublishForm.controls['ombComment']"
+      [name]="'ombrmo-input'"
+      [label]="'OMB/RMO Comment'"
+      [required]="true"
+      formControlName="ombComment"
+    ></sam-text-area>
+    <div class="usa-width-one-half">
+      <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Publish" (onClick)="onPublishClick($event)"
+                  [buttonType]="(!falPublishForm.valid ? 'disabled' : 'default')"></sam-button>
+    </div>
+  </form>
+</div>
+

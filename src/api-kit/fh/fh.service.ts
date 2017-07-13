@@ -23,6 +23,23 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
+
+  getAccess(orgKey:string, toJson?: boolean) {
+    toJson = toJson || false;
+
+    let apiOptions: any = {
+      name: 'fh',
+      suffix: '/admin/checkAccess',
+      method: 'GET',
+      oParam: {}
+    };
+
+    if(orgKey !== ""){
+      apiOptions.oParam['orgKey'] = orgKey;
+    }
+    return this.callApi(apiOptions, toJson);
+  }
+
   //gets organization with heirarchy data
   getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
     var oApiParam = {
@@ -52,19 +69,29 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
-  getAccess(orgKey:string, toJson?: boolean) {
-    toJson = toJson || false;
+  getOrganizationsByIds(ids: string) {
+    var oApiParam = {
+      name: 'federalHierarchy',
+      suffix: '',
+      oParam: {
+        'orgKey': ids,
+        'sort': 'name',
+        'mode': 'slim'
+      },
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
 
-    let apiOptions: any = {
-      name: 'fh',
-      suffix: '/admin/checkAccess/' + orgKey + '/',
-      method: 'GET',
-      oParam: {}
+  getOrganizationDetail(id: string){
+    var oApiParam = {
+      name: 'fhDetail',
+      suffix: '/organizations/'+id,
+      oParam: {},
+      method: 'GET'
     };
 
-    //
-    // return this.callApi(apiOptions, toJson);
-    return Observable.of({});
+    return this.callApi(oApiParam, true);
   }
 
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
@@ -118,18 +145,19 @@ export class FHService {
       oParam: {}
     };
     if(status !== 'active') oApiParam.oParam['status'] = status;
-    return this.oAPIService.call(oApiParam);
+    return this.callApi(oApiParam, true);
   }
 
-  getDepartmentAdminLanding(status:string, orgId:string){
+  getDepartmentAdminLanding(status:string){
+
     let oApiParam = {
-      name: 'federalHierarchyActive',
-      suffix: '/hierarchy/'+orgId,
+      name: 'fh',
+      suffix: '/myOrganizations',
       method: 'GET',
-      oParam: {type:'agency'}
+      oParam: {}
     };
     if(status !== 'active') oApiParam.oParam['status'] = status;
-    return this.oAPIService.call(oApiParam);
+    return this.callApi(oApiParam, true);
   }
 
   search(oData) {
@@ -182,11 +210,11 @@ export class FHService {
         'fullparentpathname': fullParentPathName
       }
     }
-    return this.fhAPIService.call(apiOptions);
+    return this.callApi(apiOptions, false);
 
   }
 
-  fhSearch(q:string, pageNum, pageSize, status, orgType){
+  fhSearch(q:string, pageNum, pageSize, status, levels, orgType){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search',
@@ -195,19 +223,18 @@ export class FHService {
         'q':q,
         'pageNum':pageNum,
         'pageSize':pageSize,
-        'orderBy': 'orgKey',
+        'orderBy': 'level',
         'ascending': 'asc',
       }
     };
     if(status.length === 1) apiOptions.oParam['status']= status[0];
-    if(orgType.length > 0) {
-      apiOptions.oParam['exclusive']= true;
-      apiOptions.oParam['depth']= orgType[0];
+    if(levels.length > 0) {
+      apiOptions.oParam['levels']= levels.join(',');
     }
     return this.oAPIService.call(apiOptions);
   }
 
-  fhSearchCount(q:string, searchType, status, orgType){
+  fhSearchCount(q:string, searchType, status, levels, orgType){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search/count',
@@ -218,9 +245,8 @@ export class FHService {
       }
     };
     if(status.length === 1) apiOptions.oParam['status']= status[0];
-    if(orgType.length > 0) {
-      apiOptions.oParam['exclusive']= true;
-      apiOptions.oParam['depth']= orgType[0];
+    if(levels.length > 0) {
+      apiOptions.oParam['levels']= levels.join('.');
     }
     return this.oAPIService.call(apiOptions);
   }
@@ -231,6 +257,17 @@ export class FHService {
     }else {
       return Observable.of({});
     }
+  }
+
+  getSearchFilterTypes(){
+    let apiOptions: any = {
+      name: 'federalHierarchy',
+      suffix: '/type',
+      method: 'GET',
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions,true);
   }
 
   addAuthHeader(options) {
@@ -249,7 +286,7 @@ export class FHService {
     return this.oAPIService
       .call(oApiParam, convertToJSON)
       .catch(res => {
-        if (res.status === 401 || res.status === 403) {
+        if (res.status === 401) {
           this.router.navigate(['/signin']);
         }
         return Observable.throw(res);

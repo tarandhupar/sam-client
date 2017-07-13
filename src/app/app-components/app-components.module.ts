@@ -45,6 +45,8 @@ import { StickyElementComponent } from "./sticky-element/sticky-element.componet
 import { SamKBAComponent } from './kba/kba.component';
 import { SamPasswordComponent } from './password/password.component';
 import { SamUserDirectoryComponent } from './user-directory/user-directory.component';
+import { SamDateRangeFilterComponent } from './sam-date-range-filter/sam-date-range-filter.component';
+import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/request-access/username-autocomplete.component.ts';
 
 /**
  * A module for reusable SAM Web Design components
@@ -88,6 +90,8 @@ import { SamUserDirectoryComponent } from './user-directory/user-directory.compo
     SamKBAComponent,
     SamPasswordComponent,
     SamUserDirectoryComponent,
+    SamDateRangeFilterComponent,
+    //SamRMSUsersServiceAutoDirective,
   ],
   imports: [
     BrowserModule,
@@ -135,6 +139,7 @@ import { SamUserDirectoryComponent } from './user-directory/user-directory.compo
     SamKBAComponent,
     SamPasswordComponent,
     SamUserDirectoryComponent,
+    SamDateRangeFilterComponent,
   ],
   providers: [
     SamFeedbackComponent,
@@ -143,6 +148,7 @@ import { SamUserDirectoryComponent } from './user-directory/user-directory.compo
     CityServiceImpl,
     AlertFooterService,
     FeedbackFormService,
+    //RMSUserServiceImpl,
   ]
 })
 export class AppComponentsModule { }

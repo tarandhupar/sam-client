@@ -2,7 +2,8 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import * as moment from 'moment/moment';
 import { Router } from '@angular/router';
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
-//import {RAOFormService} from "../regional-assistance-operations/regional-assistance-form.service";
+import {RAOFormService} from "../regional-assistance-operations/regional-assistance-form.service";
+import {AlertFooterService} from "../../../alerts/alert-footer/alert-footer.service";
 
 @Component({
   moduleId: __filename,
@@ -18,6 +19,14 @@ export class RegionalAssistanceLocationResult implements OnInit {
   randomColor: string;
   @ViewChild("modal1") modal1;
 
+  // deletion alert obj
+  deleteFooterAlertModel = {
+    title: "Success",
+    description: "Successfully Deleted.",
+    type: "success",
+    timer: 3000
+  };
+
   statusCodeBgColor = [
     '#2e8540',
     '#cd2026',
@@ -29,7 +38,7 @@ export class RegionalAssistanceLocationResult implements OnInit {
       "name": "fal-change-request",
       "disabled": false,
       options: [
-        {label: "Choose An Action", value:"Choose An Action", name:"Choose An Action", disabled:"false"},
+        {label: "Choose An Action", value:"Choose An Action", name:"Choose An Action"},
         {label: "Update", value:"Update", name:"Update"},
         {label: "Delete", value:"Delete", name:"Delete"}
       ]
@@ -38,48 +47,41 @@ export class RegionalAssistanceLocationResult implements OnInit {
 
   };
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private service: RAOFormService, private alertFooterService: AlertFooterService) { }
 
   ngOnInit() {
 
 
   }
 
-  // actionsDropdownSelect(event) {
-  //   console.log('here is event ', event);
-  //
-  //   if(event === 'Update') {
-  //     this.router.navigateByUrl('/fal/myRegionalOffices/' + this.data.id + '/edit');
-  //   }
-  //   if(event === 'Delete') {
-  //     console.log('went inside the delete');
-  //     this.modal1.openModal();
-  //     console.log('after open modal');
-  //   }
-  //
-  // }
+  actionsDropdownSelect(event) {
+    if(event === 'Update') {
+      this.router.navigateByUrl('/fal/myRegionalOffices/' + this.data.id + '/edit');
+    }
+    if(event === 'Delete') {
+      this.modal1.openModal();
+    }
 
-  // onModalClose(event){
-  //   console.log('event ', event);
-  //
-  //   //this.modal1.closeModal();
-  // }
-  //
-  // deleteRAO(event){
-  //
-  //   console.log('delete event ', event);
-  //   console.log('here is id ', this.data['id']);
-  //
-  //   // call the service and pass the id from data
-  //   this.service.deleteRAO(this.data['id']).subscribe(
-  //     data =>{
-  //       console.log('deleted RAO ', data);
-  //     },
-  //     error => {
-  //       console.log('error occurred while deleting');
-  //     }
-  //   )
-  //
-  // }
+  }
+
+  onModalClose(event){
+
+  }
+
+  deleteRAO(event){
+
+    // call the service and pass the id from data
+    this.service.deleteRAO(this.data['id']).subscribe(
+      data =>{
+        this.modal1.closeModal();
+        let url = 'fal/myRegionalOffices';
+        this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteFooterAlertModel)));
+        this.router.navigate([url]);
+      },
+      error => {
+        console.error('error occurred while deleting');
+      }
+    )
+
+  }
 }
-

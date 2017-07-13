@@ -44,16 +44,16 @@ export class ProgramService{
   submitRAO(id: String = null, data: any, cookie: string){
     let oApiParam = {
       name: 'program',
-      suffix: (id == null) ? '/regionalOffices' : '/regionalOffices' + id,
+      suffix: (id == null) ? '/regionalOffices' : '/regionalOffices/' + id,
       oParam: {},
       headers: {
         "X-Auth-Token": cookie
       },
       body: data,
-      method: (id == null) ? 'POST' : 'PATCH'
+      method: (id == null) ? 'POST' : 'PUT'
     };
 
-    return this.oAPIService.call(oApiParam);
+    return this.oAPIService.call(oApiParam, false);
   }
 
   deleteRAO(id: String, cookie: string){
@@ -67,7 +67,7 @@ export class ProgramService{
       method: 'DELETE'
     };
 
-    return this.oAPIService.call(oApiParam);
+    return this.oAPIService.call(oApiParam, false);
   }
 
   getProgramById(id: string, cookie: string) {
@@ -84,7 +84,41 @@ export class ProgramService{
         "X-Auth-Token": cookie
       };
     }
+    return this.oAPIService.call(oApiParam);
 
+  }
+
+  getFederalHierarchyConfigurations(orgId: string, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/federalHierarchyConfigurations/' + orgId,
+      oParam: {},
+      headers: {},
+      method: 'GET'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  isProgramNumberUnique(progNum: string, id:string, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/isProgramNumberUnique',
+      oParam: {
+        programNumber: progNum,
+        id: id
+      },
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
     return this.oAPIService.call(oApiParam);
   }
 
@@ -258,7 +292,7 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
   }
 
-  getReasons(id: string,cookie: string,) {
+  getReasons(id: string,cookie: string) {
     let oApiParam = {
       name: 'program',
       suffix: '/programRequestActions/' + id,
@@ -271,10 +305,10 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
-  rejectProgram(id, data: any, cookie: string) {
+  falWFRequestTypeProgram(id, data: any, cookie: string, workflowRequestType: string) {
     let oApiParam = {
       name: 'program',
-      suffix: '/programRequests/' + id + '/reject',
+      suffix: '/programRequests/' + id + workflowRequestType,
       oParam: {},
       headers: {
         "X-Auth-Token": cookie
@@ -289,7 +323,21 @@ export class ProgramService{
   getCountPendingRequests(cookie: string) {
     let oApiParam = {
       name: 'program',
-      suffix: '/programRequests/countPendingRequests',
+      suffix: '/programRequests/reports/requestCount/pending',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getProgramCountByStatus(cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/reports/programCountByStatus',
       oParam: {},
       headers: {
         "X-Auth-Token": cookie
@@ -304,6 +352,20 @@ export class ProgramService{
     let oApiParam = {
       name: 'program',
       suffix: '/' + id + '/submissionNotification',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getActionHistoryAndNote(cookie: string, id: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/actionHistoryAndNote',
       oParam: {},
       headers: {
         "X-Auth-Token": cookie

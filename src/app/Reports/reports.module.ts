@@ -21,6 +21,8 @@ import { SamAPIKitModule } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
+import { ReportService } from './report.service';
+
 @NgModule({
   imports: [
     SamUIKitModule,
@@ -45,7 +47,7 @@ import { ReportsPipe } from './reports.pipe';
     ReportProtoComponent,
     MstrProtoComponent
   ],
-  providers: [IAMService, ReportsService],
+  providers: [IAMService, ReportsService, ReportService],
 })
 export class ReportsModule {
 public states = {

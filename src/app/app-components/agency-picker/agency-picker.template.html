@@ -6,6 +6,10 @@
 
   <label [class.usa-input-error-label]="searchMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
 
+  <span *ngIf="hint && showToggle && !toggleOpen" class="usa-form-hint">{{hint | slice:0:100}}</span>
+  <span *ngIf="(hint && toggleOpen) || (hint && !showToggle)" class="usa-form-hint">{{hint}}</span>
+  <div *ngIf="showToggle" class="usa-form-hint-showmore-toggler"><a href="javascript:void(0)" (click)="toggleHint(toggleOpen)" class="">{{ toggleOpen?"less":"more"}}</a></div>
+
   <div class="sam-ui secondary pointing large menu" *ngIf="!advancedMode">
     <a class="item active" (click)="selectorToggle = false" [ngClass]="{'active': !selectorToggle}" (keyup.enter)="selectorToggle = false" tabindex="0">
       Simple
@@ -15,7 +19,6 @@
     </a>
   </div>
 
-  <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
   <div *ngIf="searchMessage">
     <span class="usa-input-error-message">{{ searchMessage }}</span>
   </div>

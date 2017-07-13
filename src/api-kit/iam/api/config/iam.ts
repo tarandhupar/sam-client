@@ -3,14 +3,17 @@ const getExpiration = ((minutes: number) => {
 });
 
 export default {
-  cookies: {
-    path: '/',
-    expires: getExpiration(15)
+  cookies(minutes) {
+    return {
+      path: '/',
+      expires: getExpiration(minutes)
+    };
   },
 
   session:   '/auth/v3/session',
   timeout:   '/auth/v4/session/getTimeLeft',
 
+  user:      '/auth/v4/session/user',
   mergeWith: '/users/v3/mergeWith/{email}',
 
   registration: {

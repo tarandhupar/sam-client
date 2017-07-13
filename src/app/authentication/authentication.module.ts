@@ -15,7 +15,6 @@ import { AuthenticationRouter } from './authentication.route';
 import { LoginComponent } from './login';
 import { RegisterGuard, RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
-import { FSDGuard, FSDComponent, UserComponent, UsersComponent } from './fsd';
 import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
 
 @NgModule({
@@ -54,13 +53,6 @@ import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetC
     ForgotMainComponent,
 
     /**
-     * FSD
-     */
-    FSDComponent,
-    UserComponent,
-    UsersComponent,
-
-    /**
      * Profile
      */
     ProfileComponent,
@@ -75,7 +67,6 @@ import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetC
     /**
      * Router Guards
      */
-    FSDGuard,
     ProfileGuard,
     RegisterGuard,
 

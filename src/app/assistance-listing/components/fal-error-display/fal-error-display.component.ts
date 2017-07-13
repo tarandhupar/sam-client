@@ -1,20 +1,23 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core'
 import {
   FieldError, FieldErrorList,
   isFieldError, isFieldErrorList, FALFormErrorService
 } from '../../assistance-listing-operations/fal-form-error.service';
-
+/*
+<sam-alert *ngIf="validationErrors && hasErrors(validationErrors)" [attr.id]="'fal-errors-alert'" [type]="'warning'" [title]="'You must resolve ' + numErrors + ' issue(s) to submit the form'">
+  <fal-error-display-helper [validationErrors]="validationErrors"></fal-error-display-helper>
+</sam-alert>
+*/
 @Component({
   selector: 'fal-error-display',
-  templateUrl: `
-  <sam-alert *ngIf="validationErrors && hasErrors(validationErrors)" [attr.id]="'fal-errors-alert'" [type]="'warning'" [title]="'You must resolve ' + numErrors + ' issue(s) to submit the form'">
-      <fal-error-display-helper [validationErrors]="validationErrors"></fal-error-display-helper>
-  </sam-alert>
+  template: `
+  <fal-error-display-helper [validationErrors]="validationErrors"></fal-error-display-helper>
   `
 })
 export class FALErrorDisplayComponent implements OnChanges {
   @Input()
   public validationErrors: (FieldError | FieldErrorList) = null;
+  @Output() message = new EventEmitter();
 
   public numErrors: number = 0;
 
@@ -43,6 +46,11 @@ export class FALErrorDisplayComponent implements OnChanges {
       for (let error of validationErrors.errorList) {
         this.processErrors(error);
       }
+    }
+    if(this.numErrors > 0){
+      this.message.emit('You must resolve ' + this.numErrors + ' issue(s) to submit the form');
+    } else {
+      this.message.emit('');
     }
   }
 

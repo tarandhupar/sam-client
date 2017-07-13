@@ -16,7 +16,7 @@ import { User } from '../../../api-kit/iam/api/core/user.ts';
  * @Input() options: Option - Set search/filter states on init
  * @Input() filterable: boolean - Toggles agency filter feature
  * @Input() sortable: boolean - Toggle search feature
- * @Input() routerLink: Function - Function that returns a valid routerLink value, each result will be provided to the callback
+ * @Input() router: Function - Function that returns a valid routerLink value, each result will be provided to the callback
  *
  * @Output() onSearch: EventEmitter - Search change event (Options)
  * @Output() onSort: EventEmitter - Sort change event (Sort)
@@ -74,8 +74,8 @@ export class SamUserDirectoryComponent {
   @Input() searchable: boolean = true;
   @Input() sortable: boolean = true;
   @Input() filterable: boolean = true;
-  @Input() routerLink: Function = function(user) {
-    return ['/fsd/user', user._id];
+  @Input() router: Function = function(user) {
+    return ['/user', user._id];
   };
 
   @Output('onSearch') _onSearch: EventEmitter<any> = new EventEmitter();
@@ -156,7 +156,7 @@ export class SamUserDirectoryComponent {
           page: (this.states.page.current - 1)
         };
 
-    if(filter.value.length) {
+    if(filter.value) {
       params['organization'] = filter.value;
     };
 

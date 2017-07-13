@@ -119,7 +119,7 @@ export class UserSessionService {
 
     this.iamService.iam.checkSession((user) => {
       let token = Cookies.get('iPlanetDirectoryPro');
-      Cookies.set('iPlanetDirectoryPro', token, config.cookies);
+      Cookies.set('iPlanetDirectoryPro', token, config.cookies(15));
     });
   }
 

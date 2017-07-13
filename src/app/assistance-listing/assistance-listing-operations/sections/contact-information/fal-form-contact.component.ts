@@ -154,6 +154,9 @@ export class FALFormContactInfoComponent implements OnInit {
   }
 
   onSubFormCancelClick(i) {
+    if(this.hideAddButton === false) {
+      return; // clicking cancel has no effect if nothing is being edited or added
+    }
 
     if (this.mode == 'Add') {
       this.removeContact(i);
@@ -388,5 +391,9 @@ export class FALFormContactInfoComponent implements OnInit {
       formErrorArr: this.formErrorArr,
       section: 'contact-information'
     });
+  }
+
+  public beforeSaveAction() {
+    this.onSubFormCancelClick(this.contactIndex);
   }
 }

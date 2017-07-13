@@ -145,25 +145,25 @@ export const fsd = {
           const kba = response.body || {};
           $success(transformUserKBAResponse(kba));
         }, (response) => {
-          if(isDebug()) {
-            const kba = {
-              uid: 1,
-              userEmail: id,
-              firstQuestion:  1,
-              secondQuestion: 2,
-              thirdQuestion:  3,
-              firstAnswer:  'question1',
-              secondAnswer: 'question2',
-              thirdAnswer:  'question3',
-            };
-
-            $success(transformUserKBAResponse(kba));
-          } else {
-            $error(exceptionHandler(response.body));
-          }
+          $error(exceptionHandler(response.body));
         });
     } else {
-      $error({ message: 'Please sign in' });
+      if(isDebug()) {
+        const kba = {
+          uid: 1,
+          userEmail: id,
+          firstQuestion:  1,
+          secondQuestion: 2,
+          thirdQuestion:  3,
+          firstAnswer:  'question1',
+          secondAnswer: 'question2',
+          thirdAnswer:  'question3',
+        };
+
+        $success(transformUserKBAResponse(kba));
+      } else {
+        $error({ message: 'Please sign in' });
+      }
     }
   },
 

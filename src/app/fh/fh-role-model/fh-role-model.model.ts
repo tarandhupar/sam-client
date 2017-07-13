@@ -7,15 +7,17 @@ export class FHRoleModel{
 
   get permissions(){
     let roleMethods = [];
-    this._raw._embedded[0].links.forEach( e => {
-      if ( e.link.rel !== "LOGO") roleMethods.push(e.link);
-    });
+    if(this._raw._embedded[1]){
+      this._raw._embedded[1]['_links'].forEach( e => {
+        if ( e.link.rel !== "LOGO") roleMethods.push(e.link);
+      });
+    }
     return roleMethods;
   }
 
   get logo(){
     let logo = "";
-    this._raw._embedded[0].links.forEach( e => {
+    this._raw._embedded[1]['_links'].forEach( e => {
       if ( e.link.rel == "LOGO") logo = e.link.href;
     });
     return logo;
@@ -25,6 +27,14 @@ export class FHRoleModel{
     let hasPermission = false;
     this.permissions.forEach( e => {
       if(e.method === method && this.compareOrgLevel(e.rel.toLowerCase(), orgType.toLowerCase())) hasPermission = true;
+    });
+    return hasPermission;
+  }
+
+  canMoveOffice(){
+    let hasPermission = false;
+    this.permissions.forEach( e => {
+      if(e.method === "PUT_TRANSFER" && e.rel.toLowerCase() === "office_move") hasPermission = true;
     });
     return hasPermission;
   }

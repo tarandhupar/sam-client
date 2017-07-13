@@ -9,7 +9,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 			<br />
 			<strong>Cross Reference Type: </strong>{{crossReference.crossReferenceType}}
 			<br />
-			<strong>Excluding Agency: </strong>{{crossReference.excludingAgency}}
+			<strong>Excluding Agency: </strong>{{crossReference.excludingAgencyName}}
 			<br />
 			<strong>Exclusion Type: </strong>{{crossReference.exclusionType}}
 			<br />
@@ -33,8 +33,8 @@ export class ExclusionCrossReference implements OnInit {
 
   ngOnInit(){
 
-     if(this.crossReference.excludingAgency!=null && this.crossReference.excludingAgency.length > 0){
-      this.orgIdConcat=this.crossReference.excludingAgency;
+     if(this.crossReference.excludingAgencyCode!=null && this.crossReference.excludingAgencyCode.length > 0){
+      this.orgIdConcat=this.crossReference.excludingAgencyCode;
     }
     else {
       this.orgIdConcat='NA';

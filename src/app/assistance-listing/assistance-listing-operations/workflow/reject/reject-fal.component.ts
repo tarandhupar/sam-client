@@ -63,9 +63,9 @@ export class RejectFALComponent implements OnInit {
       if (res && res['_links'] && res['_links']['program:request:reject'] && res['_links']['program:request:reject'].href) {
         let rejectLink = res['_links']['program:request:reject'].href;
         this.rejectProgramId = rejectLink.split('/')[5];
-        if (res && res['_links'] && res['_links']['program:request:action:submit']) {
-          if (res && res['_links'] && res['_links']['program:request:action:submit'] && res['_links']['program:request:action:submit'].href) {
-            let href = res['_links']['program:request:action:submit'].href;
+        if (res && res['_links'] && res['_links']['program:request:action:review']) {
+          if (res && res['_links'] && res['_links']['program:request:action:review'] && res['_links']['program:request:action:review'].href) {
+            let href = res['_links']['program:request:action:review'].href;
               this.service.getSubmitReason(href.substring(href.lastIndexOf("/") + 1)).subscribe(res => {
                 this.submitReason = res.reason;
               });
@@ -82,7 +82,8 @@ export class RejectFALComponent implements OnInit {
 
   rejectSave(id: string) {
     let data = {"reason": this.rejectALForm.controls['ombComment'].value};
-    this.service.rejectFAL(id, data).subscribe(api => {
+    let workflowRequestType = '/reject';
+    this.service.falWFRequestTypeProgram(id, data, workflowRequestType).subscribe(api => {
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
         this.router.navigate(['/fal/workspace']);
       },

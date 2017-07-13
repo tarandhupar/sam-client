@@ -17,6 +17,7 @@ import { WorkspaceWidgetComponent } from "./workspace-widget/workspace-widget.co
 import { SearchReportComponent } from "./search-report/search-report.component";
 import { DataEntryComponent } from "./data-entry/data-entry.component";
 import { AdministrationComponent } from "./administration/administration.component";
+import { FSDGuard, FSDComponent, FSDUserComponent, FSDUsersComponent } from './fsd';
 import {
   SystemGuard,
   SystemComponent,
@@ -26,7 +27,8 @@ import {
   SystemMigrationsComponent
 } from './system';
 
-import { RMWidgetComponent, SystemWidgetComponent } from "./administration";
+import { FSDWidgetComponent, RMWidgetComponent, SystemWidgetComponent } from "./administration";
+import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 
 @NgModule({
   imports: [
@@ -53,8 +55,16 @@ import { RMWidgetComponent, SystemWidgetComponent } from "./administration";
     /**
      * Widgets
      */
+    FSDWidgetComponent,
     RMWidgetComponent,
     SystemWidgetComponent,
+    AssistanceListingWidgetComponent,
+    /**
+     * FSD
+     */
+    FSDComponent,
+    FSDUserComponent,
+    FSDUsersComponent,
 
     /**
      * System
@@ -66,7 +76,15 @@ import { RMWidgetComponent, SystemWidgetComponent } from "./administration";
     SystemMigrationsComponent,
   ],
   providers: [
+    /**
+     * Services
+     */
     AlertFooterService,
+
+    /**
+     * Route Guards
+     */
+    FSDGuard,
     SystemGuard,
   ],
 })

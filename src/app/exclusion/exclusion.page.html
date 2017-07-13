@@ -1,18 +1,37 @@
 <div *ngIf="exclusion" class="sam-ui container">
-	<br />
-	<br />
-	<div *ngIf="linkedObjectView != 'er'">
-	  <a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
+<div class="usa-grid-full exclusion">
+<!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+	<div sam-sticky limit=1200 container="exclusion">
+	  <!--<a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
 		<i class="fa fa-chevron-left" aria-hidden="true"></i>
 		Back To Search
-	  </a>
-	</div>
-	<div *ngIf="linkedObjectView=='er'">
+	  </a>-->
+	  <div *ngIf="linkedObjectView=='er'">
 	  <a class="sam-ui dark blue button" [routerLink]="['/entity', exclusion.identityInfo.duns]" [queryParams]="qParams">
 		<i class="fa fa-chevron-left" aria-hidden="true"></i>
 		Back To Entity Registration
 	  </a>
 	</div>
+	  <br />
+	  <br />
+      <!--Logo-->
+      <ng-container *ngIf="exclusion && (errorEntity || logoUrl===null || errorLogo)">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
+      </ng-container>
+      <ng-container *ngIf="exclusion && logoUrl && !errorEntity">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
+      </ng-container>
+
+      <!--Side Navigation-->
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
+    </div>
+   
+  </aside>
+  <!-- Main Content -->
+	<div class="usa-width-three-fourths">
 	
 	<!-- Info Alert -->
 	<div class="usa-alert usa-alert-info">
@@ -30,28 +49,25 @@
 	  </div>
 	</div>
 	
-	<!-- Page title -->
-	<h1 class="sam-ui header">Entity Exclusions</h1>
-	
 	<!-- Individual Name -->
-	<h2 *ngIf="exclusion.classificationType=='Individual'"
-			class="sam-ui lighter header">
+	<h1 *ngIf="exclusion.classificationType=='Individual'"
+			class="sam-ui header">
 		{{exclusion.identityInfo.prefix}} 
 		{{exclusion.identityInfo.firstName}} 
 		{{exclusion.identityInfo.middleName}} 
 		{{exclusion.identityInfo.lastName}}
-	</h2>
+	</h1>
 	
 	<!-- Company Name -->
-	<h2 *ngIf="exclusion.classificationType!='Individual'"
-			class="sam-ui lighter header">
+	<h1 *ngIf="exclusion.classificationType!='Individual'"
+			class="sam-ui header">
 		{{exclusion.identityInfo.companyName}}
-	</h2>
+	</h1>
 	
 	<!-- Intro Content -->
 	<div class="sam-ui padded raised segment">
 		<div class="sam-ui top right attached mini label">
-			Entity Exclusion
+			Exclusion
 		</div>
 		<div class="sam-ui two column attached grid">
 			<div class="column">
@@ -62,7 +78,7 @@
 						<div class="item">
 							<div class="content">
 								<div class="header">
-									DUNS
+									Unique Entity Identifier
 								</div>
 								<div class="description">
 									{{exclusion.identityInfo.duns}}
@@ -79,16 +95,18 @@
 								</div>
 							</div>
 						</div>
-						<div class="item">
-							<div class="content">
-								<div class="header">
-									CAGE Code
-								</div>
-								<div class="description">
-									{{exclusion.identityInfo.cageCode}}
+						<ng-container *ngIf="exclusion.classificationType!='Special Entity Designation'">
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										CAGE Code
+									</div>
+									<div class="description">
+										{{exclusion.identityInfo.cageCode}}
+									</div>
 								</div>
 							</div>
-						</div>
+						</ng-container>
 					</ng-container>
 					
 					<div class="item">
@@ -109,12 +127,14 @@
 								Excluding Agency
 							</div>
 							<div class="description">
-								{{exclusion.excludingAgency}}
+								{{exclusion.excludingAgencyName}}
 							</div>
 						</div>
 					</div>
-					
 					<div class="item">
+						<div class="header">
+							Address
+						</div>
 						<exclusionAddress [address]="exclusion.identityInfo.address">
 						</exclusionAddress>
 					</div>
@@ -139,7 +159,7 @@
 								Activation Date
 							</div>
 							<div class="description">
-								{{exclusion.activateDate}}
+								{{exclusion.activateDate | date: 'MMM dd, y'}}
 							</div>
 						</div>
 					</div>
@@ -149,7 +169,7 @@
 								Termination Date
 							</div>
 							<div class="description">
-								{{exclusion.terminationDate}}
+								{{exclusion.terminationDate != 'Indefinite' ? (exclusion.terminationDate | date: 'MMM dd, y') : exclusion.terminationDate}}
 							</div>
 						</div>
 					</div>
@@ -173,7 +193,7 @@
 	<!-- Current Record Details -->
 	<ng-container *ngIf="exclusion.classificationType=='Individual'">
 		<h2 class="sam-ui header">Current Record Details</h2>
-		<h3 class="sam-ui header">Primary Address</h3>
+		<h3 class="sam-ui header" id="primary-address">Primary Address</h3>
 		
 		<div class="sam-ui dark white segment">
 
@@ -188,49 +208,14 @@
 	<!-- Vessel Details -->
 	<ng-container *ngIf="exclusion.classificationType=='Vessel'">
 		<div class="sam-ui hidden divider"></div>
-		<h3 class="sam-ui dividing header">
+		<h3 class="sam-ui dividing header" id="vessel-details">
 			Vessel Details
 		</h3>
 		<div class="sam-ui two column grid">
 			<div class="column">
-				<div class="sam-ui medium header">
-					Call Sign
-					<div class="sub header">
-						{{exclusion.vesselDetails.callSign}}
-					</div>
+				<div class="sub header">
+					Data specific to vessel classification types (Call Sign, type, tonnage, GRT, flag, and owner) is currently unavailable.
 				</div>
-				<div class="sam-ui medium header">
-					Type
-					<div class="sub header">
-						{{exclusion.vesselDetails.type}}
-					</div>
-				</div>
-				<div class="sam-ui medium header">
-					Tonnage
-					<div class="sub header">
-						{{exclusion.vesselDetails.tonnage}}
-					</div>
-				</div>
-				<div class="sam-ui medium header">
-					GRT
-					<div class="sub header">
-						{{exclusion.vesselDetails.grt}}
-					</div>
-				</div>
-				<div class="sam-ui medium header">
-					Flag
-					<div class="sub header">
-						{{exclusion.vesselDetails.flag}}
-					</div>
-				</div>
-				<div class="sam-ui medium header">
-					Owner
-					<div class="sub header">
-						{{exclusion.vesselDetails.owner}}
-					</div>
-				</div>
-			</div>
-			<div class="column">
 				<div class="sam-ui medium header">
 					Secondary Address
 					<div class="sub header">
@@ -243,7 +228,7 @@
 								</div>
 							</div>
 							<div id="exclusion-secondary-address" *ngSwitchDefault>
-								none provided
+								Not provided
 							</div>
 						</ng-container>
 					</div>
@@ -255,7 +240,7 @@
 	<div class="sam-ui hidden divider"></div>
 	
 	<!-- Exclusion Details -->
-	<h3 class="sam-ui dividing header">
+	<h3 class="sam-ui dividing header" id="exclusion-details">
 		Exclusion Details
 	</h3>
 	<div *ngIf="exclusion.classificationType=='Special Entity Designation'" 
@@ -303,9 +288,6 @@
 			<!-- CT Code -->
 			<div class="sam-ui medium header">
 				CT Code {{exclusion.ctCode}}
-				<div class="sub header">
-					Reference CT Codes (from legacy system) at the <a href="">CT Code Help Page.</a>
-				</div>
 			</div>
 		</div>
 		<div class="column">
@@ -313,6 +295,8 @@
 			<div class="sam-ui medium header">
 				Record
 				<div class="sub header">
+					<strong>Activation Date: </strong>{{exclusion.activateDate | date: 'MMM dd, y'}}<br />
+					<strong>Termination Date: </strong>{{exclusion.terminationDate != 'Indefinite' ? (exclusion.terminationDate | date: 'MMM dd, y') : exclusion.terminationDate}}<br />
 					<strong>Create Date: </strong>{{exclusion.recordCreateDate}}<br />
 					<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
 				</div>
@@ -323,7 +307,7 @@
 	<div class="sam-ui hidden divider"></div>
 	
 	<!-- Cross References -->
-	<h3 class="sam-ui dividing header">Cross References</h3>
+	<h3 class="sam-ui dividing header" id="cross-references">Cross References</h3>
 	<ng-container [ngSwitch]="exclusion.crossReferences">
 		<div id="exclusion-cross-reference" *ngIf="exclusion.crossReferences.length">
 			<div id="exclusion-cross-reference" *ngSwitchCase="exclusion.crossReferences">
@@ -358,7 +342,7 @@
 	</div>	
 		
 </div>
-
+</div>
 <div class="sam-ui hidden section divider"></div>
 
 
@@ -563,3 +547,4 @@
 </div>
 </div>
 </div> -->
+</div>

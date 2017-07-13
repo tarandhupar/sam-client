@@ -57,9 +57,9 @@ export class AssistanceProgramResult implements OnInit {
       this.permissions.INITIATE_CANCEL_ARCHIVE_CR == true || 
       this.permissions.INITIATE_CANCEL_NUMBER_CR == true || 
       this.permissions.INITIATE_CANCEL_TITLE_CR == true || 
-      this.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true) && (this.data.additionalInfo && this.data.additionalInfo.requestType && this.data.additionalInfo.requestId)){
-      this.requestTypeValue = this.data.additionalInfo.requestType;
-      this.requestId = this.data.additionalInfo.requestId;
+      this.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true) && (this.data.additionalProperty && this.data.additionalProperty.requestType && this.data.additionalProperty.requestId)){
+      this.requestTypeValue = this.data.additionalProperty.requestType;
+      this.requestId = this.data.additionalProperty.requestId;
     }
   }
 
