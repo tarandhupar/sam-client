@@ -22,7 +22,7 @@
   Award Data
 </h1>
 
-<div class="sam-ui grid">
+<div class="sam-ui grid relative">
   <div *ngIf="curConfig.legacyLogo" class="two wide column middle aligned">
     <img style="width:140px;" [src]="curConfig.legacyLogo">
   </div>
@@ -35,36 +35,69 @@
       </div>
     </h2>
   </div>
+  <div class="three wide column wdol-additional-list" *ngIf="curConfig.heading === 'Wage Determinations'">
+    <div class="wdol-additional-list-title">Additional Resources</div>
+    <div class="wdol-additional-list-item" *ngFor="let item of wdolCurList"><a (click)="onWDOLResourceClick(item)">{{item}}</a></div>
+  </div>
 </div>
 
 <div class="sam-ui hidden divider"></div>
 
-<!-- Splash Content -->
-<h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
-  {{curConfig.splashContent}}
-</h2>
-<h3 class="sam-ui dividing header" *ngIf="isEdit">
-  Splash Content
-</h3>
-<textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
-  {{curConfig.splashContent}}
-</textarea>
+<div *ngIf="!showLaborAgency()">
+  <!-- Splash Content -->
+  <h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </h2>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Splash Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </textarea>
 
-<!-- Subcontent -->
-<div *ngIf="!isEdit" [innerHTML]="curConfig.subContent"></div>
-<h3 class="sam-ui dividing header" *ngIf="isEdit">
-  Sub Content
-</h3>
-<textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
-  {{curConfig.subContent}}
-</textarea>
+  <!-- Subcontent -->
+  <div *ngIf="!isEdit" [innerHTML]="curConfig.subContent"></div>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Sub Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
+    {{curConfig.subContent}}
+  </textarea>
+</div>
+
+<div *ngIf="showLaborAgency()">
+  <div class="labor-agency-header"><h3>Department of Defense Agencies</h3></div>
+  <div class="labor-agency-item" *ngFor="let item of defenceAgencies">
+    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors">
+      <span>{{advisor.name}}</span><br/>
+      <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+      <span>Email: <a>{{advisor.email}}</a></span><br/>
+      <span>Phone: {{advisor.phone}}</span><br/>
+    </div>
+  </div>
+
+  <div class="labor-agency-header"><h3>Civilian Contracting Agencies</h3></div>
+  <div class="labor-agency-item" *ngFor="let item of contractAgencies">
+    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
+    <span *ngIf="item.advisorTitle">{{item.advisorTitle}}<br/></span>
+    <span *ngIf="item.email">Email: {{item.email}}<br/></span>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors">
+      <span>{{advisor.name}}</span><br/>
+      <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+      <span>Email: <a>{{advisor.email}}</a></span><br/>
+      <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
+    </div>
+  </div>
+</div>
 
 <div class="sam-ui hidden divider"></div>
 
 <!-- Features -->
 <!-- <ng-container *ngIf="this.curFeatures.length !== 0"> -->
 <ng-container *ngIf="false">
-  
+
   <h3 class="sam-ui dividing header" *ngIf="isEdit">
     Features
   </h3>
@@ -75,8 +108,8 @@
                           [name]="'features'"
                           (modelChange)="onParamChanged()">
   </sam-multiselect-dropdown>
-  
-  
+
+
   <table class="sam-ui definition table">
     <thead>
       <tr>
@@ -93,13 +126,13 @@
         <td>{{ curFeatures[1][i].interested }}</td>
         <td class="selectable center aligned" *ngIf="isEdit">
           <a (click)="onRemoveFeatureClick(featureItem)">
-            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i> 
+            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i>
           </a>
         </td>
       </tr>
     </tbody>
   </table>
-  
+
 </ng-container>
 
 <div class="sam-ui hidden section divider"></div>
