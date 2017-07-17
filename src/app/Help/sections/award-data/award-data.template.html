@@ -66,28 +66,59 @@
 </div>
 
 <div *ngIf="showLaborAgency()">
-  <div class="labor-agency-header"><h3>Department of Defense Agencies</h3></div>
-  <div class="labor-agency-item" *ngFor="let item of defenceAgencies">
+  <div class="labor-agency-header p_B-2x">
+    <h3>Department of Defense Agencies
+      <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveDODAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editDODAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+  <div class="labor-agency-item" *ngFor="let item of defenceAgencies; let i = index;">
     <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
-    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors">
-      <span>{{advisor.name}}</span><br/>
-      <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
-      <span>Email: <a>{{advisor.email}}</a></span><br/>
-      <span>Phone: {{advisor.phone}}</span><br/>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index;">
+      <div *ngIf="!dodIsEdit">
+        <span>{{advisor.name}}</span><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <span class="labor-agency-contact-label">Email:</span><a>{{advisor.email}}</a><br/>
+        <span class="labor-agency-contact-label">Phone:</span><span>{{advisor.phone}}</span><br/>
+      </div>
+
+      <div *ngIf="dodIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
+
     </div>
   </div>
 
-  <div class="labor-agency-header"><h3>Civilian Contracting Agencies</h3></div>
-  <div class="labor-agency-item" *ngFor="let item of contractAgencies">
+  <div class="labor-agency-header p_B-2x">
+    <h3>Civilian Contracting Agencies
+      <span class="pull-right" *ngIf="!contractIsEdit" (click)="editContractAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveContractAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editContractAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+  <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
     <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
     <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
     <span *ngIf="item.advisorTitle">{{item.advisorTitle}}<br/></span>
     <span *ngIf="item.email">Email: {{item.email}}<br/></span>
-    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors">
-      <span>{{advisor.name}}</span><br/>
-      <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
-      <span>Email: <a>{{advisor.email}}</a></span><br/>
-      <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index">
+      <div *ngIf="!contractIsEdit">
+        <span>{{advisor.name}}</span><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <span>Email: <a>{{advisor.email}}</a></span><br/>
+        <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
+      </div>
+
+      <div *ngIf="contractIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="contractAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="contractAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
     </div>
   </div>
 </div>

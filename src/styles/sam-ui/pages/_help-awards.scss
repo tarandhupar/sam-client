@@ -118,4 +118,23 @@
   .labor-agency-contact-region{
     color: $color-gray-light;
   }
+
+  .labor-agency-contact-email{
+    color: $color-primary-alt-darkest;
+  }
+
+  .labor-agency-contact-input{
+    width: 35%;
+    height: 25px;
+    display: inline;
+  }
+
+  .labor-agency-contact-label{
+    width: 60px;
+    display: inline-block;
+  }
+
+  .labor-agency-contact-form{
+    margin: 15px 0 15px 0;
+  }
 }

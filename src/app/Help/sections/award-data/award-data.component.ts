@@ -545,6 +545,10 @@ export class AwardDataComponent {
   wdolCurResource = 'Wage Determination Help';
   wdolResourcesList = ['External Resources', 'Labor Advisors', 'Latest Updates', 'Wage Determination Help'];
   wdolCurList = [];
+  dodIsEdit = false;
+  contractIsEdit = false;
+  defenceAgenciesEdit;
+  contractAgenciesEdit;
 
   defenceAgencies = [
     {
@@ -699,7 +703,10 @@ constructor(private router:Router, private route:ActivatedRoute) {}
       this.wdolCurList = [];
       this.wdolResourcesList.forEach( e => {
         if(e !== this.wdolCurResource) this.wdolCurList.push(e);
-      })
+      });
+      this.defenceAgenciesEdit = JSON.parse(JSON.stringify(this.defenceAgencies));
+      this.contractAgenciesEdit = JSON.parse(JSON.stringify(this.contractAgencies));
+
     }
   }
 
@@ -707,6 +714,7 @@ constructor(private router:Router, private route:ActivatedRoute) {}
     this.wdolCurResource = item;
     this.setWDOLList(this.curSubSection);
     if(item === 'External Resources') this.router.navigateByUrl('/help/reference');
+    if(item === 'Latest Updates') this.router.navigateByUrl('/alerts');
   }
 
   showLaborAgency():boolean{
@@ -798,4 +806,16 @@ constructor(private router:Router, private route:ActivatedRoute) {}
     this.updateCopies();
   }
 
+  editDODAgency(isEdit){this.dodIsEdit = isEdit;}
+  editContractAgency(isEdit){this.contractIsEdit = isEdit;}
+
+  saveDODAgency(){
+    this.defenceAgencies = JSON.parse(JSON.stringify(this.defenceAgenciesEdit));
+    this.dodIsEdit = false;
+  }
+
+  saveContractAgency(){
+    this.contractAgencies = JSON.parse(JSON.stringify(this.contractAgenciesEdit));
+    this.contractIsEdit = false;
+  }
 }
