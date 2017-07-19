@@ -54,4 +54,20 @@ describe("Award data page in help page", ()=>{
     expect(component.curConfig.splashContent).toBe("Award wage determination data splash content");
     expect(component.curFeatures[0]).toEqual(['Search', 'View']);
   });
+
+  it("should be able to save edited WDOL DOD agencies", ()=>{
+    fixture.detectChanges();
+    component.editDODAgency(true);
+    component.defenceAgenciesEdit[0].advisors[0].name = "test";
+    component.saveDODAgency();
+    expect(component.defenceAgencies[0].advisors[0].name).toBe("test");
+  });
+
+  it("should be able to save edited WDOL Contract agencies", ()=>{
+    fixture.detectChanges();
+    component.editContractAgency(true);
+    component.contractAgenciesEdit[1].advisors[0].name = "test";
+    component.saveContractAgency();
+    expect(component.contractAgencies[1].advisors[0].name).toBe("test");
+  });
 });

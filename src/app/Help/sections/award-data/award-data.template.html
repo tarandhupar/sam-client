@@ -22,7 +22,7 @@
   Award Data
 </h1>
 
-<div class="sam-ui grid">
+<div class="sam-ui grid relative">
   <div *ngIf="curConfig.legacyLogo" class="two wide column middle aligned">
     <img style="width:140px;" [src]="curConfig.legacyLogo">
   </div>
@@ -35,36 +35,100 @@
       </div>
     </h2>
   </div>
+  <div class="three wide column wdol-additional-list" *ngIf="curConfig.heading === 'Wage Determinations'">
+    <div class="wdol-additional-list-title">Additional Resources</div>
+    <div class="wdol-additional-list-item" *ngFor="let item of wdolCurList"><a (click)="onWDOLResourceClick(item)">{{item}}</a></div>
+  </div>
 </div>
 
 <div class="sam-ui hidden divider"></div>
 
-<!-- Splash Content -->
-<h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
-  {{curConfig.splashContent}}
-</h2>
-<h3 class="sam-ui dividing header" *ngIf="isEdit">
-  Splash Content
-</h3>
-<textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
-  {{curConfig.splashContent}}
-</textarea>
+<div *ngIf="!showLaborAgency()">
+  <!-- Splash Content -->
+  <h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </h2>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Splash Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </textarea>
 
-<!-- Subcontent -->
-<div *ngIf="!isEdit" [innerHTML]="curConfig.subContent"></div>
-<h3 class="sam-ui dividing header" *ngIf="isEdit">
-  Sub Content
-</h3>
-<textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
-  {{curConfig.subContent}}
-</textarea>
+  <!-- Subcontent -->
+  <div *ngIf="!isEdit" [innerHTML]="curConfig.subContent"></div>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Sub Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
+    {{curConfig.subContent}}
+  </textarea>
+</div>
+
+<div *ngIf="showLaborAgency()">
+  <div class="labor-agency-header p_B-2x">
+    <h3>Department of Defense Agencies
+      <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveDODAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editDODAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+  <div class="labor-agency-item" *ngFor="let item of defenceAgencies; let i = index;">
+    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index;">
+      <div *ngIf="!dodIsEdit">
+        <span>{{advisor.name}}</span><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <span class="labor-agency-contact-label">Email:</span><a>{{advisor.email}}</a><br/>
+        <span class="labor-agency-contact-label">Phone:</span><span>{{advisor.phone}}</span><br/>
+      </div>
+
+      <div *ngIf="dodIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="labor-agency-header p_B-2x">
+    <h3>Civilian Contracting Agencies
+      <span class="pull-right" *ngIf="!contractIsEdit" (click)="editContractAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveContractAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editContractAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+  <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
+    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
+    <span *ngIf="item.advisorTitle">{{item.advisorTitle}}<br/></span>
+    <span *ngIf="item.email">Email: {{item.email}}<br/></span>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index">
+      <div *ngIf="!contractIsEdit">
+        <span>{{advisor.name}}</span><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <span>Email: <a>{{advisor.email}}</a></span><br/>
+        <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
+      </div>
+
+      <div *ngIf="contractIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="contractAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="contractAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="sam-ui hidden divider"></div>
 
 <!-- Features -->
 <!-- <ng-container *ngIf="this.curFeatures.length !== 0"> -->
 <ng-container *ngIf="false">
-  
+
   <h3 class="sam-ui dividing header" *ngIf="isEdit">
     Features
   </h3>
@@ -75,8 +139,8 @@
                           [name]="'features'"
                           (modelChange)="onParamChanged()">
   </sam-multiselect-dropdown>
-  
-  
+
+
   <table class="sam-ui definition table">
     <thead>
       <tr>
@@ -93,13 +157,13 @@
         <td>{{ curFeatures[1][i].interested }}</td>
         <td class="selectable center aligned" *ngIf="isEdit">
           <a (click)="onRemoveFeatureClick(featureItem)">
-            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i> 
+            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i>
           </a>
         </td>
       </tr>
     </tbody>
   </table>
-  
+
 </ng-container>
 
 <div class="sam-ui hidden section divider"></div>

@@ -542,8 +542,137 @@ export class AwardDataComponent {
 
   baseURL = "/help/award";
 
+  wdolCurResource = 'Wage Determination Help';
+  wdolResourcesList = ['External Resources', 'Labor Advisors', 'Latest Updates', 'Wage Determination Help'];
+  wdolCurList = [];
+  dodIsEdit = false;
+  contractIsEdit = false;
+  defenceAgenciesEdit;
+  contractAgenciesEdit;
 
-  constructor(private router:Router, private route:ActivatedRoute) {}
+  defenceAgencies = [
+    {
+      agency:'US Air Force',
+      advisors:[
+        {name: 'Nick A De Quiroga', location:'Chief, AF Labor Advisors', email:'nicholas.de_quiroga.1@us.af.mil', phone:'(720) 847-7341'},
+        {name: 'Kyle Roberts', location:'Eastern Region', email:'kyle.roberts@patrick.af.mil', phone:'(321) 494-6734'},
+        {name: 'Gary Lechman', location:'Central Region', email:'gary.lechman@us.af.mil', phone:'(720) 847-7340'},
+        {name: 'Ward Graham', location:'Western Region', email:'ward.graham@us.af.mil', phone:'(801) 775-2097'},
+      ]
+    },
+    {
+      agency:'US Army',
+      advisors:[
+        {name: 'Roger W Wilkinson', location:'Office of the Judge Advocate General', email:'roger.w.wilkinson2.civ@mail.mil', phone:'(571) 256-8187'},
+      ]
+    },
+    {
+      agency:'US Army Corps of Engineers',
+      advisors:[
+        {name: 'Vanessa Shaw-Jennings', location:'Office of the Judge Advocate General', email:'roger.w.wilkinson2.civ@mail.mil', phone:'(571) 256-8187'},
+      ]
+    },
+    {
+      agency:'Defense Logistics Agency',
+      advisors:[
+        {name: 'Phoebe Rolen', location:'', email:'phoebe.rolen@dla.mil', phone:'(703) 767-1124'},
+      ]
+    },
+    {
+      agency:'Department of Defense',
+      advisors:[
+        {name: 'Larry McLaury', location:'Office of the Under Secretary (ATL)', email:'larry.j.mclaury2.civ@mail.mil', phone:'(703) 697-6710'},
+      ]
+    },
+    {
+      agency:'Department of the Navy',
+      advisors:[
+        {name: 'Navy and Marine Corps', location:'', email:'navylaboradvisor@navy.mil', phone:'(703) 693-2939'},
+      ]
+    },
+    {
+      agency:'Naval Facilities Engineering Command',
+      advisors:[
+        {name: 'Lynn Forbes', location:'NAVFAC Labor Advisor', email:'lynn.forbes@navy.mil', phone:'(360) 396-0272'},
+      ]
+    },
+  ];
+
+  contractAgencies = [
+    {
+      agency:'Department of Agriculture',
+      advisors:[],
+      advisorTitle: 'USDA Labor Advisor',
+      email: 'procurement@usda.gov',
+    },
+    {
+      agency:'Department of Energy',
+      advisors:[
+        {name: 'Thomas D O\'Connor', location:'', email:'thomas.o\'connor@hq.doe.gov', phone:'(202) 586-6952'},
+        {name: 'Eva M Auman', location:'DOE Idaho Falls', email:'aumanem@id.doe.gov', phone:'(208) 526-4169'},
+      ],
+      advisorTitle: 'USDA Labor Advisor',
+      email: 'procurement@usda.gov',
+    },
+    {
+      agency:'General Services Administration',
+      advisors:[],
+      advisorTitle: 'GSA Labor Advisor',
+      email: 'gsalaboradvisor@gsa.gov',
+    },
+    {
+      agency:'Department of Homeland Security',
+      advisors:[
+        {name: 'David Duda', location:'', email:'dhslaboradvisor@dhs.gov', phone:'(202) 447-5415'},
+      ],
+    },
+    {
+      agency:'Department of Housing and Urban Development',
+      advisors:[
+        {name: 'Robert B Morton', location:'', email:'robert.b.morton@hud.gov', phone:'(202) 402-7079'},
+      ],
+    },
+    {
+      agency:'Department of Labor',
+      advisors:[]
+    },
+    {
+      agency:'National Aeronautics and Space Administration (NASA)',
+      advisors:[
+        {name: 'John Brett', location:'', email:'john.brett@nasa.gov', phone:'(202) 358-0687'},
+      ],
+    },
+    {
+      agency:'Social Security Administration',
+      advisors:[
+        {name: 'Joan M Smith', location:'', email:'joan.m.smith@ssa.gov', phone:'(410) 965-6269'},
+      ],
+    },
+    {
+      agency:'Department of Transportation',
+      advisors:[
+        {name: 'Bonnie Angermann', location:'Office of Chief Counsel', email:'bonnie.angermann@dot.gov', phone:'(202) 366-9166'},
+        {name: 'Joanne Burrus', location:'Maritime Administration', email:'joanne.burrus@dot.gov', phone:'(202) 366-5158'},
+        {name: 'Greg Carter', location:'Federal Aviation Administration', email:'greg.carter@faa.gov'},
+        {name: 'Steven Rochlis', location:'Federal Highway Administration', email:'steve.rochlis@dot.gov', phone:'(202) 366-1345'},
+        {name: 'Stephen Pereira', location:'Federal Transit Administration', email:'stephen.pereira@dot.gov', phone:'(202) 493-0542'},
+        {name: 'Brandon C Hollingshead', location:'Pipeline and Hazardous Material Safety Administration', email:'brandon.hollingshead@dot.gov', phone:'(202) 366-0845'},
+        {name: 'Jean Mulff', location:'Federal Motor Carrier Safety Administration', email:'jean.wulff@dot.gov', phone:'(202) 366-0424'},
+        {name: 'RT Baumann', location:'Senior Attorney, Office of Acquisition Management', email:'roland.baumann@dot.gov'},
+        {name: 'Ross Jeffries', location:'Directory, National Highway Traffic Safeway Administration', email:'ross.jeffries@dot.gov'},
+      ],
+    },
+    {
+      agency:'Department of Veterans Affairs',
+      advisors:[
+        {name: 'Mitchell L Gasbarra', location:'', email:'mitchell.gasbarra@va.gov', phone:'(240) 215-1755'},
+      ],
+    },
+  ];
+
+
+
+constructor(private router:Router, private route:ActivatedRoute) {}
 
   ngOnInit(){
     this.loadSubSectionContent(this.curSubSection);
@@ -554,6 +683,7 @@ export class AwardDataComponent {
           let start = val.url.indexOf("#");
           if(start > 0){
             subSection = val.url.substr(start+1,val.url.length-start-1);
+            this.setWDOLList(subSection);
           }else{
             subSection = "assistanceListings";
           }
@@ -566,6 +696,29 @@ export class AwardDataComponent {
 
     this.fakeOutAdmin();
 
+  }
+
+  setWDOLList(subSection){
+    if(subSection === 'wageDeterminations'){
+      this.wdolCurList = [];
+      this.wdolResourcesList.forEach( e => {
+        if(e !== this.wdolCurResource) this.wdolCurList.push(e);
+      });
+      this.defenceAgenciesEdit = JSON.parse(JSON.stringify(this.defenceAgencies));
+      this.contractAgenciesEdit = JSON.parse(JSON.stringify(this.contractAgencies));
+
+    }
+  }
+
+  onWDOLResourceClick(item){
+    this.wdolCurResource = item;
+    this.setWDOLList(this.curSubSection);
+    if(item === 'External Resources') this.router.navigateByUrl('/help/reference');
+    if(item === 'Latest Updates') this.router.navigateByUrl('/alerts');
+  }
+
+  showLaborAgency():boolean{
+    return this.wdolCurResource === 'Labor Advisors' && this.curSubSection === 'wageDeterminations'
   }
 
   fakeOutAdmin(){
@@ -653,4 +806,16 @@ export class AwardDataComponent {
     this.updateCopies();
   }
 
+  editDODAgency(isEdit){this.dodIsEdit = isEdit;}
+  editContractAgency(isEdit){this.contractIsEdit = isEdit;}
+
+  saveDODAgency(){
+    this.defenceAgencies = JSON.parse(JSON.stringify(this.defenceAgenciesEdit));
+    this.dodIsEdit = false;
+  }
+
+  saveContractAgency(){
+    this.contractAgencies = JSON.parse(JSON.stringify(this.contractAgenciesEdit));
+    this.contractIsEdit = false;
+  }
 }
