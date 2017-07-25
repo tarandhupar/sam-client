@@ -20,6 +20,7 @@ import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 import { AACRequestGuard } from "./AAC-request/AAC-request.guard";
 import { OrgMovePage } from "./move-org/move-org.component";
 import { OrgCreateForm } from "./create-org-form/create-org-form.component";
+import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { OrgCreateForm } from "./create-org-form/create-org-form.component";
     OrgCreatePage,
     OrgCreateForm,
     OrgMovePage,
+    OrgHierarchyPage,
     AACRequestPage,
     AACConfirmPage,
   ],

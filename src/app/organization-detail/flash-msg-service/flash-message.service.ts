@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 
 @Injectable()
 export class FlashMsgService{
@@ -6,6 +6,8 @@ export class FlashMsgService{
   _isCreateOrgSuccess: boolean = false;
   _isMoveOrgSuccess: boolean = false;
 
+  hierarchyStatusUpdate:EventEmitter<any> = new EventEmitter<any>();
+  
   resetFlags(){
     this.isCreateOrgSuccess = false;
     this.isMoveOrgSuccess = false;
@@ -17,4 +19,8 @@ export class FlashMsgService{
   get isMoveOrgSuccess(){return this._isMoveOrgSuccess;}
   hideFlashMsg(){this.isFlashMsgShow = false;}
   showFlashMsg(){this.isFlashMsgShow = true;}
+  
+  setHierarchyStatus(val){
+    this.hierarchyStatusUpdate.emit(val);
+  }
 }
