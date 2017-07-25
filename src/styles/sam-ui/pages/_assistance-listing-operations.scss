@@ -37,8 +37,9 @@
     }
   }
 
-  .code-box{
-    float: left;
+  .vertical-center{
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .code-separator{
@@ -135,4 +136,8 @@
 
 .section-invalid {
   color: red;
+}
+
+.usa-input-error {
+  margin-top: 0rem;
 }

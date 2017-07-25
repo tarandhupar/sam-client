@@ -1,9 +1,17 @@
 <div class="assistance-widget">
   <div class="usa-grid">
   <div class="usa-width-two-thirds">
-      <div *ngIf="pendingApprovalCount!=null"><span class="usa-font-lead">{{pendingApprovalCount == 0 ? '0' : pendingApprovalCount}}&nbsp;</span><span class="al-text">Pending Review Requests</span></div>
-      <div *ngIf="pendingRequestCount!=null"><span class="usa-font-lead">{{pendingRequestCount == 0 ? '0' : pendingRequestCount}}&nbsp;</span><span class="al-text">Pending Change Requests</span></div>
-      <div *ngIf="rejectedCount!=null"><span class="usa-font-lead">{{rejectedCount == 0 ? '0' : rejectedCount}}&nbsp;</span><span class="al-text">Rejected Assistance Listings</span></div>
+      <div *ngIf="pendingApprovalCount!=null"><span class="usa-font-lead">{{pendingApprovalCount == 0 ? '0' : pendingApprovalCount}}&nbsp;</span>
+        <a *ngIf="pendingApprovalCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'pending'}">Pending Review Requests</a>
+        <span *ngIf="pendingApprovalCount === 0">Pending Review Requests</span>
+      </div>
+      <div *ngIf="pendingRequestCount!=null"><span class="usa-font-lead">{{pendingRequestCount == 0 ? '0' : pendingRequestCount}}&nbsp;</span>
+        <a class="al-text">Pending Change Requests</a>
+      </div>
+      <div *ngIf="rejectedCount!=null"><span class="usa-font-lead">{{rejectedCount == 0 ? '0' : rejectedCount}}&nbsp;</span>
+        <a *ngIf="rejectedCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'rejected'}">Rejected Assistance Listings</a>
+        <span *ngIf="rejectedCount == 0" class="al-text">Rejected Assistance Listings</span>
+      </div>
   </div>
   <div class="usa-width-one-third">
       <a *ngIf="permissions['CREATE_FALS']" class="usa-button usa-button-primary al-button" [routerLink]="['/programs/add']">Create a New Listing</a>

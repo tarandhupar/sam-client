@@ -120,10 +120,6 @@ export class SearchService {
       oApiParam.oParam['beneficiary'] = obj.beneficiary;
     }
 
-    if(typeof obj.functionalCodes !== 'undefined' && obj.functionalCodes !== null && obj.functionalCodes !== ''){
-      oApiParam.oParam['functional_code'] = obj.functionalCodes;
-    }
-
     if(typeof obj.assistanceType !== 'undefined' && obj.assistanceType !== null && obj.assistanceType !== ''){
       oApiParam.oParam['assistance_type'] = obj.assistanceType;
     }

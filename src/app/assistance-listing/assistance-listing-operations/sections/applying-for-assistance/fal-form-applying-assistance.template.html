@@ -57,12 +57,14 @@
     <sam-checkbox [label]="'Application Procedures'"
                  [name]="'appProc-checkbox'"
                  [hint]="appProcedureHint"
+                 [attr.id]="'app-procedure-hint'"
                  [options]="appProcOptions"
                  formControlName="isApplicable"
     ></sam-checkbox>
 
     <sam-text-area [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
                  [name]="'appProc-description'"
+                   [attr.id]="'app-procedure-hint-textarea'"
                  formControlName="description"
                  [hint]= "'List all steps in the application process.'"
     ></sam-text-area>
@@ -72,10 +74,11 @@
   <div formGroupName="selectionCriteria">
 
     <sam-checkbox [label]="'Criteria for Selecting Proposals'"
-                 [name]="'selectionCriteria-checkbox'"
-                 [hint]="'Select if applicable.'"
-                 [options]="selectionCriteriaOptions"
-                 formControlName="isApplicable"
+                  [name]="'selectionCriteria-checkbox'"
+                  [hint]="'Select if applicable.'"
+                  [options]="selectionCriteriaOptions"
+                  [attr.id]="'selection-criteria-checkbox'"
+                  formControlName="isApplicable"
     ></sam-checkbox>
 
     <sam-text-area *ngIf="falAssistanceForm.get('selectionCriteria').get('description')"
@@ -92,6 +95,7 @@
     <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
                    [label]="'Award Procedure'"
                    [hint]="awardProcedureHint"
+                   [attr.id]="'award-procedure'"
                    [name]="'awardProcedure-description'"
                    [required]="true"
                    formControlName="description"
@@ -104,6 +108,7 @@
                 [label]="'Date Range for Approval/Disapproval'"
                 [hint]="approvalHint"
                 [name]="'approval-input'"
+                [attr.id]="'date-approval'"
                 [options]="dateRangeOptions"
                 [required]="true"
                 formControlName="interval"
@@ -111,6 +116,7 @@
     ></sam-select>
 
     <sam-text-area [label]="'Other Approval Information'"
+                   [attr.id]="'other-approval-info'"
                  [hint]="'Provide an additional information if appropriate.'"
                  [name]="'approval-description'"
                  formControlName="description"
@@ -121,6 +127,7 @@
     <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
                 [label]="'Renewals'"
                 [hint]="renewalHint"
+                [attr.id]="'renewal-range'"
                 [name]="'renewal-input'"
                 [options]="dateRangeOptions"
                 [required]="true"
@@ -130,6 +137,7 @@
 
     <sam-text-area [label]="'Other Renewal Information'"
                  [hint]="'Describe renewal or extension procedures.'"
+                 [attr.id]="'other-renewal-info'"
                  [name]="'renewal-description'"
                  formControlName="description"
     ></sam-text-area>
@@ -140,12 +148,14 @@
                 [label]="'Appeals'"
                 [hint]="appealsHint"
                 [name]="'appeals-input'"
+                [attr.id]="'appeal-range'"
                 [options]="dateRangeOptions"
                 [required]="true"
                 formControlName="interval"
                 [control]="falAssistanceForm.get('appeal').get('interval')"
     ></sam-select>
     <sam-text-area [label]="'Other Appeals Information'"
+                   [attr.id]="'other-appeal-info'"
                  [hint]="'Describe appeal, rework, or other options for applications that are not approved.'"
                  [name]="'appeals-description'"
                  formControlName="description"

@@ -362,7 +362,7 @@ export class UserAccessService {
       apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
 
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   getAllUserRoles(uid, queryParams = {}) {
@@ -406,9 +406,23 @@ export class UserAccessService {
       suffix: '/checkaccess/',
       method: 'GET',
       oParam: {}
-    };
+    }
 
     return this.callApi(apiOptions);
+  }
+
+  // used to determine whether the logged in user
+  checkAccess(pageName: string) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/checkaccess/',
+      method: 'GET',
+      oParam: {
+        pageName: pageName
+      }
+    };
+
+    return this.callApi(apiOptions, false);
   }
 
   getDomainCategoriesAndRoles() {

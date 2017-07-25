@@ -33,15 +33,12 @@ export class RoleTable implements OnInit {
 
   clickfuncPerm(role){
     role.testFlag = !role.testFlag;
-    //console.log(role);
     this.getFunctionPermission(role,role.domainId,role.organizationId, role.roleId);
   }
 
-  getFunctionPermission(role,domainId, orgId, roleId){    
+  getFunctionPermission(role,domainId, orgId, roleId){
     this.userService.getAccess(this.userName,{ domainKey: domainId, orgKey: orgId, roleKey: roleId },true).subscribe(res=>{
-      //console.log(res);
       role.funcperm = res.domainMapContent[0].roleMapContent[0].organizationMapContent[0].functionMapContent;
-      //console.log(role.funcperm);
     });
   }
 

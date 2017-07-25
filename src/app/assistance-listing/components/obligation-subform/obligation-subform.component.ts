@@ -5,6 +5,8 @@ import moment = require("moment");
 import * as _ from 'lodash';
 import {UUID} from "angular2-uuid";
 import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
+import {FALFieldNames, FALSectionNames} from "../../assistance-listing-operations/fal-form.constants";
+import {FALFormViewModel} from "../../assistance-listing-operations/fal-form.model";
 
 @Component({
   selector: 'obligation-subform',
@@ -15,15 +17,15 @@ import {falCustomValidatorsComponent} from "../../validators/assistance-listing-
 export class FALObligationSubFormComponent {
 
   falObligationSubForm: FormGroup;
+  @Input() viewModel: FALFormViewModel;
   @Input() hideAddButton: boolean;
   @Input() fyYearOptions: any;
   @Input() options: any;
+  @Input() toggleAttleatOneEntryError: boolean;
   @Output() public subFormObligActionHandler = new EventEmitter();
   currentFY: number;
   prevFY: number;
   nextFY: number;
-  review:boolean = false;
-  errorExists:boolean = false;
 
   obligationsInfo = [];
   obligationIndex: number = 0;
@@ -71,7 +73,7 @@ export class FALObligationSubFormComponent {
       {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY', flag: 'text'}
     ],
     name: 'Past Fiscal year - 2016',
-    id: 'obligations-past-fiscal-year-number-input',
+    id: FALFieldNames.PAST_FISCAL_YEAR,
     label: '',
     errorMessage: '',
     hint: ''
@@ -85,7 +87,7 @@ export class FALObligationSubFormComponent {
       {value: 'cFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-cFY', flag: 'text'}
     ],
     name: 'Current Fiscal year - 2016',
-    id: 'obligations-current-fiscal-year-number-input',
+    id: FALFieldNames.CURRENT_FISCAL_YEAR,
     label: '',
     errorMessage: '',
     hint: ''
@@ -99,7 +101,7 @@ export class FALObligationSubFormComponent {
       {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY', flag: 'text'}
     ],
     name: 'Budget Fiscal year - 2016',
-    id: 'obligations-budget-fiscal-year-number-input',
+    id: FALFieldNames.BUDGET_FISCAL_YEAR,
     label: '',
     errorMessage: '',
     hint: ''
@@ -129,7 +131,6 @@ export class FALObligationSubFormComponent {
       'obligations': this.fb.array([], falCustomValidatorsComponent.atLeastOneEntryCheck)
     });
   }
-
 
   initobligations(obligation: {}, populateAddFalg: boolean) {
     let year = new Date();

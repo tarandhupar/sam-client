@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
-import {AuthGuard} from "../../../authguard/authguard.component";
+import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
 
 @Component({
   selector: 'fal-publish',

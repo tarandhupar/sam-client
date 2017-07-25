@@ -11,6 +11,7 @@ import { IsLoggedInService } from "./is-logged-in.service";
 import { IsLoggedInGuard } from "./is-logged-in.guard";
 import { UnauthenticatedPage } from "../401/401.page";
 import { UserNameResolve } from "./user-name.resolve";
+import { CheckAccessGuard } from "./check-access.guard";
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { UserNameResolve } from "./user-name.resolve";
     IsLoggedInService,
     IsLoggedInGuard,
     UserNameResolve,
+    CheckAccessGuard,
   ],
 })
 export class ForbiddenModule { }

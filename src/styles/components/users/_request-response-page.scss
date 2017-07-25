@@ -1,21 +1,30 @@
 .request-response-page {
   &.usa-grid-full{
-      max-width: initial;
-    }
-    .pd-l-1em{
-        padding-left: 1em;
-    }
-    .m-r-7em{
-        margin-right: 7em;
-    }
-    .m-r-12d5em{
-        margin-right: 12.5em;
-    }
+    max-width: initial;
+  }
+
+  sam-agency-picker .organization-container {
+    max-width: 46rem;
+  }
+
+  .usa-form-hint {
+    max-width: inherit;
+  }
+
+  label[for=comment] {
+    max-width: inherit;
+  }
 
   sam-text-area {
     textarea {
       max-width: initial;
     }
+  }
+
+  [type="checkbox"]:disabled:checked + label::before {
+    background-image: url('#{$image-path}/correct8.png');
+    background-position: 50%;
+    background-repeat: no-repeat;
   }
 
   .permission-input {

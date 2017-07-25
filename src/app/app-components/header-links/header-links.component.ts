@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, NgZone } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { globals } from '../../globals.ts';
 
@@ -42,6 +42,27 @@ import { trigger, state, style, animate, transition } from '@angular/core';
           overflow: 'hidden'
         }))
       ])
+    ]),
+    trigger('fadeInOut', [
+      state('in', style({
+        opacity: '1',
+      })),
+      transition(':enter', [
+        style({
+          opacity: '0'
+        }),
+        animate('.1s .1s ease-in', style({
+          opacity: '1'
+        }))
+      ]),
+      transition(':leave', [
+        style({
+          opacity: '1'
+        }),
+        animate('.1s ease-out', style({
+          opacity: '0'
+        }))
+      ])
     ])
   ]
 })
@@ -50,7 +71,11 @@ export class SamHeaderLinksComponent {
 
   private startCheckOutsideClick: boolean = false;
   private user = null;
-
+  showNotifications: boolean = false;
+  notifications = [{link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",text:"Made a Title change request in assistance listings"},
+    {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",text:"Made an Archive change request in assistance listings"},
+    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",text:"Requests your assistance listing change approval"},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},];
   private states = {
     isSignedIn: false,
     menu: false
@@ -63,9 +88,9 @@ export class SamHeaderLinksComponent {
     ]
   };
 
-  showDropdown:boolean = true;
+  public showDropdown:boolean = true;
 
-  dropdownData:any = [
+  public dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkId:"header-link-home", linkUrl:"/", pageInProgress:false},
     {linkTitle:"Reports", linkClass:"fa-area-chart", linkId:"header-link-reports", linkUrl:"/reports/overview", pageInProgress:true},
     {linkTitle:"Workspace", linkClass:"fa-table", linkId:"header-link-workspace", linkUrl:"/workspace", pageInProgress:false},
@@ -77,7 +102,10 @@ export class SamHeaderLinksComponent {
     {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkId:"header-link-signout", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
   ];
 
-  constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
+  public searchLink = false;
+  public menuLink = false;
+
+  constructor(private _router:Router, private api: IAMService) {
     this._router.events.subscribe((event: any) => {
       if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
@@ -98,21 +126,14 @@ export class SamHeaderLinksComponent {
   }
 
   checkSession() {
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.checkSession((user) => {
-        this.zone.run(() => {
-          this.states.isSignedIn = true;
-          this.user = user;
-        });
-      },()=>{
-        this.states.isSignedIn = false;
-        this.user = null;
-      });
+    this.api.iam.checkSession(user => {
+      this.states.isSignedIn = true;
+      this.user = user;
+    }, () => {
+      this.states.isSignedIn = false;
+      this.user = null;
     });
   }
-
-  searchLink = false;
-  menuLink = false;
 
   onSearchLinkClick(state:boolean=null){
     if (this.showDropdown === true && this.menuLink === true) {
@@ -189,5 +210,18 @@ export class SamHeaderLinksComponent {
   refreshPage(){
     window.location.reload();
   }
+  startNotificationOutsideClick = false;
+  notificationStartClick(){
+    this.showNotifications = !this.showNotifications;
+    setTimeout(()=>{
+      this.startNotificationOutsideClick = this.showNotifications;
+    });
+  }
 
+  onNotificationOutsideClick(){
+    if(this.startNotificationOutsideClick){
+      this.showNotifications = false;
+      this.startNotificationOutsideClick = false;
+    }
+  }
 }

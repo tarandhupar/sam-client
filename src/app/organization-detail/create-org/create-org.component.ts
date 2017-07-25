@@ -31,6 +31,8 @@ export class OrgCreatePage {
   orgFormConfig: any;
   orgType: string = "";
   orgParentId: string = "";
+  hierarchyPath: any = [];
+  hierarchyPathMap: any = [];
 
   fhRoleModel: FHRoleModel;
   loadData: boolean = false;
@@ -70,6 +72,7 @@ export class OrgCreatePage {
         }else {
           this.fhService.getOrganizationDetail(accessOrg).subscribe(
             val => {
+              this.setupHierarchyPathMap(val._embedded[0].org.fullParentPath, val._embedded[0].org.fullParentPathName);
               this.fhRoleModel = FHRoleModel.FromResponse(val);
               let checkPermissionType = this.orgType.toLowerCase();
               if(checkPermissionType === "majcommand" || checkPermissionType === "subcommand") checkPermissionType = "office";
@@ -91,4 +94,19 @@ export class OrgCreatePage {
   redirectToSignin = () => { this._router.navigateByUrl('/signin')};
   redirectToForbidden = () => {this._router.navigateByUrl('/403')};
 
+  setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
+    this.hierarchyPath = fullParentPathName.split('.').map( e => {
+      return e.split('_').join(' ');
+    });
+    let parentOrgIds = fullParentPath.split('.');
+    this.hierarchyPathMap = [];
+    parentOrgIds.forEach((elem,index) => {
+      this.hierarchyPathMap[this.hierarchyPath[index]] = elem;
+    });
+
+  }
+
+  onChangeOrgDetail(hierarchyName){
+    this._router.navigate(['organization-detail', this.hierarchyPathMap[hierarchyName],'profile'])
+  }
 }

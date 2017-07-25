@@ -16,3 +16,10 @@ export interface SearchOption {
   label: string;
   width: number|string;
 }
+
+export interface NotificationItem{
+  link: string,
+  datetime: string,
+  username: string,
+  text: string
+}

@@ -5,6 +5,7 @@ import {
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { ValidationErrors } from "../../../app-utils/types";
+import { FieldErrorList } from '../../assistance-listing-operations/fal-form-error.service';
 
 
 /** Interfaces **/
@@ -139,8 +140,30 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
     }
 
     for (let i = 0; i < this.codePartLengths.length; i++) {
-      // code parts are required and should only take numbers
-      let codePartControl = new FormControl(null, [Validators.required, Validators.pattern('[0-9]*')]);
+      // code parts are required, should be an exact number of digits, and should only take numbers
+      let codePartControl = new FormControl(null,
+        (control: AbstractControl): (ValidationErrors | null) => {
+          let errors: ValidationErrors = Validators.compose([
+            Validators.required,
+            Validators.minLength(this.codePartLengths[i]),
+            Validators.maxLength(this.codePartLengths[i]),
+            Validators.pattern('[0-9]*')
+          ])(control);
+
+          let shownError = null;
+
+          if (errors) {
+            shownError = {
+              invalidCode: {
+                message: 'Provide a valid 11 digit account code using only numerical values.'
+              }
+            }
+          }
+
+          return shownError;
+        }
+      );
+
       codePartControl.valueChanges.subscribe(value => {
         this.model.codeParts[i] = value;
         this.onChange();
@@ -161,16 +184,16 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
   /** Account operations (add, remove, edit) **/
 
   public addAccount() {
-    // When adding an account, combine each code part together by joining with dashes
+    // when adding an account, combine each code part together by joining with dashes
     let combinedCode = '';
     for (let i = 0; i < this.codePartLengths.length; i++) {
-      if (this.codeForm.get('codePart' + i).value) {
-        combinedCode = combinedCode + '-' + this.codeForm.get('codePart' + i).value;
-      }
+      let value = this.codeForm.get('codePart' + i).value || '';
+      value = value.replace(/-/g, ''); // strip out user-entered dashes as they will cause ambiguity when loading data
+      combinedCode = combinedCode + '-' + value;
     }
 
     let account: AccountIdentification = {
-      code: combinedCode.replace(/^-/, '') || null,
+      code: combinedCode.replace(/^-/, ''), // remove leading dash
       description: this.descriptionControl.value
     };
 
@@ -193,13 +216,16 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
   }
 
   public editAccount(index: number) {
+    this.codeForm.markAsDirty();
+
     // When editing an account, split its code up into parts
     let code = this.model.accounts[index].code;
 
     if (code) {
       let splits = code.split('-');
       for (let i = 0; i < this.codePartLengths.length; i++) {
-        this.codeForm.get('codePart' + i).setValue(splits[i]);
+        let partControl = this.codeForm.get('codePart' + i);
+        partControl.setValue(splits[i]);
       }
     }
 
@@ -208,6 +234,9 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
 
     this.currentIndex = index;
     this.isEditing = true;
+
+    this.codeForm.markAsDirty();
+    this.onChange();
   }
 
 
@@ -215,13 +244,13 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
 
   // Modified version of code originally by Joseph Lennox
   // http://stackoverflow.com/a/15595732
-  // todo: fix edge cases
+  // todo: fix edge cases (tab is broken)
   public onKeyup(event) {
     let target = event.srcElement || event.target;
     let maxLength = parseInt(target.attributes["maxlength"].value, 10);
     let currentLength = target.value.length;
 
-    let node = target.parentNode.parentNode.parentNode.parentNode;
+    let node = target.parentNode.parentNode.parentNode.parentNode.parentNode;
 
     // When typing into code part inputs, focus on the next or previous input automatically
     if (currentLength >= maxLength || currentLength === 0) {
@@ -232,7 +261,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
           node = node.previousElementSibling;
         }
 
-        if (node && node.tagName.toLowerCase() === "sam-text") {
+        if (node && node.tagName.toLowerCase() === "div") {
           node.getElementsByTagName('input')[0].focus();
           break;
         }
@@ -295,9 +324,6 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
     } else {
       this.codeWrapper.formatErrors(errored);
     }
-
-    // todo: implement this in separate function
-    // this.wrapper.formatErrors(this.accountFormGroup);
   }
 
 
@@ -336,23 +362,25 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
     this.onChange();
   }
 
+  public isValidCode(code: string) {
+    let regex = '\\d{' + this.codePartLengths[0] + '}';
+    for(let i = 1; i < this.codePartLengths.length; i++) {
+      regex += '-\\d{' + this.codePartLengths[i] + '}';
+    }
+
+    return new RegExp(regex).test(code);
+  }
+
 
   /** Validation **/
 
-  public validate(c: AbstractControl): ValidationErrors {
-    let error: ValidationErrors = {
-      atLeastOneAccount: {
-        message: 'At least one account identification code is required.'
-      }
+  public validate(c: AbstractControl): ValidationErrors | null {
+    let errors: ValidationErrors = {};
+    let atLeastOneAccountError = {
+      message: 'At least one valid account identification code is required.'
     };
 
-    if (this.config.required && this.config.required === true) {
-      if (this.model.accounts.length === 0) {
-        return error;
-      }
-    }
-
-    return null;
+    return this.model.accounts.length > 0 ? null : { atLeastOneAccount: atLeastOneAccountError};
   }
 
 

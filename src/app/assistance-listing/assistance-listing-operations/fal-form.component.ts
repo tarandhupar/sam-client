@@ -5,7 +5,7 @@ import {FALFormViewModel} from "./fal-form.model";
 import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
 import { FALSectionNames } from './fal-form.constants';
 import { FALFormErrorService } from './fal-form-error.service';
-import {AuthGuard} from "../authguard/authguard.component";
+import {AuthGuard} from "../../../api-kit/authguard/authguard.service";
 import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
 
@@ -41,7 +41,7 @@ export class FALFormComponent implements OnInit, OnDestroy {
   sectionLabels: any = [
     '1. Header Information',
     '2. Overview',
-    '3. Authorization',
+    '3. Authorizations',
     'Obligations',
     'Other Financial Info',
     '5. Criteria for Applying',

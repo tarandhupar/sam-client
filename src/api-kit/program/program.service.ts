@@ -106,12 +106,33 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
-  isProgramNumberUnique(progNum: string, id:string, cookie: string) {
+  getNextAvailableProgramNumber(orgId: string, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/nextAvailableProgramNumber/',
+      oParam: {
+        organizationId: orgId
+      },
+      headers: {},
+      method: 'GET'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  isProgramNumberUnique(progNum: string, id:string, cookie: string, newOrgId: string = null) {
     let oApiParam = {
       name: 'program',
       suffix: '/isProgramNumberUnique',
       oParam: {
         programNumber: progNum,
+        organizationId: (newOrgId) ? newOrgId : '',
         id: id
       },
       headers: {
@@ -119,6 +140,7 @@ export class ProgramService{
       },
       method: 'GET'
     };
+
     return this.oAPIService.call(oApiParam);
   }
 
@@ -244,6 +266,18 @@ export class ProgramService{
       method: 'GET'
     };
 
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getCfdaCode(orgId) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/getCfdaCode',
+      oParam: {
+        organizationId: orgId
+      },
+      method: 'GET'
+    };
     return this.oAPIService.call(oApiParam);
   }
 

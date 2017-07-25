@@ -191,7 +191,15 @@ export class SearchPage implements OnInit {
   };
 
   // scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
-  wdSearchDescription: string = "The Wage Determination filters to the left ask a series of questions to determine if the best WD is available on the site. If any criteria such as a specific location is not present or the non-standard service does not strictly apply, please click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form. Users should note that the only WDs applicable to a particular solicitation or contract are those that have been incorporated by the contracting officer in that contract action.";
+  wdSearchDescription: string = 'The Wage Determination filters to the left ask a series of questions to determine if the best WD is available on the site. '+
+                                'If any criteria such as a specific location is not present or the non-standard service does not strictly apply, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here</a> to submit an e98 form. '+
+                                'Users should note that the only WDs applicable to a particular solicitation or contract are those that have been incorporated by the contracting officer in that contract action.' +
+                                '<br>'+
+                                '<a href="https://www.wdol.gov/rollover-crosswalk2015.pdf" target="Rollover Crosswalk">Rollover crosswalk <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>'+
+                                '<br>'+
+                                '<a href="https://www.wdol.gov/newdba.aspx" target="Revise WD DBA">WD\'s to be revised DBA <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>'+
+                                '<br>'+
+                                '<a href="https://www.wdol.gov/newsca.aspx" target="Revise WD SCA">WD\'s to be revised SCA <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>';
   dismissWdAlert: boolean = false;
 
   //Select Award Types

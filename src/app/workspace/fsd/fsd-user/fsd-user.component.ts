@@ -220,7 +220,8 @@ export class FSDUserComponent {
     return [
       this.user.firstName || '',
       this.user.initials || '',
-      this.user.lastName || ''
+      this.user.lastName || '',
+      this.user.suffix || '',
     ].join(' ').replace(/\s+/g, ' ');
   }
 

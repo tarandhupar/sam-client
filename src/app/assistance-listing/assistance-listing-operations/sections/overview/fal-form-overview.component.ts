@@ -1,14 +1,13 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
 import { AutocompleteConfig } from "sam-ui-kit/types";
 import {
-  FiscalYearTableConfig,
-  FALFiscalYearTableComponent
+  FiscalYearTableConfig
 } from "../../../components/fiscal-year-table/fiscal-year-table.component";
 import { FALFormErrorService, FieldErrorList } from '../../fal-form-error.service';
-import { FALFieldNames } from '../../fal-form.constants';
+import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -143,6 +142,21 @@ export class FALFormOverviewComponent implements OnInit {
       'subjectTermsTypes': [''],
       'fundedProjects': null
     });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.OVERVIEW) === 'updated') {
+        this.falOverviewForm.get('objective').markAsDirty();
+        this.falOverviewForm.get('objective').updateValueAndValidity();
+        this.falOverviewForm.get('description').markAsDirty();
+        this.falOverviewForm.get('description').updateValueAndValidity();
+        this.falOverviewForm.get('functionalTypes').markAsDirty();
+        this.falOverviewForm.get('functionalTypes').updateValueAndValidity();
+        this.falOverviewForm.get('subjectTermsTypes').markAsDirty();
+        this.falOverviewForm.get('subjectTermsTypes').updateValueAndValidity();
+        this.falOverviewForm.get('fundedProjects').markAsDirty();
+        this.falOverviewForm.get('fundedProjects').updateValueAndValidity();
+      }
+    });
   }
 
   updateViewModel(data) {
@@ -173,12 +187,7 @@ export class FALFormOverviewComponent implements OnInit {
     control.clearValidators();
     control.setValidators((control) => { return control.errors });
     control.setErrors(errors);
-    this.markAndUpdateFieldStat(control);
-  }
-
-  private markAndUpdateFieldStat(control){
     setTimeout(() => {
-      control.markAsDirty();
       control.updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
   }

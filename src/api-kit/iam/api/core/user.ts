@@ -27,6 +27,8 @@ export class User {
   public firstName = '';
   public initials = '';
   public lastName = '';
+  public suffix = '';
+  public workPhone = '';
   public _links = {};
 
   public status = 'Active';
@@ -129,12 +131,23 @@ export class User {
     let fullName = [
       this.firstName || '',
       this.initials || '',
-      this.lastName || ''
+      this.lastName || '',
+      this.suffix || '',
     ];
 
     return fullName
       .join(' ')
       .trim()
       .replace(/ +/g, ' ');
+  }
+
+  get phone(): string {
+    let phone = this.workPhone || '';
+
+    phone = phone.replace(/[^0-9]/g, '');
+    phone = `${phone.length && phone.length < 11 ? '1' : ''}${phone}`;
+    phone = phone.replace(/([0-9])([0-9]{3})([0-9]{3})([0-9]{4})/, '$1+($2)$3-$4');
+
+    return phone;
   }
 }

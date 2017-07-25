@@ -46,7 +46,7 @@ export class FeedsFilterComponent {
       {value: 'unarchive_request', label: 'Unarchive', name: 'checkbox-al-unarchive-type'},
       {value: 'title_request', label: 'Title Change', name: 'checkbox-al-title-request'},
       {value: 'agency_request', label: 'Agency Change', name: 'checkbox-al-agency-request'},
-      {value: 'program_number_request', label: 'Program Number Change', name: 'checkbox-al-number-request'}
+      {value: 'program_number_request', label: 'CFDA Number Change', name: 'checkbox-al-number-request'}
     ],
     name: 'al-request-type-filter'
   };

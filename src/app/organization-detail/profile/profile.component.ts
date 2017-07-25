@@ -164,11 +164,11 @@ export class OrgDetailProfilePage {
     let funding = "";
 
     if(!!org.startDate){
-      startDateStr = moment(org.startDate).format('MM/DD/YYYY');
+      startDateStr = moment(org.startDate).utc().format('MM/DD/YYYY');
     }
 
     if(!!org.endDate){
-      endDateStr = moment(org.endDate).format('MM/DD/YYYY');
+      endDateStr = moment(org.endDate).utc().format('MM/DD/YYYY');
     }
 
     this.orgDetails.push({description:this.capitalizeFirstLetter(org.type)+" Name", value:this.capitalizeFirstLetter(org.name)});

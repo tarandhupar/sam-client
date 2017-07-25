@@ -29,6 +29,11 @@ import { FileExtractsService } from "./file-extracts/file-extracts.service";
 import { PeoplePickerService } from "./people-picker/people-picker.service";
 import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service';
 import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
+import { AgencyPickerAutoCompleteDirective } from "./autoCompleteWrapper/agencyPickerAutoCompleteWrapper.service";
+import { SearchServiceMock } from "./search/search.service.mock";
+import { FHServiceMock } from "./fh/fh.service.mock";
+import { FeedbackServiceMock } from "./feedback/feedback.service.mock";
+import { SystemAlertsServiceMock } from "./system-alerts/system-alerts.service.mock";
 
 /**
  * A module for reusable SAM Web Design components
@@ -38,12 +43,14 @@ import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
   declarations: [
     SuggestionsServiceDirective,
     PeoplePickerAutoCompleteDirective,
-    EntitySuggestionsServiceDirective
+    EntitySuggestionsServiceDirective,
+    AgencyPickerAutoCompleteDirective
   ],
   exports: [
     SuggestionsServiceDirective,
     PeoplePickerAutoCompleteDirective,
-    EntitySuggestionsServiceDirective
+    EntitySuggestionsServiceDirective,
+    AgencyPickerAutoCompleteDirective
   ],
   imports: [
     HttpModule,
@@ -51,9 +58,12 @@ import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
   ],
   providers: [
     SearchService,
+    //{ provide: SearchService, useClass: SearchServiceMock },
     FHService,
+    //{ provide: FHService, useClass: FHServiceMock},
     IAMService,
     SystemAlertsService,
+    //{ provide: SystemAlertsService, useClass: SystemAlertsServiceMock },
     EntityService,
     ExclusionService,
     OpportunityService,
@@ -66,6 +76,7 @@ import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
     WageDeterminationService,
     LocationService,
     FeedbackService,
+    //{ provide: FeedbackService, useClass: FeedbackServiceMock },
     DictionaryService,
     AACRequestService,
     FHWrapperService,

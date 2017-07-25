@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { FALAuthSubFormComponent } from '../../../components/authorization-subform/authorization-subform.component';
-import { FALFormViewModel } from "../../fal-form.model";
+import { FALFormViewModel } from '../../fal-form.model';
 import { FALFormErrorService } from '../../fal-form-error.service';
+import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [ ],
@@ -10,7 +11,7 @@ import { FALFormErrorService } from '../../fal-form-error.service';
   templateUrl: 'fal-form-authorizations.template.html',
 })
 
-export class FALAuthorizationsComponent implements OnInit {
+export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
 
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
@@ -21,6 +22,7 @@ export class FALAuthorizationsComponent implements OnInit {
   falAuthForm: FormGroup;
   displayAuthInfo: any = [];
   subFormErrorIndex: any = {};
+  toggleAtLeastOneEntryError: boolean = false;
 
   description: string = `
 <p>This section should include the legal authority upon which a program is based.</p><p>When new legislation is passed that has a significant bearing on a program, the reference should be included in this section.</p>
@@ -52,6 +54,16 @@ export class FALAuthorizationsComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(){
+    setTimeout( () => {
+
+       if(this.viewModel.getSectionStatus(FALSectionNames.AUTHORIZATION) == 'updated')
+         this.toggleAtLeastOneEntryError = true;
+       else
+         this.toggleAtLeastOneEntryError = false;
+    });
+  }
+
   createForm(){
     this.falAuthForm = this.fb.group({
       'description': ''
@@ -60,9 +72,6 @@ export class FALAuthorizationsComponent implements OnInit {
 
   updateAuthViewModel(data){
     this.viewModel.authList = this.getUpdatedAuthList(data.authorizations);
-    setTimeout(() => {
-      this.updateErrors();
-    });
   }
 
   updateViewModel(data){
@@ -75,6 +84,10 @@ export class FALAuthorizationsComponent implements OnInit {
 
     this.falAuthForm.patchValue({
       description: this.viewModel.authDesc
+    });
+
+    setTimeout(() => {
+      this.updateErrors();
     });
   }
 
@@ -157,15 +170,23 @@ export class FALAuthorizationsComponent implements OnInit {
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
       this.authInfoFormat(event.authInfo);
+      setTimeout(() => {
+        this.updateErrors();
+      });
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
+      this.toggleAtLeastOneEntryError = true;
     }
     if(event.type == 'edit'){
       this.editAuth(event.index, event.parentIndex);
     }
     if(event.type == 'remove'){
       this.removeAuth(event.index, event.parentIndex);
+      setTimeout(() => {
+        this.updateErrors();
+      });
+      this.toggleAtLeastOneEntryError = true;
     }
     if(event.type == 'amend'){
       this.authSubForm.addAuth(event.index);
@@ -283,7 +304,7 @@ export class FALAuthorizationsComponent implements OnInit {
     this.subFormErrorIndex = {};
     if(authListErrors) {
       for(let errObj of authListErrors.errorList){
-        if(errObj.id !== 'fal-authorization-authList-no-auth') {
+        if(errObj.id !== FALFieldNames.NO_AUTHORIZATION) {
           let id = errObj.id;
           id = id.substr(id.length - 1);
           let fcontrol = this.authSubForm.falAuthSubForm.controls['authorizations']['controls'][id].get('authType');

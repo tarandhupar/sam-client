@@ -488,7 +488,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
     apiSubject.subscribe((res: any[]) => {
       let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
       actionHistoryPipe.transform(res).subscribe(array => {
-        this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
+        this.publicHistoryIsVisible = false;
         this.actionHistoryAndNote = array;
       });
     });

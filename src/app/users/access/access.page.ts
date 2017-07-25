@@ -50,7 +50,7 @@ export class UserAccessPage implements OnInit {
 
   private user: any = {};
   private userName = '';
-  private domainCounts: any = {};
+  private countSummary: any = {};
 
   // pending requests
   private requests = [];
@@ -67,7 +67,6 @@ export class UserAccessPage implements OnInit {
     private router: Router,
     )
   {
-
     this.isAdmin = this.route.snapshot.data['isAdminView'];
     this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
     this.title = this.isAdmin ? 'ROLE MANAGEMENT' : 'PROFILE';
@@ -92,7 +91,6 @@ export class UserAccessPage implements OnInit {
   getPendingRequests() {
     this.userService.getOpenRequests(this.userName).subscribe(reqs => {
       this.requests = reqs.userAccessRequestList;
-      //console.log(this.requests);
     });
   }
 
@@ -164,9 +162,9 @@ export class UserAccessPage implements OnInit {
         };
       });
 
-      this.domainCounts = res.countSummary;
-      this.updateRoleOptions();
-      this.setDomainOptions();
+      this.countSummary = res.countSummary;
+      this.setRoleOptions();
+      this.updateDomainOptions();
     });
   }
 
@@ -179,17 +177,17 @@ export class UserAccessPage implements OnInit {
     this.onSearchParamChange();
   }
 
-  updateRoleOptions() {
-    let domain = this.domainCounts.find(d => {
-      return ''+d.id === ''+this.selectedDomain;
+  updateDomainOptions() {
+    let role = this.countSummary.find(d => {
+      return ''+d.id === ''+this.selectedRole;
     });
 
-    if (!domain) {
-      this.roleOptions = [];
+    if (!role || !role.domains || !role.domains.length) {
+      this.domainOptions = [];
       return;
     }
 
-    this.roleOptions = domain.roles.map(r => {
+    this.domainOptions = role.domains.map(r => {
       let label = `${r.val} (${r.count})`;
       return {
         label: label,
@@ -199,8 +197,8 @@ export class UserAccessPage implements OnInit {
     });
   }
 
-  setDomainOptions() {
-    this.domainOptions = this.domainCounts.map(d => {
+  setRoleOptions() {
+    this.roleOptions = this.countSummary.map(d => {
       let label = `${d.val} (${d.count})`;
       return {
         label: label,
@@ -215,11 +213,11 @@ export class UserAccessPage implements OnInit {
   }
 
   onDomainChange() {
-    this.selectedRole = null;
     this.onSearchParamChange();
   }
 
   onRoleChange() {
+    this.selectedDomain = null;
     this.onSearchParamChange();
   }
 

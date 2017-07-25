@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
+import { AgencyPickerV2Component } from './agency-picker-v2/agency-picker-v2.component';
 import { SamSearchHeaderComponent } from './search-header/search-header.component';
 import { SamWellComponent } from './well/well.component';
 import { SamSectionComponent } from './section/section.component';
@@ -18,7 +19,6 @@ import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.co
 import { SamFooterComponent } from './footer/footer.component';
 import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
-import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
@@ -47,6 +47,8 @@ import { SamPasswordComponent } from './password/password.component';
 import { SamUserDirectoryComponent } from './user-directory/user-directory.component';
 import { SamDateRangeFilterComponent } from './sam-date-range-filter/sam-date-range-filter.component';
 import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/request-access/username-autocomplete.component.ts';
+import { SamSortComponent } from "./sam-sort/sam-sort.component";
+import { SamNotificationsComponent } from './sam-notifications/sam-notifications.component';
 
 /**
  * A module for reusable SAM Web Design components
@@ -64,7 +66,6 @@ import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/req
     WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
-    InputAutocompleteComponent,
     ListResultsMessageComponent,
     FormFieldComponent,
     ObjectFormModel,
@@ -92,6 +93,9 @@ import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/req
     SamUserDirectoryComponent,
     SamDateRangeFilterComponent,
     //SamRMSUsersServiceAutoDirective,
+    AgencyPickerV2Component,
+    SamSortComponent,
+    SamNotificationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,7 +118,6 @@ import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/req
     WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
-    InputAutocompleteComponent,
     ListResultsMessageComponent,
     SamSearchbarComponent,
     SamFeedbackComponent,
@@ -140,6 +143,9 @@ import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/req
     SamPasswordComponent,
     SamUserDirectoryComponent,
     SamDateRangeFilterComponent,
+    AgencyPickerV2Component,
+    SamSortComponent,
+    SamNotificationsComponent,
   ],
   providers: [
     SamFeedbackComponent,

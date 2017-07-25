@@ -79,6 +79,9 @@ export class FALAssistSubFormComponent {
   }
 
   onSubFormCancelClick(i: number){
+    if(this.hideAddButton === false) {
+      return; // clicking cancel has no effect if nothing is being edited or added
+    }
 
     if(this.mode == 'Add'){
       this.removeAssist(i);

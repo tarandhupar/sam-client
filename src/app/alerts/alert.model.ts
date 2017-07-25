@@ -1,4 +1,5 @@
 import { AlertType } from "../../api-kit/system-alerts/system-alerts.service";
+import moment = require("moment");
 
 export class Alert {
   private _raw: AlertType = {
@@ -11,11 +12,11 @@ export class Alert {
   constructor() {  }
 
   id(): number {
-    return this._raw.id;
+    return this._raw.alertId;
   }
 
   setId(id) {
-    this._raw.id = id;
+    this._raw.alertId = id;
   }
 
   isExpiresIndefinite() : boolean {
@@ -94,14 +95,22 @@ export class Alert {
     return this._raw.content.published;
   }
   setPublishedDate(publishedDate: string) {
-    this._raw.content.published = publishedDate;
+    let date = null;
+    if(publishedDate != null){
+      date = moment(publishedDate).format("YYYY-MM-DD HH:mm:ss");
+    }
+    this._raw.content.published = date;
   }
 
   endDate(): string {
     return this._raw.content.expires;
   }
   setEndDate(endDate: string) {
-    this._raw.content.expires = endDate;
+    let date = null;
+    if(endDate != null){
+      date = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
+    }
+    this._raw.content.expires = date;
   }
 
   raw(): AlertType {

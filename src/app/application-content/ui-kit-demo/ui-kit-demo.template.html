@@ -1,4 +1,36 @@
 <div class="sam-ui-kit">
+
+  <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <h2>SAM agency-picker-v2 &lt;sam-agency-picker-v2&gt;</h2>
+      <sam-agency-picker-v2 
+        type="single" 
+        label="Agency Picker (single)" 
+        required="true" 
+        [(ngModel)]="agv2_selections1"
+        hint="Pick a single agency">
+      </sam-agency-picker-v2>
+      <sam-agency-picker-v2 
+        type="multiple" 
+        label="Agency Picker (multiple)" 
+        required="true" 
+        [(ngModel)]="agv2_selections2"
+        hint="Pick multiple agencies">
+      </sam-agency-picker-v2>
+    </div>
+    <div class="usa-width-one-half">
+      <p>{{ agv2_selections1 | json }}</p>
+      <p>{{ agv2_selections2 | json }}</p>
+    </div>
+  </div>
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+      <h2>SAM Sort &lt;sam-sort&gt;</h2>
+      <sam-sort [(ngModel)]="sortModel"></sam-sort>
+      {{ sortModel | json }}
+    </div>
+  </div>
+
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM people-picker &lt;sam-autocomplete[peoplepicker-autofill]&gt;</h2>
@@ -7,12 +39,12 @@
         [required]="true"
         peoplepicker-autofill
         [config]="autocompletePeoplePickerConfig"></sam-autocomplete>
-      <!--sam-autocomplete-multiselect 
+      <sam-autocomplete-multiselect 
         hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
         label="People Picker example (multiple)" required="true"
         peoplepicker-autofill
         [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig">
-      </sam-autocomplete-multiselect-->
+      </sam-autocomplete-multiselect>
     </div>
   </div>
 
@@ -665,13 +697,6 @@
     </div>
   </div>
 
-  <div class="usa-grid">
-    <h2 class="usa-width-one">Autocomplete &lt;sam-phone-entry&gt;</h2>
-    <div class="usa-width-one">
-      <sam-input-autocomplete [serviceName]="'suggestions'"></sam-input-autocomplete>
-    </div>
-  </div>
-
   <div class="usa-grid relative">
     <h2 class="usa-grid-full">Info Accordion Component &lt;sam-info-accordion&gt;</h2>
     <div class="usa-grid-full">
@@ -790,6 +815,12 @@
                                   [(ngModel)]="modellz2">
       </sam-autocomplete-multiselect>
     <div class="usa-width-one-half">{{modellz2 | json}}</div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Sam Comments Component</h2>
+    <sam-comments class="usa-width-one">
+    </sam-comments>
   </div>
 <br>
 </div>

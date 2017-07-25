@@ -34,6 +34,8 @@ export class AssistanceProgramResult implements OnInit {
     defaultOption: "Make a Request"
   };
 
+  public organizationName: string = "";
+
   constructor(private router: Router) { }
 
   ngOnInit() {

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, EventEmitter, Output} from '@angular/core';
 import * as moment from 'moment/moment';
 import { Router } from '@angular/router';
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
@@ -14,6 +14,7 @@ export class RegionalAssistanceLocationResult implements OnInit {
   @Input() data: any = {};
   @Input() qParams: any = {};
   @Input() permissions: any = null;
+  @Output() recordDeleted = new EventEmitter();
   showhideStatus: boolean;
   showHideStatusText: string;
   randomColor: string;
@@ -74,9 +75,10 @@ export class RegionalAssistanceLocationResult implements OnInit {
     this.service.deleteRAO(this.data['id']).subscribe(
       data =>{
         this.modal1.closeModal();
-        let url = 'fal/myRegionalOffices';
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteFooterAlertModel)));
-        this.router.navigate([url]);
+        // emits up to parent to recall api for updated data after delete
+        this.recordDeleted.emit();
+
       },
       error => {
         console.error('error occurred while deleting');

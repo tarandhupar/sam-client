@@ -33,7 +33,7 @@ export class falCustomValidatorsComponent {
   }
 
   static isProgramNumberInTheRange(rangeLow, rangeHigh){
-    let programRangeError = {message: "Program number not in the range: "+rangeLow+" - "+rangeHigh};
+    let programRangeError = {message: "CFDA number not in the range: "+rangeLow+" - "+rangeHigh};
     return (control) => {
       let flag = falCustomValidatorsComponent.threeDigitNumberCheck(control);
       if(flag == null) {
@@ -48,12 +48,12 @@ export class falCustomValidatorsComponent {
     }
   }
 
-  static isProgramNumberUnique(programService, cfdaCode, id, cookie ) {
+  static isProgramNumberUnique(programService, cfdaCode, id, cookie, OrgId ) {
     return (control) => {
       const q = new Promise((resolve, reject) => {
         setTimeout(() => {
           let programNum = cfdaCode+'.'+control.value;
-          programService.isProgramNumberUnique(programNum, id, cookie).subscribe(res => {
+          programService.isProgramNumberUnique(programNum, id, cookie, OrgId).subscribe(res => {
             if(!res['content']['isProgramNumberUnique']) {
               resolve({'duplicateProgram': true});
             } else {
@@ -148,16 +148,19 @@ export class falCustomValidatorsComponent {
     let flag = null;
     let pattern = /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
     if(control.value && !pattern.test(control.value))
-      flag = {"urlError": true};
+      flag = {"urlError": {message: "Please enter a valid url. [protocol]://hostname.domain. Protocol can be ftp, http, or https. Spaces are not allowed."}};
+      //flag = {"urlError": true};
 
     return flag;
   }
 
   static checkEmailPattern(control){
     let flag = null;
-    let pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    //let pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    let pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if(control.value && !pattern.test(control.value))
-      flag = {"emailError": true};
+      flag = {"emailError": {message: "Please enter a valid Internet email address. Format: username@host.domain."}};
+      //flag = {"emailError": true};
 
     return flag;
   }

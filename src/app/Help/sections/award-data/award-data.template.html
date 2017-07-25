@@ -66,6 +66,7 @@
 </div>
 
 <div *ngIf="showLaborAgency()">
+  <h3>Wage Determinations - Agency Labor Advisors</h3>
   <div class="labor-agency-header p_B-2x">
     <h3>Department of Defense Agencies
       <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
@@ -103,8 +104,12 @@
   <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
     <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
     <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
-    <span *ngIf="item.advisorTitle">{{item.advisorTitle}}<br/></span>
-    <span *ngIf="item.email">Email: {{item.email}}<br/></span>
+    <span *ngIf="item.advisorTitle !== '' && !contractIsEdit">{{item.advisorTitle}}<br/></span>
+    <span *ngIf="item.email !== '' && !contractIsEdit">Email: <a>{{item.email}}</a><br/></span>
+    <div *ngIf="contractIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+      <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisorTitle"></div>
+      <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="contractAgenciesEdit[i].email"></div>
+    </div>
     <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index">
       <div *ngIf="!contractIsEdit">
         <span>{{advisor.name}}</span><br/>

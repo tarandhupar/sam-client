@@ -61,7 +61,6 @@ export class RoleMgmtContent implements OnInit{
     // ids = ['1,2,3', '3,4,5']
     let allOrgIds: any = pc.collect([[], 'organizationId']);
     // ids = [[1,2,3],[3,4,5]]
-    console.log(allOrgIds);
     allOrgIds = allOrgIds.map(commaSeperated => commaSeperated.split(','));
     // ids = [1, 2, 3, 3, 4, 5]
     allOrgIds = allOrgIds.reduce((accum, curr) => {
@@ -129,12 +128,11 @@ export class RoleMgmtContent implements OnInit{
       case 'pending': return 'fa-spinner pending-icon';
       case 'approved': return 'fa-check-circle-o approved-icon';
       case 'rejected': return 'fa-user-times rejected-icon';
-      case 'escalated': return 'fa-exclamation-triangle escalated-icon';
     }
   }
 
   shouldShowRespondButton(content) {
-    return content.status.val === 'PENDING' || content.status.val === 'ESCALATED';
+    return content.status.val === 'PENDING';
   }
 
   showingCountText() {
@@ -167,8 +165,4 @@ export class RoleMgmtContent implements OnInit{
     this.clickPendingRequestsCountEvent.emit();
   }
 
-  @Output() clickEscalatedRequestsCountEvent: EventEmitter<any> = new EventEmitter();
-  onEscalatedClick() {
-    this.clickEscalatedRequestsCountEvent.emit();
-  }
 }

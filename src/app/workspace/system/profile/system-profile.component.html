@@ -125,27 +125,33 @@
       <h3 id="point-of-contact">Point of Contact</h3>
 
       <div class="content">
-        <sam-label-wrapper name="system-user-search" label="User Search Capability">
-          <input type="text" id="system-user-search" [(ngModel)]="store.search.users" [ngModelOptions]="{ standalone: true }" />
-        </sam-label-wrapper>
+        <sam-autocomplete id="system-poc-search"
+                          name="system-poc-search"
+                          [config]="store.picker"
+                          (enterEvent)="addPOC($event)"
+                          [hidden]="!(detailsForm.controls.pointOfContact.length < 3)"
+                          peoplepicker-autofill
+                          #picker></sam-autocomplete>
 
         <div class="usa-system-pocs">
-          <div *ngFor="let poc of detailsForm.controls.pointOfContact.value; let $index = index;" class="usa-system-poc">
-            <h4>
-              <a href="javascript:void(0);" [innerText]="poc.firstName + ' ' + poc.lastName"></a>
-              <div class="usa-edit">
-                <a href="javascript:void(0);" (click)="removePOC($index)">Remove</a>
+          <ng-container *ngFor="let poc of detailsForm.controls.pointOfContact.value; let $index = index;">
+            <div *ngIf="pocs[$index]" class="usa-system-poc">
+              <h4>
+                <a href="javascript:void(0);" [innerText]="pocs[$index].fullName"></a>
+                <div class="usa-edit">
+                  <a href="javascript:void(0);" (click)="removePOC($index)">Remove</a>
+                </div>
+              </h4>
+              <div class="usa-form-group">
+                <label>Email</label>
+                <div class="usa-form-control" [innerText]="pocs[$index].email"></div>
               </div>
-            </h4>
-            <div class="usa-form-group">
-              <label>Email</label>
-              <div class="usa-form-control" [innerText]="poc.email"></div>
+              <div class="usa-form-group">
+                <label>Business Phone</label>
+                <div class="usa-form-control" [innerText]="pocs[$index].phone"></div>
+              </div>
             </div>
-            <div class="usa-form-group">
-              <label>Business Phone</label>
-              <div class="usa-form-control" [innerText]="poc.phone"></div>
-            </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </section>

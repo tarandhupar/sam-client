@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { OpportunityPage }   from './opportunity.page';
-import { OpportunityDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { routing } from './opportunity.route';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
@@ -29,7 +28,6 @@ import { AppComponentsModule } from '../app-components/app-components.module';
   ],
   declarations: [
     OpportunityPage,
-    OpportunityDisplayPageDemoPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
     FixHTMLPipe,

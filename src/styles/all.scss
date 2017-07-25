@@ -198,6 +198,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/authentication';
 @import 'components/users/index';
 @import 'components/collapsible';
+@import 'components/comments';
 @import 'components/list-input';
 @import 'components/footer';
 @import 'components/button';
@@ -231,11 +232,13 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/workspace';
 @import 'components/bread-crumbs';
 @import 'components/data-service/data-service';
-@import 'components/_status_banner';
+@import 'components/sort';
+@import 'components/status_banner';
 @import 'components/fh/fh';
 @import 'components/title-subtitle';
 @import 'components/organization-move';
 @import 'components/user-directory';
+@import 'components/notifications';
 
 @import 'templates/workspace';
 
@@ -311,8 +314,6 @@ samsearchheader .search-header > .usa-width-one-whole{
   text-align: right;
 }
 
-
-
 .sidenav-logo {
   width:160px;
   height: 160px;
@@ -320,6 +321,13 @@ samsearchheader .search-header > .usa-width-one-whole{
   margin: 0 auto;
 }
 
+.noPadding-falWorkspace{
+  .usa-unstyled-list{
+    li{
+      padding-bottom:0px;
+    }
+  }
+}
 
 // Make sidenav use all availabe horizontal space on medium screen
 @media screen and (min-width: $medium-screen) and (max-width: $large-screen - 1) {
@@ -356,4 +364,8 @@ select {
 .overflow-ellipsis {
   overflow-x: hidden;
   text-overflow: ellipsis;
+}
+
+sam-solo-accordian li {
+  position: relative;;
 }

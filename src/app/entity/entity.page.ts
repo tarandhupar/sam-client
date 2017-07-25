@@ -44,6 +44,7 @@ export class EntityPage implements OnInit, OnDestroy {
   pscDetails: any;
   qParams:any = {};
   error;
+  isFederal:boolean = false;
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -84,6 +85,7 @@ export class EntityPage implements OnInit, OnDestroy {
 	  if(jsonData.entityInfo.assertions.pscList != null){
 		this.getPscDescription(jsonData.entityInfo.assertions.pscList);
 	  }
+	  this.isFederal = this.getIsFederal(jsonData.entityInfo.coreData.businessType, '2R');
 	  this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
           if (logoData != null) {
@@ -173,6 +175,10 @@ export class EntityPage implements OnInit, OnDestroy {
 		  error => {
 			this.error = error;
 	});
+	}
+	
+	getIsFederal(arr,obj) {
+		return (arr.indexOf(obj) != -1);
 	}
 
   ngOnDestroy() {

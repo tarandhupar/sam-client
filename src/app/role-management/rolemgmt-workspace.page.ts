@@ -22,7 +22,7 @@ export class RoleMgmtWorkspace implements OnInit{
   escalatedCount: number = 0;
 
   private crumbs: Array<IBreadcrumb> = [
-      { url: '/workspace', breadcrumb: 'Workspace' },      
+      { url: '/workspace', breadcrumb: 'Workspace' },
       { breadcrumb: 'Access Requests' }
     ];
 

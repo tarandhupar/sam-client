@@ -52,13 +52,13 @@ export class ActionHistoryLabelPipe implements PipeTransform {
         label = "Agency Change Request Cancelled";
         break;
       case "program_number_reject":
-        label = "Program Number Request Rejected";
+        label = "CFDA Number Request Rejected";
         break;
       case "program_number":
-        label = "Program Number Changed";
+        label = "CFDA Number Changed";
         break;
       case "program_number_cancel":
-        label = "Program Number Request Cancelled";
+        label = "CFDA Number Request Cancelled";
         break;
       case "omb_extension":
         label = "omb_extension";

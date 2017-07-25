@@ -12,6 +12,7 @@ import { falCustomValidatorsComponent } from '../../validators/assistance-listin
 export class FALAuthSubFormComponent {
 
   @Input() hideAddButton: boolean;
+  @Input() toggleAtLeastOneEntryError: boolean;
   @Output() public authActionHandler = new EventEmitter();
 
   falAuthSubForm: FormGroup;
@@ -94,6 +95,7 @@ export class FALAuthSubFormComponent {
       type:'add',
       hideAddButton: this.hideAddButton
     });
+
   }
 
   onConfirmClick(index){
@@ -120,10 +122,10 @@ export class FALAuthSubFormComponent {
       authInfo: this.authInfo,
       controlIndex: index
     });
-
   }
 
   onSubFormCancelClick(i: number){
+
     if(this.hideAddButton === false) {
       return; // clicking cancel has no effect if nothing is being edited or added
     }
@@ -167,6 +169,7 @@ export class FALAuthSubFormComponent {
     this.mode = "Edit";
     this.authIndex = i;
     this.hideAddButton = true;
+
   }
 
   getObjWithoutNullValues(obj){

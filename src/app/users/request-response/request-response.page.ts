@@ -3,8 +3,9 @@ import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 import { UserAccessModel } from "../access.model";
-import { Location } from "@angular/common";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import {  Location } from "@angular/common";
+import { IBreadcrumb } from "sam-ui-kit/types";
+import { PropertyCollector } from "../../app-utils/property-collector";
 
 @Component({
   templateUrl: './request-response.template.html',
@@ -13,59 +14,107 @@ export class RequestResponsePage {
   private request: any;
   private rawRequest: any;
   private comment: string = '';
-  private commentError: string = '';
+  private errors = {
+    comment: '',
+    org: '',
+    role: '',
+    domain: '',
+  };
+  private initialOrg;
+  private org;
+  private domain;
+  private domainOptions = [];
+  private roleOptions = [];
   private username : string = '';
   private userId : string = '';
-  private objects = [
-    {
-      function: { id: 1, val: 'Awards/IDV'},
-      permission: [
-        {id: 0, val: 'Approve'},
-        {id: 1, val: 'Create'},
-        {id: 2, val: 'Edit'},
-        {id: 3, val: 'Delete'},
-      ]
-    },
-    {
-      function: { id: 2, val: 'Admin'},
-      permission: [
-        {id: 0, val: 'Approve'},
-        {id: 1, val: 'Create'},
-        {id: 2, val: 'Edit'},
-        {id: 3, val: 'Delete'},
-      ]
-    },
-    {
-      function: { id: 3, val: 'Some other function'},
-      permission: [
-        {id: 0, val: 'Approve'},
-        {id: 1, val: 'Create'},
-        {id: 2, val: 'Edit'},
-        {id: 3, val: 'Delete'},
-        {id: 4, val: 'Reject'},
-        {id: 5, val: 'Promote'},
-        {id: 6, val: 'Demote'},
-        {id: 7, val: 'Fire'},
-      ]
-    },
-  ];
+  private objects = [];
+  private role = '';
+  private roles = [];
+  private userAccess;
+  private myCrumbs: Array<IBreadcrumb> = [];
 
   constructor(
     private route: ActivatedRoute,
     private userAccessService: UserAccessService,
     private router: Router,
     private footerAlerts: AlertFooterService,
-    private location: Location
+    private location: Location,
   ) {
-    this.rawRequest = this.route.snapshot.data['request'];
-    this.parseRequest(this.rawRequest);
-    
+
   }
 
-  private myCrumbs: Array<IBreadcrumb> = [];
+  ngOnInit() {
+    this.rawRequest = this.route.snapshot.data['request'];
+    this.parseRequest(this.rawRequest);
+    this.getDomains();
+    this.getRoles();
+  }
+
+  getDomains() {
+    this.userAccessService.getDomains().subscribe(
+      domains => {
+        this.domainOptions = domains._embedded.domainList.map(domain => {
+          return { value: domain.id, label: domain.domainName };
+        });
+      },
+      error => {
+        this.footerAlerts.registerFooterAlert({
+          title:"Unable to fetch domain information.",
+          description:"",
+          type:'error',
+          timer:3200
+        });
+      }
+    );
+  }
+
+  onDomainChange(domain) {
+    this.domain = domain;
+    this.role = null;
+    this.roleOptions = [];
+    this.objects = [];
+    this.getRoles(true);
+  }
+
+  getRoles(selectFirstRole?: boolean) {
+    let options: any = {domainID: this.domain};
+    if (this.role) {
+      options.keepRoles = this.role;
+    }
+    this.userAccessService
+      .getRoles(options)
+      .subscribe(
+        perms => {
+          this.roles = perms;
+          let c = new PropertyCollector(perms);
+          let roles = c.collect([[], 'role']);
+          this.roleOptions = roles.map(role => {
+            return { label: role.val, value: role.id };
+          });
+          if (selectFirstRole && this.roles[0] && this.roles[0].role) {
+            this.onRoleChange(this.roles[0].role.id);
+          }
+        },
+        err => {
+          this.roleOptions = [];
+          this.footerAlerts.registerFooterAlert({
+            title:"Error",
+            description:"Unable to retrieve permission data",
+            type:'error',
+            timer:3200
+          });
+        }
+      );
+  }
 
   parseRequest(req) {
+    this.initialOrg = [req.organizationId];
+    this.org = { value: req.organizationId };
+    this.role = req.role.id;
+    this.domain = req.domain.id;
+
     this.request = {
+      requestorName: req.requestorName,
       organization: req.organization.val,
       role: req.role.val,
       domains: req.domain.val,
@@ -100,17 +149,33 @@ export class RequestResponsePage {
     if(req.organization){
       queryParam.orgKey = req.organization.id;
     }
-    
+
     this.userAccessService.getAllUserRoles(req.requestorName,queryParam).subscribe(res => {
       this.username = `${res.user.firstName} ${res.user.lastName}`;
       this.myCrumbs.push({ url: '/workspace', breadcrumb: 'Workspace' });
       this.myCrumbs.push({ url: '/access/user-roles-directory', breadcrumb: 'Role Management'});
       this.myCrumbs.push({ url: `/users/${this.userId}/access`,breadcrumb : this.username == "undefined undefined" ? "No User Name" :this.username });
-      this.myCrumbs.push({breadcrumb: 'Respond to Request'});      
+      this.myCrumbs.push({breadcrumb: 'Respond to Request'});
     });
 
-    
-    
+    this.userAccessService.getRoles({domainID: this.domain}).subscribe(
+      perms => {
+        this.roles = perms;
+        this.onRoleChange(this.role);
+      },
+      err => {
+        this.footerAlerts.registerFooterAlert({
+          title:"Error",
+          description:"Unable to retreive permission information",
+          type:'error',
+          timer:2000
+        });
+      }
+    );
+  }
+
+  onOrganizationsChange(org) {
+    this.org = org;
   }
 
   permissionId(permission, object) {
@@ -133,12 +198,33 @@ export class RequestResponsePage {
     this.updateRequest('escalate');
   }
 
-  updateRequest(status: string, ) {
+  validateForm() {
+    return this.comment && this.comment.length && this.role && this.org && this.domain;
+  }
+
+  showErrors() {
     if (!this.comment || !this.comment.length) {
-      this.commentError = 'A message is required';
-      return;
+      this.errors.comment = 'A comment is required.';
     }
 
+    if (!this.domain) {
+      this.errors.domain = 'A domain is required.';
+    }
+
+    if (!this.role) {
+      this.errors.role = 'A role is required';
+    }
+
+    if (!this.org) {
+      this.footerAlerts.registerFooterAlert({
+        type: 'error',
+        description: 'An organization is required. Select an organization.',
+        timer: 3200,
+      })
+    }
+  }
+
+  updateRequest(status: string) {
     let newStatus: any = {
       adminMessage: '',
       status: '',
@@ -176,8 +262,22 @@ export class RequestResponsePage {
     });
   }
 
+  clearErrors() {
+    this.errors = {
+      comment: '',
+        org: '',
+      role: '',
+      domain: '',
+    };
+  }
+
   approveRequest() {
-    let orgIds = [this.rawRequest.organizationID];
+    if (!this.validateForm()) {
+      this.clearErrors();
+      this.showErrors();
+      return;
+    }
+    let orgIds = [''+this.org.value];
     let funcs: any = this.objects.map(obj => {
       let perms = obj.permission.filter((p: any) => p.notChecked).map(p => p.id);
       return {
@@ -185,13 +285,10 @@ export class RequestResponsePage {
         permissions: perms
       }
     });
-    let role = parseInt(this.rawRequest.roleId);
-    let domain = parseInt(this.rawRequest.domainId);
+    let role = parseInt(this.role);
+    let domain = parseInt(this.domain);
 
-    let access;
-    let params = {};
-
-    access = UserAccessModel.CreateGrantObject(
+    let access : any = UserAccessModel.CreateGrantObject(
       this.rawRequest.requestorName,
       role,
       domain,
@@ -200,6 +297,10 @@ export class RequestResponsePage {
       this.comment,
     );
 
+    access.mode = "approve";
+    let params = {
+      userAccessRequestId: this.rawRequest.id
+    };
 
     this.userAccessService.postAccess(access, this.rawRequest.requestorName, params).delay(2000).subscribe(
       res => {
@@ -217,7 +318,7 @@ export class RequestResponsePage {
           this.footerAlerts.registerFooterAlert({
             title:'',
             description:error,
-            type:'success',
+            type:'error',
             timer:3000
           });
         } else {
@@ -231,6 +332,30 @@ export class RequestResponsePage {
 
       }
     );
+  }
+
+  onRoleChange(role) {
+    this.role = role;
+
+    if (role) {
+      this.errors.role = '';
+    }
+
+    let r = this.roles.find(role => {
+      return +role.role.id === +this.role;
+    });
+
+    if (r) {
+      this.objects = r.functionContent;
+    } else {
+      // the user selected a role that is not in the roles table (it may not have been fetched yet)
+      this.footerAlerts.registerFooterAlert({
+        title:"Error",
+        description:"Unable to find permissions for role",
+        type:'error',
+        timer: 3200
+      });
+    }
   }
 
   goToRoleWorkspace() {

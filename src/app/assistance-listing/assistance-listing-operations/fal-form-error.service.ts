@@ -85,6 +85,16 @@ export class FALFormErrorService {
           errorList: []
         },
         {
+          id: FALSectionNames.OBLIGATIONS,
+          label: 'Obligations',
+          errorList: []
+        },
+        {
+          id: FALSectionNames.OTHER_FINANCIAL_INFO,
+          label: 'Other Financial Information',
+          errorList: []
+        },
+        {
           id: FALSectionNames.CRITERIA_INFO,
           label: 'Criteria for Applying',
           errorList: []
@@ -98,10 +108,16 @@ export class FALFormErrorService {
           id: FALSectionNames.COMPLIANCE_REQUIREMENTS,
           label: 'Compliance Requirements',
           errorList: []
+        },
+        {
+          id: FALSectionNames.CONTACT_INFORMATION,
+          label: 'Contact Information',
+          errorList: []
         }
       ]
     };
 
+    // todo: use string enums
     for (let field of FALSectionFieldsList.OVERVIEW_FIELDS) {
       this.validate(FALSectionNames.OVERVIEW, field);
     }
@@ -114,23 +130,54 @@ export class FALFormErrorService {
       this.validate(FALSectionNames.AUTHORIZATION, field);
     }
 
+    for (let field of FALSectionFieldsList.OBLIGATION_FIELDS) {
+      this.validate(FALSectionNames.OBLIGATIONS, field);
+    }
+
+    for (let field of FALSectionFieldsList.OTHER_FINANCIAL_INFO_FIELDS) {
+      this.validate(FALSectionNames.OTHER_FINANCIAL_INFO, field);
+    }
+
     for (let field of FALSectionFieldsList.CRITERIA_FIELDS) {
       this.validate(FALSectionNames.CRITERIA_INFO, field);
     }
 
-    for (let field of FALSectionFieldsList.APPLYING_FOR_ASSISTANCE_FIELDS){
+    for (let field of FALSectionFieldsList.APPLYING_FOR_ASSISTANCE_FIELDS) {
       this.validate(FALSectionNames.APPLYING_FOR_ASSISTANCE, field);
     }
 
     for (let field of FALSectionFieldsList.COMPLIANCE_REQUIREMENTS_FIELDS) {
       this.validate(FALSectionNames.COMPLIANCE_REQUIREMENTS, field);
     }
+
+    for (let field of FALSectionFieldsList.CONTACT_INFORMATION_FIELDS) {
+      this.validate(FALSectionNames.CONTACT_INFORMATION, field);
+    }
   }
 
   public static findErrorById(fieldErrorList: FieldErrorList, id: string): (FieldError | FieldErrorList | null) {
-    for (let error of fieldErrorList.errorList) {
-      if (error.id && error.id === id) {
-        return error;
+    if(fieldErrorList && fieldErrorList.errorList.length > 0) {
+      for (let error of fieldErrorList.errorList) {
+        if (error.id && error.id === id) {
+          return error;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  public static findSectionErrorById(fieldErrorList: any, sectionId: string, fieldId: string = null): (FieldError | FieldErrorList | null) {
+    if(fieldErrorList && fieldErrorList.errorList.length > 0) {
+      for (let error of fieldErrorList.errorList) {
+        if (error.id && error.id === sectionId) {
+          if(fieldId) {
+            let fieldError = FALFormErrorService.findErrorById(error, fieldId);
+            return fieldError;
+          }
+          else
+            return error;
+        }
       }
     }
 
@@ -165,6 +212,12 @@ export class FALFormErrorService {
       case FALSectionNames.AUTHORIZATION:
         this.validateAuthorization(fieldName);
         break;
+      case FALSectionNames.OBLIGATIONS:
+        this.validateObligation(fieldName);
+        break;
+      case FALSectionNames.OTHER_FINANCIAL_INFO:
+        this.validateOtherFinancialInfo(fieldName);
+        break;
       case FALSectionNames.CRITERIA_INFO:
         this.validateCriteria(fieldName);
         break;
@@ -174,10 +227,40 @@ export class FALFormErrorService {
       case FALSectionNames.COMPLIANCE_REQUIREMENTS:
         this.validateComplianceRequirement(fieldName);
         break;
+      case FALSectionNames.CONTACT_INFORMATION:
+        this.validateContactInformation(fieldName);
+        break;
     }
   }
 
-  //Header Information Section
+  private validateRequired(fieldName, ...properties): ValidationErrors|null {
+    let valid = true;
+
+    for(let prop of properties) {
+      if (!prop && prop !== 0) { // null, undefined, "", false, NaN
+        valid = false;
+        break;
+      } else {
+        if (prop instanceof Array && !(prop.filter((a) => (!!a || a === 0)).length > 0)) {
+          valid = false;
+          break;
+        }
+      }
+    }
+
+    return valid ? null : {
+      requiredField: {
+        message: fieldName + ' is a required field'
+      }
+    };
+  }
+
+  private validateConditionalRequired(fieldName, isApplicable, ...properties): ValidationErrors|null {
+    return isApplicable ? this.validateRequired(fieldName, properties) : null;
+  }
+
+  // Header Information Section
+  // --------------------------------------------------------------------------
   public validateHeaderInfo(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.TITLE:
@@ -193,23 +276,12 @@ export class FALFormErrorService {
   }
 
   public validateHeaderTitle(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!this._viewModel.title) {
-      errors = {
-        missingField: {
-          message: 'Title field cannot be empty'
-        }
-      };
-    }
-
     let titleErrors = {
       id: FALFieldNames.TITLE,
-      errors: errors
+      errors: this.validateRequired('Title', this._viewModel.title)
     };
 
     let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-
     this.setOrUpdateError(headerErrors, titleErrors);
 
     return titleErrors;
@@ -239,45 +311,31 @@ export class FALFormErrorService {
     };
 
     let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-
     this.setOrUpdateError(headerErrors, falNoErrors);
-
     return falNoErrors;
-
   }
 
   public validateFederalAgency(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!this._viewModel.organizationId) {
-      errors = {
-        missingField: {
-          message: 'Federal Agency field cannot be empty'
-        }
-      };
-    }
-
     let agencyErrors = {
       id: FALFieldNames.FEDERAL_AGENCY,
-      errors: errors
+      errors: this.validateRequired('Federal Agency', this._viewModel.organizationId)
     };
 
     let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-
     this.setOrUpdateError(headerErrors, agencyErrors);
 
     return agencyErrors;
   }
 
-  //Overview Section
-
+  // Overview Section
+  // --------------------------------------------------------------------------
   public validateOverview(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.OBJECTIVE:
         this.validateObjective();
         break;
       case FALFieldNames.FUNDED_PROJECTS:
-        this.validateFundedProjects;
+        this.validateFundedProjects();
         break;
       case FALFieldNames.FUNCTIONAL_CODES:
         this.validateFunctionalCodes();
@@ -289,65 +347,33 @@ export class FALFormErrorService {
   }
 
   public validateObjective(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!this._viewModel.objective) {
-      errors = {
-        missingField: {
-          message: 'Objectives are missing'
-        }
-      };
-    }
-
     let objectiveErrors = {
       id: FALFieldNames.OBJECTIVE,
-      errors: errors
+      errors: this.validateRequired('Objectives', this._viewModel.objective)
     };
 
     let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
-
     this.setOrUpdateError(overviewErrors, objectiveErrors);
 
     return objectiveErrors;
   }
 
   public validateSubjectTerms(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!(this._viewModel.subjectTerms.length > 0)) {
-      errors = {
-        missingField: {
-          message: 'Subject Terms are missing'
-        }
-      };
-    }
-
     let subjectTermsErrors = {
       id: FALFieldNames.SUBJECT_TERMS,
-      errors: errors
+      errors: this.validateRequired('Subject Terms', this._viewModel.subjectTerms)
     };
 
     let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
-
     this.setOrUpdateError(overviewErrors, subjectTermsErrors);
 
     return subjectTermsErrors;
   }
 
   public validateFunctionalCodes(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!(this._viewModel.functionalCodes.length > 0)) {
-      errors = {
-        missingField: {
-          message: 'Functional Codes are missing'
-        }
-      };
-    }
-
     let functionalCodesErrors = {
       id: FALFieldNames.FUNCTIONAL_CODES,
-      errors: errors
+      errors: this.validateRequired('Functional Codes', this._viewModel.functionalCodes)
     };
 
     let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
@@ -404,6 +430,7 @@ export class FALFormErrorService {
   }
 
   //Authorization
+  // --------------------------------------------------------------------------
   public validateAuthorization(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.AUTHORIZATION_LIST:
@@ -415,7 +442,7 @@ export class FALFormErrorService {
   public validateAuthList(): (FieldErrorList | null) {
     let errors: FieldError[] = [];
 
-    if(this._viewModel.authList && this._viewModel.authList.length > 0) {
+    if (this._viewModel.authList && this._viewModel.authList.length > 0) {
       let authList = this._viewModel.authList;
       let orderedAuthList = this.rearrangeAuthList(authList);
       let counter = 1;
@@ -438,10 +465,10 @@ export class FALFormErrorService {
     }
     else {
       let authError = {
-        id: FALFieldNames.AUTHORIZATION_LIST + '-no-auth',
+        id: FALFieldNames.NO_AUTHORIZATION,
         errors: {
-          noAuth : {
-            message : 'Atleast one authorization is required'
+          noAuth: {
+            message: 'At least one authorization is required'
           }
         }
       };
@@ -500,7 +527,291 @@ export class FALFormErrorService {
     }
   }
 
+  //Finanacial-Obligation
+  public validateObligation(fieldName: string): void {
+    switch (fieldName) {
+      case FALFieldNames.OBLIGATION_LIST:
+        this.validateObligationList();
+        break;
+    }
+  }
+
+  public validateObligationList(): (FieldErrorList | null) {
+    let errors: FieldError[] = [];
+    if (this._viewModel.obligations && this._viewModel.obligations.length > 0) {
+      let obligations = this._viewModel.obligations;
+      let orderedObligList = this.rearrangeObligationList(obligations);
+      let counter = 1;
+      for (let key of Object.keys(orderedObligList)) {
+        let index = orderedObligList[key].index;
+        let oblig = obligations[index];
+        this.checkObligationForError(oblig, counter, errors, index);
+        counter++;
+      }
+    }
+    else {
+      let obligError = {
+        id: FALFieldNames.OBLIGATION_LIST + '-no-oblig',
+        errors: {
+          noOblig: {
+            message: 'At least one obligation is required'
+          }
+        }
+      };
+
+      if (!(_.isEmpty(obligError.errors))) {
+        errors.push(obligError);
+      }
+    }
+
+    let obligListErrors = {
+      id: FALFieldNames.OBLIGATION_LIST,
+      errorList: errors
+    };
+
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OBLIGATIONS) as FieldErrorList;
+    this.setOrUpdateError(sectionErrors, obligListErrors);
+
+    if (errors.length > 0) {
+      return obligListErrors;
+    } else {
+      return null;
+    }
+  }
+
+  public checkObligationForError(oblig, i, errors, index) {
+    let obligError = {
+      id: FALFieldNames.OBLIGATION_LIST + index,
+      errors: {}
+    };
+
+    if (oblig.obligationId && !oblig.assistanceType) {
+      obligError.errors['missingAssistanceType'] = {
+        message: 'Obligation: Row ' + i + ' is missing Assistance Type'
+      };
+    }
+
+    if (!(_.isEmpty(obligError.errors))) {
+      errors.push(obligError);
+    }
+  }
+
+  public rearrangeObligationList(obligationList) {
+    let orderedOblig = {};
+    let counter = 0;
+    for (let oblig of obligationList) {
+      if (oblig.obligationId !== null)
+        orderedOblig[oblig.obligationId] = {index: counter}
+
+      counter = counter + 1;
+    }
+    return orderedOblig;
+  }
+
   //Criteria Section
+  // Other Financial Info Section
+  // --------------------------------------------------------------------------
+  public validateOtherFinancialInfo(fieldName: string): void {
+    switch (fieldName) {
+      case FALFieldNames.PROGRAM_ACCOMPLISHMENTS:
+        this.validateProgramAccomplishments();
+        break;
+      case FALFieldNames.ACCOUNT_IDENTIFICATION:
+        this.validateAccountIdentification();
+        break;
+      case FALFieldNames.TAFS_CODES:
+        this.validateTafsCodes();
+        break;
+    }
+  }
+
+  public validateProgramAccomplishments(): (FieldErrorList | null) {
+    let errors: FieldError[] = [];
+
+    if (this._viewModel.accomplishments && this._viewModel.accomplishments.list && this._viewModel.accomplishments.isApplicable) {
+      let accomplishments = this._viewModel.accomplishments;
+      if (accomplishments.list.length > 0) {
+
+        for (let i = 0; i < accomplishments.list.length; i++) {
+          let accomplishment = accomplishments.list[i];
+          let accomplishmentError = {
+            id: FALFieldNames.PROGRAM_ACCOMPLISHMENTS + i,
+            errors: {}
+          };
+
+          if (!accomplishment.fiscalYear) {
+            accomplishmentError.errors['missingYear'] = {
+              message: 'Program Accomplishments: Row ' + (i + 1) + ' is missing Year'
+            };
+          }
+
+          if (!accomplishment.description) {
+            accomplishmentError.errors['missingDescription'] = {
+              message: 'Program Accomplishments: Row ' + (i + 1) + ' is missing Accomplishments'
+            };
+          }
+
+          if (!(_.isEmpty(accomplishmentError.errors))) {
+            errors.push(accomplishmentError);
+          }
+        }
+      } else {
+        errors.push({
+          id: FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
+          errors: {
+            atLeastOneAccomplishment: {
+              message: 'At least one program accomplishment is required.'
+            }
+          }
+        });
+      }
+    }
+
+    let programAccomplishmentsErrors = {
+      id: FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
+      // label: 'Program Accomplishments',
+      errorList: errors
+    };
+
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    this.setOrUpdateError(financialInfoErrors, programAccomplishmentsErrors);
+
+    if (errors.length > 0) {
+      return programAccomplishmentsErrors;
+    } else {
+      return null;
+    }
+  }
+
+  public validateAccountIdentification(): (FieldErrorList | null) {
+    let errors: FieldError[] = [];
+
+    if (this._viewModel.accounts && this._viewModel.accounts.length > 0) {
+      for (let i = 0; i < this._viewModel.accounts.length; i++) {
+        let account = this._viewModel.accounts[i];
+        let accountError = {
+          id: FALFieldNames.ACCOUNT_IDENTIFICATION + i,
+          errors: {}
+        };
+
+        if (!account.code || (account.code && !/^\d{2}-\d{4}-\d-\d-\d{3}$/.test(account.code))) {
+          accountError.errors['invalidCode'] = {
+            message: 'Account Identification: Row ' + (i + 1) + ' has an invalid code'
+          };
+        }
+
+        if (!(_.isEmpty(accountError.errors))) {
+          errors.push(accountError);
+        }
+      }
+    } else {
+      errors.push({
+        id: FALFieldNames.ACCOUNT_IDENTIFICATION,
+        errors: {
+          atLeastOneAccount: {
+            message: 'At least one valid account identification code is required.'
+          }
+        }
+      });
+    }
+
+    let accountIdentificationErrors = {
+      id: FALFieldNames.ACCOUNT_IDENTIFICATION,
+      // label: 'Account Identification',
+      errorList: errors
+    };
+
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    this.setOrUpdateError(financialInfoErrors, accountIdentificationErrors);
+
+    if (errors.length > 0) {
+      return accountIdentificationErrors;
+    } else {
+      return null;
+    }
+  }
+
+  public validateTafsCodes(): (FieldErrorList | null) {
+    let errors: FieldError[] = [];
+
+    if (this._viewModel.tafs && this._viewModel.tafs.length > 0) {
+      for (let i = 0; i < this._viewModel.tafs.length; i++) {
+        let tafs = this._viewModel.tafs[i];
+        let tafsError = {
+          id: FALFieldNames.TAFS_CODES + i,
+          errors: {}
+        };
+
+        if (!tafs.departmentCode || (tafs.departmentCode && !/^\d{2}$/.test(tafs.departmentCode))) {
+          tafsError.errors['invalidDepartmentCode'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid department code'
+          };
+        }
+
+        if(!tafs.accountCode || (tafs.accountCode && !/^\d{4}$/.test(tafs.accountCode))) {
+          tafsError.errors['invalidAccountCode'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid account main code'
+          };
+        }
+
+        if(tafs.subAccountCode && !/^\d{3}$/.test(tafs.subAccountCode)) {
+          tafsError.errors['invalidSubAccountCode'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid sub account code'
+          };
+        }
+
+        if(tafs.allocationTransferAgency && !/^\d{2}$/.test(tafs.allocationTransferAgency)) {
+          tafsError.errors['invalidTransferAgency'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid allocation transfer agency'
+          };
+        }
+
+        if(tafs.fy1 && !/^\d{4}$/.test(tafs.fy1)) {
+          tafsError.errors['invalidFY1'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid fiscal year 1'
+          };
+        }
+
+        if(tafs.fy2 && !/^\d{4}$/.test(tafs.fy2)) {
+          tafsError.errors['invalidFY2'] = {
+            message: 'TAFS Codes: Row ' + (i + 1) + ' has an invalid fiscal year 2'
+          };
+        }
+
+        if (!(_.isEmpty(tafsError.errors))) {
+          errors.push(tafsError);
+        }
+      }
+    } else {
+      errors.push({
+        id: FALFieldNames.TAFS_CODES,
+        errors: {
+          atLeastOneTAFS: {
+            message: 'At least one valid TAFS code is required.'
+          }
+        }
+      });
+    }
+
+    let tafsErrors = {
+      id: FALFieldNames.TAFS_CODES,
+      // label: 'TAFS',
+      errorList: errors
+    };
+
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    this.setOrUpdateError(financialInfoErrors, tafsErrors);
+
+    if (errors.length > 0) {
+      return tafsErrors;
+    } else {
+      return null;
+    }
+  }
+
+  // Criteria Section
+  // --------------------------------------------------------------------------
+
   public validateCriteria(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.DOCUMENTATION:
@@ -537,18 +848,12 @@ export class FALFormErrorService {
   }
 
   validateCriteriaDocumentation(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.documentation.description && this._viewModel.documentation.isApplicable) {
-      errors = {
-        missingField: {
-          message: 'Credentials and Documentation are missing'
-        }
-      };
-    }
+    let isApplicable = this._viewModel.documentation.isApplicable;
+    let documentation = this._viewModel.documentation.description;
 
     let documentationErrors = {
       id: FALFieldNames.DOCUMENTATION,
-      errors: errors
+      errors: this.validateConditionalRequired('Credentials and Documentation', isApplicable, documentation)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -558,23 +863,12 @@ export class FALFormErrorService {
   }
 
   public validateApplicantList(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!(this._viewModel.appListDisplay.length > 0)) {
-      errors = {
-        missingField: {
-          message: 'Applicant Eligibility is missing'
-        }
-      };
-    }
-
     let appListDisplayErrors = {
       id: FALFieldNames.APPLICANT_LIST,
-      errors: errors
+      errors: this.validateRequired('Applicant Eligibility', this._viewModel.appListDisplay)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
-
     this.setOrUpdateError(criteriaErrors, appListDisplayErrors);
 
     return appListDisplayErrors;
@@ -582,12 +876,8 @@ export class FALFormErrorService {
 
   public validateBeneficiaryList(): FieldError {
     let errors: ValidationErrors = null;
-    if ((!(this._viewModel.benListDisplay.length > 0)) && !this.viewModel.isSameAsApplicant) {
-      errors = {
-        missingField: {
-          message: 'Beneficiary Eligibility is missing'
-        }
-      };
+    if (!this.viewModel.isSameAsApplicant) {
+      errors = this.validateRequired('Beneficiary Eligibility', this._viewModel.benListDisplay);
     }
 
     let benListDisplayErrors = {
@@ -596,25 +886,15 @@ export class FALFormErrorService {
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
-
     this.setOrUpdateError(criteriaErrors, benListDisplayErrors);
 
     return benListDisplayErrors;
   }
 
   validateLengthTimeDesc(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.lengthTimeDesc) {
-      errors = {
-        missingField: {
-          message: 'Length and Time Phasing of Assistance is missing'
-        }
-      };
-    }
-
     let lengthTimeDescErrors = {
       id: FALFieldNames.LENGTH_TIME_DESC,
-      errors: errors
+      errors: this.validateRequired('Length and Time Phasing of Assistance', this._viewModel.lengthTimeDesc)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -639,48 +919,27 @@ export class FALFormErrorService {
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
-
     this.setOrUpdateError(criteriaErrors, awardedTypeErrors);
 
     return awardedTypeErrors;
   }
 
   public validateAssistanceUsageList(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!(this._viewModel.assListDisplay.length > 0)) {
-      errors = {
-        missingField: {
-          message: 'Use of Assistance is missing'
-        }
-      };
-    }
-
     let assListDisplayErrors = {
       id: FALFieldNames.ASS_USAGE_LIST,
-      errors: errors
+      errors: this.validateRequired('Use of Assistance', this._viewModel.assListDisplay)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
-
     this.setOrUpdateError(criteriaErrors, assListDisplayErrors);
 
     return assListDisplayErrors;
   }
 
   validateAssUsageDesc(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.assUsageDesc) {
-      errors = {
-        missingField: {
-          message: 'Use of Assistance Description is missing'
-        }
-      };
-    }
-
     let assUsageDescErrors = {
       id: FALFieldNames.ASS_USAGE_DESC,
-      errors: errors
+      errors: this.validateRequired('Use of Assistance Description', this._viewModel.assUsageDesc)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -690,18 +949,12 @@ export class FALFormErrorService {
   }
 
   validateCriteriaUsageRes(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.usageRes.description && this._viewModel.usageRes.isApplicable) {
-      errors = {
-        missingField: {
-          message: 'Use Restrictions are missing'
-        }
-      };
-    }
+    let isApplicable = this._viewModel.usageRes.isApplicable;
+    let usageRestrictions = this._viewModel.usageRes.description;
 
     let usageResErrors = {
       id: FALFieldNames.USAGE_RESTRICTIONS,
-      errors: errors
+      errors: this.validateConditionalRequired('Use Restrictions', isApplicable, usageRestrictions)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -711,18 +964,12 @@ export class FALFormErrorService {
   }
 
   validateCriteriaUseDisFunds(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.useDisFunds.description && this._viewModel.useDisFunds.isApplicable) {
-      errors = {
-        missingField: {
-          message: 'Discretionary Funds are missing'
-        }
-      };
-    }
+    let isApplicable = this._viewModel.useDisFunds.isApplicable;
+    let discretionaryFunds = this._viewModel.useDisFunds.description;
 
     let useDisFundsErrors = {
       id: FALFieldNames.USE_DIS_FUNDS,
-      errors: errors
+      errors: this.validateConditionalRequired('Discretionary Funds', isApplicable, discretionaryFunds)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -732,18 +979,12 @@ export class FALFormErrorService {
   }
 
   validateCriteriaUseLoanTerms(): FieldError {
-    let errors: ValidationErrors = null;
-    if (!this._viewModel.useLoanTerms.description && this._viewModel.useLoanTerms.isApplicable) {
-      errors = {
-        missingField: {
-          message: 'Loan Types of Assistance are missing'
-        }
-      };
-    }
+    let isApplicable = this._viewModel.useLoanTerms.isApplicable;
+    let loanTerms = this._viewModel.useLoanTerms.description;
 
     let useLoanTermsErrors = {
       id: FALFieldNames.USE_LOAN_TERMS,
-      errors: errors
+      errors: this.validateConditionalRequired('Loan Types of Assistance', isApplicable, loanTerms)
     };
 
     let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
@@ -752,7 +993,8 @@ export class FALFormErrorService {
     return useLoanTermsErrors;
   }
 
-  //Applying for Assistance Section
+  // Applying for Assistance Section
+  // --------------------------------------------------------------------------
   public validateApplyingForAssistance(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.DEADLINES:
@@ -780,36 +1022,22 @@ export class FALFormErrorService {
   }
 
   public validateDeadlinesFlag(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!this._viewModel.deadlineFlag) {
-      errors = {
-        missingField: {
-          message: 'Deadlines are missing'
-        }
-      };
-    }
-
     let fieldErrors = {
       id: FALFieldNames.DEADLINES,
-      errors: errors
+      errors: this.validateRequired('Deadlines', this._viewModel.deadlineFlag)
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
   public validatePreAppCoordAddInfo(): FieldError {
-
     let errors: ValidationErrors = null;
 
     if (this._viewModel.preAppCoordReports.length > 0) {
-
       for(let report of this._viewModel.preAppCoordReports){
-
         if(report.reportCode == 'otherRequired' && report.isSelected && !this._viewModel.preAppCoordDesc){
           errors = {
             missingField: {
@@ -827,22 +1055,16 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
   public validateSelCritDescription(): FieldError {
-
     let errors: ValidationErrors = null;
 
-    if (this._viewModel.selCriteriaIsApp && !this._viewModel.selCriteriaDesc) {
-      errors = {
-        missingField: {
-          message: 'Criteria for Selecting Proposals - Please describe field cannot be empty'
-        }
-      };
+    if (this._viewModel.selCriteriaIsApp) {
+      errors = this.validateRequired('Criteria for Selecting Proposals - Please describe', this._viewModel.selCriteriaDesc);
     }
 
     let fieldErrors = {
@@ -851,30 +1073,18 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
   public validateAwardProcDescription(): FieldError {
-    let errors: ValidationErrors = null;
-
-    if (!this._viewModel.awardProcDesc) {
-      errors = {
-        missingField: {
-          message: 'Award Procedure field cannot be empty'
-        }
-      };
-    }
-
     let fieldErrors = {
       id: FALFieldNames.AWARD_PROCEDURE_DESCRIPTION,
-      errors: errors
+      errors: this.validateRequired('Award Procedure', this._viewModel.awardProcDesc)
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -896,7 +1106,6 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -918,7 +1127,6 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -940,13 +1148,13 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  //Compliance Requirement
+  // Compliance Requirement
+  // --------------------------------------------------------------------------
   validateComplianceRequirement(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.COMPLIANCE_REPORTS:
@@ -965,8 +1173,8 @@ export class FALFormErrorService {
     let errors: FieldError[] = [];
     if (this._viewModel.complianceReports) {
       let counter = 0;
-      for(let report of this._viewModel.complianceReports) {
-        if(report.isSelected && (report.description == null || report.description == "")) {
+      for (let report of this._viewModel.complianceReports) {
+        if (report.isSelected && (report.description == null || report.description == "")) {
           let message = '';
           let reportError = {
             id: 'compliance-reports-textarea' + counter,
@@ -1009,7 +1217,6 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     if (errors.length > 0) {
@@ -1022,7 +1229,7 @@ export class FALFormErrorService {
   public validateComplianceAudits(): FieldError {
     let errors: ValidationErrors = null;
 
-    if((this._viewModel.audit && this._viewModel.audit.isApplicable && !this._viewModel.audit.description) || this._viewModel.audit == null) {
+    if ((this._viewModel.audit && this._viewModel.audit.isApplicable && !this._viewModel.audit.description) || this._viewModel.audit == null) {
       errors = {
         missingField: {
           message: 'Other Audit Requirement Description field cannot be empty'
@@ -1036,7 +1243,6 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -1045,7 +1251,7 @@ export class FALFormErrorService {
   public validateAdditionDocumentation(): FieldError {
     let errors: ValidationErrors = null;
 
-    if((this._viewModel.documents && this._viewModel.documents.isApplicable && !this._viewModel.documents.description) || this._viewModel.documents == null) {
+    if ((this._viewModel.documents && this._viewModel.documents.isApplicable && !this._viewModel.documents.description) || this._viewModel.documents == null) {
       errors = {
         missingField: {
           message: 'Regulations, Guidelines, and Literature Description field cannot be empty'
@@ -1059,10 +1265,170 @@ export class FALFormErrorService {
     };
 
     let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
-
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
+  //Contact Information
+  // --------------------------------------------------------------------------
+  validateContactInformation(fieldName: string): void {
+    switch (fieldName) {
+      case FALFieldNames.CONTACT_LIST:
+        this.validateContactList();
+        break;
+      case FALFieldNames.CONTACT_WEBSITE:
+        this.validateContactWebsite();
+        break;
+    }//end of switch
+  }
+
+  public validateContactList(): (FieldErrorList | null){
+    let errors: FieldError[] = [];
+
+    if(this._viewModel.contacts && this._viewModel.contacts.headquarters && this._viewModel.contacts.headquarters.length > 0) {
+      let contacts = this._viewModel.contacts.headquarters;
+      for (let i = 0; i < contacts.length; i++) {
+        let contactError = {
+          id: FALFieldNames.CONTACT_LIST + i,
+          errors: {}
+        };
+
+        this.validateContactFields(contacts[i], contactError, i);
+
+        if (!(_.isEmpty(contactError.errors))) {
+          errors.push(contactError);
+        }
+      }
+    }
+    else {
+      let contactError = {
+        id: FALFieldNames.NO_CONTACT,
+        errors: {
+          noContact : {
+            message : 'At least one contact is required'
+          }
+        }
+      };
+
+      if (!(_.isEmpty(contactError.errors))) {
+        errors.push(contactError);
+      }
+
+    }
+
+    let contactListErrors = {
+      id: FALFieldNames.CONTACT_LIST,
+      errorList: errors
+    };
+
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FieldErrorList;
+    this.setOrUpdateError(sectionErrors, contactListErrors);
+
+    if (errors.length > 0) {
+      return contactListErrors;
+    } else {
+      return null;
+    }
+  }
+
+  public validateContactFields(contact, contactError, i) {
+    //fullName validation
+    if (!contact.fullName) {
+      contactError.errors['missingFullName'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing Full Name'
+      };
+    }
+
+    //email validation
+    if(!contact.email) {
+      contactError.errors['missingEmail'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing Email'
+      };
+    }
+    else {
+      let pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if(!pattern.test(contact.email)) {
+        contactError.errors['wrongEmailFormat'] = {
+          message: 'Contacts: Row ' + (i + 1) + ' Please enter a valid Internet email address. Format: username@host.domain'
+        };
+      }
+    }
+
+    //phone validation
+    if(!contact.phone) {
+      contactError.errors['missingPhone'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing Phone Number'
+      }
+    }
+    else {
+      if(contact.phone.length !== 10) {
+        contactError.errors['maxLengthPhone'] = {
+          message: 'Contacts: Row ' + (i + 1) + ' Phone must have 10 digits'
+        }
+      }
+    }
+
+    //fax validation
+    if(contact.fax && contact.fax.length !== 10) {
+      contactError.errors['maxLengthFax'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' Fax must have 10 digits'
+      }
+    }
+
+    //street validation
+    if(!contact.streetAddress) {
+      contactError.errors['missingStreet'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing Street'
+      }
+    }
+
+    //city validation
+    if(!contact.city) {
+      contactError.errors['missingCity'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing City'
+      }
+    }
+
+    //state validation
+    if(!contact.state || contact.state == 'na') {
+      contactError.errors['missingState'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing State'
+      }
+    }
+
+    //zip validation
+    if(!contact.zip) {
+      contactError.errors['missingZip'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' is missing Zip'
+      }
+    }
+
+  }
+
+  public validateContactWebsite(): FieldError {
+    let errors: ValidationErrors = null;
+
+    if(this._viewModel.website) {
+      let pattern = /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
+      if(!pattern.test(this._viewModel.website)) {
+        errors = {
+          urlFormatError: {
+            message: 'Please enter a valid url. [protocol]://hostname.domain. Protocol can be ftp, http, or https. Spaces are not allowed.'
+          }
+        };
+      }
+    }
+
+    let fieldErrors = {
+      id: FALFieldNames.CONTACT_WEBSITE,
+      errors: errors
+    };
+
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FieldErrorList;
+
+    this.setOrUpdateError(sectionErrors, fieldErrors);
+
+    return fieldErrors;
+  }
 }

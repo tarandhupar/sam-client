@@ -27,6 +27,7 @@ function getMockUserAccount() {
     firstName: 'John',
     initials: 'J',
     lastName: 'Doe',
+    suffix: 'Jr.',
 
     workPhone: '12401234568',
 
@@ -372,9 +373,7 @@ export const user = {
         .send(data)
         .then((response) => {
           let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
-
           Cookies.set('IAMSession', $user, config.cookies(15));
-
           $success(response.body);
         }, $error);
     } else {

@@ -6,7 +6,7 @@ import { WrapperService } from "../wrapper/wrapper.service";
 
 describe('SystemAlertsService', () => {
   let basicAlert: AlertType = {
-    id: 1,
+    alertId: 1,
     content: {
       title: 'Title',
       description: 'Description',

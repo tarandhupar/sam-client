@@ -337,7 +337,7 @@
       </section>
 
       <!-- Synopsis -->
-      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="(shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content) || (shouldBeDisplayed(opportunityFields.Synopsis) && differences?.description)">
+      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)">
 
         <h2 class="sam-ui header">Synopsis
           <sam-button *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></sam-button>

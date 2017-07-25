@@ -25,10 +25,8 @@ export class ActionHistoryPipe implements PipeTransform {
 
 
     let processOrganizationNames = function(historyItem){
-      let organizationId;
       if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
-        organizationId = historyItem.requested_organizationId;
-        return organizationId;
+        return historyItem.requested_organizationId;
       }
     };
 
@@ -41,6 +39,11 @@ export class ActionHistoryPipe implements PipeTransform {
 
   private loadOrganizationNames(orgIds) {
     let apiSubject = new ReplaySubject(1);
+
+    if (orgIds == "" ){
+      this.orgNames = {};
+      return Observable.of({});
+    }
 
     // construct a stream of federal hierarchy data
     let apiStream = this.fhService.getOrganizationsByIds(orgIds);
@@ -61,23 +64,14 @@ export class ActionHistoryPipe implements PipeTransform {
       }
       this.orgNames = listOrgNames;
     }, err => {
-      console.log('Error loading organization: ', err);
+      console.log('Error loading organization names: ', err);
+      return apiSubject;
     });
 
     return apiSubject;
   }
 
   private processHistoryItems(organizationNamesAPI: Observable<any>, actionHistoryArray: any){
-    organizationNamesAPI.subscribe(api => {
-      let toReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
-        for (let i in toReturn){
-          if ((toReturn[i]['title'] == null || toReturn[i]['title'] == '') && toReturn[i]['date'] == null && toReturn[i]['description'] == null && toReturn[i]['submitter'] == null){
-            toReturn.splice(i,1);
-          }
-        }
-      this.subject.next(toReturn);
-    });
-
     let processHistoryItem = (historyItem) => {
       let dateFormat = new DateFormatPipe();
       let actionHistoryLabelPipe = new ActionHistoryLabelPipe();
@@ -119,5 +113,17 @@ export class ActionHistoryPipe implements PipeTransform {
       let processedHistoryArray = [processedHistoryItem1, processedHistoryItem2];
       return processedHistoryArray;
     };
+
+    organizationNamesAPI.subscribe(api => {
+      let toReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
+      for (let i in toReturn){
+        if ((toReturn[i]['title'] == null || toReturn[i]['title'] == '') && toReturn[i]['date'] == null && toReturn[i]['description'] == null && toReturn[i]['submitter'] == null){
+          toReturn.splice(i,1);
+        }
+      }
+      this.subject.next(toReturn);
+    });
+
+
   }
 }

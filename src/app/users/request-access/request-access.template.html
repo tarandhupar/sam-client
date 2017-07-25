@@ -42,19 +42,11 @@
           <sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail" [required]="true"></sam-text>
         </div>
       </div>
-      <!--<div class = "usa-grid-full">-->
-        <!--<div class = "usa-width-one-half">-->
-          <!--<sam-autocomplete rmsusers [ngModelOptions]="{standalone: true}" [allowAny]="false" [(ngModel)]="userDetail" [labelText]="'Supervisor Name'" [config]="userConfig" (enterEvent)="updateUserData($event)"></sam-autocomplete>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="usa-grid-full">-->
-        <!--<div class="usa-width-one-half">-->
-          <!--<sam-text formControlName="superName" label="Supervisor Name" name="supervisor-name" [errorMessage]="errors.superName" [required]="true"></sam-text>-->
-        <!--</div>-->
-        <!--<div class="usa-width-one-half">-->
-          <!--<sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail" [required]="true"></sam-text>-->
-        <!--</div>-->
-      <!--</div>-->
+
+      <!-- Optional Message -->
+      <h2 class="usa-bgcolor-gray-lighter">Comments</h2>
+      <sam-text-area formControlName="comment" name="comment" label="Please comment on the reason for your request." [required]="false" [errorMessage]="errors.comment"></sam-text-area>
+
 
       <!-- Cancel / Confirm -->
       <div>

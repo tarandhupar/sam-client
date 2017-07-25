@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { FALFormService } from "../../../fal-form.service";
 import { FALFormViewModel } from "../../../fal-form.model";
@@ -11,18 +11,19 @@ import {
   AccountIdentificationModel
 } from "../../../../components/account-identification/account-identification.component";
 import { TAFSConfig, TAFSModel } from "../../../../components/tafs/tafs.component";
+import { FALFormErrorService } from '../../../fal-form-error.service';
+import { FALFieldNames, FALSectionNames } from '../../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
   selector: 'fal-form-financial-info-other',
   templateUrl: 'fal-form-financial-info-other.template.html'
 })
-export class FALFormFinancialInfoOtherComponent implements OnInit {
+export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit {
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
+  @Output() public showErrors = new EventEmitter();
 
   public otherFinancialInfoForm: FormGroup;
-  private formErrors = new Set();
 
   rangeAndAverageHint:string = `<p>Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.</p>
                                 <p>First, list a representative range (smallest to largest) of the amounts of financial assistance available. 
@@ -33,11 +34,11 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
                                           <p>List the 11 digit budget account identification code(s) that funds the program. The meaning of the 11-digit code is specified in OMB Circular No. 
                                           A-11, and in Appendix III of the Catalog. All program coding used will be consistent with that submitted for inclusion in the President's Budget.</p>`;
   public accomplishmentsConfig: FiscalYearTableConfig = {
-    name: 'program-accomplishments',
+    name: FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
     label: 'Program Accomplishments',
     hint: this.accomplishmentConfigHint,
     required: true,
-    itemName: 'Accomplishments',
+    itemName: 'Accomplishment',
     errorMessage: 'You must select Not Applicable or add at least one Program Accomplishment.',
 
     entry: {
@@ -59,7 +60,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   };
 
   public accountIdentificationConfig: AccountIdentificationConfig = {
-    name: 'account-identification',
+    name: FALFieldNames.ACCOUNT_IDENTIFICATION,
     label: 'Account Identification',
     hint: this.accountIdentificationConfigHint,
     codeHint: 'Agency supplied 11-digit budget account code',
@@ -83,7 +84,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     }
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private errorService: FALFormErrorService) {
   }
 
   ngOnInit() {
@@ -92,6 +93,25 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.loadForm();
     }
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
+    });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.OTHER_FINANCIAL_INFO) === 'updated') {
+        this.otherFinancialInfoForm.get('assistanceRange').markAsDirty();
+        this.otherFinancialInfoForm.get('assistanceRange').updateValueAndValidity();
+        this.otherFinancialInfoForm.get('accomplishments').markAsDirty();
+        this.otherFinancialInfoForm.get('accomplishments').updateValueAndValidity();
+        this.otherFinancialInfoForm.get('accountIdentification').markAsDirty();
+        this.otherFinancialInfoForm.get('accountIdentification').updateValueAndValidity();
+        this.otherFinancialInfoForm.get('tafs').markAsDirty();
+        this.otherFinancialInfoForm.get('tafs').updateValueAndValidity();
+      }
+    });
   }
 
   private createForm() {
@@ -104,7 +124,9 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
 
     this.otherFinancialInfoForm.valueChanges.subscribe(data => {
       this.updateViewModel(data);
-      this.collectErrors();
+      setTimeout(() => { // horrible hack to trigger angular change detection
+        this.updateErrors();
+      });
     });
   }
 
@@ -117,6 +139,10 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     }, {
       emitEvent: false
     });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
+    });
   }
 
   private updateViewModel(data: Object) {
@@ -124,6 +150,14 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     this.viewModel.accomplishments = this.saveAccomplishments(data['accomplishments']);
     this.viewModel.accounts = this.saveAccounts(data['accountIdentification']);
     this.viewModel.tafs = this.saveTafs(data['tafs']);
+  }
+
+  private updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.errorService.validateAccountIdentification();
+    this.errorService.validateProgramAccomplishments();
+    this.errorService.validateTafsCodes();
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 
   private loadAccomplishments() {
@@ -206,99 +240,5 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     }
 
     return tafs;
-  }
-
-  public validateSection() {
-    //mark all controls as dirty
-    for (let control in this.otherFinancialInfoForm.controls) {
-      this.otherFinancialInfoForm.controls[control].markAsDirty();
-      this.otherFinancialInfoForm.controls[control].updateValueAndValidity();
-    }
-
-    this.collectErrors();
-  }
-
-  private collectErrors() {
-    let size = this.formErrors.size;
-
-    for(let key in this.otherFinancialInfoForm.controls) {
-      if(this.otherFinancialInfoForm.controls[key].errors && this.otherFinancialInfoForm.controls[key].dirty) {
-        this.formErrors.add(key);
-      } else {
-        this.formErrors.delete(key);
-      }
-    }
-
-    if(this.formErrors.size !== size) {
-      this.emitEvent();
-    }
-  }
-
-  // private collectErrors() {
-  //   let pageErrors: FieldErrorList = {
-  //     id: '',
-  //     label: 'Other Financial Info',
-  //     errors: []
-  //   };
-  //
-  //   let tableErrors: FieldErrorList = {
-  //     id: '',
-  //     label: 'TAFS Code',
-  //     errors: []
-  //   };
-  //
-  //   let tafsControl = this.otherFinancialInfoForm.get('tafs').value;
-  //
-  //   for(let i = 0; i < tafsControl.tafs.length; i++) {
-  //     let tafs = tafsControl.tafs[i];
-  //     if(tafs.departmentCode == null || tafs.accountCode == null) {
-  //       let rowErrors: FieldErrorList = {
-  //         id: '',
-  //         label: 'Row ' + i,
-  //         errors: []
-  //       };
-  //
-  //       if(tafs.departmentCode == null) {
-  //         let departmentCodeError: FieldError = {
-  //           id: '',
-  //           label: 'Department Code',
-  //           errors: ['A department code is required']
-  //         };
-  //
-  //         rowErrors.errors.push(departmentCodeError);
-  //       }
-  //
-  //       if(tafs.accountCode == null) {
-  //         let accountCodeError: FieldError = {
-  //           id: '',
-  //           label: 'Account Code',
-  //           errors: ['An account code is required']
-  //         };
-  //
-  //         rowErrors.errors.push(accountCodeError);
-  //       }
-  //
-  //       if(rowErrors.errors.length > 0) {
-  //         tableErrors.errors.push(rowErrors);
-  //       }
-  //     }
-  //   }
-  //
-  //   if(tableErrors.errors.length > 0) {
-  //     pageErrors.errors.push(tableErrors);
-  //   }
-  //
-  //   // add errors for other components on page
-  //
-  //   if(pageErrors.errors.length > 0) {
-  //     // emit pageErrors to fal-form-component
-  //   }
-  // }
-
-  private emitEvent() {
-    this.onError.emit({
-      formErrorArr: Array.from(this.formErrors.values()),
-      section: 'financial-information-other'
-    });
   }
 }

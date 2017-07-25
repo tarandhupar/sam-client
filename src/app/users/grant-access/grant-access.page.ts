@@ -18,6 +18,7 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
 import { UserAccessModel } from "../access.model";
 import { PropertyCollector } from "../../app-utils/property-collector";
 import { Organization } from "../../organization/organization.model";
+import { SamModalComponent } from "sam-ui-kit/components/modal";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -59,6 +60,9 @@ export class GrantAccessPage implements OnInit {
   private requestId: any = null;
   private request: any;
   private adminLevel: number;
+  private user: any;
+
+  @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
   constructor(
     private userService: UserAccessService,
@@ -96,6 +100,19 @@ export class GrantAccessPage implements OnInit {
     if (this.mode === 'edit') {
       this.initializePageFromQueryParameters();
     }
+    this.user = this.getUser();
+  }
+
+  getUser() {
+    let cookie = Cookie.get('IAMSession');
+    if (cookie) {
+      let u = Cookie.get('IAMSession');
+      let uo;
+      uo = JSON.parse(u);
+      return uo;
+    } else {
+      throw new Error('User cookie missing');
+    }
   }
 
   getAccess() {
@@ -119,10 +136,10 @@ export class GrantAccessPage implements OnInit {
       },
       error => {
         this.footerAlert.registerFooterAlert({
-          title:"Unable to fetch access information.",
+          title:"Unable to fetch domain information.",
           description:"",
           type:'error',
-          timer:0
+          timer:3200
         });
       }
     );
@@ -132,6 +149,11 @@ export class GrantAccessPage implements OnInit {
     let queryParams = this.route.snapshot.queryParams;
     this.role = parseInt(queryParams["role"]);
     this.domain = parseInt(queryParams["domain"]);
+    if (queryParams['orgs']) {
+      let oid = queryParams["orgs"]
+      this.org = { value: oid };
+      this.initialOrg = [oid];
+    }
     let obsAccess = this.getAccess();
     this.getRoles().switchMap(() => obsAccess).subscribe(
       res => {
@@ -147,34 +169,7 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
-
-    if (queryParams['orgs']) {
-      let oid = queryParams["orgs"]
-      this.org = { value: oid };
-      this.initialOrg = [oid];
-    }
   }
-
-  // prePopulateOrgs() {
-  //   this.fhService.getOrganizationById(this.initialOrg, false, true).subscribe(
-  //     orgs => {
-  //       this.orgs = orgs.map(org => Organization.FromResponse(org)).map(org => {
-  //         return {
-  //           name: org.orgName,
-  //           value: org.id
-  //         };
-  //       });
-  //     },
-  //     err => {
-  //       this.footerAlert.registerFooterAlert({
-  //         title:"Unable to get organization data",
-  //         description:"",
-  //         type:'error',
-  //         timer:2000
-  //       });
-  //     }
-  //   );
-  // }
 
   public scrollToHead(): void {
     let pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, '#form-top');
@@ -195,6 +190,36 @@ export class GrantAccessPage implements OnInit {
     } else {
       console.error('domain:', domainId, ' not found');
     }
+  }
+
+  onDeleteClick() {
+    this.deleteModal.openModal();
+  }
+
+  onDeleteConfirm() {
+    let queryParams = this.route.snapshot.queryParams;
+    let roleId = parseInt(queryParams["role"]);
+    let domainId = parseInt(queryParams["domain"]);
+    let orgId = queryParams["orgs"];
+    let deleteBody = UserAccessModel.CreateDeletePartial(this.userName, roleId, domainId, [orgId]);
+    this.userService.postAccess(deleteBody, this.userName).subscribe(
+      res => {
+        this.deleteModal.closeModal();
+        this.footerAlert.registerFooterAlert({
+          title:"",
+          description:"Successfully deleted this access.",
+          type:'success',
+          timer:3200
+        });
+        this.goToUserAccessPage();
+      }, err => {
+        this.footerAlert.registerFooterAlert({
+          title:"",
+          description:"Unable to delete access object.",
+          type:'error',
+          timer:3200
+        });
+      });
   }
 
   onOrganizationsChange(org) {
@@ -298,7 +323,11 @@ export class GrantAccessPage implements OnInit {
     }
   }
 
-  goToAccessPage() {
+  goToUserAccessPage() {
+    this.router.navigate(['/users', this.userName, 'access'])
+  }
+
+  goToMyAccessPage() {
     this.router.navigate(['../access'], { relativeTo: this.route });
   }
 
@@ -391,7 +420,7 @@ export class GrantAccessPage implements OnInit {
     if (this.userCameFromRoleWorkspace) {
       this.goToRoleWorkspace();
     } else {
-      this.goToAccessPage();
+      this.goToMyAccessPage();
     }
   }
 
@@ -412,7 +441,7 @@ export class GrantAccessPage implements OnInit {
             type:'success',
             timer:3000
           });
-          this.goToAccessPage();
+          this.goToMyAccessPage();
         },
         err => {
           this.footerAlert.registerFooterAlert({
@@ -491,7 +520,7 @@ export class GrantAccessPage implements OnInit {
         if (this.userCameFromRoleWorkspace) {
           this.goToRoleWorkspace();
         } else {
-          this.goToAccessPage();
+          this.goToMyAccessPage();
         }
       },
       error => {

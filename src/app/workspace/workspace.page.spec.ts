@@ -11,12 +11,12 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceModule } from "./workspace.module";
+import { ProgramService } from "../../api-kit/program/program.service";
 
 
 class RouterStub {
   navigate(url: string) { return url; }
 }
-
 
 describe('Workspace Page', () => {
   // provide our implementations or mocks to the dependency injector
@@ -34,6 +34,7 @@ describe('Workspace Page', () => {
       ],
       providers: [
         WorkspacePage,
+        ProgramService,
         {
           provide: ActivatedRoute,
           useValue: {

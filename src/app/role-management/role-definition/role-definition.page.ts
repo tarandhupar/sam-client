@@ -3,7 +3,6 @@ import { UserAccessService } from "../../../api-kit/access/access.service";
 
 
 @Component({
-  providers: [ UserAccessService ],
   templateUrl: 'role-definition.page.html'
 })
 export class RoleDefinitionPage implements OnInit {

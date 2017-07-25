@@ -38,7 +38,11 @@
         <ng-container *ngFor="let account of model.accounts; let i=index">
           <tr>
             <!-- Table account data -->
-            <td><span [class]="account.code ? '' : 'usa-input-error-message'">{{ account.code || 'An account code is required' }}</span></td>
+            <td>
+              {{ account.code }}
+              <span *ngIf="account.code === '----'" [class]="'usa-input-error-message'">An account code is required</span>
+              <span *ngIf="account.code !== '----' && !isValidCode(account.code)" [class]="'usa-input-error-message'">Provide a valid 11 digit number using only numerical values.</span>
+            </td>
             <!--todo: wrap account description if it is long-->
             <!--todo: keep pointer style when disabled or not?-->
             <td>{{ account.description }}</td>
@@ -75,15 +79,15 @@
           <div class="usa-width-one-whole" [formGroup]="codeForm">
             <ng-container *ngFor="let length of codePartLengths; let i = index; let isLast = last">
               <!-- todo: don't hardcode maxwidth -->
-              <!-- todo: add minLength -->
-              <sam-text class="code-box"
-                       [name]="config.name + '-code-box' + i"
-                       [maxlength]="length"
-                       [style.maxWidth]="0.9*length + 2.8 + 'rem'"
-                       [formControlName]="'codePart' + i"
-                       (keyup)="onKeyup($event)"
-              ></sam-text>
-              <span class="code-separator" *ngIf="!isLast">-</span>
+              <div [style.display]="'inline-block'" [style.maxWidth]="0.9*length + 3 + 'rem'">
+                <sam-text class="vertical-center"
+                          [name]="config.name + '-code-box' + i"
+                          [maxlength]="length"
+                          [formControlName]="'codePart' + i"
+                          (keyup)="onKeyup($event)"
+                ></sam-text>
+              </div>
+              <span class="vertical-center" *ngIf="!isLast">-</span>
             </ng-container>
           </div>
         </div>
@@ -92,16 +96,16 @@
 
       <!-- New account description -->
       <sam-text-area [name]="config.name + '-description'"
-                   [formControl]="descriptionControl"
+                     [formControl]="descriptionControl"
                      [hint]="'Optionally add a description for this account number'"
       ></sam-text-area>
     </div>
 
     <!-- Add new account form action buttons -->
-    <sam-button *ngIf="!isEditing" buttonText="Add New Account" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
+    <sam-button [buttonId]="'account-id-add-btn'" *ngIf="!isEditing" buttonText="Add New Account" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
 
-    <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
-    <sam-button *ngIf="isEditing" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="'default'"></sam-button>
+    <sam-button [buttonId]="'account-id-cancel-btn'" *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+    <sam-button [buttonId]="'account-id-confirm-btn'" *ngIf="isEditing" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="'default'"></sam-button>
   </div>
 
 </sam-label-wrapper>

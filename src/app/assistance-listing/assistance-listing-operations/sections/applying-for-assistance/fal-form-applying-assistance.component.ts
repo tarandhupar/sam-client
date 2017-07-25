@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { FALAssistSubFormComponent } from '../../../components/applying-assistance-subform/applying-assistance-subform.component';
 import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
 import { FALFormErrorService } from '../../fal-form-error.service';
+import { FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -143,6 +144,42 @@ export class FALAssistanceComponent implements OnInit {
         interval: ['na', falCustomValidatorsComponent.selectRequired],
         description: ''
       })
+    });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.APPLYING_FOR_ASSISTANCE) === 'updated') {
+        // todo: find way to shorten this...
+        this.falAssistanceForm.get('deadlines').get('flag').markAsDirty();
+        this.falAssistanceForm.get('deadlines').get('flag').updateValueAndValidity();
+        this.falAssistanceForm.get('deadlines').get('description').markAsDirty();
+        this.falAssistanceForm.get('deadlines').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('preApplicationCoordination').get('reports').markAsDirty();
+        this.falAssistanceForm.get('preApplicationCoordination').get('reports').updateValueAndValidity();
+        this.falAssistanceForm.get('preApplicationCoordination').get('description').markAsDirty();
+        this.falAssistanceForm.get('preApplicationCoordination').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('applicationProcedure').get('isApplicable').markAsDirty();
+        this.falAssistanceForm.get('applicationProcedure').get('isApplicable').updateValueAndValidity();
+        this.falAssistanceForm.get('applicationProcedure').get('description').markAsDirty();
+        this.falAssistanceForm.get('applicationProcedure').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('selectionCriteria').get('isApplicable').markAsDirty();
+        this.falAssistanceForm.get('selectionCriteria').get('isApplicable').updateValueAndValidity();
+        this.falAssistanceForm.get('selectionCriteria').get('description').markAsDirty();
+        this.falAssistanceForm.get('selectionCriteria').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('awardProcedure').get('description').markAsDirty();
+        this.falAssistanceForm.get('awardProcedure').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('approval').get('interval').markAsDirty();
+        this.falAssistanceForm.get('approval').get('interval').updateValueAndValidity();
+        this.falAssistanceForm.get('approval').get('description').markAsDirty();
+        this.falAssistanceForm.get('approval').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('appeal').get('interval').markAsDirty();
+        this.falAssistanceForm.get('appeal').get('interval').updateValueAndValidity();
+        this.falAssistanceForm.get('appeal').get('description').markAsDirty();
+        this.falAssistanceForm.get('appeal').get('description').updateValueAndValidity();
+        this.falAssistanceForm.get('renewal').get('interval').markAsDirty();
+        this.falAssistanceForm.get('renewal').get('interval').updateValueAndValidity();
+        this.falAssistanceForm.get('renewal').get('description').markAsDirty();
+        this.falAssistanceForm.get('renewal').get('description').updateValueAndValidity();
+      }
     });
   }
 
@@ -334,15 +371,12 @@ export class FALAssistanceComponent implements OnInit {
     control.clearValidators();
     control.setValidators((control) => { return control.errors });
     control.setErrors(errors);
-    this.markAndUpdateFieldStat(control);
-  }
-
-  private markAndUpdateFieldStat(control){
     setTimeout(() => {
-      control.markAsDirty();
       control.updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
-
   }
 
+  public beforeSaveAction() {
+    this.assistSubForm.onSubFormCancelClick(this.assistSubForm.assistIndex);
+  }
 }

@@ -23,6 +23,8 @@ export class AlertsPage {
   alertBeingEdited: Alert = null;
   alerts:Alert[] = [];
   _totalAlerts:number;
+  links : any;
+  alertmessage : string = '';
 
   private userAccessModel: UserAccessModel;
 
@@ -102,34 +104,7 @@ export class AlertsPage {
               private api: IAMService,
               private role: UserAccessService,
               private _location: Location) {
-  }
-
-  checkSession() {
-    //Get the sign in info
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.checkSession((user) => {
-        this.zone.run(() => {
-          this.route.queryParams.subscribe(param => {
-            if(param['mode'] === 'create') {
-              this.alertBeingEdited = new Alert();
-            }
-          });
-
-          this.states.isSignedIn = true;
-          this.user = user;
-          if(this.user !== null){
-            this.role.getAccess(this.user._id).subscribe(
-              res => {
-                this.userAccessModel = UserAccessModel.FromResponse(res);
-                this.states.isCreate = this.userAccessModel.canCreateAlerts();
-                this.states.isEdit = this.userAccessModel.canEditAlerts();
-              }
-            )
-          }
-        });
-      });
-    });
-  }
+  } 
 
 
   isAdmin() {
@@ -150,17 +125,24 @@ export class AlertsPage {
   }
 
   ngOnInit() {
-    this.checkSession();
     this.doSearch();
 
   }
 
   onNewAlertsReceived(alerts) {
     this._totalAlerts = alerts.total;
+    this.links = alerts._links;
+    
+    this.states.isCreate = this.links.hasOwnProperty('create');
+    this.states.isEdit = this.links.hasOwnProperty('edit');
+    if(this.states.isCreate || this.states.isEdit){
+      this.states.isSignedIn = true;
+    }
     if (alerts.alerts && alerts.alerts.length) {
       this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
     } else {
       this.alerts = [];
+      this.alertmessage = 'No results found for selected criteria. Please use filters to expand the search results.';
     }
   }
 
@@ -169,6 +151,7 @@ export class AlertsPage {
       if(param['status']) {this.filters.statuses = [param['status']];}
     });
     this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
+    
   }
 
   getAlerts() : Observable<any> {

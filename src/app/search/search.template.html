@@ -214,6 +214,7 @@
         <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ei'">
           <sam-autocomplete-multiselect autofill-entityduns
                                         class="usa-award-filter"
+                                        [attr.id]="'entityDuns'"
                                         [label]="'Entity Name/UEI'"
                                         [name]="'Test'"
                                         [ngModel]="dunsModelList"
@@ -259,16 +260,6 @@
                                   [applicantOptions]="appElType.options"
                                   [applicantConfig]="appElType">
           </sam-eligibility-filter>
-        </sam-collapsible>
-
-        <!--Functional Codes Filter-->
-        <sam-collapsible [label]="'Functional Codes'" [startOpened]="true" *ngIf="(index==='cfda')">
-          <sam-functional-codes-filter  [attr.id]= "'functional-code-filter'"
-                                        class="usa-award-filter"
-                                        [selectModel1]="functionalCodesModel"
-                                        [options1]="functionalCodesType"
-                                        (modelChange1)="functionalCodeSelected($event)">
-          </sam-functional-codes-filter>
         </sam-collapsible>
 
         <!--Assistance Type Filters-->

@@ -6,6 +6,9 @@ import { IAMService } from 'api-kit';
 import { globals } from '../../app/globals';
 import { Cookie } from 'ng2-cookies';
 import all = protractor.promise.all;
+import * as xmljs from 'xml-js';
+import * as moment from 'moment';
+import { OptionsType } from 'sam-ui-kit/types';
 
 @Component({
   providers: [IAMService],
@@ -13,22 +16,22 @@ import all = protractor.promise.all;
 })
 export class ReportProtoComponent implements OnInit {
   @ViewChild('samAccordionValue') samAccordionValue;
-  @ViewChild('agencyPicker') agencyPicker;
   public id = null;
+  public expid = null;
   public name = null;
   public desc = null;
   public pwd = null;
   public appendix = [];
-  url: SafeResourceUrl;
   public states = {
     isSignedIn: false
   };
   public prompts: string;
-  data: Object;
-  totalReportCount: number = 0;
   public user = null;
-  organizationId:string = '';
-  agencyPickerValue = [];
+  data: Object;
+  url: SafeResourceUrl;
+  totalReportCount: number = 0;
+  organizationId: string = '';
+  agencyPicker = [];
   showReport: boolean = false;
   dateRange = {
     startDate: '',
@@ -36,8 +39,26 @@ export class ReportProtoComponent implements OnInit {
   };
   usedPrompts = {
     dateRange: false,
-    fHierarchy: false
+    fHierarchy: false,
+    includesBases: false,
+    contractingRegion: false,
+    orgId: false,
+    agencyName: false
   };
+  officeId: any = '';
+  agencyId: any = '';
+  departmentId: any = '';
+  promptAnswersXML;
+  contractingRegion = "";
+  orgCode = "";
+  orgCodeXML;
+  includesBases;
+  includesBasesXML;
+  agencyName = "";
+  basesOptions: OptionsType[] = [
+    { name: 'all', label: 'All', value: 'all'},
+    { name: 'basesOnly', label: 'Bases Only', value: 'basesOnly'}
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -68,30 +89,36 @@ export class ReportProtoComponent implements OnInit {
 
   reportExecute() {
     let vm = this;
-    let promptAnswers = '';
-
-    console.log(this.agencyPicker);
-
-    if(this.agencyPicker.selectedOrganizations.length > 0) {
-      promptAnswers = '%3Crsl%3E%3Cpa%20pt%3D%225%22%20pin%3D%220%22%20did%3D%2208C4877C401950B7A2D182B0B36801EC%22%20tp%3D%2210%22%3E'+this.dateRange.endDate+'%3C%2Fpa%3E%3Cpa%20pt%3D%225%22%20pin%3D%220%22%20did%3D%22343002F84DD3741D37B81198047298B1%22%20tp%3D%2210%22%3E'+this.dateRange.startDate+'%3C%2Fpa%3E%3Cpa%20pt%3D%227%22%20pin%3D%220%22%20did%3D%22A009A1AF453DEBD6C1A3C7A6DD3CEE00%22%20tp%3D%2210%22%3E%3Cmi%3E%3Ces%20%2F%3E%3C%2Fmi%3E%3C%2Fpa%3E%3Cpa%20pt%3D%227%22%20pin%3D%220%22%20did%3D%22C1D7F68B4D09F29E00BE9EB436506CE6%22%20tp%3D%2210%22%3E%3Cmi%3E%3Ces%3E%3Cat%20did%3D%225343F7064B266D77D4763CB55CF193E5%22%20tp%3D%2212%22%20%2F%3E%3Ce%20emt%3D%221%22%20ei%3D%225343F7064B266D77D4763CB55CF193E5%3A'+this.agencyPicker.selectedOrganizations[0].code+'%22%20art%3D%221%22%20%2F%3E%3C%2Fes%3E%3C%2Fmi%3E%3C%2Fpa%3E%3C%2Frsl%3E';
-    } else {
-      promptAnswers = '%3Crsl%3E%3Cpa%20pt%3D%225%22%20pin%3D%220%22%20did%3D%2208C4877C401950B7A2D182B0B36801EC%22%20tp%3D%2210%22%3E'+this.dateRange.endDate+'%3C%2Fpa%3E%3Cpa%20pt%3D%225%22%20pin%3D%220%22%20did%3D%22343002F84DD3741D37B81198047298B1%22%20tp%3D%2210%22%3E'+this.dateRange.startDate+'%3C%2Fpa%3E%3Cpa%20pt%3D%227%22%20pin%3D%220%22%20did%3D%22A009A1AF453DEBD6C1A3C7A6DD3CEE00%22%20tp%3D%2210%22%3E%3Cmi%3E%3Ces%20%2F%3E%3C%2Fmi%3E%3C%2Fpa%3E%3Cpa%20pt%3D%227%22%20pin%3D%220%22%20did%3D%22C1D7F68B4D09F29E00BE9EB436506CE6%22%20tp%3D%2210%22%3E%3Cmi%3E%3Ces%20%2F%3E%3C%2Fmi%3E%3C%2Fpa%3E%3C%2Frsl%3E'
-    }
-    
+    let evt = '4001';
+    let reportId = "&reportId=" + this.id;
     vm.showReport = true;
     vm.samAccordionValue.collapseAll();
-    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=2048001&src=mstrWeb.2048001&currentViewMedia=1&visMode=0'
-          + '&uid=' + vm.user._id + '&documentID=' + vm.route.snapshot.params['id'] +  '&role=' + vm.user.gsaRAC[0] + '&promptsAnswerXML=' +promptAnswers);
+    this.hitUrl(evt, reportId);
   }
 
-  resetParameter(){
-    this.agencyPicker.resetBrowse();
+  exportReport() {
+    let vm = this;
+    let evt = '3069';
+    let documentId = "&documentId=" + this.expid;
+    vm.showReport = true;
+    vm.samAccordionValue.collapseAll();
+    this.hitUrl(evt, documentId);
+  }
+
+  hitUrl(evt, docId) {
+    let vm = this;
+    // +'&role='+vm.user.gsaRAC[0] -- role disabled for now
+    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategystg.helix.gsa.gov/OOB/servlet/mstrWeb?Server=MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+docId+'&promptsAnswerXML='+this.generateXML());
+  }
+
+  resetParameter(){ 
     this.showReport = false;
-    this.agencyPickerValue = [];
+    this.agencyPicker = [];
   }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
+    this.expid = this.route.snapshot.params['expid'];
     this.name = this.route.snapshot.params['name'];
     this.desc = this.route.snapshot.params['desc'];
     this.prompts = this.route.snapshot.params['prompts'];
@@ -101,28 +128,70 @@ export class ReportProtoComponent implements OnInit {
     if (this.prompts.indexOf('fHierarchy') >= 0) {
       this.usedPrompts.fHierarchy = true;
     }
+    if (this.prompts.indexOf('includesBases') >= 0) {
+      this.usedPrompts.includesBases = true;
+    }
+    if (this.prompts.indexOf('contractingRegion') >= 0) {
+      this.usedPrompts.contractingRegion = true;
+    }
+    if (this.prompts.indexOf('orgId') >= 0) {
+      this.usedPrompts.orgId = true;
+    }
+    if (this.prompts.indexOf('agencyName') >= 0) {
+      this.usedPrompts.agencyName = true;
+    }
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
       });
   }
 
-  // handles 'organization' emmitted event from agency picker
-  onOrganizationChange(orgId:any){
-    let organizationStringList = '';
-    let stringBuilderArray = orgId.map(function (organizationItem) {
-      if(organizationStringList === ''){
-        organizationStringList += organizationItem.value;
+  generateXML() {
+    if (this.agencyPicker) {
+      for (let i in this.agencyPicker) {
+        if (this.agencyPicker[i].name.includes('(D)')) {
+          this.departmentId = [{type:"element",name:"at",attributes:{did:"5343F7064B266D77D4763CB55CF193E5",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"5343F7064B266D77D4763CB55CF193E5:"+this.agencyPicker[i].code,art:"1"}}];
+        }
+        if (this.agencyPicker[i].name.includes('(A)')) {
+          this.agencyId = [{type:"element",name:"at",attributes:{did:"9909C3FF4C4E64A62A92DC991D69F2CD",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"9909C3FF4C4E64A62A92DC991D69F2CD:"+this.agencyPicker[i].code,art:"1"}}];
+        }
+        if (this.agencyPicker[i].name.includes('(L3)')) {
+          this.officeId = [{type:"element",name:"at",attributes:{did:"54F94B1940759D1794E3A1BD3D9F54B0",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"54F94B1940759D1794E3A1BD3D9F54B0:"+this.agencyPicker[i].code,art:"1"}}];;
+        }
       }
-      else{
-        organizationStringList += ',' + organizationItem.value;
-      }
-      console.log(orgId);
-      return organizationStringList;
-    });
+    }
+    this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"08C4877C401950B7A2D182B0B36801EC",tp:"10"},elements:[{type:"text",text:this.dateRange.endDate}]},{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"343002F84DD3741D37B81198047298B1",tp:"10"},elements:[{type:"text",text:this.dateRange.startDate}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"3FCC554F4FE90D3221692D93AE98EBAE",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.departmentId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"A009A1AF453DEBD6C1A3C7A6DD3CEE00",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.agencyId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"C1D7F68B4D09F29E00BE9EB436506CE6",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.officeId}]}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"E8B36A044628ECFA1B0677899EA10FD7",tp:"10"},elements:[{type:"text",text:this.contractingRegion}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"36B0D8F847186CF11E92829BF216055F",tp:"10"},elements:[{type:"text",text:this.orgCode}]}]}]}
+    this.checkIncludesBases();
+    this.checkIncludesAgencyName();
+    return xmljs.json2xml(this.promptAnswersXML);
   }
-  orgFullPath($evt) {
-    console.log
-  }
-}
 
+  includesBasesStatusChange(status) {
+    this.includesBases = status;
+  }
+
+  checkIncludesBases() {
+    let basesBool;
+    if (this.usedPrompts.includesBases) {
+      if (this.includesBases === "basesOnly") {
+        basesBool = {type:"element",name:"fct",attributes:{qsr:"0",fcn:"0",cc:"1",sto:"1",pfc:"0",pcc:"1"},elements:[{type:"element",name:"f",attributes:{did:"3503C54C4A888FC05808BBBA626176BB",tp:"1"}}]}
+      } else {
+        basesBool = {type:"element",name:"fct",attributes:{qsr:"0",fcn:"0",cc:"0",sto:"1",pfc:"0",pcc:"0"}}
+      }
+      this.includesBasesXML = {type:"element",name:"pa",attributes:{pt:"6",pin:"0",did:"B9F089924537A060405BC6B00FF42017",tp:"10"},elements:[{type:"element",name:"mi",elements:[]}]}
+      this.includesBasesXML.elements[0].elements.push(basesBool);
+      this.promptAnswersXML.elements[0].elements.push(this.includesBasesXML);
+    }
+  }
+
+  checkIncludesAgencyName() {
+    if (this.usedPrompts.agencyName) {
+      let agencyNameXML
+      if (this.agencyName) {
+        agencyNameXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"1D31F4954BAFE2D81C6DF3A2FAEA5D91",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:[{type:"element",name:"at",attributes:{did:"325702214C591F58735CE080B4735878",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"325702214C591F58735CE080B4735878:"+this.agencyName,art:"1"}}]}]}]}
+      }
+      this.promptAnswersXML.elements[0].elements.push(agencyNameXML);
+    }
+  }
+
+}

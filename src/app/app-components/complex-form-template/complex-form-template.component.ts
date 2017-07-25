@@ -33,10 +33,10 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
         <ng-content select="[form-sections]"></ng-content>    
         <div>
           <div class="pull-left">
-            <sam-button buttonType="outline" buttonText="Cancel" (onClick)="formAction('cancel')"></sam-button>
-            <sam-button buttonType="outline" *ngIf="sectionIndex - 1 >= 0" buttonText="Back" (onClick)="formAction('back')"></sam-button>
-            <sam-button buttonType="outline" *ngIf="sectionIndex + 1 < numberOfSections" buttonText="Next" (onClick)="formAction('next')"></sam-button>
-            <sam-button buttonText="Done" (onClick)="formAction('done')"></sam-button>
+            <sam-button [buttonId]="'fal-form-nav-cancel'" buttonType="outline" buttonText="Cancel" (onClick)="formAction('cancel')"></sam-button>
+            <sam-button [buttonId]="'fal-form-nav-back'" buttonType="outline" *ngIf="sectionIndex - 1 >= 0" buttonText="Back" (onClick)="formAction('back')"></sam-button>
+            <sam-button [buttonId]="'fal-form-nav-next'"buttonType="outline" *ngIf="sectionIndex + 1 < numberOfSections" buttonText="Next" (onClick)="formAction('next')"></sam-button>
+            <sam-button [buttonId]="'fal-form-nav-done'" buttonText="Done" (onClick)="formAction('done')"></sam-button>
           </div>
         </div>
       </div>

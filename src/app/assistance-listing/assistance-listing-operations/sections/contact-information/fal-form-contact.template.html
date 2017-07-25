@@ -14,15 +14,16 @@
                [name]="'addInfo-input'"
                [label]="'Additional Information'"
                [hint]= "contactadditionalInforamtionHint"
+               [attr.id]="'additional-contact-info'"
                formControlName="additionalInfo"></sam-text-area>
 
   <h4>Headquaters Office</h4>
-  <sam-label-wrapper [hint]="headquartersOfficeHint"></sam-label-wrapper>
+  <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
 
-  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" [formErrorArr]="formErrorArr" (actionHandler)="actionHandler($event)" #contactInfoTable></contactInfoTable>
+  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" [subFormErrorIndex]="subFormErrorIndex" (actionHandler)="actionHandler($event)"></contactInfoTable>
 
-  <span class='usa-input-error-message' *ngIf="contactInfoTable.review && formErrorArr['contact']"><sup>*</sup>At least one Point of Contact is required.</span>
-  <sam-button buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></sam-button>
+  <span class='usa-input-error-message' *ngIf="contactsInfo.length == 0 && (this.sectionStatus == 'updated' || (this.sectionStatus == 'pristine' && atLeastOneEntryError))"><sup>*</sup>At least one Point of Contact is required.</span>
+  <sam-button  [buttonId]="'contact-add-btn'" buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></sam-button>
 
   <div formArrayName="contacts" [class.hide]="hideContactsForm">
 
@@ -62,7 +63,6 @@
             [name]="'email-input'"
             [label]="'Email'"
             [required]="true"
-            [errorMessage]="contactGrp.controls.email.valid || contactGrp.controls.email.pristine || contactGrp.controls.email.errors.length == 0 ? '' : 'Please enter a valid Internet email address. Format: username@host.domain.' "
             formControlName="email"></sam-text>
 
           <sam-number
@@ -118,8 +118,8 @@
             formControlName="country"></sam-select>
 
         </div> <!-- End of newcontact -->
-        <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
-        <sam-button
+        <sam-button [buttonId]="'contact-cancel-btn'" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
+        <sam-button [buttonId]="'contact-confirm-btn'"
           buttonText="Confirm"
           (onClick)="onConfirmClick(i)"
           *ngIf="contactGrp.controls.contactId.value != 'na'"></sam-button>
@@ -131,9 +131,9 @@
   <sam-text
     [control]="falContactInfoForm.controls['website']"
     [hint]="websiteHint"
+    [attr.id]="'website-info'"
     [name]="'website-input'"
     [label]="'Website'"
-    [errorMessage]="falContactInfoForm.controls['website'].valid || falContactInfoForm.controls['website'].pristine ? '' : 'Please enter a valid url. [protocol]://hostname.domain. Protocal can be ftp, http, or https. Spaces are not allowed.'"
     formControlName="website">
   </sam-text>
 </form>

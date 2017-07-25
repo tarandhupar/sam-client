@@ -13,7 +13,7 @@ export class RequestHistoryLabelPipe implements PipeTransform {
         label = "Agency Change Requested";
         break;
       case "program_number_request":
-        label = "Program Number Change Requested";
+        label = "CFDA Number Change Requested";
         break;
       case "archive_request":
         label = "Archive Requested";

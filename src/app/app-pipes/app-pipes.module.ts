@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { CapitalizePipe } from './capitalize.pipe';
 import { DateFormatPipe } from './date-format.pipe';
+import { DateTimeDisplayPipe } from './date-time-display.pipe';
 import { FilterMultiArrayObjectPipe } from './filter-multi-array-object.pipe';
 import { GroupByPipe } from './group-by.pipe';
 import { KeysPipe } from './keyspipe.pipe';
@@ -13,6 +14,7 @@ import { SortArrayOfObjects } from "./sort-array-object.pipe";
   exports: [
     CapitalizePipe,
     DateFormatPipe,
+    DateTimeDisplayPipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,
@@ -22,6 +24,7 @@ import { SortArrayOfObjects } from "./sort-array-object.pipe";
   declarations: [
     CapitalizePipe,
     DateFormatPipe,
+    DateTimeDisplayPipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,

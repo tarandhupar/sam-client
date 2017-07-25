@@ -25,6 +25,9 @@
 }
 
 sam-label-wrapper{
+  label{
+    overflow:auto;
+  }
   .usa-form-hint{
     max-width: 46rem;
     display: block;

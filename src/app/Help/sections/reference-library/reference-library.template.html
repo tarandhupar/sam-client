@@ -147,6 +147,41 @@
       </ul>
     </div>
   </div>
+  <div class="usa-width-one-whole m_T-4x">
+    <h3 class="sam-ui header ">Wage Determinations Resources</h3>
+    <div class="usa-width-one-whole m_T-4x">
+      <div class="usa-width-one-third">
+        <ul class="sam-ui list">
+          <li *ngFor="let linkItem of wdolLinks.slice(0, wdolLinks.length/3)">
+            <a href="{{linkItem.url}}" target="{{linkItem.text}}">
+              {{linkItem.text}}
+              <i class="fa fa-external-link fa-sm" aria-hidden="true" *ngIf="linkItem.comment !== 'Internal'"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="sam-ui list">
+          <li *ngFor="let linkItem of wdolLinks.slice(wdolLinks.length/3, wdolLinks.length*2/3)">
+            <a href="{{linkItem.url}}" target="{{linkItem.text}}">
+              {{linkItem.text}}
+              <i class="fa fa-external-link fa-sm" aria-hidden="true" *ngIf="linkItem.comment !== 'Internal'"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="sam-ui list">
+          <li *ngFor="let linkItem of wdolLinks.slice(wdolLinks.length*2/3, wdolLinks.length)">
+            <a href="{{linkItem.url}}" target="{{linkItem.text}}">
+              {{linkItem.text}}
+              <i class="fa fa-external-link fa-sm" aria-hidden="true" *ngIf="linkItem.comment !== 'Internal'"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="sam-ui hidden section divider"></div>

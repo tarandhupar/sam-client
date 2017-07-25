@@ -5,7 +5,6 @@ import { routing } from './organization.route.ts';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AppComponentsModule } from '../app-components/app-components.module';
-import { OrganizationDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 
 @NgModule({
   imports: [
@@ -19,8 +18,7 @@ import { OrganizationDisplayPageDemoPage } from './display-template-demo/display
     OrganizationPage
   ],
   declarations: [
-    OrganizationPage,
-    OrganizationDisplayPageDemoPage
+    OrganizationPage
   ],
 })
 export class OrganizationModule { }

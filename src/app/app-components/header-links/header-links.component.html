@@ -14,6 +14,11 @@
         <i class="fa fa-search fa-lg" aria-hidden="true"></i>
         <span class="usa-sr-only">Search</span>
       </a>
+      <!-- Notifications -->
+      <!--a *ngIf="states.isSignedIn" (click)="notificationStartClick()" class="item notification-container">
+        <i class="fa fa-envelope-o fa-lg" aria-hidden="true" (click)="active = !active"></i>
+        <span class="notification-num">{{ notifications.length > 5 ? "+" : notifications.length }}</span>
+      </a-->
       <!-- Signed in -->
       <a *ngIf="states.isSignedIn" class="item" routerLink="/profile">
         {{ user.fullName }}
@@ -26,6 +31,13 @@
       <a class="item" [hidden]="states.isSignedIn" routerLink="/signup">
         Sign up
       </a>
+      <!--sam-notifications 
+        [@fadeInOut]="'in'"
+        sam-click-outside (clickOutside)="onNotificationOutsideClick()"
+        *ngIf="showNotifications" 
+        [notifications]="notifications"
+        (action)="showNotifications = false;startNotificationOutsideClick = false;"></sam-notifications-->
+      
     </div>
   </div>
 </nav>
@@ -57,4 +69,3 @@
   </div>
   
 </div>
-

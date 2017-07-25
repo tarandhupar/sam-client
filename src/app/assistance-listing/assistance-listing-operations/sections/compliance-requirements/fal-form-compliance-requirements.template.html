@@ -5,6 +5,7 @@
                [label]="policyRequirementsConfig.checkbox.label"
                [hint]="policyRequirementsConfig.checkbox.hint"
                [options]="policyRequirementsConfig.checkbox.options"
+               [attr.id]="'policy-requirements-checkbox'"
                [formControlName]="'policyRequirementsCheckbox'"
   ></sam-checkbox>
   <sam-text-area [name]="policyRequirementsConfig.textarea.name"
@@ -15,6 +16,7 @@
 
   <samCheckboxToggledTextarea #reportsComp
                               [options]="reportsConfig"
+                              [attr.id]="'reports-info'"
                               [formControlName]="'reports'"
                               [control]="complianceRequirementsGroup.get('reports')"
   ></samCheckboxToggledTextarea>
@@ -22,6 +24,7 @@
   <div class="fal-label-margin fal-label">Audits</div>
   <samCheckboxToggledTextarea #auditsComp
                               [options]="auditsConfig"
+                              [attr.id]="'audit-info'"
                               [formControlName]="'audits'"
                               [control]="complianceRequirementsGroup.get('audits')"
   ></samCheckboxToggledTextarea>
@@ -30,16 +33,19 @@
                [hint]="'Describe required records. Include the time period when the records must be kept.'"
                [name]="'compliance-records'"
                [control]="records"
+               [attr.id]="'records-textarea'"
                [formControlName]="'records'"
   ></sam-text-area>
 
   <samCheckboxToggledTextarea #additionalDocumentationComp
                               [options]="additionalDocumentationConfig"
+                              [attr.id]="'regulation-guideline-literature'"
                               [formControlName]="'additionalDocumentation'"
                               [control]="complianceRequirementsGroup.get('additionalDocumentation')"
   ></samCheckboxToggledTextarea>
 
   <falFormulaMatchingInput [options]="formulaMatchingConfig"
                            [formControlName]="'formulaMatching'"
+                           [attr.id]="'formula-matching'"
   ></falFormulaMatchingInput>
 </div>

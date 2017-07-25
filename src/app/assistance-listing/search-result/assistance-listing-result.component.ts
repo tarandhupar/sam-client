@@ -25,6 +25,20 @@ import * as moment from 'moment/moment';
           </p>
           
           <ul class="sam-ui small list">
+            <!-- Eligibility sections -->
+            <li class="item" *ngIf="data.eligibility?.beneficiary">
+              <strong>Beneficiary Eligibility</strong><br>
+              <ng-container *ngFor="let type of data.eligibility?.beneficiary?.types; let i=index; let last = last">
+                  <strong>{{ type.code }}</strong> {{ type.code && type.value ? '-' : '' }} {{ type.value }}{{ (type.code || type.value) && !last ? ',' : '' }}
+              </ng-container>
+            </li>
+            <li class="item" *ngIf="data.eligibility?.applicant">
+              <strong>Applicant Eligibility</strong><br>
+              <ng-container *ngFor="let type of data.eligibility?.applicant?.types; let i=index; let last = last">
+                  <strong>{{ type.code }}</strong> {{ type.code && type.value ? '-' : '' }} {{ type.value }}{{ (type.code || type.value) && !last ? ',' : '' }}
+              </ng-container>
+            </li>
+
             <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1">
               <strong>Department/Ind. Agency</strong><br>
               <a *ngIf="data.isActive==true" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
@@ -85,6 +99,7 @@ import * as moment from 'moment/moment';
                 </ng-container>
               </ng-container>
             </li>
+            
           </ul>
           
         </div>

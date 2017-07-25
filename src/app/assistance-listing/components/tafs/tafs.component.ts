@@ -1,10 +1,11 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
 import {
   ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators,
-  NG_VALIDATORS, Validator, AbstractControl
+  NG_VALIDATORS, Validator, AbstractControl, ValidatorFn
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { ValidationErrors } from "../../../app-utils/types";
+import * as _ from 'lodash';
 
 
 /** Interfaces **/
@@ -13,10 +14,10 @@ import { ValidationErrors } from "../../../app-utils/types";
 export interface TAFS {
   departmentCode: string,
   accountCode: string,
-  subAccountCode: string,
-  allocationTransferAgency: string,
-  fy1: string,
-  fy2: string
+  subAccountCode?: string,
+  allocationTransferAgency?: string,
+  fy1?: string,
+  fy2?: string
 }
 
 // Represents all the data that has been entered into a tafs form
@@ -132,14 +133,33 @@ export class FALTafsComponent implements ControlValueAccessor, Validator {
   }
 
   private createFormControls() {
+    // Creates a new validator that checks the input has exactly n digits
+    let nDigitsValidator = (n: number): ValidatorFn => {
+      return (control: AbstractControl): ValidationErrors => {
+        let errors: ValidationErrors = {};
+        Object.assign(errors, Validators.pattern('[0-9]*')(control), Validators.minLength(n)(control), Validators.maxLength(n)(control));
+
+        // todo: once label wrapper is updated to use custom messages, return normal error key with custom message
+        if (!_.isEmpty(errors)) {
+          return {
+            error: {
+              message: 'Provide a valid number using numerical values ' + Array(n+1).join('0') + '-' + Array(n+1).join('9') + '.'
+            }
+          }
+        } else {
+          return null;
+        }
+      };
+    };
+
     // all tafs fields take only numbers
     this.tafsForm = new FormGroup({
-      departmentCode: new FormControl(null, Validators.pattern('[0-9]*')),
-      accountCode: new FormControl(null, Validators.pattern('[0-9]*')),
-      subAccountCode: new FormControl(null, Validators.pattern('[0-9]*')),
-      allocationTransferAgency: new FormControl(null, Validators.pattern('[0-9]*')),
-      fy1: new FormControl(null, Validators.pattern('[0-9]*')),
-      fy2: new FormControl(null, Validators.pattern('[0-9]*'))
+      departmentCode: new FormControl(null, nDigitsValidator(2)),
+      accountCode: new FormControl(null, nDigitsValidator(4)),
+      subAccountCode: new FormControl(null, nDigitsValidator(3)),
+      allocationTransferAgency: new FormControl(null, nDigitsValidator(2)),
+      fy1: new FormControl(null, nDigitsValidator(4)),
+      fy2: new FormControl(null, nDigitsValidator(4))
     });
 
     if(this.control) {
@@ -148,33 +168,8 @@ export class FALTafsComponent implements ControlValueAccessor, Validator {
       });
     }
 
-    this.tafsForm.get('departmentCode').valueChanges.subscribe(value => {
-      this.model.current.departmentCode = value;
-      this.onChange();
-    });
-
-    this.tafsForm.get('accountCode').valueChanges.subscribe(value => {
-      this.model.current.accountCode = value;
-      this.onChange();
-    });
-
-    this.tafsForm.get('subAccountCode').valueChanges.subscribe(value => {
-      this.model.current.subAccountCode = value;
-      this.onChange();
-    });
-
-    this.tafsForm.get('allocationTransferAgency').valueChanges.subscribe(value => {
-      this.model.current.allocationTransferAgency = value;
-      this.onChange();
-    });
-
-    this.tafsForm.get('fy1').valueChanges.subscribe(value => {
-      this.model.current.fy1 = value;
-      this.onChange();
-    });
-
-    this.tafsForm.get('fy2').valueChanges.subscribe(value => {
-      this.model.current.fy2 = value;
+    this.tafsForm.valueChanges.subscribe(value => {
+      this.model.current = value;
       this.onChange();
     });
   }
@@ -221,6 +216,11 @@ export class FALTafsComponent implements ControlValueAccessor, Validator {
 
     this.currentIndex = index;
     this.isEditing = true;
+
+    for (let control in this.tafsForm.controls) {
+      this.tafsForm.controls[control].markAsDirty();
+      this.tafsForm.controls[control].updateValueAndValidity();
+    }
   }
 
 
@@ -303,23 +303,50 @@ export class FALTafsComponent implements ControlValueAccessor, Validator {
     this.onChange();
   }
 
+  public isValidTAFS(tafs: TAFS) {
+    let valid = true;
+
+    if(!this.hasNDigits(tafs.departmentCode, 2)) {
+      valid = false;
+    }
+
+    if(!this.hasNDigits(tafs.accountCode, 4)) {
+      valid = false;
+    }
+
+    if(tafs.subAccountCode && !this.hasNDigits(tafs.subAccountCode, 3)) {
+      valid = false;
+    }
+
+    if(tafs.allocationTransferAgency && !this.hasNDigits(tafs.allocationTransferAgency, 2)) {
+      valid = false;
+    }
+
+    if(tafs.fy1 &&!this.hasNDigits(tafs.fy1, 4)) {
+      valid = false;
+    }
+
+    if(tafs.fy2 && !this.hasNDigits(tafs.fy2, 4)) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  public hasNDigits(str: string, n: number) {
+    return new RegExp('^\\d{' + n + '}$').test(str);
+  }
+
 
   /** Validation **/
 
   public validate(c: AbstractControl): ValidationErrors {
-    let error: ValidationErrors = {
-      atLeastOneEntry: {
-        message: 'At least one TAFs code is required.'
-      }
+    let errors: ValidationErrors = {};
+    let atLeastOneTAFSError = {
+      message: 'At least one valid TAFS code is required.'
     };
 
-    if (this.config.required && this.config.required === true) {
-      if (this.model.tafs.length === 0) {
-        return error;
-      }
-    }
-
-    return null;
+    return this.model.tafs.length > 0 ? null : { atLeastOneTAFS: atLeastOneTAFSError};
   }
 
 

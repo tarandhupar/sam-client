@@ -6,7 +6,9 @@
       <sam-label-wrapper class="usa-width-one-whole m_B-2x" [label]="'Sub-Tier Name'" [name]="'Sub Tier Name'" *ngIf="!isCreateMode()">
         <span>{{ parentName}}</span>
       </sam-label-wrapper>
-      <sam-text #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></sam-text>
+      <div class="usa-width-one-whole m_B-1x">
+        <sam-text #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></sam-text>
+      </div>
       <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
         <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date' [value]="startDateInitVal" *ngIf="isCreateMode()"></sam-date>
         <span *ngIf="!isCreateMode()">{{startDateInitVal}}</span>

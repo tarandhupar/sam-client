@@ -43,12 +43,13 @@
     <!-- Orgs -->
     <sam-agency-picker
       *ngIf="initialOrg && mode !== 'request'"
-      [label]="'Organizations'"
+      [label]="'Organization'"
       [multimode]="false"
       (organization)="onOrganizationsChange($event)"
       [required]="true"
       [searchMessage]="errors.org"
       [initial]="initialOrg"
+      [orgRoot]="user.departmentID"
     ></sam-agency-picker>
     <sam-agency-picker *ngIf="!initialOrg && mode !== 'request'"
                        [label]="'Organizations'"
@@ -56,6 +57,7 @@
                        (organization)="onOrganizationsChange($event)"
                        [required]="true"
                        [searchMessage]="errors.org"
+                       [orgRoot]="user.departmentID"
     ></sam-agency-picker>
 
     <ng-container *ngIf="objects">
@@ -98,9 +100,14 @@
       <p class="pull-right">
         <button class="usa-button usa-button-outline" (click)="onCancelClick()">Cancel</button>
         &nbsp;
+        <button class="usa-button delete-button" *ngIf="mode === 'edit'" (click)="onDeleteClick()">Delete</button>
+        &nbsp;
         <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">{{submitButtonText()}}</button>
       </p>
     </div>
   </div>
+  <sam-modal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+    <p>Are you sure you want to delete this role from the user&apos;s profile? This action cannot be undone.</p>
+  </sam-modal>
 </div>
 

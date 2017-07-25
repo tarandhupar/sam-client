@@ -27,7 +27,7 @@ export class ProgramFormModel{
           label: 'FAL Number',
           maxlength:  3,
           minlength: 3,
-          hint: 'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)',
+          hint: 'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)',
           required: true,
           errorMessage: 'This number falls outside the range defined for this organization.'
         }

@@ -75,7 +75,7 @@
 					
 					<ng-container *ngIf="exclusion.classificationType!='Individual'
 											 && exclusion.classificationType!='Vessel'">
-						<div class="item">
+						<div *ngIf="exclusion.classificationType=='Firm'" class="item">
 							<div class="content">
 								<div class="header">
 									Unique Entity Identifier
@@ -252,9 +252,18 @@
 	</div>
 	<div *ngIf="exclusion.classificationType=='Firm'" 
 				class="sam-ui medium header">
-		NPI
+		National Provider Identifier (NPI)
 		<div class="sub header">
-			{{exclusion.identityInfo.npi}}
+			<ng-container [ngSwitch]="exclusion.identityInfo.npi">
+				<div id="exclusion-npi" *ngIf="exclusion.identityInfo.npi">
+					<div id="exclusion-npi" *ngSwitchCase="exclusion.identityInfo.npi">
+						{{exclusion.identityInfo.npi}}
+					</div>
+				</div>
+				<div id="exclusion-npi" *ngSwitchDefault>
+					Not provided
+				</div>
+			</ng-container>
 		</div>
 	</div>
 	<div class="sam-ui medium header">
@@ -282,25 +291,30 @@
 			</p>
 		</div>
 	</div>
-	
-	<div class="sam-ui equal width grid">
-		<div class="column">
-			<!-- CT Code -->
-			<div class="sam-ui medium header">
-				CT Code {{exclusion.ctCode}}
-			</div>
-		</div>
-		<div class="column">
-			<!-- Record -->
-			<div class="sam-ui medium header">
-				Record
-				<div class="sub header">
-					<strong>Activation Date: </strong>{{exclusion.activateDate | date: 'MMM dd, y'}}<br />
-					<strong>Termination Date: </strong>{{exclusion.terminationDate != 'Indefinite' ? (exclusion.terminationDate | date: 'MMM dd, y') : exclusion.terminationDate}}<br />
-					<strong>Create Date: </strong>{{exclusion.recordCreateDate}}<br />
-					<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
+	<!-- CT Code -->
+	<div class="sam-ui medium header">
+		Cause and Treatment (CT) Code
+		<div class="sub header">
+			<ng-container [ngSwitch]="exclusion.ctCode">
+				<div id="exclusion-ctCode" *ngIf="exclusion.ctCode">
+					<div id="exclusion-ctCode" *ngSwitchCase="exclusion.ctCode">
+						{{exclusion.ctCode}}
+					</div>
 				</div>
-			</div>
+				<div id="exclusion-ctCode" *ngSwitchDefault>
+					Not provided
+				</div>
+			</ng-container>
+		</div>
+	</div>
+	<!-- Record -->
+	<div class="sam-ui medium header">
+		Record
+		<div class="sub header">
+			<strong>Activation Date: </strong>{{exclusion.activateDate | date: 'MMM dd, y'}}<br />
+			<strong>Termination Date: </strong>{{exclusion.terminationDate != 'Indefinite' ? (exclusion.terminationDate | date: 'MMM dd, y') : exclusion.terminationDate}}<br />
+			<strong>Create Date: </strong>{{exclusion.recordCreateDate}}<br />
+			<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
 		</div>
 	</div>
 	

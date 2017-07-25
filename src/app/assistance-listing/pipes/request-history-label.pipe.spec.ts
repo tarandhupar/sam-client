@@ -8,8 +8,8 @@ describe('src/app/assistance-listing/pipes/request-history-label.pipe.spec.ts', 
   it('RequestHistoryLabelPipe: transforms "agency_request" to "Agency Change Requested"', () => {
     expect(pipe.transform('agency_request')).toBe('Agency Change Requested');
   });
-  it('RequestHistoryLabelPipe: transforms "program_number_request" to "Program Number Change Requested"', () => {
-    expect(pipe.transform('program_number_request')).toBe('Program Number Change Requested');
+  it('RequestHistoryLabelPipe: transforms "program_number_request" to "CFDA Number Change Requested"', () => {
+    expect(pipe.transform('program_number_request')).toBe('CFDA Number Change Requested');
   });
   it('RequestHistoryLabelPipe: transforms "archive_request" to "Archive Requested"', () => {
     expect(pipe.transform('archive_request')).toBe('Archive Requested');

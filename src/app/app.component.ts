@@ -17,8 +17,7 @@ import { UserSessionService } from 'api-kit/user-session/user-session.service';
  */
 @Component({
   selector: 'app',
-  templateUrl: './app.template.html',
-  providers : [SearchService]
+  templateUrl: './app.template.html'
 })
 export class App{
 

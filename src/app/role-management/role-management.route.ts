@@ -14,32 +14,58 @@ import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-direct
 import { DomainDefinitionResolve } from "./domaindefinition.resolve";
 import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
+import { CheckAccessGuard } from "../application-content/403/check-access.guard";
 
 export const routes: Routes = [{
   path: 'access',
   resolve: { domains: DomainsResolve },
   canActivateChild: [IsLoggedInGuard],
   children: [
-    { path: 'bulk-update', component: BulkUpdateComponent, canActivate: [SuperAdminGuard] },
-    { path: 'workspace',  component: RoleDefinitionPage, canActivate: [SuperAdminGuard] },
-    { path: 'objects/new', component: ObjectDetailsPage, canActivate: [SuperAdminGuard] },
-    { path: 'roles/new', component: RoleDetailsPage, canActivate: [SuperAdminGuard] },
-    { path: 'objects/:objectId/edit', component: ObjectDetailsPage, canActivate: [SuperAdminGuard] },
-    { path: 'roles/:roleId/edit', component: RoleDetailsPage, canActivate: [SuperAdminGuard] },
     {
-      path: 'requests/:requestId',
-      component: ManageRequestPage,
-      resolve: {
-        request: RequestAccessResolve,
-        statusNames: RequestStatusNamesResolve,
-      },
-      canActivate: [DeptAdminGuard]
+      path: 'bulk-update',
+      component: BulkUpdateComponent,
     },
-    { path: 'requests', component: RoleMgmtWorkspace, canActivate: [DeptAdminGuard] },
+    {
+      path: 'workspace',
+      component: RoleDefinitionPage,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/workspace'}
+    },
+    {
+      path: 'objects/new',
+      component: ObjectDetailsPage,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/objects'}
+    },
+    {
+      path: 'roles/new',
+      component: RoleDetailsPage,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/roles'}
+    },
+    {
+      path: 'objects/:objectId/edit',
+      component: ObjectDetailsPage,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/objects'}
+    },
+    {
+      path: 'roles/:roleId/edit',
+      component: RoleDetailsPage,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/roles'}
+    },
+    {
+      path: 'requests',
+      component: RoleMgmtWorkspace,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/requests'}
+    },
     {
       path: 'user-roles-directory',
       component: UserRolesDirectoryPage,
-      canActivate: [DeptAdminGuard],
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/user-roles-directory'},
       resolve: { domainDefinition: DomainDefinitionResolve }
     }
   ]

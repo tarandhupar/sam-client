@@ -3,6 +3,7 @@
   <div class="fal-label-margin">
     <samCheckboxToggledTextarea #documentationComp [options]="documentationConfig"
                                 [formControlName]="'documentation'"
+                                [attr.id]="'credentials-documents'"
                                 [control]="falCriteriaForm.get('documentation')"
     ></samCheckboxToggledTextarea>
   </div>
@@ -14,12 +15,14 @@
     [control]="falCriteriaForm.controls['applicantType']"
     [keyValueConfig]="appAutocompleteConfig.keyValueConfig"
     [required]="true"
+    [attr.id]="'applicant-eligibility'"
     [label]="'Applicant Eligibility'"
     [hint]="applicantEligibilityHint">
   </sam-autocomplete-multiselect>
   <sam-text-area
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
+    [attr.id]="'applicant-eligibility-text'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
     formControlName="applicantDesc"></sam-text-area>
 
@@ -30,9 +33,11 @@
     [options]="benSameAsApplicantConfig.options"
     formControlName="isSameAsApplicant"
     [hint]="beneficiaryEligibilityHint"
+    [attr.id]="'beneficiary-eligibility'"
     (modelChange)="chkSameAsApp($event)"></sam-checkbox>
   <div [hidden]="toggleBenSection">
     <sam-autocomplete-multiselect
+      [attr.id]="'beneficiary-multiselect'"
       [options]="benTypeOptions"
       [name]="'benificiaryTypes-control'"
       formControlName="benType"
@@ -44,6 +49,7 @@
     <sam-text-area
       [control]="falCriteriaForm.controls['benDesc']"
       [name]="'beneficiary-description-input'"
+      [attr.id]="'beneficiary-eligibility-text'"
       [label]="'Describe who may benefit from the assistance.'"
       formControlName="benDesc"></sam-text-area>
   </div>
@@ -52,6 +58,7 @@
     [control]="falCriteriaForm.controls['lengthTimeDesc']"
     [name]="'lengthandtime-description-input'"
     [label]="'Length and Time Phasing of Assistance'"
+    [attr.id]="'time-phasing'"
     [required]="true"
     formControlName="lengthTimeDesc"></sam-text-area>
 
@@ -62,6 +69,7 @@
     [required]="true"
     [options]="awardedTypeOptions"
     formControlName="awardedType"
+    [attr.id]="'funding-released'"
     [hint]="'Select the value that best represent how funding is released.'"
     (modelChange)="onawardedTypeChange($event)"></sam-select>
 
@@ -81,23 +89,28 @@
       [keyValueConfig]="assUsageAutocompleteConfig.keyValueConfig"
       [required]="true"
       [label]="'Use of Assistance'"
+      [attr.id]="'assistance-multiselect'"
       [hint]="useOfAssistanceHint">
     </sam-autocomplete-multiselect>
   <sam-text-area
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"
     [label]="'Describe how assistance may be used. Use specific terms that will help public users find this listing.'"
+    [attr.id]="'use-assistance-hint'"
     [required]="true"
     formControlName="assUsageDesc"></sam-text-area>
   <samCheckboxToggledTextarea #usageResComp class = "toggle-text-checkbox" [options]="useResConfig"
+                              [attr.id]="'usage-res-comp'"
                               [formControlName]="'usageRes'" [textareaLabel] = "['Please describe']"
                               [control]="falCriteriaForm.get('usageRes')"
   ></samCheckboxToggledTextarea>
   <samCheckboxToggledTextarea #useDisFundsComp class = "toggle-text-checkbox" [options]="useDisFundsConfig"
+                              [attr.id]="'use-dis-funds'"
                               [formControlName]="'useDisFunds'" [textareaLabel] = "['Please describe']"
                               [control]="falCriteriaForm.get('useDisFunds')"
   ></samCheckboxToggledTextarea>
   <samCheckboxToggledTextarea #useLoanTermsComp class = "toggle-text-checkbox" [options]="useLoanTermsConfig"
+                              [attr.id]="'use-loan-terms'"
                               [formControlName]="'useLoanTerms'" [textareaLabel] = "['Please describe']"
                               [control]="falCriteriaForm.get('useLoanTerms')"
   ></samCheckboxToggledTextarea>

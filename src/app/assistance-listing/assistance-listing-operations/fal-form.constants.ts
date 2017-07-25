@@ -24,6 +24,18 @@ export class FALFieldNames {
 
   //Authorizations
   static readonly AUTHORIZATION_LIST = 'fal-authorization-authList';
+  static readonly NO_AUTHORIZATION = 'fal-no-auth';
+
+  //Financial-Obligations
+  static readonly OBLIGATION_LIST = 'fal-obligation-obligationList';
+  static readonly PAST_FISCAL_YEAR = 'fal-obligation-past-fiscal-year';
+  static readonly CURRENT_FISCAL_YEAR = 'fal-obligation-current-fiscal-year';
+  static readonly BUDGET_FISCAL_YEAR = 'fal-obligation-budget-fiscal-year';
+
+  // Other Financial Info
+  static readonly PROGRAM_ACCOMPLISHMENTS = 'fal-financial-info-accomplishments';
+  static readonly ACCOUNT_IDENTIFICATION = 'fal-financial-info-account-identification';
+  static readonly TAFS_CODES = 'fal-financial-info-tafs-codes';
 
   //Criteria
   static readonly DOCUMENTATION = 'fal-criteria-documentation';
@@ -50,6 +62,11 @@ export class FALFieldNames {
   static readonly COMPLIANCE_REPORTS = 'fal-cr-reports';
   static readonly OTHER_AUDIT_REQUIREMENTS = 'fal-cr-audits';
   static readonly ADDITIONAL_DOCUMENTATION = 'fal-cr-additional-documentation';
+
+  //Contact Information
+  static readonly CONTACT_LIST = 'fal-contact-list';
+  static readonly NO_CONTACT = 'fal-no-contact';
+  static readonly CONTACT_WEBSITE = 'fal-contact-website';
 }
 
 export class FALSectionFieldsList {
@@ -68,6 +85,16 @@ export class FALSectionFieldsList {
 
   static readonly AUTHORIZATION_FIELDS = [
     FALFieldNames.AUTHORIZATION_LIST
+  ];
+
+  static readonly OBLIGATION_FIELDS = [
+    FALFieldNames.OBLIGATION_LIST
+  ];
+
+  static readonly OTHER_FINANCIAL_INFO_FIELDS = [
+    FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
+    FALFieldNames.ACCOUNT_IDENTIFICATION,
+    FALFieldNames.TAFS_CODES
   ];
 
   static readonly CRITERIA_FIELDS = [
@@ -97,5 +124,10 @@ export class FALSectionFieldsList {
     FALFieldNames.COMPLIANCE_REPORTS,
     FALFieldNames.OTHER_AUDIT_REQUIREMENTS,
     FALFieldNames.ADDITIONAL_DOCUMENTATION
+  ];
+
+  static readonly CONTACT_INFORMATION_FIELDS = [
+    FALFieldNames.CONTACT_LIST,
+    FALFieldNames.CONTACT_WEBSITE
   ];
 }

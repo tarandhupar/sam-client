@@ -8,12 +8,13 @@
     [name]="'objectives-input'"
     [label]="'Objectives'"
     [required]="true"
+    [attr.id]="'objective-field'"
     formControlName="objective"
   ></sam-text-area>
 
   <falFYTable [config]="fundedProjectsConfig"
-              [errors]="fpErrors"
               [formControlName]="'fundedProjects'"
+              [attr.id]="'funded-projects'"
               [control]="falOverviewForm.get('fundedProjects')"
               #fundedProjects
   ></falFYTable>
@@ -23,10 +24,11 @@
     [control]="falOverviewForm.controls['description']"
     [name]="'falDesc-input'"
     [label]="'Assistance Listing Description'"
+    [attr.id]="'assistance-listing-overview'"
     formControlName="description"
   ></sam-text-area>
 
-  <sam-autocomplete-multiselect 
+  <sam-autocomplete-multiselect
     [options]="fcTypeOptions"
     [name]="'functional-codes-control'"
     formControlName="functionalTypes"
@@ -34,10 +36,11 @@
     [keyValueConfig]="fcAutocompleteConfig.keyValueConfig"
     [required]="true"
     [label]="'Functional Codes'"
+    [attr.id]="'functional-codes-multiselect'"
     [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
   </sam-autocomplete-multiselect>
 
-  <sam-autocomplete-multiselect 
+  <sam-autocomplete-multiselect
       autofill-falProgram
       [name]="'subjectTermsSearch'"
       formControlName="subjectTermsTypes"
@@ -46,6 +49,7 @@
       [serviceOptions]="{index:'D'}"
       [required]="true"
       [label]="'Subject Terms'"
+      [attr.id]="'subject-terms-multiselect'"
       [hint]="'Select one or more Subject Terms to help public users search for this listing.'">
     </sam-autocomplete-multiselect>
 </form>

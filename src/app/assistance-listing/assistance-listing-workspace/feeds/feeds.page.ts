@@ -106,7 +106,7 @@ export class FeedsPage implements OnInit {
         this.requestTypeTitle = "Agency Change Request";
         break;
       case "program_number_request":
-        this.requestTypeTitle = "Program Number Change Request";
+        this.requestTypeTitle = "CFDA Number Change Request";
         break;
       default:
         this.requestTypeTitle = "Change Request";

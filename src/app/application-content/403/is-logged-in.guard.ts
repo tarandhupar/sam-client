@@ -16,11 +16,13 @@ export class IsLoggedInGuard implements CanActivate, CanActivateChild {
   }
 
   canActivate(route: ActivatedRouteSnapshot): Promise<boolean>|boolean {
-    if(!this.iam.user.isSignedIn()) {
-      this.router.navigate(['/signin']);
-      return false;
-    }
-
     return true;
+
+    // if(!this.iam.user.isSignedIn()) {
+    //   this.router.navigate(['/signin']);
+    //   return false;
+    // }
+    //
+    // return true;
   }
 }

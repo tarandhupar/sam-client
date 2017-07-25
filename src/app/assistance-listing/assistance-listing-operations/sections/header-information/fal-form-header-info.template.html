@@ -1,51 +1,56 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}</div>
+<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}
+</div>
 
 <form [formGroup]="falHeaderInfoForm">
   <sam-text *ngIf="!viewModel.isRevision"
-           [maxlength]="144"
-           [hint]="titleHint"
-           [control]="falHeaderInfoForm.controls['title']"
-           [name]="'title-input'"
-           [label]="'Title'"
-           [required]="true"
-           formControlName="title"></sam-text>
+            [maxlength]="144"
+            [hint]="titleHint"
+            [control]="falHeaderInfoForm.controls['title']"
+            [name]="'title-input'"
+            [label]="'Title'"
+            [required]="true"
+            [attr.id]="'title-al-create'"
+            formControlName="title"></sam-text>
 
   <div *ngIf="viewModel.isRevision">
     Title: {{ viewModel.title }}
   </div>
 
   <sam-text [hint]="popularNameHint"
-           [control]="falHeaderInfoForm.controls['alternativeNames']"
-           [name]="'alternative-names-input'"
-           [label]="'Popular Name'"
-           formControlName="alternativeNames"></sam-text>
-
-  <sam-agency-picker *ngIf="!viewModel.isRevision"
-                [label]="'Federal Agency'"
-                [showToggle]="true"
-                [hint]="'List the administering department or independent agency. For Cabinet-level departments, the National Foundation on the Arts and the Humanities, Environmental Protection Agency, and the Federal Emergency Management Agency, the primary organizational subunit name should precede the departmental name.'"
-                [multimode]="false"
-                [advancedMode]="false"
-                [required]="true"
-                [orgId]="organizationId"
-                [initial]="organizationId ? [organizationId] : []"
-                (organization)="onOrganizationChange($event)"
-                [levelLimit]='2'
-                formControlName="federalAgency" #agencyPicker></sam-agency-picker>
-
-  <div *ngIf="viewModel.isRevision && organizationData">
-      {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
+            [control]="falHeaderInfoForm.controls['alternativeNames']"
+            [name]="'alternative-names-input'"
+            [label]="'Popular Name'"
+            [attr.id]="'popular-name'"
+            formControlName="alternativeNames"></sam-text>
+  <div *ngIf="toggleAgencyPicker">
+    <sam-agency-picker *ngIf="!viewModel.isRevision && orgLevels"
+                       [label]="'Federal Agency'"
+                       [showToggle]="true"
+                       [hint]="'List the administering department or independent agency. For Cabinet-level departments, the National Foundation on the Arts and the Humanities, Environmental Protection Agency, and the Federal Emergency Management Agency, the primary organizational subunit name should precede the departmental name.'"
+                       [multimode]="false"
+                       [advancedMode]="false"
+                       [required]="true"
+                       [attr.id]="'federal-agency'"
+                       [orgId]="organizationId"
+                       [orgRoot]="orgRoot"
+                       [initial]="organizationId ? [organizationId] : []"
+                       (organization)="onOrganizationChange($event)"
+                       formControlName="federalAgency" #agencyPicker></sam-agency-picker>
+  </div>
+  <div *ngIf="(organizationData && (viewModel.isRevision || !toggleAgencyPicker))">
+    {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
   </div>
 
   <sam-number *ngIf="!viewModel.isRevision"
-             [maxlength]="3"
-             [minlength]="3"
-             [required]="true"
-             [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
-             [control]="falHeaderInfoForm.controls['programNumber']"
-             [name]="'programNumber-input'"
-             [label]="'FAL Number'"
-             formControlName="programNumber"></sam-number>
+              [maxlength]="3"
+              [minlength]="3"
+              [required]="true"
+              [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
+              [control]="falHeaderInfoForm.controls['programNumber']"
+              [name]="'programNumber-input'"
+              [label]="'FAL Number'"
+              [attr.id]="'fal-number'"
+              formControlName="programNumber"></sam-number>
 
   <div *ngIf="viewModel.isRevision">
     CFDA Number: {{ falNo }}
@@ -59,6 +64,7 @@
       [keyValueConfig]="relProAutocompleteConfig.keyValueConfig"
       [serviceOptions]="{index:'RP'}"
       [label]="'Related Federal Assistance Listing'"
+      [attr.id]="'related-fal'"
       [hint]="relatedFalHint">
     </sam-autocomplete-multiselect>
 </form>

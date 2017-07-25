@@ -14,7 +14,6 @@ import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
 import { DomainsResolve } from "./domains.resolve";
 import { RequestAccessResolve } from "./request-access.resolve";
-import { ManageRequestPage } from "./manage-request/manage-request";
 import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 import { RoleMainContent } from "./role-maincontent/role-maincontent.component.ts";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
@@ -50,7 +49,6 @@ import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
     RoleSideNav,
     PermissionSelectorComponent,
     RoleMainContent,
-    ManageRequestPage,
     RoleMgmtWorkspace,
     RoleMgmtSidenav,
     RoleMgmtContent,

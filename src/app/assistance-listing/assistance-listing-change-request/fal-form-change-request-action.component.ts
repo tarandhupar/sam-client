@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ViewChild} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, FormControl} from "@angular/forms";
 import {Location} from "@angular/common";
 import {Router, ActivatedRoute} from '@angular/router';
 import * as Cookies from 'js-cookie';
@@ -7,6 +7,7 @@ import {ChangeRequestService} from "../../../api-kit/program/change-request.serv
 import {ProgramService} from "../../../api-kit/program/program.service";
 import {falCustomValidatorsComponent} from "../validators/assistance-listing-validators";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import {FHService} from "../../../api-kit/fh/fh.service";
 
 enum ChangeRequestActionPermissionType {
   CANCEL,
@@ -42,8 +43,14 @@ export class FALFormChangeRequestActionComponent implements OnInit {
   requestStatus: ChangeRequestStatus;
   programRequest: any;
   programRequestData:any;
+  userOrganization:any;
   programRequestAction: any;
   cookieValue: string;
+  programNumber: string;
+  programNumberLow: number;
+  programNumberHigh: number;
+  cfdaCode: string;
+  federalHierarchy: any;
   public permissions: any;
   public formOptions = {
     archive: [
@@ -59,6 +66,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private programService: ProgramService,
+    private fhService: FHService,
     private changeRequestService: ChangeRequestService,
     private location: Location,
     private activatedRoute: ActivatedRoute,
@@ -72,7 +80,6 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     if (this.cookieValue === null || this.cookieValue === undefined) {
       this.router.navigate(['signin']);
     }
-
     if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
       this.router.navigate(['accessrestricted']);
     }
@@ -93,8 +100,40 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     });
   }
 
+    private loadOrganizationData(orgId:string){
+      this.programService.getFederalHierarchyConfigurations(orgId, this.cookieValue).subscribe(res => {
+        this.programNumberHigh = res.programNumberHigh;
+        this.programNumberLow = res.programNumberLow;
+
+        //load cfda code
+        this.programService.getCfdaCode(orgId).subscribe(code => {
+        this.cfdaCode = code.content.cfdaCode;
+          if (res.programNumberAuto){
+            this.programService.getNextAvailableProgramNumber(orgId, this.cookieValue).subscribe(api => {
+              if(!api.content.isProgramNumberOutsideRange){
+                this.programNumber = api.content.nextAvailableCode;
+                this.falChangeRequestActionForm = this.fb.group({
+                  programNumber: new FormControl({value: this.programNumber.split('.')[1], disabled: true}),
+                  comment: ''
+                });
+              } else {
+                console.error('CFDA Number is outside of range');
+              }
+            });
+          } else {
+            this.falChangeRequestActionForm = this.fb.group({
+              programNumber: ['', falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh), falCustomValidatorsComponent.isProgramNumberUnique(this.programService, this.cfdaCode, this.programRequest.programId, this.cookieValue, orgId)],
+              comment: ''
+            });
+          }
+        });
+      });
+    }
+
   private loadPermission() {
-    this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS', this.programRequest.program.organizationId).subscribe(res => {
+    //Important for Agency Request only as we can't distinguish between A.C who submitted vs A.C to approve/Reject it
+    var orgId = (this.requestType == 'agency_request') ? null : this.programRequest.program.organizationId;
+    this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS', orgId).subscribe(res => {
       this.permissions = res;
       this.initPage();
     });
@@ -104,11 +143,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     this.changeRequestService.getRequestActionByRequestId(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(data => {
       this.programRequestAction = data;
       //set up the right requestStatus
-      if (this.programRequestAction.actionType == 'archive_cancel' || this.programRequestAction.actionType == 'unarchive_cancel' || this.programRequestAction.actionType == 'title_cancel' || this.programRequestAction.actionType == 'program_number_cancel') {
+      if (this.programRequestAction.actionType == 'archive_cancel' || this.programRequestAction.actionType == 'unarchive_cancel' || this.programRequestAction.actionType == 'title_cancel' || this.programRequestAction.actionType == 'program_number_cancel' || this.programRequestAction.actionType == 'agency_cancel') {
         this.requestStatus = ChangeRequestStatus.CANCELLED;
-      } else if (this.programRequestAction.actionType == 'archive_reject' || this.programRequestAction.actionType == 'unarchive_reject' || this.programRequestAction.actionType == 'title_reject' || this.programRequestAction.actionType == 'program_number_reject') {
+      } else if (this.programRequestAction.actionType == 'archive_reject' || this.programRequestAction.actionType == 'unarchive_reject' || this.programRequestAction.actionType == 'title_reject' || this.programRequestAction.actionType == 'program_number_reject' || this.programRequestAction.actionType == 'agency_reject') {
         this.requestStatus = ChangeRequestStatus.REJECTED;
-      } else if (this.programRequestAction.actionType == 'archive' || this.programRequestAction.actionType == 'unarchive' || this.programRequestAction.actionType == 'title' || this.programRequestAction.actionType == 'program_number') {
+      } else if (this.programRequestAction.actionType == 'archive' || this.programRequestAction.actionType == 'unarchive' || this.programRequestAction.actionType == 'title' || this.programRequestAction.actionType == 'program_number' || this.programRequestAction.actionType == 'agency') {
         this.requestStatus = ChangeRequestStatus.APPROVED;
       }
     });
@@ -120,7 +159,8 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       if ((this.requestType === 'archive_request' && (this.permissions['INITIATE_CANCEL_ARCHIVE_CR'] || this.permissions['APPROVE_REJECT_ARCHIVE_CR'])) ||
         (this.requestType === 'unarchive_request' && (this.permissions['INITIATE_CANCEL_UNARCHIVE_CR'] || this.permissions['APPROVE_REJECT_UNARCHIVE_CR'])) ||
         (this.requestType === 'program_number_request' && (this.permissions['INITIATE_CANCEL_NUMBER_CR'] || this.permissions['APPROVE_REJECT_NUMBER_CR'])) ||
-        (this.requestType === 'title_request' && (this.permissions['INITIATE_CANCEL_TITLE_CR'] || this.permissions['APPROVE_REJECT_TITLE_CR']))) {
+        (this.requestType === 'title_request' && (this.permissions['INITIATE_CANCEL_TITLE_CR'] || this.permissions['APPROVE_REJECT_TITLE_CR'])) || 
+        (this.requestType === 'agency_request' && (this.permissions['APPROVE_REJECT_AGENCY_CR'] || this.permissions['INITIATE_CANCEL_AGENCY_CR']))) {
         this.createForm(this.requestType);
         this.pageReady = true;
       } else {
@@ -167,7 +207,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
         this.permissionType = ChangeRequestActionPermissionType.CANCEL;
       }
     } else if (type == 'program_number_request') {
-      this.pageTitle = "Change an Assistance Listing Number";
+      this.pageTitle = "Change CFDA Number";
       this.falChangeRequestActionForm = this.fb.group({
         comment: ''
       });
@@ -177,6 +217,28 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       } else if (this.permissions['INITIATE_CANCEL_NUMBER_CR']) {
         this.permissionType = ChangeRequestActionPermissionType.CANCEL;
       }
+    } else if (type == 'agency_request') {
+      this.pageTitle = "Change Agency";
+      var proposedOrg = JSON.parse(this.programRequest.data).organizationId;
+
+      this.fhService.getOrganizationById(proposedOrg, false).subscribe(federalHierarchy => {
+        this.federalHierarchy = federalHierarchy['_embedded'][0]['org'];
+      });
+
+      this.programService.getPermissions(this.cookieValue, 'ORG_ID', this.programRequest.program.organizationId).subscribe(res => {
+        this.userOrganization = res['ORG_ID'];
+
+        //check wether this proposed org is within user's associated orgs
+        if(this.userOrganization.indexOf(String(proposedOrg)) != -1 && this.permissions['APPROVE_REJECT_AGENCY_CR']) {
+          this.permissionType = ChangeRequestActionPermissionType.APPROVE_REJECT;
+          this.loadOrganizationData(proposedOrg);
+        } else { //Proposed orgId is not within user's assicated orgs
+          this.falChangeRequestActionForm = this.fb.group({
+            comment: ''
+          });
+          this.permissionType = ChangeRequestActionPermissionType.CANCEL;
+        }
+      });
     }
   }
 
@@ -196,7 +258,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       },
       program_number_request: {
         action: 'program_number',
-        success: 'Program Number Changed'
+        success: 'CFDA Number Changed'
+      },
+      agency_request: {
+        action: 'agency',
+        success: 'Agency Changed'
       }
     };
 
@@ -219,7 +285,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       },
       program_number_request: {
         action: 'program_number_reject',
-        success: 'The program number change request has been rejected successfully'
+        success: 'The CFDA number change request has been rejected successfully'
+      },
+      agency_request: {
+        action: 'agency_reject',
+        success: 'The agency change request has been rejected successfully'
       }
     };
 
@@ -242,7 +312,11 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       },
       program_number_request: {
         action: 'program_number_cancel',
-        success: 'The program number change request has been cancelled successfully'
+        success: 'The CFDA number change request has been cancelled successfully'
+      },
+      agency_request: {
+        action: 'agency_cancel',
+        success: 'The agency change request has been cancelled successfully'
       }
     };
 
@@ -250,7 +324,6 @@ export class FALFormChangeRequestActionComponent implements OnInit {
   }
 
   private submitChangeRequestAction(actionType: any) {
-
     if (this.falChangeRequestActionForm.valid) {
       //disable button's event
       this.buttonType = 'disabled';
@@ -285,10 +358,9 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       reason: this.falChangeRequestActionForm.get('comment').value,
       actionType: actionType,
     };
-
     if (this.falChangeRequestActionForm.valid) {
-      if (this.requestType == 'agency_request') {
-        preparedData.programNumber = this.falChangeRequestActionForm.get('programNumber').value;
+      if (actionType == 'agency'){
+        preparedData.programNumber = this.cfdaCode+'.'+this.falChangeRequestActionForm.get('programNumber').value;
       }
     }
     return preparedData;

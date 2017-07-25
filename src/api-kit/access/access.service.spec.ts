@@ -3,11 +3,12 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { TestBed, fakeAsync, inject } from "@angular/core/testing";
 import { WrapperService } from "../wrapper/wrapper.service";
 import { UserAccessService } from "./access.service";
+import { RouterTestingModule } from "@angular/router/testing";
 
-
-xdescribe('UserAccessService', () => {
+describe('UserAccessService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [ RouterTestingModule ],
       providers: [
         UserAccessService,
         WrapperService,

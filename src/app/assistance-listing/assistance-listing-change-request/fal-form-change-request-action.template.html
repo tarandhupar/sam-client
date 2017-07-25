@@ -1,10 +1,10 @@
 <div class="usa-grid-full" *ngIf = "pageReady">
-  <form [formGroup]="falChangeRequestActionForm">
+  <form *ngIf="falChangeRequestActionForm" [formGroup]="falChangeRequestActionForm">
     <h1 class="m_T-0 p_T-6x"> {{pageTitle}} </h1>
     <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="programRequest">
       <div class="usa-width-one-half">
         <div class="content"><strong>Title:</strong> {{programRequest.program.title}}</div>
-        <div class="content"><strong>Assistance Listing Number:</strong> {{programRequest.program.programNumber}}</div>
+        <div class="content"><strong>CFDA Number:</strong> {{programRequest.program.programNumber}}</div>
       </div>
       <div class="usa-width-one-half">
         <div class="content">
@@ -35,7 +35,7 @@
       </ng-container>
 
       <ng-container *ngIf="requestType == 'program_number_request'">
-        <strong>New Assistance Listing Number:</strong> {{ toJSON(programRequest.data).programNumber }}
+        <strong>New CFDA Number:</strong> {{ toJSON(programRequest.data).programNumber }}
       </ng-container>
 
       <div class="sam-ui hidden divider"></div>
@@ -45,6 +45,26 @@
           <h4>Proposed Title</h4>
           <strong>{{ programRequestData.title}}</strong>
         </div>
+
+        <div class="sam-ui hidden divider"></div>
+
+        <div class="usa-grid-full" *ngIf="requestType == 'agency_request'">
+          <h4>New Organization</h4>
+          <div class="usa-grid-full">
+            <div class="content" *ngIf="federalHierarchy.l1Name"><strong>Department: </strong>{{federalHierarchy.l1Name}}</div>
+            <div class="content" *ngIf="federalHierarchy.l2Name"><strong>Sub-Tier: </strong>{{federalHierarchy.l2Name}}</div>
+            <div class="content" *ngIf="federalHierarchy.l3Name"><strong>Office: </strong>{{federalHierarchy.l3Name}}</div>
+          </div>
+          <sam-text *ngIf="isPermissionType('approve_reject')"
+                    [maxlength]="3"
+                    [control]="falChangeRequestActionForm.controls['programNumber']"
+                    [name]="'program-number-input'"
+                    [label]="'CFDA Number*'"
+                    [required]="true"
+                    [errorMessage]="falChangeRequestActionForm.controls['programNumber'].hasError('duplicateProgram') ? 'CFDA Number already exists. Please enter a valid Number.' : '' "
+                    formControlName="programNumber"></sam-text>
+        </div>
+
         <h4>Comments</h4>
         <strong>{{ programRequest.createdBy }}:</strong> {{ programRequest.reason }}
 

@@ -41,8 +41,14 @@
         <tbody>
         <ng-container *ngFor="let entry of model.entries; let i=index">
           <tr *ngIf="entry.year === null || (entry.year >= getCurrentFY() - 1 && entry.year <= getCurrentFY() + 1)">
-            <td>{{ entry.year }}</td>
-            <td>{{ entry.description }}</td>
+            <td>
+              {{ entry.year }}
+              <span *ngIf="!entry.year" [class]="'usa-input-error-message'">A fiscal year is required</span>
+            </td>
+            <td>
+              {{ entry.description }}
+              <span *ngIf="!entry.description" [class]="'usa-input-error-message'">{{ config.itemName }} is required</span>
+            </td>
             <td>
               <ng-container *ngIf="!isEditing">
                 <a class="fal-table-edit" (click)="editEntry(i)">Edit</a>
@@ -79,9 +85,9 @@
                      [control]="fyTableGroup.get('textarea')"
       ></sam-text-area>
 
-      <sam-button *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
-      <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
-      <sam-button *ngIf="isEditing" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="'default'"></sam-button>
+      <sam-button [buttonId]="'fiscal-year-add-btn'" *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
+      <sam-button [buttonId]="'fiscal-year-cancel-btn'" *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+      <sam-button [buttonId]="'fiscal-year-confirm-btn'" *ngIf="isEditing" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="'default'"></sam-button>
     </div>
   </div>
 

@@ -23,34 +23,29 @@
         [(ngModel)]="usersEntered"
         (ngModelChange)="onUserClick($event)"
       ></sam-autocomplete>
-      <sam-accordion [expandIndex]="0">
-        <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
-          <sam-checkbox
-            #statusCheckboxes
-            (ngModelChange)="activeFilter($event)"
-            [(ngModel)]="StatusCheckboxModel"
-            [name]="'Access-Status-Checkbox-Filter'"
-            [options]="filters.status.options"
-            [label]="filters.status.label"
-            [hasSelectAll]="'Yes'"
-            >
-          </sam-checkbox>
-        </sam-accordion-section>
-      </sam-accordion>
-
-      <sam-accordion [expandIndex]="0">
-        <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
-          <sam-checkbox
-            (modelChange)="domainFilter($event)"
-            [(model)]="DomiansCheckboxModel"
-            [name]="'Domains-Checkbox-Filter'"
-            [options]="filters.domains.options"
-            [label]="filters.domains.label"
-            [hasSelectAll]="'Yes'"
-            >
-          </sam-checkbox>
-        </sam-accordion-section>
-      </sam-accordion>
+      <sam-solo-accordian [titleText]="accordionHeading1">
+        <sam-checkbox
+          #statusCheckboxes
+          (ngModelChange)="activeFilter($event)"
+          [(ngModel)]="StatusCheckboxModel"
+          [name]="'Access-Status-Checkbox-Filter'"
+          [options]="filters.status.options"
+          [label]="filters.status.label"
+          [hasSelectAll]="'Yes'"
+        >
+        </sam-checkbox>
+      </sam-solo-accordian>
+      <sam-solo-accordian [titleText]="accordionHeading2">
+        <sam-checkbox
+          (modelChange)="domainFilter($event)"
+          [(model)]="DomiansCheckboxModel"
+          [name]="'Domains-Checkbox-Filter'"
+          [options]="filters.domains.options"
+          [label]="filters.domains.label"
+          [hasSelectAll]="'Yes'"
+        >
+        </sam-checkbox>
+      </sam-solo-accordian>
     </div>
   </div>
 </div>

@@ -147,7 +147,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       this.validationGroup.addControl('textarea' + i, textareaControl);
     }
 
-     if(this.control) {
+     if(this.control && this.validateComponentLevel) {
        this.control.statusChanges.subscribe(status => {
          this.wrapper.formatErrors(this.control);
        });

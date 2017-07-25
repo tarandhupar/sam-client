@@ -1,124 +1,115 @@
-<div class="request-response-page usa-grid-full">
-  <div class = "usa-width-one-fourth pd-l-1em">
-    <sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>
-  </div>
+<div class="p_L-4x">
+  <sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>
+</div>
+<div class="request-response-page">
+  <div class="usa-width-one-fourth">&nbsp;</div>
   <div class="usa-width-three-fourths">
-    <h1 class="m_T-4x">Respond to Request</h1>
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter m-r-7em">Role Request</h2>
-
-    <!-- Organization -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Organization</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.organization}}</div>
-    </div>
-
-    <!-- Role -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Role</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.role}}</div>
-    </div>
-
-    <!-- Domains -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Domain</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.domains}}</div>
-    </div>
-
-    <!-- SuperVisor name-->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Supervisor Name</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.supervisorName}}</div>
-    </div>
-
-    <!-- SuperVisor email -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Supervisor Email</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.supervisorEmail}}</div>
-    </div>
-
-    <!-- Status -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Status</b>
-      </div>
-      <div class="usa-width-three-fourths"><b>{{request.status}}</b></div>
-    </div>
-
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter m-r-7em">Comments</h2>
-    <ng-container *ngIf="request.comments && request.comments.length">
-      <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
-        <div class="usa-width-one-fourth overflow-ellipsis">
-          <b [attr.title]="comment.userName">{{comment.userName}}</b>
+    <div class="usa-grid-full">
+      <div class="usa-width-three-fourths">
+        <h1 class="m_T-4x">Respond to Request</h1>
+        <b>All fields are required</b>
+        <h2 class="p_All-2x usa-bgcolor-gray-lighter">Request Details</h2>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-fourth"><b>User</b></div>
+          <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.requestorName">{{request.requestorName}}asdfasdfsadfsafasfasf&nbsp;</div>
+          <div class="usa-width-one-fourth"><b>Supervisor Name</b></div>
+          <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorName">{{request.supervisorName}}&nbsp;</div>
         </div>
-        <div class="usa-width-three-fourths">
-          {{comment.text}}
-          <div>
-            <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-fourth"><b>Status</b></div>
+          <div class="usa-width-one-fourth">{{request.status}}&nbsp;</div>
+          <div class="usa-width-one-fourth"><b>Supervisor Email</b></div>
+          <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorEmail">{{request.supervisorEmail}}&nbsp;</div>
+        </div>
+        <hr>
+
+        <sam-agency-picker
+          [label]="'Organization'"
+          [multimode]="false"
+          (organization)="onOrganizationsChange($event)"
+          [required]="true"
+          [searchMessage]="errors.org"
+          [initial]="initialOrg"
+        ></sam-agency-picker>
+
+        <!-- Domain -->
+        <sam-select name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>
+
+        <!-- Role -->
+        <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
+
+
+        <!-- Objects and Permissions -->
+        <h2 class="p_All-2x usa-bgcolor-gray-lighter">Objects and Permissions</h2>
+        <div class="text-center" *ngIf="!(objects && objects.length)">Select a role</div>
+        <div class="background-light p_All-3x" *ngIf="objects && objects.length">
+          <div  *ngFor="let object of objects" class="object-item">
+            <h3>{{object.function.val}}</h3>
+            <div class="usa-grid-full" *ngFor="let p of object.permission; let e = even; let i = index">
+              <ng-container *ngIf="e">
+                <!-- ngFor hack to declare a local variable -->
+                <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
+                  <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                  <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
+                </div>
+                <ng-container *ngIf="object.permission[i+1]">
+                  <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
+                    <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                    <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments -->
+        <h2 class="p_All-2x usa-bgcolor-gray-lighter">Comments</h2>
+        <ng-container *ngIf="request.comments && request.comments.length">
+          <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
+            <div class="usa-width-one-fourth overflow-ellipsis">
+              <b [attr.title]="comment.userName">
+                <span *ngIf="comment.userName">{{comment.userName}}</span>
+                <span *ngIf="!comment.userName"><i>User Name Unavailable</i></span>
+              </b>
+            </div>
+            <div class="usa-width-three-fourths">
+              {{comment.text}}
+              <div>
+                <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!(request.comments && request.comments.length)">
+          <div class="text-center p_All-4x">
+            <em>No comments</em>
+          </div>
+        </ng-container>
+
+        <!-- New Comment -->
+        <div>
+          <sam-text-area
+            hint="Editing this role impacts the user's access at this organizations. Please provide a reason for the change."
+            name="comment"
+            label="Message"
+            [required]="true"
+            [(ngModel)]="comment"
+            [errorMessage]="errors.comment"
+          ></sam-text-area></div>
+
+        <!-- Action Buttons -->
+        <div class="m_T-4x m_B-4x">
+          <div class="pull-right clearfix">
+            <button class="pull-left usa-button usa-button-outline" (click) = "location.back()" type="button">Cancel</button>
+            <button class="request-action reject" (click)="onRejectClick()">Reject</button>
+            <!--<button class="request-action escalate" (click)="onEscalateClick()">Escalate</button>-->
+            <button class="request-action approve m_R-0" (click)="onApproveClick()">Done</button>
           </div>
         </div>
       </div>
-    </ng-container>
-    <ng-container *ngIf="!(request.comments && request.comments.length)">
-      <div class="text-center p_All-4x">
-        <em>No comments</em>
-      </div>
-    </ng-container>
 
-    <!-- Objects and Permissions -->
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter m-r-7em">Objects and Permissions</h2>
-    <div class="background-light p_All-3x m-r-12d5em">
-      <div  *ngFor="let object of objects" class="object-item">
-        <h3>{{object.function.val}}</h3>
-        <div class="usa-grid-full" *ngFor="let p of object.permission; let e = even; let i = index">
-          <ng-container *ngIf="e">
-            <!-- ngFor hack to declare a local variable -->
-            <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
-              <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-              <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
-            </div>
-            <ng-container *ngIf="object.permission[i+1]">
-              <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
-                <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-                <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
     </div>
-
-    <!-- Comments -->
-    <div class="m-r-12d5em">
-    <sam-text-area
-      hint="Editing this role impacts the user's access at this organizations. Please provide a reason for the change."
-      name="comment"
-      label="Message"
-      [required]="true"
-      [(ngModel)]="comment"
-      [errorMessage]="commentError"
-    ></sam-text-area></div>
-
-    <!-- Action Buttons -->
-    <div class="m_T-4x m_B-4x">
-      <!--<button [routerLink]="['/access', 'requests']"><i class="fa fa-chevron-left"></i>&nbsp;Back to Access Management</button>-->
-      <div class="pull-right clearfix m-r-12d5em">
-        <button class="pull-left usa-button usa-button-outline" (click) = "location.back()" type="button">Cancel</button>
-        <button class="request-action reject" (click)="onRejectClick()">Reject</button>
-        <button class="request-action escalate" (click)="onEscalateClick()">Escalate</button>
-        <button class="request-action approve m_R-0" (click)="onApproveClick()">Approve</button>
-      </div>
-    </div>
-
   </div>
 </div>
 

@@ -78,7 +78,7 @@ import Moment = moment.Moment;
             </li>
             <li class="psc-code">
               <strong>PSC Code </strong><br>
-              <span>{{ data.productOrService?.psc[0]?.value }} {{ data.productOrService?.psc[0]?.code ? '('+data.productOrService?.psc[0]?.code+')' : "" }}</span>
+              <span *ngIf="data.productOrService?.psc">{{ data.productOrService?.psc[0]?.value }} {{ data.productOrService?.psc[0]?.code ? '('+data.productOrService?.psc[0]?.code+')' : "" }}</span>
             </li>   
           </ul>
         </div>

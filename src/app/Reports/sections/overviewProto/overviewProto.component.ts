@@ -74,12 +74,11 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
   }
 
   addUser( id ) {
-
     this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
         error => console.log(error),
-        () => console.log('Completed')
+        () => console.log('addUser: Completed')
       );
   }
 
@@ -88,12 +87,14 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
       .subscribe(
         data => this.data = data,
         error => console.log(error),
-        () => console.log('Completed')
+        () => console.log('deleteUser: Completed')
       );
   }
+
   totalPages(): number {
     return Math.floor((this.totalReportCount) / REPORTS_PER_PAGE) + 1;
   }
+
   onParamChanged(page) {
     // if this is a page change, the page parameter is > 1
     if (page) {
@@ -103,6 +104,7 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
     }
     this.getReports();
   }
+
   getReports() {
     let startIndex: number = (this.currentPage - 1) * REPORTS_PER_PAGE;
     let endIndex: number = startIndex + REPORTS_PER_PAGE;
@@ -117,49 +119,53 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
 
     this.currentReports = this.dbReports.slice(startIndex, endIndex);
   }
+
   ngOnInit() {
-  this.http.get('src/assets/dynamicMincReports.json')
-      .map(res => res.json())
-      .subscribe(data => {
-          this.data = data;
-          this.zone.runOutsideAngular(() => {
-            this.checkSession(() => {
-              this.zone.run(() => {
-                // Callback
+    this.http.get('src/assets/dynamicMincReports.json')
+        .map(res => res.json())
+        .subscribe(data => {
+            this.data = data;
+            this.zone.runOutsideAngular(() => {
+              this.checkSession(() => {
+                this.zone.run(() => {
+                  // Callback
+                });
               });
             });
-          });
-        },
-        err => console.log(err),
-        () => console.log('Completed'));
+          },
+          err => console.log(err),
+          () => console.log('Completed'));
   }
 
   checkSession( cb: () => void ) {
     let vm = this;
-
     this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
-      vm.userRoles = user.gsaRAC;
+      // vm.userRoles = user.gsaRAC;
 
-      let isReportsUser = false;
-      let isReportsAdmin = false;
+      let isReportsUser = true; // change to false after RM added
+      let isReportsAdmin = true;
+      vm.states.isAdmin = true;
+      vm.admin = vm.states.isAdmin;
 
-      for (let _i = 0; _i < vm.userRoles.length; _i++) {
-        if (vm.userRoles[_i].indexOf('GSA_REPORT_R') >= 0) {
-          isReportsUser = true;
-        }
+      // for (let _i = 0; _i < vm.userRoles.length; _i++) {
+      //   if (vm.userRoles[_i].length >= 0) {
+      //     isReportsUser = true;
+      //   }
 
-        if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
-          isReportsAdmin = true;
-        }
+      //   if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
+      //     isReportsAdmin = true;
+      //   }
 
-        if (isReportsUser && isReportsAdmin) {
-          // User is an Admin user
-          vm.states.isAdmin = true;
-          vm.admin = vm.states.isAdmin;
-        }
-      }
+      //   if (isReportsUser && isReportsAdmin) {
+      //     // User is an Admin user
+      //     vm.states.isAdmin = true;
+      //     vm.admin = vm.states.isAdmin;
+      //   }
+      // }
+
+
       vm.user = user;
       if ( ENV === 'development') {
         if (vm.admin) {
@@ -167,19 +173,6 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
         } else {
           vm.dbReports = vm.data.development.user;
         }
-        /*else if (ENV === 'test') {
-         if (vm.admin) {
-         vm.dbReports = vm.data.test.admin;
-         } else {
-         vm.dbReports = vm.data.test.user;
-         }
-         } else if ( ENV === 'production') {
-         if (vm.admin) {
-         vm.dbReports = vm.data.production.admin;
-         } else {
-         vm.dbReports = vm.data.production.user;
-         }
-         }*/
       } else if (_.includes(API_UMBRELLA_URL, 'comp')) {
         if (vm.admin) {
           vm.dbReports = vm.data.development.admin;

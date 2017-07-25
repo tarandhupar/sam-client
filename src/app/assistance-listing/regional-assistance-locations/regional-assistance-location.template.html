@@ -44,7 +44,7 @@
 
     <br>
     <div *ngFor="let row of data" tabindex="-1">
-      <regional-assistance-location-result [data]="row" [qParams]="qParams" [permissions]="permissions"></regional-assistance-location-result>
+      <regional-assistance-location-result [data]="row" [qParams]="qParams" [permissions]="permissions" (recordDeleted)="getRegionalAssistanceLocations()"></regional-assistance-location-result>
       <div class="sam-ui section divider"></div>
     </div>
 

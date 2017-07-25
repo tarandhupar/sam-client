@@ -85,12 +85,9 @@ export class OrgMovePage {
   onUpdateDetailClick(){
     //check end date and new parent sub-tier
     this.agencyPickerMsg = !!this.targetParentOrg?'':'This field cannot be empty';
-    this.orgEndDateWrapper.errorMessage = !!this.endDate?'':'This field cannot be empty';
-    if(!this.isValidEndDate()){
-      this.orgEndDateWrapper.errorMessage = "Date is invalid";
-    }
 
-    if(this.targetParentOrg && this.isValidEndDate()){
+    let isValidDate = this.isValidEndDate();
+    if(this.targetParentOrg && isValidDate){
       this.updateDetail = true;
     }
   }
@@ -111,12 +108,26 @@ export class OrgMovePage {
   }
 
   isValidEndDate(){
-    // End date should be the date count from today to a year from today
-    if(this.endDate && moment(this.endDate,'Y-M-D').isValid()){
-      if( moment().diff(moment(this.endDate)) <= 0 &&  moment().add(1, "years").diff(moment(this.endDate)) > 0){
-        return true;
+
+    if(!!this.endDate) {
+      this.orgEndDateWrapper.errorMessage = "";
+      // End date should be the date count from today to a year from today
+      if (this.endDate && moment(this.endDate, 'Y-M-D').isValid()) {
+        if (moment().isSameOrBefore(moment(this.endDate), 'day') && moment().add(1, "years").diff(moment(this.endDate)) > 0) {
+          return true;
+        }
+
+        if(!moment().isSameOrBefore(moment(this.endDate), 'day')){
+          this.orgEndDateWrapper.errorMessage = "Please do not enter a past date";
+        }else{
+          this.orgEndDateWrapper.errorMessage = "Please provide end date up to one year from today";
+        }
+        return false;
       }
-      return false;
+
+      this.orgEndDateWrapper.errorMessage = "Date is invalid";
+    }else{
+      this.orgEndDateWrapper.errorMessage = 'This field cannot be empty';
     }
     return false;
   }

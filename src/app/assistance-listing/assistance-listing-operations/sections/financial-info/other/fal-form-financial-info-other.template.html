@@ -4,22 +4,26 @@
                [name]="'assitance-range-input'"
                [hint]="rangeAndAverageHint"
                [required]="false"
+               [attr.id]="'range-average'"
                [control]="otherFinancialInfoForm.get('assistanceRange')"
                [formControlName]="'assistanceRange'"
   ></sam-text-area>
 
   <falFYTable [config]="accomplishmentsConfig"
               [formControlName]="'accomplishments'"
+              [attr.id]="'program-accomplishments'"
               [control]="otherFinancialInfoForm.get('accomplishments')"
   ></falFYTable>
 
   <falAccountIdentificationInput [config]="accountIdentificationConfig"
                                  [formControlName]="'accountIdentification'"
+                                 [attr.id]="'account-identification'"
                                  [control]="otherFinancialInfoForm.get('accountIdentification')"
   ></falAccountIdentificationInput>
 
   <falTAFSInput [config]="tafsConfig"
                 [formControlName]="'tafs'"
                 [control]="otherFinancialInfoForm.get('tafs')"
+                [attr.id]="'tafs-code'"
   ></falTAFSInput>
 </div>

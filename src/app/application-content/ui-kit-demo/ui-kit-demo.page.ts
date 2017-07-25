@@ -8,17 +8,27 @@ import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
 
 import { LocationService } from 'api-kit/location/location.service';
 
+import { CommentsDemoService, CommentsService } from './comments-demo.service';
+
 import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
   providers: [
-    {provide: AutocompleteService, useClass: AutocompleteDropdownService}
+    { provide: AutocompleteService, useClass: AutocompleteDropdownService },
+    { provide: CommentsService, useClass: CommentsDemoService }
   ]
 })
 export class UIKitDemoPage {
+  sortModel = "";
+
+  agv2_selections1;
+  agv2_selections2;
+
+
   samDateRangeAdvModel;
   samDateRangeAdvModel2;
+
   peoplePickerOptions = [{key:'uncategorized1', value: 'Uncategorized Data'},
     {key: 'uncategorized2', value: 'More Uncategorized Data'},
     {key: 'Carlos', value: 'Carlos', category: 'people'},
@@ -79,8 +89,7 @@ export class UIKitDemoPage {
      { key: 'Power Grid', value: 'Power Grid', category: 'Board Games' },
      { key: 'Splendor', value: 'Splendor', category: 'Board Games'},
      { key: 'Ticket To Ride', value: 'Ticket to Ride', category: 'Board Games'}
-   ]
-   
+   ];
 
    multiselectConfigSelectable = {
      keyProperty: 'key',
@@ -94,6 +103,7 @@ export class UIKitDemoPage {
      valueProperty: 'value',
      categoryProperty: 'category',
    }
+  
   /**
    * Autocomplete Category demo
    */

@@ -625,28 +625,38 @@ export class AwardDataComponent {
       advisors:[
         {name: 'David Duda', location:'', email:'dhslaboradvisor@dhs.gov', phone:'(202) 447-5415'},
       ],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'Department of Housing and Urban Development',
       advisors:[
         {name: 'Robert B Morton', location:'', email:'robert.b.morton@hud.gov', phone:'(202) 402-7079'},
       ],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'Department of Labor',
-      advisors:[]
+      advisors:[],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'National Aeronautics and Space Administration (NASA)',
       advisors:[
         {name: 'John Brett', location:'', email:'john.brett@nasa.gov', phone:'(202) 358-0687'},
       ],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'Social Security Administration',
       advisors:[
         {name: 'Joan M Smith', location:'', email:'joan.m.smith@ssa.gov', phone:'(410) 965-6269'},
       ],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'Department of Transportation',
@@ -661,12 +671,16 @@ export class AwardDataComponent {
         {name: 'RT Baumann', location:'Senior Attorney, Office of Acquisition Management', email:'roland.baumann@dot.gov'},
         {name: 'Ross Jeffries', location:'Directory, National Highway Traffic Safeway Administration', email:'ross.jeffries@dot.gov'},
       ],
+      advisorTitle: '',
+      email: '',
     },
     {
       agency:'Department of Veterans Affairs',
       advisors:[
         {name: 'Mitchell L Gasbarra', location:'', email:'mitchell.gasbarra@va.gov', phone:'(240) 215-1755'},
       ],
+      advisorTitle: '',
+      email: '',
     },
   ];
 
@@ -706,7 +720,6 @@ constructor(private router:Router, private route:ActivatedRoute) {}
       });
       this.defenceAgenciesEdit = JSON.parse(JSON.stringify(this.defenceAgencies));
       this.contractAgenciesEdit = JSON.parse(JSON.stringify(this.contractAgencies));
-
     }
   }
 

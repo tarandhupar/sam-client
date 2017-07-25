@@ -18,6 +18,7 @@ export class RequestAccessPage {
     domain: '',
     superName: '',
     superEmail: '',
+    comment: '',
   };
 
   userName: string;
@@ -46,7 +47,8 @@ export class RequestAccessPage {
       role: ['', Validators.required],
       domain: ['', Validators.required],
       superName: ['', Validators.required],
-      superEmail: ['', [Validators.required, $Validators.email]]
+      superEmail: ['', [Validators.required, $Validators.email]],
+      comment: '',
     });
   }
 
@@ -142,16 +144,16 @@ export class RequestAccessPage {
       return;
     }
     let val = this.form.value;
-    console.log(val);
     let body = {
       requestorName: this.userName,
       supervisorName: val.superName,
       supervisorEmail: val.superEmail,
       domainId: val.domain,
-      requestorMessage: val.message,
+      requestorMessage: val.comment,
       roleId: val.role,
       organization : { id:val.org.value, val:val.org.name}
     };
+
     this.userAccessService.requestAccess(body).subscribe(
       res => {
         this.router.navigate(['/profile', 'access']);

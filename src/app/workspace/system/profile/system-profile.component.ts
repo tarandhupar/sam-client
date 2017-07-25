@@ -1,13 +1,16 @@
 import { merge } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/of';
 
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FHService, IAMService } from 'api-kit';
+import { FHService, IAMService, PeoplePickerService } from 'api-kit';
+import { User } from 'api-kit/iam/api/core/user';
 
-import { Validators as $Validators } from '../../../authentication/shared/validators';
-import { User } from '../../../authentication/user.interface';
+import { Validators as $Validators } from 'authentication/shared/validators';
 import { System, POC } from '../system.interface';
 
 @Component({
@@ -20,10 +23,12 @@ import { System, POC } from '../system.interface';
 export class SystemProfileComponent {
   @ViewChild('confirmModal') confirmModal;
   @ViewChild('reconfirmModal') reconfirmModal;
+  @ViewChild('picker') picker;
 
   private api = {
     fh: null,
-    iam: null
+    iam: null,
+    picker: null,
   };
 
   private store = {
@@ -43,7 +48,16 @@ export class SystemProfileComponent {
       department: '',
       agency: '',
       office: ''
-    }
+    },
+
+    picker: {
+      placeholder: 'Search users',
+      keyValueConfig: {
+        keyProperty:     'email',
+        valueProperty:   'givenName',
+        subheadProperty: 'email'
+      }
+    },
   };
 
   public states = {
@@ -67,7 +81,7 @@ export class SystemProfileComponent {
   };
 
   private detailsForm: FormGroup;
-  public user: User = {
+  public user = {
     _id: '',
     email: '',
 
@@ -107,9 +121,18 @@ export class SystemProfileComponent {
     pointOfContact: []
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private _fh: FHService, private _iam: IAMService) {
+  private pocs = [];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private builder: FormBuilder,
+    private _fh: FHService,
+    private _iam: IAMService,
+    private _picker: PeoplePickerService) {
     this.api.iam = _iam.iam;
     this.api.fh = _fh;
+    this.api.picker = _picker;
   }
 
   ngOnInit() {
@@ -131,12 +154,15 @@ export class SystemProfileComponent {
          this.system._id = params['id'];
 
          if(this.system._id) {
-           this.api.iam.system.account.get(this.system._id, (system) => {
+           this.api.iam.system.account.get(this.system._id, system => {
+             system.pointOfContact = system.pointOfContact || [];
+
              this.system = merge({}, this.system, system);
              this.states.edit = true;
              this.initForm();
            }, () => {
              // Error handling for system account GET
+             this.router.navigate([this.states.cancel]);
            });
          } else {
            this.initForm();
@@ -155,7 +181,8 @@ export class SystemProfileComponent {
 
   initForm() {
     let initFormGroup,
-        initSystemAccountData;
+        initSystemAccountData,
+        requests;
 
     initFormGroup = (() => {
       this.detailsForm = this.builder.group({
@@ -177,6 +204,26 @@ export class SystemProfileComponent {
 
         pointOfContact:    this.builder.array(this.initPointOfContact(this.system.pointOfContact || []))
       });
+
+      requests = this.system.pointOfContact.map(userID =>
+        this.api.picker
+          .getPerson(userID, {})
+          .catch(response => Observable.of({
+            user : {
+              _id: userID,
+              email: userID,
+              firstName: userID,
+            }
+          }))
+      );
+
+      if(requests.length) {
+        Observable
+          .forkJoin(requests)
+          .subscribe(results => {
+            this.pocs = results.map(result => new User(result['user']));
+          });
+      }
 
       if(this.states.gov && this.system.department.toString().length) {
         this.api.fh
@@ -221,16 +268,7 @@ export class SystemProfileComponent {
   }
 
   initPointOfContact(items: POC[]) {
-    let formItems: FormGroup[] = items.map((item) => {
-      return this.builder.group({
-        email:     [item.email],
-        firstName: [item.firstName],
-        lastName:  [item.lastName],
-        phone:     [item.phone]
-      });
-    });
-
-    return formItems;
+    return items.map(item => new FormControl(item));;
   }
 
   setControlValue(key, value) {
@@ -276,14 +314,32 @@ export class SystemProfileComponent {
   /**
    * Point of Contact
    */
-  addPOC() {
-     //TODO
+  addPOC(user) {
+    const controls = <FormArray>this.detailsForm.controls['pointOfContact'];
+
+    user = new User(user);
+
+    this.pocs.push(user);
+    this.system.pointOfContact.push(user._id);
+    controls.push(new FormControl(user._id));
+
+    this.picker.inputValue = '';
+
+    if(this.states.edit) {
+      this.save('poc');
+    }
   }
 
   removePOC($index) {
+    const controls = <FormArray>this.detailsForm.controls['pointOfContact'];
+
+    this.pocs.splice($index, 1);
     this.system.pointOfContact.splice($index, 1);
-    (<FormArray>this.detailsForm.controls['pointOfContact']).removeAt($index);
-    this.save('poc');
+    controls.removeAt($index);
+
+    if(this.states.edit) {
+      this.save('poc');
+    }
   }
 
   /**

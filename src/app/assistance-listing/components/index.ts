@@ -23,6 +23,7 @@ import {
   FALErrorDisplayHelperComponent
 } from './fal-error-display/fal-error-display.component';
 import { PipesModule } from '../../app-pipes/app-pipes.module';
+import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { PipesModule } from '../../app-pipes/app-pipes.module';
     FALContactInfoTableComponent,
     FeedsFilterComponent,
     FALErrorDisplayComponent,
-    FALErrorDisplayHelperComponent
+    FALErrorDisplayHelperComponent,
+    CustomInlineErrorMessageComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
@@ -68,7 +70,8 @@ import { PipesModule } from '../../app-pipes/app-pipes.module';
     FALWrapperChangeRequestDropdownComponent,
     FALContactInfoTableComponent,
     FeedsFilterComponent,
-    FALErrorDisplayComponent
+    FALErrorDisplayComponent,
+    CustomInlineErrorMessageComponent
   ]
 })
 export class FALComponentsModule {}

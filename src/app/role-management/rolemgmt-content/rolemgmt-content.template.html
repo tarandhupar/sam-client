@@ -144,46 +144,42 @@
             </div>
           </div>
 
-          <sam-accordion>
-            <sam-accordion-section [name]="'comments'" [headerText]="'Comments'">
-              <section class="comment-section" *ngIf="content.requestorMessage">
-                <div class="comment-user-icon">
-                  <i class="fa fa-user"></i>
-                </div>
-                <div class="comment-user-name">
-                  <strong>Requestor said:</strong>
-                </div>
-                <div class="comment">
-                  {{content.requestorMessage}}
-                </div>
-              </section>
-              <section class="comment-section" *ngIf="content.adminMessage">
-                <div class="comment-user-icon">
-                  <i class="fa fa-user"></i>
-                </div>
-                <div class="comment-user-name">
-                  <strong>Admin said:</strong>
-                </div>
-                <div class="comment">
-                  {{content.adminMessage}}
-                </div>
-              </section>
-            </sam-accordion-section>
-          </sam-accordion>
-          <sam-accordion *ngIf='content.status.val.toLowerCase() === "approved"' class="details-accordion">
-            <sam-accordion-section [name]="'details'" [headerText]="'Details'">
-              <div class="usa-grid-full">
-                <div class="usa-width-one-third">
-                  <div><strong>Role Granted</strong></div>
-                  <div>{{getRolesGranted(content)}}</div>
-                </div>
-                <div class="usa-width-two-thirds">
-                  <div><strong>Organizations</strong></div>
-                  <div>{{getOrganizations(content)}}</div>
-                </div>
+          <sam-solo-accordian [titleText]="'Comments'">
+            <section class="comment-section" *ngIf="content.requestorMessage">
+              <div class="comment-user-icon">
+                <i class="fa fa-user"></i>
               </div>
-            </sam-accordion-section>
-          </sam-accordion>
+              <div class="comment-user-name">
+                <strong>Requestor said:</strong>
+              </div>
+              <div class="comment">
+                {{content.requestorMessage}}
+              </div>
+            </section>
+            <section class="comment-section" *ngIf="content.adminMessage">
+              <div class="comment-user-icon">
+                <i class="fa fa-user"></i>
+              </div>
+              <div class="comment-user-name">
+                <strong>Admin said:</strong>
+              </div>
+              <div class="comment">
+                {{content.adminMessage}}
+              </div>
+            </section>
+          </sam-solo-accordian>
+          <sam-solo-accordian [titleText]="'Details'" *ngIf='content.status.val.toLowerCase() === "approved"' class="details-accordion">
+            <div class="usa-grid-full">
+              <div class="usa-width-one-third">
+                <div><strong>Role Granted</strong></div>
+                <div>{{getRolesGranted(content)}}</div>
+              </div>
+              <div class="usa-width-two-thirds">
+                <div><strong>Organizations</strong></div>
+                <div>{{getOrganizations(content)}}</div>
+              </div>
+            </div>
+          </sam-solo-accordian>
         </div>
       </section>
     </div>

@@ -77,3 +77,32 @@
     display:block;
   }
 }
+
+.report__prompts {
+  div.usa-accordion-content {
+    position: relative;
+  }
+
+  .report__additionalprompts {
+    margin: 23px 0 0 25px;
+  }
+
+  .report__promptBtns {
+    position: absolute;
+    bottom: 1.25em;
+    right: 1.25em;
+  }
+
+  .includesBases label {
+    margin-top: 0;
+  }
+
+  label[for=contractingRegion],
+  label[for=orgCode],
+  label[for=includesBases] {
+    font-weight: 600;
+  }
+  label[for=includesBases] {
+    margin-top: 25px;
+  }
+}

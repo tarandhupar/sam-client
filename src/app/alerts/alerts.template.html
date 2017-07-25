@@ -31,7 +31,7 @@
     </div>
   </div>
   <div class="alert-count" *ngIf="alerts.length === 0">
-    <em>No results found for selected criteria. Please use filters to expand the search results.</em>
+    <em>{{alertmessage}}</em>
   </div>
   <div *ngIf="alertBeingEdited && !alertBeingEdited.id()" class="alert-block">
     <alert-edit [mode]="'add'" (cancel)="onAlertCancel()" (accept)="onAddAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>

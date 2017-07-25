@@ -8,7 +8,6 @@ import { ReportProtoComponent } from './sections/reportProto/reportProto.compone
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
-import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
 
 
 export const routes: Routes = [
@@ -24,8 +23,7 @@ export const routes: Routes = [
       { path: 'adhoc', component: AdhocComponent },
       { path: 'favorites', component: FavoritesComponent },
       { path: 'report/:id/:name/:desc', component: ReportComponent },
-      { path: 'reportProto/:id/:name/:desc/:prompts', component: ReportProtoComponent },
-      { path: 'mstrProto', component: MstrProtoComponent }
+      { path: 'reportProto/:id/:expid/:name/:desc/:prompts', component: ReportProtoComponent }
     ]
   },
 ];

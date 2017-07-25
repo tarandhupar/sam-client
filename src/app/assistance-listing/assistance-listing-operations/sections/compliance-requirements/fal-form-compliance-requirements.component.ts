@@ -4,12 +4,11 @@ import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
 import { FALFormService } from "../../fal-form.service";
 import { FALFormViewModel } from "../../fal-form.model";
-//import { FALFormErrorService } from '../../fal-form-error.service';
 
 import {
-  FieldErrorList, FALFormErrorService,
-  FieldError
+  FALFormErrorService, FieldError
 } from '../../fal-form-error.service';
+import { FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [ProgramService, DictionaryService, FALFormService],
@@ -153,6 +152,43 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       'records': null,
       'additionalDocumentation': null,
       'formulaMatching': null
+    });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.COMPLIANCE_REQUIREMENTS) === 'updated') {
+        this.complianceRequirementsGroup.get('policyRequirementsCheckbox').markAsDirty();
+        this.complianceRequirementsGroup.get('policyRequirementsCheckbox').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('policyRequirementsTextarea').markAsDirty();
+        this.complianceRequirementsGroup.get('policyRequirementsTextarea').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('reports').markAsDirty();
+        this.complianceRequirementsGroup.get('reports').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('audits').markAsDirty();
+        this.complianceRequirementsGroup.get('audits').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('records').markAsDirty();
+        this.complianceRequirementsGroup.get('records').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('additionalDocumentation').markAsDirty();
+        this.complianceRequirementsGroup.get('additionalDocumentation').updateValueAndValidity();
+        this.complianceRequirementsGroup.get('formulaMatching').markAsDirty();
+        this.complianceRequirementsGroup.get('formulaMatching').updateValueAndValidity();
+
+        for (let id in this.reportsComp.validationGroup.controls) {
+          let fcontrol =  this.reportsComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+
+        for (let id in this.auditsComp.validationGroup.controls) {
+          let fcontrol =  this.auditsComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+
+        for (let id in this.additionalDocumentationComp.validationGroup.controls) {
+          let fcontrol =  this.additionalDocumentationComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+      }
     });
 
     this.complianceRequirementsGroup.valueChanges.subscribe(data => {
@@ -542,7 +578,6 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       for (let id in this.auditsComp.validationGroup.controls) {
         let fcontrol =  this.auditsComp.validationGroup.get(id);
         this.setControlErrors(fcontrol, auditErrors);
-        this.auditsComp.wrapper.formatErrors(fcontrol);
       }
     }
   }
@@ -552,17 +587,14 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       for (let id in this.additionalDocumentationComp.validationGroup.controls) {
         let fcontrol =  this.additionalDocumentationComp.validationGroup.get(id);
         this.setControlErrors(fcontrol, addDocErrors);
-        this.additionalDocumentationComp.wrapper.formatErrors(fcontrol);
       }
     }
   }
 
   setControlErrors(fcontrol, ferrors){
     fcontrol.clearValidators();
-    fcontrol.markAsPristine();
     fcontrol.setValidators((control) => { return control.errors });
     fcontrol.setErrors(ferrors.errors);
-    fcontrol.markAsDirty();
   }
 
   resetControlErrors(fcontrol){

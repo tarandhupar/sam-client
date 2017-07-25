@@ -19,7 +19,6 @@ export class FALObligationFYTableComponent {
   currentFY: string;
   prevFY: string;
   nextFY: string;
-  review: boolean = false;
 
 
   ngOnInit() {

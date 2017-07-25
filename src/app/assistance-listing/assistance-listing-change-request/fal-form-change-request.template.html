@@ -3,7 +3,7 @@
     <h1 class="m_T-0 p_T-6x"> {{pageTitle}} </h1>
     <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="program">
       <div class="content"><strong>Title:</strong> {{program.data.title}}</div>
-      <div class="content"><strong>Assistance Listing Number:</strong> {{program.data.programNumber}}</div>
+      <div class="content"><strong>CFDA Number:</strong> {{program.data.programNumber}}</div>
     </div>
 
     <div class="sam-ui section divider"></div>
@@ -19,13 +19,32 @@
                       formControlName="activeAwards"
         ></sam-checkbox>
       </ng-container>
+      <ng-container *ngIf="program && (requestType == 'agency_request')">
+        <h4>Current Organization</h4>
+        <div class="usa-grid-full p_All-3x">
+          <div class="content" *ngIf="currentOrganization.l1Name"><strong>Department: </strong>{{currentOrganization.l1Name}}</div>
+          <div class="content" *ngIf="currentOrganization.l2Name"><strong>Sub-Tier: </strong>{{currentOrganization.l2Name}}</div>
+          <div class="content" *ngIf="currentOrganization.l3Name"><strong>Office: </strong>{{currentOrganization.l3Name}}</div>
+        </div>
+      </ng-container>
+      <sam-agency-picker *ngIf="(requestType == 'agency_request')"
+                         [label]="'New Agency'"
+                         [multimode]="false"
+                         [advancedMode]="false"
+                         [required]="true"
+                         (organization)="onOrganizationChange($event)"
+                         [levelLimit]='3'
+                         formControlName="organizationPicker"></sam-agency-picker>
+      <sam-alert [type]="'warning'" [title]="'Agency outside of your users scope'" *ngIf="agencyChangeAlertShow">
+        The chosen agency is outside your users scope. If you continue and this request is approved, you will no longer have access to this program.
+      </sam-alert>
       <sam-text *ngIf="requestType == 'program_number_request'"
                 [maxlength]="3"
                 [control]="falChangeRequestForm.controls['programNumber']"
                 [name]="'program-number-input'"
-                [label]="'Program Number*'"
+                [label]="'CFDA Number*'"
                 [required]="true"
-                [errorMessage]="falChangeRequestForm.controls['programNumber'].hasError('duplicateProgram') ? 'Program Number already exists. Please enter a valid Number.' : '' "
+                [errorMessage]="falChangeRequestForm.controls['programNumber'].hasError('duplicateProgram') ? 'CFDA Number already exists. Please enter a valid Number.' : '' "
                 formControlName="programNumber"></sam-text>
       <sam-text *ngIf="requestType == 'title_request'"
                 [maxlength]="144"

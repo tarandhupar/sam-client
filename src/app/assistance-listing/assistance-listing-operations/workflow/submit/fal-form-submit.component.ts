@@ -3,7 +3,7 @@ import {FormControl, FormGroup, FormBuilder} from "@angular/forms";
 import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
 import {Router} from "@angular/router";
 import {FALFormService} from "../../fal-form.service";
-import {AuthGuard} from "../../../authguard/authguard.component";
+import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
 
 @Component({
   selector: 'fal-form-submit',

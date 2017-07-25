@@ -14,9 +14,8 @@
 <sam-label-wrapper #tafsLabel
                    [name]="config.name"
                    [label]="config.label"
-                   [hint]="config.hint"
+                   [hint]="tatsHint"
                    [required]="config.required">
-
   <!-- Existing tafs table -->
   <table class="sam-ui table celled" *ngIf="model.tafs && model.tafs.length > 0">
     <thead>
@@ -48,12 +47,44 @@
     <ng-container *ngFor="let tafs of model.tafs; let i=index">
       <tr>
         <!-- Table tafs data -->
-        <td><span [class]="tafs.departmentCode ? '' : 'usa-input-error-message'">{{ tafs.departmentCode || 'A department code is required' }}</span></td>
-        <td><span [class]="tafs.accountCode ? '' : 'usa-input-error-message'">{{ tafs.accountCode || 'An account main code is required'}}</span></td>
-        <td>{{ tafs.subAccountCode }}</td>
-        <td>{{ tafs.allocationTransferAgency }}</td>
-        <td>{{ tafs.fy1 }}</td>
-        <td>{{ tafs.fy2 }}</td>
+        <td>
+          {{ tafs.departmentCode }}
+          <span *ngIf="!tafs.departmentCode" [class]="'usa-input-error-message'">A department code is required</span>
+          <span *ngIf="tafs.departmentCode && !hasNDigits(tafs.departmentCode, 2)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 00-99.
+          </span>
+        </td>
+        <td>
+          {{ tafs.accountCode }}
+          <span *ngIf="!tafs.accountCode" [class]="'usa-input-error-message'">An account main code is required</span>
+          <span *ngIf="tafs.accountCode && !hasNDigits(tafs.accountCode, 4)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 0000-9999.
+          </span>
+        </td>
+        <td>
+          {{ tafs.subAccountCode }}
+          <span *ngIf="tafs.subAccountCode && !hasNDigits(tafs.subAccountCode, 3)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 000-999.
+          </span>
+        </td>
+        <td>
+          {{ tafs.allocationTransferAgency }}
+          <span *ngIf="tafs.allocationTransferAgency && !hasNDigits(tafs.allocationTransferAgency, 2)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 00-99.
+          </span>
+        </td>
+        <td>
+          {{ tafs.fy1 }}
+          <span *ngIf="tafs.fy1 && !hasNDigits(tafs.fy1, 4)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 0000-9999.
+          </span>
+        </td>
+        <td>
+          {{ tafs.fy2 }}
+          <span *ngIf="tafs.fy2 && !hasNDigits(tafs.fy2, 4)" [class]="'usa-input-error-message'">
+            Provide a valid number using numerical values 0000-9999.
+          </span>
+        </td>
         <!-- Table action buttons -->
         <td>
           <ng-container *ngIf="!isEditing">
@@ -130,12 +161,12 @@
               [formControlName]="'fy2'"
     ></sam-text>
   </div>
-  <br><sam-label-wrapper [hint]="tatsHint"></sam-label-wrapper>
+  <br>
   <!-- Add new account form action buttons -->
-  <sam-button *ngIf="!isEditing" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
+  <sam-button [buttonId]= "'tafs-add-btn'" *ngIf="!isEditing" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
 
-  <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
-  <sam-button *ngIf="isEditing" buttonText="Confirm TAF" (onClick)="addTafs()" [buttonType]="'default'"></sam-button>
+  <sam-button  [buttonId]= "'tafs-cancel-btn'" *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+  <sam-button  [buttonId]= "'tafs-confirm-btn'" *ngIf="isEditing" buttonText="Confirm TAF" (onClick)="addTafs()" [buttonType]="'default'"></sam-button>
 </div>
 
 

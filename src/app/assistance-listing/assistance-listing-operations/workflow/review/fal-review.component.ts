@@ -16,10 +16,13 @@ import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {HistoricalIndexLabelPipe} from "../../../pipes/historical-index-label.pipe";
 import {FALFormService} from "../../fal-form.service";
 import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
-import {FALFormErrorService} from "../../fal-form-error.service";
+import {FALFormErrorService, FieldError, FieldErrorList} from "../../fal-form-error.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {RequestLabelPipe} from "../../../pipes/request-label.pipe";
 import {ActionHistoryPipe} from "../../../pipes/action-history.pipe";
+import { MenuItem } from 'sam-ui-kit/components/sidenav';
+import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
+import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
 
 
 @Component({
@@ -118,6 +121,67 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     timer: 3000
   };
 
+  private pristineIconClass = 'fa fa-circle-o section-pristine';
+  private updatedIconClass = 'fa fa-check section-updated';
+  private invalidIconClass = 'fa fa-exclamation-triangle section-invalid';
+
+  sectionLabels: any = [
+    'Header Information',
+    'Overview',
+    'Authorizations',
+    'Financial Information',
+    'Criteria for Applying',
+    'Applying For Assistance',
+    'Compliance Requirements',
+    'Contact Information',
+    'History'
+  ];
+
+  // todo: find a way to refactor this...
+  sideNavSelection;
+  sideNavModel: MenuItem = {
+    label: "abc",
+    children:[{
+      label: this.sectionLabels[0],
+      // route: "#" + FALSectionNames.HEADER,
+      route: "#program-information",
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[1],
+      route: "#" + FALSectionNames.OVERVIEW,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[2],
+      // route: "#" + FALSectionNames.AUTHORIZATION,
+      route: "#program-authorizations",
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[3],
+      route: "#financial-information",
+      iconClass: this.pristineIconClass,
+    }, {
+      label: this.sectionLabels[4],
+      // route: "#" + FALSectionNames.CRITERIA_INFO,
+      route: "#criteria-for-applying",
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[5],
+      route: "#" + FALSectionNames.APPLYING_FOR_ASSISTANCE,
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[6],
+      route: "#" + FALSectionNames.COMPLIANCE_REQUIREMENTS,
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[7],
+      route: "#" + FALSectionNames.CONTACT_INFORMATION,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[8],
+      route: "#history"
+    }]
+  };
+
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
               private route: ActivatedRoute,
@@ -172,6 +236,26 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   }
 
+  private makeSidenav() {
+    this.route.fragment.subscribe((fragment: string) => {
+      for (let item of this.sidenavModel.children) {
+        if (item.route === fragment) {
+          this.sideNavSelection = item.label;
+          break;
+        }
+      }
+    });
+
+    this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+    this.updateSidenavIcons(FALSectionNames.OVERVIEW, this.sectionLabels[1]);
+    this.updateSidenavIcons(FALSectionNames.AUTHORIZATION, this.sectionLabels[2]);
+    this.updateFinancialIcon();
+    this.updateSidenavIcons(FALSectionNames.CRITERIA_INFO, this.sectionLabels[4]);
+    this.updateSidenavIcons(FALSectionNames.APPLYING_FOR_ASSISTANCE, this.sectionLabels[5]);
+    this.updateSidenavIcons(FALSectionNames.COMPLIANCE_REQUIREMENTS, this.sectionLabels[6]);
+    this.updateSidenavIcons(FALSectionNames.CONTACT_INFORMATION, this.sectionLabels[7]);
+  }
+
   sidenavPathEvtHandler(data) {
     this.sidenavHelper.sidenavPathEvtHandler(this, data);
   }
@@ -224,6 +308,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         this.router.navigate['accessrestricted'];
       }
       this.showHideButtons(this.program);
+      this.makeSidenav();
       this.checkCurrentFY();
       this.setAlerts();
       if (this.program.data && this.program.data.authorizations) {
@@ -277,11 +362,55 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         }]);
 
       this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
+
+      //console.log("reviewErrorList", this.reviewErrorList);
+
     }, err => {
       this.router.navigate(['/404']);
     });
 
     return apiSubject;
+  }
+
+  getFieldId(field) {
+    return FALFieldNames[field];
+  }
+
+  getSectionId(section){
+    return FALSectionNames[section];
+  }
+
+  getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, counter: number = 0, subId: any = null){
+
+    let errObj : (FieldError | FieldErrorList) = FALFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
+    let message = '';
+
+    if(errObj) {
+
+      if(!row && errObj['errors']) {
+        message = this.generateErrorMessage(errObj);
+      }
+      else if(row && errObj['errorList']) {
+        let rowErrorObj: any;
+        if(subId)
+          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, subId);
+        else
+          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId + counter);
+
+        if(rowErrorObj)
+          message = this.generateErrorMessage(rowErrorObj);
+      }
+    }
+
+    return message;
+  }
+
+  generateErrorMessage(fieldErrors){
+    let message = [];
+    for(let key of Object.keys(fieldErrors['errors'])) {
+      message.push(fieldErrors['errors'][key]['message']);
+    }
+    return message.join('<br/>');
   }
 
   showHideButtons(program: any) {
@@ -558,7 +687,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
       });
     });
   }
-  
+
 
   public onChangeRequestSelect(event) {
     this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type=' + event.value);
@@ -790,6 +919,60 @@ Please contact the issuing agency listed under "Contact Information" for more in
     this.statusBannerLeadingText = msg;
   }
   checkForErrors(){
-    return FALFormErrorService.hasErrors(this.errorService.errors);
+    return FALFormErrorService.hasErrors(this.errorService.applicableErrors);
+  }
+
+  private updateSidenavIcons(sectionName: string, sectionLabel: string) {
+    let hasError = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, sectionName));
+    //console.log(sectionName);
+    let status = this.viewModel.getSectionStatus(sectionName);
+    let iconClass = this.pristineIconClass;
+    if (status === 'updated') {
+      if (hasError) {
+        iconClass = this.invalidIconClass;
+      } else {
+        iconClass = this.updatedIconClass;
+      }
+    }
+
+    let filter = new FilterMultiArrayObjectPipe();
+    let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
+    section['iconClass'] = iconClass;
+  }
+
+  // todo: find a better way to do this
+  private updateFinancialIcon() {
+    let filter = new FilterMultiArrayObjectPipe();
+    let section = filter.transform(["Financial Information"], this.sideNavModel.children, 'label', true, 'children')[0];
+
+    /*
+     * If all subsections are pristine, then financial information section is pristine
+     * If all subsections are valid, then financial information section is valid
+     * Otherwise, financial information section is invalid
+     */
+    let obligationStatus = this.viewModel.getSectionStatus(FALSectionNames.OBLIGATIONS);
+    let otherFinancialInfoStatus = this.viewModel.getSectionStatus(FALSectionNames.OTHER_FINANCIAL_INFO);
+    let status = 'updated';
+
+    if (obligationStatus === 'pristine' && otherFinancialInfoStatus === 'pristine') {
+      status = 'pristine';
+    }
+
+    let obligationHasErrors = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, FALSectionNames.OBLIGATIONS));
+    let otherFinancialInfoHasErrors = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, FALSectionNames.OTHER_FINANCIAL_INFO));
+    let iconClass = this.pristineIconClass;
+    if (status === 'updated') {
+      if (obligationHasErrors || obligationStatus === 'pristine' || otherFinancialInfoHasErrors || otherFinancialInfoStatus === 'pristine') {
+        iconClass = this.invalidIconClass;
+      } else {
+        iconClass = this.updatedIconClass;
+      }
+    }
+
+    section['iconClass'] = iconClass;
+  }
+
+  navHandler(obj) {
+    this.router.navigate([], {fragment: obj.route.substring(1)});
   }
 }

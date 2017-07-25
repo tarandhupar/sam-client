@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
+import {FHService} from 'api-kit';
 import * as Cookies from 'js-cookie';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
@@ -9,7 +10,8 @@ import {Observable} from "rxjs/Observable";
   moduleId: __filename,
   templateUrl: 'assistance-listing-workspace.template.html',
   providers: [
-    ProgramService
+    ProgramService,
+    FHService
   ]
 })
 
@@ -35,15 +37,30 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   workspaceSearchConfig: any = {
     placeholder: "Search Workspace"
   };
+  defaultStatus: any = ['published'];
+  statusCheckboxModel: any = this.defaultStatus;
+  statusCheckboxConfig = {
+    options: [
+      {value: 'published', label: 'Published', name: 'checkbox-published'},
+      {value: 'pending', label: 'Pending', name: 'checkbox-pending'},
+      {value: 'rejected', label: 'Rejected', name: 'checkbox-rejected'},
+      {value: 'draft', label: 'Draft', name: 'checkbox-draft'},
+      {value: 'archived', label: 'Archived', name: 'checkbox-archived'},
+    ],
+    name: 'fal-status-filter',
+    label: '',
+    hasSelectAll: 'true'
+  }
+  orgMap = new Map();
 
-
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     let userPermissionsAPI = this.loadUserPermissions();
     this.loadCountPendingRequest(userPermissionsAPI);
+    this.getStatusCounts(this.cookieValue)
   }
 
   ngOnDestroy() {
@@ -63,6 +80,12 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     } else {
       qsobj['page'] = 1;
     }
+    if(this.statusCheckboxModel){
+      qsobj['status'] = this.statusCheckboxModel.toString()
+    }
+    else {
+      qsobj['status'] = '';
+    }
     return qsobj;
   }
 
@@ -71,7 +94,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.runProgSub = this.programService.runProgram({
       keyword: this.keyword,
       pageNum: this.pageNum,
-      Cookie: this.cookieValue
+      Cookie: this.cookieValue,
+      status: this.statusCheckboxModel ? this.statusCheckboxModel.toString() : this.defaultStatus
 
     }).subscribe(
       data => {
@@ -88,6 +112,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         }
         this.oldKeyword = this.keyword;
         this.initLoad = false;
+        //retrieving org names from fhservice by orgids and mapping org.orgKey to org.name
+        this.createOrgNameMap();
       },
       error => {
         console.error('Error!!', error);
@@ -145,6 +171,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           data => {
             this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+            this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
+            this.getStatusCounts(this.cookieValue);
             this.runProgram();
           });
     });
@@ -178,5 +206,95 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       this.pendingRequestCount = res;
     });
   }
+
+  // status filter model change
+  statusModelChanged(){
+    let qsobj = this.setupQS();
+    // overwrite the page number to be 1. When filters are changed we do not want to retain page number
+    qsobj['page'] = 1;
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/fal/workspace/'], navigationExtras);
+  }
+
+  // gets the count of records in each status for filter
+  getStatusCounts(passedCookie){
+    this.programService.getProgramCountByStatus(passedCookie).subscribe(data => {
+      this.statusCheckboxConfig.options = this.buildStatusFilterOptions(data.content);
+    },
+    error => {
+      console.error('error calling program CountByStatus method');
+    });
+  }
+
+  // builds the options for status filter with counts included from api call -- returns to getStatusCounts()
+  buildStatusFilterOptions(data){
+    var returnOptions = [];
+
+    for(var property in data){
+      var newObj = {};
+      var isZero = data[property] === 0 ? true : false;
+
+      switch(property){
+        case 'total_archived_listing':
+          newObj = {value: 'archived', label: 'Archived (' + data[property] + ')', name: 'checkbox-archived', disabled: isZero ? true : false};
+          break;
+        case 'total_draft_listing':
+          newObj = {value: 'draft', label: 'Draft (' + data[property] + ')', name: 'checkbox-draft', disabled: isZero ? true : false};
+          break;
+        case 'total_rejected_listing':
+          newObj = {value: 'rejected', label: 'Rejected (' + data[property] + ')', name: 'checkbox-rejected', disabled: isZero ? true : false};
+          break;
+        case 'total_pending_listing':
+          newObj = {value: 'pending', label: 'Pending (' + data[property] + ')', name: 'checkbox-pending', disabled: isZero ? true : false};
+          break;
+        case 'total_published_listing':
+          newObj = {value: 'published', label: 'Published (' + data[property] + ')', name: 'checkbox-published', disabled: isZero ? true : false};
+          break;
+        default:
+          newObj = null;
+          break;
+      }
+      // add new object to our returnOptions
+      if(newObj){
+        returnOptions.unshift(newObj);
+      }
+    }
+    return returnOptions;
+  }
+
+  createOrgNameMap(){
+    let idArray = new Set(this.data.map(data => {
+        let id = data.data.organizationId;
+
+        if(typeof id !== 'string'){
+            return id.toString();
+        }
+        return id;
+    }));
+    let uniqueIdList = Array.from(idArray).join();
+    let ctx = this;
+    this.fhService.getOrganizationsByIds(uniqueIdList)
+      .subscribe(
+        data => {
+          data._embedded.orgs.forEach(function(org){
+            ctx.orgMap.set(org.org.orgKey.toString(), org.org.name);
+          });
+          this.addOrgNameToData();
+        },
+        error => {
+          console.error('Error!!', error);
+        }
+      );
+  }
+
+  addOrgNameToData() {
+    let ctx = this;
+    ctx.data.forEach(function(data){
+        data['organizationName'] = ctx.orgMap.get(data.data.organizationId.toString());
+    });
+  }
+
 }
 

@@ -3,8 +3,8 @@ import {FALFormService} from "../../fal-form.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
-import {falCustomValidatorsComponent} from "../../../validators/assistance-listing-validators";
 import {FALFormErrorService} from "../../fal-form-error.service";
+import { FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -268,6 +268,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
+
     setTimeout(() => { // horrible hack to trigger angular change detection
       this.updateErrors();
     });
@@ -342,19 +343,77 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       useDisFunds: [''],
       useLoanTerms: ['']
     });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.CRITERIA_INFO) === 'updated') {
+        // todo: find way to shorten this...
+        this.falCriteriaForm.get('documentation').markAsDirty();
+        this.falCriteriaForm.get('documentation').updateValueAndValidity();
+        this.falCriteriaForm.get('applicantType').markAsDirty();
+        this.falCriteriaForm.get('applicantType').updateValueAndValidity();
+        this.falCriteriaForm.get('applicantDesc').markAsDirty();
+        this.falCriteriaForm.get('applicantDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('isSameAsApplicant').markAsDirty();
+        this.falCriteriaForm.get('isSameAsApplicant').updateValueAndValidity();
+        this.falCriteriaForm.get('benType').markAsDirty();
+        this.falCriteriaForm.get('benType').updateValueAndValidity();
+        this.falCriteriaForm.get('benDesc').markAsDirty();
+        this.falCriteriaForm.get('benDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('lengthTimeDesc').markAsDirty();
+        this.falCriteriaForm.get('lengthTimeDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('awardedType').markAsDirty();
+        this.falCriteriaForm.get('awardedType').updateValueAndValidity();
+        this.falCriteriaForm.get('awardedDesc').markAsDirty();
+        this.falCriteriaForm.get('awardedDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('assUsageType').markAsDirty();
+        this.falCriteriaForm.get('assUsageType').updateValueAndValidity();
+        this.falCriteriaForm.get('assUsageDesc').markAsDirty();
+        this.falCriteriaForm.get('assUsageDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('usageRes').markAsDirty();
+        this.falCriteriaForm.get('usageRes').updateValueAndValidity();
+        this.falCriteriaForm.get('useDisFunds').markAsDirty();
+        this.falCriteriaForm.get('useDisFunds').updateValueAndValidity();
+        this.falCriteriaForm.get('useLoanTerms').markAsDirty();
+        this.falCriteriaForm.get('useLoanTerms').updateValueAndValidity();
+
+        for (let id in this.documentationComp.validationGroup.controls) {
+          let fcontrol = this.documentationComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+
+        for (let id in this.usageResComp.validationGroup.controls) {
+          let fcontrol = this.usageResComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+
+        for (let id in this.useDisFundsComp.validationGroup.controls) {
+          let fcontrol = this.useDisFundsComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+
+        for (let id in this.useLoanTermsComp.validationGroup.controls) {
+          let fcontrol = this.useLoanTermsComp.validationGroup.get(id);
+          fcontrol.markAsDirty();
+          // fcontrol.updateValueAndValidity({onlySelf: true});
+        }
+      }
+    });
   }
 
   updateViewModel(data) {
     let appListDisplay = [];
     let benListDisplay = [];
     let assListDisplay = [];
-    for(let appList of data['applicantType']){
+    for (let appList of data['applicantType']) {
       appListDisplay.push(appList.code);
     }
-    for(let benList of data['benType']){
+    for (let benList of data['benType']) {
       benListDisplay.push(benList.code);
     }
-    for(let assList of data['assUsageType']){
+    for (let assList of data['assUsageType']) {
       assListDisplay.push(assList.code);
     }
     this.viewModel.documentation = this.saveChkToggleTextarea(data['documentation']);
@@ -371,7 +430,10 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     this.viewModel.usageRes = this.saveChkToggleTextarea(data['usageRes']);
     this.viewModel.useDisFunds = this.saveChkToggleTextarea(data['useDisFunds']);
     this.viewModel.useLoanTerms = this.saveChkToggleTextarea(data['useLoanTerms']);
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
       this.updateErrors();
+    });
   }
 
   updateForm() {
@@ -390,6 +452,10 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       useLoanTerms: this.loadChkToggleTextarea(this.viewModel.useLoanTerms)
     }, {
       emitEvent: false
+    });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
     });
   }
 
@@ -503,28 +569,67 @@ export class FALFormCriteriaInfoComponent implements OnInit {
 
   private updateErrors() {
     this.errorService.viewModel = this.viewModel;
-    this.updateControlError(this.falCriteriaForm.get('documentation'), this.errorService.validateCriteriaDocumentation().errors);
-    this.updateControlError(this.falCriteriaForm.get('applicantType'), this.errorService.validateApplicantList().errors);
-    this.updateControlError(this.falCriteriaForm.get('benType'), this.errorService.validateBeneficiaryList().errors);
-    this.updateControlError(this.falCriteriaForm.get('lengthTimeDesc'), this.errorService.validateLengthTimeDesc().errors);
-    this.updateControlError(this.falCriteriaForm.get('awardedType'), this.errorService.validateAwardedType().errors);
-    this.updateControlError(this.falCriteriaForm.get('assUsageType'), this.errorService.validateAssistanceUsageList().errors);
-    this.updateControlError(this.falCriteriaForm.get('assUsageDesc'), this.errorService.validateAssUsageDesc().errors);
-    this.updateControlError(this.falCriteriaForm.get('usageRes'), this.errorService.validateCriteriaUsageRes().errors);
-    this.updateControlError(this.falCriteriaForm.get('useDisFunds'), this.errorService.validateCriteriaUseDisFunds().errors);
-    this.updateControlError(this.falCriteriaForm.get('useLoanTerms'), this.errorService.validateCriteriaUseLoanTerms().errors);
+    this.updateControlError(this.falCriteriaForm.get('applicantType'), this.errorService.validateApplicantList());
+    this.updateControlError(this.falCriteriaForm.get('benType'), this.errorService.validateBeneficiaryList());
+    this.updateControlError(this.falCriteriaForm.get('lengthTimeDesc'), this.errorService.validateLengthTimeDesc());
+    this.updateControlError(this.falCriteriaForm.get('awardedType'), this.errorService.validateAwardedType());
+    this.updateControlError(this.falCriteriaForm.get('assUsageType'), this.errorService.validateAssistanceUsageList());
+    this.updateControlError(this.falCriteriaForm.get('assUsageDesc'), this.errorService.validateAssUsageDesc());
+
+    this.updateDocumentationErrors(this.errorService.validateCriteriaDocumentation());
+    this.updateUseRestrictionsErrors(this.errorService.validateCriteriaUsageRes());
+    this.updateUseDiscretionaryFundsErrors(this.errorService.validateCriteriaUseDisFunds());
+    this.updateUseLoanTermsErrors(this.errorService.validateCriteriaUseLoanTerms());
+
     this.showErrors.emit(this.errorService.applicableErrors);
   }
-  private updateControlError(control, errors){
-    control.clearValidators();
-    control.setValidators((control) => { return control.errors });
-    control.setErrors(errors);
-    this.markAndUpdateFieldStat(control);
+
+  private updateDocumentationErrors(documentationErrors) {
+    if (documentationErrors) {
+      for (let id in this.documentationComp.validationGroup.controls) {
+        let fcontrol = this.documentationComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, documentationErrors);
+      }
+    }
   }
-  private markAndUpdateFieldStat(control){
+
+  private updateUseRestrictionsErrors(useResErrors) {
+    if (useResErrors) {
+      for (let id in this.usageResComp.validationGroup.controls) {
+        let fcontrol = this.usageResComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, useResErrors);
+      }
+    }
+  }
+
+  private updateUseDiscretionaryFundsErrors(useDisErrors) {
+    if (useDisErrors) {
+      for (let id in this.useDisFundsComp.validationGroup.controls) {
+        let fcontrol = this.useDisFundsComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, useDisErrors);
+      }
+    }
+  }
+
+  private updateUseLoanTermsErrors(useLoanTermsErrors) {
+    if (useLoanTermsErrors) {
+      for (let id in this.useLoanTermsComp.validationGroup.controls) {
+        let fcontrol = this.useLoanTermsComp.validationGroup.get(id);
+        this.setControlErrors(fcontrol, useLoanTermsErrors);
+      }
+    }
+  }
+
+  private updateControlError(control, errors) {
+    this.setControlErrors(control, errors);
     setTimeout(() => {
-      control.markAsDirty();
       control.updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
+  }
+
+  private setControlErrors(fcontrol, ferrors){
+    fcontrol.clearValidators();
+    fcontrol.setValidators((control) => { return control.errors });
+    fcontrol.setErrors(ferrors.errors);
   }
 }

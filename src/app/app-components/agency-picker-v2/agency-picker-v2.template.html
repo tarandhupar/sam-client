@@ -1,0 +1,40 @@
+<sam-label-wrapper [attr.class]="organization-container" [label]="label" [hint]="hint" [required]="required">
+    <div class="sam-ui secondary pointing large menu" *ngIf="!advancedMode">
+        <a class="item active" (click)="showAdvanced = false" [ngClass]="{'active': !showAdvanced}" (keyup.enter)="showAdvanced = false" tabindex="0">
+        Simple
+        </a>
+        <a class="item" (click)="showAdvanced = true" [ngClass]="{'active': showAdvanced}" (keyup.enter)="showAdvanced = true" tabindex="0">
+        Advanced
+        </a>
+    </div>
+    <ng-container *ngIf="!showAdvanced">
+        <sam-autocomplete 
+            *ngIf="type=='single'"
+            agencypicker-autofill 
+            [ngModel]="selections"
+            (ngModelChange)="addSelection($event)"
+            [config]="singleACConfig">
+        </sam-autocomplete>
+        <sam-autocomplete-multiselect 
+            *ngIf="type=='multiple'" 
+            agencypicker-autofill 
+            [ngModel]="selections"
+            (ngModelChange)="addSelection($event)"
+            [keyValueConfig]="multipleACConfig"
+            [serviceOptions]="serviceOptions">
+        </sam-autocomplete-multiselect>
+    </ng-container>
+    <div *ngIf="showAdvanced">
+        <ng-container *ngFor="let orgLvl of orgLevels; let idx = index;">
+            <sam-select
+                *ngIf="orgLvl.show && idx < orgLimit"
+                (ngModelChange)="updateAdvanced(idx,$event)" 
+                [(ngModel)]="orgLvl.selectedOrg" 
+                [name]="orgLvl.name"
+                [label]="orgLvl.label" 
+                [options]="orgLvl.options"></sam-select>
+        </ng-container>
+        <button class="sam-ui tiny positive button" (click)="makeSelectionFromAdvanced()">Add</button>
+        <button class="sam-ui tiny button" (click)="clearAdvanced()">Clear</button>
+    </div>
+</sam-label-wrapper>

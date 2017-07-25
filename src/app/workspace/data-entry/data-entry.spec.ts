@@ -10,6 +10,7 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { DataEntryComponent } from "./data-entry.component";
 import { WorkspaceModule } from "../workspace.module";
+import { ProgramService } from "../../../api-kit/program/program.service";
 
 
 describe('Workspace data entry component', () => {
@@ -21,7 +22,7 @@ describe('Workspace data entry component', () => {
     TestBed.configureTestingModule({
       declarations: [ ],
       imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule, WorkspaceModule ],
-      providers: []
+      providers: [ ProgramService ]
     });
     fixture = TestBed.createComponent(DataEntryComponent);
     component = fixture.componentInstance;

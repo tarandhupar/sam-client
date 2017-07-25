@@ -33,24 +33,11 @@
         </div>
       </div>
       <ul class="ul-css">
-        <!--test report to test MSTR connection; to be deleted -isaac -->
-        <li class="report-li">
-          <div class="usa-grid-full">
-            <div class="usa-grid-full">
-              <div class="grid-name">
-                <a [routerLink]="['../mstrProto']">
-                  <b>Prototype Report for Common Components</b>
-                </a>
-              </div>
-            </div>
-          </div>
-        </li>
-        <!--end test report-->
         <li class="report-li" #myVar *ngFor="let item of currentReports; let i = index; let last = last">
           <div class="usa-grid-full">
             <div class="usa-grid-full">
               <div class="grid-name">
-                <a [routerLink]="['../reportProto', item.id, item.name, item.desc, item.prompts]">
+                <a [routerLink]="['../reportProto', item.id, item.expid, item.name, item.desc, item.prompts]">
                   <b>{{item.name  }}</b>
                 </a>
                 <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;

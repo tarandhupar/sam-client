@@ -1,4 +1,5 @@
 <sam-complex-form-template 
+  [ngClass]="'assistance-listing-operations'"
   [hidden]="createPermissions === undefined"
   [crumbs]="crumbs"
   pageTitle="Assistance Listing" 
@@ -30,10 +31,11 @@
                                 (showErrors)="showErrors($event)" #form></fal-form-authorization>
 
         <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')"
-                                  [viewModel]="falFormViewModel" #form></fal-form-obligation-info>
+                                  [viewModel]="falFormViewModel" (showErrors)="showErrors($event)" #form></fal-form-obligation-info>
 
         <fal-form-financial-info-other *ngIf="isSection('financial-information-other')"
-                                       [viewModel]="falFormViewModel" #form></fal-form-financial-info-other>
+                                       [viewModel]="falFormViewModel"
+                                       (showErrors)="showErrors($event)" #form></fal-form-financial-info-other>
 
         <fal-form-criteria-info *ngIf="isSection('criteria-information')"
                                 [viewModel]="falFormViewModel"
@@ -48,7 +50,8 @@
                                           (showErrors)="showErrors($event)" #form></fal-form-compliance-requirements>
 
         <fal-form-contact-info *ngIf="isSection('contact-information')"
-                               [viewModel]="falFormViewModel" #form></fal-form-contact-info>
+                               [viewModel]="falFormViewModel"
+                               (showErrors)="showErrors($event)" #form></fal-form-contact-info>
 
   </div>
 </sam-complex-form-template>

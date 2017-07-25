@@ -10,12 +10,11 @@
            [cancelButtonLabel]="'Cancel'"
            (onSubmit)="onDeleteModalSubmit()">
 </sam-modal>
-<div class="usa-grid assistance-listing-page" *ngIf="program">
+<div class="usa-grid assistance-listing-page sticky-target" *ngIf="program">
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
-    <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="assistance-listing-page">
+    <div sam-sticky limit=1200 container="sticky-target">
       <!--Logo-->
       <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px"
@@ -25,10 +24,11 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px"
              height="160px">
       </ng-container>
+
       <!--Side Navigation-->
-      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel"
-                            (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
+      <sam-sidenav (data)="navHandler($event)" [labelLookup]="sideNavSelection" [model]="sideNavModel"></sam-sidenav>
     </div>
+    &nbsp;
   </aside>
 
 
@@ -54,14 +54,14 @@
       </a>
       <div class="sam-ui divider"></div>
     </ng-container>
-   
-   <sam-status-banner [type]="'warning'" *ngIf="checkForErrors()">
+
+    <sam-status-banner [type]="'warning'" *ngIf="checkForErrors() && reviewErrorList.errorList.length > 0">
       <div leading-content>{{statusBannerLeadingText}}</div>
       <div main-content>
         <fal-error-display [validationErrors]="reviewErrorList" (message)="updateBannerText($event)"></fal-error-display>
       </div>
     </sam-status-banner>
-    
+
     <!-- Alerts -->
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
@@ -91,6 +91,7 @@
           <h1 class="sam-ui header">
             <span class="field" id="program-title">{{program?.data?.title}}</span>
           </h1>
+          <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))"></inline-error-message>
         </div>
         <div class="usa-width-one-third">
           <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#header-information'])">
@@ -102,14 +103,14 @@
             <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
           </a>
           <wrapper-fal-change-request-dropdown *ngIf="changeRequestDropdown.permissions"
-            [name]="changeRequestDropdown.config.name"
-            [hint]="changeRequestDropdown.config.hint"
-            [disabled]="changeRequestDropdown.config.disabled"
-            [permissions]="changeRequestDropdown.permissions"
-            [defaultOption]="changeRequestDropdown.defaultOption"
-            (clickActionHandler)="onChangeRequestSelect($event)"
-            [program]="program"
-            [requestTypeAction] = "programRequest?.requestType?.value">
+                                               [name]="changeRequestDropdown.config.name"
+                                               [hint]="changeRequestDropdown.config.hint"
+                                               [disabled]="changeRequestDropdown.config.disabled"
+                                               [permissions]="changeRequestDropdown.permissions"
+                                               [defaultOption]="changeRequestDropdown.defaultOption"
+                                               (clickActionHandler)="onChangeRequestSelect($event)"
+                                               [program]="program"
+                                               [requestTypeAction] = "programRequest?.requestType?.value">
           </wrapper-fal-change-request-dropdown>
         </div>
       </div>
@@ -154,6 +155,7 @@
                     {{federalHierarchy.type}}
                   </div>
                   <div class="description">
+                    <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('FEDERAL_AGENCY'))"></inline-error-message>
                     {{ federalHierarchy.name || federalHierarchy.agencyName }}
                   </div>
                 </div>
@@ -165,6 +167,7 @@
                     CFDA Number
                   </div>
                   <div class="description">
+                    <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('FALNO'))"></inline-error-message>
                     {{program.data?.programNumber}}
                   </div>
                 </div>
@@ -229,8 +232,9 @@
 
       <!-- Objectives -->
       <h3 class="sam-ui dividing header">Objectives</h3>
-
+      <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('OBJECTIVE'))"></inline-error-message>
       <p class="field" id="program-objective">
+
         {{program.data?.objective}}
 
       </p>
@@ -240,12 +244,13 @@
 
       <!-- Examples of Funded Projects -->
       <h3 class="sam-ui dividing header">Examples of Funded Projects</h3>
-
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngFor="let item of program.data?.projects?.list; let i = index">
-            <p class="field" [attr.id]="'program-project-example-' + i"
-               *ngIf="item?.description && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
+            <p class="field" [attr.id]="'program-project-example-' + i" *ngIf="!item.fiscalYear || (item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1)">
+
+              <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNDED_PROJECTS'), true, i)"></inline-error-message>
+
               <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
             </p>
           </ng-container>
@@ -267,8 +272,11 @@
            [class.section]="!(program.data?.subjectTerms && program.data?.subjectTerms.length > 0)"></div>
 
       <!-- Functional Codes -->
+      <h3 class="sam-ui dividing header ">Functional Codes <i class="fa fa-lock" aria-hidden="true"></i></h3>
+
+      <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNCTIONAL_CODES'))"></inline-error-message>
+
       <ng-container *ngIf="dictionaries && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
-        <h3 class="sam-ui dividing header ">Functional Codes <i class="fa fa-lock" aria-hidden="true"></i></h3>
         <ng-container
           *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-functional-code-' + i">
@@ -279,8 +287,11 @@
       </ng-container>
 
       <!-- Subject Terms -->
+      <h3 class="sam-ui dividing header">Subject Terms <i class="fa fa-lock" aria-hidden="true"></i></h3>
+
+      <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('SUBJECT_TERMS'))"></inline-error-message>
+
       <ng-container *ngIf="dictionaries && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
-        <h3 class="sam-ui dividing header">Subject Terms <i class="fa fa-lock" aria-hidden="true"></i></h3>
         <ng-container
           *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-subject-terms-' + i">
@@ -308,7 +319,11 @@
         </div>
       </div>
 
+      <inline-error-message [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, 0, getFieldId('NO_AUTHORIZATION'))"></inline-error-message>
+
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
+
+        <inline-error-message [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, i)"></inline-error-message>
         <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
       </div>
 
@@ -1071,9 +1086,9 @@
       <div *ngIf="toggleButton" class="sam-ui section divider"></div>
       <div *ngIf="historyElement" class="sticky-element" sticky-element [element]="historySection">
         <ng-container  *ngFor="let text of buttonText; let i=index;">
-        <sam-button *ngIf="toggleButton" [buttonText]="text"
-                    (onClick)="onButtonClick(text)"
-                    [buttonType]="(!enableDisableBtn ? 'default' : 'disabled')"></sam-button>
+          <sam-button *ngIf="toggleButton" [buttonText]="text"
+                      (onClick)="onButtonClick(text)"
+                      [buttonType]="(!enableDisableBtn ? 'default' : 'disabled')"></sam-button>
         </ng-container>
 
       </div>

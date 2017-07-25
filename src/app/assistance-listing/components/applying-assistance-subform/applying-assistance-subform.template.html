@@ -1,11 +1,11 @@
-<sam-fieldset-wrapper [hint] ="'List all deadlines in the application process. Enter each deadline separately.'"><sam-button buttonText="Add Deadline" (onClick)="addAssist()" [class.hide]="hideAddButton"></sam-button>
+<sam-fieldset-wrapper [attr.id]="'list-deadline'" [hint] ="'List all deadlines in the application process. Enter each deadline separately.'"><sam-button [buttonId]="'apply-asst-add-deadline-btn'" buttonText="Add Deadline" (onClick)="addAssist()" [attr.id]="'add-deadline'" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAssistSubForm" [class.hide]="!hideAddButton">
   <div formArrayName="deadlineList">
     <h4>{{subFormLabel}}</h4>
     <ng-container *ngFor="let assistGrp of falAssistSubForm.controls.deadlineList.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="assistIndex !== i">
-        <sam-label-wrapper [hint] = "'Use the calendar and/or description field to provide deadline date(s). Leave the End Date blank if the deadline is fixed.'">
+        <sam-label-wrapper [attr.id]="'start-end-date-info'" [hint] = "'Use the calendar and/or description field to provide deadline date(s). Leave the End Date blank if the deadline is fixed.'">
         <div class="start-date">
           <sam-date [name]="'start-date'"
                    [label]="'Start Date'"
@@ -20,14 +20,15 @@
           ></sam-date>
         </div>
         </sam-label-wrapper>
-        <sam-text-area [name]="'list-desc'"
-                     [label]="'Describe this Deadline'"
-                     formControlName="description"
-                     [hint]= "'Optionally provide a description for this deadline'"
+        <sam-text-area [attr.id]="'optional-desc-deadline'"
+                       [name]="'list-desc'"
+                       [label]="'Describe this Deadline'"
+                       formControlName="description"
+                       [hint]= "'Optionally provide a description for this deadline'"
         ></sam-text-area>
 
-        <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
-        <sam-button buttonText="Confirm" (onClick)="onConfirmClick(i)"></sam-button>
+        <sam-button [buttonId]="'apply-asst-cancel-deadline-btn'" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
+        <sam-button [buttonId]="'apply-asst-confirm-deadline-btn'" buttonText="Confirm" (onClick)="onConfirmClick(i)"></sam-button>
       </div>
     </ng-container>
   </div>

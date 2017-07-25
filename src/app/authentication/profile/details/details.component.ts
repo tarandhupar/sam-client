@@ -491,7 +491,8 @@ export class DetailsComponent {
     return [
       this.user.firstName || '',
       this.user.initials || '',
-      this.user.lastName || ''
+      this.user.lastName || '',
+      this.user.suffix || '',
     ].join(' ').replace(/\s+/g, ' ');
   }
 
@@ -683,8 +684,10 @@ export class DetailsComponent {
     }
 
     this.api.iam.user.update(userData, (user) => {
+console.log('success');
       $success(user);
     }, (error) => {
+console.log('failure');
       $error(error);
     });
   }

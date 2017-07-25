@@ -1,29 +1,61 @@
 <div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
   <section class="usa-grid-full">
     <div class="sam-ui hidden divider"></div>
-    Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Proto Reports</a>
+    Back to: <a routerLink="/reports/overviewProto" routerLinkActive="Active">Dynamic Proto Reports</a>
     <br>
     <h2 class="m_T-2x">{{name}}</h2>
-    <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue>
+    <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
+          
           <div class="display-block">
-            <sam-date-range *ngIf="usedPrompts.dateRange" 
-                            [(ngModel)]='dateRange' 
-                            name='dateRange'>
-            </sam-date-range>
+            <div class="usa-width-one-half">
+              <sam-date-range *ngIf="usedPrompts.dateRange" 
+                              [required]="true" 
+                              [label]="'Date range correspond to the Date Signed on Procurement Awards'"
+                              [(ngModel)]='dateRange' 
+                              name='dateRange'>
+              </sam-date-range> 
+              <sam-agency-picker *ngIf="usedPrompts.fHierarchy" 
+                                name="agency-picker"
+                                [label]="'Search Federal Organizations'"
+                                [multimode]="true" 
+                                [advancedMode]="true"
+                                [(ngModel)]="agencyPicker">
+              </sam-agency-picker>
+            </div>
           </div>
+
           <div class="display-block">
-            <sam-agency-picker *ngIf="usedPrompts.fHierarchy" 
-                               #agencyPicker name="agency-picker"
-                               [label]="'Search Federal Organizations'"
-                               [multimode]="false"
-                               (organization)="onOrganizationChange($event)"
-                               (orgFullpath)="showFullPath($event)" 
-                               [(ngModel)]="agencyPickerValue">
-            </sam-agency-picker>
-          </div> 
-          <div class="usa-width-one-fourth">
+            <div class="usa-width-one-half report__additionalprompts">
+              <sam-text *ngIf="usedPrompts.contractingRegion"
+                        [(ngModel)]="contractingRegion"
+                        [name]="'contractingRegion'" 
+                        [label]="'Contracting Office Region'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts.orgId" 
+                        [(ngModel)]="orgCode"
+                        [name]="'orgCode'" 
+                        [label]="'Organization'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts.agencyName" 
+                        [(ngModel)]="agencyName"
+                        [name]="'agencyName'" 
+                        [label]="'Agency Name'">
+              </sam-text>
+              <sam-select *ngIf="usedPrompts.includesBases"
+                                  class="includesBases"
+                                  [(ngModel)]="includesBases"
+                                  name="includesBases" 
+                                  [options] = "basesOptions"
+                                  [label] = "'Includes'"
+                                  (switchStatusChange)="includesBasesStatusChange($event)">
+              </sam-select>
+            </div>
+
+          </div>  
+
+          <div class="display-block report__promptBtns">
             <sam-button [buttonId]="'defaultBtn'" 
                         [buttonText]="'Clear'" 
                         [buttonType]="btnType"
@@ -33,6 +65,11 @@
                         [buttonText]="'Execute'" 
                         [buttonType]="btnType"
                         (click)="reportExecute()">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" 
+                        [buttonText]="'Export'" 
+                        [buttonType]="btnType" 
+                        (click)="exportReport()">
             </sam-button>
           </div>
         </form>

@@ -1,37 +1,39 @@
-import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from "@angular/core";
-import {FormBuilder, FormArray, FormGroup, Validators} from "@angular/forms";
-import {FALFormViewModel} from "../../fal-form.model";
-import {FALFormService} from "../../fal-form.service";
-import {UUID} from "angular2-uuid";
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup } from "@angular/forms";
+import { FALFormViewModel } from "../../fal-form.model";
+import { FALFormService } from "../../fal-form.service";
+import { UUID } from "angular2-uuid";
 import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
+import { FALFormErrorService } from '../../fal-form-error.service';
+import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
   templateUrl: 'fal-form-contact.template.html',
   selector: 'fal-form-contact-info'
 })
-export class FALFormContactInfoComponent implements OnInit {
+export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
-  @ViewChild('contactInfoTable') contactInfoTable;
+  @Output() public showErrors = new EventEmitter();
 
   falContactInfoForm: FormGroup;
   progTitle: string;
   hideAddButton: boolean = false;
   hideContactsForm: boolean = true;
+  atLeastOneEntryError: boolean = false;
   contactIndex: number = 0;
   contactsInfo = [];
+  subFormErrorIndex: any = {};
   checkboxConfig: any;
   mode: string;
   contactDrpDwnInfo = [];
+  sectionStatus: string = '';
   contactDrpDwnOptions = [{label: "None Selected", value: 'na'},
     {label: "New Contact", value: 'new'}];
 
   stateDrpDwnOptions = [{label: "None Selected", value: 'na'}];
   countryDrpDwnOptions = [];
-  //errorExists: boolean = false;
-  formErrorArr: any = {};
-  review: boolean = false;
+
   contactadditionalInforamtionHint:string = `<p>Identify Federal regional or local offices that may be contacted about this listing.</p>
                                              <p>Identify the Federal regional or local office(s) that may be contacted for detailed information concerning a program, such as the availability of funds, the likelihood of receiving assistance and State Plan/application deadlines. 
                                              Only the names of program managers and/or contact persons closest to the program should be listed. The commercial, FTS, FAX, and TTY/TTD telephone numbers, and e-mail addresses should also be included for the regional and local contact persons. 
@@ -49,7 +51,8 @@ export class FALFormContactInfoComponent implements OnInit {
   websiteHint:string = `<p>Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.</p>
                         <p>List the Website address of the administering office at the headquarters level.</p>`;
   constructor(private fb: FormBuilder,
-              private service: FALFormService) {
+              private service: FALFormService,
+              private errorService: FALFormErrorService) {
 
 
     this.service.getContactDict().subscribe(data => {
@@ -74,7 +77,6 @@ export class FALFormContactInfoComponent implements OnInit {
       }
 
     });
-
   }
 
   ngOnInit() {
@@ -86,8 +88,13 @@ export class FALFormContactInfoComponent implements OnInit {
 
     if (!this.viewModel.isNew) {
       this.getData();
-      this.collectErrors();
     }
+  }
+
+  ngAfterViewInit() {
+    setTimeout( () => {
+      this.sectionStatus = this.viewModel.getSectionStatus(FALSectionNames.CONTACT_INFORMATION);
+    });
   }
 
   createForm() {
@@ -105,6 +112,19 @@ export class FALFormContactInfoComponent implements OnInit {
       'additionalInfo': '',
       'contacts': this.fb.array([], falCustomValidatorsComponent.atLeastOneEntryCheck)
     });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.CONTACT_INFORMATION) === 'updated') {
+        this.falContactInfoForm.get('website').markAsDirty();
+        this.falContactInfoForm.get('website').updateValueAndValidity();
+        this.falContactInfoForm.get('useRegionalOffice').markAsDirty();
+        this.falContactInfoForm.get('useRegionalOffice').updateValueAndValidity();
+        this.falContactInfoForm.get('additionalInfo').markAsDirty();
+        this.falContactInfoForm.get('additionalInfo').updateValueAndValidity();
+        this.falContactInfoForm.get('contacts').markAsDirty();
+        this.falContactInfoForm.get('contacts').updateValueAndValidity();
+      }
+    });
   }
 
   initContacts() {
@@ -117,7 +137,7 @@ export class FALFormContactInfoComponent implements OnInit {
       fax: [''],
       streetAddress: [''],
       city: [''],
-      state: ['na'],
+      state: ['na', falCustomValidatorsComponent.selectRequired],
       zip: [''],
       country: ['US']
     });
@@ -129,7 +149,10 @@ export class FALFormContactInfoComponent implements OnInit {
     if (event != 'new' && event != 'na') {
       control.at(control.length - 1).patchValue(this.contactDrpDwnInfo[event]);
     }
-
+    else {
+      control.at(control.length - 1).reset();
+      control.at(control.length - 1).patchValue({contactId: event});
+    }
   }
 
   addContact() {
@@ -148,12 +171,16 @@ export class FALFormContactInfoComponent implements OnInit {
     this.contactsInfo = this.falContactInfoForm.value.contacts;
     this.hideAddButton = false;
     this.hideContactsForm = true;
+    this.atLeastOneEntryError = true;
 
-    if(this.contactInfoTable.review)
-      this.markAllSubControls(this.falContactInfoForm.controls['contacts']['controls'][i]);
+    setTimeout(() => {
+      this.updateSubformErrors();
+    });
   }
 
   onSubFormCancelClick(i) {
+    this.atLeastOneEntryError = true;
+
     if(this.hideAddButton === false) {
       return; // clicking cancel has no effect if nothing is being edited or added
     }
@@ -167,7 +194,6 @@ export class FALFormContactInfoComponent implements OnInit {
       //let errorExists = this.contactsInfo[i]['errorExists'];
       delete this.contactsInfo[i]['errorExists'];
       control.at(i).setValue(this.contactsInfo[i]);
-      //this.contactsInfo[i].errorExists = errorExists;
     }
 
     this.hideAddButton = false;
@@ -189,6 +215,11 @@ export class FALFormContactInfoComponent implements OnInit {
     this.contactsInfo = this.falContactInfoForm.value.contacts;
     this.hideContactsForm = true;
     this.hideAddButton = false;
+    this.atLeastOneEntryError = true;
+
+    setTimeout(() => {
+      this.updateSubformErrors();
+    });
   }
 
   editContact(i: number) {
@@ -196,6 +227,7 @@ export class FALFormContactInfoComponent implements OnInit {
     this.contactIndex = i;
     this.hideContactsForm = false;
     this.hideAddButton = true;
+    this.atLeastOneEntryError = true;
   }
 
   getData() {
@@ -220,11 +252,15 @@ export class FALFormContactInfoComponent implements OnInit {
     }
 
     this.contactsInfo = this.falContactInfoForm.value.contacts;
+
+    setTimeout(() => {
+      this.updateErrors();
+      this.updateSubformErrors();
+    });
   }
 
   saveData() {
 
-    this.formErrorArr = {};
     let contacts = [];
     let regLocalOffice = '';
     let counter = 0;
@@ -233,7 +269,6 @@ export class FALFormContactInfoComponent implements OnInit {
       let generateUUID = false;
 
       if (contact.contactId == 'na' || contact.contactId == 'new') {
-        let contactId = contact.contactId;
         generateUUID = true;
       }
 
@@ -256,7 +291,7 @@ export class FALFormContactInfoComponent implements OnInit {
     regLocalOffice = (regLocalOffice ? regLocalOffice : 'none');
 
     let data = {
-      website: this.falContactInfoForm.value.website,
+      website: this.falContactInfoForm.value.website.trim(),
       contacts: {
         local: {
           flag: regLocalOffice,
@@ -270,130 +305,54 @@ export class FALFormContactInfoComponent implements OnInit {
     this.viewModel.contacts = data.contacts;
 
     setTimeout(() => {
-      this.collectErrors();
-    }, 0);
-
-  }
-
-  validateSection(){
-
-    this.contactInfoTable.review = true;
-    this.review = true;
-
-    for (let key of Object.keys(this.falContactInfoForm.controls)) {
-
-      if(this.falContactInfoForm.controls[key] instanceof FormArray){
-        const control = <FormArray> this.falContactInfoForm.controls[key];
-
-        for (let contact of control.controls) {
-            this.markAllSubControls(contact);
-        }//end of contact for
-      }
-      else {
-        this.markAllSubControls(this.falContactInfoForm.controls[key]);
-      }
-    }
-
-    setTimeout(() => {
-      if(Object.keys(this.formErrorArr).length > 0){
-        this.emitEvent();
-      }
-    }, 0);
-  }
-
-  markAllSubControls(control){
-    if(control.controls){
-      for(let key of Object.keys(control['controls'])){
-        control['controls'][key].markAsDirty();
-        control['controls'][key].updateValueAndValidity();
-      }//end of key
-    }
-    else {
-      control.markAsDirty();
-      control.updateValueAndValidity();
-    }
-  }
-
-  collectErrors(){
-    for(let key of Object.keys(this.falContactInfoForm.controls)) {
-      if(this.falContactInfoForm.controls[key] instanceof FormArray) {
-        const control = <FormArray> this.falContactInfoForm.controls[key];
-        this.noContactError(control.controls);
-        for (let row of control.controls) {
-          this.collectErrorsForContact(row);
-        }
-      }
-      else {
-        this.checkControlforErrors(this.falContactInfoForm.controls[key], key, key);
-      }
-    }
-  }
-
-  collectErrorsForContact(contact){
-    for(let key of Object.keys(contact['controls'])){
-        this.checkControlforErrors(contact['controls'][key], key, contact.value.contactId);
-    }
-  }
-
-  checkControlforErrors(control, key, contactId){
-
-    let formErrorLen = Object.keys(this.formErrorArr).length;
-
-    if(control.errors){
-      if(!(contactId in this.formErrorArr)) {
-        this.formErrorArr[contactId] = {  errors: [key] };
-      }
-      else {
-        let index = this.formErrorArr[contactId].errors.indexOf(key);
-        if(index == -1) {
-          this.formErrorArr[contactId].errors.push(key);
-        }
-      }
-    }
-    else {
-
-      if(contactId in this.formErrorArr) {
-
-        let index = this.formErrorArr[contactId].errors.indexOf(key);
-        if(index > -1) {
-          this.formErrorArr[contactId].errors.splice(index, 1);
-        }
-
-        if(this.formErrorArr[contactId].errors.length == 0) {
-          delete this.formErrorArr[contactId];
-        }
-      }
-    }
-
-    if((formErrorLen !== Object.keys(this.formErrorArr).length || Object.keys(this.formErrorArr).length == 0) && this.review) {
-      this.emitEvent();
-    }
-
-  }
-
-  noContactError(contactInfo){
-
-    let formErrorLen = Object.keys(this.formErrorArr).length;
-
-    if(contactInfo.length == 0){
-      this.formErrorArr['contact'] = { errors: ['one contact information required']};
-    }
-    else {
-      delete this.formErrorArr['contact'];
-    }
-
-    if(this.review && formErrorLen !== Object.keys(this.formErrorArr).length)
-      this.emitEvent();
-  }
-
-  emitEvent(){
-    this.onError.emit({
-      formErrorArr: this.formErrorArr,
-      section: 'contact-information'
+      this.updateErrors();
     });
+  }
+
+  private updateSubformErrors(){
+    this.errorService.viewModel = this.viewModel;
+    this.setSubFormErrors(this.errorService.validateContactList());
+    this.showErrors.emit(this.errorService.applicableErrors);
+  }
+
+  private setSubFormErrors(contactsErrorList){
+    this.subFormErrorIndex = {};
+    if(contactsErrorList) {
+      let fieldList = ['fullName', 'email', 'phone', 'fax', 'streetAddress', 'city', 'state', 'zip'];
+
+      for(let errObj of contactsErrorList.errorList){
+        if(errObj.id !== FALFieldNames.NO_CONTACT) {
+          let id = errObj.id;
+          id = id.substr(id.length - 1);
+
+          for(let fieldName of fieldList) {
+            let fcontrol = this.falContactInfoForm.controls['contacts']['controls'][id].get(fieldName);
+            fcontrol.markAsDirty();
+            fcontrol.updateValueAndValidity({onlySelf: true, emitEvent: true});
+          }
+
+          this.subFormErrorIndex[id] = true;
+        }//end of if
+      }//end of for
+    }//end of if
+  }
+
+  private updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+
+    this.falContactInfoForm.get('website').clearValidators();
+    this.falContactInfoForm.get('website').setValidators((control) => { return control.errors });
+    this.falContactInfoForm.get('website').setErrors(this.errorService.validateContactWebsite().errors);
+    this.falContactInfoForm.get('website').updateValueAndValidity({onlySelf: true, emitEvent: true});
+
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 
   public beforeSaveAction() {
     this.onSubFormCancelClick(this.contactIndex);
+    if(this.sectionStatus === 'updated')
+      this.atLeastOneEntryError = true;
+    else
+      this.atLeastOneEntryError = false;
   }
 }

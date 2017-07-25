@@ -12,7 +12,6 @@ import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
 import { AppComponentsModule } from '../app-components/app-components.module';
-import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
 import { AlertsModule } from '../alerts/alerts.module';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
@@ -44,8 +43,7 @@ import { ReportService } from './report.service';
     FavoritesComponent,
     StaticComponent,
     ReportsPipe,
-    ReportProtoComponent,
-    MstrProtoComponent
+    ReportProtoComponent
   ],
   providers: [IAMService, ReportsService, ReportService],
 })

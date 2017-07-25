@@ -38,19 +38,19 @@
     </div>
   </div>
 </div>
-<div>  
+<div>
   <div *ngFor = "let role of roles">
     <div class = "usa-grid-full m-l-1em pd-tb-0d5em" [ngClass] = "role.testFlag ? 'role-border' : ''" >
-      <div class = "usa-width-one-half pd-l-0d5em">      
+      <div class = "usa-width-one-half pd-l-0d5em">
         <div *ngIf = "role.organization">
           <span (click) = "clickfuncPerm(role)"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i></span>
           &nbsp;&nbsp;{{role.organization}}
         </div>
         <div *ngIf = "!role.organization">
           <span (click) = "clickfuncPerm(role)"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i></span>
-        <i>&nbsp;&nbsp;Organization name unavailable</i>
+          <i>&nbsp;&nbsp;{{role.organizationId || 'Organization ID Unknown'}}</i>
         </div>
-      </div>      
+      </div>
       <div class = "usa-width-one-half">
         <div class = "usa-width-one-half">
           {{role.domain}}
@@ -59,8 +59,8 @@
           <span class = "pull-left">{{role.role}}</span><div *ngIf = "isAdmin"><span class = "pull-right pd-r-1em"><i class="fa fa-pencil" aria-hidden="true" [routerLink]="role.path" [queryParams]="role.queryParams"></i></span></div>
         </div>
       </div>
-    </div>    
-  
+    </div>
+
   <div class = "usa-grid-full perm-border" *ngIf = "role.testFlag">
     <h4 class="pd-l-1d1em text-lighter">OBJECTS AND PERMISSIONS</h4>
       <div class = "pd-l-1d3em">
@@ -69,10 +69,10 @@
           <div class = "usa-width-two-thirds">
             <span *ngFor = "let perm of func.permission; let isLast = last">
                 {{perm.val}} {{isLast ? '' : ', '}}
-            </span>              
+            </span>
           </div>
         </div>
       </div>
-    </div>  
+    </div>
   </div>
 </div>

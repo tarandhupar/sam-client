@@ -59,30 +59,34 @@ export class AlertHeaderComponent {
 
   fetchAlerts() {
     const MAX_ALERTS: number = 2;
-    this.systemAlerts.getActive(MAX_ALERTS)
-      .map(alerts => alerts.map(alert => {
-        return Alert.FromResponse(alert);
-      }))
-      .subscribe(alerts => {
-
-      if (!alerts.length) {
+    this.systemAlerts.getActive(MAX_ALERTS)      
+      .subscribe(alerts => {        
+      if (!alerts._embedded.alertList.length) {
         this.alerts = [];
         return;
       }
+      let alert = [];
 
-      let firstSeverity = alerts[0].severity().toLowerCase();
+      alert = alerts._embedded.alertList;
+      alert = alert.map(res => {        
+        return Alert.FromResponse(res);
+      });
 
-      // Only display two errors if there is more than one error and they are both critical
-      // (We didn't want two different colors of messages)
-      this.alerts = alerts.slice(0, 1);
-      if (alerts.length > 1) {
-        let secondSeverity = alerts[1].severity().toLowerCase();
+      let firstSeverity = alert[0].severity().toLowerCase();
+
+      //Only display two errors if there is more than one error and they are both critical
+      //(We didn't want two different colors of messages)
+      this.alerts = alert.slice(0, 1);
+
+      if (alerts._embedded.alertList.length > 1) {
+        let secondSeverity = alert[1].severity().toLowerCase();
         if (secondSeverity === 'error' && firstSeverity === 'error') {
-          this.alerts = alerts.slice(0, 2);
+          this.alerts = alert.slice(0, 2);
         }
       }
     }, error => {
       console.error('Encountered an error fetching alerts: ', error);
     });
-  }
+  } 
+
 }

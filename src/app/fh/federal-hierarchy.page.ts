@@ -31,7 +31,7 @@ export class FederalHierarchyPage {
   ];
 
   accessOrgID = "";
-  userRole = "superAdmin";
+  userRole = "";
   adminOrgKey:any;
   deptOrgKey:string;
   deptOrg:any;
@@ -49,8 +49,8 @@ export class FederalHierarchyPage {
 
   typeMap = {'DEPARTMENT':'Dept/Ind Agency (L1)','AGENCY':'Sub-Tier (L2)'};
 
-  dodTypeLevelMap = {'Dep/Ind Agency':1, 'Sub-Tier':2, 'Maj Command':3, 'Sub-Command 1':4, 'Sub-Command 2':5, 'Sub-Command 3':6, 'Office':7};
-  nondodTypeLevelMap = {'Dep/Ind Agency':1, 'Sub-Tier':2, 'Office':3};
+  dodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Maj Command':3, 'Sub-Command 1':4, 'Sub-Command 2':5, 'Sub-Command 3':6, 'Office':7};
+  nondodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Office':3};
 
   filterTypes: any = []
   searchText:string = "";
@@ -67,11 +67,20 @@ export class FederalHierarchyPage {
       (user)=>{
         this.user = user;
         this.deptOrgKey = user.departmentID && user.departmentID !== ""? user.departmentID: "";
-        this.fhService.getAccess(this.deptOrgKey,false).subscribe(
-          (data)=>{this.loadDefaultData('active')},
-          (error)=>{if(error.status === 403)this.redirectToForbidden()}
+        this.fhService.getAccess("", false).subscribe(
+          (data)=>{
+            this.userRole = "superAdmin";
+            this.loadDefaultData('active');
+          },
+          (error) => {
+            if(error.status === 403){
+              this.fhService.getAccess(this.deptOrgKey,false).subscribe(
+                (data)=>{this.loadDefaultData('active')},
+                (error)=>{if(error.status === 403)this.redirectToForbidden()}
+              );
+            }
+          }
         );
-
       }, this.redirectToSignin);
 
   }
@@ -80,8 +89,7 @@ export class FederalHierarchyPage {
   redirectToForbidden = () => {this._router.navigateByUrl('/403')};
 
   loadDefaultData(status){
-    if(this.deptOrgKey === ""){
-      this.userRole = "superAdmin";
+    if(this.userRole === "superAdmin"){
       this.fhService.getDepartmentsByStatus(status).subscribe( data => {
         this.initiatePage(data._embedded,data._embedded.length);
         this.setCreateOrgTypes();
@@ -95,7 +103,6 @@ export class FederalHierarchyPage {
         this.initiatePage(this.deptOrg.hierarchy,this.deptOrg.hierarchy.length);
         this.setUserRole(data);
         this.setCreateOrgTypes();
-        // this.setAdminOrg();
         this.dataLoaded = true;
       });
     }
@@ -134,7 +141,7 @@ export class FederalHierarchyPage {
 
   setDeptLogo(data){
     this.deptLogo = "";
-    data._embedded[1]._links.forEach(e => {if(e.link.rel === "logo") this.deptLogo = e.link.href;});
+    if(data._embedded[1].links) data._embedded[1]._links.forEach(e => {if(e.link.rel === "logo") this.deptLogo = e.link.href;});
     if(this.deptLogo === "") this.updateNoLogoUrl();
   }
 
@@ -226,7 +233,7 @@ export class FederalHierarchyPage {
 
   getStartDate(org):String{
     if(org.startDate) {
-      return moment(org.startDate).format('MM/DD/YYYY');
+      return moment(org.startDate).utc().format('MM/DD/YYYY');
     }
     return "";
   }
@@ -264,11 +271,11 @@ export class FederalHierarchyPage {
       this.resultType = "search";
       let searchTypes = [];
       let searchLevels = [];
-      this.searchOrgType.forEach(e => {searchTypes.push(e.split('-')[1]);});
-      this.searchOrgType.forEach(e => {searchLevels.push(e.split('-')[0]);});
+      this.searchOrgType.forEach(e => {searchTypes.push(e.split('_')[1]);});
+      this.searchOrgType.forEach(e => {searchLevels.push(e.split('_')[0]);});
       Observable.forkJoin(
-        this.fhService.fhSearchCount(this.searchText, this.searchType, this.orgSearchStatusModel, searchLevels, searchTypes),
-        this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage, this.orgSearchStatusModel, searchLevels, searchTypes)
+        this.fhService.fhSearchCount(this.searchText, this.searchType, this.orgSearchStatusModel, searchLevels, searchTypes, false, null, this.userRole !== 'superAdmin'),
+        this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage, this.orgSearchStatusModel, searchLevels, searchTypes, false, null, this.userRole !== 'superAdmin')
       ).subscribe( data => {
         this.curPageOrgs = data[1]._embedded;
         this.totalRecords = data[0];
@@ -310,17 +317,18 @@ export class FederalHierarchyPage {
   }
 
   getFilterTypes(){
-    this.fhService.getSearchFilterTypes().subscribe(data => {
-      let typeOptions = [];
-      let typeValueMap = this.isDOD()? this.dodTypeLevelMap: this.nondodTypeLevelMap;
-      data.forEach(e => {
-        if(this.userRole === "superAdmin" && e === "Office"){
-          typeOptions.push({value: '3,7-'+e, label: e, name: e});
-        }else {
-          typeOptions.push({value: typeValueMap[e]+'-'+e, label: e, name: e});
-        }
+    this.fhService.getSearchFilterTypes().subscribe(
+      data => {
+        let typeOptions = [];
+        let typeValueMap = this.isDOD()? this.dodTypeLevelMap: this.nondodTypeLevelMap;
+        data.forEach(e => {
+          if(this.userRole === "superAdmin" && e === "Office"){
+            typeOptions.push({value: '3,7_'+e, label: e, name: e});
+          }else {
+            typeOptions.push({value: typeValueMap[e]+'_'+e, label: e, name: e});
+          }
+        });
+        this.filterTypes = typeOptions;
       });
-      this.filterTypes = typeOptions;
-    })
   }
 }

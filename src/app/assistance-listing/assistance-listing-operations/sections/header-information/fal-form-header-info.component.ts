@@ -3,7 +3,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
-import { FALFormErrorService } from '../../fal-form-error.service';
+import {FALFormErrorService} from '../../fal-form-error.service';
+import { FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -18,32 +19,36 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   falHeaderInfoForm: FormGroup;
 
-  titleHint:string =`<p>Spell out any acronyms and limit to 144 characters.</p>
+  titleHint: string = `<p>Spell out any acronyms and limit to 144 characters.</p>
            <p><br>The number for a particular program remains constant from one Catalog submission to another.
            The program-title should be a concise description of the program. The use of the principal subject area followed by a dash and the particular application is encouraged.
            For example, use “Adult Education Teacher Training” as opposed to simply “Teacher Training.”
            Generally, the words “Program” and “Project” are superfluous and should not be used.
            The length of program titles should be kept reasonably short (two 72 character lines).</p>`;
 
-  popularNameHint:string=`Many programs do not have a popular name, but if one exists,
+  popularNameHint: string = `Many programs do not have a popular name, but if one exists,
                     it may be a name less descriptive than the program title, an acronym,
                      or a reference to legislation by name or number.
                      The program title should not be repeated as the popular name.`;
-  agencyPickerHint: string =`List the administering department or independent agency.
+  agencyPickerHint: string = `List the administering department or independent agency.
                               For Cabinet-level departments, the National Foundation on the Arts and the Humanities,
                                Environmental Protection Agency, and the Federal Emergency Management Agency,
                                the primary organizational subunit name should precede the departmental name.`;
-  relatedFalHint: string= `In this section of the program description, agencies should determine whether the programs listed are closely related based first on program objectives,
+  relatedFalHint: string = `In this section of the program description, agencies should determine whether the programs listed are closely related based first on program objectives,
                           and second on program uses. Programs listed in the Catalog that are administered by other agencies should also be considered for inclusion in this section.
                           Programs being deleted from the Catalog should be taken out of this section.
                           Programs being placed in this section should first be checked against the latest Agency Program Index,
-                          or more recent internal information. Programs should be listed in consecutive program number sequence.`;
+                          or more recent internal information. Programs should be listed in consecutive CFDA number sequence.`;
 
   //  TODO Remove and replace with call to FH to get cfdaCode using organization id
   falNoPrefix: string = '';
   public falNo = '';
   public organizationId: string;
   public organizationData: any;
+  public orgLevels: any;
+  public orgRoot: string;
+  toggleAgencyPicker: boolean = true;
+  OrganizationDataOnRole: any;
 
   // Related Program multi-select
   rpNGModel: any;
@@ -58,9 +63,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.createForm();
     this.populateMultiList();
+    this.getOrganizationLevels();
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
@@ -75,6 +80,26 @@ export class FALFormHeaderInfoComponent implements OnInit {
       'federalAgency': ''
     });
 
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.HEADER) === 'updated') {
+        this.falHeaderInfoForm.get('title').markAsDirty();
+        this.falHeaderInfoForm.get('title').updateValueAndValidity();
+        this.falHeaderInfoForm.get('alternativeNames').markAsDirty();
+        this.falHeaderInfoForm.get('alternativeNames').updateValueAndValidity();
+        this.falHeaderInfoForm.get('programNumber').markAsDirty();
+        this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
+        this.falHeaderInfoForm.get('relatedPrograms').markAsDirty();
+        this.falHeaderInfoForm.get('relatedPrograms').updateValueAndValidity();
+        this.falHeaderInfoForm.get('federalAgency').markAsDirty();
+        this.falHeaderInfoForm.get('federalAgency').updateValueAndValidity();
+
+        // hack to mark agency picker as dirty since it does not support formControl
+        if ((this.agencyPicker) && this.falHeaderInfoForm.get('federalAgency').value == '') {
+          this.agencyPicker.touched = true;
+          this.agencyPicker.checkForFocus(null);
+        }
+      }
+    });
   }
 
   populateMultiList() {
@@ -156,14 +181,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     }
     //set organization
     this.organizationId = this.viewModel.organizationId;
-
-    //set organization name
-    this.service.getOrganization(this.organizationId)
-      .subscribe(data => {
-        this.organizationData = data['_embedded'][0]['org'];
-      }, error => {
-        console.error('error retrieving organization', error);
-      });
+    this.getOrganizationName(this.organizationId);
 
     this.falHeaderInfoForm.patchValue({
       title: title,
@@ -178,7 +196,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   public onOrganizationChange(org: any) {
-
     let orgVal;
     if (org) {
       orgVal = org.value;
@@ -215,36 +232,61 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.errorService.viewModel = this.viewModel;
 
     this.falHeaderInfoForm.get('title').clearValidators();
-    this.falHeaderInfoForm.get('title').setValidators((control) => { return control.errors });
+    this.falHeaderInfoForm.get('title').setValidators((control) => {
+      return control.errors
+    });
     this.falHeaderInfoForm.get('title').setErrors(this.errorService.validateHeaderTitle().errors);
     this.markAndUpdateFieldStat('title');
 
     this.falHeaderInfoForm.get('programNumber').clearValidators();
-    this.falHeaderInfoForm.get('programNumber').setValidators((control) => { return control.errors });
+    this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
+      return control.errors
+    });
     this.falHeaderInfoForm.get('programNumber').setErrors(this.errorService.validateHeaderProgNo().errors);
     this.markAndUpdateFieldStat('programNumber');
 
     this.falHeaderInfoForm.get('federalAgency').clearValidators();
-    this.falHeaderInfoForm.get('federalAgency').setValidators((control) => { return control.errors });
+    this.falHeaderInfoForm.get('federalAgency').setValidators((control) => {
+      return control.errors
+    });
     this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
     this.markAndUpdateFieldStat('federalAgency');
 
     this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  private markAndUpdateFieldStat(fieldName){
+  private markAndUpdateFieldStat(fieldName) {
     setTimeout(() => {
-
-      if(this.agencyPicker && fieldName == 'federalAgency' && this.falHeaderInfoForm.get(fieldName).value == ''){
-        this.agencyPicker.touched = true;
-        this.agencyPicker.checkForFocus(null);
-      }
-
-      this.falHeaderInfoForm.get(fieldName).markAsDirty();
       this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
-
     });
 
   }
 
+  getOrganizationLevels() {
+    this.service.getFALPermission('ORG_LEVELS').subscribe(res => {
+      this.orgLevels = res.ORG_LEVELS;
+      if (res && res.ORG_LEVELS) {
+        if (res.ORG_LEVELS.level === 'none') {
+          this.toggleAgencyPicker = false;
+          this.orgRoot = res.ORG_LEVELS.org;
+        } else if (res.ORG_LEVELS.org === 'all') {
+          this.orgRoot = '';
+        } else {
+          this.orgRoot = res.ORG_LEVELS.org;
+        }
+        this.getOrganizationName(this.orgRoot);
+      }
+    });
+  }
+
+  getOrganizationName(orgId: any) {
+    //set organization name
+    this.service.getOrganization(orgId)
+      .subscribe(data => {
+        this.organizationData = data['_embedded'][0]['org'];
+      }, error => {
+        console.error('error retrieving organization', error);
+      });
+
+  }
 }

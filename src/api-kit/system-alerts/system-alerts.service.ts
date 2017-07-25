@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
+import { Observable } from "rxjs";
+import { Cookie } from "ng2-cookies";
 
 export type AlertType = {
   content: {
@@ -13,7 +15,7 @@ export type AlertType = {
     isExpiresIndefinite?: string,
   },
   status?: string,
-  id?: number,
+  alertId?: number,
   rank?: any,
   createdDate?: string,
   createdBy?: any,
@@ -37,10 +39,12 @@ export class SystemAlertsService {
     // specify defaults
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
-
+    
+    this.addAuthHeader(apiOptions);
     return this.apiService.call(apiOptions);
+     
   }
-
+  
   /**
    *
    * @param limit: the number of alerts to fetch
@@ -85,17 +89,20 @@ export class SystemAlertsService {
       apiOptions.oParam.order = order;
     }
 
+    this.addAuthHeader(apiOptions);    
+
     return this.apiService.call(apiOptions);
   }
 
   updateAlert(alert: AlertType) {
     const apiOptions: any = {
       name: 'alerts',
-      suffix: '/' + alert.id,
+      suffix: '/' + alert.alertId,
       method: 'PUT',
       body: alert
     };
 
+    this.addAuthHeader(apiOptions);
     return this.apiService.call(apiOptions);
   }
 
@@ -107,6 +114,7 @@ export class SystemAlertsService {
       body: alert
     };
 
+    this.addAuthHeader(apiOptions);
     return this.apiService.call(apiOptions);
   }
 
@@ -116,10 +124,22 @@ export class SystemAlertsService {
       suffix: '',
       method: 'DELETE',
       body: {
-        id: id
+        alertId: id
       }
     };
 
     return this.apiService.call(apiOptions);
   }
+
+  addAuthHeader(options) {
+    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
+
+    if (!iPlanetCookie) {
+      return;
+    }
+
+    options.headers = options.headers || {};
+    options.headers['X-Auth-Token'] = iPlanetCookie;
+  }
+
 }

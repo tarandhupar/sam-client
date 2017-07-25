@@ -210,11 +210,12 @@ export class FHService {
         'fullparentpathname': fullParentPathName
       }
     }
-    return this.callApi(apiOptions, false);
+    return this.callApi(apiOptions, true);
 
   }
 
-  fhSearch(q:string, pageNum, pageSize, status, levels, orgType){
+
+  fhSearch(q:string, pageNum, pageSize, status, levels, orgType, isCode = false, parent = null, isDefaultDept = false){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search',
@@ -225,16 +226,23 @@ export class FHService {
         'pageSize':pageSize,
         'orderBy': 'level',
         'ascending': 'asc',
+        'defaultDept': isDefaultDept,
       }
     };
     if(status.length === 1) apiOptions.oParam['status']= status[0];
-    if(levels.length > 0) {
-      apiOptions.oParam['levels']= levels.join(',');
+    if(orgType && orgType.length > 0) {
+      apiOptions.oParam['orgType']= orgType.join(',');
     }
-    return this.oAPIService.call(apiOptions);
+    if(isCode){
+      apiOptions.oParam['searchType'] = "code";
+    }
+    if(parent){
+      apiOptions.oParam['parent'] = parent;
+    }
+    return this.callApi(apiOptions, true);
   }
 
-  fhSearchCount(q:string, searchType, status, levels, orgType){
+  fhSearchCount(q:string, searchType, status, levels, orgType, isCode = false, parent = null, isDefaultDept = false){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search/count',
@@ -242,13 +250,22 @@ export class FHService {
       oParam: {
         'q':q,
         'searchType':searchType,
+        'defaultDept': isDefaultDept,
       }
     };
     if(status.length === 1) apiOptions.oParam['status']= status[0];
-    if(levels.length > 0) {
-      apiOptions.oParam['levels']= levels.join('.');
+    if(orgType.length > 0) {
+      apiOptions.oParam['orgType']= orgType.join(',');
     }
-    return this.oAPIService.call(apiOptions);
+    if(isCode){
+      apiOptions.oParam['searchType'] = "code";
+    }
+    if(parent){
+      apiOptions.oParam['parent'] = parent;
+    }
+
+    return this.callApi(apiOptions, true);
+
   }
 
   getMyOrganization(orgKey, orgType){

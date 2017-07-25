@@ -145,6 +145,7 @@
 			
 			<div class="sam-ui medium header">
 				Business Types
+				<ng-container *ngIf!="isFederal">
 				<div class="sub header">
 					<p>
 						<i>
@@ -156,6 +157,7 @@
 						</i>
 					</p>
 				</div>
+				</ng-container>
 			</div>
 			
 			<div class="sam-ui two column grid">
@@ -437,6 +439,12 @@
 				</table>
 			</ng-container>			
 		</ng-container>
+		
+		<ng-container *ngIf="coreData && coreData.purposeOfRegistration == 'Federal Assistance Awards'">
+			<div class="sub header">
+				This entity did not choose to pursue Federal contracts. They stated their reason for registering in SAM was to pursue Federal Assistance opportunities like grants and loans. This means they are not required to complete the Assertions section of this SAM registration.
+			</div>
+		</ng-container>
 				
 		<div class="sam-ui hidden section divider"></div>
 		
@@ -471,6 +479,12 @@
 					Download FAR &amp; DFARS Report
 				</a>
 			</ng-container>			
+		</ng-container>
+		<div class="sam-ui hidden divider"></div>
+		<ng-container *ngIf="coreData && (coreData.purposeOfRegistration == 'Federal Assistance Awards' || coreData.purposeOfRegistration == 'IGT-Only' || coreData.purposeOfRegistration == 'Federal Assistance Awards & IGT')">
+			<div class="sub header">
+				This entity did not choose to pursue Federal contracts. They stated their reason for registering in SAM was to pursue Federal Assistance opportunities like grants and loans. This means they are not required to complete the Representations and Certifications section of this SAM registration.
+			</div>
 		</ng-container>
 		
 		<div class="sam-ui hidden section divider"></div>

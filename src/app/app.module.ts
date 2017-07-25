@@ -42,7 +42,7 @@ import { ForbiddenModule } from "./application-content/403/403.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
 import { DataServiceModule } from "./data-service/data-service.module";
 import { FederalHierarchyModule } from "./fh/federal-hierarchy.module";
-import {AuthGuard} from "./assistance-listing/authguard/authguard.component";
+import {AuthGuard} from "../api-kit/authguard/authguard.service";
 
 // Application wide providers
 const APP_PROVIDERS = [

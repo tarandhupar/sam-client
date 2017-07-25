@@ -2,19 +2,24 @@
 
 <form [formGroup]="falAuthForm">
 
-  <sam-fieldset-wrapper  [hint]="description">
+  <sam-fieldset-wrapper [attr.id]="'authorization-info'" [hint]="description">
   <authInfoTable
     [hideAddButton]="hideAddButton"
     [displayAuthInfo]="displayAuthInfo"
     [subFormErrorIndex]="subFormErrorIndex"
     (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
 
-  <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
+  <authSubform [hideAddButton]="hideAddButton"
+               [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
+               (authActionHandler)="authActionHandler($event)"
+               #authSubForm></authSubform>
+
   </sam-fieldset-wrapper>
   <sam-text-area
     [control]="falAuthForm.controls['description']"
     [name]="'description-input'"
     [label]="'Description'"
+    [attr.id]="'auth-description'"
     formControlName="description"></sam-text-area>
 
 </form>

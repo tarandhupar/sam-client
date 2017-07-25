@@ -1,8 +1,22 @@
 <workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
                   [totalElements]="totalCount" [loadFlag]="data.length >= 0"
-                  titleText="Sam.gov Assistance Listings Workspace">
+                  titleText="Assistance Listings">
   <br>
-  <div workspace-sidebar></div>
+  <!--filter sidebar-->
+  <div workspace-sidebar>
+    <sam-collapsible class="noPadding-falWorkspace" [label]="'Status'" [startOpened]="true">
+      <sam-checkbox
+          [(model)]="statusCheckboxModel"
+          (modelChange)="statusModelChanged()"
+          [name]="statusCheckboxConfig.name"
+          [options]="statusCheckboxConfig.options"
+          [label]="statusCheckboxConfig.label"
+          [hint]="statusCheckboxConfig.hint"
+          [errorMessage]="statusCheckboxConfig.errorMessage"
+          [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
+        </sam-checkbox>
+      </sam-collapsible>
+  </div>
   <div workspace-content class="workspace-content">
     <a href="/fal/workspace/requests?domain=al&event=request">
       <button class="fa fa-chevron-circle-right pending-button" *ngIf="pendingRequestCount == 1"> 1 Pending Request</button>

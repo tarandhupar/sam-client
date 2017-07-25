@@ -12,12 +12,14 @@
     <falObligationFYTable
       [fyYearOptions] = "fyYearOptions"
       [hideAddButton]="hideAddButton"
+      [attr.id]="'financial-obligation-fy-table'"
       [obligationsInfo]="obligationsInfo"
       [total] = "totalvalue"
       (obligationTableActionHandler)="obligationActionHandler($event)" #obligationTable></falObligationFYTable>
 
-    <obligation-subform  [fyYearOptions] = "fyYearOptions" [hideAddButton]="hideAddButton" (subFormObligActionHandler)="obligationActionHandler($event)"
+    <obligation-subform  [fyYearOptions] = "fyYearOptions" [hideAddButton]="hideAddButton" [attr.id]="'financial-obligation-subform'" (subFormObligActionHandler)="obligationActionHandler($event)"
                          [options] = "options"
+                         [toggleAttleatOneEntryError]="toggleAttleatOneEntryError"
                         #obligationSubForm></obligation-subform>
 
   </div>

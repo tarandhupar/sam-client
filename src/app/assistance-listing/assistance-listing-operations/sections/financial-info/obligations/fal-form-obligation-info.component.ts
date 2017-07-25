@@ -1,10 +1,13 @@
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import {Component, Input, ViewChild, Output, EventEmitter, AfterViewInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from "@angular/forms";
 import {FALFormViewModel} from "../../../fal-form.model";
 import moment = require("moment");
 import * as _ from 'lodash';
 import {FALObligationSubFormComponent} from "../../../../components/obligation-subform/obligation-subform.component";
 import {FALFormService} from "../../../fal-form.service";
+import {FALFormErrorService} from "../../../fal-form-error.service";
+import {FALSectionNames} from "../../../fal-form.constants";
+
 
 
 @Component({
@@ -14,10 +17,10 @@ import {FALFormService} from "../../../fal-form.service";
 })
 
 
-export class FALFormObligationsInfoComponent {
+export class FALFormObligationsInfoComponent implements  AfterViewInit {
   finObligationsForm: FormGroup;
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
+  @Output() public showErrors = new EventEmitter();
 
   private formErrors = new Set();
   @ViewChild('obligationSubForm') obligationSubForm: FALObligationSubFormComponent;
@@ -31,6 +34,8 @@ export class FALFormObligationsInfoComponent {
   assistanceTypeArray = [];
   options = [];
   @ViewChild('obligationTable') obligationTable;
+  toggleAttleatOneEntryError: boolean = false;
+
 
   // Current Fiscal year Checkbox config
   currentFiscalYearCheckboxModel: any = [''];
@@ -46,7 +51,7 @@ export class FALFormObligationsInfoComponent {
   };
 
 
-  constructor(private fb: FormBuilder, private service: FALFormService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
 
   }
   parseDictionariesList(data) {
@@ -102,34 +107,35 @@ export class FALFormObligationsInfoComponent {
       this.updateForm();
     }
   }
+
   createForm() {
     this.finObligationsForm = this.fb.group({
       isFundedCurrentFY: ['']
     });
     this.finObligationsForm.valueChanges.subscribe(data => {
       this.updateViewModel(data);
-      this.collectErrors();
     });
     this.obligationSubForm.falObligationSubForm.valueChanges.subscribe(data => {
       this.updateObligationsViewModel(data);
-      this.collectErrors();
     });
     this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
     this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
   }
+
+  ngAfterViewInit() {
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      if (this.viewModel.getSectionStatus(FALSectionNames.OBLIGATIONS) === 'updated') {
+        this.toggleAttleatOneEntryError = true;
+      }
+    });
+  }
+
   updateViewModel(data) {
     this.viewModel.isFundedCurrentFY = this.saveIsFunded(data['isFundedCurrentFY']);
   }
 
   updateObligationsViewModel(data) {
     this.viewModel.obligations = this.saveObligations(data);
-    const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
-    if(control.errors){
-      this.obligationSubForm.errorExists = true;
-    }
-    else {
-      this.obligationSubForm.errorExists = false;
-    }
   }
 
   updateForm() {
@@ -139,8 +145,12 @@ export class FALFormObligationsInfoComponent {
     }, {
       emitEvent: false
     });
-    this.errorLookup(this.obligationsInfo);
+
+    setTimeout(() => {
+      this.updateErrors();
+    }, 60);
   }
+
   private loadIsFunded(flag: boolean) {
     let isFunded = [];
     if (flag) {
@@ -181,24 +191,29 @@ export class FALFormObligationsInfoComponent {
   obligationActionHandler(event) {
     if(event.type == 'add'){
       this.hideAddButton = event.hideAddButton;
-      if(this.obligationSubForm.review)
-      this.validateSection();
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
       this.obligationsInfo = event.obligationsInfo;
       this.caluclateTotal(this.obligationsInfo);
-      this.errorLookup(this.obligationsInfo);
+      setTimeout(() => {
+          this.updateErrors();
+
+      });
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
+      this.toggleAttleatOneEntryError = true;
     }
     if(event.type == 'edit'){
       this.editObligation(event.index);
     }
     if(event.type == 'remove'){
       this.removeObligaiton(event.index);
-      this.errorLookup(this.obligationsInfo);
+      setTimeout(() => {
+          this.updateErrors();
+      });
+      this.toggleAttleatOneEntryError = true;
     }
   }
   editObligation(i: number){
@@ -335,69 +350,25 @@ export class FALFormObligationsInfoComponent {
     }
     return budgetObj;
   }
-  validateSection() {
-    this.obligationTable.review = true;
-    this.obligationSubForm.review = true;
-    this.errorLookup(this.obligationsInfo);
-    const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
-    if(control.errors){
-      this.obligationSubForm.errorExists = true;
-    }
-    else {
-      this.obligationSubForm.errorExists = false;
-    }
-    for(let obligation of control.controls){
-      for(let key of Object.keys(obligation['controls'])){
-        obligation['controls'][key].markAsDirty();
-        obligation['controls'][key].updateValueAndValidity();
-      }
-    }
 
-    this.collectErrors();
+  private updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateObligationsErrors(this.errorService.validateObligationList());
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
-  errorLookup(obligationInfo: any) {
-      let counter = 0;
-      const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
-      for (let obligation of obligationInfo) {
-        let errorExists = false;
-        if (control.controls[counter]['controls'].assistanceType.errors !== null) {
-          errorExists = true;
+
+  updateObligationsErrors(obligListErrors){
+    if(obligListErrors) {
+      for(let errObj of obligListErrors.errorList){
+        if(errObj.id !== 'fal-obligation-obligationList-no-oblig') {
+          let id = errObj.id;
+          id = id.substr(id.length - 1);
+          let fcontrol = this.obligationSubForm.falObligationSubForm.controls['obligations']['controls'][id].get('assistanceType');
+          fcontrol.markAsDirty();
+          fcontrol.updateValueAndValidity({onlySelf: true, emitEvent: true});
         }
-        obligation['errorExists'] = errorExists;
-        counter = counter + 1;
-      }
-  }
-
-  private collectErrors() {
-    this.formErrors.clear();
-
-    for(let key in this.finObligationsForm.controls) {
-      if(this.finObligationsForm.controls[key].errors && this.finObligationsForm.controls[key].dirty) {
-        this.formErrors.add(key);
-      }
-    }
-
-    let obligations: FormArray = this.obligationSubForm.falObligationSubForm.get('obligations') as FormArray;
-
-    if (obligations.errors && obligations.dirty) {
-      this.formErrors.add('obligations');
-    }
-
-    for (let obligation of obligations.controls) {
-      let assistanceType = obligation.get('assistanceType');
-      if (assistanceType && assistanceType.errors && assistanceType.dirty) {
-        this.formErrors.add('assistanceType');
-      }
-    }
-
-    this.emitEvent();
-  }
-
-  private emitEvent() {
-    this.onError.emit({
-      formErrorArr: Array.from(this.formErrors.values()),
-      section: 'financial-information-obligations'
-    });
+      }//end of for
+    }//end of if
   }
 
   public beforeSaveAction() {

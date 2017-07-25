@@ -11,22 +11,12 @@ import { OrgDetailPage } from "./organization-detail.page";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../api-kit/fh/fh.service";
+import { FHServiceMock } from "../../api-kit/fh/fh.service.mock";
 
 
 class RouterStub {
   navigate(url: string) { return url; }
 }
-
-class FHServiceStub {
-
-  getOrganizationById(orgId:string, childHierarchy:boolean, parentHierarchy:boolean):any{
-    return  Observable.of(
-      {_embedded:
-        [{org: {name: "RMAC",}}]
-      }
-    );
-  }
-};
 
 let activatedRouteStub = {
   snapshot: {
@@ -40,7 +30,7 @@ let activatedRouteStub = {
 
 describe('Organization Detail Page', () => {
   // provide our implementations or mocks to the dependency injector
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations:[OrgDetailPage],
@@ -53,7 +43,7 @@ describe('Organization Detail Page', () => {
         OrgDetailPage,
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
-        { provide: FHService ,useClass:FHServiceStub}
+        { provide: FHService ,useClass:FHServiceMock}
       ]
     });
 
