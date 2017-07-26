@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
 import { FHService } from "api-kit/fh/fh.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, NavigationCancel } from "@angular/router";
 import { IAMService } from "api-kit";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
+import { Location } from '@angular/common';
 
 @Component ({
   templateUrl: 'organization-detail.template.html'
@@ -30,7 +31,16 @@ export class OrgDetailPage {
     label: '',
   };
 
-  constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router, private iamService: IAMService, public flashMsgService: FlashMsgService){}
+  currentUrl: string = "";
+  baseUrl: string = "/organization-detail/";
+  orgKeyLength = 9;
+
+  constructor(private fhService: FHService,
+              private route: ActivatedRoute,
+              private _router: Router,
+              private iamService: IAMService,
+              public flashMsgService: FlashMsgService,
+              private location:Location){}
 
   ngOnInit(){
 
@@ -41,6 +51,21 @@ export class OrgDetailPage {
 
 
         this.setupOrgName(this.orgId);
+      });
+
+    this._router.events.subscribe(
+      val => {
+        if(!(val instanceof  NavigationCancel)){
+          this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
+          this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
+
+          let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
+          section = section.length === 0? 'profile':section;
+          this.currentSection = section;
+        }else{
+          this.currentSection = this.location.path(false).substr(this.baseUrl.length);
+        }
+
       });
   }
 
