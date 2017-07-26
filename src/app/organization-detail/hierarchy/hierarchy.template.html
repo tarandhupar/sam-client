@@ -1,3 +1,34 @@
 <section class="org-hierarchy-page usa-grid relative">
-  Org Hierarchy page
+  <div class="usa-width-one-whole m_T-4x">
+    <div class="pull-left p_T-3x">
+      Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
+    </div>
+
+    <div class="pull-right">
+      <sam-select class="pull-right" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="''"></sam-select>
+      <span class="pull-right m_T-3x">Sort by: &nbsp;</span>
+    </div>
+  </div>
+
+  <div class="usa-width-one-whole split-line m_T-2x"></div>
+  <div class="usa-width-one-whole org-item" *ngFor="let orgItem of curPageOrgList">
+    <div class="usa-width-one-whole">
+      <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a>
+    </div>
+    <div class="usa-width-three-fourths">
+      <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem.org)}}</span>
+    </div>
+    <div class="usa-width-one-fourth">
+          <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
+            <span *ngIf="isOrgActive(orgItem.org)">Active</span>
+            <span *ngIf="!isOrgActive(orgItem.org)">Inactive</span>
+          </span>
+      <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
+    </div>
+  </div>
+
+  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgList.length > 0">
+    <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+  </div>
 </section>

@@ -52,7 +52,7 @@ export class FederalHierarchyPage {
   dodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Maj Command':3, 'Sub-Command 1':4, 'Sub-Command 2':5, 'Sub-Command 3':6, 'Office':7};
   nondodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Office':3};
 
-  filterTypes: any = []
+  filterTypes: any = [];
   searchText:string = "";
   searchType:string = "general";
   searchOrgType:any = [];

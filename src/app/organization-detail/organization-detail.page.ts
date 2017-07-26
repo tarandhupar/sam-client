@@ -29,7 +29,7 @@ export class OrgDetailPage {
     name: 'organization status',
     label: '',
   };
-  
+
   constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router, private iamService: IAMService, public flashMsgService: FlashMsgService){}
 
   ngOnInit(){

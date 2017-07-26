@@ -6,6 +6,7 @@ export class FlashMsgService{
   _isCreateOrgSuccess: boolean = false;
   _isMoveOrgSuccess: boolean = false;
 
+  hierarchyStatusFilter:any = ['allactive'];
   hierarchyStatusUpdate:EventEmitter<any> = new EventEmitter<any>();
   
   resetFlags(){
@@ -21,6 +22,7 @@ export class FlashMsgService{
   showFlashMsg(){this.isFlashMsgShow = true;}
   
   setHierarchyStatus(val){
-    this.hierarchyStatusUpdate.emit(val);
+    this.hierarchyStatusFilter = val;
+    this.hierarchyStatusUpdate.emit(this.hierarchyStatusFilter)
   }
 }
