@@ -34,7 +34,9 @@
 
   <!-- *ngIf="isDetailExpanded(1)" -->
   <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.fh">
-    <workspace-widget [isExpand]="states.expanded.fh" title="Federal Hierarchy" (onToggleChange)="toggleHelpDetail('fh')"></workspace-widget>
+    <workspace-widget [isExpand]="states.expanded.fh" title="Federal Hierarchy" (onToggleChange)="toggleHelpDetail('fh')">
+      <fh-widget></fh-widget>
+    </workspace-widget>
     <div class="workspace-help-detail" *ngIf="states.expanded.fh">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
     </div>

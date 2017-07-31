@@ -27,7 +27,7 @@ import {
   SystemMigrationsComponent
 } from './system';
 
-import { FSDWidgetComponent, RMWidgetComponent, SystemWidgetComponent } from "./administration";
+import { FSDWidgetComponent, RMWidgetComponent, SystemWidgetComponent, FHWidgetComponent } from "./administration";
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 
 @NgModule({
@@ -56,6 +56,7 @@ import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listin
      * Widgets
      */
     FSDWidgetComponent,
+    FHWidgetComponent,
     RMWidgetComponent,
     SystemWidgetComponent,
     AssistanceListingWidgetComponent,

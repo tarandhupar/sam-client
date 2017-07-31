@@ -1,0 +1,29 @@
+<div class="fh-widget relative">
+  <input class="pull-right fh-widget-search-bar" placeholder="Find an Organization" (keyup.enter)="searchFH()" [(ngModel)]="searchText">
+  <span><i class="fa fa-search" (click)="searchFH()"></i></span>
+  <h4 class="usa-width-one-whole m_L-1x m_T-0">Organization Detail</h4>
+  <div class="usa-width-one-whole p_T-2x p_L-4x">
+    <div class="usa-width-one-third p_L-5x">
+      <div class="usa-width-one-whole text-center"><span class="fh-widget-num">2</span></div>
+      <div class="usa-width-one-whole text-center p_T-2x"><span class="fh-widget-tag">Created</span></div>
+    </div>
+    <div class="usa-width-one-third p_R-5x">
+      <div class="usa-width-one-whole text-center"><span class="fh-widget-num">2</span></div>
+      <div class="usa-width-one-whole text-center p_T-2x"><span class="fh-widget-tag">Expired</span></div>
+    </div>
+    <div class="usa-width-one-third">
+      <sam-radio-button
+        [(model)]="fhRadioModel"
+        [options]="fhRadioConfig.options"
+        [label]="fhRadioConfig.label"
+        [hint]="fhRadioConfig.hint"
+        [name]="fhRadioConfig.name"
+        [errorMessage]="fhRadioConfig.errorMessage">
+      </sam-radio-button>
+    </div>
+  </div>
+
+  <div class="usa-width-one-whole m_T-2x"><a class="pull-right" [routerLink]="['/federal-hierarchy']">Go to Federal Hierarchy<i class="fa fa-chevron-circle-right m_L-1x m_R-2x"></i></a></div>
+</div>
+
+
