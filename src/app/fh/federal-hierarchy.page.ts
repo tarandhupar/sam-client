@@ -52,7 +52,7 @@ export class FederalHierarchyPage {
   dodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Maj Command':3, 'Sub-Command 1':4, 'Sub-Command 2':5, 'Sub-Command 3':6, 'Office':7};
   nondodTypeLevelMap = {'Dept/Ind Agency':1, 'Sub-Tier':2, 'Office':3};
 
-  filterTypes: any = []
+  filterTypes: any = [];
   searchText:string = "";
   searchType:string = "general";
   searchOrgType:any = [];
@@ -63,6 +63,17 @@ export class FederalHierarchyPage {
               private iamService: IAMService){}
 
   ngOnInit(){
+
+    this.route.queryParams.subscribe( queryParams => {
+      this.searchText = queryParams['keyword'];
+      this.orgSearchStatusModel = queryParams['status'];
+      console.log(queryParams);
+      this.checkAccess(this.searchFH());
+    });
+    this.checkAccess(this.loadDefaultData('active'));
+  }
+
+  checkAccess(loadResult:()=>any){
     this.iamService.iam.checkSession(
       (user)=>{
         this.user = user;
@@ -70,25 +81,24 @@ export class FederalHierarchyPage {
         this.fhService.getAccess("", false).subscribe(
           (data)=>{
             this.userRole = "superAdmin";
-            this.loadDefaultData('active');
+            loadResult();
           },
           (error) => {
             if(error.status === 403){
               this.fhService.getAccess(this.deptOrgKey,false).subscribe(
-                (data)=>{this.loadDefaultData('active')},
+                (data)=>{loadResult();},
                 (error)=>{if(error.status === 403)this.redirectToForbidden()}
               );
             }
           }
         );
       }, this.redirectToSignin);
-
   }
 
   redirectToSignin = () => { this._router.navigateByUrl('/signin')};
   redirectToForbidden = () => {this._router.navigateByUrl('/403')};
 
-  loadDefaultData(status){
+  loadDefaultData: any = (status) => {
     if(this.userRole === "superAdmin"){
       this.fhService.getDepartmentsByStatus(status).subscribe( data => {
         this.initiatePage(data._embedded,data._embedded.length);
@@ -107,7 +117,7 @@ export class FederalHierarchyPage {
       });
     }
     this.getFilterTypes();
-  }
+  };
 
   initiatePage(orgList,totalCount){
     this.orgList = orgList;
@@ -264,7 +274,7 @@ export class FederalHierarchyPage {
     this.showAdminOrg? this.searchFHAdmin(this.orgSearchStatusModel):this.searchFH();
   }
 
-  searchFH(){
+  searchFH:any = () => {
     this.getFilterTypes();
     // Search field is required for searching in fh landing page
     if(this.searchText.length > 0){

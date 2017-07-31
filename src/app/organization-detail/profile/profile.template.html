@@ -16,19 +16,11 @@
         Create {{selectConfig.options[0].label}}</button>
     </div>
 
-    <!--<sam-alert class="org-detail-info-alert m_B-6x" (dismiss)="dismissCreateOrgInfoAlert()" [showClose]="true" [type]="'info'" [title]="'Information'" [description]="''" *ngIf="flashMsgService.isMoveOrgSuccess">-->
-
-      <!--<p>-->
-        <!--{{orgObj.name}} has been moved under {{hierarchyPath[hierarchyPath.length - 2]}}-->
-        <!--<a>Click here</a> to view previous hierarchy for {{orgObj.name}}-->
-      <!--</p>-->
-    <!--</sam-alert>-->
-
-    <div class="usa-width-one-whole">
-      <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
-        <a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>
-      </span>
-    </div>
+    <!--<div class="usa-width-one-whole">-->
+      <!--<span *ngFor="let hierarchyName of hierarchyPath; let i = index">-->
+        <!--<a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>-->
+      <!--</span>-->
+    <!--</div>-->
 
     <!-- Detail Section-->
     <div class="usa-width-one-whole m_T-4x">

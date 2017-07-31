@@ -63,8 +63,9 @@ export class OrgDetailProfilePage {
       params => {
         this.orgId = params['orgId'];
 
-        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
+        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
 
+        this.getOrgDetail(this.orgId);
       });
   }
 
