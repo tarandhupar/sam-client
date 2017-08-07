@@ -169,7 +169,7 @@ $pressedItemTextColor: $hoverItemTextColor;
 /* Active Item */
 $activeItemBackground: $transparentBlack;
 $activeItemTextColor: $selectedTextColor;
-$activeItemFontWeight: normal;
+$activeItemFontWeight: 600;
 $activeIconOpacity: 1;
 $activeItemBoxShadow: none;
 
@@ -439,13 +439,13 @@ $attachedBottomBoxShadow:
 ;
 
 /* Resize large sizes */
-$mini: 11px;
-$tiny: 12px;
-$small: 13px;
-$large: 15px;
-$huge: 16px;
-$big: 17px;
-$massive: 18px;
+$mini: 12px;
+$tiny: 13px;
+$small: 15px;
+$large: 18px;
+$huge: 19px;
+$big: 20px;
+$massive: 21px;
 
 /* Sizes */
 $miniWidth: 9rem;
@@ -1728,6 +1728,20 @@ Floated Menu / Item
 
 
 /*--------------
+    Subtle
+---------------*/
+
+/* Border */
+.#{$prefix}.subtle.menu{
+  border: none;
+}
+
+/* Menu Item */
+.#{$prefix}.subtle.menu .item:before {
+  background: $white;
+}
+
+/*--------------
     Inverted
 ---------------*/
 
@@ -1880,6 +1894,10 @@ Floated Menu / Item
 .#{$prefix}.inverted.blue.menu .active.item {
   background-color: $invertedColoredActiveBackground !important;
 }
+.#{$prefix} .inverted.blue.active.item {
+  color: #fff !important;
+  background-color: $blue;
+}
 
 
 /* Grey */
@@ -1892,6 +1910,12 @@ Floated Menu / Item
 }
 .#{$prefix}.inverted.grey.menu .active.item {
   background-color: $invertedColoredActiveBackground !important;
+}
+
+/* Bluish Grey */
+.#{$prefix}.inverted.menu .bluish.grey.active.item,
+.#{$prefix}.inverted.bluish.grey.menu {
+  background-color: #838b96;
 }
 
 

@@ -1,23 +1,30 @@
 import { Component, Input } from '@angular/core';
-import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
-import { IAMService } from "api-kit";
-import { UserAccessService } from "api-kit/access/access.service";
-import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
-import { AdminService } from "../../application-content/403/admin.service";
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { IAMService } from 'api-kit';
+
+import { UserAccessService } from 'api-kit/access/access.service';
+import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service';
+import { AdminService } from 'application-content/403/admin.service';
 
 @Component({
   selector: 'workspace-administration',
   templateUrl: 'administration.template.html'
 })
 export class AdministrationComponent {
-  public activeAlerts:number = 0;
-  public draftAlerts:number = 0;
+  private shortcuts = {
+    profile: {
+      text: 'Reset Your Password',
+      routerLink: ['/profile/password']
+    }
+  };
 
+  public activeAlerts: number = 0;
+  public draftAlerts: number = 0;
   public user = null;
-
   public states = {
     isSignedIn: false,
     menu: false,
+    public: false,
     isCreate: false,
     isEdit: false,
     expanded: {
@@ -46,7 +53,7 @@ export class AdministrationComponent {
   ) {}
 
   ngOnInit() {
-    this.checkSession();
+    this.initSession();
     this.getAlertStatistic('Active', this.setActiveAlertsNum);
     this.getAlertStatistic('Draft', this.setDraftAlertsNum);
 
@@ -82,15 +89,25 @@ export class AdministrationComponent {
     this._router.navigate(["/alerts"], navigationExtras);
   }
 
-  checkSession() {
+  initSession() {
     //Get the sign in info
     this.api.iam.checkSession((user) => {
       this.states.isSignedIn = true;
       this.user = user;
+      this.initRoles();
     });
 
     this.toggleControl.system = this.api.iam.user.isSystemAccount();
     this.toggleControl.fsd = this.api.iam.user.isFSD();
+  }
+
+  initRoles() {
+    this.states.public = !(this.user.gov || this.user.entity);
+
+    // Remove After Demo
+    if(this.user.email.match(/@(bah|governmentcio).com/g)) {
+      this.states.public = false;
+    }
   }
 
   getAlertStatistic(type, cb:(num)=>any){

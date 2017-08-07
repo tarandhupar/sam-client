@@ -16,17 +16,31 @@
     ></sam-radio-button>
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
-
-      <assistInfoTable
-        [hideAddButton]="hideAddButton"
-        [assistInfo]="assistInfoDisp"
-        (assistTableActionHandler)="assistActionHandler($event)"></assistInfoTable>
-
-      <assistSubform #assistSubForm
-                     [hideAddButton]="hideAddButton"
-                     (assistActionHandler)="assistActionHandler($event)"
-      ></assistSubform>
-
+      <sam-listbuilder
+        [formArrayInput]="deadlinesList.controls"
+        [formGroupTemplate]="deadlineSubform"  
+        (formArrayChange)="fmArrayChange($event)">
+        <template #display let-item>{{formatAssistInfo(item.value)}}</template>
+        <template #edit let-item>
+          <form [formGroup]="item">
+            <sam-date [name]="'start-date'"
+                [label]="'Start Date'"
+                formControlName="start"
+              ></sam-date>
+              <sam-date [name]="'end-date'"
+                [label]="'End Date'"
+                formControlName="end"
+              ></sam-date>
+              <sam-text-area [attr.id]="'optional-desc-deadline'"
+                [name]="'list-desc'"
+                [label]="'Describe this Deadline'"
+                formControlName="description"
+                [hint]= "'Optionally provide a description for this deadline'"
+            ></sam-text-area>
+          </form>
+        </template>
+      </sam-listbuilder>
+      
       <sam-text-area [label]="'Other Deadline Information'"
                    [name]="'deadlines-description'"
                    formControlName="description"
@@ -45,6 +59,7 @@
 
     <sam-text-area [label]="'Additional Information'"
                  [name]="'preAppCord-description'"
+                 [attr.id]="'fal-appForAssist-pac-addInfo'"
                  [control]="falAssistanceForm.get('preApplicationCoordination').get('description')"
                  formControlName="description"
                  [required]="falAssistanceForm.get('preApplicationCoordination').get('reports').value.indexOf('otherRequired') !== -1"
@@ -84,6 +99,7 @@
     <sam-text-area *ngIf="falAssistanceForm.get('selectionCriteria').get('description')"
                    [label]="'Please describe.'"
                    [name]="'selectionCriteria-description'"
+                   [attr.id]="'fal-appForAssist-sc-description'"
                    [required]="falAssistanceForm.value.selectionCriteria.isApplicable[0] == true"
                    formControlName="description"
                    [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
@@ -95,7 +111,7 @@
     <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
                    [label]="'Award Procedure'"
                    [hint]="awardProcedureHint"
-                   [attr.id]="'award-procedure'"
+                   [attr.id]="'fal-appForAssist-ap-description'"
                    [name]="'awardProcedure-description'"
                    [required]="true"
                    formControlName="description"
@@ -108,7 +124,7 @@
                 [label]="'Date Range for Approval/Disapproval'"
                 [hint]="approvalHint"
                 [name]="'approval-input'"
-                [attr.id]="'date-approval'"
+                [attr.id]="'fal-appForAssist-approval-interval'"
                 [options]="dateRangeOptions"
                 [required]="true"
                 formControlName="interval"
@@ -127,7 +143,7 @@
     <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
                 [label]="'Renewals'"
                 [hint]="renewalHint"
-                [attr.id]="'renewal-range'"
+                [attr.id]="'fal-appForAssist-renewal-interval'"
                 [name]="'renewal-input'"
                 [options]="dateRangeOptions"
                 [required]="true"
@@ -148,7 +164,7 @@
                 [label]="'Appeals'"
                 [hint]="appealsHint"
                 [name]="'appeals-input'"
-                [attr.id]="'appeal-range'"
+                [attr.id]="'fal-appForAssist-appeal-interval'"
                 [options]="dateRangeOptions"
                 [required]="true"
                 formControlName="interval"

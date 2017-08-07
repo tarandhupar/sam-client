@@ -30,7 +30,10 @@ import { RequestAccessPage } from "./request-access/request-access.page";
 import { RoleCategoriesResolve } from "./roles-categories.resolve";
 import { ViewRequestPage } from "./view-request/view-request.page";
 import { RequestResponsePage } from "./request-response/request-response.page";
-import {RMSUserServiceImpl, SamRMSUsersServiceAutoDirective} from "./request-access/username-autocomplete.component";
+import { UserService } from "./user.service";
+import { UserServiceMock } from "./user.service.mock";
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { UserSearchModule } from "./user-search.module";
 
 @NgModule({
   imports: [
@@ -46,7 +49,8 @@ import {RMSUserServiceImpl, SamRMSUsersServiceAutoDirective} from "./request-acc
     AppComponentsModule,
     RoleManagementModule,
     AppTemplatesModule,
-    Ng2PageScrollModule.forRoot()
+    Ng2PageScrollModule.forRoot(),
+    UserSearchModule,
   ],
   exports: [
     UserPic
@@ -65,14 +69,15 @@ import {RMSUserServiceImpl, SamRMSUsersServiceAutoDirective} from "./request-acc
     RequestAccessPage,
     ViewRequestPage,
     RequestResponsePage,
-    SamRMSUsersServiceAutoDirective,
   ],
   providers: [
     AlertFooterService,
     RequestAccessResolve,
     UserRoleDetailsResolve,
     RoleCategoriesResolve,
-    RMSUserServiceImpl,
+    CapitalizePipe,
+    UserService,
+    //{ provide: UserService, useClass: UserServiceMock }
   ],
 })
 export class UserDirectoryModule { }

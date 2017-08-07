@@ -25,6 +25,13 @@ import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-direct
 import { DomainDefinitionResolve } from "./domaindefinition.resolve";
 import { AppTemplatesModule } from "../app-templates/index";
 import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { PipesModule } from "../app-pipes/app-pipes.module";
+import {
+  RMSUserServiceImpl,
+  SamRMSUsersServiceAutoDirective
+} from "../users/request-access/username-autocomplete.component";
+import { UserSearchModule } from "../users/user-search.module";
 
 @NgModule({
   imports: [
@@ -37,6 +44,8 @@ import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
     SamAPIKitModule,
     AppComponentsModule,
     AppTemplatesModule,
+    PipesModule,
+    UserSearchModule,
   ],
   exports: [
     RequestDetailsComponent
@@ -60,7 +69,7 @@ import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
     DomainDefinitionResolve,
     RequestAccessResolve,
     RequestStatusNamesResolve,
-    AlertFooterService
+    AlertFooterService,
   ],
 })
 export class RoleManagementModule { }

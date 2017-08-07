@@ -38,24 +38,23 @@
         <!-- Role -->
         <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
 
-
         <!-- Objects and Permissions -->
-        <h2 class="p_All-2x usa-bgcolor-gray-lighter">Objects and Permissions</h2>
+        <h2 class="p_All-2x usa-bgcolor-gray-lighter">Permissions</h2>
         <div class="text-center" *ngIf="!(objects && objects.length)">Select a role</div>
         <div class="background-light p_All-3x" *ngIf="objects && objects.length">
           <div  *ngFor="let object of objects" class="object-item">
-            <h3>{{object.function.val}}</h3>
+            <h3>{{object.function.val | capitalize}}</h3>
             <div class="usa-grid-full" *ngFor="let p of object.permission; let e = even; let i = index">
               <ng-container *ngIf="e">
                 <!-- ngFor hack to declare a local variable -->
                 <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
                   <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-                  <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
+                  <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val | capitalize}}</label>
                 </div>
                 <ng-container *ngIf="object.permission[i+1]">
                   <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
                     <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-                    <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
+                    <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val | capitalize}}</label>
                   </div>
                 </ng-container>
               </ng-container>
@@ -102,9 +101,9 @@
         <div class="m_T-4x m_B-4x">
           <div class="pull-right clearfix">
             <button class="pull-left usa-button usa-button-outline" (click) = "location.back()" type="button">Cancel</button>
-            <button class="request-action reject" (click)="onRejectClick()">Reject</button>
+            <button *ngIf="request?._links?.reject_request" class="request-action reject" (click)="onRejectClick()">Reject</button>
             <!--<button class="request-action escalate" (click)="onEscalateClick()">Escalate</button>-->
-            <button class="request-action approve m_R-0" (click)="onApproveClick()">Done</button>
+            <button *ngIf="request?._links?.approve_request" class="request-action approve m_R-0" (click)="onApproveClick()">Done</button>
           </div>
         </div>
       </div>

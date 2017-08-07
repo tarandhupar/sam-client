@@ -169,7 +169,7 @@ export class SamUserDirectoryComponent {
 
     cb = cb || ((data) => {});
     fnSubscription = (data => {
-      let users = data._embedded.userResources,
+      let users = data._embedded.ldapUserResources,
           page = data.page;
 
       this.store.cache = users.map(item => new User(item.user));

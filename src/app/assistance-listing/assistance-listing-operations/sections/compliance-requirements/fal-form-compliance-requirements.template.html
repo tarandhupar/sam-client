@@ -24,7 +24,7 @@
   <div class="fal-label-margin fal-label">Audits</div>
   <samCheckboxToggledTextarea #auditsComp
                               [options]="auditsConfig"
-                              [attr.id]="'audit-info'"
+                              [attr.id]="'fal-cr-audits'"
                               [formControlName]="'audits'"
                               [control]="complianceRequirementsGroup.get('audits')"
   ></samCheckboxToggledTextarea>
@@ -39,7 +39,7 @@
 
   <samCheckboxToggledTextarea #additionalDocumentationComp
                               [options]="additionalDocumentationConfig"
-                              [attr.id]="'regulation-guideline-literature'"
+                              [attr.id]="'fal-cr-additional-documentation'"
                               [formControlName]="'additionalDocumentation'"
                               [control]="complianceRequirementsGroup.get('additionalDocumentation')"
   ></samCheckboxToggledTextarea>

@@ -5,6 +5,11 @@ import * as moment from 'moment';
 
 const LDAP_MAPPINGS = {
   // Reverse Mappings
+  'uid':             '_id',
+  'mail':            'email',
+  'givenName':       'firstName',
+  'surName':         'lastName',
+  'telephoneNumber': 'workPhone',
 };
 
 const ROLE_MAPPINGS = {
@@ -58,6 +63,11 @@ export class User {
 
     user = this.reverseMappings(user || {});
 
+    // Legacy Department fallback
+    if(user.department || user.departmentID) {
+      user.departmentID = user.departmentID || user.departmentID;
+    }
+
     merge(this, user, {
       emailNotification: this.toBoolean(user.emailNotification || 'no')
     });
@@ -65,6 +75,8 @@ export class User {
     if(!this._id && this.email) {
       this._id = this.email;
     }
+
+    this.suffix = (this.suffix || '').trim();
 
     setRoles();
   }
@@ -149,5 +161,14 @@ export class User {
     phone = phone.replace(/([0-9])([0-9]{3})([0-9]{3})([0-9]{4})/, '$1+($2)$3-$4');
 
     return phone;
+  }
+
+  get gov(): boolean {
+    return (this['officeID'] || this['agencyID'] || this['departmentID'] || '').toString().length ? true : false;
+  }
+
+  get entity(): boolean {
+    //TODO
+    return false;
   }
 }

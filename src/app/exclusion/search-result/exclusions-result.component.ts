@@ -1,4 +1,4 @@
-import { Component,Input,OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment/moment';
 
@@ -20,7 +20,7 @@ import * as moment from 'moment/moment';
               <strong>Unique Entity Identifier (UEI)</strong><br>
               {{ data.dunsNumber }}
             </li>
-            <li *ngIf="data.cageCode!==null && data.cageCode!==''">
+            <li *ngIf="isFirm">
               <strong>CAGE Code</strong><br>
               {{ data.cageCode }}
             </li>
@@ -61,57 +61,54 @@ import * as moment from 'moment/moment';
   `
 })
 export class ExclusionsResult implements OnInit {
-  @Input() data: any={};
-  @Input() qParams:any = {};
+  @Input() data: any = {};
+  @Input() qParams: any = {};
   uniqueIdentifier: string;
-  samNumberConcat:string;
-  orgIdConcat:string;
-  typeConcat:string;
-  cageCodeConcat:string;
-  constructor() { }
+  samNumberConcat: string;
+  orgIdConcat: string;
+  typeConcat: string;
+  cageCodeConcat: string;
+  isFirm: boolean = false;
 
-  ngOnInit(){
+  constructor() {
+  }
 
-    if(this.data.organizationHierarchy!=null && this.data.organizationHierarchy.organizationId!=null && this.data.organizationHierarchy.organizationId.length > 0){
-      this.orgIdConcat=this.data.organizationHierarchy.organizationId;
-    }
-    else {
-      this.orgIdConcat='NA';
-    }
-
-    if(this.data.samNumber!=null && this.data.samNumber.length > 0){
-      this.samNumberConcat=this.data.samNumber;
-    }
-    else {
-      this.samNumberConcat='NA';
+  ngOnInit() {
+    if (this.data.organizationHierarchy != null && this.data.organizationHierarchy.organizationId != null && this.data.organizationHierarchy.organizationId.length > 0) {
+      this.orgIdConcat = this.data.organizationHierarchy.organizationId;
+    } else {
+      this.orgIdConcat = 'NA';
     }
 
-    //Refactor this later with appropriate solution
-    if(this.data.type!=null && this.data.type.length > 0){
-      if(this.data.type.indexOf("/")>-1) {
-        this.typeConcat = this.data.type.replace(/[/]/g, "SLASH");
-      } else {
-        this.typeConcat = this.data.type;
-      }
-    }
-    else {
-      this.typeConcat='NA';
+    if (this.data.samNumber != null && this.data.samNumber.length > 0) {
+      this.samNumberConcat = this.data.samNumber;
+    } else {
+      this.samNumberConcat = 'NA';
     }
 
-    if(this.data.cageCode!=null && this.data.cageCode.length > 0){
-      this.cageCodeConcat=this.data.cageCode;
+    if (this.data.type != null) {
+      this.typeConcat = this.data.type.code;
+    } else {
+      this.typeConcat = 'NA';
     }
-    else {
-      this.cageCodeConcat='NA';
+
+    if (this.data.cageCode != null && this.data.cageCode.length > 0) {
+      this.cageCodeConcat = this.data.cageCode;
+    } else {
+      this.cageCodeConcat = 'NA';
     }
 
-    this.uniqueIdentifier=this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
+    if (this.data.classification != null && this.data.classification.code === 'Firm') {
+      this.isFirm = true;
+    }
 
+    this.uniqueIdentifier = this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
 
-    if(this.data.activationDate!==null) {
+    if (this.data.activationDate !== null) {
       this.data.activationDate = moment(this.data.activationDate).format("MMM D, Y");
     }
-    if(this.data.terminationDate!==null) {
+
+    if (this.data.terminationDate !== null) {
       this.data.terminationDate = moment(this.data.terminationDate).format("MMM D, Y");
     }
   }

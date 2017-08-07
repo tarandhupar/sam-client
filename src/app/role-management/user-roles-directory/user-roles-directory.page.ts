@@ -4,9 +4,12 @@ import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import * as _ from "lodash";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 
 @Component({
-  templateUrl: './user-roles-directory.template.html'
+  templateUrl: './user-roles-directory.template.html',
+  providers: [CapitalizePipe]
 })
 export class UserRolesDirectoryPage {
   crumbs: Array<IBreadcrumb> = [
@@ -40,13 +43,28 @@ export class UserRolesDirectoryPage {
   totalResults: number;
   totalPages: number;
 
+  userConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    }
+  };
+
+  dummySearchValue; //autocomplete makes me do this
+
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
-  constructor(private route: ActivatedRoute, private userAccessService: UserAccessService) {
+  @ViewChild('userPicker') userAutoComplete: SamAutocompleteComponent;
+
+  constructor(
+    private route: ActivatedRoute,
+    private userAccessService: UserAccessService,
+    private capitalize: CapitalizePipe
+  ) {
     this.allDomains = this.route.parent.snapshot.data['domains']._embedded.domainList;
     this.domainOptions = this.allDomains.map(dom => {
       return {
-        label: dom.domainName,
+        label: this.capitalize.transform(dom.domainName),
         value: dom.id,
         name: dom.domainName
       };
@@ -66,6 +84,8 @@ export class UserRolesDirectoryPage {
   onClearAllClick() {
     this.selectedOrganization = null;
     this.agencyPicker.onResetClick();
+    this.userAutoComplete.clearInput();
+    this.userSearchValue = null;
     this.selectedDomainId = null;
     this.selectedRoleId = null;
     this.doSearch();
@@ -78,7 +98,7 @@ export class UserRolesDirectoryPage {
     return this.rolesForDomainId[domainId].map(role => {
       return {
         value: role.role.id,
-        label: role.role.val,
+        label: this.capitalize.transform(role.role.val),
         name: role.role.val
       };
     });
@@ -119,26 +139,51 @@ export class UserRolesDirectoryPage {
 
         // group user organizations by tier
         this.users.forEach(u => {
+          // group by tier type
           let orgsByTier = _.groupBy(u.access, acc => {
             return acc.organization.type || 'Uncategorized';
           });
 
+          orgsByTier = _.mapKeys(orgsByTier, (value, key) => {
+            switch(key.toLowerCase()) {
+              case 'department': return 'Department/Independent Agency';
+              case 'agency': return 'Sub-Tier';
+              case 'office': return 'Office';
+              default: return key;
+            }
+          });
+
           let tiers = [];
-          _.forOwn(orgsByTier, (value, key) => {
-            let orgs = value.map(o => {
+
+          // convert { [tierName]: [orgs] } to [ {[tierName]: [orgs] ] so that we can iterate in the html
+          _.forOwn(orgsByTier, (org, tierName) => {
+            let orgs = org.map(o => {
               let v = {
                 name: o.organization.val || o.organization.id,
                 isSelected: o.organization.isSelected
               };
               return v;
             });
-            tiers.push({ name: key, organizations: orgs});
+            tiers.push({ name: tierName, organizations: orgs});
+          });
+
+          let sorted = [undefined, undefined, undefined];
+
+          // sort
+          tiers.forEach(tier => {
+            switch (tier.name) {
+              case 'Department/Independent Agency': sorted[0] = tier; break;
+              case 'Sub-Tier': sorted[1] = tier; break;
+              case 'Office': sorted[2] = tier; break;
+              default: sorted.push(tier);
+            }
           });
 
           // do not display tier if there no organizations with a name for this tier
-          tiers = tiers.filter(t => {
-            return t.organizations.length;
+          tiers = sorted.filter(t => {
+            return t && t.organizations && t.organizations.length;
           });
+
           u.tiers = tiers;
         });
       }
@@ -166,6 +211,11 @@ export class UserRolesDirectoryPage {
 
   onPageChange($event) {
     this.page = $event;
+    this.doSearch();
+  }
+
+  onUserChange(user) {
+    this.userSearchValue = user.key;
     this.doSearch();
   }
 

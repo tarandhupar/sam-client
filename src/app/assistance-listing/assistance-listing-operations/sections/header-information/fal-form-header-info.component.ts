@@ -1,13 +1,15 @@
 import {Component, Input, Output, OnInit, EventEmitter, ViewChild} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {FALFormService} from "../../fal-form.service";
-import {FALFormViewModel} from "../../fal-form.model";
-import {AutocompleteConfig} from "sam-ui-kit/types";
-import {FALFormErrorService} from '../../fal-form-error.service';
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { FALFormService } from "../../fal-form.service";
+import { FALFormViewModel } from "../../fal-form.model";
+import { AutocompleteConfig } from "sam-ui-kit/types";
+import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames } from '../../fal-form.constants';
+import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
+import { ProgramService } from "../../../../../api-kit/program/program.service";
 
 @Component({
-  providers: [FALFormService],
+  providers: [FALFormService, ProgramService],
   selector: 'fal-form-header-information',
   templateUrl: 'fal-form-header-info.template.html'
 })
@@ -49,6 +51,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
   public orgRoot: string;
   toggleAgencyPicker: boolean = true;
   OrganizationDataOnRole: any;
+  autoProgNoGeneration: boolean = true;
+  programNumberLow: number;
+  programNumberHigh: number;
 
   // Related Program multi-select
   rpNGModel: any;
@@ -59,7 +64,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     clearOnSelection: true, showOnEmptyInput: false
   };
 
-  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private programService: ProgramService) {
   }
 
   ngOnInit() {
@@ -75,7 +80,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm = this.fb.group({
       'title': '',
       'alternativeNames': [''],
-      'programNumber': null,
+      'programNumber':  null,
       'relatedPrograms': '',
       'federalAgency': ''
     });
@@ -86,8 +91,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
         this.falHeaderInfoForm.get('title').updateValueAndValidity();
         this.falHeaderInfoForm.get('alternativeNames').markAsDirty();
         this.falHeaderInfoForm.get('alternativeNames').updateValueAndValidity();
-        this.falHeaderInfoForm.get('programNumber').markAsDirty();
-        this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
         this.falHeaderInfoForm.get('relatedPrograms').markAsDirty();
         this.falHeaderInfoForm.get('relatedPrograms').updateValueAndValidity();
         this.falHeaderInfoForm.get('federalAgency').markAsDirty();
@@ -98,8 +101,24 @@ export class FALFormHeaderInfoComponent implements OnInit {
           this.agencyPicker.touched = true;
           this.agencyPicker.checkForFocus(null);
         }
+        this.falHeaderInfoForm.markAsPristine({onlySelf: true});
+        this.falHeaderInfoForm.get('programNumber').markAsDirty({onlySelf: true});
+        this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
       }
     });
+  }
+
+  setCustomValidatorsForFALNo(programNumber, code, orgId){
+    if(programNumber !== null && programNumber !== '') {
+
+      this.falHeaderInfoForm.get('programNumber').setValidators(falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh));
+
+      if((this.falHeaderInfoForm.get('programNumber').errors && this.falHeaderInfoForm.get('programNumber').errors == null) || !this.falHeaderInfoForm.get('programNumber').errors) {
+
+          this.falHeaderInfoForm.get('programNumber')
+            .setAsyncValidators(falCustomValidatorsComponent.isProgramNumberUnique(this.programService, code.content.cfdaCode, this.viewModel.programId, FALFormService.getAuthenticationCookie(), orgId));
+      }
+    }
   }
 
   populateMultiList() {
@@ -134,19 +153,35 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   updateViewModel(data) {
-
     let alternativeNames = [];
     let relatedPrograms = [];
+    let orgId = '';
+
+    if(data.federalAgency) {
+      if(data.federalAgency.value)
+        orgId = data.federalAgency.value;
+      else
+        orgId = data.federalAgency;
+
+      this.getFHConfig(orgId);
+    }
+    else {
+      this.autoProgNoGeneration = true;
+    }
+
+    if(!this.autoProgNoGeneration) {
+      this.service.getCfdaCode(orgId).subscribe( (code) => {
+        this.falNoPrefix = code.content.cfdaCode;
+        this.setCustomValidatorsForFALNo(data['programNumber'], code, orgId);
+      });
+    }
 
     relatedPrograms = this.updateViewModelRelatedPrograms(data['relatedPrograms']);
     alternativeNames.push(data.alternativeNames);
 
-    if (data['programNumber'] === 'undefined')
-      data['programNumber'] = null;
-
     this.viewModel.title = data['title'] || null;
     this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
-    this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + data['programNumber']) : null;
+    this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + '.' + data['programNumber'].replace(/\./g, '')) : null;
     this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
 
     setTimeout(() => {
@@ -171,10 +206,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
     this.falNo = (this.viewModel.programNumber ? this.viewModel.programNumber : '');
 
-    if (this.falNo.trim().length == 6) {
+    let falNoDotIndex = this.falNo.indexOf('.');
+    if (falNoDotIndex !== -1) {
       //  Need to preserve prefix, TODO: Remove once FH API lookup is established
-      this.falNoPrefix = this.falNo.slice(0, 3);
-      this.falNo = this.falNo.slice(3, 6);
+      this.falNoPrefix = this.falNo.slice(0, falNoDotIndex);
+      this.falNo = this.falNo.slice(falNoDotIndex+1);
     }
     else {
       this.falNoPrefix = '';
@@ -192,7 +228,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
       emitEvent: false
     });
 
-    this.updateErrors();
+    this.getFHConfig(this.organizationId);
+
+    setTimeout( ()=> {
+      this.updateErrors();
+    });
   }
 
   public onOrganizationChange(org: any) {
@@ -200,11 +240,21 @@ export class FALFormHeaderInfoComponent implements OnInit {
     if (org) {
       orgVal = org.value;
     }
-    else
+    else {
       orgVal = null;
+    }
 
     this.organizationId = orgVal;
     this.viewModel.organizationId = orgVal;
+
+  }
+
+  getFHConfig(orgId){
+    this.service.getFederalHierarchyConfigurations(orgId).subscribe( data => {
+      this.autoProgNoGeneration = data.programNumberAuto;
+      this.programNumberHigh = data.programNumberHigh;
+      this.programNumberLow = data.programNumberLow;
+    });
   }
 
   relatedProgramTypeChange(event) {
@@ -228,7 +278,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   private updateErrors() {
-
     this.errorService.viewModel = this.viewModel;
 
     this.falHeaderInfoForm.get('title').clearValidators();
@@ -242,8 +291,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
       return control.errors
     });
-    this.falHeaderInfoForm.get('programNumber').setErrors(this.errorService.validateHeaderProgNo().errors);
-    this.markAndUpdateFieldStat('programNumber');
 
     this.falHeaderInfoForm.get('federalAgency').clearValidators();
     this.falHeaderInfoForm.get('federalAgency').setValidators((control) => {
@@ -252,7 +299,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
     this.markAndUpdateFieldStat('federalAgency');
 
-    this.showErrors.emit(this.errorService.applicableErrors);
+    this.errorService.validateHeaderProgNo(!this.autoProgNoGeneration, this.programNumberLow, this.programNumberHigh, FALFormService.getAuthenticationCookie(), this.programService).subscribe(res => {
+      this.falHeaderInfoForm.get('programNumber').setErrors(res.errors);
+      this.markAndUpdateFieldStat('programNumber');
+      this.showErrors.emit(this.errorService.applicableErrors);
+    });
   }
 
   private markAndUpdateFieldStat(fieldName) {
@@ -261,6 +312,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     });
 
   }
+
 
   getOrganizationLevels() {
     this.service.getFALPermission('ORG_LEVELS').subscribe(res => {

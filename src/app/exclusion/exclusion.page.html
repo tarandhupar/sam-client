@@ -73,9 +73,8 @@
 			<div class="column">
 				<div class="sam-ui relaxed divided list">
 					
-					<ng-container *ngIf="exclusion.classificationType!='Individual'
-											 && exclusion.classificationType!='Vessel'">
-						<div *ngIf="exclusion.classificationType=='Firm'" class="item">
+					<ng-container *ngIf="exclusion.classificationType=='Firm'">
+						<div class="item">
 							<div class="content">
 								<div class="header">
 									Unique Entity Identifier
@@ -95,18 +94,16 @@
 								</div>
 							</div>
 						</div>
-						<ng-container *ngIf="exclusion.classificationType!='Special Entity Designation'">
-							<div class="item">
-								<div class="content">
-									<div class="header">
-										CAGE Code
-									</div>
-									<div class="description">
-										{{exclusion.identityInfo.cageCode}}
-									</div>
+						<div class="item">
+							<div class="content">
+								<div class="header">
+									CAGE Code
+								</div>
+								<div class="description">
+									{{exclusion.identityInfo.cageCode}}
 								</div>
 							</div>
-						</ng-container>
+						</div>
 					</ng-container>
 					
 					<div class="item">

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FALAccountIdentificationComponent } from './account-identification/account-identification.component';
+import { FALAccountIdentificationCodeComponent } from './account-indentification-code/account-indentification-code.component';
 import { SamCheckboxToggledTextareaComponent } from './checkbox-toggled-textarea/checkbox-toggled-textarea.component';
-import { FALTafsComponent } from './tafs/tafs.component';
 import { SamTextRadioButtonComponent } from './text-radio/text-radio-button.component';
 import { FALAuthSubFormComponent } from './authorization-subform/authorization-subform.component';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -10,8 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FALFormulaMatchingComponent } from "./formula-matching/formula-matching.component";
 import { FALAuthInfoTableComponent } from "./authorization-table/authorization-table.component";
 import { FALFiscalYearTableComponent } from "./fiscal-year-table/fiscal-year-table.component";
-import { FALAssistSubFormComponent } from "./applying-assistance-subform/applying-assistance-subform.component";
-import { FALAssistInfoTableComponent } from './applying-assistance-table/applying-assistance-table.component';
 import { FALObligationFYTableComponent } from "./obligation-table/obligation-table.component";
 import { FALObligationSubFormComponent } from "./obligation-subform/obligation-subform.component";
 import { FALContactInfoTableComponent } from "./contact-information-table/contact-information-table.component";
@@ -23,25 +20,25 @@ import {
   FALErrorDisplayHelperComponent
 } from './fal-error-display/fal-error-display.component';
 import { PipesModule } from '../../app-pipes/app-pipes.module';
+import { AppComponentsModule } from '../../app-components/app-components.module';
 import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
+import { SamFALTextComponent } from "./fal-text/fal-text.component.ts"
 
 @NgModule({
   imports: [
     CommonModule,
     SamUIKitModule,
     ReactiveFormsModule,
+    AppComponentsModule,
     PipesModule
   ],
   declarations: [
-    FALAccountIdentificationComponent,
+    FALAccountIdentificationCodeComponent,
     SamCheckboxToggledTextareaComponent,
-    FALTafsComponent,
     SamTextRadioButtonComponent,
     FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
     FALAuthInfoTableComponent,
-    FALAssistSubFormComponent,
-    FALAssistInfoTableComponent,
     FALFiscalYearTableComponent,
     FALObligationFYTableComponent,
     FALObligationSubFormComponent,
@@ -51,19 +48,17 @@ import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message
     FeedsFilterComponent,
     FALErrorDisplayComponent,
     FALErrorDisplayHelperComponent,
-    CustomInlineErrorMessageComponent
+    CustomInlineErrorMessageComponent,
+    SamFALTextComponent
   ],
   exports: [
-    FALAccountIdentificationComponent,
+    FALAccountIdentificationCodeComponent,
     SamCheckboxToggledTextareaComponent,
-    FALTafsComponent,
     SamTextRadioButtonComponent,
     FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
     FALAuthInfoTableComponent,
     FALFiscalYearTableComponent,
-    FALAssistSubFormComponent,
-    FALAssistInfoTableComponent,
     FALObligationFYTableComponent,
     FALObligationSubFormComponent,
     FALChangeRequestDropdownComponent,
@@ -71,7 +66,8 @@ import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message
     FALContactInfoTableComponent,
     FeedsFilterComponent,
     FALErrorDisplayComponent,
-    CustomInlineErrorMessageComponent
+    CustomInlineErrorMessageComponent,
+    SamFALTextComponent
   ]
 })
 export class FALComponentsModule {}

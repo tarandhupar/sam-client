@@ -19,7 +19,7 @@
   <ng-container *ngFor="let auth of displayAuthInfo; let i=index">
     <tr>
       <td>
-        <span class='usa-input-error-message' *ngIf="subFormErrorIndex[auth.index]"><sup>*</sup>This field cannot be empty</span>
+        <span class='usa-input-error-message' *ngIf="subFormErrorIndex[auth.index]"><sup>*</sup>This field is required</span>
         {{auth.label}}
       </td>
       <td>
@@ -52,7 +52,7 @@
     <ng-container *ngFor="let amend of auth.children; let j=index">
       <tr>
         <td class="amend-table-col">
-          <span class='usa-input-error-message' *ngIf="subFormErrorIndex[amend.index]"><sup>*</sup>This field cannot be empty</span>
+          <span class='usa-input-error-message' *ngIf="subFormErrorIndex[amend.index]"><sup>*</sup>This field is required</span>
           &emsp;{{amend.label}}
         </td>
         <td>

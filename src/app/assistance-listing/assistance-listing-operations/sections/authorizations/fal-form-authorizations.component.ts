@@ -23,7 +23,6 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
   displayAuthInfo: any = [];
   subFormErrorIndex: any = {};
   toggleAtLeastOneEntryError: boolean = false;
-
   description: string = `
 <p>This section should include the legal authority upon which a program is based.</p><p>When new legislation is passed that has a significant bearing on a program, the reference should be included in this section.</p>
 
@@ -61,6 +60,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
          this.toggleAtLeastOneEntryError = true;
        else
          this.toggleAtLeastOneEntryError = false;
+      this.authSubForm.falAuthSubForm.markAsPristine({onlySelf: true});
     });
   }
 
@@ -177,12 +177,19 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
       this.toggleAtLeastOneEntryError = true;
+      if(this.displayAuthInfo.length === 0) {
+        this.authSubForm.falAuthSubForm.markAsDirty({onlySelf: true})
+      }
     }
     if(event.type == 'edit'){
       this.editAuth(event.index, event.parentIndex);
     }
     if(event.type == 'remove'){
       this.removeAuth(event.index, event.parentIndex);
+     if(this.displayAuthInfo.length === 0) {
+        this.authSubForm.falAuthSubForm.markAsDirty({onlySelf: true})
+      }
+
       setTimeout(() => {
         this.updateErrors();
       });
@@ -304,7 +311,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
     this.subFormErrorIndex = {};
     if(authListErrors) {
       for(let errObj of authListErrors.errorList){
-        if(errObj.id !== FALFieldNames.NO_AUTHORIZATION) {
+        if(!errObj.errors['noAuth']) {
           let id = errObj.id;
           id = id.substr(id.length - 1);
           let fcontrol = this.authSubForm.falAuthSubForm.controls['authorizations']['controls'][id].get('authType');

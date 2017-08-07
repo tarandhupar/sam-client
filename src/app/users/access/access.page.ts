@@ -2,15 +2,16 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/pairwise';
 import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
-import { Cookie } from 'ng2-cookies';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { RoleTableRow } from "../role-table/role-table.component";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
-  templateUrl: 'access.template.html'
+  templateUrl: 'access.template.html',
+  providers: [CapitalizePipe],
 })
 export class UserAccessPage implements OnInit {
 
@@ -57,7 +58,12 @@ export class UserAccessPage implements OnInit {
 
   private isAdmin: boolean;
   private isFirstRequest: boolean = true;
-  private hideFilters: boolean = true;
+  private hideFilters: boolean = true;  
+
+//hateaos changes
+  private canRequest:boolean;
+  private canGrant:boolean;
+  private canEdit:boolean;
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
@@ -65,15 +71,14 @@ export class UserAccessPage implements OnInit {
     private userService: UserAccessService,
     private route: ActivatedRoute,
     private router: Router,
+    private capitalize: CapitalizePipe,
     )
   {
-    this.isAdmin = this.route.snapshot.data['isAdminView'];
-    this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
-    this.title = this.isAdmin ? 'ROLE MANAGEMENT' : 'PROFILE';
+    
   }
 
   ngOnInit( ) {
-    this.userName = this.isAdmin ? this.route.snapshot.params['id'] : this.route.snapshot.data['userName'];
+    this.userName = (this.route.snapshot.data['userName']==null) ? this.route.snapshot.params['id'] : this.route.snapshot.data['userName'];
     this.user.email = this.userName;
     this.onSearchParamChange();
     this.getPendingRequests();
@@ -119,6 +124,18 @@ export class UserAccessPage implements OnInit {
         this.totalPages = Math.floor((res.total-1) / res.limit)+1;
       }
 
+      //Hateoas Changes
+      if(res._links && res._links.request_access)
+        this.canRequest = true;
+
+      if(res._links && res._links.grant_access){
+         this.canGrant = true;
+         this.isAdmin = true;
+         this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
+         this.title = this.isAdmin ? 'ROLE MANAGEMENT' : 'PROFILE';
+      }
+     
+
       if (this.isFirstRequest && res.total > 0) {
         this.hideFilters = false;
       }
@@ -153,6 +170,7 @@ export class UserAccessPage implements OnInit {
           },
           role: acc.role.val,
           roleId: acc.role.id,
+          links: acc._links,
           isDeletable: !!(acc.links && acc.links.find(l => {
             if (!l.rel || !l.rel.toUpperCase) {
               return false;
@@ -190,7 +208,7 @@ export class UserAccessPage implements OnInit {
     this.domainOptions = role.domains.map(r => {
       let label = `${r.val} (${r.count})`;
       return {
-        label: label,
+        label: this.capitalize.transform(label),
         name: label,
         value: r.id
       };
@@ -201,7 +219,7 @@ export class UserAccessPage implements OnInit {
     this.roleOptions = this.countSummary.map(d => {
       let label = `${d.val} (${d.count})`;
       return {
-        label: label,
+        label: this.capitalize.transform(label),
         name: label,
         value: d.id,
       };

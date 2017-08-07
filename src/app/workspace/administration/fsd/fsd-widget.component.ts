@@ -14,9 +14,9 @@ export class FSDWidgetComponent {
     picker: {
       placeholder: 'Search users',
       keyValueConfig: {
-        keyProperty:     'email',
-        valueProperty:   'givenName',
-        subheadProperty: 'email'
+        keyProperty: 'mail',
+        valueProperty: 'commonName',
+        subheadProperty: 'mail'
       }
     }
   };
@@ -26,14 +26,22 @@ export class FSDWidgetComponent {
   ngOnInit() {
     let params = {
       fle:     '%', // Hack to bypass search phrase requirement
-      orderBy: 'lastName',
+      orderBy: 'lastLogin',
       dir:     'asc',
       page:    0,
+      size:    3
     };
 
-    this.api.getFilteredList(params).subscribe(data => {
-      let users = data._embedded.userResources;
-      this.accounts = users.map(item => new User(item.user)).slice(0, 3);
+    this.api.getList(params).subscribe(data => {
+      let users = data._embedded.ldapUserResources;
+      this.accounts = users.map(item => new User(item.user));
+    }, error => {
+      // Fallback for when 'lastLogin' is permitted by the API for sorting
+      params.orderBy = 'lastName';
+      this.api.getList(params).subscribe(data => {
+        let users = data._embedded.ldapUserResources;
+        this.accounts = users.map(item => new User(item.user));
+      });
     });
   }
 

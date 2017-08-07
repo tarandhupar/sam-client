@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FALFormViewModel } from './fal-form.model';
 import { ValidationErrors } from '../../app-utils/types';
-import { FALSectionNames, FALFieldNames, FALSectionFieldsList } from './fal-form.constants';
+import { FALSectionNames, FALFieldNames, FALSectionFieldsBiMap } from './fal-form.constants';
 import * as _ from 'lodash';
+import { ReplaySubject, Subject } from "rxjs";
 
 export interface FieldError {
   id?: string,
@@ -117,42 +118,12 @@ export class FALFormErrorService {
       ]
     };
 
-    // todo: use string enums
-    for (let field of FALSectionFieldsList.OVERVIEW_FIELDS) {
-      this.validate(FALSectionNames.OVERVIEW, field);
-    }
-
-    for (let field of FALSectionFieldsList.HEADER_FIELDS) {
-      this.validate(FALSectionNames.HEADER, field);
-    }
-
-    for (let field of FALSectionFieldsList.AUTHORIZATION_FIELDS) {
-      this.validate(FALSectionNames.AUTHORIZATION, field);
-    }
-
-    for (let field of FALSectionFieldsList.OBLIGATION_FIELDS) {
-      this.validate(FALSectionNames.OBLIGATIONS, field);
-    }
-
-    for (let field of FALSectionFieldsList.OTHER_FINANCIAL_INFO_FIELDS) {
-      this.validate(FALSectionNames.OTHER_FINANCIAL_INFO, field);
-    }
-
-    for (let field of FALSectionFieldsList.CRITERIA_FIELDS) {
-      this.validate(FALSectionNames.CRITERIA_INFO, field);
-    }
-
-    for (let field of FALSectionFieldsList.APPLYING_FOR_ASSISTANCE_FIELDS) {
-      this.validate(FALSectionNames.APPLYING_FOR_ASSISTANCE, field);
-    }
-
-    for (let field of FALSectionFieldsList.COMPLIANCE_REQUIREMENTS_FIELDS) {
-      this.validate(FALSectionNames.COMPLIANCE_REQUIREMENTS, field);
-    }
-
-    for (let field of FALSectionFieldsList.CONTACT_INFORMATION_FIELDS) {
-      this.validate(FALSectionNames.CONTACT_INFORMATION, field);
-    }
+    // todo: use string enums ??
+    Object.keys(FALSectionFieldsBiMap.sectionFields).forEach((section) => {
+      FALSectionFieldsBiMap.sectionFields[section].forEach((field) => {
+        this.validate(section, field);
+      });
+    });
   }
 
   public static findErrorById(fieldErrorList: FieldErrorList, id: string): (FieldError | FieldErrorList | null) {
@@ -248,7 +219,11 @@ export class FALFormErrorService {
       }
     }
 
-    return valid ? null : {
+    return valid ? null : this.requiredFieldError(fieldName);
+  }
+
+  private requiredFieldError(fieldName): ValidationErrors {
+    return {
       requiredField: {
         message: fieldName + ' is a required field'
       }
@@ -287,33 +262,84 @@ export class FALFormErrorService {
     return titleErrors;
   }
 
-  public validateHeaderProgNo(): FieldError {
+  public validateHeaderProgNo(validateFlag = false, rangeLow = 0, rangeHigh = 0, cookie = null, programService = null): Subject<any> {
     let errors: ValidationErrors = null;
+    let response: Subject<any> = new ReplaySubject(1);
+    let finished = true;
 
-    if (!this._viewModel.programNumber) {
-      errors = {
-        missingField: {
-          message: 'FAL Number field cannot be empty'
+    if(validateFlag) {
+
+      let progNo;
+
+      if (!this._viewModel.programNumber) {
+        errors = this.requiredFieldError('FAL Number field');
+      }
+      else {
+
+        if (this._viewModel.programNumber.indexOf(".") == -1) {
+          progNo = this._viewModel.programNumber;
         }
-      };
-    }
-    else if (this._viewModel.programNumber.indexOf(".") == -1 && this._viewModel.programNumber.length !== 3) {
-      errors = {
-        maxFieldLength: {
-          message: 'FAL Number field value falls outside the range defined for this organization.'
+        else {
+          progNo = this._viewModel.programNumber.slice(3);
         }
+
+        if(progNo.length !== 3) {
+          errors = {
+            maxFieldLength: {
+              message: 'FAL Number field - Please enter a three digit number'
+            }
+          };
+        }
+        else if (progNo < rangeLow || progNo > rangeHigh) {
+          errors = {
+            maxFieldLength: {
+              message: 'FAL Number field value falls outside the range defined for this organization'
+            }
+          };
+        }
+        else {
+          finished = false;
+          programService.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, cookie, this._viewModel.organizationId)
+            .subscribe(res => {
+              if(!res['content']['isProgramNumberUnique']) {
+                errors = {
+                  programNumberUnique: {
+                    message: 'CFDA Number already exists. Please enter a valid Number'
+                  }
+                };
+              }
+
+              let falNoErrors = {
+                id: FALFieldNames.FALNO,
+                errors: errors
+              };
+
+              let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+              this.setOrUpdateError(headerErrors, falNoErrors);
+
+              response.next(falNoErrors);
+              response.complete();
+            });
+        } //end of else
+      }
+    } //end of if validateFlag
+
+    if (finished) {
+      let falNoErrors = {
+        id: FALFieldNames.FALNO,
+        errors: errors
       };
+
+      let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+      this.setOrUpdateError(headerErrors, falNoErrors);
+
+      response.next(falNoErrors);
+      response.complete();
     }
 
-    let falNoErrors = {
-      id: FALFieldNames.FALNO,
-      errors: errors
-    };
-
-    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-    this.setOrUpdateError(headerErrors, falNoErrors);
-    return falNoErrors;
+    return response;
   }
+
 
   public validateFederalAgency(): FieldError {
     let agencyErrors = {
@@ -377,7 +403,6 @@ export class FALFormErrorService {
     };
 
     let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
-
     this.setOrUpdateError(overviewErrors, functionalCodesErrors);
 
     return functionalCodesErrors;
@@ -397,13 +422,13 @@ export class FALFormErrorService {
 
         if (!project.fiscalYear) {
           projectError.errors['missingYear'] = {
-            message: 'Examples of Funded Projects: Row ' + (i + 1) + ' is missing Year'
+            message: 'Examples of Funded Projects: Row ' + (i + 1) + ' Year is required'
           };
         }
 
         if (!project.description) {
           projectError.errors['missingDescription'] = {
-            message: 'Examples of Funded Projects: Row ' + (i + 1) + ' is missing Examples'
+            message: 'Examples of Funded Projects: Row ' + (i + 1) + ' Examples is required'
           };
         }
 
@@ -429,7 +454,7 @@ export class FALFormErrorService {
     }
   }
 
-  //Authorization
+  // Authorization
   // --------------------------------------------------------------------------
   public validateAuthorization(fieldName: string): void {
     switch (fieldName) {
@@ -465,7 +490,7 @@ export class FALFormErrorService {
     }
     else {
       let authError = {
-        id: FALFieldNames.NO_AUTHORIZATION,
+        id: FALFieldNames.AUTHORIZATION_LIST,
         errors: {
           noAuth: {
             message: 'At least one authorization is required'
@@ -518,7 +543,7 @@ export class FALFormErrorService {
     if (!auth.authorizationTypes && auth.authorizationId) {
 
       authError.errors['missingAuthType'] = {
-        message: (child ? 'Ammendment: Row ' + i + ' is missing Authorization Type' : 'Authorization: Row ' + i + ' is missing Authorization Type')
+        message: (child ? 'Amendment: Row ' + i + ' Authorization Type is required' : 'Authorization: Row ' + i + ' Authorization Type is required')
       };
     }
 
@@ -527,7 +552,8 @@ export class FALFormErrorService {
     }
   }
 
-  //Finanacial-Obligation
+  // Financial Obligations
+  // --------------------------------------------------------------------------
   public validateObligation(fieldName: string): void {
     switch (fieldName) {
       case FALFieldNames.OBLIGATION_LIST:
@@ -551,7 +577,7 @@ export class FALFormErrorService {
     }
     else {
       let obligError = {
-        id: FALFieldNames.OBLIGATION_LIST + '-no-oblig',
+        id: FALFieldNames.OBLIGATION_LIST,
         errors: {
           noOblig: {
             message: 'At least one obligation is required'
@@ -587,7 +613,7 @@ export class FALFormErrorService {
 
     if (oblig.obligationId && !oblig.assistanceType) {
       obligError.errors['missingAssistanceType'] = {
-        message: 'Obligation: Row ' + i + ' is missing Assistance Type'
+        message: 'Obligation: Row ' + i + ' Assistance Type is required'
       };
     }
 
@@ -600,15 +626,14 @@ export class FALFormErrorService {
     let orderedOblig = {};
     let counter = 0;
     for (let oblig of obligationList) {
-      if (oblig.obligationId !== null)
-        orderedOblig[oblig.obligationId] = {index: counter}
-
+      if (oblig.obligationId !== null) {
+        orderedOblig[oblig.obligationId] = {index: counter};
+      }
       counter = counter + 1;
     }
     return orderedOblig;
   }
 
-  //Criteria Section
   // Other Financial Info Section
   // --------------------------------------------------------------------------
   public validateOtherFinancialInfo(fieldName: string): void {
@@ -641,13 +666,13 @@ export class FALFormErrorService {
 
           if (!accomplishment.fiscalYear) {
             accomplishmentError.errors['missingYear'] = {
-              message: 'Program Accomplishments: Row ' + (i + 1) + ' is missing Year'
+              message: 'Program Accomplishments: Row ' + (i + 1) + ' Year is required'
             };
           }
 
           if (!accomplishment.description) {
             accomplishmentError.errors['missingDescription'] = {
-              message: 'Program Accomplishments: Row ' + (i + 1) + ' is missing Accomplishments'
+              message: 'Program Accomplishments: Row ' + (i + 1) + ' Accomplishments is required'
             };
           }
 
@@ -696,7 +721,8 @@ export class FALFormErrorService {
 
         if (!account.code || (account.code && !/^\d{2}-\d{4}-\d-\d-\d{3}$/.test(account.code))) {
           accountError.errors['invalidCode'] = {
-            message: 'Account Identification: Row ' + (i + 1) + ' has an invalid code'
+            message: 'Account Identification: Row ' + (i + 1) + ' has an invalid code',
+            index: i
           };
         }
 
@@ -709,6 +735,7 @@ export class FALFormErrorService {
         id: FALFieldNames.ACCOUNT_IDENTIFICATION,
         errors: {
           atLeastOneAccount: {
+            listError:true,
             message: 'At least one valid account identification code is required.'
           }
         }
@@ -787,6 +814,7 @@ export class FALFormErrorService {
         id: FALFieldNames.TAFS_CODES,
         errors: {
           atLeastOneTAFS: {
+            listError: true,
             message: 'At least one valid TAFS code is required.'
           }
         }
@@ -906,11 +934,7 @@ export class FALFormErrorService {
   public validateAwardedType(): FieldError {
     let errors: ValidationErrors = null;
     if ((this._viewModel.awardedType.length > 0 && this._viewModel.awardedType === 'na')) {
-      errors = {
-        missingField: {
-          message: 'Assistance awarded and/or released is missing'
-        }
-      };
+      errors = this.requiredFieldError('Assistance awarded and/or released');
     }
 
     let awardedTypeErrors = {
@@ -1039,12 +1063,7 @@ export class FALFormErrorService {
     if (this._viewModel.preAppCoordReports.length > 0) {
       for(let report of this._viewModel.preAppCoordReports){
         if(report.reportCode == 'otherRequired' && report.isSelected && !this._viewModel.preAppCoordDesc){
-          errors = {
-            missingField: {
-              message: 'Additional Information field cannot be empty'
-            }
-          };
-
+          errors = this.requiredFieldError('Additional Information');
         } //end of if
       } //end of for
     }
@@ -1093,11 +1112,7 @@ export class FALFormErrorService {
   public validateApprovalInterval(): FieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.approvalInterval == 'na') {
-      errors = {
-        missingField: {
-          message: 'Date Range for Approval/Disapproval field cannot be empty'
-        }
-      };
+      errors = this.requiredFieldError('Date Range for Approval/Disapproval');
     }
 
     let fieldErrors = {
@@ -1114,11 +1129,7 @@ export class FALFormErrorService {
   public validateAppealInterval(): FieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.appealInterval == 'na') {
-      errors = {
-        missingField: {
-          message: 'Appeals field cannot be empty'
-        }
-      };
+      errors = this.requiredFieldError('Appeals');
     }
 
     let fieldErrors = {
@@ -1135,11 +1146,7 @@ export class FALFormErrorService {
   public validateRenewalInterval(): FieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.renewalInterval == 'na') {
-      errors = {
-        missingField: {
-          message: 'Renewal field cannot be empty'
-        }
-      };
+      errors = this.requiredFieldError('Renewals');
     }
 
     let fieldErrors = {
@@ -1177,25 +1184,25 @@ export class FALFormErrorService {
         if (report.isSelected && (report.description == null || report.description == "")) {
           let message = '';
           let reportError = {
-            id: 'compliance-reports-textarea' + counter,
+            id: FALFieldNames.COMPLIANCE_REPORTS + '-textarea' + counter,
             errors: {}
           };
 
           switch (report.code) {
             case 'program':
-              message = 'Program Reports Description Field cannot be empty';
+              message = 'Program Reports Description is a required field';
               break;
             case 'cash':
-              message = 'Cash Reports Description Field cannot be empty';
+              message = 'Cash Reports Description Field is a required field';
               break;
             case 'progress':
-              message = 'Progress Reports Description Field cannot be empty';
+              message = 'Progress Reports Description Field is a required field';
               break;
             case 'expenditure':
-              message = 'Expenditure Reports Description Field cannot be empty';
+              message = 'Expenditure Reports Description Field is a required field';
               break;
             case 'performanceMonitoring':
-              message = 'Performance Reports Description Field cannot be empty';
+              message = 'Performance Reports Description Field is a required field';
               break;
           }
 
@@ -1230,11 +1237,7 @@ export class FALFormErrorService {
     let errors: ValidationErrors = null;
 
     if ((this._viewModel.audit && this._viewModel.audit.isApplicable && !this._viewModel.audit.description) || this._viewModel.audit == null) {
-      errors = {
-        missingField: {
-          message: 'Other Audit Requirement Description field cannot be empty'
-        }
-      };
+      errors = this.requiredFieldError('Other Audit Requirement Description');
     }
 
     let fieldErrors = {
@@ -1252,11 +1255,7 @@ export class FALFormErrorService {
     let errors: ValidationErrors = null;
 
     if ((this._viewModel.documents && this._viewModel.documents.isApplicable && !this._viewModel.documents.description) || this._viewModel.documents == null) {
-      errors = {
-        missingField: {
-          message: 'Regulations, Guidelines, and Literature Description field cannot be empty'
-        }
-      };
+      errors = this.requiredFieldError('Regulations, Guidelines, and Literature Description');
     }
 
     let fieldErrors = {
@@ -1270,7 +1269,7 @@ export class FALFormErrorService {
     return fieldErrors;
   }
 
-  //Contact Information
+  // Contact Information
   // --------------------------------------------------------------------------
   validateContactInformation(fieldName: string): void {
     switch (fieldName) {
@@ -1303,9 +1302,10 @@ export class FALFormErrorService {
     }
     else {
       let contactError = {
-        id: FALFieldNames.NO_CONTACT,
+        id: FALFieldNames.CONTACT_LIST,
         errors: {
           noContact : {
+            listError: true,
             message : 'At least one contact is required'
           }
         }
@@ -1336,14 +1336,14 @@ export class FALFormErrorService {
     //fullName validation
     if (!contact.fullName) {
       contactError.errors['missingFullName'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing Full Name'
+        message: 'Contacts: Row ' + (i + 1) + ' Full Name is required'
       };
     }
 
     //email validation
     if(!contact.email) {
       contactError.errors['missingEmail'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing Email'
+        message: 'Contacts: Row ' + (i + 1) + ' Email is required'
       };
     }
     else {
@@ -1358,7 +1358,7 @@ export class FALFormErrorService {
     //phone validation
     if(!contact.phone) {
       contactError.errors['missingPhone'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing Phone Number'
+        message: 'Contacts: Row ' + (i + 1) + ' Phone Number is required'
       }
     }
     else {
@@ -1379,28 +1379,28 @@ export class FALFormErrorService {
     //street validation
     if(!contact.streetAddress) {
       contactError.errors['missingStreet'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing Street'
+        message: 'Contacts: Row ' + (i + 1) + ' Street is required'
       }
     }
 
     //city validation
     if(!contact.city) {
       contactError.errors['missingCity'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing City'
+        message: 'Contacts: Row ' + (i + 1) + ' City is required'
       }
     }
 
     //state validation
     if(!contact.state || contact.state == 'na') {
       contactError.errors['missingState'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing State'
+        message: 'Contacts: Row ' + (i + 1) + ' State is required'
       }
     }
 
     //zip validation
     if(!contact.zip) {
       contactError.errors['missingZip'] = {
-        message: 'Contacts: Row ' + (i + 1) + ' is missing Zip'
+        message: 'Contacts: Row ' + (i + 1) + ' Zip is required'
       }
     }
 

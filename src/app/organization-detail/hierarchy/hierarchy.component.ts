@@ -2,7 +2,6 @@ import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/c
 import { ActivatedRoute, Router} from "@angular/router";
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
-import { Observable } from 'rxjs';
 import { Location } from "@angular/common";
 import { IAMService } from "api-kit";
 import * as moment from 'moment';
@@ -12,23 +11,24 @@ import * as moment from 'moment';
 })
 export class OrgHierarchyPage {
 
-  recordsPerPage:number = 7;
+  recordsPerPage:number = 10;
 
+  orgId: string = "";
   orgType: string = "";
   orgList: any = [];
   loadData: boolean = false;
+  status: any = [];
 
   curStart = 0;
   curEnd = 0;
   curPage = 0;
   totalRecords = 0;
   totalPages = 0;
-  curPageOrgList: any = [];
 
   sortField = 'asc';
   sortFields = [
     {label: 'Organization A-Z', value: 'asc'},
-    {label: 'Organization Z-A', value: 'dsc'},
+    {label: 'Organization Z-A', value: 'desc'},
   ];
   typeMap = {'DEPARTMENT':'Dept/Ind Agency (L1)','AGENCY':'Sub-Tier (L2)'};
 
@@ -41,16 +41,42 @@ export class OrgHierarchyPage {
   }
 
   ngOnInit() {
-    this.getHierarchyData(this.flashMsgService.hierarchyStatusFilter);
+    this.status = this.flashMsgService.hierarchyStatusFilter;
+
+    this.route.parent.params.subscribe(
+      params => {
+        this.orgId = params['orgId'];
+        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
+      });
+
     this.flashMsgService.hierarchyStatusUpdate.subscribe( status => {
-      this.getHierarchyData(status);
+      this.status = status;
+      this.curPage = 0;
+      this.getHierarchyData(status, this.sortField);
     });
   }
 
-  getHierarchyData(status){
-    this.fhService.getDepartments().subscribe( data => {
-      this.orgList = data._embedded;
-      this.totalRecords = this.orgList.length;
+  checkAccess = (user) => {
+    this.fhService.getAccess(this.orgId).subscribe(
+      (data)=> {this.getHierarchyData(this.status, this.sortField);},
+      (error)=> {if(error.status === 403) this.redirectToForbidden();}
+    );
+  };
+
+  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
+  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
+  redirectToNotFound = () => { this._router.navigateByUrl('/404')};
+
+  getHierarchyData(status, sort){
+    let statusStr = 'all';
+    if(status.length === 1) statusStr = status[0];
+
+    this.fhService.getOrganizationById(this.orgId, true, true, statusStr, this.recordsPerPage, this.curPage+1, this.sortField).subscribe( data => {
+      if(data._embedded[0].org.type.toLowerCase() === 'office'){
+        this.redirectToNotFound();
+      }
+      this.orgList = data._embedded[0].org.hierarchy;
+      this.totalRecords = data._embedded[0].count;
       this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
       this.updateRecords();
 
@@ -62,21 +88,16 @@ export class OrgHierarchyPage {
     this.curEnd = (this.curPage + 1) * this.recordsPerPage;
     if( this.curEnd >= this.totalRecords) this.curEnd = this.totalRecords;
     if( this.totalRecords === 0) this.curStart = 0;
-    this.updatePageContent(this.curStart, this.curEnd);
-  }
-
-  updatePageContent(start, end){
-    this.curPageOrgList = this.orgList.slice(start - 1, end);
   }
 
   pageChange(val){
     this.curPage = val;
-    this.updateRecords();
+    this.getHierarchyData(this.status, this.sortField);
   }
 
   isOrgActive(org):boolean{
     if(!!org.modStatus){
-      return org.modStatus === "active";
+      return org.modStatus.toLowerCase() === "active";
     }
 
     if(!!org.endDate){
@@ -103,5 +124,10 @@ export class OrgHierarchyPage {
       return moment(org.startDate).utc().format('MM/DD/YYYY');
     }
     return "";
+  }
+
+  onSortChanged(){
+    this.curPage = 0;
+    this.getHierarchyData(this.status, this.sortField);
   }
 }

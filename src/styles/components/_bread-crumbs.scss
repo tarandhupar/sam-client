@@ -1,12 +1,15 @@
 .sam-breadcrumbs {
-  margin: 0;
+  margin: 1.5rem 0 0 0;
   padding: 0;
 
   li {
+    font-weight: 600;
     display: inline;
   }
 
   li:not(:last-child)::after {
-    content: '>';
+    content: '/';
+    color: #ccc;
+    padding: 0 .2rem;
   }
 }

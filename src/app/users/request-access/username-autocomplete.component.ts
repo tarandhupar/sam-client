@@ -17,9 +17,9 @@ export class RMSUserServiceImpl implements AutocompleteService {
       (res) => {
         results.next(res.reduce( (prev, curr) => {
           const newObj = {
-            key: `${curr.firstName} ${curr.lastName}`,
-            value: `${curr.firstName} ${curr.lastName} ( ${curr.email })`
-          }
+            key: curr.email,
+            value: `${curr.firstName} ${curr.lastName} (${curr.email })`
+          };
           prev.push(newObj);
           return prev;
         }, []));
@@ -31,7 +31,7 @@ export class RMSUserServiceImpl implements AutocompleteService {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    return this.getAllRMSUsers(val).map(o => o);
+    return this.getAllRMSUsers(val);
   }
 }
 

@@ -1,40 +1,57 @@
- <div>
-    <sam-collapsible [label]="'Domain'" [startOpened]="true">
-      <sam-checkbox
-        [(model)]="domainFilterModel"
-        [name]="domainFilterConfig.name"
-        [options]="domainFilterConfig.options"
-        [label]="domainFilterConfig.label"
-        [hint]="domainFilterConfig.hint"
-        [errorMessage]="domainFilterConfig.errorMessage"
-        [hasSelectAll]="domainFilterConfig.hasSelectAll"
-        (modelChange)="domainFilterChange($event)">
-      </sam-checkbox>
-    </sam-collapsible>
+<h4 class="sam-ui header">Domain</h4>
+<sam-checkbox
+  [(model)]="domainFilterModel"
+  [name]="domainFilterConfig.name"
+  [options]="domainFilterConfig.options"
+  [label]="domainFilterConfig.label"
+  [hint]="domainFilterConfig.hint"
+  [errorMessage]="domainFilterConfig.errorMessage"
+  [hasSelectAll]="domainFilterConfig.hasSelectAll"
+  (modelChange)="domainFilterChange($event)">
+</sam-checkbox>
 
-    <!-- AL Specific Filters -->
-    <sam-collapsible [label]="'Event'" [startOpened]="true" *ngIf="showALFilters">
-      <sam-checkbox
-        [(model)]="eventFilterModel"
-        [name]="eventFilterConfig.name"
-        [options]="eventFilterConfig.options"
-        [label]="eventFilterConfig.label"
-        [hint]="eventFilterConfig.hint"
-        [errorMessage]="eventFilterConfig.errorMessage"
-        [hasSelectAll]="eventFilterConfig.hasSelectAll"
-        (modelChange)="eventFilterChange($event)">
-      </sam-checkbox>
-    </sam-collapsible>
-    <sam-collapsible [label]="'Request Type'" [startOpened]="true" *ngIf="showALFilters && showALRequestFilters">
-      <sam-checkbox
-        [(model)]="alRequestTypeModel"
-        [name]="alRequestTypeConfig.name"
-        [options]="alRequestTypeConfig.options"
-        [label]="alRequestTypeConfig.label"
-        [hint]="alRequestTypeConfig.hint"
-        [errorMessage]="alRequestTypeConfig.errorMessage"
-        [hasSelectAll]="alRequestTypeConfig.hasSelectAll"
-        (modelChange)="alRequestTypeFilterChange($event)">
-      </sam-checkbox>
-    </sam-collapsible>
- </div>
+<!-- AL Specific Filters -->
+<ng-container *ngIf="showALFilters">
+  <div class="sam-ui divider"></div>
+  <h4 class="sam-ui header">Event</h4>
+  <sam-checkbox
+    [(model)]="eventFilterModel"
+    [name]="eventFilterConfig.name"
+    [options]="eventFilterConfig.options"
+    [label]="eventFilterConfig.label"
+    [hint]="eventFilterConfig.hint"
+    [errorMessage]="eventFilterConfig.errorMessage"
+    [hasSelectAll]="eventFilterConfig.hasSelectAll"
+    (modelChange)="eventFilterChange($event)">
+  </sam-checkbox>
+</ng-container>
+  
+<ng-container *ngIf="showALFilters && showALPendingRequestFilters">
+  <div class="sam-ui divider"></div>
+  <h4 class="sam-ui header">Pending Requests</h4>
+  <sam-checkbox
+    [(model)]="pendingRequestsModel"
+    [name]="pendingRequestFilterConfig.name"
+    [options]="pendingRequestFilterConfig.options"
+    [label]="pendingRequestFilterConfig.label"
+    [hint]="pendingRequestFilterConfig.hint"
+    [errorMessage]="pendingRequestFilterConfig.errorMessage"
+    [hasSelectAll]="pendingRequestFilterConfig.hasSelectAll"
+    (modelChange)="pendingRequestsFilterChange($event)">
+  </sam-checkbox>
+</ng-container>
+  
+<ng-container *ngIf="showALFilters && showALPendingRequestFilters && showALRequestFilters">
+  <div class="sam-ui divider"></div>
+  <h4 class="sam-ui header">Request Type</h4>
+  <sam-checkbox
+    [(model)]="alRequestTypeModel"
+    [name]="alRequestTypeConfig.name"
+    [options]="alRequestTypeConfig.options"
+    [label]="alRequestTypeConfig.label"
+    [hint]="alRequestTypeConfig.hint"
+    [errorMessage]="alRequestTypeConfig.errorMessage"
+    [hasSelectAll]="alRequestTypeConfig.hasSelectAll"
+    (modelChange)="alRequestTypeFilterChange($event)">
+  </sam-checkbox>
+</ng-container> 

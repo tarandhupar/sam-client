@@ -24,11 +24,24 @@ import {
   SystemDirectoryComponent,
   SystemProfileComponent,
   SystemPasswordComponent,
-  SystemMigrationsComponent
+  SystemMigrationsComponent,
 } from './system';
 
-import { FSDWidgetComponent, RMWidgetComponent, SystemWidgetComponent, FHWidgetComponent } from "./administration";
+import {
+  FHWidgetComponent,
+  FSDWidgetComponent,
+  ProfileWidgetComponent,
+  RMWidgetComponent,
+  SystemWidgetComponent,
+} from "./administration";
+
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
+import { RoleManagementModule } from "../role-management/role-management.module";
+import {
+  RMSUserServiceImpl,
+  SamRMSUsersServiceAutoDirective
+} from "../users/request-access/username-autocomplete.component";
+import { UserSearchModule } from "../users/user-search.module";
 
 @NgModule({
   imports: [
@@ -42,7 +55,8 @@ import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listin
     SamAPIKitModule,
     AppComponentsModule,
     PipesModule,
-    Ng2PageScrollModule.forRoot()
+    Ng2PageScrollModule.forRoot(),
+    UserSearchModule,
   ],
   exports: [],
   declarations: [
@@ -55,11 +69,14 @@ import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listin
     /**
      * Widgets
      */
-    FSDWidgetComponent,
     FHWidgetComponent,
+    FSDWidgetComponent,
+    ProfileWidgetComponent,
     RMWidgetComponent,
     SystemWidgetComponent,
+
     AssistanceListingWidgetComponent,
+
     /**
      * FSD
      */

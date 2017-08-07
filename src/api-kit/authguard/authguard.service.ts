@@ -52,18 +52,30 @@ export class AuthGuard implements CanActivate {
           }
           break;
         case 'addoredit':
+          let url;
           if (this.router.url.indexOf('add') >= 0) {
             if (program && !program['CREATE_FALS']) {
               this.router.navigate(['accessrestricted']);
+            } else if (!this.viewModel.title) {
+              url = '/programs/add'.concat('#header-information');
+              this.router.navigateByUrl(url);
             }
           } else {
             if (program && program._links && !program._links['program:update']) {
               this.router.navigate(['accessrestricted']);
+            } else if (!this.viewModel.title) {
+              url = '/programs/' + this.viewModel.programId + '/edit'.concat('#header-information');
+              this.router.navigateByUrl(url);
             }
           }
           break;
         case 'addoreditrao':
           if (program && !program['CREATE_RAO']) {
+            this.router.navigate(['accessrestricted']);
+          }
+          break;
+        case 'review':
+          if (program && program._links && !program._links['program:access']) {
             this.router.navigate(['accessrestricted']);
           }
           break;

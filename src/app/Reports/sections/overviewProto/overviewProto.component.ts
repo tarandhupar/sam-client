@@ -12,13 +12,13 @@ import { globals } from '../../app/globals';
 import { FavoritePipe } from './favorite.pipe';
 import * as _ from 'lodash';
 import * as Cookies from 'js-cookie';
-import { ReportService } from '../../report.service';
 import { Report } from '../../report';
+import * as base64 from 'base-64';
 
 export const REPORTS_PER_PAGE: number = 10;
 
 @Component({
-  providers: [ IAMService, ReportsService, ReportService ],
+  providers: [ IAMService, ReportsService],
   templateUrl: './overviewProto.template.html',
 })
 export class OverviewProtoComponent implements OnInit, AfterViewInit {
@@ -59,9 +59,13 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
   API_UMBRELLA_URL: string;
   mode = 'Observable';
   reports;
+  completedReports = [];
+  roleData;
+  userRoleObject;
+  userRole;
 
   constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
-                private api: IAMService, private http: Http, private reportService: ReportService ) {
+                private api: IAMService, private http: Http ) {
   }
 
   ngAfterViewInit() {
@@ -77,8 +81,7 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
     this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
-        error => console.log(error),
-        () => console.log('addUser: Completed')
+        error => console.log(error)
       );
   }
 
@@ -86,8 +89,7 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
     this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
-        error => console.log(error),
-        () => console.log('deleteUser: Completed')
+        error => console.log(error)
       );
   }
 
@@ -133,12 +135,21 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
               });
             });
           },
-          err => console.log(err),
-          () => console.log('Completed'));
+          err => console.log(err));
+    this.reportsService.getUserRole(Cookies.get('iPlanetDirectoryPro')).subscribe(
+        data => {
+          this.roleData = data;
+          let encodedToken = this.roleData.token.split(".");
+          this.userRoleObject = JSON.parse(base64.decode(encodedToken[1]));
+          this.userRole = this.userRoleObject.domainMapContent[0].roleMapContent[0].role.val;
+        },
+        error => console.log(error)
+      );  
   }
 
   checkSession( cb: () => void ) {
     let vm = this;
+    let completedReports = [];
     this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
@@ -148,22 +159,6 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
       let isReportsAdmin = true;
       vm.states.isAdmin = true;
       vm.admin = vm.states.isAdmin;
-
-      // for (let _i = 0; _i < vm.userRoles.length; _i++) {
-      //   if (vm.userRoles[_i].length >= 0) {
-      //     isReportsUser = true;
-      //   }
-
-      //   if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
-      //     isReportsAdmin = true;
-      //   }
-
-      //   if (isReportsUser && isReportsAdmin) {
-      //     // User is an Admin user
-      //     vm.states.isAdmin = true;
-      //     vm.admin = vm.states.isAdmin;
-      //   }
-      // }
 
 
       vm.user = user;
@@ -198,15 +193,22 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
           vm.dbReports = vm.data.production.user;
         }
       }
-      vm.totalReportCount = vm.dbReports.length;
+      
       let sortedArray = vm.dbReports.slice(0);
       sortedArray.sort((first, second): number => {
         if (first.name < second.name) return -1;
         if (first.name > second.name) return 1;
         return 0;
       });
-      vm.dbReports = sortedArray;
+      for (let report of sortedArray) {
+        if (report.complete) {
+          completedReports.push(report);
+        }
+      }
+      vm.dbReports = completedReports;
+      vm.totalReportCount = completedReports.length;
       vm.getReports();
+      
       cb();
     });
   }

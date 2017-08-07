@@ -1,13 +1,14 @@
-<div class="usa-width-one-whole m_L-3x workspace-administration-section relative">
-    <!-- *ngIf="isDetailExpanded(0)"-->
-  <div class="usa-width-one-whole m_T-3x">
-    <workspace-widget [isExpand]="states.expanded.profile" title="My Profile" (onToggleChange)="toggleHelpDetail('profile')"></workspace-widget>
+<div class="usa-width-one-whole m_L-3x workspace-administration-section relative" [ngClass]="states.public ? 'grid-public' : 'grid-federal'">
+  <div class="profile-widget m_T-3x" [ngClass]="states.public ? 'usa-width-one-half' : 'usa-width-one-whole'">
+    <workspace-widget [isExpand]="states.expanded.profile" title="Profile" [shortcut]="states.public ? shortcuts.profile : false" (onToggleChange)="toggleHelpDetail('profile')">
+      <profile-widget [user]="user" *ngIf="user"></profile-widget>
+    </workspace-widget>
     <div class="workspace-help-detail" *ngIf="states.expanded.profile">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
     </div>
   </div>
 
-  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.system">
+  <div class="system-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.system">
     <workspace-widget [isExpand]="states.expanded.system" title="System Accounts" (onToggleChange)="toggleHelpDetail('system')">
       <system-widget></system-widget>
     </workspace-widget>
@@ -16,7 +17,7 @@
     </div>
   </div>
 
-  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.fsd">
+  <div class="fsd-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.fsd">
     <workspace-widget [isExpand]="states.expanded.fsd" title="Federal Service Desk" (onToggleChange)="toggleHelpDetail('fsd')">
       <fsd-widget></fsd-widget>
     </workspace-widget>
@@ -25,15 +26,14 @@
     </div>
   </div>
 
-  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.aacRequest">
+  <div class="aac-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.aacRequest">
     <workspace-widget [isExpand]="states.expanded.aacRequest" title="AAC Request" (onToggleChange)="toggleHelpDetail('aacRequest')"></workspace-widget>
     <div class="workspace-help-detail" *ngIf="states.expanded.aacRequest">
       Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
     </div>
   </div>
 
-  <!-- *ngIf="isDetailExpanded(1)" -->
-  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.fh">
+  <div class="fh-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.fh">
     <workspace-widget [isExpand]="states.expanded.fh" title="Federal Hierarchy" (onToggleChange)="toggleHelpDetail('fh')">
       <fh-widget></fh-widget>
     </workspace-widget>
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div class="usa-width-one-half m_T-3x" *ngIf="toggleControl.rm">
+  <div class="rm-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.rm">
     <workspace-widget [isExpand]="states.expanded.rm" title="Role Management" (onToggleChange)="toggleHelpDetail('rm')">
       <rm-widget></rm-widget>
     </workspace-widget>

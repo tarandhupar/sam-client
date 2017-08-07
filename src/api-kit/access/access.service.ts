@@ -118,10 +118,11 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  postAccess(access: UserAccessWrapper, userName, queryParams = {}) {
+  postAccess(access: any, userName?, queryParams = {}) {
+    let suffix = userName ? '/' + userName + '/' : '/';
     let apiOptions: any = {
       name: 'access',
-      suffix: '/' + userName + '/',
+      suffix: suffix,
       method: 'POST',
       body: access,
       oParam: queryParams
@@ -434,6 +435,21 @@ export class UserAccessService {
     };
 
     return this.callApi(apiOptions);
+  }
+
+  getUsers(queryParams = {}) {
+    let apiOptions: any = {
+      name: 'rms2',
+      suffix: '/users/',
+      method: 'GET',
+      oParam: queryParams,
+    };
+
+    return this.callApi(apiOptions);
+  }
+
+  bulkUpdate() {
+
   }
 
   addAuthHeader(options) {

@@ -24,6 +24,8 @@ export const routes: Routes = [{
     {
       path: 'bulk-update',
       component: BulkUpdateComponent,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/bulk-update'}
     },
     {
       path: 'workspace',

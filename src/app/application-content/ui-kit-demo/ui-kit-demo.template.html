@@ -26,8 +26,10 @@
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM Sort &lt;sam-sort&gt;</h2>
-      <sam-sort [(ngModel)]="sortModel"></sam-sort>
-      {{ sortModel | json }}
+      <sam-sort [(ngModel)]="sortModel" 
+      [options]="[{label:'Name',name:'Name',value:'name'},{label:'Fruit',name:'Fruit',value:'fruit'}]">
+      </sam-sort>
+      <br/>{{ sortModel | json }}
     </div>
   </div>
 
@@ -821,6 +823,43 @@
     <h2 class="usa-width-one">Sam Comments Component</h2>
     <sam-comments class="usa-width-one">
     </sam-comments>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Actions Components</h2>
+    <div class="usa-width-one-half">
+      <h3>Sam Actions Dropdown</h3>
+      <sam-actions-dropdown [disabled]="false"
+                            [actions]="actions"
+                            (emitCallback)="handleAction($event)"
+                            (emitAction)="handleAction($event)"></sam-actions-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Sam Actions Dropdown (disabled)</h3>
+      <sam-actions-dropdown [disabled]="true"></sam-actions-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Sam Action Button</h3>
+      <sam-action-button [action]="action"
+                         (emitCallback)="handleActionButton($event)"></sam-action-button>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Sam Action Button (disabled)</h3>
+      <sam-action-button [action]="action"
+                         [disabled]="true"></sam-action-button>
+    </div>
+  </div>
+  <br>
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Image Component</h2>
+    <sam-image name="urmom"
+               class="usa-width-one"
+               src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Georgewashington.jpg"
+               (fileChange)="fileChangeHandler($event)"
+               [editable]="true"></sam-image>
+    <p class="usa-width-one">
+      {{bob}}
+    </p>
   </div>
 <br>
 </div>

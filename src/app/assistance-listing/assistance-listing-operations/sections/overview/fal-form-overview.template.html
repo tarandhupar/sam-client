@@ -8,13 +8,13 @@
     [name]="'objectives-input'"
     [label]="'Objectives'"
     [required]="true"
-    [attr.id]="'objective-field'"
+    [attr.id]="'fal-objective'"
     formControlName="objective"
   ></sam-text-area>
 
   <falFYTable [config]="fundedProjectsConfig"
               [formControlName]="'fundedProjects'"
-              [attr.id]="'funded-projects'"
+              [attr.id]="'fal-funded-projects'"
               [control]="falOverviewForm.get('fundedProjects')"
               #fundedProjects
   ></falFYTable>
@@ -36,7 +36,7 @@
     [keyValueConfig]="fcAutocompleteConfig.keyValueConfig"
     [required]="true"
     [label]="'Functional Codes'"
-    [attr.id]="'functional-codes-multiselect'"
+    [attr.id]="'fal-functional-codes'"
     [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
   </sam-autocomplete-multiselect>
 
@@ -49,7 +49,7 @@
       [serviceOptions]="{index:'D'}"
       [required]="true"
       [label]="'Subject Terms'"
-      [attr.id]="'subject-terms-multiselect'"
+      [attr.id]="'fal-subject-terms'"
       [hint]="'Select one or more Subject Terms to help public users search for this listing.'">
     </sam-autocomplete-multiselect>
 </form>

@@ -4,8 +4,9 @@ import { Validators as $Validators } from "../../authentication/shared/validator
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
-import { Cookie } from "ng2-cookies";
 import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
+import { UserService } from "../user.service";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   templateUrl: './request-access.template.html',
@@ -40,7 +41,9 @@ export class RequestAccessPage {
     private userAccessService: UserAccessService,
     private route: ActivatedRoute,
     private router: Router,
-    private alertFooter: AlertFooterService
+    private alertFooter: AlertFooterService,
+    private userService: UserService,
+    private capitalize: CapitalizePipe,
   ) {
     this.form = fb.group({
       org: ['', Validators.required],
@@ -54,13 +57,13 @@ export class RequestAccessPage {
 
   ngOnInit() {
     //this.userName = this.route.snapshot.data['userName'];
-    this.user = this.getUser();
+    this.user = this.userService.getUser();
     this.userName = this.user.uid;
     this.roleCategories = this.route.snapshot.data['roleCategories'].map(
       cat => {
         let options = cat.roles.map(role => {
           return {
-            label: role.role.val,
+            label: this.capitalize.transform(role.role.val),
             value: role.role.id,
             domains: role.domains,
           };
@@ -71,18 +74,6 @@ export class RequestAccessPage {
         }
       }
     );
-  }
-
-  getUser() {
-    let cookie = Cookie.get('IAMSession');
-    if (cookie) {
-      let u = Cookie.get('IAMSession');
-      let uo;
-      uo = JSON.parse(u);
-      return uo;
-    } else {
-      throw new Error('User cookie missing');
-    }
   }
 
   onRoleChange() {
@@ -101,7 +92,7 @@ export class RequestAccessPage {
     });
     this.domainOptions = domains.map(dom => {
       return {
-        label: dom.val,
+        label: this.capitalize.transform(dom.val),
         value: dom.id
       }
     });

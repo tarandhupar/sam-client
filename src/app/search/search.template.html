@@ -300,6 +300,10 @@
 
       <div class="sam-ui hidden divider"></div>
 
+      <div *ngIf="showSpinner" id="search-spinner">
+        <sam-spinner></sam-spinner>
+      </div>
+
       <div *ngIf= "isSearchComplete" id="search-results">
         <div tabindex="-1" *ngFor="let row of data.results">
 

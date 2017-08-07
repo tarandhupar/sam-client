@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { UserAccessService } from "../../api-kit/access/access.service";
 import {RoleMgmtSidenav} from "./rolemgmt-sidenav/rolemgmt-sidenav.component";
-import {ActivatedRouteSnapshot, ActivatedRoute} from "@angular/router";
+import { ActivatedRouteSnapshot, ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 
 @Component({
-  templateUrl: './rolemgmt-workspace.page.html'
+  templateUrl: './rolemgmt-workspace.page.html',
 })
 export class RoleMgmtWorkspace implements OnInit{
   autocompleteInput : string = '';
@@ -23,35 +24,54 @@ export class RoleMgmtWorkspace implements OnInit{
 
   private crumbs: Array<IBreadcrumb> = [
       { url: '/workspace', breadcrumb: 'Workspace' },
-      { breadcrumb: 'Access Requests' }
+      { breadcrumb: 'Role Requests' }
     ];
 
   @ViewChild('sideNav') sideNav: RoleMgmtSidenav;
 
-  constructor(private role: UserAccessService, private route: ActivatedRoute){
+  constructor(
+    private role: UserAccessService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private capitalize: CapitalizePipe,
+  ){
 
   }
 
   ngOnInit(){
-    let status = this.route.snapshot.queryParams['status'];
-    if (status === 'pending') {
-      this.onClickPending()
-    } else if (status === 'escalated') {
-      this.onClickEscalated();
-    } else {
-      this.getStatusIds();
+    let qp = this.route.snapshot.queryParams;
+    let status = qp['status'];
+
+    if (qp['domain']) {
+      this.domainKey = qp['domain'];
     }
+    if (qp['page']) {
+      this.page = +qp['page'];
+    }
+    if (qp['status']) {
+      this.statusKey = qp['status'];
+      let e = this.statusKey.split(',').map(s => +s);
+      this.sideNav.statusCheckboxes.value = e;
+      this.sideNav.StatusCheckboxModel = e;
+    }
+    if (qp['q']) {
+      this.autocompleteInput = qp['q'];
+    }
+    if (qp['order']) {
+      this.order = qp['order'];
+    }
+    this.getRequestAccess();
   }
 
   StatusValue(event){
-    this.statusKey = event;
+    this.statusKey = event.join(',');
     this.page =1;
     this.getRequestAccess();
 
   }
 
   DomainValue(event){
-    this.domainKey = event;
+    this.domainKey = event.join(',');
     this.page =1;
     this.getRequestAccess();
   }
@@ -91,6 +111,17 @@ export class RoleMgmtWorkspace implements OnInit{
 
   getRequestAccess(){
     this.role.getRequestAccess(this.autocompleteInput, this.statusKey,this.domainKey,this.order,this.page).subscribe(res => {
+      let extras: NavigationExtras = {
+        queryParams: {
+          q: this.autocompleteInput,
+          page: this.page,
+          status: this.statusKey,
+          domain: this.domainKey,
+          order: this.order,
+        }
+      };
+      this.router.navigate(['access/requests'], extras);
+
       this.Details = res.userAccessRequestList;
       this.totalRequest = res.count;
       this.currCount = res.userAccessRequestList.length;
@@ -100,22 +131,4 @@ export class RoleMgmtWorkspace implements OnInit{
     });
 
   }
-
-  getStatusIds(){
-    this.role.getAccessStatus('Admin').subscribe(res => {
-        if(res.length > 0 ){
-          res.forEach(status => {
-            if(this.statusKey === ''){
-              this.statusKey = this.statusKey + status.id;
-            }
-            else{
-              this.statusKey = this.statusKey + "," + status.id;
-            }
-          });
-
-        }
-        this.getRequestAccess();
-      });
-    }
-
 }

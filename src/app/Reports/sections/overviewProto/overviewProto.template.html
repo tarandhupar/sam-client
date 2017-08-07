@@ -1,6 +1,6 @@
 <section class="usa-grid-full" [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
   <div class="sam-ui hidden divider"></div>
-  <h2 class="m_T-2x">Reports Prototype</h2>
+  <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
     Sam.gov reports can be used to support analysis of federal spending including geographical analysis, market analysis, and
     analysis on the impact of the congressional and presidential initiatives in socio-economic areas such as small business
@@ -8,7 +8,7 @@
     management improvement.
   </p>
   <div class="usa-grid-full">
-    <h3 class="p_L-3x">Dynamic Prototype Reports</h3>
+    <h3 class="p_L-3x">Dynamic Reports</h3>
     <div class="usa-grid-full">
       <p class="p_L-8x">
         We have pre-built many of the reports people run regularly, providing quick access to information people need most.
@@ -18,8 +18,11 @@
     <section class="usa-grid-full">
       <div class="grid-name1">
         <span *ngIf="states.isSignedIn">
-          <p class="p_L-8x">
+          <!-- <p class="p_L-8x reportCount">
             Showing {{currentReportStartIndex}}-{{currentReportEndIndex}} out of {{totalReportCount}} reports
+          </p> -->
+          <p class="p_L-8x reportCount">
+            Showing {{currentReportEndIndex}} out of {{totalReportCount}} reports
           </p>
         </span>
       </div>

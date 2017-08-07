@@ -16,6 +16,9 @@ import { KBA } from '../../kba.interface';
   ]
 })
 export class DetailsComponent {
+  @ViewChild('identityEditor') identityEditor;
+  @ViewChild('businessEditor') businessEditor;
+  @ViewChild('kbaEditor') kbaEditor;
   @ViewChild('agencyPicker') agencyPicker;
   @ViewChild('confirmModal') confirmModal;
   @ViewChild('reconfirmModal') reconfirmModal;
@@ -54,11 +57,6 @@ export class DetailsComponent {
     selected: ['','',''],
     loading: false,
     submitted: false,
-    editable: {
-      identity: false,
-      business: false,
-      kba: false
-    }
   };
 
   public user:User = {
@@ -148,6 +146,16 @@ export class DetailsComponent {
     this.initUser(() => {
       this.initForm();
       this.syncCache();
+    });
+  }
+
+  ngAfterViewInit() {
+    this.route.queryParams.subscribe(qparams => {
+      if(qparams['edit']) {
+        if(this[`${qparams['edit']}Editor`]) {
+          this[`${qparams['edit']}Editor`].showInputView = true;
+        }
+      }
     });
   }
 
@@ -258,8 +266,12 @@ export class DetailsComponent {
 
   loadUser(cb) {
     this.api.iam.checkSession((user) => {
-      this.user = merge({}, this.user, user);
-      this.user['middleName'] = user.initials;
+      user.workPhone = user.workPhone.replace(/[^0-9]/g, '');
+      user.workPhone = (user.workPhone.length < 11 ? '1' : '' ) + user.workPhone;
+
+      this.user = merge({
+        middleName: user.initials,
+      }, this.user, user);
 
       cb();
     }, () => {
@@ -496,10 +508,6 @@ export class DetailsComponent {
     ].join(' ').replace(/\s+/g, ' ');
   }
 
-  isEdit(groupKey) {
-    return this.states.editable[groupKey] || false;
-  }
-
   /**
    * KBA
    */
@@ -590,10 +598,6 @@ export class DetailsComponent {
   /**
    * Editables
    */
-  edit(groupKey) {
-    this.states.editable[groupKey] = true;
-  }
-
   isValid(keys: Array<String>) {
     let controls = this.detailsForm.controls,
         entries = this.kbaEntries.toArray(),
@@ -684,10 +688,8 @@ export class DetailsComponent {
     }
 
     this.api.iam.user.update(userData, (user) => {
-console.log('success');
       $success(user);
     }, (error) => {
-console.log('failure');
       $error(error);
     });
   }
@@ -715,7 +717,7 @@ console.log('failure');
       this.saveGroup(keys, () => {
         this.syncCache();
 
-        this.states.editable[groupKey] = false;
+        // this.states.editable[groupKey] = false;
         this.states.loading = false;
         // Trick Header to Update State
         this.router.navigate(['/profile']);

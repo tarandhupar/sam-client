@@ -1,147 +1,202 @@
-<div class="usa-grid-full" *ngIf = "pageReady">
-  <form *ngIf="falChangeRequestActionForm" [formGroup]="falChangeRequestActionForm">
-    <h1 class="m_T-0 p_T-6x"> {{pageTitle}} </h1>
-    <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="programRequest">
-      <div class="usa-width-one-half">
-        <div class="content"><strong>Title:</strong> {{programRequest.program.title}}</div>
-        <div class="content"><strong>CFDA Number:</strong> {{programRequest.program.programNumber}}</div>
-      </div>
-      <div class="usa-width-one-half">
-        <div class="content">
-          <sam-label *ngIf="programRequest && isRequestStatus('pending')" [labelType]="'big'" [labelText]="'Pending'"></sam-label>
-          <sam-label *ngIf="programRequestAction && isRequestStatus('rejected')" [labelType]="'big'" [labelText]="'Rejected'"></sam-label>
-          <sam-label *ngIf="programRequestAction && isRequestStatus('approved')" [labelType]="'big'" [labelText]="'Approved'"></sam-label>
-          <sam-label *ngIf="programRequestAction && isRequestStatus('cancelled')" [labelType]="'big'" [labelText]="'Cancelled'"></sam-label>
-        </div>
-        <div class="content"><strong>Submitted Date:</strong> {{ programRequest.entryDate | dateFormat: 'MMM DD, YYYY' }}</div>
-        <div class="content"><strong>Submitted By:</strong> {{ programRequest.createdBy }}</div>
-      </div>
-    </div>
+<page
+  *ngIf="pageReady"
+  theme="inside"
+  [breadcrumbs]=""
+  section="Workspace"
+  [attr.id]="'page-title'"
+  [title]="pageTitle">
 
-    <div class="sam-ui section divider"></div>
+  <div class="sam-ui grid">
+    <div class="twelve wide mobile eleven wide tablet seven wide computer column">
 
-    <!--Display Form-->
-    <ng-container *ngIf="programRequest && programRequest.completed===false">
-      <ng-container *ngIf="requestType == 'archive_request'">
-        <sam-checkbox class="cb-request"
-                      [hint]="'Have you verified there is $0 funding and no active awards against this listing on USASpending.gov?*'"
-                      [name] ="'active-awards'"
-                      [options]="formOptions.archive"
-                      [hasSelectAll]="false"
-                      [control]="falChangeRequestActionForm.controls['activeAwards']"
-                      formControlName="activeAwards"
-                      >
-        </sam-checkbox>
-      </ng-container>
-
-      <ng-container *ngIf="requestType == 'program_number_request'">
-        <strong>New CFDA Number:</strong> {{ toJSON(programRequest.data).programNumber }}
-      </ng-container>
-
-      <div class="sam-ui hidden divider"></div>
-
-      <div class="usa-grid-full">
-        <div *ngIf="requestType == 'title_request'">
-          <h4>Proposed Title</h4>
-          <strong>{{ programRequestData.title}}</strong>
-        </div>
-
-        <div class="sam-ui hidden divider"></div>
-
-        <div class="usa-grid-full" *ngIf="requestType == 'agency_request'">
-          <h4>New Organization</h4>
-          <div class="usa-grid-full">
-            <div class="content" *ngIf="federalHierarchy.l1Name"><strong>Department: </strong>{{federalHierarchy.l1Name}}</div>
-            <div class="content" *ngIf="federalHierarchy.l2Name"><strong>Sub-Tier: </strong>{{federalHierarchy.l2Name}}</div>
-            <div class="content" *ngIf="federalHierarchy.l3Name"><strong>Office: </strong>{{federalHierarchy.l3Name}}</div>
+      <div class="sam-ui segment" *ngIf="programRequest">
+        <div id="page-label" class="sam-ui top right attached mini dark blue label">
+          <ng-container *ngIf="programRequest && isRequestStatus('pending')">
+            Request Pending
+          </ng-container>
+          <ng-container *ngIf="programRequestAction && isRequestStatus('rejected')">
+            Rejected
+          </ng-container>
+          <ng-container *ngIf="programRequestAction && isRequestStatus('approved')">
+            Approved
+          </ng-container>
+          <ng-container *ngIf="programRequestAction && isRequestStatus('cancelled')">
+            Cancelled
+          </ng-container>
+				</div>
+        <div class="sam-ui attached equal width grid">
+          <div id="page-data" class="column">
+            <div class="sam-ui medium header">
+              Title
+              <div class="sub header">{{programRequest.program.title}}</div>
+            </div>
+            <div class="sam-ui medium header">
+              CFDA Number
+              <div class="sub header">{{programRequest.program.programNumber}}</div>
+            </div>
           </div>
-          <sam-text *ngIf="isPermissionType('approve_reject')"
-                    [maxlength]="3"
-                    [control]="falChangeRequestActionForm.controls['programNumber']"
-                    [name]="'program-number-input'"
-                    [label]="'CFDA Number*'"
-                    [required]="true"
-                    [errorMessage]="falChangeRequestActionForm.controls['programNumber'].hasError('duplicateProgram') ? 'CFDA Number already exists. Please enter a valid Number.' : '' "
-                    formControlName="programNumber"></sam-text>
+          <div class="column">
+            <div id="submitted-date" class="sam-ui medium header">
+              Submitted Date
+              <div class="sub header">{{programRequest.entryDate | dateFormat: 'MMM DD, YYYY'}}</div>
+            </div>
+            <div  id="submitted-by" class="sam-ui medium header">
+              Submitted By
+              <div class="sub header">{{programRequest.createdBy}}</div>
+            </div>
+          </div>
         </div>
-
-        <h4>Comments</h4>
-        <strong>{{ programRequest.createdBy }}:</strong> {{ programRequest.reason }}
-
-        <div class="sam-ui hidden divider"></div>
-
-        <sam-text-area *ngIf="isPermissionType('cancel')"
-                       [label]="'Comment'"
-                       [name]="'comment-input'"
-                       [control]="falChangeRequestActionForm.controls['comment']"
-                       formControlName="comment"
-                       >
-        </sam-text-area>
-        <sam-text-area *ngIf="!isPermissionType('cancel')"
-                        [label]="'Comment*'"
-                        [name]="'comment-input'"
-                        [control]="falChangeRequestActionForm.controls['comment']"
-                        [required]="true"
-                        formControlName="comment"
-                        >
-        </sam-text-area>
       </div>
-
-      <div class="usa-grid-full">
-        <sam-button [buttonType]="buttonType"
-          [buttonText]="'Back'"
-          [buttonClass]="'usa-button-outline'"
-          (onClick)="goBack()">
-        </sam-button>
-
-        <!--Reviewer-->
-        <ng-container *ngIf="isPermissionType('approve_reject')">
-          <sam-button [buttonType]="buttonType"
-            [buttonText]="'Reject'"
-            [buttonClass]="'usa-button-primary-alt'"
-            (onClick)="rejectRequest()">
-          </sam-button>
-          <sam-button [buttonType]="buttonType"
-            [buttonText]="'Approve'"
-            [buttonClass]="'usa-button-primary'"
-            (onClick)="approveRequest()">
-          </sam-button>
-        </ng-container>
-
-        <!--Submitter-->
-        <ng-container  *ngIf="isPermissionType('cancel')">
-          <sam-button [buttonType]="buttonType"
-            [buttonText]="'Cancel Request'"
-            [buttonClass]="'usa-button-primary'"
-            (onClick)="cancelRequest()">
-          </sam-button>
-        </ng-container>
-      </div>
-    </ng-container>
-
-    <!--Display view request-->
-    <ng-container *ngIf="programRequest && programRequestAction && programRequest.completed===true">
-      <div class="usa-grid-full">
-
-        <div *ngIf="requestType == 'title_request'">
-          <h4>Proposed Title</h4>
-          <strong>{{ programRequestData.title}}</strong>
-        </div>
-
-        <h4>Comments</h4>
-        <p><strong>{{ programRequest.createdBy }}:</strong> {{ programRequest.reason }}</p>
-        <p><strong>{{ programRequestAction.createdBy }}:</strong> {{ programRequestAction.reason }}</p>
-      </div>
-
       <div class="sam-ui hidden divider"></div>
 
-      <div class="usa-grid-full">
-        <sam-button [buttonType]="buttonType"
-          [buttonText]="'Back'"
-          [buttonClass]="'usa-button-outline'"
-          (onClick)="goBack()">
-        </sam-button>
-      </div>
-    </ng-container>
-  </form>
-</div>
+      <form *ngIf="falChangeRequestActionForm" [formGroup]="falChangeRequestActionForm">
+
+        <!--Display Form-->
+        <ng-container *ngIf="programRequest && programRequest.completed===false">
+          <div class="sam-ui segment">
+            <ng-container *ngIf="requestType == 'archive_request' && showActiveAwards">
+              <sam-checkbox class="cb-request"
+                            [label]="'Have you verified there is $0 funding for two years(current and prior), and no active awards against this listing on USASpending.gov?'"
+                            [name] ="'active-awards'"
+                            [attr.id]="'archive-checkbox'"
+                            [options]="formOptions.archive"
+                            [hasSelectAll]="false"
+                            [control]="falChangeRequestActionForm.controls['activeAwards']"
+                            formControlName="activeAwards">
+              </sam-checkbox>
+            </ng-container>
+
+            <ng-container *ngIf="requestType == 'program_number_request'">
+              <h4 class="sam-ui header">Proposed CFDA Number</h4>
+              <strong>{{ toJSON(programRequest.data).programNumber }}</strong>
+              <div class="sam-ui hidden divider"></div>
+            </ng-container>
+
+            <ng-container *ngIf="requestType == 'title_request'">
+              <h4 class="sam-ui header">Proposed Title</h4>
+              <strong>{{ toJSON(programRequest.data).title}}</strong>
+              <div class="sam-ui hidden divider"></div>
+            </ng-container>
+
+            <ng-container *ngIf="requestType == 'agency_request' && federalHierarchy">
+              <ng-container *ngFor="let fh of federalHierarchy">
+                <h4 class="sam-ui header">
+                  {{(fh.org.orgKey == programRequest.program.organizationId) ? 'Current' : 'New' }} Organization
+                </h4>
+                <div class="sam-ui medium header" *ngIf="fh.org.l1Name">
+                  Department
+                  <div class="sub header">{{fh.org.l1Name}}</div>
+                </div>
+                <div class="sam-ui medium header" *ngIf="fh.org.l2Name">
+                  Sub-Tier
+                  <div class="sub header">{{fh.org.l2Name}}</div>
+                </div>
+                <div class="sam-ui medium header" *ngIf="fh.org.l3Name">
+                  Office
+                  <div class="sub header">{{fh.org.l3Name}}</div>
+                </div>
+                <div class="sam-ui hidden divider"></div>
+              </ng-container>
+              <sam-fal-text *ngIf="isPermissionType('approve_reject') && cfdaCode"
+                [maxlength]="3"
+                [control]="falChangeRequestActionForm.controls['programNumber']"
+                [name]="'program-number-input'"
+                [label]="'Proposed CFDA Number*'"
+                [required]="true"
+                [cfdaCode]="cfdaCode"
+                [pending]="falChangeRequestActionForm.controls['programNumber'].pending"
+                formControlName="programNumber">
+              </sam-fal-text>
+            </ng-container>
+
+            <h4 class="sam-ui header">Comments</h4>
+            <div id="request-comment" class="sam-ui medium header">
+              {{ programRequest.createdBy }}
+              <div class="sub header">{{ programRequest.reason }}</div>
+            </div>
+
+            <ng-container *ngIf="isPermissionType('cancel') || isPermissionType('approve_reject')">
+              <sam-text-area *ngIf="isPermissionType('cancel')"
+                             [label]="'Comment'"
+                             [name]="'comment-input'"
+                             [control]="falChangeRequestActionForm.controls['comment']"
+                             formControlName="comment">
+              </sam-text-area>
+              <sam-text-area *ngIf="!isPermissionType('cancel')"
+                              [label]="'Comment*'"
+                              [name]="'comment-input'"
+                              [control]="falChangeRequestActionForm.controls['comment']"
+                              [required]="true"
+                              formControlName="comment">
+              </sam-text-area>
+            </ng-container>
+          </div>
+
+          <sam-button [buttonType]="buttonType"
+            [buttonText]="'Back'"
+            [attr.id]="'back-btn'"
+            [buttonClass]="'usa-button-outline'"
+            (onClick)="goBack()">
+          </sam-button>
+
+          <!--Reviewer-->
+          <ng-container *ngIf="isPermissionType('approve_reject')">
+            <sam-button [buttonType]="buttonType"
+              [buttonText]="'Reject'"
+              [attr.id]="'reject-btn'"
+              [buttonClass]="'usa-button-primary-alt'"
+              (onClick)="rejectRequest()">
+            </sam-button>
+            <sam-button [buttonType]="buttonType"
+              [buttonText]="'Approve'"
+              [attr.id]="'approve-btn'"
+              [buttonClass]="'usa-button-primary'"
+              (onClick)="approveRequest()">
+            </sam-button>
+          </ng-container>
+
+          <!--Submitter-->
+          <ng-container  *ngIf="isPermissionType('cancel')">
+            <sam-button [buttonType]="buttonType"
+              [buttonText]="'Cancel Request'"
+              [attr.id]="'cancel-btn'"
+              [buttonClass]="'usa-button-primary'"
+              (onClick)="cancelRequest()">
+            </sam-button>
+          </ng-container>
+        </ng-container>
+
+        <!--Display view request-->
+        <ng-container *ngIf="programRequest && programRequestAction && programRequest.completed===true">
+          <div class="sam-ui segment">
+            <ng-container *ngIf="requestType == 'title_request'">
+              <h4 class="sam-ui header">Proposed Title</h4>
+              <strong>{{ toJSON(programRequest.data).title}}</strong>
+            </ng-container>
+            <h4 class="sam-ui header">Comments</h4>
+            <div id="request-reason" class="sam-ui medium header">
+              {{ programRequest.createdBy }}
+              <div class="sub header">{{ programRequest.reason }}</div>
+            </div>
+            <div id="action-reason" class="sam-ui medium header">
+              {{ programRequestAction.createdBy }}
+              <div class="sub header">{{ programRequestAction.reason }}</div>
+            </div>
+          </div>
+
+          <sam-button [buttonType]="buttonType"
+            [buttonText]="'Back'"
+            [buttonClass]="'usa-button-outline'"
+            (onClick)="goBack()">
+          </sam-button>
+        </ng-container>
+
+      </form>
+
+
+    </div>
+  </div>
+
+  <div class="sam-ui hidden section divider"></div>
+
+</page>

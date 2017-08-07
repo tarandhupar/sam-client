@@ -1,5 +1,19 @@
 sam-sort{
+    .label-wrapper{
+        display:inline-block;
+        label{
+            height: 51px;
+            line-height: 45px;
+            margin-top:0;
+            margin-right:5px;
+            display:inline;
+        }
+        &>div{
+            display:inline-block;
+        }
+    }
     select{
-        width:140px;
+        min-width:140px;
+        display:inline-block;
     }
 }

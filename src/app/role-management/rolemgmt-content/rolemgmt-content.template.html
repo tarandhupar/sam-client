@@ -1,40 +1,40 @@
 <div class = "rolemgmt-content usa-grid-full ">
-  <div>
-    <div class="overview-header">
-      <div class="usa-grid-full">
-        <div class="usa-width-one-fourth">
-          <h3>Requests</h3>
-          <div>
-            <span class="badge-primary">{{escalatedCount}}</span>
-            <a class="pointer-hover" (click)="onEscalatedClick()">Escalated Requests</a>
-          </div>
-          <div class="m_T-2x">
-            <span class="badge-primary">{{pendingCount}}</span>
-            <a class="pointer-hover" (click)="onPendingClick()">Pending Requests</a>
-          </div>
-        </div>
-        <div class="usa-width-one-third">
-          <h3>Favorite Organizations</h3>
-          <div>
-            <a>GSA</a>
-          </div>
-          <div>
-            <a>Office of Management and Budget</a>
-          </div>
-        </div>
-      </div>
-      <div>
-        <button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/workspace'">
-          <i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>
-          <span class = "inline-block">Back to Workspace Home</span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!--<div>-->
+    <!--<div class="overview-header">-->
+      <!--<div class="usa-grid-full">-->
+        <!--<div class="usa-width-one-fourth">-->
+          <!--<h3>Requests</h3>-->
+          <!--<div>-->
+            <!--<span class="badge-primary">{{escalatedCount}}</span>-->
+            <!--<a class="pointer-hover" (click)="onEscalatedClick()">Escalated Requests</a>-->
+          <!--</div>-->
+          <!--<div class="m_T-2x">-->
+            <!--<span class="badge-primary">{{pendingCount}}</span>-->
+            <!--<a class="pointer-hover" (click)="onPendingClick()">Pending Requests</a>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="usa-width-one-third">-->
+          <!--<h3>Favorite Organizations</h3>-->
+          <!--<div>-->
+            <!--<a>GSA</a>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<a>Office of Management and Budget</a>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div>-->
+        <!--<button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/workspace'">-->
+          <!--<i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>-->
+          <!--<span class = "inline-block">Back to Workspace Home</span>-->
+        <!--</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
   <div class = "usa-grid-full">
-    <div class="p_T-3em">
+    <div>
       <div>
-        <h2>Access Management
+        <h2>Role Requests
           <div class="pull-right">
             <strong class="sort-label">Sort (Requested Date)</strong>
             <sam-select
@@ -52,12 +52,12 @@
     </div>
   </div>
   <div *ngIf = "currCount < 1" >
-    <em>No records were found</em>
+    <em>No records found for selected criteria</em>
   </div>
   <div *ngIf = "currCount > 0">
     <div  *ngFor = "let content of requestDetails" >
       <section class = "sec-bor">
-        <div><span class="usa-label-big">{{content.domain.val}}</span></div>
+        <div><span class="usa-label-big">{{content.domain.val | capitalize}}</span></div>
         <div class="request-block">
           <div class="request-top-block">
             <div class="usa-grid-full clearfix">

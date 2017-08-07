@@ -5,7 +5,6 @@ export { CommentsService };
 
 export class CommentsDemoService implements CommentsService {
 
-  private lastIndex = 0;
   private offset = 5;
 
   public _username: string = 'anon-user@common-components.team';
@@ -20,7 +19,7 @@ export class CommentsDemoService implements CommentsService {
     },
     {
       username: 'colin-dev@commoncomponents.team',
-      datetime: new Date(),
+      datetime: new Date('02/14/2017'),
       text: 'Lorem ipsum doit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient motur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium.',
       image: 'https://upload.wikimedia.org/wikipedia/commons/c/c6/Georgewashington.jpg'
     },
@@ -91,6 +90,8 @@ export class CommentsDemoService implements CommentsService {
     },
   ];
 
+    private lastIndex = (this._comments.length - 1) - this.offset;
+
   isCommentingDisabled(): boolean {
     return this._disabled;
   }
@@ -104,9 +105,10 @@ export class CommentsDemoService implements CommentsService {
   }
 
   getComments(): Observable<Comment[]> {
-    const endPoint = this.lastIndex + this.offset + 2;
+    const endPoint = (this._comments.length - 1) - this.offset;
     this.lastIndex = endPoint;
-    return Observable.of(this._comments.slice(0, endPoint));
+    
+    return Observable.of(this._comments.slice(endPoint, this._comments.length-1));
   };
 
   postComment(_: any): Observable<Comment[]> {
@@ -124,7 +126,7 @@ export class CommentsDemoService implements CommentsService {
         return item;
       }
     })
-    return Observable.of(this._comments);
+    return Observable.of(this._comments.slice(this.lastIndex, this._comments.length-1));
   };
 
   getInitialState(): Observable<Comment[]> {

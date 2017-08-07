@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild, Output, EventEmitter} from "@angular/core";
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter, AfterViewInit} from "@angular/core";
 import {FALFormService} from "../../fal-form.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
@@ -12,7 +12,7 @@ import { FALSectionNames } from '../../fal-form.constants';
   templateUrl: 'fal-form-criteria-info.template.html'
 })
 
-export class FALFormCriteriaInfoComponent implements OnInit {
+export class FALFormCriteriaInfoComponent implements OnInit, AfterViewInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public onError = new EventEmitter();
   @Output() public showErrors = new EventEmitter();
@@ -273,6 +273,9 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       this.updateErrors();
     });
   }
+  ngAfterViewInit() {
+
+  }
 
   parseDictionariesList(data) {
     let assListDisplay = [];
@@ -343,37 +346,37 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       useDisFunds: [''],
       useLoanTerms: ['']
     });
-
     setTimeout(() => { // horrible hack to trigger angular change detection
       if (this.viewModel.getSectionStatus(FALSectionNames.CRITERIA_INFO) === 'updated') {
         // todo: find way to shorten this...
-        this.falCriteriaForm.get('documentation').markAsDirty();
-        this.falCriteriaForm.get('documentation').updateValueAndValidity();
-        this.falCriteriaForm.get('applicantType').markAsDirty();
+        this.falCriteriaForm.markAsPristine({onlySelf: true});
+        this.falCriteriaForm.get('applicantType').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('applicantType').updateValueAndValidity();
-        this.falCriteriaForm.get('applicantDesc').markAsDirty();
-        this.falCriteriaForm.get('applicantDesc').updateValueAndValidity();
-        this.falCriteriaForm.get('isSameAsApplicant').markAsDirty();
-        this.falCriteriaForm.get('isSameAsApplicant').updateValueAndValidity();
-        this.falCriteriaForm.get('benType').markAsDirty();
+        this.falCriteriaForm.get('benType').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('benType').updateValueAndValidity();
-        this.falCriteriaForm.get('benDesc').markAsDirty();
-        this.falCriteriaForm.get('benDesc').updateValueAndValidity();
-        this.falCriteriaForm.get('lengthTimeDesc').markAsDirty();
-        this.falCriteriaForm.get('lengthTimeDesc').updateValueAndValidity();
-        this.falCriteriaForm.get('awardedType').markAsDirty();
+        this.falCriteriaForm.get('awardedType').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('awardedType').updateValueAndValidity();
-        this.falCriteriaForm.get('awardedDesc').markAsDirty();
-        this.falCriteriaForm.get('awardedDesc').updateValueAndValidity();
-        this.falCriteriaForm.get('assUsageType').markAsDirty();
+        this.falCriteriaForm.get('lengthTimeDesc').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('lengthTimeDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('assUsageType').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('assUsageType').updateValueAndValidity();
-        this.falCriteriaForm.get('assUsageDesc').markAsDirty();
+        this.falCriteriaForm.get('assUsageDesc').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('assUsageDesc').updateValueAndValidity();
-        this.falCriteriaForm.get('usageRes').markAsDirty();
+        this.falCriteriaForm.get('documentation').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('documentation').updateValueAndValidity();
+        this.falCriteriaForm.get('applicantDesc').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('applicantDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('isSameAsApplicant').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('isSameAsApplicant').updateValueAndValidity();
+        this.falCriteriaForm.get('benDesc').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('benDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('awardedDesc').markAsDirty({onlySelf: true});
+        this.falCriteriaForm.get('awardedDesc').updateValueAndValidity();
+        this.falCriteriaForm.get('usageRes').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('usageRes').updateValueAndValidity();
-        this.falCriteriaForm.get('useDisFunds').markAsDirty();
+        this.falCriteriaForm.get('useDisFunds').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('useDisFunds').updateValueAndValidity();
-        this.falCriteriaForm.get('useLoanTerms').markAsDirty();
+        this.falCriteriaForm.get('useLoanTerms').markAsDirty({onlySelf: true});
         this.falCriteriaForm.get('useLoanTerms').updateValueAndValidity();
 
         for (let id in this.documentationComp.validationGroup.controls) {

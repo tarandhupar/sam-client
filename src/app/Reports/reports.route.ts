@@ -16,7 +16,7 @@ export const routes: Routes = [
     component: ReportsPage,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: OverviewComponent },
+      { path: 'overview', component: OverviewProtoComponent },
       { path: 'overviewProto', component: OverviewProtoComponent },
       { path: 'scheduled', component: ScheduledComponent },
       { path: 'static', component: StaticComponent },

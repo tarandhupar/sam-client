@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, NavigationCancel } from "@angular/router";
 import { IAMService } from "api-kit";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 import { Location } from '@angular/common';
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 
 @Component ({
   templateUrl: 'organization-detail.template.html'
@@ -21,10 +22,10 @@ export class OrgDetailPage {
   currentSection: string = "Profile";
   dataLoaded:boolean = false;
 
-  orgStatusCbxModel: any = ['allActive'];
+  orgStatusCbxModel: any = ['allactive'];
   orgStatusCbxConfig = {
     options: [
-      {value: 'allActive', label: 'Active', name: 'Active'},
+      {value: 'allactive', label: 'Active', name: 'Active'},
       {value: 'inactive', label: 'Inactive', name: 'Inactive'},
     ],
     name: 'organization status',
@@ -40,17 +41,15 @@ export class OrgDetailPage {
               private _router: Router,
               private iamService: IAMService,
               public flashMsgService: FlashMsgService,
-              private location:Location){}
+              private location:Location,
+              private capitalize: CapitalizePipe){}
 
   ngOnInit(){
 
     this.route.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-
-
-        this.setupOrgName(this.orgId);
+        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
       });
 
     this._router.events.subscribe(
@@ -113,7 +112,7 @@ export class OrgDetailPage {
 
   setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
     this.hierarchyPath = fullParentPathName.split('.').map( e => {
-      return e.split('_').join(' ');
+      return this.capitalize.transform(e.split('_').join(' '));
     });
     let parentOrgIds = fullParentPath.split('.');
     this.hierarchyPathMap = [];

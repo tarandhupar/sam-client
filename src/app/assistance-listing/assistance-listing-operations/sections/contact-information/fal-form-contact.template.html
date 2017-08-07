@@ -17,56 +17,74 @@
                [attr.id]="'additional-contact-info'"
                formControlName="additionalInfo"></sam-text-area>
 
-  <h4>Headquaters Office</h4>
+  <h4 [attr.id]="'fal-contact-list'">Headquaters Office</h4>
   <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
 
-  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" [subFormErrorIndex]="subFormErrorIndex" (actionHandler)="actionHandler($event)"></contactInfoTable>
-
-  <span class='usa-input-error-message' *ngIf="contactsInfo.length == 0 && (this.sectionStatus == 'updated' || (this.sectionStatus == 'pristine' && atLeastOneEntryError))"><sup>*</sup>At least one Point of Contact is required.</span>
-  <sam-button  [buttonId]="'contact-add-btn'" buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></sam-button>
-
-  <div formArrayName="contacts" [class.hide]="hideContactsForm">
-
-    <h4>{{mode}} Contact</h4>
-
-    <ng-container *ngFor="let contactGrp of falContactInfoForm.controls.contacts.controls; let i=index">
-
-      <div [formGroupName]="i" [class.hide]="contactIndex !== i">
-
+  <sam-listbuilder
+    [max]="2"
+    [control]="falContactInfoForm.get('contacts')"
+    [formArrayInput]="falContactInfoForm.get('contacts').controls"
+    [formGroupTemplate]="contactsSubform"
+    (formArrayChange)="contactsFormArrayChange($event)"
+    (action)="lbActionHandler($event)">
+    <template #display let-item>
+      <ng-container *ngIf="!item.valid">
+        <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
+      </ng-container>
+      <p>
+        <ng-container *ngIf="item.value.title">{{item.value.title}} </ng-container>{{item.value.fullName}}<br/>
+        <ng-container *ngIf="item.value.streetAddress">{{item.value.streetAddress}}<br/></ng-container>
+        <ng-container *ngIf="item.value.email">Email: {{item.value.email}}<br/></ng-container>
+        <ng-container *ngIf="item.value.phone">Phone: {{item.value.phone}}<br/></ng-container>
+      </p>
+    </template>
+    <template #edit let-item>
+      <form [formGroup]="item">
         <sam-select
-          [control]="contactGrp.controls.contactId"
+          [control]="item.controls.contactId"
           [label]="'Contact'"
           [name]="'contact-control'"
           [required]="true"
           [options]="contactDrpDwnOptions"
           [disabled]="(mode == 'Edit' ? true : false)"
           formControlName="contactId"
-          (modelChange)="onParamChanged($event)"></sam-select>
+          (modelChange)="onParamChanged($event,item)"></sam-select>
 
-        <div id="newContact" [class.hide]="(contactGrp.controls.contactId.value != 'new' && mode != 'Edit')">
+        <div id="newContact" [class.hide]="(item.controls.contactId.value != 'new' && mode != 'Edit')">
 
           <sam-text
-            [control]="contactGrp.controls.title"
+            [control]="item.controls.title"
             [name]="'title-input'"
             [label]="'Title'"
             formControlName="title"></sam-text>
 
           <sam-text
-            [control]="contactGrp.controls.fullName"
+            [control]="item.controls.fullName"
             [name]="'fullName-input'"
             [label]="'Full Name'"
             [required]="true"
             formControlName="fullName"></sam-text>
 
           <sam-text
-            [control]="contactGrp.controls.email"
+            [control]="item.controls.email"
             [name]="'email-input'"
             [label]="'Email'"
             [required]="true"
             formControlName="email"></sam-text>
 
+          <!--<sam-phone-entry [control]="item.controls.phone"
+            [required]="true"
+            label="Phone"
+            name="phone-input"
+            formControlName="phone"></sam-phone-entry>
+
+          <sam-phone-entry [control]="item.controls.fax"
+            label="Fax"
+            name="fax-input"
+            formControlName="fax"></sam-phone-entry>-->
+
           <sam-number
-            [control]="contactGrp.controls.phone"
+            [control]="item.controls.phone"
             [minlength]="10"
             [maxlength]="10"
             [name]="'phone-input'"
@@ -75,7 +93,7 @@
             formControlName="phone"></sam-number>
 
           <sam-number
-            [control]="contactGrp.controls.fax"
+            [control]="item.controls.fax"
             [minlength]="10"
             [maxlength]="10"
             [name]="'fax-input'"
@@ -83,21 +101,21 @@
             formControlName="fax"></sam-number>
 
           <sam-text-area
-            [control]="contactGrp.controls.streetAddress"
+            [control]="item.controls.streetAddress"
             [name]="'street-input'"
             [label]="'Street'"
             [required]="true"
             formControlName="streetAddress"></sam-text-area>
 
           <sam-text
-            [control]="contactGrp.controls.city"
+            [control]="item.controls.city"
             [name]="'city-input'"
             [label]="'City'"
             [required]="true"
             formControlName="city"></sam-text>
 
           <sam-select
-            [control]="contactGrp.controls.state"
+            [control]="item.controls.state"
             [label]="'State'"
             [name]="'state-control'"
             [required]="true"
@@ -105,7 +123,7 @@
             formControlName="state"></sam-select>
 
           <sam-text
-            [control]="contactGrp.controls.zip"
+            [control]="item.controls.zip"
             [name]="'zip-input'"
             [label]="'Zip'"
             [required]="true"
@@ -117,21 +135,15 @@
             [options]="countryDrpDwnOptions"
             formControlName="country"></sam-select>
 
-        </div> <!-- End of newcontact -->
-        <sam-button [buttonId]="'contact-cancel-btn'" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
-        <sam-button [buttonId]="'contact-confirm-btn'"
-          buttonText="Confirm"
-          (onClick)="onConfirmClick(i)"
-          *ngIf="contactGrp.controls.contactId.value != 'na'"></sam-button>
-
-      </div> <!-- End of formgroup div -->
-    </ng-container>
-  </div>
+        </div>
+      </form>
+    </template>
+  </sam-listbuilder>
 
   <sam-text
     [control]="falContactInfoForm.controls['website']"
     [hint]="websiteHint"
-    [attr.id]="'website-info'"
+    [attr.id]="'fal-contact-website'"
     [name]="'website-input'"
     [label]="'Website'"
     formControlName="website">

@@ -53,9 +53,9 @@ export class SystemProfileComponent {
     picker: {
       placeholder: 'Search users',
       keyValueConfig: {
-        keyProperty:     'email',
-        valueProperty:   'givenName',
-        subheadProperty: 'email'
+        keyProperty:     'mail',
+        valueProperty:   'commonName',
+        subheadProperty: 'mail'
       }
     },
   };

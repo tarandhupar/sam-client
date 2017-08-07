@@ -2,13 +2,19 @@ import { Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   selector : 'role-sidenav',
   templateUrl : "./role-sidenav.template.html"
 })
 export class RoleSideNav implements OnInit{
-    constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){ }
+    constructor(
+      private router: Router,
+      private route: ActivatedRoute,
+      private role: UserAccessService,
+      private capitalize: CapitalizePipe
+    ){ }
 
     @Output() pathChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() checkSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -30,8 +36,8 @@ export class RoleSideNav implements OnInit{
     ngOnInit() {
       this.determinePath();
       this.domainList = this.route.parent.snapshot.data['domains']._embedded.domainList;
-      this.filters.domains.options = this.domainList.map(this.mapLabelAndName);
-      this.domains = this.domainList.map(this.mapLabel);
+      this.filters.domains.options = this.domainList.map((e) => { return this.mapLabelAndName(e) });
+      this.domains = this.domainList.map((e) => { return this.mapLabel(e) });
     }
 
     accordionHeading1 = "Role Management Definitions";
@@ -61,11 +67,11 @@ export class RoleSideNav implements OnInit{
     }
 
     mapLabelAndName(val) {
-      return { label: val.domainName, value: val.id, name: val.domainName };
+      return { label: this.capitalize.transform(val.domainName), value: val.id, name: val.domainName };
     }
 
     mapLabel(val) {
-      return val.domainName;
+      return this.capitalize.transform(val.domainName);
     }
 
     mapId(val){

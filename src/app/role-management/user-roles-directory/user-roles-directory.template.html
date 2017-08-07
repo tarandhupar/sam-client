@@ -2,11 +2,19 @@
   <div workspace-header class="clearfix">
     <sam-breadcrumbs class='pull-left' [crumbs]="crumbs"></sam-breadcrumbs>
     <div class="pull-right clearfix">
-      <div class="input-and-addon">
-        <input type="text" placeholder="Find User" [(ngModel)]="userSearchValue" (ngModelChange)="doSearch()">
-        <i class="fa fa-search"></i>
-      </div>
+      <label class="pull-left" style="margin-top: .4em; margin-right: .3em">Find User</label>
+      <sam-autocomplete class="pull-right"
+                        rmsusers
+                        #userPicker
+                        [ngModelOptions]="{standalone: true}"
+                        [allowAny]="false"
+                        [(ngModel)]="dummySearchValue"
+                        [labelText]="''"
+                        [config]="userConfig"
+                        (enterEvent)="onUserChange($event)">
+      </sam-autocomplete>
     </div>
+
   </div>
   <div workspace-left>
     <div class="clearfix">
@@ -41,7 +49,7 @@
   <div workspace-right>
     <div class="clearfix">
       <sam-title-subtitle class='pull-left' titleText="Workspace" subtitle="Role Management"></sam-title-subtitle>
-      <button class="usa-button usa-button-primary edit-multiple-button pull-right">Bulk Update</button>
+      <button routerLink='/access/bulk-update' class="pull-right usa-button usa-button-primary m_R-0">Bulk Update</button>
     </div>
     <div *ngIf="resultsOnThisPage" class="title-and-result-count clearfix m_T-4x">
       <div class="result-count text-lighter pull-left" style="line-height: 44px">Showing {{resultCount()}} results</div>
@@ -64,7 +72,8 @@
           </div>
           <div class="pull-left m_L-4x">
             <h2>{{user.user.fullName}}</h2>
-            <h3 class="m_T-0"><a class="pointer-hover" [routerLink]="['/users', user.user.email, 'access']">{{user.user.email}}</a></h3>
+            <h3 class="m_T-0" *ngIf="user?._links.view_access"><a class="pointer-hover" [routerLink]="['/users', user.user.email, 'access']">{{user.user.email}}</a></h3>
+            <h3 class="m_T-0" *ngIf="!user?._links.view_access">{{user.user.email}}</h3>
           </div>
         </div>
 
@@ -72,7 +81,7 @@
           <!-- Organization list (if exists) -->
           <div *ngIf="user.tiers">
             <div *ngFor="let tier of user.tiers">
-              <strong>{{tier.name}}</strong>
+              <strong [ngClass]="tier.name === 'Uncategorized' && 'text-lighter'">{{tier.name}}</strong>
               <br>
               <span *ngFor="let org of tier.organizations; let i = index">
                 <span *ngIf="i !== 0">,&nbsp;</span>
@@ -82,7 +91,6 @@
             </div>
           </div>
 
-
           <!-- If no organization list -->
           <div *ngIf="!user.tiers || !user.tiers.length">
             <i>No roles assigned for this user</i>
@@ -91,7 +99,7 @@
 
       </div>
       <!-- Pagination -->
-      <div class="pagination-row text-center">
+      <div class="pagination-row text-center" *ngIf="totalPages && totalPages > 0">
         <sam-pagination [totalPages]="totalPages" [currentPage]="1" (pageChange)="onPageChange($event)"></sam-pagination>
       </div>
     </ng-container>

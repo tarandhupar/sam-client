@@ -22,6 +22,7 @@ export class FALObligationSubFormComponent {
   @Input() fyYearOptions: any;
   @Input() options: any;
   @Input() toggleAttleatOneEntryError: boolean;
+  @Input() acCategories = [];
   @Output() public subFormObligActionHandler = new EventEmitter();
   currentFY: number;
   prevFY: number;
@@ -114,10 +115,12 @@ export class FALObligationSubFormComponent {
     name: 'Additional Information',
   };
 
-  autocompleteConfig: AutocompleteConfig = {
+  autocompleteConfig: any = {
+    categoryProperty: 'category',
+    isCategorySelectable: false,
     keyValueConfig: {
       keyProperty: 'code',
-      valueProperty: 'name'
+      valueProperty: 'name',
     }, showOnEmptyInput: true
   };
   subFormLabel: string;

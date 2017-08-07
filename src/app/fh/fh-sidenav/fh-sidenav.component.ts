@@ -38,6 +38,10 @@ export class FHSideNav implements OnInit{
     this.orgTypeCbxConfig.options = this.types;
   }
 
+  ngOnChanges(){
+    this.orgTypeCbxConfig.options = this.types;
+  }
+
   orgSearchTypeChange(val){
     this.orgTypeCbxModel = val;
     this.orgTypeChange.emit(this.orgTypeCbxModel);

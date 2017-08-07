@@ -1,48 +1,52 @@
-<div class="assistance-listing-operations">
-  <div class="usa-grid">
-
-    <div *ngIf="isEditForm">
-      <h1>Edit Regional Assistance Location</h1>
-    </div>
-
-    <div *ngIf="!isEditForm">
-      <h1>Add Regional Assistance Location</h1>
-    </div>
-
-    <div>Note: Any updates made in this space will not be reflected in the public view.</div>
-
-    <div class="usa-width-three-fourths">
-      <div class="usa-width-one-whole m_L-4x">
-        <div>
-          <div class="pull-left">
-            <sam-button buttonText="Submit" (onClick)="onSubmit()"
-                        [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')"></sam-button>
-            <div *ngIf="isEditForm" class="pull-right">
-              <sam-button buttonText="Delete Location" (onClick)="modal2.openModal($event)"></sam-button>
-            </div>
-            <div class="pull-right">
-              <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
-            </div>
+<page 
+  theme="inside" 
+  [breadcrumbs]=""
+  section="Workspace"
+  [title]="isEditForm ? 'Edit Regional Assistance Location' : 'Add Regional Assistance Location'">
+  
+  <div class="sam-ui grid">
+    <div class="twelve wide mobile eleven wide tablet seven wide computer column">
+      
+      <div class="sam-ui info icon message">
+        <i class="icon fa fa-info-circle" aria-hidden="true"></i>
+        <div class="content">
+          Any updates made in this space will not be reflected in the public view.
+        </div>
+      </div>
+      
+      <sam-button 
+        buttonText="Submit" 
+        (onClick)="onSubmit()"
+        [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
+      </sam-button>
+      <sam-button 
+        *ngIf="isEditForm"
+        buttonText="Delete Location" 
+        (onClick)="modal2.openModal($event)">
+      </sam-button>
+      <sam-button 
+        buttonText="Cancel" 
+        (onClick)="onCancelClick($event)">
+      </sam-button>
+      
+      <div class="sam-ui segment" *ngIf="isEditForm">
+        <div class="sam-ui medium header">
+          Created By {{RaoFormViewModel.createdBy || 'NA'}}
+          <div class="sub header">
+            On {{RaoFormViewModel.createdDate|date: 'MMM d, yyyy h:mm a' || ''}}
+          </div>
+        </div>
+        <div class="sam-ui medium header">
+          Last Modified By {{RaoFormViewModel.modifiedBy || 'NA'}}
+          <div class="sub header">
+            On {{RaoFormViewModel.modifiedDate|date: 'MMM d, yyyy h:mm a' || ''}}
           </div>
         </div>
       </div>
-
-
-      <div class="usa-width-one-whole m_L-4x">
-        <div *ngIf="isEditForm">
-          <div class="inline">
-            <strong>Created By: </strong><span>{{RaoFormViewModel.createdBy || 'NA'}}</span>
-            <strong>On: </strong> <span>{{RaoFormViewModel.createdDate|date: 'MMM d, yyyy h:mm a' || ''}}</span>
-          </div>
-          <hr>
-          <div>
-            <strong>Last Modified By: </strong><span>{{RaoFormViewModel.modifiedBy || 'NA'}}</span>
-            <strong>On: </strong> <span>{{RaoFormViewModel.modifiedDate|date: 'MMM d, yyyy h:mm a' || ''}}</span>
-          </div>
-        </div>
-
+      
+      <div class="sam-ui segment">
         <form [formGroup]="raoFormGroup">
-
+        
           <!--Department and Subtier-->
           <sam-agency-picker
              [label]="'Federal Agency'"
@@ -55,7 +59,7 @@
              [levelLimit]='2'
              formControlName="organizationId" #agencyPicker>
           </sam-agency-picker>
-
+        
           <!--State/Region-->
           <sam-text
             [control]="raoFormGroup.controls['region']"
@@ -64,7 +68,7 @@
             [required]="false"
             formControlName="region">
           </sam-text>
-
+        
           <!--Point of Contact-->
           <sam-text-area
             [control]="raoFormGroup.controls['pointOfContact']"
@@ -73,7 +77,7 @@
             [required]="true"
             formControlName="pointOfContact">
           </sam-text-area>
-
+        
           <!--Street Address-->
           <sam-text-area
             [control]="raoFormGroup.controls['street']"
@@ -82,7 +86,7 @@
             [required]="true"
             formControlName="streetAddress">
           </sam-text-area>
-
+        
           <!--City-->
           <sam-text
             [control]="raoFormGroup.controls['city']"
@@ -91,7 +95,7 @@
             [required]="true"
             formControlName="city">
           </sam-text>
-
+        
           <!--State-->
           <sam-select
             [control]="raoFormGroup.controls['state']"
@@ -101,7 +105,7 @@
             [options]="stateDrpDwnOptions"
             formControlName="state">
           </sam-select>
-
+        
           <!--Zip-->
           <sam-text
             [control]="raoFormGroup.controls['zip']"
@@ -110,7 +114,7 @@
             [required]="true"
             formControlName="zip">
           </sam-text>
-
+        
           <!--Country-->
           <sam-select
             [control]="raoFormGroup.controls['country']"
@@ -120,7 +124,7 @@
             [options]="countryDrpDwnOptions"
             formControlName="country">
           </sam-select>
-
+        
           <!--Phone -->
           <sam-text
             [control]="raoFormGroup.controls['phone']"
@@ -129,7 +133,7 @@
             [required]="true"
             formControlName="phone">
           </sam-text>
-
+        
           <!--Sub-Branch-->
           <sam-text
             [control]="raoFormGroup.controls['subBranch']"
@@ -138,7 +142,7 @@
             [required]="false"
             formControlName="subBranch">
           </sam-text>
-
+        
           <!--Division-->
           <sam-select
             [control]="raoFormGroup.controls['division']"
@@ -148,9 +152,10 @@
             [options]="divisionDrpDwnOptions"
             formControlName="division">
           </sam-select>
-
+        
         </form>
       </div>
+      
       <sam-modal #modal2
                  [type]="'info'"
                  [title]="'Are You Sure?'"
@@ -158,24 +163,28 @@
                  [submitButtonLabel]="'Yes'"
                  [description]="'Are you sure you want to delete this location? Note: Any updates made in this space will not be reflected in the public view.'"
                  (onClose)="onModalClose($event)"
-                 (onSubmit)="deleteRAO($event)"
-      ></sam-modal>
-
-      <div class="usa-width-one-whole m_L-4x">
-        <div>
-          <div class="pull-left">
-            <sam-button buttonText="Submit" (onClick)="onSubmit()"
-            [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')"></sam-button>
-            <div *ngIf="isEditForm" class="pull-right">
-              <sam-button buttonText="Delete Location" (onClick)="modal2.openModal()"></sam-button>
-            </div>
-            <div class="pull-right">
-              <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
-            </div>
-          </div>
-        </div>
-      </div>
+                 (onSubmit)="deleteRAO($event)">
+      </sam-modal>
+      
+      <sam-button 
+        buttonText="Submit" 
+        (onClick)="onSubmit()"
+        [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
+      </sam-button>
+      <sam-button
+        *ngIf="isEditForm" 
+        buttonText="Delete Location" 
+        (onClick)="modal2.openModal()">
+      </sam-button>
+      <sam-button 
+        buttonText="Cancel" 
+        (onClick)="onCancelClick($event)">
+      </sam-button>
+      
     </div>
-
   </div>
-</div>
+  
+  <div class="sam-ui hidden section divider"></div>
+  
+</page>
+

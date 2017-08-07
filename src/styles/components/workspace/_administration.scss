@@ -1,4 +1,5 @@
 @import 'administration/fsd-widget';
+@import 'administration/profile-widget';
 @import 'administration/rm-widget';
 @import 'administration/system-widget';
 @import 'administration/fh-widget';
@@ -25,7 +26,6 @@
     margin-top: 13px;
     font-size: 125%;
     color: $color-primary-darker;
-
   }
 
   .alert-text-center {
@@ -52,8 +52,18 @@
     cursor: pointer;
   }
 
-  .usa-width-one-half {
-    &:nth-child(odd) {
+  &.grid-public {
+    .profile-widget + .usa-width-one-half {
+      margin-right: 0%;
+    }
+
+    .usa-width-one-half:nth-child(even) {
+      margin-right: 0%;
+    }
+  }
+
+  &.grid-federal {
+    .usa-width-one-half:nth-child(odd) {
       margin-right: 0%;
     }
   }

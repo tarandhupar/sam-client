@@ -1,54 +1,82 @@
 import {Component, OnInit} from "@angular/core";
 import { UserAccessService } from "api-kit/access/access.service";
 import {Router, Route, ActivatedRoute} from "@angular/router";
+import { RMSUserServiceImpl } from "../../../users/request-access/username-autocomplete.component";
 
 @Component({
   selector: 'rm-widget',
-  templateUrl: './rm-widget.template.html'
+  templateUrl: './rm-widget.template.html',
+  providers: [RMSUserServiceImpl]
 })
 export class RMWidgetComponent implements OnInit {
 
-  autocompletePeoplePickerConfig = {
+  userConfig = {
     keyValueConfig: {
-      keyProperty: 'email',
-      valueProperty: 'givenName',
-      subheadProperty: 'email'
+      keyProperty: 'key',
+      valueProperty: 'value'
     }
   };
 
-  adminLevel: number = 2; // default to regular user (non-admin)
+  pendingCount: number = 0;
+  escalatedCount: number = 0;
 
-  pendingCount: number;
-  escalatedCount: number;
+  shouldShowPending: boolean = false;
+  shouldShowEscalated: boolean = false;
+  shouldShowRoleDefinitions: boolean = false;
+  shouldShowRoleDirectory: boolean = false;
+
+  get shouldShowAnyAdmin() {
+    return this.shouldShowEscalated || this.shouldShowPending || this.shouldShowRoleDirectory || this.shouldShowRoleDefinitions;
+  }
+
+  dummySearchValue; //autocomplete makes me do this
+  loadingAccess: boolean = true;
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private accessService: UserAccessService,
   ) {
 
   }
 
   ngOnInit() {
-    this.adminLevel = this.route.snapshot.data['adminLevel'];
-    this.accessService.getWidget().subscribe(res => {
-      if (!res || !res.requests || ! res.requests.length) {
-        return;
-      }
-      res.requests.forEach(countInfo => {
-        if (!countInfo.type || !countInfo.type.toLowerCase()) {
+    this.accessService.getWidget().subscribe(
+      res => {
+        if (res._links && res._links.domaindefinition) {
+          this.shouldShowRoleDefinitions = true;
+        }
+
+        if (res._links && res._links.userdirectory) {
+          this.shouldShowRoleDirectory = true;
+        }
+
+        if (!res || !res.requests || ! res.requests.length) {
           return;
         }
-        if (countInfo.type.toLowerCase() === 'pending') {
-          this.pendingCount = countInfo.count;
-        } else if(countInfo.type.toLowerCase() === 'escalated') {
-          this.escalatedCount = countInfo.count;
-        }
-      });
-    });
+
+        res.requests.forEach(countInfo => {
+          if (!countInfo.type || !countInfo.type.toLowerCase()) {
+            return;
+          }
+          if (countInfo.type.toLowerCase() === 'pending') {
+            this.shouldShowPending = true;
+            this.pendingCount = countInfo.count;
+          } else if(countInfo.type.toLowerCase() === 'escalated') {
+            this.shouldShowEscalated = true;
+            this.escalatedCount = countInfo.count;
+          }
+        });
+      },
+      err => {
+        this.loadingAccess = false;
+      },
+      () => {
+        this.loadingAccess = false;
+      }
+    );
   }
 
   onPersonChange(person) {
-    this.router.navigate(['/users', person.email, 'access']);
+    this.router.navigate(['/users', person.key, 'access']);
   }
 }

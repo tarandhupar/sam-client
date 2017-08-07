@@ -8,14 +8,15 @@
   <!--============================-->
   <!--=== Identity Information ===-->
   <!--============================-->
-  <section class="identity">
+  <section id="identity" class="identity">
     <sam-alert [type]="alerts.identity.type"
                [title]="alerts.identity.message"
                [showClose]="true"
                [hidden]="!alerts.identity.show"
                (dismiss)="dismiss('identity')"></sam-alert>
     <sam-editor (action)="handleAction($event,'identity')"
-                label="Identifying Information">
+                label="Identifying Information"
+                #identityEditor>
       <div editor-display-view>
         <div class="usa-form-group">
           <label>Name:</label>
@@ -53,14 +54,15 @@
   <!--============================-->
   <!--=== Business Information ===-->
   <!--============================-->
-  <section class="business">
+  <section id="business" class="business">
     <sam-alert [type]="alerts.business.type"
                [title]="alerts.business.message"
                [showClose]="true"
                [hidden]="!alerts.business.show"
                (dismiss)="dismiss('business')"></sam-alert>
     <sam-editor [label]="states.isGov ? 'Organization Information' : 'Business Information'"
-                (action)="handleAction($event,'business')">
+                (action)="handleAction($event,'business')"
+                #businessEditor>
       <div editor-display-view>
         <div class="usa-form-group" *ngIf="states.isGov">
           <label>Department:</label>
@@ -96,16 +98,17 @@
                              #agencyPicker>
           </sam-agency-picker>
 
-          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)"></sam-phone-entry>
+          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)" *ngIf="user.workPhone"></sam-phone-entry>
       </div>
     </sam-editor>
   </section>
   <!--==========================-->
   <!--=== Security Questions ===-->
   <!--==========================-->
-  <section *ngIf="user.kbaAnswerList.length" class="kba">
+  <section id="kba" class="kba" *ngIf="user.kbaAnswerList.length">
     <sam-editor (action)="handleAction($event,'kba')"
-                label="Security Questions">
+                label="Security Questions"
+                #kbaEditor>
       <div editor-display-view>
         <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
           <label [innerText]="question(kbaAnswer.questionId)"></label>
@@ -125,7 +128,7 @@
       </div>
     </sam-editor>
   </section>
-  <section>
+  <section id="deactivate">
     <h3>Deactivate Account</h3>
     <div>
       Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will

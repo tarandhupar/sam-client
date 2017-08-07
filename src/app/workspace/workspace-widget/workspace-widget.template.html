@@ -1,6 +1,13 @@
 <div class="usa-width-one-whole workspace-widget">
   <div class="usa-width-one-whole workspace-widget-body-section">
-    <h4 class="m_L-1x m_T-1x workspace-widget-title workspace-widget-text">{{title}}</h4>
+    <h4 class="m_L-1x m_T-1x workspace-widget-title workspace-widget-text">
+      {{ title }}
+      <a class="shortcut usa-button usa-button-primary"
+         [routerLink]="shortcut.routerLink"
+         [innerText]="shortcut.text"
+         (click)="onShortcutClick"
+         *ngIf="shortcut"></a>
+    </h4>
     <ng-content></ng-content>
   </div>
 

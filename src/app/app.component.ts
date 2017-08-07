@@ -39,6 +39,9 @@ export class App{
     label: '',
     name: 'filter',
   };
+  searchBarConfig = {
+    placeholder: "I'm looking for..."
+  }
 
   showOverlay = false;
 

@@ -36,12 +36,15 @@ export class WrapperService {
         "domainDefinition" : "/rms/v1/domaindefinition",
         "feedback": "/feedback/v1",
         "rms": "/rms/v1",
+        "rms2": "/rms/v2",
         "relatedPrograms": "/fac/v1/programs/relatedprograms",
         "aac": "/aac/v1",
         "searchDictionaries": "/sgs/v1/dictionaries",
         'preferences': '/preferences',
         'fileExtracts':'/fileextractservices/v1/api/listfiles',
-        'userPicker':'/picker/users',
+        'userPicker':'/picker/v2/users',
+        'iam': '/iam/auth/v4',
+		'watchlist':'/watchlistservice/v1/api/recorddetail'
     };
 
     constructor(private _http: Http){}

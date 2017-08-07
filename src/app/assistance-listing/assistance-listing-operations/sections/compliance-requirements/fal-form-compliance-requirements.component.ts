@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import {Component, OnInit, Input, ViewChild, EventEmitter, Output} from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
@@ -8,7 +8,7 @@ import { FALFormViewModel } from "../../fal-form.model";
 import {
   FALFormErrorService, FieldError
 } from '../../fal-form-error.service';
-import { FALSectionNames } from '../../fal-form.constants';
+import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 
 @Component({
   providers: [ProgramService, DictionaryService, FALFormService],
@@ -53,7 +53,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
   };
 
   public reportsConfig: any = {
-    name: 'compliance-reports',
+    name: FALFieldNames.COMPLIANCE_REPORTS,
     label: 'Reports',
     hint: 'What reports does the funding agency require?',
     required: false,
@@ -156,19 +156,20 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
     setTimeout(() => { // horrible hack to trigger angular change detection
       if (this.viewModel.getSectionStatus(FALSectionNames.COMPLIANCE_REQUIREMENTS) === 'updated') {
-        this.complianceRequirementsGroup.get('policyRequirementsCheckbox').markAsDirty();
+        this.complianceRequirementsGroup.markAsPristine({onlySelf: true});
+        this.complianceRequirementsGroup.get('policyRequirementsCheckbox').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('policyRequirementsCheckbox').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('policyRequirementsTextarea').markAsDirty();
+        this.complianceRequirementsGroup.get('policyRequirementsTextarea').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('policyRequirementsTextarea').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('reports').markAsDirty();
+        this.complianceRequirementsGroup.get('reports').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('reports').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('audits').markAsDirty();
+        this.complianceRequirementsGroup.get('audits').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('audits').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('records').markAsDirty();
+        this.complianceRequirementsGroup.get('records').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('records').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('additionalDocumentation').markAsDirty();
+        this.complianceRequirementsGroup.get('additionalDocumentation').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('additionalDocumentation').updateValueAndValidity();
-        this.complianceRequirementsGroup.get('formulaMatching').markAsDirty();
+        this.complianceRequirementsGroup.get('formulaMatching').markAsDirty({onlySelf: true});
         this.complianceRequirementsGroup.get('formulaMatching').updateValueAndValidity();
 
         for (let id in this.reportsComp.validationGroup.controls) {
@@ -556,9 +557,12 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       let fcontrol =  this.reportsComp.validationGroup.get(id);
       let wrapperControl = this.reportsComp.compTextarea._results[id.substr(id.length - 1)];
       if(reportErrors) {
-        let currentErrors = FALFormErrorService.findErrorById(reportErrors, 'compliance-reports-' + id) as FieldError;
+        let currentErrors = FALFormErrorService.findErrorById(reportErrors, FALFieldNames.COMPLIANCE_REPORTS + '-' + id) as FieldError;
         if(currentErrors){
           this.setControlErrors(fcontrol, currentErrors);
+          if (this.viewModel.getSectionStatus(FALSectionNames.COMPLIANCE_REQUIREMENTS) === 'updated') {
+            fcontrol.markAsDirty();
+          }
           wrapperControl.wrapper.formatErrors(fcontrol);
         } //end of if
         else {

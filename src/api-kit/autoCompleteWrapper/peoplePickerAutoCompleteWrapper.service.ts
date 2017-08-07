@@ -7,23 +7,23 @@ import { Observable }    from 'rxjs/Observable';
 @Injectable()
 export class PeoplePickerAutoCompleteWrapper implements AutocompleteService{
   constructor(private oPeoplePickerService:PeoplePickerService) {}
-  
+
   //sam-ui-kit autocomplete
   fetch(val: any, endOfList: boolean, serviceOptions: any) {
     if(val.length>3){
       return this.oPeoplePickerService.getFilteredList({
           fle: val
       }).map(data => {
-        return data._embedded.userResources.map((value)=>{
+        return data._embedded.ldapUserResources.map((value)=>{
           return value.user;
         });
       });
     }
     return Observable.of([]);
   }
-  
+
   setFetchMethod(newVal){
-    
+
   }
 }
 

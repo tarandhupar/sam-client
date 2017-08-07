@@ -1,22 +1,30 @@
-import { Component, OnInit, ViewChild, OnDestroy, ViewChildren } from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy, ViewChildren, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {FALFormService} from "./fal-form.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router} from '@angular/router';
 import {FALFormViewModel} from "./fal-form.model";
-import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
-import { FALSectionNames } from './fal-form.constants';
-import { FALFormErrorService } from './fal-form-error.service';
+import {FALErrorDisplayComponent} from '../components/fal-error-display/fal-error-display.component';
+import {FALSectionNames} from './fal-form.constants';
+import {FALFormErrorService} from './fal-form-error.service';
 import {AuthGuard} from "../../../api-kit/authguard/authguard.service";
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
-import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
+import {MenuItem} from 'sam-ui-kit/components/sidenav';
+import {FilterMultiArrayObjectPipe} from '../../app-pipes/filter-multi-array-object.pipe';
+import {AlertFooterService} from "../../alerts/alert-footer/alert-footer.service";
+import {ProgramService} from "../../../api-kit/program/program.service";
 
 @Component({
   moduleId: __filename,
   templateUrl: 'fal-form.template.html',
-  providers: [FALFormService]
+  providers: [FALFormService, ProgramService]
 })
-export class FALFormComponent implements OnInit, OnDestroy {
+export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   falFormViewModel: FALFormViewModel;
   createPermissions: any;
+  @ViewChild('titleModal') titleModal;
+  titleMissingConfig = {
+    title: 'No Title Provided',
+    description: 'You must provide a title for this draft assistance listing in order to proceed.',
+    closeText: 'Close'
+  };
   sections: string[] = [
     FALSectionNames.HEADER,
     FALSectionNames.OVERVIEW,
@@ -30,7 +38,16 @@ export class FALFormComponent implements OnInit, OnDestroy {
   ];
   currentSection: number;
   leadingErrorMsg: string;
-  crumbs = [{url:'/',breadcrumb:'Home'},{url:'/fal/workspace',breadcrumb:'Workspace'},{breadcrumb:'Assistance Listing'}];
+  crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
+    breadcrumb: 'Workspace',
+    urlmock: true
+  }, {breadcrumb: 'Assistance Listing', urlmock: false}];
+  successFooterAlertModel = {
+    title: "Success",
+    description: "",
+    type: "success",
+    timer: 5000
+  }
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   @ViewChildren('form') form;
   private routeSubscribe;
@@ -54,7 +71,7 @@ export class FALFormComponent implements OnInit, OnDestroy {
   sidenavSelection;
   sidenavModel: MenuItem = {
     label: "abc",
-    children:[{
+    children: [{
       label: this.sectionLabels[0],
       route: "#" + this.sections[0],
       iconClass: this.pristineIconClass
@@ -83,22 +100,24 @@ export class FALFormComponent implements OnInit, OnDestroy {
       label: this.sectionLabels[5],
       route: "#" + this.sections[5],
       iconClass: this.pristineIconClass
-    },  {
+    }, {
       label: this.sectionLabels[6],
       route: "#" + this.sections[6],
       iconClass: this.pristineIconClass
-    },  {
+    }, {
       label: this.sectionLabels[7],
       route: "#" + this.sections[7],
       iconClass: this.pristineIconClass
-    },  {
+    }, {
       label: this.sectionLabels[8],
       route: "#" + this.sections[8],
       iconClass: this.pristineIconClass
     }]
   };
 
-  constructor(private service: FALFormService, private route: ActivatedRoute, private router: Router, private errorService: FALFormErrorService, private authGuard: AuthGuard) {
+  constructor(private service: FALFormService, private route: ActivatedRoute, private router: Router,
+              private errorService: FALFormErrorService, private authGuard: AuthGuard, private cdr: ChangeDetectorRef, private alertFooterService: AlertFooterService,
+              private programService: ProgramService) {
     // jump to top of page when changing sections
     this.routeSubscribe = this.router.events.subscribe(() => {
       window.scrollTo(0, 0);
@@ -116,6 +135,18 @@ export class FALFormComponent implements OnInit, OnDestroy {
         this.falFormViewModel.programId = this.route.snapshot.params['id'];
         this.errorService.viewModel = this.falFormViewModel;
         this.errorService.initFALErrors();
+
+        this.service.getFederalHierarchyConfigurations(this.falFormViewModel.organizationId).subscribe( data => {
+          let runValidationFlag = !data.programNumberAuto;
+          let highRange = data.programNumberHigh;
+          let lowRange = data.programNumberLow;
+
+          this.errorService.validateHeaderProgNo(runValidationFlag, lowRange, highRange, FALFormService.getAuthenticationCookie(), this.programService).subscribe(res => {
+            this.updateSidenavIcon(FALSectionNames.HEADER);
+            this.showErrors(this.errorService.applicableErrors);
+          });
+
+        });
       });
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
@@ -129,8 +160,13 @@ export class FALFormComponent implements OnInit, OnDestroy {
       this.authGuard.checkPermissions('addoredit', this.falFormViewModel.programId ? this.falFormViewModel['_fal'] : res);
       this.createPermissions = res;
     });
-
     this.makeSidenavModel();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.determineSection();
+    }, 0);
   }
 
   private makeSidenavModel() {
@@ -157,9 +193,25 @@ export class FALFormComponent implements OnInit, OnDestroy {
 
   determineSection() {
     this.route.fragment.subscribe((fragment: string) => {
-      if (fragment && this.sections.indexOf(fragment) != -1) {
-        this.gotoSection(fragment);
+      let section = '';
+
+      if (fragment) {
+        for (let s of this.sections) {
+          if (fragment.indexOf(s) != -1) {
+            section = s;
+          }
+        }
+      }
+
+      if (section) {
+        this.gotoSection(section);
         this.sidenavSelection = this.sectionLabels[this.currentSection];
+        setTimeout(() => { // schedule scroll after angular change detection runs
+          let field = document.getElementById(fragment.replace(new RegExp('^' + section + '-'), ''));
+          if (field) {
+            field.scrollIntoView();
+          }
+        }, 2000);
       } else {
         this.gotoSection(FALSectionNames.HEADER);
         this.navigateSection();
@@ -168,8 +220,8 @@ export class FALFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  formActionHandler(obj){
-    switch(obj.event){
+  formActionHandler(obj) {
+    switch (obj.event) {
       case "done":
         this.onSaveExitClick();
         break;
@@ -224,56 +276,27 @@ export class FALFormComponent implements OnInit, OnDestroy {
 
   navigateSection() {
     let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit' : '/programs/add';
-    this.router.navigate([url], {fragment: this.sections[this.currentSection]});
+    this.router.navigate([url], {
+      fragment: this.sections[this.currentSection],
+      queryParams: this.route.snapshot.queryParams
+    });
   }
 
   onSaveExitClick() {
-    this.beforeSaveAction();
-    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
-      .subscribe(api => {
-          this.afterSaveAction(api);
-          let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
-
-          this.router.navigate([url]);
-        },
-        error => {
-          console.error('error saving assistance listing to api', error);
-        });
-
+    this.formsDirtyCheck('SaveExit');
   }
 
   onSaveBackClick() {
-    //  TODO: Support partial update?
-    this.beforeSaveAction();
-    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
-      .subscribe(api => {
-          this.afterSaveAction(api);
-          this.gotoPreviousSection();
-          this.navigateSection();
-        },
-        error => {
-          console.error('error saving assistance listing to api', error);
-        });
-
+    this.formsDirtyCheck('SaveBack');
   }
 
   onSaveContinueClick() {
-    //  TODO: Support partial update?
-    this.beforeSaveAction();
-    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
-      .subscribe(api => {
-          this.afterSaveAction(api);
-          this.gotoNextSection();
-          this.navigateSection();
-        },
-        error => {
-          console.error('error saving assistance listing to api', error);
-        });
-
+    this.formsDirtyCheck('SaveContinue');
   }
 
+
   private beforeSaveAction() {
-    for(let section of this.form._results) {
+    for (let section of this.form._results) {
       if (section.beforeSaveAction) {
         section.beforeSaveAction();
       }
@@ -301,6 +324,8 @@ export class FALFormComponent implements OnInit, OnDestroy {
       } else {
         iconClass = this.updatedIconClass;
       }
+    } else if (status === 'pristine') {
+      iconClass = this.pristineIconClass;
     }
 
     let filter = new FilterMultiArrayObjectPipe();
@@ -346,14 +371,136 @@ export class FALFormComponent implements OnInit, OnDestroy {
   }
 
   navHandler(obj) {
-    this.router.navigate([], {fragment: obj.route.substring(1)});
+    this.formsDirtyCheck('SideNav', obj);
   }
+
 
   public showErrors(errors) {
     this.errorDisplayComponent.formatErrors(errors);
   }
 
-  updateLeadingMsg(msg){
+  updateLeadingMsg(msg) {
     this.leadingErrorMsg = msg;
+  }
+
+  breadCrumbClick(event) {
+    if (event === 'Workspace') {
+      this.router.navigate(['/fal/workspace']);
+    }
+  }
+
+  onTitleModalClose() {
+    this.sidenavSelection = "";
+    this.cdr.detectChanges();
+    this.sidenavSelection = "1. Header Information";
+    this.cdr.detectChanges();
+    let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
+    this.router.navigateByUrl(url);
+  }
+
+  public checkNavigation(target) {
+    if (target.url === this.router.url) {
+      let field = document.getElementById(target.fieldId);
+      if (field) {
+        field.scrollIntoView();
+      }
+    }
+  }
+
+  formsDirtyCheck(actionType, navObj?: any) {
+    if (!this.falFormViewModel.title) {
+      this.titleModal.openModal();
+    } else {
+      //  TODO: Support partial update?
+      for (let section of this.form._results) {
+        if (section.falHeaderInfoForm) {
+          this.saveFormOnDirty(section.falHeaderInfoForm, false, navObj, actionType);
+        }
+        if (section.falOverviewForm) {
+          this.saveFormOnDirty(section.falOverviewForm, false, navObj, actionType);
+        }
+        if (section.falAuthForm) {
+          this.saveFormOnDirty(section.falAuthForm, true, navObj, actionType, section.authSubForm.falAuthSubForm);
+        }
+        if (section.finObligationsForm) {
+          this.saveFormOnDirty(section.finObligationsForm, true, navObj, actionType, section.obligationSubForm.falObligationSubForm);
+        }
+        if (section.otherFinancialInfoForm) {
+          this.saveFormOnDirty(section.otherFinancialInfoForm, false, navObj, actionType);
+        }
+        if (section.falCriteriaForm) {
+          this.saveFormOnDirty(section.falCriteriaForm, false, navObj, actionType);
+        }
+        if (section.falAssistanceForm) {
+          this.saveFormOnDirty(section.falAssistanceForm, false, navObj, actionType);
+        }
+        if (section.complianceRequirementsGroup) {
+          this.saveFormOnDirty(section.complianceRequirementsGroup, false, navObj, actionType);
+        }
+        if (section.falContactInfoForm) {
+          this.saveFormOnDirty(section.falContactInfoForm, false, navObj, actionType);
+        }
+      }
+    }
+  }
+
+  saveFormOnDirty(section, subsectionFlag, navObj, actionType, subsection?: any) {
+    if (subsectionFlag === true) {
+      let dirty = false;
+      if (section.dirty || subsection.dirty) {
+        dirty = true;
+      }
+      this.saveAction(dirty, navObj, actionType);
+    } else {
+      this.saveAction(section.dirty, navObj, actionType);
+    }
+  }
+
+  saveAction(dirtyFlag, navObj, actionType) {
+    if (dirtyFlag) {
+      this.beforeSaveAction();
+      this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
+        .subscribe(api => {
+            this.afterSaveAction(api);
+            if (actionType === 'SideNav') {
+              let section = this.sectionLabels[this.currentSection];
+              let sectionLabel;
+              if(section !== 'Obligations' && section !== 'Other Financial Info') {
+                sectionLabel = section.split('.')[1];
+              } else {
+                sectionLabel = section;
+              }
+              this.successFooterAlertModel.description = sectionLabel + ' saved successfully.'
+              this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
+              this.navigationOnAction(actionType, navObj);
+            }
+            this.navigationOnAction(actionType, navObj);
+          },
+          error => {
+            console.error('error saving assistance listing to api', error);
+          });
+    } else {
+      this.navigationOnAction(actionType, navObj);
+    }
+  }
+
+  navigationOnAction(actionType, navObj) {
+    let url;
+    if (actionType === 'SaveExit') {
+      url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
+      this.router.navigate([url]);
+    }
+    if (actionType === 'SideNav') {
+      url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit' : '/programs/add';
+      this.router.navigate([url], {fragment: navObj.route.substring(1)});
+    }
+    if (actionType === 'SaveBack') {
+      this.gotoPreviousSection();
+      this.navigateSection();
+    }
+    if (actionType === 'SaveContinue') {
+      this.gotoNextSection();
+      this.navigateSection();
+    }
   }
 }

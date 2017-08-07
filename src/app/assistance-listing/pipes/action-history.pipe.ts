@@ -14,6 +14,7 @@ export class ActionHistoryPipe implements PipeTransform {
   orgNames: any;
   observable: Observable<any>;
   subject: ReplaySubject<any>;
+  latestProgramId: string = null;
 
 
   transform(actionHistoryArray:any) : any {
@@ -26,7 +27,7 @@ export class ActionHistoryPipe implements PipeTransform {
 
     let processOrganizationNames = function(historyItem){
       if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
-        return historyItem.requested_organizationId;
+        return historyItem.requested_organizationId + "," + historyItem.current_organization_id;
       }
     };
 
@@ -81,47 +82,65 @@ export class ActionHistoryPipe implements PipeTransform {
       processedHistoryItem1['title'] = actionHistoryLabelPipe.transform(historyItem.action_type);
       processedHistoryItem1['comment'] = historyItem.action_reason;
       processedHistoryItem1['submitter'] = historyItem.action_submitter;
-      processedHistoryItem1['url'] = '/programs/' + historyItem.program_id + "/view";
       if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
-        processedHistoryItem1['titleNumberAgency'] = _.find(this.orgNames, function(o) { return o.key == historyItem.requested_organizationId; }).value;
-        if (processedHistoryItem1['titleNumberAgency'] == null) {
-          processedHistoryItem1['titleNumberAgency'] = "New Agency: Not Available";
+        let newAgency = _.find(this.orgNames, function(o) { return o.key == historyItem.requested_organizationId; }).value;
+        let currentAgency = _.find(this.orgNames, function(o) { return o.key == historyItem.current_organization_id; }).value;
+        let newProgramNumber = historyItem.requested_programNumber;
+        let currentProgramNumber = historyItem.current_program_number;
+        if (newAgency == null) {
+          newAgency = "To".bold() + ": Not Available";
         } else {
-          processedHistoryItem1['titleNumberAgency'] = "New Agency: " + processedHistoryItem1['titleNumberAgency'];
+          newAgency = "To".bold() + ": " + newAgency;
         }
+        if (newProgramNumber == null) {
+          newProgramNumber = "To".bold() + ": Not Available";
+        } else {
+          newProgramNumber = "To".bold() + ": " + newProgramNumber;
+        }
+        processedHistoryItem1['titleNumberAgency'] = newAgency + "<br />" + "From".bold() + ": " + currentAgency + "<br />" + newProgramNumber + "<br />" + "From".bold() + ": " + currentProgramNumber;
       } else if (historyItem.action_type == 'title') {
-        processedHistoryItem1['titleNumberAgency'] = historyItem.requested_title;
-        if (processedHistoryItem1['titleNumberAgency'] == null) {
-          processedHistoryItem1['titleNumberAgency'] = "New Title: Not Available";
+        let newTitle = historyItem.requested_title;
+        let currentTitle = historyItem.current_title;
+        if (newTitle == null) {
+          newTitle = "To".bold() + ": Not Available";
         } else {
-          processedHistoryItem1['titleNumberAgency'] = "New Title: " + processedHistoryItem1['titleNumberAgency'];
+          newTitle = "To".bold() + ": " + newTitle;
         }
+        processedHistoryItem1['titleNumberAgency'] = newTitle + "<br />" + "From".bold() + ": " + currentTitle
       } else if (historyItem.action_type == 'program_number'){
-        processedHistoryItem1['titleNumberAgency'] = historyItem.requested_programNumber;
-        if (processedHistoryItem1['titleNumberAgency'] == null) {
-          processedHistoryItem1['titleNumberAgency'] = "New Number: Not Available";
+        let newProgramNumber = historyItem.requested_programNumber;
+        let currentProgramNumber = historyItem.current_program_number;
+        if (newProgramNumber == null) {
+          newProgramNumber = "To".bold() + ": Not Available";
         } else {
-          processedHistoryItem1['titleNumberAgency'] = "New Number: " + processedHistoryItem1['titleNumberAgency'];
+          newProgramNumber = "To".bold() + ": " + newProgramNumber;
         }
+        processedHistoryItem1['titleNumberAgency'] = newProgramNumber + "<br />" + "From".bold() + ": " + currentProgramNumber;
+      } else if (historyItem.action_type == 'publish'){
+        processedHistoryItem1['url'] = '/programs/' + historyItem.program_id + "/review";
       }
       let processedHistoryItem2 = {};
       processedHistoryItem2['date'] = dateFormat.transform(historyItem.request_date, 'MMMM DD, YYYY h:mm a');
       processedHistoryItem2['title'] = requestHistoryLabelPipe.transform(historyItem.request_type);
       processedHistoryItem2['comment'] = historyItem.request_reason;
       processedHistoryItem2['submitter'] = historyItem.request_submitter;
-      processedHistoryItem2['url'] = '/programs/' + historyItem.program_id + "/view";
       let processedHistoryArray = [processedHistoryItem1, processedHistoryItem2];
       return processedHistoryArray;
     };
 
     organizationNamesAPI.subscribe(api => {
-      let toReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
-      for (let i in toReturn){
-        if ((toReturn[i]['title'] == null || toReturn[i]['title'] == '') && toReturn[i]['date'] == null && toReturn[i]['description'] == null && toReturn[i]['submitter'] == null){
-          toReturn.splice(i,1);
+      let objectToReturn;
+      let arrayToReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
+      for (let i in arrayToReturn){
+        if (((arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') && arrayToReturn[i]['date'] == null && arrayToReturn[i]['description'] == null && arrayToReturn[i]['submitter'] == null) || arrayToReturn[i]['title'] == 'send_omb'){
+          arrayToReturn.splice(i,1);
         }
       }
-      this.subject.next(toReturn);
+      objectToReturn = {
+        array: arrayToReturn,
+        latestProgramId: this.latestProgramId
+      };
+      this.subject.next(objectToReturn);
     });
 
 

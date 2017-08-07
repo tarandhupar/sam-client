@@ -14,7 +14,6 @@ export const routes: Routes = [
   { path: 'workspace',
     component: WorkspacePage,
     canActivate: [ IsLoggedInGuard ],
-    resolve: { adminLevel: AdminLevelResolve },
   },
   {
     path: 'workspace/fsd',

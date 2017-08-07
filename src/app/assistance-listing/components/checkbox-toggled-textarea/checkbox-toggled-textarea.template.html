@@ -7,14 +7,16 @@
   <div *ngIf="validationGroup" [formGroup]="validationGroup">
     <sam-checkbox *ngIf="model"
                  [model]="model.checkbox"
-                 [name]="name + '-checkbox'"
+                 [name]="name + '-checkbox-input'"
+                 [attr.id]="name + '-checkbox'"
                  [options]="checkboxOptions"
                  [hasSelectAll]="checkboxHasSelectAll"
                  (modelChange)="onCheckboxChange($event)"
     ></sam-checkbox>
 
     <ng-container *ngFor="let option of checkboxOptions; let i = index;">
-      <sam-text-area [name]="name + '-textarea' + i"
+      <sam-text-area [name]="name + '-textarea-input' + i"
+                   [attr.id]="name + '-textarea' + i"
                    [label]="textareaLabel[i]"
                    [hint] = "textareaHint[i]"
                    [required]="textareaRequired[i]"

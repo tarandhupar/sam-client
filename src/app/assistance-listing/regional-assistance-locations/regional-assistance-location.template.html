@@ -1,57 +1,87 @@
-<workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
-                  [totalElements]="totalCount" [loadFlag]="data.length >= 0"
-                  titleText="Regional Assistance Locations">
-  <br>
-  <div workspace-sidebar></div>
-  <div workspace-content class="workspace-content">
-    <div class="sam-ui grid">
-      <div class="row">
-    <div *ngIf="raoExists && !initLoad" custom-input class="search-bar eight wide column">
-
-      <sam-autocomplete class="div-fill"#autocomplete
-                        [(ngModel)]="keyword"
-                        (ngModelChange)="regionalLocationSearchModel($event)"
-                        (enterEvent)="regionalLocationSearchClick()"
-                        [config]="regionalLocationSearchConfig"
-                        [options]="[]"
-                        [showClearButton]="true"
-                        [allowAny]="true"
-                        name="appsearch">
-      </sam-autocomplete>
-      <sam-button class="div-right"
-                  [buttonType]="'default'"
-                  [buttonText]="'Search' "
-                  [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                  (onClick)="regionalLocationSearchClick()">
-      </sam-button>
-    </div>
-
-    </div>
-      <div class="row" *ngIf="!initLoad">
-          <div *ngIf="permissions['CREATE_RAO']" class="eight wide">
-          <sam-button class="div-right"
-                      [buttonType]="'default'"
-                      [buttonText]="'Create New' "
-                      [buttonClass]="'sam-ui button dark blue'"
-                      (onClick)="createNewLocation()">
-          </sam-button>
-        </div>
+<page 
+  *ngIf="permissions"
+  theme="inside" 
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Regional Assistance Locations">
+  
+  <sidebar>
+    <!-- Navigation -->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a routerLink="/fal/workspace">
+          Assistance Listings
+        </a>
+      </li>
+      <li>
+        <a class="usa-current">
+          Manage Assistance Locations
+        </a>
+      </li>
+      <li>
+        <a routerLink="/workspace/my-feed" 
+          [queryParams]="{domain: 'al', event: 'request', pending: true}">
+          Pending Requests 
+        </a>
+      </li>
+    </ul>
+    
+    <!-- Filters -->
+    <div class="sam-ui segment">
+      <h4 class="sam-ui header">Search</h4>
+      <div *ngIf="raoExists && !initLoad" class="search-bar">
+        <sam-autocomplete class="div-fill"#autocomplete
+                          [(ngModel)]="keyword"
+                          (ngModelChange)="regionalLocationSearchModel($event)"
+                          (enterEvent)="regionalLocationSearchClick()"
+                          [config]="regionalLocationSearchConfig"
+                          [options]="[]"
+                          [showClearButton]="true"
+                          [allowAny]="true"
+                          name="appsearch">
+        </sam-autocomplete>
+        <sam-button class="div-right"
+                    [buttonType]="'default'"
+                    [buttonText]="'Search' "
+                    [buttonClass]="'usa-button usa-search-submit search-btn'"
+                    (onClick)="regionalLocationSearchClick()">
+        </sam-button>
       </div>
-      <div class="row" *ngIf="permissions['CREATE_RAO']">
-        <span *ngIf="!raoExists && !initLoad">There are no Regional Agency Offices associated with user's department</span>
-      </div>
     </div>
-
-    <br>
-    <div *ngFor="let row of data" tabindex="-1">
-      <regional-assistance-location-result [data]="row" [qParams]="qParams" [permissions]="permissions" (recordDeleted)="getRegionalAssistanceLocations()"></regional-assistance-location-result>
-      <div class="sam-ui section divider"></div>
+  </sidebar>
+  
+  <sam-button *ngIf="permissions['CREATE_RAO']"
+              [buttonType]="'default'"
+              [buttonText]="'Create New' "
+              [buttonClass]="'sam-ui button dark blue'"
+              (onClick)="createNewLocation()">
+  </sam-button>
+  
+  <p *ngIf="permissions['CREATE_RAO'] && !raoExists && !initLoad">
+    There are no Regional Agency Offices associated with user's department
+  </p>
+  
+  <!-- Page results -->
+  <results 
+    [totalElements]="totalCount" 
+    [totalPages]="totalPages" 
+    [currentPage]="pageNum+1"
+    (pageChange)="pageChange($event-1)">
+    
+    <!-- Results -->
+    <div class="sam-ui segment" *ngFor="let row of data">
+      <regional-assistance-location-result 
+        [data]="row" 
+        [qParams]="qParams" 
+        [permissions]="permissions" 
+        (recordDeleted)="getRegionalAssistanceLocations()">
+      </regional-assistance-location-result>
     </div>
-
-    <div class="search-inactive-results" *ngIf="oldKeyword!='' && data.length===0 && !initLoad">
-      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
-      <div style="height:300px;"></div>
-    </div>
-
-  </div>
-</workspace-layout>
+    
+    <!-- No results -->
+    <p *ngIf="oldKeyword!='' && data.length===0 && !initLoad">
+      No results found for '<strong>{{ oldKeyword }}</strong>'
+    </p>
+  </results>
+  
+</page>

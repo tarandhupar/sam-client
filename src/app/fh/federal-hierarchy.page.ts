@@ -57,43 +57,68 @@ export class FederalHierarchyPage {
   searchType:string = "general";
   searchOrgType:any = [];
   resultType:string = "default";
+
   constructor(private fhService: FHService,
               private route: ActivatedRoute,
               private _router:Router,
               private iamService: IAMService){}
 
   ngOnInit(){
-
     this.route.queryParams.subscribe( queryParams => {
+      if(!this.dataLoaded){
+        this.iamService.iam.checkSession(
+          (user) => {
+            this.user = user;
+            this.deptOrgKey = user.departmentID && user.departmentID !== "" ? user.departmentID : "";
+            this.fhService.getAccess("", false).subscribe(
+              (data) => {
+                this.userRole = "superAdmin";
+                this.loadInitResult(queryParams);
+              },
+              (error) => {
+                if (error.status === 403) {
+                  this.fhService.getAccess(this.deptOrgKey, false).subscribe(
+                    (data) => {
+                      this.loadInitResult(queryParams);
+                    },
+                    (error) => {
+                      if (error.status === 403) this.redirectToForbidden()
+                    }
+                  );
+                }
+              }
+            );
+          }, this.redirectToSignin
+        );
+      }
+    });
+  }
+
+  loadInitResult(queryParams){
+    if(queryParams['keyword']){
       this.searchText = queryParams['keyword'];
       this.orgSearchStatusModel = queryParams['status'];
-      console.log(queryParams);
-      this.checkAccess(this.searchFH());
-    });
-    this.checkAccess(this.loadDefaultData('active'));
+      if(this.userRole !== "superAdmin"){
+        this.fhService.getDepartmentAdminLanding(status).subscribe( data => {
+          //Set up agency admin, dept admin or office admin role
+          this.deptOrg = data._embedded[0].org;
+          this.setDeptLogo(data);
+          this.setUserRole(data);
+          this.setCreateOrgTypes();
+          this.searchFH();
+          this.dataLoaded = true;
+        });
+      }else{
+        this.setCreateOrgTypes();
+        this.searchFH();
+        this.dataLoaded = true;
+      }
+
+    }else{
+      this.loadDefaultData('active');
+    }
   }
 
-  checkAccess(loadResult:()=>any){
-    this.iamService.iam.checkSession(
-      (user)=>{
-        this.user = user;
-        this.deptOrgKey = user.departmentID && user.departmentID !== ""? user.departmentID: "";
-        this.fhService.getAccess("", false).subscribe(
-          (data)=>{
-            this.userRole = "superAdmin";
-            loadResult();
-          },
-          (error) => {
-            if(error.status === 403){
-              this.fhService.getAccess(this.deptOrgKey,false).subscribe(
-                (data)=>{loadResult();},
-                (error)=>{if(error.status === 403)this.redirectToForbidden()}
-              );
-            }
-          }
-        );
-      }, this.redirectToSignin);
-  }
 
   redirectToSignin = () => { this._router.navigateByUrl('/signin')};
   redirectToForbidden = () => {this._router.navigateByUrl('/403')};
@@ -223,7 +248,7 @@ export class FederalHierarchyPage {
 
   isOrgActive(org):boolean{
     if(!!org.modStatus){
-      return org.modStatus === "active";
+      return org.modStatus.toLowerCase() === "active";
     }
 
     if(!!org.endDate){
@@ -278,6 +303,16 @@ export class FederalHierarchyPage {
     this.getFilterTypes();
     // Search field is required for searching in fh landing page
     if(this.searchText.length > 0){
+
+      // Update query params
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          keyword: this.searchText,
+          status: this.orgSearchStatusModel
+        }
+      };
+      this._router.navigate(['/federal-hierarchy'], navigationExtras);
+
       this.resultType = "search";
       let searchTypes = [];
       let searchLevels = [];
@@ -293,7 +328,7 @@ export class FederalHierarchyPage {
         this.updateRecordsText();
       });
     }
-  }
+  };
 
   searchFHAdmin(orgStatusModel){
     this.fhService.getMyOrganization(this.adminOrgKey, this.searchOrgType).subscribe(data => {

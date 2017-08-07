@@ -9,6 +9,9 @@ import all = protractor.promise.all;
 import * as xmljs from 'xml-js';
 import * as moment from 'moment';
 import { OptionsType } from 'sam-ui-kit/types';
+import * as base64 from 'base-64';
+import { ReportsService } from 'api-kit';
+import * as Cookies from 'js-cookie';
 
 @Component({
   providers: [IAMService],
@@ -59,10 +62,16 @@ export class ReportProtoComponent implements OnInit {
     { name: 'all', label: 'All', value: 'all'},
     { name: 'basesOnly', label: 'Bases Only', value: 'basesOnly'}
   ];
+  roleData;
+  userRoleObject;
+  userRole;
+  testToken;
+  mstrEnv;
+  mstrServer;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer,
+    private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService,
     private http: Http) {
     this.zone.runOutsideAngular(() => {
       this.checkSession(() => {
@@ -71,7 +80,7 @@ export class ReportProtoComponent implements OnInit {
         });
       });
     });
-    http.get('src/assets/standardReport.json')
+    http.get('src/assets/dynamicMincReports.json')
       .map(res => res.json())
       .subscribe(data => this.data = data,
         err => console.log(err),
@@ -107,8 +116,10 @@ export class ReportProtoComponent implements OnInit {
 
   hitUrl(evt, docId) {
     let vm = this;
-    // +'&role='+vm.user.gsaRAC[0] -- role disabled for now
-    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategystg.helix.gsa.gov/OOB/servlet/mstrWeb?Server=MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+docId+'&promptsAnswerXML='+this.generateXML());
+    this.mstrEnv = 'test';
+      this.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
+    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+'&role=GSA_REPORT_R_DOD_REPORT_USER_9700'+docId+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
+    // this.userRole
   }
 
   resetParameter(){ 
@@ -118,7 +129,7 @@ export class ReportProtoComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
-    this.expid = this.route.snapshot.params['expid'];
+    this.expid = this.route.snapshot.params['expid']; 
     this.name = this.route.snapshot.params['name'];
     this.desc = this.route.snapshot.params['desc'];
     this.prompts = this.route.snapshot.params['prompts'];
@@ -140,27 +151,46 @@ export class ReportProtoComponent implements OnInit {
     if (this.prompts.indexOf('agencyName') >= 0) {
       this.usedPrompts.agencyName = true;
     }
+    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
+      this.mstrEnv = 'stg';
+      this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
+      this.mstrEnv = 'test';
+      this.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/comp") != -1) {
+      this.mstrEnv = 'dev';
+      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
+    }
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
       });
+    this.reportsService.getUserRole(Cookies.get('iPlanetDirectoryPro')).subscribe(
+      data => {
+        this.roleData = data;
+        let encodedToken = this.roleData.token.split(".");
+        this.userRoleObject = JSON.parse(base64.decode(encodedToken[1]));
+        this.userRole = this.userRoleObject.domainMapContent[0].roleMapContent[0].role.val;
+      },
+      error => console.log(error)
+    );  
   }
 
   generateXML() {
     if (this.agencyPicker) {
       for (let i in this.agencyPicker) {
-        if (this.agencyPicker[i].name.includes('(D)')) {
-          this.departmentId = [{type:"element",name:"at",attributes:{did:"5343F7064B266D77D4763CB55CF193E5",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"5343F7064B266D77D4763CB55CF193E5:"+this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i].level == 1) {
+          this.departmentId = [{type:"element",name:"at",attributes:{did:"092E3409421A8C76CCE01CB6E423BE3B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"092E3409421A8C76CCE01CB6E423BE3B:"+this.agencyPicker[i].code,art:"1"}}];
         }
-        if (this.agencyPicker[i].name.includes('(A)')) {
-          this.agencyId = [{type:"element",name:"at",attributes:{did:"9909C3FF4C4E64A62A92DC991D69F2CD",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"9909C3FF4C4E64A62A92DC991D69F2CD:"+this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i].level == 2) {
+          this.agencyId = [{type:"element",name:"at",attributes:{did:"A1FE94BE483FD8D534B145B794EC4166",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"A1FE94BE483FD8D534B145B794EC4166:"+this.agencyPicker[i].code,art:"1"}}];
         }
-        if (this.agencyPicker[i].name.includes('(L3)')) {
-          this.officeId = [{type:"element",name:"at",attributes:{did:"54F94B1940759D1794E3A1BD3D9F54B0",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"54F94B1940759D1794E3A1BD3D9F54B0:"+this.agencyPicker[i].code,art:"1"}}];;
+        if (this.agencyPicker[i].level == 3) {
+          this.officeId = [{type:"element",name:"at",attributes:{did:"C556EB554CED80B514C5DFBC01CEFC5F",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C556EB554CED80B514C5DFBC01CEFC5F:"+this.agencyPicker[i].code,art:"1"}}];;
         }
       }
     }
-    this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"08C4877C401950B7A2D182B0B36801EC",tp:"10"},elements:[{type:"text",text:this.dateRange.endDate}]},{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"343002F84DD3741D37B81198047298B1",tp:"10"},elements:[{type:"text",text:this.dateRange.startDate}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"3FCC554F4FE90D3221692D93AE98EBAE",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.departmentId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"A009A1AF453DEBD6C1A3C7A6DD3CEE00",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.agencyId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"C1D7F68B4D09F29E00BE9EB436506CE6",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.officeId}]}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"E8B36A044628ECFA1B0677899EA10FD7",tp:"10"},elements:[{type:"text",text:this.contractingRegion}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"36B0D8F847186CF11E92829BF216055F",tp:"10"},elements:[{type:"text",text:this.orgCode}]}]}]}
+    this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"08C4877C401950B7A2D182B0B36801EC",tp:"10"},elements:[{type:"text",text:this.dateRange.endDate}]},{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"343002F84DD3741D37B81198047298B1",tp:"10"},elements:[{type:"text",text:this.dateRange.startDate}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"3FCC554F4FE90D3221692D93AE98EBAE",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.officeId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"A009A1AF453DEBD6C1A3C7A6DD3CEE00",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.agencyId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"C1D7F68B4D09F29E00BE9EB436506CE6",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.departmentId}]}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"E8B36A044628ECFA1B0677899EA10FD7",tp:"10"},elements:[{type:"text",text:this.contractingRegion}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"36B0D8F847186CF11E92829BF216055F",tp:"10"},elements:[{type:"text",text:this.orgCode}]}]}]}
     this.checkIncludesBases();
     this.checkIncludesAgencyName();
     return xmljs.json2xml(this.promptAnswersXML);
@@ -193,5 +223,4 @@ export class ReportProtoComponent implements OnInit {
       this.promptAnswersXML.elements[0].elements.push(agencyNameXML);
     }
   }
-
 }

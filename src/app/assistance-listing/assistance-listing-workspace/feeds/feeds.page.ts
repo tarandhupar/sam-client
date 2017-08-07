@@ -2,9 +2,12 @@ import {Component, OnInit, Input, ViewChild} from "@angular/core";
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
+import {ActionHistoryLabelPipe} from "../../pipes/action-history-label.pipe";
+import {RequestTypeLabelPipe} from "../../pipes/request-type-label.pipe";
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
-  providers: [],
+  providers: [ActionHistoryLabelPipe, RequestTypeLabelPipe],
   templateUrl: 'feeds.template.html'
 })
 
@@ -12,11 +15,11 @@ export class FeedsPage implements OnInit {
   cookieValue: string;
   requests: any;
   programRequestList: any;
-  requestTypeTitle:any;
   public permissions: any;
   domainLabel: any = "";
   isAL:boolean = false;
   isRequest: boolean = false;
+  isPendingRequest:boolean;
   programId:any;
   currentPage = 0;
   requestType:any;
@@ -28,6 +31,12 @@ export class FeedsPage implements OnInit {
   initLoad = true;
   defaultDomainOption: any;
   defaultEventOption: any;
+  defaultPendingRequestsOption: any;
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb:'Home', url:'/',},
+    { breadcrumb: 'Workspace', url: '/workspace' },
+    { breadcrumb: 'My feed'}
+  ];
 
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
@@ -47,7 +56,9 @@ export class FeedsPage implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.defaultDomainOption = params['domain'];
       this.defaultEventOption = params['event'];
+      this.defaultPendingRequestsOption = params['pending'];
     });
+
 
     this.programService.getPermissions(this.cookieValue, 'FAL_LISTING').subscribe(res => {
       this.permissions = res;
@@ -55,7 +66,8 @@ export class FeedsPage implements OnInit {
         this.router.navigate['accessrestricted'];
       } else {
         this.activatedRoute.queryParams.subscribe(
-          data => {
+          params => {
+            this.isPendingRequest = this.defaultPendingRequestsOption;
             this.getRequests();
           });
       }
@@ -69,7 +81,7 @@ export class FeedsPage implements OnInit {
       pageNum: this.currentPage,
       type: this.requestType,
       keyword : this.keyword,
-      isCompleted: true,
+      isCompleted: !this.isPendingRequest,
       size: this.size,
       includeCount: true
     }).subscribe(
@@ -91,31 +103,8 @@ export class FeedsPage implements OnInit {
     );
   }
 
-  getRequestTypeTitle(type: any){
-    switch (type) {
-      case "title_request":
-        this.requestTypeTitle = "Title Change Request";
-        break;
-      case "archive_request":
-        this.requestTypeTitle = "Archive Change Request";
-        break;
-      case "unarchive_request":
-        this.requestTypeTitle = "Unarchive Change Request";
-        break;
-      case "agency_request":
-        this.requestTypeTitle = "Agency Change Request";
-        break;
-      case "program_number_request":
-        this.requestTypeTitle = "CFDA Number Change Request";
-        break;
-      default:
-        this.requestTypeTitle = "Change Request";
-        break;
-    }
-    return this.requestTypeTitle;
-  }
-
   domainFilterModelChangeHandler(event){
+    this.currentPage = 0;
     if(event.indexOf('al') < 0){
       this.isAL = false;
     }else{
@@ -125,6 +114,7 @@ export class FeedsPage implements OnInit {
   }
 
   eventFilterModelChangeHandler(event){
+    this.currentPage = 0;
     if(event.indexOf('request') < 0){
       this.isRequest = false;
     }else{
@@ -132,21 +122,23 @@ export class FeedsPage implements OnInit {
     }
   }
 
+  pendingRequestsModelChangeHandler(event){
+    this.currentPage = 0;
+    if(event.indexOf('pending-requests') < 0){
+      this.isPendingRequest = false;
+    }else{
+      this.isPendingRequest = true;
+    }
+    this.getRequests();
+  }
+
   requestTypeFilterModelChangeHandler(event) {
     this.requestType = '';
     event.forEach((res: any) => {
         this.requestType += res +',';
     });
-
-    if(this.requestType) {
-      this.currentPage = 0;
-      this.getRequests();
-    }else{
-      this.programRequestList = [];
-      this.currentPage = 0;
-      this.totalPages = 0;
-      this.totalElements = 0;
-    }
+    this.currentPage = 0;
+    this.getRequests();
   }
 
   onFeedSearchClick(){

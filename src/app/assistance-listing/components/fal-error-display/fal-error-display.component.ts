@@ -3,6 +3,12 @@ import {
   FieldError, FieldErrorList,
   isFieldError, isFieldErrorList, FALFormErrorService
 } from '../../assistance-listing-operations/fal-form-error.service';
+import {
+  FALSectionFieldsBiMap, FALFieldNames,
+  FALSectionNames
+} from '../../assistance-listing-operations/fal-form.constants';
+import { Router } from '@angular/router';
+import { ValidationErrors } from '../../../app-utils/types';
 /*
 <sam-alert *ngIf="validationErrors && hasErrors(validationErrors)" [attr.id]="'fal-errors-alert'" [type]="'warning'" [title]="'You must resolve ' + numErrors + ' issue(s) to submit the form'">
   <fal-error-display-helper [validationErrors]="validationErrors"></fal-error-display-helper>
@@ -11,13 +17,14 @@ import {
 @Component({
   selector: 'fal-error-display',
   template: `
-  <fal-error-display-helper [validationErrors]="validationErrors"></fal-error-display-helper>
+  <fal-error-display-helper [validationErrors]="validationErrors" (onNavigation)="onNavigation.emit($event)"></fal-error-display-helper>
   `
 })
 export class FALErrorDisplayComponent implements OnChanges {
   @Input()
   public validationErrors: (FieldError | FieldErrorList) = null;
   @Output() message = new EventEmitter();
+  @Output() onNavigation = new EventEmitter();
 
   public numErrors: number = 0;
 
@@ -66,8 +73,8 @@ export class FALErrorDisplayComponent implements OnChanges {
     <!-- base case: single field's errors -->
     <ng-container *ngIf="isLeaf(validationErrors)">
       <!-- then just display the error messages -->
-      <div *ngFor="let errorObj of (validationErrors.errors | keys)" class="m_L-4x">
-        <i class="fa fa-angle-right" aria-hidden="true"></i> {{ errorObj.value.message }}
+      <div *ngFor="let error of toIterable(validationErrors.errors)" class="m_L-4x">
+        <i class="fa fa-angle-right" aria-hidden="true"></i> <a (click)="onErrorClick(validationErrors.id)">{{ error.message }}</a>
       </div>
     </ng-container>
     
@@ -79,7 +86,7 @@ export class FALErrorDisplayComponent implements OnChanges {
       </strong>
       <!-- and recurse for each field -->
       <ng-container *ngFor="let error of validationErrors.errorList">
-        <fal-error-display-helper [validationErrors]="error"></fal-error-display-helper>
+        <fal-error-display-helper [validationErrors]="error" (onNavigation)="onNavigation.emit($event)"></fal-error-display-helper>
       </ng-container>
     </ng-container>
     
@@ -89,6 +96,10 @@ export class FALErrorDisplayComponent implements OnChanges {
 export class FALErrorDisplayHelperComponent {
   @Input()
   public validationErrors: (FieldError | FieldErrorList) = null;
+  @Output()
+  public onNavigation = new EventEmitter();
+
+  constructor(private router: Router){}
 
   // todo: handle this as part of preprocess
   public isLeaf(node: any): boolean {
@@ -103,5 +114,68 @@ export class FALErrorDisplayHelperComponent {
   // todo: handle this as part of preprocess ??
   public hasErrors(node: (FieldError | FieldErrorList)): boolean {
     return FALFormErrorService.hasErrors(node);
+  }
+
+  public toIterable(obj: ValidationErrors): Array<any> {
+    let arr = [];
+
+    for (let error in obj) {
+      arr.push(obj[error]);
+    }
+
+    return arr;
+  }
+
+  public onErrorClick(fieldId: string): void {
+    let section = FALSectionFieldsBiMap.fieldSections[fieldId];
+    let programId = this.router.url.split('/')[2];
+    let url = '/programs/' + programId + '/edit';
+
+    if (fieldId.indexOf(FALFieldNames.COMPLIANCE_REPORTS) !== -1) {
+      section = FALSectionNames.COMPLIANCE_REQUIREMENTS;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.AUTHORIZATION_LIST) !== -1) {
+      section = FALSectionNames.AUTHORIZATION;
+      fieldId = FALFieldNames.AUTHORIZATION_LIST;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.CONTACT_LIST) !== -1) {
+      section = FALSectionNames.CONTACT_INFORMATION;
+      fieldId = FALFieldNames.CONTACT_LIST;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.OBLIGATION_LIST) !== -1) {
+      section = FALSectionNames.OBLIGATIONS;
+      fieldId = FALFieldNames.OBLIGATION_LIST;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.FUNDED_PROJECTS) !== -1) {
+      section = FALSectionNames.OVERVIEW;
+      fieldId = FALFieldNames.FUNDED_PROJECTS;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.TAFS_CODES) !== -1) {
+      section = FALSectionNames.OTHER_FINANCIAL_INFO;
+      fieldId = FALFieldNames.TAFS_CODES;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.PROGRAM_ACCOMPLISHMENTS) !== -1) {
+      section = FALSectionNames.OTHER_FINANCIAL_INFO;
+      fieldId = FALFieldNames.PROGRAM_ACCOMPLISHMENTS;
+    }
+
+    if (fieldId.indexOf(FALFieldNames.ACCOUNT_IDENTIFICATION) !== -1) {
+      section = FALSectionNames.OTHER_FINANCIAL_INFO;
+      fieldId = FALFieldNames.ACCOUNT_IDENTIFICATION;
+    }
+
+    if (section) {
+      url += '#' + section + '-' + fieldId;
+    }
+
+    this.router.navigateByUrl(url);
+
+    this.onNavigation.emit({url, section, programId, fieldId});
   }
 }

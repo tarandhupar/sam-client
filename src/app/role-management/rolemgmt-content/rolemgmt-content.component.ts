@@ -22,10 +22,6 @@ export class RoleMgmtContent implements OnInit{
   @Output() sortOrder : EventEmitter<any> = new EventEmitter<any>();
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
   Pagelimit : number;
-  paginationConfig = {
-      currentPage: 1,
-  };
-  pageNo = 1;
 
   selectModel = 'asc';
   selectConfig = {
@@ -109,7 +105,6 @@ export class RoleMgmtContent implements OnInit{
   }
 
   onPageChange(event){
-    this.pageNo = event;
     this.pageNumber.emit(event);
     window.scrollTo(0,0);
 
@@ -132,12 +127,12 @@ export class RoleMgmtContent implements OnInit{
   }
 
   shouldShowRespondButton(content) {
-    return content.status.val === 'PENDING';
+    return content._links && content._links.respond_request;
   }
 
   showingCountText() {
-    if (this.count === 0) {
-      return 'Showing 0 results';
+    if (!this.count || this.count === 0) {
+      return '';
     }
     const first = (this.currPage - 1)* 10 + 1;
     const last = (this.currPage - 1)*10 + this.currCount;
@@ -164,5 +159,11 @@ export class RoleMgmtContent implements OnInit{
   onPendingClick() {
     this.clickPendingRequestsCountEvent.emit();
   }
+
+  @Output() clickEscalatedRequestsCountEvent: EventEmitter<any> = new EventEmitter();
+  onEscalatedClick() {
+    this.clickEscalatedRequestsCountEvent.emit();
+  }
+
 
 }

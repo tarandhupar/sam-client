@@ -1,16 +1,4 @@
-<!--Delete Modal-->
-<sam-modal #deleteModal
-           [showClose]="true"
-           [closeOnOutsideClick]="true"
-           [closeOnEscape]="true"
-           [type]="'warning'"
-           [title]="modalConfig.title"
-           [description]="modalConfig.description"
-           [submitButtonLabel]="'Ok'"
-           [cancelButtonLabel]="'Cancel'"
-           (onSubmit)="onDeleteModalSubmit()">
-</sam-modal>
-<div class="usa-grid assistance-listing-page" *ngIf="program">
+<div class="usa-grid assistance-listing-page assistance-listing-operations" *ngIf="program">
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
@@ -27,43 +15,23 @@
     </div>
   </aside>
 
-  <!--Edit Modal-->
-  <sam-modal #editModal
-            [showClose]="true"
-            [closeOnOutsideClick]="true"
-            [closeOnEscape]="true"
-            [type]="'info'"
-            [title]="'Revise -  Assistance Listing'"
-            [description]="'A draft revision for this published program will be utilized for editing. Please click ok to edit a draft of this AL.'"
-            [submitButtonLabel]="'Ok'"
-            [cancelButtonLabel]="'Cancel'"
-            (onSubmit)="onEditModalSubmit($event)">
-  </sam-modal>
-
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
-    <ng-container *ngIf="programRequest">
-      <a class="usa-button-primary" [routerLink]="['/programs/change-request/', programRequest.id, 'action']">
-        <span>{{ programRequest.requestType?.value | requestLabel }}</span>
-        <i aria-hidden="true" class="fa fa-chevron-circle-right"></i>
-      </a>
-      <div class="sam-ui divider"></div>
-    </ng-container>
-
     <!-- Alerts -->
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
         <sam-alert [attr.id]="'program-alert-' + i" labelname="alerts[i].labelname" [type]="alerts[i].config.type" [title]="alerts[i].config.title">
           <div [innerHTML]="alerts[i].config.description"></div>
-          <ng-container *ngIf="alert.labelname === 'published-fal-alert'">
-            <ng-container *ngIf="program._links && (program._links['program:revise'] || program._links['program:update'])">
-              Click <a class="fal-table-edit" (click)="onEditClick(['#header-information'])">here</a> to edit a draft of the Assistance Listing.
-            </ng-container>
-          </ng-container>
         </sam-alert>
       </div>
     </ng-container>
+    <div class="float-right">
+      <sam-button  buttonText="Editor View" *ngIf="canEdit()" (onClick)="onEditViewClick($event)"></sam-button>
+      <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditViewClick($event)">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </a>
 
+    </div>
     <!-- Intro Content -->
     <section id="program-information">
 
@@ -71,31 +39,9 @@
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <sam-button *ngIf="program._links && program._links['program:submit']" buttonText="Submit" (onClick)="onSubmitClick($event)"></sam-button>
-          <sam-button *ngIf="program._links && program._links['program:request:reject']" buttonText="Reject" (onClick)="onRejectClick($event)"></sam-button>
           <h1 class="sam-ui header">
             <span class="field" id="program-title">{{program?.data?.title}}</span>
           </h1>
-        </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#header-information'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
-          <a class="fal-table-edit" *ngIf="canDelete()" (click)="onDeleteClick()">
-            Delete
-            <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
-          </a>
-            <wrapper-fal-change-request-dropdown *ngIf="changeRequestDropdown.permissions"
-              [name]="changeRequestDropdown.config.name"
-              [hint]="changeRequestDropdown.config.hint"
-              [disabled]="changeRequestDropdown.config.disabled"
-              [permissions]="changeRequestDropdown.permissions"
-              [defaultOption]="changeRequestDropdown.defaultOption"
-              (clickActionHandler)="onChangeRequestSelect($event)"
-              [program]="program"
-              [requestTypeAction] = "programRequest?.requestType?.value">
-              </wrapper-fal-change-request-dropdown>
         </div>
       </div>
 
@@ -200,12 +146,6 @@
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="overview">Overview</h2>
         </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#overview'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
-        </div>
       </div>
 
       <!-- Objectives -->
@@ -242,29 +182,6 @@
       </ng-container>
 
       <div class="sam-ui hidden divider" [class.section]="!(program.data?.subjectTerms && program.data?.subjectTerms.length > 0)"></div>
-
-      <!-- Functional Codes -->
-      <ng-container *ngIf="dictionaries && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
-        <h3 class="sam-ui dividing header " id="functional-codes-label">Functional Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
-        <ng-container *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
-            <span class="field" [attr.id]="'program-functional-code-' + i">
-              {{ item.displayValue }}<br>
-            </span>
-        </ng-container>
-        <div class="sam-ui hidden divider"></div>
-      </ng-container>
-
-      <!-- Subject Terms -->
-      <ng-container *ngIf="dictionaries && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
-        <h3 class="sam-ui dividing header" id="subject-terms-label">Subject Terms  <i class="fa fa-lock" aria-hidden="true"></i></h3>
-        <ng-container *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
-            <span class="field" [attr.id]="'program-subject-terms-' + i">
-              {{ item.value }}<br>
-            </span>
-        </ng-container>
-        <div class="sam-ui hidden section divider"></div>
-      </ng-container>
-
     </section>
 
     <!-- Authorizations -->
@@ -274,12 +191,6 @@
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="authorizations">Authorizations</h2>
-        </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#authorization'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
         </div>
       </div>
 
@@ -302,12 +213,6 @@
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="financial-information">Financial Information</h2>
-        </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#financial-information-obligations'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
         </div>
       </div>
       <em>These funding amounts do not reflect the award amounts that are displayed on USASpending.gov</em>
@@ -363,54 +268,6 @@
       <div class="sam-ui hidden divider" [class.section]="!(program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0)"></div>
     </section>
 
-
-    <!-- TAFS Codes -->
-    <ng-container *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
-    <h3 class="sam-ui dividing header" id="tafs-codes-label">TAFS Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
-
-    <table id="tafs-codes-table" class="sam-ui table celled" *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
-      <thead>
-      <tr>
-        <th scope="col">
-          Treasury Dept. Code
-        </th>
-        <th scope="col">
-          Treasury Account Main Code
-        </th>
-        <th scope="col">
-          TAFS Sub Account
-        </th>
-        <th scope="col">
-          Allocation Transfer Agency
-        </th>
-        <th scope="col">
-          FY 1
-        </th>
-        <th scope="col">
-          FY 2
-        </th>
-        <th scope="col">
-          Actions
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <ng-container *ngFor="let tafs of program.data.financial.treasury.tafs; let i=index">
-        <tr>
-          <!-- Table tafs data -->
-          <td>{{ tafs.departmentCode }}</td>
-          <td>{{ tafs.accountCode }}</td>
-          <td>{{ tafs.subAccountCode }}</td>
-          <td>{{ tafs.allocationTransferAgency }}</td>
-          <td>{{ tafs.fy1 }}</td>
-          <td>{{ tafs.fy2 }}</td>
-        </tr>
-      </ng-container>
-      </tbody>
-    </table>
-      <div class="sam-ui hidden section divider"></div>
-    </ng-container>
-
     <!--Should I apply?-->
     <section id="program-application-criteria">
 
@@ -421,12 +278,6 @@
           <h2 class="sam-ui header" id="criteria-for-applying">
             Criteria for Applying
           </h2>
-        </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#criteria-information'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
         </div>
       </div>
 
@@ -553,12 +404,6 @@
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="applying-for-assistance">Applying for Assistance</h2>
-        </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#applying-for-assistance'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
         </div>
       </div>
 
@@ -775,12 +620,6 @@
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="compliance-requirements">Compliance Requirements</h2>
         </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#compliance-requirements'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
-        </div>
       </div>
 
       <div class="sam-ui hidden divider"></div>
@@ -964,12 +803,6 @@
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="contact-information">Contact Information</h2>
         </div>
-        <div class="usa-width-one-third">
-          <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditClick(['#contact-information'])">
-            Edit
-            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
-          </a>
-        </div>
       </div>
 
       <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
@@ -990,22 +823,16 @@
     </section>
 
     <!--History Section-->
-    <section class="program-history" *ngIf="historicalIndex">
+    <section class="program-history">
       <a name="#/programs/{{programID}}/view#history"></a>
-      <div class = "sam-ui header"><h2 class="sam-ui header header-history" id="history">{{actionHistoryAndNote && !publicHistoryIsVisible ? "Action History" : "History"}}</h2>
-      <sam-checkbox
-        class="checkbox-history"
-        *ngIf="actionHistoryAndNote"
-        [(model)]="checkboxModel"
-        [name]="checkboxConfig.name"
-        [options]="checkboxConfig.options"
-        (modelChange)="showHidePublicHistory($event)">
-      </sam-checkbox></div>
-      <div *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">This history is only visible to managers of this listing</div>
-      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Created By: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}<b> On: </b>{{ actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ? actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "None" }}</div>
-      <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Last Submitted By: </b>{{ actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "None" }} <b>On: </b>{{ actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "None" }}</div>
-      <sam-history *ngIf="publicHistoryIsVisible" [data]="history"></sam-history>
-      <sam-history *ngIf="!publicHistoryIsVisible" [data]="actionHistoryAndNote"></sam-history>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 class="sam-ui header header-history" id="history">History</h2>
+          <div *ngIf="history">
+            <sam-history [data]="history"></sam-history>
+          </div>
+        </div>
+      </div>
     </section>
 
 

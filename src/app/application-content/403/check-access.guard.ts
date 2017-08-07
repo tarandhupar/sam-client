@@ -36,25 +36,49 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
     if (!pageName) {
       throw new Error('Must define a pageName data property for this route');
     }
-    return this.accessService.checkAccess(pageName).map(res => {
-      if (res.status >= 200 && res.status < 300) {
-        return true
-      } else if (res.status === 401) {
-        this.router.navigate(['/401']);
+    return this.accessService.checkAccess(pageName)
+      .map(res => {
+        if (res.status >= 200 && res.status < 300) {
+          return true;
+        }
         return false;
-      } else if (res.status === 403) {
-        this.router.navigate(['/403']);
-        return false;
-      } else {
-        this.alertFooter.registerFooterAlert({
-          title: "",
-          description: "You may not have the neccessary permission to perform this action.",
-          type: 'error',
-          timer: 3200
-        });
-        return false;
-      }
-    });
+      })
+      .catch(res => {
+        let body;
+        try {
+          body = res.json();
+        } catch(e) {
+          return Observable.of(false);
+        }
+        // if the server does not include the appropriate CORS headers, we cannot read res.status, so we have to get
+        // status from the body
+        let status = res.status || body.status;
+
+        if (!status) {
+          return Observable.of(false);
+        }
+        if (status === 401) {
+          this.router.navigate(['/signin']);
+          this.alertFooter.registerFooterAlert({
+            title: "",
+            description: "You must be logged in to perform his action.",
+            type: 'error',
+            timer: 3200
+          });
+          return Observable.of(false);
+        } else if (status === 403) {
+          this.router.navigate(['/403']);
+          return Observable.of(false);
+        } else {
+          this.alertFooter.registerFooterAlert({
+            title: "",
+            description: "You may not have the neccessary permission to perform this action.",
+            type: 'error',
+            timer: 3200
+          });
+          return Observable.of(false);
+        }
+      });
   }
 }
 

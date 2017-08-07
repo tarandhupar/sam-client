@@ -1,79 +1,119 @@
-<div class="usa-grid" *ngIf="permissions">
-  <div class="workspace-content">
-  <div class="sam-ui grid">
-    <div class="row">
-      <div class="four wide column">
-        <a href="/fal/workspace">Back to My Workspace</a>
+<page 
+  *ngIf="permissions"
+  theme="inside" 
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="My feed">
+  
+  <!-- Sidebar section -->
+  <sidebar>
+    <!-- Navigation -->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a routerLink="/fal/workspace">
+          Assistance Listings
+        </a>
+      </li>
+      <li>
+        <a routerLink="/fal/myRegionalOffices">
+          Manage Assistance Locations
+        </a>
+      </li>
+      <li>
+        <a class="usa-current">
+          Pending Requests
+        </a>
+      </li>
+    </ul>
+    
+    <!-- Filters -->
+    <div class="sam-ui segment">
+      <h4 class="sam-ui header">Search</h4>
+      <div custom-input class="search-bar">
+        <sam-text name="searchText" [(ngModel)]="keyword"></sam-text>
+        <sam-button class="div-right"
+                    [buttonType]="'default'"
+                    [buttonText]="'Search' "
+                    [buttonClass]="'usa-button usa-search-submit search-btn'"
+                    (onClick)="onFeedSearchClick()">
+        </sam-button>
       </div>
-      <div custom-input class="search-bar eight wide column">
-        <div class="sam-ui grid">
-          <div class="row">
-            <sam-text class="eight wide column" name="searchText" [(ngModel)]="keyword"></sam-text>
-            <sam-button class="div-right"
-                        [buttonType]="'default'"
-                        [buttonText]="'Search' "
-                        [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                        (onClick)="onFeedSearchClick()">
-            </sam-button>
-          </div>
-        </div>
-      </div>
+      
+      <div class="sam-ui divider"></div>
+      
+      <feedsFilter 
+        [defaultDomainOption]="defaultDomainOption"
+        [defaultEventOption]="defaultEventOption"
+        [defaultPendingRequestsOption]="defaultPendingRequestsOption"
+        (domainFilterModelChange)="domainFilterModelChangeHandler($event)"
+        (eventFilterModelChange)="eventFilterModelChangeHandler($event)"
+        (pendingRequestsFilterModelChange)="pendingRequestsModelChangeHandler($event)"
+        (alRequestTypeModelChange)="requestTypeFilterModelChangeHandler($event)">
+      </feedsFilter>
+      
     </div>
-  </div>
-<div>
-  <aside class="usa-width-one-third">
-  <feedsFilter [defaultDomainOption]="defaultDomainOption"
-                            [defaultEventOption]="defaultEventOption"
-                            (domainFilterModelChange)="domainFilterModelChangeHandler($event)"
-                            (eventFilterModelChange)="eventFilterModelChangeHandler($event)"
-                            (alRequestTypeModelChange)="requestTypeFilterModelChangeHandler($event)"></feedsFilter></aside>
-  <div class="usa-width-two-thirds">
-    <h3>Workspace</h3>
-    <h2>My Feed</h2>
-    <ng-container *ngIf="isAL && isRequest">
-      <strong>
-        <list-results-message *ngIf="totalElements > 0" [showing]="4" [currentPage]="currentPage+1" [total]="totalElements"></list-results-message>
-        <span *ngIf="totalElements==0">&nbsp;</span>
-      </strong>
-       <ng-container *ngFor="let row of programRequestList">
-         <div class="sam-ui section divider"></div>
-          <a class="requestLink" href="/programs/change-request/{{row.id}}/action">
-            <div class="sam-ui grid">
-              <div class="row">
-                <div id="request-name" class="four wide column">
-                  <ng-container *ngIf="row?.createdBy">
-                    {{ row.createdBy }}
-                  </ng-container>
-                </div>
-                <div id="request-type" class="eight wide column">
-                  <div><ng-container *ngIf="row?.requestType?.value">
-                      {{getRequestTypeTitle(row.requestType.value)}} in {{domainLabel}}
-                  </ng-container></div>
-                  <div><ng-container *ngIf="row?.entryDate">
-                    {{row.entryDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
-                  </ng-container></div>
-                </div>
-              </div>
-            </div>
-            <div id="request-commnets" class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x">
-              <div class="content">
-                <div class="header">Comments</div>
-                <div class="description" *ngIf="row?.reason">
-                    {{row.reason}}
-                </div>
-              </div>
-            </div>
-          </a>
-      </ng-container>
-      <div class="search-inactive-results" *ngIf="!initLoad && programRequestList.length==0">
-        <p>There are no requests under the selected criteria.</p>
-      </div>
-      <sam-pagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage+1" [totalPages]="totalPages"></sam-pagination>
-    </ng-container>
-    <div class="search-inactive-results" *ngIf="!isAL || !isRequest">
-      <p>There are no results under the selected criteria.</p>
+    <div class="sam-ui hidden section divider"></div>
+  </sidebar>
+  
+  <!-- Page results -->
+  <results 
+    *ngIf="isAL && isRequest && programRequestList"
+    [totalElements]="totalElements" 
+    [showing]="4"
+    [totalPages]="totalPages" 
+    [currentPage]="currentPage+1"
+    (pageChange)="pageChangeHandler($event)">
+    
+    <!-- Results -->
+    <div class="sam-ui segment">
+      <ng-container *ngFor="let row of programRequestList">
+        <div class="sam-ui section divider"></div>
+           <div class="sam-ui grid">
+             <div class="row">
+               <div id="request-name" class="three wide column">
+                 <ng-container *ngIf="row?.createdBy">
+                   {{ row.createdBy }}
+                 </ng-container>
+               </div>
+               <div id="request-type" class="six wide column">
+                 <div><a *ngIf="row?.requestType?.value" routerLink="/programs/change-request/{{row.id}}/action">
+                     {{row.requestType.value | requestTypeLabel}} in {{domainLabel}}
+                 </a></div>
+                 <div><ng-container *ngIf="row?.entryDate">
+                   {{row.entryDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
+                 </ng-container></div>
+               </div>
+               <div class="three wide column">
+                 <ng-container *ngIf="row?.completed && row?.actionType">
+                   <sam-label [labelType]="'small'" [labelText]="row.actionType | actionHistoryLabel"></sam-label>
+
+                 </ng-container>
+                 <ng-container *ngIf="!(row?.completed)">
+                   <sam-label [labelType]="'small'" [labelText]="'Request Pending'"></sam-label>
+                 </ng-container>
+               </div>
+             </div>
+           </div>
+           <div id="request-commnets" class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x">
+             <div class="content">
+               <div class="header">Comments</div>
+               <div class="description" *ngIf="row?.reason">
+                   {{row.reason}}
+               </div>
+             </div>
+           </div>
+     </ng-container>
+     
+     <!-- No results -->
+     <p *ngIf="!initLoad && programRequestList.length==0">
+      There are no requests under the selected criteria.
+     </p>
+     
     </div>
-  </div>
-</div>
-  </div>
-</div>
+  </results>
+  
+  <p *ngIf="!isAL || !isRequest || !programRequestList">
+    There are no results under the selected criteria.
+  </p>
+  
+</page> 

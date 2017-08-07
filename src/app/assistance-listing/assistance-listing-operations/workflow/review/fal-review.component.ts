@@ -23,6 +23,7 @@ import {ActionHistoryPipe} from "../../../pipes/action-history.pipe";
 import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
+import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
 
 
 @Component({
@@ -49,6 +50,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   };
   publicHistoryIsVisible:boolean = true;
   actionHistoryAndNote: any;
+  latestRevision:any
   @Input() viewModel: FALFormViewModel;
   @ViewChild('historySection') historySection: ElementRef;
   programRequest: any;
@@ -83,6 +85,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     "children": []
   };
   roleFalg: boolean = false;
+  runValidationFlag: boolean = false;
+  lowRange: number = 0;
+  highRange: number = 0;
   qParams: any;
   reviewErrorList = {};
   @ViewChild('deleteModal') deleteModal;
@@ -105,6 +110,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   private relatedProgramsSub: Subscription;
   private reasonSub: Subscription;
   private statusBannerLeadingText;
+  private totalsByYear: any = {};
 
   @ViewChild('editModal') editModal;
   notifySuccessFooterAlertModel = {
@@ -193,7 +199,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
               private dictionaryService: DictionaryService,
               private service: FALFormService,
               private alertFooterService: AlertFooterService,
-              private errorService: FALFormErrorService, private el: ElementRef) {
+              private errorService: FALFormErrorService, private el: ElementRef, private authGuard: AuthGuard) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -220,6 +226,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     let programAPISource = this.loadProgram();
     this.loadDictionaries();
+    this.loadLatestRevision();
     this.loadFederalHierarchy(programAPISource);
     let historicalIndexAPISource = this.loadHistoricalIndex(programAPISource);
     this.loadRelatedPrograms(programAPISource);
@@ -231,7 +238,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     if (this.cookieValue) {
       let userPermissionsAPISource = this.loadUserPermissions(programAPISource);
       this.loadPendingRequests(userPermissionsAPISource);
-      this.loadActionHistoryAndNote(userPermissionsAPISource);
+      this.loadActionHistoryAndNote(programAPISource);
     }
 
   }
@@ -309,7 +316,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       }
       this.showHideButtons(this.program);
       this.makeSidenav();
-      this.checkCurrentFY();
       this.setAlerts();
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -362,9 +368,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         }]);
 
       this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
-
-      //console.log("reviewErrorList", this.reviewErrorList);
-
+      this.authGuard.checkPermissions('review', this.program);
     }, err => {
       this.router.navigate(['/404']);
     });
@@ -380,7 +384,21 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     return FALSectionNames[section];
   }
 
-  getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, counter: number = 0, subId: any = null){
+  runValidationForFAL(orgId){
+    this.service.getFederalHierarchyConfigurations(orgId).subscribe( data => {
+      this.runValidationFlag = !data.programNumberAuto;
+      this.highRange = data.programNumberHigh;
+      this.lowRange = data.programNumberLow;
+
+      this.errorService.validateHeaderProgNo(this.runValidationFlag, this.lowRange, this.highRange, FALFormService.getAuthenticationCookie(), this.programService).subscribe(red => {
+        this.reviewErrorList = this.errorService.applicableErrors;
+        this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+      });
+
+    });
+  }
+
+  getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, suffix: string = null, atLeastOneEntryError: boolean = false, errorId: string = null){
 
     let errObj : (FieldError | FieldErrorList) = FALFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
     let message = '';
@@ -392,12 +410,21 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       }
       else if(row && errObj['errorList']) {
         let rowErrorObj: any;
-        if(subId)
-          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, subId);
-        else
-          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId + counter);
 
-        if(rowErrorObj)
+        if(atLeastOneEntryError) {
+          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId);
+        }
+        else {
+          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId + suffix);
+
+          if (errorId !== null) {
+
+            if(rowErrorObj && rowErrorObj.errors && rowErrorObj.errors[errorId])
+              message = rowErrorObj.errors[errorId]['message'];
+          }
+        }
+
+        if(rowErrorObj && errorId == null)
           message = this.generateErrorMessage(rowErrorObj);
       }
     }
@@ -418,6 +445,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     this.errorService = new FALFormErrorService();
     this.errorService.viewModel = this.viewModel;
     this.errorService.initFALErrors();
+    //bad hack to avoid passing service in constructor in ErrorService - Need a revisit on this.
+
     let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
     this.reviewErrorList = this.errorService.applicableErrors;
     if (program._links) {
@@ -488,6 +517,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
+      this.runValidationForFAL(api.data.organizationId);
       return this.fhService.getOrganizationById(api.data.organizationId, false);
     });
 
@@ -495,6 +525,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     this.federalHierarchySub = apiSubject.subscribe(res => {
       this.federalHierarchy = res['_embedded'][0]['org'];
+
       this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
           if (logoData != null) {
@@ -577,29 +608,26 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     return relatedProgramsStream;
   }
 
-  private checkCurrentFY() {
-    // check if this program has changed in this FY, if not, display an alert
-    // does not apply to draft FALs
-    if (this.program.status && this.program.status.code && this.program.status.code === 'draft') {
-      return;
-    }
-
-
-    if ((new Date(this.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
-      this.alerts.push({
-        'labelname': 'not-updated-since', 'config': {
-          'type': 'warning', 'title': '', 'description': 'Note: \n\
-This Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
-Please contact the issuing agency listed under "Contact Information" for more information.'
-        }
-      });
-    }
-  }
-
   private loadAssistanceTypes(apiSource: Observable<any>) {
     apiSource.subscribe(api => {
       if (api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
+
+        for(let item of  api.data.financial.obligations) {
+          if(!this.totalsByYear['totalpFY']) {
+            this.totalsByYear['totalpFY'] = 0;
+          }
+          if(!this.totalsByYear['totalcFY']) {
+            this.totalsByYear['totalcFY'] = 0;
+          }
+          if(!this.totalsByYear['totalbFY']) {
+            this.totalsByYear['totalbFY'] = 0;
+          }
+
+          this.totalsByYear['totalpFY'] = this.totalsByYear['totalpFY'] + item.values[0].actual;
+          this.totalsByYear['totalcFY'] = this.totalsByYear['totalcFY'] + item.values[1].estimate;
+          this.totalsByYear['totalbFY'] = this.totalsByYear['totalbFY'] + item.values[2].estimate;
+        }
       }
 
       if (api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
@@ -607,6 +635,13 @@ Please contact the issuing agency listed under "Contact Information" for more in
       }
     });
   }
+
+  private getAssistanceType(id): string {
+    let filter = new FilterMultiArrayObjectPipe();
+    let result = filter.transform([id], this.dictionaries.assistance_type, 'element_id', true, 'elements');
+    return (result instanceof Array && result.length > 0) ? result[0].value : [];
+  }
+
 
   private toTheTop() {
     document.body.scrollTop = 0;
@@ -662,29 +697,19 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
-        return this.programService.getActionHistoryAndNote(this.cookieValue, this.programID);
-      }
-      return Observable.empty<any[]>();
+      return this.programService.getActionHistoryAndNote(this.cookieValue, this.programID);
     });
 
     apiStream.subscribe(apiSubject);
 
     apiSubject.subscribe((res: any[]) => {
-      let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
-      actionHistoryPipe.transform(res).subscribe(array => {
-        this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
-        this.actionHistoryAndNote = array;
-      });
+      if (!_.isEmpty(res)){
+        let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
+        actionHistoryPipe.transform(res).subscribe(history => {
+          this.publicHistoryIsVisible = false;
+          this.actionHistoryAndNote = history.array;
+        });
+      }
     });
   }
 
@@ -924,10 +949,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
   private updateSidenavIcons(sectionName: string, sectionLabel: string) {
     let hasError = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, sectionName));
-    //console.log(sectionName);
     let status = this.viewModel.getSectionStatus(sectionName);
     let iconClass = this.pristineIconClass;
-    if (status === 'updated') {
+    if (status === 'updated' || this.program.status.code === 'rejected') {
       if (hasError) {
         iconClass = this.invalidIconClass;
       } else {
@@ -937,7 +961,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
     let filter = new FilterMultiArrayObjectPipe();
     let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
-    section['iconClass'] = iconClass;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
   }
 
   // todo: find a better way to do this
@@ -952,16 +976,12 @@ Please contact the issuing agency listed under "Contact Information" for more in
      */
     let obligationStatus = this.viewModel.getSectionStatus(FALSectionNames.OBLIGATIONS);
     let otherFinancialInfoStatus = this.viewModel.getSectionStatus(FALSectionNames.OTHER_FINANCIAL_INFO);
-    let status = 'updated';
-
-    if (obligationStatus === 'pristine' && otherFinancialInfoStatus === 'pristine') {
-      status = 'pristine';
-    }
 
     let obligationHasErrors = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, FALSectionNames.OBLIGATIONS));
     let otherFinancialInfoHasErrors = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, FALSectionNames.OTHER_FINANCIAL_INFO));
     let iconClass = this.pristineIconClass;
-    if (status === 'updated') {
+
+    if (obligationStatus !== 'pristine' || otherFinancialInfoStatus !== 'pristine' || this.program.status.code === 'rejected') {
       if (obligationHasErrors || obligationStatus === 'pristine' || otherFinancialInfoHasErrors || otherFinancialInfoStatus === 'pristine') {
         iconClass = this.invalidIconClass;
       } else {
@@ -969,10 +989,29 @@ Please contact the issuing agency listed under "Contact Information" for more in
       }
     }
 
-    section['iconClass'] = iconClass;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
+  }
+
+
+  private loadLatestRevision() {
+    let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
+    let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
+      return this.programService.getProgramById(params['id'], null);
+    });
+    this.apiStreamSub = apiStream.subscribe(apiSubject);
+
+    this.apiSubjectSub = apiSubject.subscribe(api => {
+      // run whenever api data is updated
+      this.latestRevision = api;
+    });
+    return apiSubject;
   }
 
   navHandler(obj) {
     this.router.navigate([], {fragment: obj.route.substring(1)});
+  }
+  onViewClick() {
+    let url = '/programs/' + this.program.id + '/view';
+    this.router.navigateByUrl(url);
   }
 }

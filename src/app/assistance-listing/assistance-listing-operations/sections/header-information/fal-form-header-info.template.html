@@ -1,4 +1,4 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}
+<div id="fal-header-title" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}
 </div>
 
 <form [formGroup]="falHeaderInfoForm">
@@ -30,7 +30,7 @@
                        [multimode]="false"
                        [advancedMode]="false"
                        [required]="true"
-                       [attr.id]="'federal-agency'"
+                       [attr.id]="'fal-header-fed-agency'"
                        [orgId]="organizationId"
                        [orgRoot]="orgRoot"
                        [initial]="organizationId ? [organizationId] : []"
@@ -41,19 +41,22 @@
     {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
   </div>
 
-  <sam-number *ngIf="!viewModel.isRevision"
-              [maxlength]="3"
-              [minlength]="3"
-              [required]="true"
-              [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
-              [control]="falHeaderInfoForm.controls['programNumber']"
-              [name]="'programNumber-input'"
-              [label]="'FAL Number'"
-              [attr.id]="'fal-number'"
-              formControlName="programNumber"></sam-number>
+  <sam-fal-text *ngIf="!viewModel.isRevision"
+                [maxlength]="3"
+                [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
+                [control]="falHeaderInfoForm.controls['programNumber']"
+                [name]="'programNumber-input'"
+                [label]="'FAL Number'"
+                [required]="true"
+                [cfdaCode]="falNoPrefix"
+                [pending]="falHeaderInfoForm.controls['programNumber'].pending"
+                [attr.id]="'fal-header-falNo'"
+                [class.hide]="autoProgNoGeneration || organizationId == null"
+                formControlName="programNumber">
+  </sam-fal-text>
 
   <div *ngIf="viewModel.isRevision">
-    CFDA Number: {{ falNo }}
+    CFDA Number: {{ viewModel.programNumber }}
   </div>
 
   <sam-autocomplete-multiselect

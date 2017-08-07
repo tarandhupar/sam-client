@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 import { FormControl } from '@angular/forms';
 
@@ -20,7 +20,49 @@ import { Observable } from 'rxjs';
   ]
 })
 export class UIKitDemoPage {
-  sortModel = "";
+  @ViewChild('image') image: ElementRef;
+  @ViewChild('dropper') dropzone: ElementRef;
+
+  readURL(event) {
+    const image = this.image;
+    if (event.target.files && event.target.files[0]) {
+      this.readFile(event.target.files, image);
+    }
+  }
+
+  readFile(files: any[], targetImage: ElementRef) {
+    const reader = new FileReader();
+
+    reader.onload = function(e: any) {
+      targetImage.nativeElement.src = e.target.result;
+      targetImage.nativeElement.style.width = '160px';
+      targetImage.nativeElement.style.height = '160px';
+    };
+
+    reader.readAsDataURL(files[0]);
+  }
+
+  dragenter(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  dragover(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  drop(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    const dt = event.dataTransfer;
+    this.readFile(dt.files, this.image);
+  }
+  fileChangeHandler(event)  {
+    console.log(event);
+  }
+
+  sortModel = {type:"name",sort:"asc"};
 
   agv2_selections1;
   agv2_selections2;
@@ -38,14 +80,46 @@ export class UIKitDemoPage {
     {key: 'Maryland', value: 'Maryland', category: 'states'},
     {key: 'Virginia', value: 'Virginia', category: 'states'},
     {key: 'Washington DC', value: 'Washington DC', category: 'states'}];
- 
+
   autocompletePeoplePickerConfig = {
     keyValueConfig: {
-      keyProperty: 'email',
-      valueProperty: 'givenName',
-      subheadProperty: 'email'
+      keyProperty: 'mail',
+      valueProperty: 'commonName',
+      subheadProperty: 'mail'
     }
   };
+
+  /** Actions Component */
+
+  callback = () => {
+    console.log("I succeeded");
+  }
+
+  actions: Array<any> = [
+    { name: 'edit', label: 'Edit', icon: 'fa fa-pencil', callback: this.callback},
+    { name: 'delete', label: 'Delete', icon: 'fa fa-trash', callback: this.callback },
+    { name: 'save', label: 'Save', icon: 'fa fa-floppy-o', callback: this.callback }
+  ];
+
+  action = this.actions[0];
+
+  handleAction(event) {
+    if (event === 'edit') {
+      console.log("I'm handling the edit event");
+    } else if (event === 'delete') {
+      console.log("I'm handling the delete event");
+    } else if (event === 'save') {
+      console.log("I'm handling the save event");
+    }
+  }
+
+  handleActionButton(event) {
+    console.log('Emitted: ' + event);
+  }
+
+
+
+  /** End Actions Component */
 
   editorExampleText1 = "test value 1";
   editorExampleText2 = "test value 2";
@@ -60,7 +134,7 @@ export class UIKitDemoPage {
       this.editorExampleDraftText1 = this.editorExampleText1;
       this.editorExampleDraftText2 = this.editorExampleText2;
       this.editorExampleDraftText3 = this.editorExampleText3;
-    } 
+    }
     if(evt.event == "formActionSave"){
       console.log("save action triggered");
       this.editorExampleText1 = this.editorExampleDraftText1;
@@ -103,7 +177,7 @@ export class UIKitDemoPage {
      valueProperty: 'value',
      categoryProperty: 'category',
    }
-  
+
   /**
    * Autocomplete Category demo
    */

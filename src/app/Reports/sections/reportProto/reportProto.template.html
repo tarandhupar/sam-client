@@ -1,32 +1,38 @@
 <div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
   <section class="usa-grid-full">
     <div class="sam-ui hidden divider"></div>
-    Back to: <a routerLink="/reports/overviewProto" routerLinkActive="Active">Dynamic Proto Reports</a>
+    Back to: <a routerLink="/reports/overviewProto" routerLinkActive="Active">Dynamic Reports</a>
     <br>
-    <h2 class="m_T-2x">{{name}}</h2>
+    <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount' ||
+      name=='Potential Vendor Anomaly Report' ||
+      name=='Unique Vendors Report'" style="color: red">ANOMOLY</span></h2> <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount'">ANOMOLY</span>
     <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
           
           <div class="display-block">
-            <div class="usa-width-one-half">
+            
               <sam-date-range *ngIf="usedPrompts.dateRange" 
-                              [required]="true" 
+                              [required]="true"
                               [label]="'Date range correspond to the Date Signed on Procurement Awards'"
                               [(ngModel)]='dateRange' 
                               name='dateRange'>
               </sam-date-range> 
-              <sam-agency-picker *ngIf="usedPrompts.fHierarchy" 
-                                name="agency-picker"
-                                [label]="'Search Federal Organizations'"
-                                [multimode]="true" 
-                                [advancedMode]="true"
-                                [(ngModel)]="agencyPicker">
-              </sam-agency-picker>
-            </div>
           </div>
 
           <div class="display-block">
+            
+            <div class="usa-width-one-half">
+              <sam-text *ngIf="usedPrompts.agencyName"
+                        [(ngModel)]="agencyName"
+                        [name]="'agencyName'"
+                        [label]="'Agency Name'">
+              </sam-text>
+              <sam-agency-picker-v2 *ngIf="usedPrompts.fHierarchy" 
+                                    name="agency-picker"
+                                    [(ngModel)]="agencyPicker">
+              </sam-agency-picker-v2>
+            </div>
             <div class="usa-width-one-half report__additionalprompts">
               <sam-text *ngIf="usedPrompts.contractingRegion"
                         [(ngModel)]="contractingRegion"
@@ -38,18 +44,14 @@
                         [name]="'orgCode'" 
                         [label]="'Organization'">
               </sam-text>
-              <sam-text *ngIf="usedPrompts.agencyName" 
-                        [(ngModel)]="agencyName"
-                        [name]="'agencyName'" 
-                        [label]="'Agency Name'">
-              </sam-text>
+              
               <sam-select *ngIf="usedPrompts.includesBases"
-                                  class="includesBases"
-                                  [(ngModel)]="includesBases"
-                                  name="includesBases" 
-                                  [options] = "basesOptions"
-                                  [label] = "'Includes'"
-                                  (switchStatusChange)="includesBasesStatusChange($event)">
+                          class="includesBases"
+                          [(ngModel)]="includesBases"
+                          name="includesBases" 
+                          [options] = "basesOptions"
+                          [label] = "'Includes'"
+                          (switchStatusChange)="includesBasesStatusChange($event)">
               </sam-select>
             </div>
 
@@ -89,7 +91,7 @@
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
             <ul  class="p_L-0x ul-css">
-              <li *ngFor="let report of data.reports | repfil: id">
+              <li *ngFor="let report of data.development.admin | repfil: id">
                 <b>
                   <a href="{{report.name}}"></a>
                 </b>

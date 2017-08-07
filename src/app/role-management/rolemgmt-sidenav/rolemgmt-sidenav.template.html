@@ -1,11 +1,5 @@
 <div class = "rolemgmt-sidenav">
   <div>
-    <img src="src/assets/img/blank_icon.png" class = "img_size" alt="GSA Image" tabindex="0">
-  </div>
-  <div>
-    <h2 class = "min_txt">General Services Administration</h2>
-  </div>
-  <div class = "m_T-1em">
     <div class = "filter-color">
       <h3>Filters
         <div class = "pull-right filter-icon filter-color">
@@ -26,7 +20,7 @@
       <sam-solo-accordian [titleText]="accordionHeading1">
         <sam-checkbox
           #statusCheckboxes
-          (ngModelChange)="activeFilter($event)"
+          (modelChange)="activeFilter($event)"
           [(ngModel)]="StatusCheckboxModel"
           [name]="'Access-Status-Checkbox-Filter'"
           [options]="filters.status.options"

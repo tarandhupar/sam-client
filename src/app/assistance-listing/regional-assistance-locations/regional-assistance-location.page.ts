@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
   moduleId: __filename,
@@ -38,6 +39,12 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   regionalLocationSearchConfig: any = {
     placeholder: "Search Regional Assistance Locations"
   };
+  
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb:'Home', url:'/',},
+    { breadcrumb: 'Workspace', url: '/workspace' },
+    { breadcrumb: 'Regional Assistance Locations'}
+  ];
 
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {

@@ -111,15 +111,18 @@ $large: $current-large;
 @import 'sam-ui/elements/header';
 @import 'sam-ui/elements/image';
 @import 'sam-ui/elements/divider';
+@import 'sam-ui/elements/step';
 
 /* Collections */
 @import 'sam-ui/collections/grid';
 @import 'sam-ui/collections/table';
 @import 'sam-ui/collections/menu';
+@import 'sam-ui/collections/message';
 
 /* Views */
 @import 'sam-ui/views/statistic';
 @import 'sam-ui/views/item';
+@import 'sam-ui/views/feed';
 
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
@@ -185,6 +188,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'typography';
 @import 'grid-offsets';
 
+@import 'components/actions';
 @import 'components/parent-orgs.scss';
 @import 'components/card';
 @import 'components/complex-form-template';
@@ -207,6 +211,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/header-links';
 @import 'components/header-menu';
 @import 'components/info-accordion';
+@import 'components/image';
 @import 'components/agency-picker';
 @import 'components/input';
 @import 'components/multiselect';
@@ -240,6 +245,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/user-directory';
 @import 'components/notifications';
 @import 'components/organization-hierarchy';
+@import 'components/list-builder';
 
 @import 'templates/workspace';
 
@@ -322,12 +328,11 @@ samsearchheader .search-header > .usa-width-one-whole{
   margin: 0 auto;
 }
 
-.noPadding-falWorkspace{
-  .usa-unstyled-list{
-    li{
-      padding-bottom:0px;
-    }
+.falDateFilter{
+  .start-date{
+    margin-right: 0rem;
   }
+
 }
 
 // Make sidenav use all availabe horizontal space on medium screen
@@ -369,4 +374,15 @@ select {
 
 sam-solo-accordian li {
   position: relative;;
+}
+
+// https://stackoverflow.com/questions/7492062/css-overflow-scroll-always-show-vertical-scroll-bar
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }

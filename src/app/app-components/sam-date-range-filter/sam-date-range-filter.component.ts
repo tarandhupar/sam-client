@@ -58,7 +58,7 @@ export class SamDateRangeFilterComponent implements ControlValueAccessor {
      */
     @Input() radioSelection = "timeSpan";
     /**
-     * Sets the range type to be 'date' or 'date-time' 
+     * Sets the range type to be 'date' or 'date-time'
      */
     @Input() rangeType = "date";
     /**
@@ -141,7 +141,7 @@ export class SamDateRangeFilterComponent implements ControlValueAccessor {
         for(let val of keys){
             obj[val] = this.model[val];
         }
-        
+
         this.onChange(obj);
     }
 
@@ -161,8 +161,8 @@ export class SamDateRangeFilterComponent implements ControlValueAccessor {
     }
 
     writeValue(value) {
-        if(value){
-            this.model = value;
-        }
+      if(value){
+        this.model = value;
+      }
     }
 }

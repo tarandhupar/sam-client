@@ -41,7 +41,7 @@ export class FHService {
   }
 
   //gets organization with heirarchy data
-  getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
+  getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false, status: string = 'all', pageSize: number = 10, pageNum: number = 1, orderBy: string = "asc") {
     var oApiParam = {
         name: '',
         suffix: '',
@@ -64,6 +64,16 @@ export class FHService {
 
     if (includeOrgTypes) {
       oApiParam.oParam['types'] = 'true';
+    }
+
+    if (status !== 'all') {
+      oApiParam.oParam['status'] = status;
+    }
+
+    if (includeChildrenLevels) {
+      oApiParam.oParam['limit'] = pageSize;
+      oApiParam.oParam['offset'] = pageNum;
+      oApiParam.oParam['order'] = orderBy;
     }
 
     return this.oAPIService.call(oApiParam);
@@ -282,6 +292,20 @@ export class FHService {
       suffix: '/type',
       method: 'GET',
       oParam: {}
+    };
+
+    return this.callApi(apiOptions,true);
+  }
+
+  getFHWidgetInfo(type, day){
+    let apiOptions: any = {
+      name: 'fhDetail',
+      suffix: '/FHWidget',
+      method: 'GET',
+      oParam: {
+        type: type,
+        days: day
+      }
     };
 
     return this.callApi(apiOptions,true);

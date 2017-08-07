@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
@@ -57,8 +57,8 @@ export class FALFormOverviewComponent implements OnInit {
   fcTypeOptions = [];
   fcKeyValue = [];
   fcNGModel: any;
-  fcAutocompleteConfig: AutocompleteConfig = {
-    keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
+  fcAutocompleteConfig: any = {
+    keyValueConfig: {keyProperty: 'code', valueProperty: 'name', categoryProperty: 'category'},
     placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
   };
 
@@ -93,17 +93,16 @@ export class FALFormOverviewComponent implements OnInit {
       this.updateErrors();
     });
   }
-
   parseFunctionalCodes(data: any) {
     let functionalTypesArr = [];
     for (let fcData of data['functional_codes']) {
       for (let data of fcData.elements) {
         let value = data.code + ' - ' + data.value;
-        this.fcTypeOptions.push({code: data.element_id, name: value});
+        this.fcTypeOptions.push({code: data.element_id, name: value, category:fcData.value});
         this.fcKeyValue[data.element_id] = value;
       }
     }
-    this.populateMultiSelect(this.viewModel.functionalCodes, this.fcAutocompleteConfig, functionalTypesArr, this.fcKeyValue);
+    this.populateMultiSelect(this.viewModel.functionalCodes, this.fcAutocompleteConfig, functionalTypesArr, this.fcKeyValue,this.fcTypeOptions);
     this.falOverviewForm.patchValue({
       functionalTypes: functionalTypesArr.length > 0 ? functionalTypesArr : []
     }, {
@@ -125,10 +124,13 @@ export class FALFormOverviewComponent implements OnInit {
 
   }
 
-  populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
+  populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any, fcTypeOptions) {
     if (multiTypeData && multiTypeData.length > 0) {
       for (let id of multiTypeData) {
-        listDisplay.push({code: id, name: keyValueArray[id]});
+        let item = fcTypeOptions.find((item)=>{
+          return item.code == id;
+        });
+        listDisplay.push({code: id, name: keyValueArray[id],category: item['category']});
       }
       autoCompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
     }
@@ -145,16 +147,17 @@ export class FALFormOverviewComponent implements OnInit {
 
     setTimeout(() => { // horrible hack to trigger angular change detection
       if (this.viewModel.getSectionStatus(FALSectionNames.OVERVIEW) === 'updated') {
-        this.falOverviewForm.get('objective').markAsDirty();
-        this.falOverviewForm.get('objective').updateValueAndValidity();
-        this.falOverviewForm.get('description').markAsDirty();
-        this.falOverviewForm.get('description').updateValueAndValidity();
-        this.falOverviewForm.get('functionalTypes').markAsDirty();
-        this.falOverviewForm.get('functionalTypes').updateValueAndValidity();
-        this.falOverviewForm.get('subjectTermsTypes').markAsDirty();
-        this.falOverviewForm.get('subjectTermsTypes').updateValueAndValidity();
         this.falOverviewForm.get('fundedProjects').markAsDirty();
         this.falOverviewForm.get('fundedProjects').updateValueAndValidity();
+        this.falOverviewForm.markAsPristine({onlySelf: true});
+        this.falOverviewForm.get('objective').markAsDirty({onlySelf: true});
+        this.falOverviewForm.get('objective').updateValueAndValidity();
+        this.falOverviewForm.get('description').markAsDirty({onlySelf: true});
+        this.falOverviewForm.get('description').updateValueAndValidity();
+        this.falOverviewForm.get('functionalTypes').markAsDirty({onlySelf: true});
+        this.falOverviewForm.get('functionalTypes').updateValueAndValidity();
+        this.falOverviewForm.get('subjectTermsTypes').markAsDirty({onlySelf: true});
+        this.falOverviewForm.get('subjectTermsTypes').updateValueAndValidity();
       }
     });
   }

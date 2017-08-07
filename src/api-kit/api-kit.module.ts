@@ -34,6 +34,7 @@ import { SearchServiceMock } from "./search/search.service.mock";
 import { FHServiceMock } from "./fh/fh.service.mock";
 import { FeedbackServiceMock } from "./feedback/feedback.service.mock";
 import { SystemAlertsServiceMock } from "./system-alerts/system-alerts.service.mock";
+import { WatchlistService } from './watchlist/watchlist.service';
 
 /**
  * A module for reusable SAM Web Design components
@@ -63,6 +64,7 @@ import { SystemAlertsServiceMock } from "./system-alerts/system-alerts.service.m
     //{ provide: FHService, useClass: FHServiceMock},
     IAMService,
     SystemAlertsService,
+    WatchlistService,
     //{ provide: SystemAlertsService, useClass: SystemAlertsServiceMock },
     EntityService,
     ExclusionService,

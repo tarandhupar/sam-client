@@ -5,13 +5,13 @@
     </div>
 
     <div class="pull-right">
-      <sam-select class="pull-right" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="''"></sam-select>
+      <sam-select class="pull-right" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onSortChanged()" [label]="''"></sam-select>
       <span class="pull-right m_T-3x">Sort by: &nbsp;</span>
     </div>
   </div>
 
   <div class="usa-width-one-whole split-line m_T-2x"></div>
-  <div class="usa-width-one-whole org-item" *ngFor="let orgItem of curPageOrgList">
+  <div class="usa-width-one-whole org-item" *ngFor="let orgItem of orgList">
     <div class="usa-width-one-whole">
       <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a>
     </div>
@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgList.length > 0">
+  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0">
     <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
   </div>
 </section>

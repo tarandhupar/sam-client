@@ -153,7 +153,7 @@ export class FALFormChangeRequestComponent implements OnInit {
         this.programService.getPermissions(this.cookieValue, 'ORG_ID', this.program.data.organizationId).subscribe(res => {
           this.userOrganization = res['ORG_ID'];
           this.falChangeRequestForm = this.fb.group({
-            organizationPicker: '',
+            organizationPicker: ['', falCustomValidatorsComponent.isAgencyPickerValueDiff(this.program.data.organizationId)],
             comment: ''
           });
           this.pageReady = true;

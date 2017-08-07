@@ -1,29 +1,132 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Financial Information - {{ viewModel.title }}</div>
 <div *ngIf="otherFinancialInfoForm" [formGroup]="otherFinancialInfoForm">
   <sam-text-area [label]="'Range and Average of Financial Assistance'"
-               [name]="'assitance-range-input'"
-               [hint]="rangeAndAverageHint"
-               [required]="false"
-               [attr.id]="'range-average'"
-               [control]="otherFinancialInfoForm.get('assistanceRange')"
-               [formControlName]="'assistanceRange'"
+              [name]="'assitance-range-input'"
+              [hint]="rangeAndAverageHint"
+              [required]="false"
+              [attr.id]="'range-average'"
+              [control]="otherFinancialInfoForm.get('assistanceRange')"
+              [formControlName]="'assistanceRange'"
   ></sam-text-area>
 
   <falFYTable [config]="accomplishmentsConfig"
               [formControlName]="'accomplishments'"
-              [attr.id]="'program-accomplishments'"
+              [attr.id]="'fal-financial-info-accomplishments'"
               [control]="otherFinancialInfoForm.get('accomplishments')"
   ></falFYTable>
 
-  <falAccountIdentificationInput [config]="accountIdentificationConfig"
-                                 [formControlName]="'accountIdentification'"
-                                 [attr.id]="'account-identification'"
-                                 [control]="otherFinancialInfoForm.get('accountIdentification')"
-  ></falAccountIdentificationInput>
+  <sam-listbuilder
+    label="Account Identification"
+    [hint]="accountIdentificationConfigHint"
+    [required]="true"
+    [attr.id]="'fal-financial-info-account-identification'"
+    [control]="otherFinancialInfoForm.get('accountIdentification')"
+    [formArrayInput]="otherFinancialInfoForm.get('accountIdentification').controls"
+    [formGroupTemplate]="acctIdentifcationSubform"  
+    (formArrayChange)="acctIdentifcationFormArrayChange($event)"
+    (action)="acctIdentificationActionHandler($event)">
+    <template #display let-item>
+      <p>
+        <ng-container *ngIf="!item.valid">
+          <span class='usa-input-error-message'><sup>*</sup>This entry has some errors</span><br/>
+        </ng-container>
+        Account Code: {{item.value.code}}<br/>
+        Description: {{item.value.description}}
+      </p>
+    </template>
+    <template #edit let-item>
+      <form [formGroup]="item">
+        <fal-account-identification-code name="code"
+            label="Code"
+            hint="Agency supplied 11-digit budget account code"
+            [required]="true"
+            [control]="item.get('code')"
+            formControlName="code"
+          ></fal-account-identification-code>
+          <sam-text-area 
+            name="acct-ident-desc"
+            label="Description"
+            hint="Optionally add a description for this account number"
+            formControlName="description"
+        ></sam-text-area>
+      </form>
+    </template>
+  </sam-listbuilder>
 
-  <falTAFSInput [config]="tafsConfig"
-                [formControlName]="'tafs'"
-                [control]="otherFinancialInfoForm.get('tafs')"
-                [attr.id]="'tafs-code'"
-  ></falTAFSInput>
+  <sam-listbuilder
+    label="TAFS Codes - Unique Treasury Appropriation Fund Symbols"
+    [hint]="tafsHint"
+    [required]="true"
+    [attr.id]="'fal-financial-info-tafs-codes'"
+    [control]="otherFinancialInfoForm.get('tafs')"
+    [formArrayInput]="otherFinancialInfoForm.get('tafs').controls"
+    [formGroupTemplate]="tafsSubform"  
+    (formArrayChange)="tafsFormArrayChange($event)"
+    (action)="tafsActionHandler($event)">
+    <template #display let-item>
+      <p>
+        <ng-container *ngIf="!item.valid">
+          <span class='usa-input-error-message'><sup>*</sup>This entry has some errors</span><br/>
+        </ng-container>
+        Treasury Dept. Code: {{item.value.departmentCode}}<br/>
+        Treasury Account Main Code: {{item.value.accountCode}}<br/>
+        TAFS Sub Account: {{item.value.subAccountCode}}<br/>
+        Allocation Transfer Agency: {{item.value.allocationTransferAgency}}<br/>
+        FY 1: {{item.value.fy1}}<br/>
+        FY 2: {{item.value.fy2}}
+      </p>
+    </template>
+    <template #edit let-item>
+      <form [formGroup]="item">
+        <sam-text label="Treasury Dept. Code"
+                  name="treasury-dept-code"
+                  [maxlength]="2"
+                  [required]="true"
+                  [control]="item.get('departmentCode')"
+                  [formControlName]="'departmentCode'"
+        ></sam-text>
+
+        <sam-text label="Treasury Account Main Code"
+                  name="treasury-account-main-code"
+                  [maxlength]="4"
+                  [required]="true"
+                  [control]="item.get('accountCode')"
+                  [formControlName]="'accountCode'"
+        ></sam-text>
+
+        <sam-text label="TAFS Sub Account"
+                  name="sub-account-code"
+                  [maxlength]="3"
+                  [required]="false"
+                  [control]="item.get('subAccountCode')"
+                  [formControlName]="'subAccountCode'"
+        ></sam-text>
+
+        <sam-text label="Allocation Transfer Agency"
+                  name="allocation-transfer-agency-code"
+                  [maxlength]="2"
+                  [required]="false"
+                  [control]="item.get('allocationTransferAgency')"
+                  [formControlName]="'allocationTransferAgency'"
+        ></sam-text>
+
+        <sam-text label="FY 1"
+                  name="fy1-code"
+                  [maxlength]="4"
+                  [required]="false"
+                  [control]="item.get('fy1')"
+                  [formControlName]="'fy1'"
+        ></sam-text>
+
+        <sam-text label="FY 2"
+                  name="fy2-code"
+                  [maxlength]="4"
+                  [required]="false"
+                  [control]="item.get('fy2')"
+                  [formControlName]="'fy2'"
+        ></sam-text>
+      </form>
+    </template>
+  </sam-listbuilder>
+  <br/>
 </div>

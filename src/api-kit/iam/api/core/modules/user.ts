@@ -312,7 +312,7 @@ export const user = {
       }
     } else {
       if(isDebug()) {
-        $success(getMockUserAccount());
+        $success(new User(getMockUserAccount()));
       } else {
         $error({ message: 'Please sign in' });
       }

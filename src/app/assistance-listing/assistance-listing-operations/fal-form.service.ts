@@ -53,6 +53,7 @@ export class FALFormService {
   getObligation_Info_Dictionaries(){
     return this.dictionaryService.getDictionaryById('assistance_type');
   }
+
   getContactDict(){
     let dictionaries = ['states', 'countries'];
     return this.dictionaryService.getDictionaryById(dictionaries.join(','));
@@ -65,9 +66,11 @@ export class FALFormService {
   submitFAL(programId: string, data: {}) {
     return this.programService.submitProgram(programId, data, FALFormService.getAuthenticationCookie());
   }
+
   falWFRequestTypeProgram(programId: string, data: {}, workflowRequestType: string) {
     return this.programService.falWFRequestTypeProgram(programId, data, FALFormService.getAuthenticationCookie(), workflowRequestType);
   }
+
   getSubmitReason(programId: string) {
     return this.programService.getReasons(programId,FALFormService.getAuthenticationCookie());
   }
@@ -75,7 +78,16 @@ export class FALFormService {
   sendNotification(programId: string) {
     return this.programService.sendNotification(programId, FALFormService.getAuthenticationCookie());
   }
+
   getFALPermission(type: string) {
     return this.programService.getPermissions(FALFormService.getAuthenticationCookie(),type);
+  }
+
+  getFederalHierarchyConfigurations(orgId: string){
+    return this.programService.getFederalHierarchyConfigurations(orgId, FALFormService.getAuthenticationCookie());
+  }
+
+  getCfdaCode(orgId){
+    return this.programService.getCfdaCode(orgId);
   }
 }

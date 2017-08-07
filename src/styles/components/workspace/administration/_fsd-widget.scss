@@ -1,9 +1,4 @@
 .fsd-widget {
-  .widget-body {
-    height: 100px;
-    margin-top: 20px;
-  }
-
   .fsd-accounts,
   .fsd-controls {
     display: inline-block;
@@ -18,9 +13,9 @@
 
   .fsd-controls {
     width: 50%;
+    padding-right: 1em;
 
     .sam-autocomplete {
-      width: 94%;
       margin: 0 auto;
       transform: translateY(50%);
 
@@ -53,34 +48,6 @@
         content: '\f058';
         color: $green;
         float: left;
-      }
-    }
-  }
-
-  .widget-footer {
-    $widget-footer-height: 30px;
-
-    display: block;
-    height: $widget-footer-height;
-    padding-left: 20px;
-    padding-right: 20px;
-    line-height: $widget-footer-height;
-    font-weight: 600;
-    color: $black;
-    cursor: pointer;
-
-    .fa-chevron-circle-right {
-      display: inline-block;
-      height: $widget-footer-height;
-      margin-left: 4px;
-      line-height: $widget-footer-height;
-      color: $blue;
-
-      &:before {
-        position: relative;
-        top: 3px;
-        font-size: 1.4em;
-        z-index: -1;
       }
     }
   }

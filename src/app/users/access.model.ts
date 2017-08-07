@@ -13,9 +13,9 @@ export class UserAccessModel {
 
   private constructor() {  }
 
-  static FromResponse(res: UserAccessInterface): UserAccessModel {
+  static FromResponse(res: any): UserAccessModel {
     let a = new UserAccessModel();
-    a._raw = res;
+    a._raw = JSON.parse(res._body);
     a.collector = new PropertyCollector(res);
     return a;
   }

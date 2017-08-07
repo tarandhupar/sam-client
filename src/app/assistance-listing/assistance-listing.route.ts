@@ -29,7 +29,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
     {path: 'programs/:id/publish', component: FALPublishComponent, canActivate: [AuthGuard]},
     {path: 'programs/:id/change-request', component: FALFormChangeRequestComponent},
     {path: 'programs/change-request/:id/action', component: FALFormChangeRequestActionComponent},
-    {path: 'fal/workspace/requests', component: FeedsPage},
+    {path: 'workspace/my-feed', component: FeedsPage, canActivate: [AuthGuard]},
     {path: 'fal/myRegionalOffices/add', component: FALRegionalAssistanceFormComponent, canActivate: [AuthGuard]},
     {path: 'fal/myRegionalOffices/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [AuthGuard]},
     {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [AuthGuard]}

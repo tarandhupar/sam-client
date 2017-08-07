@@ -50,4 +50,20 @@ export class ReportsService {
 
     return this.oAPIService.call(oApiParam, false);
   }
+
+  getUserRole(cookie: String) {
+    let oApiParam = {
+      name: 'iam',
+      suffix: '/roles',
+      oParam: {
+        'fetchNames': true
+      },
+      headers: {
+        'iPlanetDirectoryPro': cookie
+      },
+      body: {},
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
 }

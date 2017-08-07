@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserAccessService } from "api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   selector: 'pending-requests',
-  templateUrl:'pending-requests.template.html'
+  templateUrl:'pending-requests.template.html',
+  providers: [CapitalizePipe]
 })
 export class PendingRequestsComponent  implements OnInit {
   @Input() requests: Array<PendingRequest> = [];

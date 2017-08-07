@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { SamCheckboxComponent } from "sam-ui-kit/form-controls/checkbox/checkbox.component";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   selector: 'rolemgmt-sidenav',
@@ -32,7 +33,12 @@ export class RoleMgmtSidenav implements OnInit{
     };
 
 
-    constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){
+    constructor(
+      private router: Router,
+      private route: ActivatedRoute,
+      private role: UserAccessService,
+      private capitalize: CapitalizePipe,
+    ){
 
 
     }
@@ -44,8 +50,15 @@ export class RoleMgmtSidenav implements OnInit{
       this.accordionName2 = 'Domains-Filter-Check-Box';
 
 
+      if (this.route.snapshot.queryParams['domain']) {
+         this.DomiansCheckboxModel = this.route.snapshot.queryParams['domain'].split(',').map(d => +d);
+      }
+
+
       this.getAccessStatus();
-      this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map(this.mapDomainLabelAndVal);
+      this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map((d) => {
+        return this.mapDomainLabelAndVal(d);
+      });
       this.getRequestorIds();
     }
 
@@ -61,7 +74,7 @@ export class RoleMgmtSidenav implements OnInit{
             }
           });
 
-          this.filters.status.options = res.map(this.mapLabelAndValue);
+          this.filters.status.options = res.map((e) => { return this.mapLabelAndValue(e); });
         }
       });
     }
@@ -69,38 +82,35 @@ export class RoleMgmtSidenav implements OnInit{
     getRequestorIds(){
       this.role.getRequestorIds().subscribe( res => {
         if(res && res.length)
-          this.requestorIds = res.map(this.mapKeyAndVal);
+          this.requestorIds = res.map((e) => { return this.mapKeyAndVal(e) });
+        console.log(this.requestorIds);
       });
     }
 
     mapKeyAndVal(val){
-      return {key : val, value : val};
+      return {key : val, value : this.capitalize.transform(val)};
     }
 
     mapLabelAndValue(val){
-      return {label : val.status, value : val.id};
+      return {label : this.capitalize.transform(val.status), value : val.id};
     }
 
     mapDomainLabelAndVal(val){
-      return {label : val.domainName, value: val.id};
+      return {label : this.capitalize.transform(val.domainName), value: val.id};
     }
 
     activeFilter(event){
-      if(event.length < 1)
-        this.statusSelected.emit(this.statusIds);
-      else
-        this.statusSelected.emit(event.toString());
-
+      this.statusSelected.emit(event);
     }
 
     domainFilter(event){
-      this.domainSelected.emit(event.toString());
+      this.domainSelected.emit(event);
     }
 
     onUserClick(newValue){
       let c = '';
       if (typeof newValue === 'object') {
-        c = newValue.value;
+        c = newValue.key;
       } else if (typeof newValue === 'string') {
         c = newValue;
       }

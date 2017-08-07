@@ -1,0 +1,44 @@
+<div style="display: flex;" 
+    [style.background-color]="theme == 'inside' ? '#F9F9F9' : ''">
+    
+  <div class="sam-ui container grid">
+    
+    <!-- Breadcrumbs -->
+    <div class="row" *ngIf="breadcrumbs">
+      <div class="twelve wide column">
+        <sam-breadcrumbs [crumbs]="breadcrumbs"></sam-breadcrumbs>
+      </div>
+    </div>
+    
+    <div *ngIf="!breadcrumbs" class="sam-ui hidden divider"></div>
+    
+    <div class="row">
+      <!-- Sidebar -->
+      <div *ngIf="pageService.sidebar" [ngClass]="pageService.sidebarColumns">
+        <ng-content select="sidebar"></ng-content>
+      </div>
+      
+      <!-- Main Content -->
+      <div [ngClass]="pageService.mainContentColumns">
+        
+        <!-- Page Title -->
+        <h1 *ngIf="title || section"
+            class="sam-ui header" 
+            style="font-size: 4rem;">
+          <div class="sup header"
+                style="font-weight: 300; font-size: 2.5rem;">
+            {{ section }}
+          </div>
+          {{ title }}
+        </h1>
+        
+        <ng-content></ng-content>
+        
+        <div class="sam-ui hidden divider"></div>
+        
+      </div>  
+    </div>
+    
+  </div>
+  
+</div>

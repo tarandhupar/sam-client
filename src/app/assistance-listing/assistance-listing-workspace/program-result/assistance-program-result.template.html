@@ -1,58 +1,77 @@
-<div class="sam-ui grid">
-  <div class="row">
-    <div class="eight wide column">
-      <h3 class="assistance-program-title">
-        <a [routerLink]="['/programs', data.id, 'review']">{{data.data.title}}</a>
-      </h3>
-
-      <ul class="sam-ui small list">
-        <li>
-          <strong>Date Modified</strong><br>
-          <span>{{data.modifiedDate}}</span>
-        </li>
-        <li>
-          <strong>Office</strong><br>
-          <span>{{data.organizationName}}</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="four wide column">
-      <ul class="sam-ui small list">
-        <li>
-          <wrapper-fal-change-request-dropdown
-              [name]="changeRequestDropdown.config.name"
-              [hint]="changeRequestDropdown.config.hint"
-              [disabled]="changeRequestDropdown.config.disabled"
-              [permissions]="permissions"
-              [defaultOption]="changeRequestDropdown.defaultOption"
-              (clickActionHandler)="onChangeRequestSelect($event)"
-              [program]="data"
-              [requestTypeAction] = "requestTypeValue"
-            ></wrapper-fal-change-request-dropdown>
-        </li>
-        <li>
-        <span class="sam-ui mini label">{{data.status.value}}</span>
-        </li>
-        <li>
-          <strong>CFDA #</strong><br>
-          <span class="fal-program-number">{{data.data.programNumber}}</span>
-        </li>
-        <li>
-          <strong>Date Published</strong><br>
-          <span>{{data.publishedDate}}</span>
-        </li>
-      </ul>
-    </div>
+<div class="sam-ui small subtle menu">
+  <a *ngIf="requestTypeValue && requestId"
+      [routerLink]="['/programs/change-request/', requestId, 'action']"
+      class="active inverted blue item"
+      id="pending-request-button">
+    {{ requestTypeValue | requestLabel }}
+    &nbsp;
+    <i aria-hidden="true" class="fa fa-arrow-circle-right"></i>
+  </a>
+  <div class="right menu">
+    <wrapper-fal-change-request-dropdown
+      [name]="changeRequestDropdown.config.name"
+      [disabled]="changeRequestDropdown.config.disabled"
+      [permissions]="permissions"
+      [defaultOption]="changeRequestDropdown.defaultOption"
+      (clickActionHandler)="onChangeRequestSelect($event)"
+      [program]="data"
+      [requestTypeAction] = "requestTypeValue">
+    </wrapper-fal-change-request-dropdown>
   </div>
-  <ng-container *ngIf="requestTypeValue && requestId">
-    <a class="usa-button-primary" [routerLink]="['/programs/change-request/', requestId, 'action']">
-      <span>{{ requestTypeValue | requestLabel }}</span>
-      <i aria-hidden="true" class="fa fa-chevron-circle-right"></i>
-    </a>
-    <div class="sam-ui divider"></div>
-  </ng-container>
 </div>
 
+<div class="sam-ui grid ">
+  <div class="twelve wide column">
+    <h3 class="sam-ui header">
+      <a *ngIf="data.data.title"
+        [routerLink]="['/programs', data.id, 'review']">
+        {{data.data.title}}
+      </a>
+      <ng-container *ngIf="!data.data.title">
+        Untitled
+      </ng-container>
+    </h3>
+  </div>
+</div>
 
+<div class="sam-ui equal width grid">
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      CFDA Number
+      <div *ngIf="!data.data.programNumber" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.data.programNumber}}</div>
+    </div>
+
+    <div class="sam-ui medium header">
+      Office
+      <div *ngIf="!data.organizationName" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.organizationName}}</div>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      Date Modified
+      <div class="sub header">{{data.modifiedDate}}</div>
+    </div>
+
+    <div class="sam-ui medium header" *ngIf="data.publishedDate">
+      Date Published
+      <div class="sub header">{{data.publishedDate}}</div>
+    </div>
+
+    <span class="sam-ui basic tiny blue label"
+      style="margin-top: 10px;">
+      <ng-container *ngIf="data.archived">Archived</ng-container>
+      <ng-container *ngIf="!data.archived">{{data.status.value}}</ng-container>
+    </span>
+
+  </div>
+
+</div>
 

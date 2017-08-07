@@ -19,6 +19,8 @@ import { UserAccessModel } from "../access.model";
 import { PropertyCollector } from "../../app-utils/property-collector";
 import { Organization } from "../../organization/organization.model";
 import { SamModalComponent } from "sam-ui-kit/components/modal";
+import {UserService} from "../user.service";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -72,6 +74,8 @@ export class GrantAccessPage implements OnInit {
     private pageScrollService: PageScrollService,
     private fhService: FHService,
     private titleService: Title,
+    private userCookieService: UserService,
+    private capitalize: CapitalizePipe,
   ) {
     PageScrollConfig.defaultDuration = 500;
   }
@@ -100,19 +104,7 @@ export class GrantAccessPage implements OnInit {
     if (this.mode === 'edit') {
       this.initializePageFromQueryParameters();
     }
-    this.user = this.getUser();
-  }
-
-  getUser() {
-    let cookie = Cookie.get('IAMSession');
-    if (cookie) {
-      let u = Cookie.get('IAMSession');
-      let uo;
-      uo = JSON.parse(u);
-      return uo;
-    } else {
-      throw new Error('User cookie missing');
-    }
+    this.user = this.userCookieService.getUser();
   }
 
   getAccess() {
@@ -127,7 +119,7 @@ export class GrantAccessPage implements OnInit {
     this.userService.getDomains().subscribe(
       domains => {
         this.domainOptions = domains._embedded.domainList.map(domain => {
-          return { value: domain.id, label: domain.domainName };
+          return { value: domain.id, label: this.capitalize.transform(domain.domainName) };
         });
 
         if (this.userCameFromRoleWorkspace) {
@@ -232,7 +224,7 @@ export class GrantAccessPage implements OnInit {
 
     let userRole;
     if (this.userAccess) {
-      let userRL = JSON.parse(this.userAccess.raw()._body);
+      let userRL = this.userAccess.raw();
       userRole = userRL.domainMapContent[0].roleMapContent[0];
 
       if (+userRole.role.id === +this.role) {
@@ -250,6 +242,19 @@ export class GrantAccessPage implements OnInit {
 
     if (r) {
       this.objects = r.functionContent;
+
+      if (roleIsCurrentRole) {
+        this.objects.forEach(fun => {
+          let fid = fun.function.id;
+          fun.permission.forEach(perm => {
+            let pid = perm.id;
+
+            if (!this.userHasPermission(fid, pid)) {
+              perm.notChecked = true;
+            }
+          });
+        });
+      }
     } else {
       // the user selected a role that is not in the roles table (it may not have been fetched yet)
       this.objects = [];
@@ -257,7 +262,8 @@ export class GrantAccessPage implements OnInit {
   }
 
   userHasPermission(fid, pid) {
-    let userFunctions =  this.userAccess.raw().domainMapContent[0].roleMapContent[0].organizationMapContent[0].functionMapContent;
+    let userRL = this.userAccess.raw();
+    let userFunctions =  userRL.domainMapContent[0].roleMapContent[0].organizationMapContent[0].functionMapContent;
     let found = false;
     userFunctions.forEach(fun => {
       if (fun.function.id === fid) {
@@ -285,7 +291,7 @@ export class GrantAccessPage implements OnInit {
         let c = new PropertyCollector(perms);
         let roles = c.collect([[], 'role']);
         this.roleOptions = roles.map(role => {
-          return { label: role.val, value: role.id };
+          return { label: this.capitalize.transform(role.val), value: role.id };
         });
       },
       err => {
@@ -425,7 +431,6 @@ export class GrantAccessPage implements OnInit {
   }
 
   onGrantClick() {
-    console.log('grant clicked');
     if (!this.isFormValid()) {
       this.showErrors();
       return;

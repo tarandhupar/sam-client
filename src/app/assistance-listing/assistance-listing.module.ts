@@ -29,6 +29,9 @@ import { FALFormChangeRequestActionComponent } from "./assistance-listing-change
 import {ActionHistoryPipe} from "./pipes/action-history.pipe";
 import {RAOFormResolver} from "./regional-assistance-locations/regional-assistance-operations/rao-form-resolver.service";
 import {FALPublishComponent} from "./assistance-listing-operations/workflow/publish/fal-publish.component";
+import {ActionHistoryLabelPipe} from "./pipes/action-history-label.pipe";
+import {RequestTypeLabelPipe} from "./pipes/request-type-label.pipe";
+import { AppTemplatesModule } from "../app-templates/index";
 
 @NgModule({
   imports: [
@@ -40,7 +43,8 @@ import {FALPublishComponent} from "./assistance-listing-operations/workflow/publ
     ReactiveFormsModule,
     FormsModule,
     FALComponentsModule,
-    FALFormModule
+    FALFormModule,
+    AppTemplatesModule
   ],
   exports: [
     AuthorizationPipe,
@@ -70,6 +74,8 @@ import {FALPublishComponent} from "./assistance-listing-operations/workflow/publ
     RegionalAssistanceLocationResult,
     FALReviewComponent,
     ActionHistoryPipe,
+    ActionHistoryLabelPipe,
+    RequestTypeLabelPipe,
     FALRegionalAssistanceFormComponent,
     FALPublishComponent
   ],

@@ -49,6 +49,11 @@ import { SamDateRangeFilterComponent } from './sam-date-range-filter/sam-date-ra
 import { SamRMSUsersServiceAutoDirective, RMSUserServiceImpl} from '../users/request-access/username-autocomplete.component.ts';
 import { SamSortComponent } from "./sam-sort/sam-sort.component";
 import { SamNotificationsComponent } from './sam-notifications/sam-notifications.component';
+import { SamListBuilderComponent } from './sam-listbuilder/sam-listbuilder.component';
+import { SamListBuilderCardComponent } from './sam-listbuilder/sam-listbuilder-card.component';
+import { SamListBuilderActionComponent } from './sam-listbuilder/sam-listbuilder-action.component';
+import { SamWatchComponent } from './watchlist/watchlist.component';
+
 
 /**
  * A module for reusable SAM Web Design components
@@ -96,6 +101,10 @@ import { SamNotificationsComponent } from './sam-notifications/sam-notifications
     AgencyPickerV2Component,
     SamSortComponent,
     SamNotificationsComponent,
+    SamWatchComponent,
+    SamListBuilderComponent,
+    SamListBuilderActionComponent,
+    SamListBuilderCardComponent
   ],
   imports: [
     BrowserModule,
@@ -146,6 +155,8 @@ import { SamNotificationsComponent } from './sam-notifications/sam-notifications
     AgencyPickerV2Component,
     SamSortComponent,
     SamNotificationsComponent,
+    SamWatchComponent,
+    SamListBuilderComponent
   ],
   providers: [
     SamFeedbackComponent,

@@ -39,6 +39,7 @@ export class SearchPage implements OnInit {
   showRegionalOffices: boolean = false;
   ro_keyword: string = "";
   isSearchComplete: boolean = false;
+  showSpinner: boolean = false;
 
   // duns entity objects
   dunsModel: any = '';
@@ -261,7 +262,6 @@ export class SearchPage implements OnInit {
       {label: 'COST PLUS INCENTIVE FEE', value: 'V', name: 'COST PLUS INCENTIVE FEE'},
       {label: 'COST SHARING', value: 'T', name: 'COST SHARING'},
       {label: 'FIRM FIXED PRICE', value: 'J', name: 'FIRM FIXED PRICE'},
-      {label: 'FIXED PRICE', value: 'J', name: 'FIXED PRICE'},
       {label: 'FIXED PRICE AWARD FEE', value: 'M', name: 'FIXED PRICE AWARD FEE'},
       {label: 'FIXED PRICE INCENTIVE', value: 'L', name: 'FIXED PRICE INCENTIVE'},
       {label: 'FIXED PRICE LEVEL OF EFFORT', value: 'B', name: 'FIXED PRICE LEVEL OF EFFORT'},
@@ -624,6 +624,8 @@ export class SearchPage implements OnInit {
   }
 
   runSearch() {
+    // showing spinner while data fetches
+    this.showSpinner = true;
     switch (this.index) {
       // fetching data for drop downs
       case 'wd':
@@ -649,7 +651,6 @@ export class SearchPage implements OnInit {
       default:
         this.dismissWdAlert = false;
     }
-
     //make featuredSearch api call only for first page
     if (this.pageNum <= 0 && this.keyword !== '' && (!this.index || this.index == 'fh' || this.index == 'fpds')) {
       this.searchService.featuredSearch({
@@ -678,7 +679,6 @@ export class SearchPage implements OnInit {
     } else {
       this.featuredData['featuredResult'] = null;
     }
-
     //make api call
     this.searchService.runSearch({
       keyword: this.keyword,
@@ -708,6 +708,7 @@ export class SearchPage implements OnInit {
       entityType: this.registrationExclusionCheckboxModel
     }).subscribe(
       data => {
+        
         if (data._embedded && data._embedded.results) {
           for (var i = 0; i < data._embedded.results.length; i++) {
             //Modifying FAL data
@@ -747,6 +748,10 @@ export class SearchPage implements OnInit {
       },
       error => {
         console.error("Error!!", error);
+      },
+      () => {
+        //hide spinner when call is complete
+        this.showSpinner = false;
       }
     );
     //construct qParams to pass parameters to object view pages

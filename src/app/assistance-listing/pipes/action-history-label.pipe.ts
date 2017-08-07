@@ -19,7 +19,7 @@ export class ActionHistoryLabelPipe implements PipeTransform {
         label = "send_omb";
         break;
       case "send_gsa":
-        label = "send_gsa";
+        label = "Submitted to GSA";
         break;
       case "archive_reject":
         label = "Archive Request Rejected";

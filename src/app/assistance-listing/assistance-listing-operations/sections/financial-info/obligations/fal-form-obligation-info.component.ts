@@ -35,6 +35,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   options = [];
   @ViewChild('obligationTable') obligationTable;
   toggleAttleatOneEntryError: boolean = false;
+  ac_categories = [];
 
 
   // Current Fiscal year Checkbox config
@@ -57,6 +58,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   parseDictionariesList(data) {
     if (data['assistance_type'] && data['assistance_type'].length > 0) {
       for (let dictionaries of data['assistance_type']) {
+        this.ac_categories.push({code:dictionaries.code,name:dictionaries.value});
         for (let element of dictionaries.elements) {
           let elementId = element.element_id;
           let value = element.value;
@@ -64,7 +66,8 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
           let name = code + ' - ' + value;
           this.options.push({
             code: elementId,
-            name: name
+            name: name,
+            category: dictionaries.code
           });
           this.assistanceTypeArray[elementId] = name;
         }
@@ -85,6 +88,10 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       }
       this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
       this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
+      setTimeout(() => {
+        this.obligationSubForm.falObligationSubForm.markAsPristine({onlySelf: true});
+        this.updateObligationsErrors(this.errorService.validateObligationList(), true);
+      });
       this.caluclateTotal(this.obligationsInfo);
     }
   }
@@ -148,7 +155,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
 
     setTimeout(() => {
       this.updateErrors();
-    }, 60);
+    });
   }
 
   private loadIsFunded(flag: boolean) {
@@ -204,12 +211,18 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
       this.toggleAttleatOneEntryError = true;
+      if(this.obligationsInfo.length === 0) {
+        this.obligationSubForm.falObligationSubForm.markAsDirty({onlySelf: true})
+      }
     }
     if(event.type == 'edit'){
       this.editObligation(event.index);
     }
     if(event.type == 'remove'){
       this.removeObligaiton(event.index);
+      if(this.obligationsInfo.length === 0) {
+        this.obligationSubForm.falObligationSubForm.markAsDirty({onlySelf: true})
+      }
       setTimeout(() => {
           this.updateErrors();
       });
@@ -357,15 +370,19 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  updateObligationsErrors(obligListErrors){
+  updateObligationsErrors(obligListErrors, flag?: boolean){
     if(obligListErrors) {
       for(let errObj of obligListErrors.errorList){
-        if(errObj.id !== 'fal-obligation-obligationList-no-oblig') {
+        if(!errObj.errors['noOblig']) {
           let id = errObj.id;
           id = id.substr(id.length - 1);
           let fcontrol = this.obligationSubForm.falObligationSubForm.controls['obligations']['controls'][id].get('assistanceType');
-          fcontrol.markAsDirty();
-          fcontrol.updateValueAndValidity({onlySelf: true, emitEvent: true});
+          if(flag === true) {
+            fcontrol.markAsDirty({onlySelf: true});
+          } else {
+            fcontrol.markAsDirty();
+            fcontrol.updateValueAndValidity({onlySelf: true, emitEvent: true});
+          }
         }
       }//end of for
     }//end of if

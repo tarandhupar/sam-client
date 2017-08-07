@@ -10,7 +10,7 @@ export class PeoplePickerService {
   constructor(private oAPIService: WrapperService) {}
 
   getList(obj) {
-    let keys = ('orderBy|dir|page').split('|'),
+    let keys = ('orderBy|dir|page|size').split('|'),
         oApiParam = {
           name: 'userPicker',
           suffix: '/',
@@ -47,7 +47,7 @@ export class PeoplePickerService {
   }
 
   getFilteredList(obj) {
-    let keys = ('firstName|lastName|email|fle|organization|orderBy|dir|page').split('|'),
+    let keys = ('firstName|lastName|email|fle|organization|orderBy|dir|page|size').split('|'),
         oApiParam = {
           name: 'userPicker',
           suffix: '/filter',

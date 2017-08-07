@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import {Component, Input, Output, EventEmitter, ViewChild} from "@angular/core";
 
 @Component ({
   selector: 'sam-complex-form-template',
@@ -6,7 +6,7 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 <br/>
 <div class="complex-form-wrapper">
   <div class="usa-grid">
-    <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+    <sam-breadcrumbs [crumbs]="crumbs" (crumbActionHandler)="breadcrumbHandler($event)"></sam-breadcrumbs>
   </div>
   <div class="usa-grid sticky-target">
     <aside class="usa-width-one-fourth">
@@ -59,7 +59,10 @@ export class SamComplexFormTemplateComponent {
     @Input() statusBannerLeadingText: string;
     @Output() action = new EventEmitter();
     @Output() sideNavOutput = new EventEmitter();
-
+    @Output() public breadcrumbOut = new EventEmitter();
+    breadcrumbHandler(evt){
+      this.breadcrumbOut.emit(evt);
+    }
     formAction(evtStr){
         this.action.emit({event:evtStr});
     }

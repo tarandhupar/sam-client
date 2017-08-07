@@ -12,7 +12,6 @@ import * as _ from 'lodash';
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
 import {SidenavHelper} from '../app-utils/sidenav-helper';
 import {RequestLabelPipe} from "./pipes/request-label.pipe";
-import {ActionHistoryPipe} from "./pipes/action-history.pipe";
 
 @Component({
   moduleId: __filename,
@@ -27,17 +26,6 @@ import {ActionHistoryPipe} from "./pipes/action-history.pipe";
   ]
 })
 export class ProgramPage implements OnInit, OnDestroy {
-  // Checkboxes Component
-  checkboxModel: any = [];
-  checkboxConfig = {
-    options: [
-      {value: 'true', label: 'Show Public History', name: 'checkbox-action-history'},
-    ],
-    name: 'show-hide-action-history'
-  };
-  publicHistoryIsVisible:boolean = true;
-  actionHistoryAndNote: any;
-  programRequest: any;
   program: any;
   programID: any;
   federalHierarchy: any;
@@ -53,7 +41,6 @@ export class ProgramPage implements OnInit, OnDestroy {
   public logoInfo: any;
   errorLogo: any;
   cookieValue: string;
-  isCookie: boolean = false;
   assistanceTypes: any[] = [];
   //SideNav: On load select first item on sidenav component
   selectedPage: number = 0;
@@ -64,20 +51,8 @@ export class ProgramPage implements OnInit, OnDestroy {
     "label": "AL",
     "children": []
   };
-  roles = [];
-  roleFalg: boolean = false;
   qParams: any;
-  @ViewChild('deleteModal') deleteModal;
-  modalConfig = {title:'Delete Draft AL', description:''};
-  changeRequestDropdown: any = {
-    config: {
-      "hint": "Actions",
-      "name": "fal-change-request",
-      "disabled": false,
-    },
-    permissions:null,
-    defaultOption: "Make a Request"
-  };
+
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -85,11 +60,6 @@ export class ProgramPage implements OnInit, OnDestroy {
   private federalHierarchySub: Subscription;
   private historicalIndexSub: Subscription;
   private relatedProgramsSub: Subscription;
-  private rolesSub: Subscription;
-  private reasonSub: Subscription;
-
-  @ViewChild('editModal') editModal;
-
 
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
@@ -133,13 +103,6 @@ export class ProgramPage implements OnInit, OnDestroy {
     let DOMReady$ = Observable.zip(programAPISource, historicalIndexAPISource).delay(2000);
     this.sidenavHelper.DOMComplete(this, DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
-
-    if(this.cookieValue) {
-      let userPermissionsAPISource = this.loadUserPermissions(programAPISource);
-      this.loadPendingRequests(userPermissionsAPISource);
-      this.loadActionHistoryAndNote(userPermissionsAPISource);
-      //TODO check if this FAL has pending request, if so switch dropdown flag and add alert to link it to CR listing page
-    }
   }
 
   sidenavPathEvtHandler(data) {
@@ -169,12 +132,6 @@ export class ProgramPage implements OnInit, OnDestroy {
     if (this.relatedProgramsSub) {
       this.relatedProgramsSub.unsubscribe();
     }
-    if (this.reasonSub) {
-      this.reasonSub.unsubscribe();
-    }
-    if (this.rolesSub) {
-      this.rolesSub.unsubscribe();
-    }
   }
 
   /**
@@ -199,7 +156,6 @@ export class ProgramPage implements OnInit, OnDestroy {
       }
 
       this.checkCurrentFY();
-      this.setAlerts();
 
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -265,14 +221,12 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadDictionaries() {
     // declare dictionaries to load
     let dictionaries = [
-      'program_subject_terms',
       'date_range',
       'match_percent',
       'assistance_type',
       'applicant_types',
       'assistance_usage_types',
       'beneficiary_types',
-      'functional_codes',
       'cfr200_requirements'
     ];
 
@@ -418,215 +372,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
     document.body.scrollTop = 0;
   }
 
-  private loadUserPermissions(apiSource: Observable<any>){
-    let apiSubject = new ReplaySubject(1);
-
-    let apiStream = apiSource.switchMap(api => {
-      return this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS', api.data.organizationId);
-    });
-
-    apiStream.subscribe(apiSubject);
-
-    apiSubject.subscribe(res => {
-      this.changeRequestDropdown.permissions = res;
-    });
-
-    return apiSubject;
-  }
-
-  private loadPendingRequests(apiSource: Observable<any>){
-    let apiSubject = new ReplaySubject(1);
-
-    // construct a stream of federal hierarchy data
-    let apiStream = apiSource.switchMap(api => {
-      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
-        return this.programService.getPendingRequest(this.cookieValue, this.programID);
-      }
-      return Observable.empty<any[]>();
-    });
-
-    apiStream.subscribe(apiSubject);
-
-    apiSubject.subscribe((res: any[]) => {
-      if (res.length > 0){
-        this.programRequest = res[0];
-      }
-    });
-  }
-
-  private loadActionHistoryAndNote(apiSource: Observable<any>){
-    let apiSubject = new ReplaySubject(1);
-
-    // construct a stream of federal hierarchy data
-    let apiStream = apiSource.switchMap(api => {
-      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true ||
-        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
-        return this.programService.getActionHistoryAndNote(this.cookieValue, this.programID);
-      }
-      return Observable.empty<any[]>();
-    });
-
-    apiStream.subscribe(apiSubject);
-
-    apiSubject.subscribe((res: any[]) => {
-      let actionHistoryPipe = new ActionHistoryPipe(this.fhService);
-      actionHistoryPipe.transform(res).subscribe(array => {
-        this.publicHistoryIsVisible = false;
-        this.actionHistoryAndNote = array;
-      });
-    });
-  }
-
-  public onChangeRequestSelect(event) {
-    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type='+event.value);
-  }
-
-  public canEdit() {
-    // show edit button if user has update permission, except on published FALs, or if user has revise permission
-    if (this.program._links && this.program._links['program:update'] && this.program.status && this.program.status.code !== 'published') {
-      return true;
-    } else if (this.program._links && this.program._links['program:revise']) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public canDelete() {
-    return this.program.status && this.program.status.code === 'draft' && this.program._links && this.program._links['program:delete'];
-  }
-
-  public onEditClick(page: string[]) {
-    if (this.program._links && this.program._links['program:update'] && this.program._links['program:update'].href) {
-      let id = this.program._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
-      let url = '/programs/' + id + '/edit'.concat(page.toString());
-      this.router.navigateByUrl(url);
-    } else if (this.program._links && this.program._links['program:revise']) {
-      this.editModal.openModal(page.toString());
-    }
-  }
-
-  public onEditModalSubmit(page: any[]) {
-    this.editModal.closeModal();
-    this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      let url = '/programs/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
-      this.router.navigateByUrl(url);
-    });
-  }
-
-  public onDeleteClick() {
-    this.deleteModal.openModal();
-    let title = this.program.data.title;
-    if (title !== undefined) {
-      this.modalConfig.description = 'Please confirm that you want to delete "' + title + '".';
-    } else {
-      this.modalConfig.description = 'Please confirm that you want to delete draft AL.';
-    }
-  }
-
-  public onDeleteModalSubmit() {
-    this.deleteModal.closeModal();
-    this.programService.deleteProgram(this.programID, this.cookieValue).subscribe(res => {
-      this.router.navigate(['/fal/workspace']);
-    }, err => {
-      // todo: show error message when failing to delete
-      console.log('Error deleting program ', err);
-    });
-  }
 
   public getCurrentFY(event) {
     return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
-  }
-
-  // different alerts are shown depending on the FAL's status
-  private setAlerts() {
-    let draftAlert = {
-      'labelname': 'draft-fal-alert',
-      'config': {
-        'type': 'info',
-        'title': '',
-        'description': 'This is a draft Assistance Listing. Any updates will need to be published before the public is able to view the changes.'
-      }
-    };
-
-    let publishedAlert = {
-      'labelname': 'published-fal-alert',
-      'config': {
-        'type': 'info',
-        'title': '',
-        'description': 'This is the currently published version of this program.'
-      }
-    };
-
-    let rejectedAlert = {
-      'labelname': 'rejected-fal-alert',
-      'config': {
-        'type': 'error',
-        'title': 'Rejected',
-        'description': ''
-      }
-    };
-
-    // show correct alert based on current status
-    let status = this.program.status;
-    let code = status.code ? status.code : null;
-    switch (code) {
-      case 'draft':
-        // alert for draft version
-        this.alerts.push(draftAlert);
-        break;
-
-      case 'published':
-        // alert for latest published version, which is only shown to logged in users
-        if (this.cookieValue && this.program.latest === true) {
-          this.alerts.push(publishedAlert);
-        }
-        break;
-
-      case 'rejected':
-        // alert for rejected message, which is only shown to users with permission
-        if (this.program._links && this.program._links['program:request:action:reject']) {
-          let link = this.program._links['program:request:action:reject'];
-          if (link.href) {
-            let id = link.href.match(/\/programRequests\/(.*)/)[1];
-            this.programService.getReasons(id, this.cookieValue).subscribe(reject => {
-              rejectedAlert.config.description = reject.reason;
-              this.alerts.push(rejectedAlert);
-            });
-          }
-        }
-        break;
-
-      default:
-        // noop
-        break;
-    }
-  }
-
-  onRejectClick() {
-    let url = '/programs/' + this.program.id + '/reject';
-    this.router.navigateByUrl(url);
-  }
-  onSubmitClick() {
-    let url = '/programs/' + this.program.id + '/submit';
-    this.router.navigateByUrl(url);
   }
 
   public containsExecutiveOrder() {
@@ -639,7 +387,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
       return false;
     }
   }
-  showHidePublicHistory(event) {
-    this.publicHistoryIsVisible = !this.publicHistoryIsVisible;
+  onEditViewClick() {
+    let url = '/programs/' + this.program.id + '/review';
+    this.router.navigateByUrl(url);
+  }
+  public canEdit() {
+    let editFlag = false;
+    // show edit button if user is logged in and has access.
+    if (this.cookieValue && (this.program && this.program._links['program:access'])) {
+      return true;
+    }
+    return editFlag;
   }
 }

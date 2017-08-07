@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export class FALSectionNames {
   static readonly HEADER = 'header-information';
   static readonly OVERVIEW = 'overview';
@@ -69,65 +71,80 @@ export class FALFieldNames {
   static readonly CONTACT_WEBSITE = 'fal-contact-website';
 }
 
-export class FALSectionFieldsList {
-  static readonly OVERVIEW_FIELDS = [
-    FALFieldNames.OBJECTIVE,
-    FALFieldNames.FUNDED_PROJECTS,
-    FALFieldNames.FUNCTIONAL_CODES,
-    FALFieldNames.SUBJECT_TERMS
-  ];
+export const FALSectionFieldsBiMap = (function() {
+  let sectionFields = {
+    [FALSectionNames.HEADER]: [
+      FALFieldNames.TITLE,
+      FALFieldNames.FEDERAL_AGENCY,
+      FALFieldNames.FALNO
+    ],
 
-  static readonly HEADER_FIELDS = [
-    FALFieldNames.TITLE,
-    FALFieldNames.FEDERAL_AGENCY,
-    FALFieldNames.FALNO
-  ];
+    [FALSectionNames.OVERVIEW]: [
+      FALFieldNames.OBJECTIVE,
+      FALFieldNames.FUNDED_PROJECTS,
+      FALFieldNames.FUNCTIONAL_CODES,
+      FALFieldNames.SUBJECT_TERMS
+    ],
 
-  static readonly AUTHORIZATION_FIELDS = [
-    FALFieldNames.AUTHORIZATION_LIST
-  ];
+    [FALSectionNames.AUTHORIZATION]: [
+      FALFieldNames.AUTHORIZATION_LIST
+    ],
 
-  static readonly OBLIGATION_FIELDS = [
-    FALFieldNames.OBLIGATION_LIST
-  ];
+    [FALSectionNames.OBLIGATIONS]: [
+      FALFieldNames.OBLIGATION_LIST
+    ],
 
-  static readonly OTHER_FINANCIAL_INFO_FIELDS = [
-    FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
-    FALFieldNames.ACCOUNT_IDENTIFICATION,
-    FALFieldNames.TAFS_CODES
-  ];
+    [FALSectionNames.OTHER_FINANCIAL_INFO]: [
+      FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
+      FALFieldNames.ACCOUNT_IDENTIFICATION,
+      FALFieldNames.TAFS_CODES
+    ],
 
-  static readonly CRITERIA_FIELDS = [
-    FALFieldNames.DOCUMENTATION,
-    FALFieldNames.APPLICANT_LIST,
-    FALFieldNames.BENEFICIARY_LIST,
-    FALFieldNames.LENGTH_TIME_DESC,
-    FALFieldNames.AWARDED_TYPE,
-    FALFieldNames.ASS_USAGE_LIST,
-    FALFieldNames.ASS_USAGE_DESC,
-    FALFieldNames.USAGE_RESTRICTIONS,
-    FALFieldNames.USE_DIS_FUNDS,
-    FALFieldNames.USE_LOAN_TERMS,
-  ];
+    [FALSectionNames.CRITERIA_INFO]: [
+      FALFieldNames.DOCUMENTATION,
+      FALFieldNames.APPLICANT_LIST,
+      FALFieldNames.BENEFICIARY_LIST,
+      FALFieldNames.LENGTH_TIME_DESC,
+      FALFieldNames.AWARDED_TYPE,
+      FALFieldNames.ASS_USAGE_LIST,
+      FALFieldNames.ASS_USAGE_DESC,
+      FALFieldNames.USAGE_RESTRICTIONS,
+      FALFieldNames.USE_DIS_FUNDS,
+      FALFieldNames.USE_LOAN_TERMS,
+    ],
 
-  static readonly APPLYING_FOR_ASSISTANCE_FIELDS = [
-    FALFieldNames.DEADLINES,
-    FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO,
-    FALFieldNames.SELECTION_CRITERIA_DESCRIPTION,
-    FALFieldNames.AWARD_PROCEDURE_DESCRIPTION,
-    FALFieldNames.APPROVAL_INTERVAL,
-    FALFieldNames.RENEWAL_INTERVAL,
-    FALFieldNames.APPEAL_INTERVAL
-  ];
+    [FALSectionNames.APPLYING_FOR_ASSISTANCE]: [
+      FALFieldNames.DEADLINES,
+      FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO,
+      FALFieldNames.SELECTION_CRITERIA_DESCRIPTION,
+      FALFieldNames.AWARD_PROCEDURE_DESCRIPTION,
+      FALFieldNames.APPROVAL_INTERVAL,
+      FALFieldNames.RENEWAL_INTERVAL,
+      FALFieldNames.APPEAL_INTERVAL
+    ],
 
-  static readonly COMPLIANCE_REQUIREMENTS_FIELDS = [
-    FALFieldNames.COMPLIANCE_REPORTS,
-    FALFieldNames.OTHER_AUDIT_REQUIREMENTS,
-    FALFieldNames.ADDITIONAL_DOCUMENTATION
-  ];
+    [FALSectionNames.COMPLIANCE_REQUIREMENTS]: [
+      FALFieldNames.COMPLIANCE_REPORTS,
+      FALFieldNames.OTHER_AUDIT_REQUIREMENTS,
+      FALFieldNames.ADDITIONAL_DOCUMENTATION
+    ],
 
-  static readonly CONTACT_INFORMATION_FIELDS = [
-    FALFieldNames.CONTACT_LIST,
-    FALFieldNames.CONTACT_WEBSITE
-  ];
-}
+    [FALSectionNames.CONTACT_INFORMATION]: [
+      FALFieldNames.CONTACT_LIST,
+      FALFieldNames.CONTACT_WEBSITE
+    ]
+  };
+
+  let fieldSections = {};
+
+  Object.keys(sectionFields).forEach((section) => {
+    sectionFields[section].forEach((field) => {
+      fieldSections[field] = section;
+    });
+  });
+
+  return {
+    sectionFields,
+    fieldSections
+  };
+})();

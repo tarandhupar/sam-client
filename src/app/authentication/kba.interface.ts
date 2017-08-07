@@ -1,4 +1,4 @@
 export interface KBA {
-  questionId: number,
-  answer: string
+  questionId: number;
+  answer: string;
 }

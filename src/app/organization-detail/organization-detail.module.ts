@@ -21,6 +21,7 @@ import { AACRequestGuard } from "./AAC-request/AAC-request.guard";
 import { OrgMovePage } from "./move-org/move-org.component";
 import { OrgCreateForm } from "./create-org-form/create-org-form.component";
 import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
   providers: [
     AlertFooterService,
     FlashMsgService,
-    AACRequestGuard
+    AACRequestGuard,
+    CapitalizePipe,
   ],
 })
 export class OrganizationDetailModule { }

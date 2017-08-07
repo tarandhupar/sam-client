@@ -53,11 +53,11 @@
       </div>
       <div class = "usa-width-one-half">
         <div class = "usa-width-one-half">
-          {{role.domain}}
+          {{role.domain | capitalize}}
         </div>
         <div class = "usa-width-one-half">
-          <span class = "pull-left">{{role.role}}</span><div *ngIf = "isAdmin"><span class = "pull-right pd-r-1em"><i class="fa fa-pencil" aria-hidden="true" [routerLink]="role.path" [queryParams]="role.queryParams"></i></span></div>
-        </div>
+          <span class = "pull-left">{{role.role | capitalize}}</span><div *ngIf = "role?.links?.edit_access"><span class = "pull-right pd-r-1em"><i class="fa fa-pencil" aria-hidden="true" [routerLink]="role.path" [queryParams]="role.queryParams"></i></span></div>
+        </div> 
       </div>
     </div>
 
@@ -65,10 +65,10 @@
     <h4 class="pd-l-1d1em text-lighter">OBJECTS AND PERMISSIONS</h4>
       <div class = "pd-l-1d3em">
         <div *ngFor = "let func of role.funcperm">
-          <div class = "usa-width-one-third"><i>{{func.function.val}}</i></div>
+          <div class = "usa-width-one-third"><i>{{func.function.val | capitalize}}</i></div>
           <div class = "usa-width-two-thirds">
             <span *ngFor = "let perm of func.permission; let isLast = last">
-                {{perm.val}} {{isLast ? '' : ', '}}
+                {{perm.val | capitalize}} {{isLast ? '' : ', '}}
             </span>
           </div>
         </div>

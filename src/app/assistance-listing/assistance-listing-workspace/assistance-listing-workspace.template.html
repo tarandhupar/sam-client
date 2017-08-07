@@ -1,82 +1,149 @@
-<workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
-                  [totalElements]="totalCount" [loadFlag]="data.length >= 0"
-                  titleText="Assistance Listings">
-  <br>
-  <!--filter sidebar-->
-  <div workspace-sidebar>
-    <sam-collapsible class="noPadding-falWorkspace" [label]="'Status'" [startOpened]="true">
-      <sam-checkbox
-          [(model)]="statusCheckboxModel"
-          (modelChange)="statusModelChanged()"
-          [name]="statusCheckboxConfig.name"
-          [options]="statusCheckboxConfig.options"
-          [label]="statusCheckboxConfig.label"
-          [hint]="statusCheckboxConfig.hint"
-          [errorMessage]="statusCheckboxConfig.errorMessage"
-          [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
-        </sam-checkbox>
-      </sam-collapsible>
-  </div>
-  <div workspace-content class="workspace-content">
-    <a href="/fal/workspace/requests?domain=al&event=request">
-      <button class="fa fa-chevron-circle-right pending-button" *ngIf="pendingRequestCount == 1"> 1 Pending Request</button>
-      <button class="fa fa-chevron-circle-right pending-button" *ngIf="pendingRequestCount > 1"> {{ pendingRequestCount }} Pending Requests</button>
-    </a>
+<page
+  *ngIf="permissions"
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Assistance Listings">
 
-    <div class="sam-ui grid">
-      <div class="row">
-    <div *ngIf="!initLoad" custom-input class="search-bar eight wide column">
+  <!-- Sidebar section -->
+  <sidebar>
 
-      <sam-autocomplete class="div-fill"#autocomplete
-                        [(ngModel)]="keyword"
-                        (ngModelChange)="workspaceSearchModel($event)"
-                        (enterEvent)="workspaceSearchClick()"
-                        [config]="workspaceSearchConfig"
-                        [options]="[]"
-                        [showClearButton]="true"
-                        [allowAny]="true"
-                        name="appsearch">
-      </sam-autocomplete>
-      <sam-button class="div-right"
-                  [buttonType]="'default'"
-                  [buttonText]="'Search' "
-                  [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                  (onClick)="workspaceSearchClick()">
-      </sam-button>
-    </div>
+    <!-- Navigation -->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a class="usa-current">
+          Assistance Listings
+        </a>
+      </li>
+      <li *ngIf="permissions['CREATE_RAO']">
+        <a routerLink="/fal/myRegionalOffices">
+          Manage Assistance Locations
+        </a>
+      </li>
+      <li>
+        <a routerLink="/workspace/my-feed"
+          [queryParams]="{domain: 'al', event: 'request', pending: true}">
+          Pending Requests &nbsp;
+          <span class="sam-ui circular red mini label">
+            {{ pendingRequestCount }}
+          </span>
+        </a>
+      </li>
+    </ul>
 
-    </div>
-      <div class="row" *ngIf="!initLoad">
+    <!-- Filters -->
+    <div class="sam-ui segment">
 
-          <div *ngIf="permissions['CREATE_FALS']" class="eight wide">
-          <sam-button class="div-right"
-                      [buttonType]="'default'"
-                      [buttonText]="'Add Assistance Listing' "
-                      [buttonClass]="'sam-ui button dark blue'"
-                      (onClick)="addAssistanceListingClick()">
-          </sam-button>
-        </div>
-        <div *ngIf="permissions['CREATE_RAO']" class="eight wide">
-          <sam-button class="div-right"
-                      [buttonType]="'default'"
-                      [buttonText]="'Manage Assistance Locations' "
-                      [buttonClass]="'sam-ui button dark blue'"
-                      (onClick)="manageAssistanceLocationsClick()">
-          </sam-button>
-        </div>
-
+      <!-- Search filter -->
+      <div *ngIf="!initLoad" custom-input class="search-bar">
+        <h4 class="sam-ui header">Search</h4>
+        <sam-autocomplete class="div-fill"#autocomplete
+                          [(ngModel)]="keyword"
+                          (ngModelChange)="workspaceSearchModel($event)"
+                          (enterEvent)="workspaceSearchClick()"
+                          [config]="workspaceSearchConfig"
+                          [options]="[]"
+                          [showClearButton]="true"
+                          [allowAny]="true"
+                          name="appsearch">
+        </sam-autocomplete>
+        <sam-button class="div-right"
+                    [buttonType]="'default'"
+                    [buttonText]="'Search' "
+                    [buttonClass]="'usa-button usa-search-submit search-btn'"
+                    (onClick)="workspaceSearchClick()">
+        </sam-button>
+        <div class="sam-ui divider"></div>
       </div>
-    </div>
-    <br>
-    <div *ngFor="let row of data" tabindex="-1">
-      <assistance-program-result [data]="row" [qParams]="qParams" [permissions]="permissions"></assistance-program-result>
-      <div class="sam-ui section divider"></div>
+
+      <!-- Status Filter -->
+      <h4 class="sam-ui header">Status</h4>
+      <sam-checkbox
+        [(model)]="statusCheckboxModel"
+        (modelChange)="statusModelChanged()"
+        [name]="statusCheckboxConfig.name"
+        [options]="statusCheckboxConfig.options"
+        [label]="statusCheckboxConfig.label"
+        [hint]="statusCheckboxConfig.hint"
+        [errorMessage]="statusCheckboxConfig.errorMessage"
+        [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
+      </sam-checkbox>
+
+      <!--Date Filter-->
+      <h4 class="sam-ui header">Date</h4>
+      <div class="sam-ui secondary pointing menu">
+        <a (click)="selectTab('posted')"  class="item" [ngClass]="getColorClass('posted')">
+          Posted
+        </a>
+        <a (click)="selectTab('modified')" class="item" [ngClass]="getColorClass('modified')">
+          Modified
+        </a>
+      </div>
+      <sam-date-range-filter *ngIf="isCurrentTab('posted')"
+                             #postedDateRangeFilterVar="ngModel"
+                             [control]="postedDateRangeFilterVar.control"
+                             [(ngModel)]="postedDateFilterModel"
+                             (ngModelChange)="dateChangehandler($event)"
+                             [radioSelection]="dateFilterConfig.radSelection"
+                             [dateRadioOptions]="dateFilterConfig.options"
+                             [class]="'falDateFilter'">
+      </sam-date-range-filter>
+      <sam-date-range-filter *ngIf="isCurrentTab('modified')"
+                             #modifiedDateRangeFilterVar="ngModel"
+                             [control]="modifiedDateRangeFilterVar.control"
+                             [(ngModel)]="modifiedDateFilterModel"
+                             (ngModelChange)="dateChangehandler($event)"
+                             [radioSelection]="dateFilterConfig.radSelection"
+                             [dateRadioOptions]="dateFilterConfig.options"
+                             [class]="'falDateFilter'">
+      </sam-date-range-filter>
+
+      <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
+      <!--filter button-->
+      <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()' [buttonText]="'Filter'"></sam-button>
+
+      <div>
+        <sam-button (onClick)='clearAllFilters()' [buttonText]="'Clear All'"></sam-button>
+      </div>
+
     </div>
 
-    <div class="search-inactive-results" *ngIf="data.length==0 && !initLoad">
-      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
-      <div style="height:300px;"></div>
+  </sidebar>
+
+  <!-- Main Content Section -->
+  <sam-button *ngIf="permissions['CREATE_FALS']"
+            [buttonType]="'default'"
+            [buttonText]="'Add Assistance Listing' "
+            [buttonClass]="'sam-ui button dark blue'"
+            (onClick)="addAssistanceListingClick()">
+  </sam-button>
+
+  <!-- No results -->
+  <p *ngIf="data.length==0 && !initLoad">
+    No results found for '<strong>{{ oldKeyword }}</strong>'
+  </p>
+  <!-- Page results -->
+  <results *ngIf="!data.length==0 && !initLoad"
+    [totalElements]="totalCount"
+    [totalPages]="totalPages"
+    [currentPage]="pageNum+1"
+    (pageChange)="pageChange($event-1)">
+
+    <sam-sort [(ngModel)]="sortModel"
+              [options]="sortOptions"
+              (ngModelChange)="sortModelChange()">
+    </sam-sort>
+
+    <!-- Results -->
+    <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">
+      <assistance-program-result
+        [data]="row"
+        [qParams]="qParams"
+        [permissions]="permissions">
+      </assistance-program-result>
     </div>
 
-  </div>
-</workspace-layout>
+
+  </results>
+
+</page>

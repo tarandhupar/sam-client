@@ -6,6 +6,7 @@ import { UserAccessModel } from "../access.model";
 import {  Location } from "@angular/common";
 import { IBreadcrumb } from "sam-ui-kit/types";
 import { PropertyCollector } from "../../app-utils/property-collector";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   templateUrl: './request-response.template.html',
@@ -39,6 +40,7 @@ export class RequestResponsePage {
     private router: Router,
     private footerAlerts: AlertFooterService,
     private location: Location,
+    private capitalize: CapitalizePipe,
   ) {
 
   }
@@ -54,7 +56,7 @@ export class RequestResponsePage {
     this.userAccessService.getDomains().subscribe(
       domains => {
         this.domainOptions = domains._embedded.domainList.map(domain => {
-          return { value: domain.id, label: domain.domainName };
+          return { value: domain.id, label: this.capitalize.transform(domain.domainName) };
         });
       },
       error => {
@@ -89,7 +91,7 @@ export class RequestResponsePage {
           let c = new PropertyCollector(perms);
           let roles = c.collect([[], 'role']);
           this.roleOptions = roles.map(role => {
-            return { label: role.val, value: role.id };
+            return { label: this.capitalize.transform(role.val), value: role.id };
           });
           if (selectFirstRole && this.roles[0] && this.roles[0].role) {
             this.onRoleChange(this.roles[0].role.id);
@@ -121,6 +123,7 @@ export class RequestResponsePage {
       supervisorName: req.supervisorName,
       supervisorEmail: req.supervisorEmail,
       status: req.status.val,
+      _links: req._links,
       comments: []
     };
     if (req.requestorMessage && req.requestorMessage.length) {

@@ -1,21 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup } from "@angular/forms";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup, FormControl,Validators } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
 import { UUID } from "angular2-uuid";
 import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
+import * as _ from 'lodash';
 
 @Component({
   providers: [FALFormService],
   templateUrl: 'fal-form-contact.template.html',
   selector: 'fal-form-contact-info'
 })
-export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
+export class FALFormContactInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
-
   falContactInfoForm: FormGroup;
   progTitle: string;
   hideAddButton: boolean = false;
@@ -115,13 +115,14 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => { // horrible hack to trigger angular change detection
       if (this.viewModel.getSectionStatus(FALSectionNames.CONTACT_INFORMATION) === 'updated') {
-        this.falContactInfoForm.get('website').markAsDirty();
+        this.falContactInfoForm.markAsPristine({onlySelf: true});
+        this.falContactInfoForm.get('website').markAsDirty({onlySelf: true});
         this.falContactInfoForm.get('website').updateValueAndValidity();
-        this.falContactInfoForm.get('useRegionalOffice').markAsDirty();
+        this.falContactInfoForm.get('useRegionalOffice').markAsDirty({onlySelf: true});
         this.falContactInfoForm.get('useRegionalOffice').updateValueAndValidity();
-        this.falContactInfoForm.get('additionalInfo').markAsDirty();
+        this.falContactInfoForm.get('additionalInfo').markAsDirty({onlySelf: true});
         this.falContactInfoForm.get('additionalInfo').updateValueAndValidity();
-        this.falContactInfoForm.get('contacts').markAsDirty();
+        this.falContactInfoForm.get('contacts').markAsDirty({onlySelf: true});
         this.falContactInfoForm.get('contacts').updateValueAndValidity();
       }
     });
@@ -132,7 +133,7 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
       contactId: ['na'],
       title: [''],
       fullName: [''],
-      email: ['', falCustomValidatorsComponent.checkEmailPattern],
+      email: ['', [falCustomValidatorsComponent.checkEmailPattern,Validators.required]],
       phone: [''],
       fax: [''],
       streetAddress: [''],
@@ -143,15 +144,15 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onParamChanged(event) {
-    const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-
+  onParamChanged(event,control) {
     if (event != 'new' && event != 'na') {
-      control.at(control.length - 1).patchValue(this.contactDrpDwnInfo[event]);
+      this.mode = "Edit";
+      control.patchValue(this.contactDrpDwnInfo[event]);
     }
-    else {
-      control.at(control.length - 1).reset();
-      control.at(control.length - 1).patchValue({contactId: event});
+    else if(control.length>0) {
+      this.mode = "Edit";
+      control.reset();
+      control.patchValue({contactId: event});
     }
   }
 
@@ -246,9 +247,9 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
     let index = 0;
     const control = <FormArray> this.falContactInfoForm.controls['contacts'];
     for (let contact of headquarters) {
-      control.push(this.initContacts());
-      control.at(index).patchValue(contact);
-      index = index + 1;
+      let c = this.initContacts();
+      c.patchValue(contact);
+      control.push(c);
     }
 
     this.contactsInfo = this.falContactInfoForm.value.contacts;
@@ -321,7 +322,7 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
       let fieldList = ['fullName', 'email', 'phone', 'fax', 'streetAddress', 'city', 'state', 'zip'];
 
       for(let errObj of contactsErrorList.errorList){
-        if(errObj.id !== FALFieldNames.NO_CONTACT) {
+        if(!errObj.errors['noContact']) {
           let id = errObj.id;
           id = id.substr(id.length - 1);
 
@@ -339,6 +340,14 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
 
   private updateErrors() {
     this.errorService.viewModel = this.viewModel;
+    let contactErrors = this.errorService.validateContactList();
+    if(contactErrors){
+      let formArr = <FormArray>this.falContactInfoForm.get('contacts');
+      if(contactErrors.errorList[0]['errors']['noContact']){
+        formArr.setErrors(contactErrors.errorList[0]['errors']);
+      }
+    }
+
 
     this.falContactInfoForm.get('website').clearValidators();
     this.falContactInfoForm.get('website').setValidators((control) => { return control.errors });
@@ -354,5 +363,44 @@ export class FALFormContactInfoComponent implements OnInit, AfterViewInit {
       this.atLeastOneEntryError = true;
     else
       this.atLeastOneEntryError = false;
+  }
+
+  contactsSubform:FormGroup = this.fb.group({
+    contactId: ['na'],
+    title: [''],
+    fullName: [''],
+    email: ['', [falCustomValidatorsComponent.checkEmailPattern,Validators.required]],
+    phone: [''],
+    fax: [''],
+    streetAddress: [''],
+    city: [''],
+    state: ['na', falCustomValidatorsComponent.selectRequired],
+    zip: [''],
+    country: ['US']
+  });
+
+  contactsFormArrayChange(data){
+    let formArray= <FormArray>this.falContactInfoForm.get('contacts');
+    while(formArray.value.length>0){
+      formArray.removeAt(0);
+    }
+    for(var idx in data){
+      let control = _.cloneDeep(this.contactsSubform);
+      control.setValue(data[idx].value);
+      formArray.markAsDirty();
+      formArray.push(control);
+    }
+    this.mode = "";
+  }
+
+  lbActionHandler(event){
+    let formArray= <FormArray>this.falContactInfoForm.get('contacts');
+    if(event=="add-cancel"){
+      this.mode = "";
+      formArray.markAsDirty();
+      this.updateErrors();
+    } else if (event=="edit"){
+      this.mode = "Edit";
+    }
   }
 }

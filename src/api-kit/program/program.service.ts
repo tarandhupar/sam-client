@@ -87,7 +87,7 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
 
   }
-
+  
   getFederalHierarchyConfigurations(orgId: string, cookie: string) {
     let oApiParam = {
       name: 'program',
@@ -177,7 +177,11 @@ export class ProgramService{
         status: (obj.status == undefined) ? '' : obj.status,
         includeCount : (obj.includeCount == undefined) ? '' : obj.includeCount,
         size: (obj.size == undefined) ? '' : obj.size,
-        sortBy: (obj.sortBy == undefined) ? '' : obj.sortBy
+        sortBy: (obj.sortBy == undefined) ? '' : obj.sortBy,
+        postedFrom: (obj.postedFrom == undefined) ? '' : obj.postedFrom,
+        postedTo: (obj.postedTo == undefined) ? '' : obj.postedTo,
+        modifiedFrom: (obj.modifiedFrom == undefined) ? '' : obj.modifiedFrom,
+        modifiedTo: (obj.modifiedTo == undefined) ? '' : obj.modifiedTo,
       },
       headers: {
         "X-Auth-Token": obj.Cookie

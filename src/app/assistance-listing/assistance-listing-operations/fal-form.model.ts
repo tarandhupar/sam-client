@@ -33,7 +33,6 @@ export class FALFormViewModel {
         }
       }
     }
-
     return sectionInfo;
   }
 
@@ -45,6 +44,8 @@ export class FALFormViewModel {
 
     if (existing) {
       status = existing.status;
+    } else if(existing === null || existing === undefined) {
+      status = 'pristine';
     }
 
     return status;

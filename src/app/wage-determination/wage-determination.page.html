@@ -22,6 +22,18 @@
 
       <div class="sam-ui hidden divider"></div>
 
+      <div id="wd-watchlist">
+          <sam-watch-button [domainId] = "'WD'" [recordId]="wageDetermination.fullReferenceNumber"></sam-watch-button>
+      </div>
+        <!--div class="usa-grid">
+        <div class="usa-width-one-whole">
+          <div class="usa-width-one-fourth">
+            <sam-watch-button [domainId] = "'WD'" [recordId]="wageDetermination.fullReferenceNumber"></sam-watch-button>
+          </div>
+        </div>
+      </div-->
+
+      <div class="sam-ui hidden divider"></div>
       <!-- Alert -->
       <ng-container *ngIf="revisionMessage == true">
         <sam-alert [type]="'info'" [title]="''">

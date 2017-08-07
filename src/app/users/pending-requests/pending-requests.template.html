@@ -13,14 +13,14 @@
     <div class = "request-border" *ngIf = "areRequestsVisible">
       <div class = "usa-grid-full request-content">
         <div class = "usa-width-three-fourths pd-l-1em">
-          {{request.role ? request.role.val : 'Unspecified Role Assocaited'}} for {{request.domain ? request.domain.val  : 'Unspecified Domain'}} at the {{request.organization ? request.organization.val : 'Unspecified Organization'}}
+          {{request.role ? (request.role.val | capitalize) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val | capitalize) : 'Unspecified Domain'}} at the {{request.organization ? request.organization.val : 'Unspecified Organization'}}
         </div>
         <div class = "usa-width-one-fourth">
           <div class = "usa-width-one-half">
             {{request.createdDate | dateFormat: 'MMM DD, YYYY'}}
           </div>
           <div class = "usa-width-one-half">
-            <a [routerLink]="[hideCancel ? '/access-requests/' + request.id + '/respond' : '/access-requests/' + request.id ]">{{request.status.val}}</a>
+            <a [routerLink]="[hideCancel ? '/access-requests/' + request.id + '/respond' : '/access-requests/' + request.id ]">{{request.status.val | capitalize}}</a>
           </div>
         </div>
       </div>

@@ -9,14 +9,19 @@ import moment = require("moment");
 export class FeedsFilterComponent {
   showALFilters:boolean = false;
   showALRequestFilters: boolean = false;
+  showALPendingRequestFilters: boolean = false;
 
   @Input() defaultDomainOption: any;
 
   @Input() defaultEventOption: any;
 
+  @Input() defaultPendingRequestsOption: any;
+
   @Output() domainFilterModelChange: EventEmitter<any> = new EventEmitter<any>();
 
   @Output() eventFilterModelChange: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output() pendingRequestsFilterModelChange: EventEmitter<any> = new EventEmitter<any>();
 
   @Output() alRequestTypeModelChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -27,6 +32,15 @@ export class FeedsFilterComponent {
       {value: 'request', label: 'Requests', name: 'checkbox-request'},
     ],
     name: 'event-filter'
+  };
+
+  // Active Checkbox config
+  pendingRequestsModel: any = [];
+  pendingRequestFilterConfig = {
+    options: [
+      {value: 'pending-requests', label: 'Pending Requests Only', name: 'checkbox-pending-request'},
+    ],
+    name: 'pending-request-filter'
   };
 
   // Domain Checkbox config
@@ -54,17 +68,26 @@ export class FeedsFilterComponent {
   ngOnInit() {
     this.eventFilterModel= [this.defaultEventOption];
     this.domainFilterModel = [this.defaultDomainOption];
+    if(this.defaultPendingRequestsOption) {
+      this.pendingRequestsModel = ['pending-requests'];
+    }
     this.domainFilterChange(this.domainFilterModel);
     this.eventFilterChange(this.eventFilterModel);
-    if(!(this.eventFilterModel.indexOf('request')< 0)){
+    this.pendingRequestsFilterChange(this.pendingRequestsModel);
+    if(!(this.eventFilterModel.indexOf('request')< 0) || !(this.pendingRequestsModel.indexOf('pending-requests')< 0)){
       this.alRequestTypeModel = ['archive_request', 'unarchive_request', 'title_request', 'agency_request', 'program_number_request'];
       this.alRequestTypeFilterChange(this.alRequestTypeModel);
     }
   }
 
   eventFilterChange(event) {
+    this.showALPendingRequestFilters = (event.indexOf('request') < 0)? false: true;
     this.showALRequestFilters = (event.indexOf('request') < 0)? false: true;
     this.eventFilterModelChange.emit(event);
+  }
+
+  pendingRequestsFilterChange(event){
+    this.pendingRequestsFilterModelChange.emit(event);
   }
 
   domainFilterChange(event) {

@@ -24,7 +24,7 @@
 
   <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
     <tr>
-      <td><span class='usa-input-error-message' *ngIf="!obligation.assistanceType"><sup>*</sup>This field cannot be empty</span>{{obligation.assistanceType && obligation.assistanceType.name ? obligation.assistanceType.name : ''}}</td>
+      <td><span class='usa-input-error-message' *ngIf="!obligation.assistanceType"><sup>*</sup>This field is required</span>{{obligation.assistanceType && obligation.assistanceType.name ? obligation.assistanceType.name : ''}}</td>
       <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
         {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
         obligation['pFY']['textboxValue']:''}}

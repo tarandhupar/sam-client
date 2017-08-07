@@ -1,10 +1,11 @@
 import { Input,Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 
 @Component({
   selector: "role-content",
-  templateUrl: "./role-maincontent.template.html"
+  templateUrl: "./role-maincontent.template.html",
 })
 export class RoleMainContent implements OnInit{
 

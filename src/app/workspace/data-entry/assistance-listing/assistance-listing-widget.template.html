@@ -1,5 +1,5 @@
 <div class="assistance-widget">
-  <div class="usa-grid">
+  <div class="usa-grid widget-body">
   <div class="usa-width-two-thirds">
       <div *ngIf="pendingApprovalCount!=null"><span class="usa-font-lead">{{pendingApprovalCount == 0 ? '0' : pendingApprovalCount}}&nbsp;</span>
         <a *ngIf="pendingApprovalCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'pending'}">Pending Review Requests</a>

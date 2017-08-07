@@ -1,6 +1,7 @@
 import { Component, Input, forwardRef  } from '@angular/core';
 import {NumberFormatter} from "@angular/common/src/pipes/intl";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
+import { OptionsType } from 'sam-ui-kit/types';
 /**
 * SamSortComponent - Lists results message component
 */
@@ -14,25 +15,24 @@ import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
     }]
 })
 export class SamSortComponent implements ControlValueAccessor{
-  options = [{
-      label:"Sort By",
+  @Input() options:OptionsType[] = [{
+      label:"",
       name: "Sort By",
       value: ""
-  },{
-      label:"Ascending",
-      name: "Ascending",
-      value: "asc"
-  },{
-      label:"Descending",
-      name: "Descending",
-      value: "desc"
-  },];
+  }];
+  sort = "asc";
   selection = "";
   disabled = false;
   selectionHandler(evt){
     this.selection = evt;
     this.onTouched();
-    this.onChange(this.selection);
+    this.onChange({type:this.selection,sort:this.sort});
+  }
+
+  toggleSort(){
+    this.onTouched();
+    this.sort = this.sort!='asc'?'asc':'desc';
+    this.onChange({type:this.selection,sort:this.sort});
   }
 
   onChange = (c)=>{};
@@ -42,8 +42,13 @@ export class SamSortComponent implements ControlValueAccessor{
     this.disabled = disabled;
   }
 
-  writeValue(value) {
-    this.selection = value;
+  writeValue(value:{type:string,sort:string}={type:"",sort:"asc"}) {
+    if(value && value.type){
+      this.selection = value.type;
+    } 
+    if(value && value.sort){
+      this.sort = value.sort;
+    }
   }
 
   registerOnChange(fn: any) {

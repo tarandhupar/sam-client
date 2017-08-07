@@ -1,75 +1,112 @@
-<div class="sam-ui grid">
-  <div class="row">
-    <div class="eight wide column">
-      <h3 class="assistance-program-title">
-        {{data.title}}
-      </h3>
-
-      <ul class="sam-ui small list">
-        <li>
-          <strong>State/Region</strong><br>
-          <span>{{data.region}}</span>
-        </li>
-        <li>
-          <strong>Point Of Contact</strong><br>
-          <span>{{data.pointOfContact}}</span>
-        </li>
-        <li>
-          <strong>Address</strong><br>
-          <span>{{data.address.streetAddress}}, {{data.address.city}}, {{data.address.state}} {{data.address.zip}}</span>
-        </li>
-        <li>
-          <strong>Phone</strong><br>
-          <span>{{data.phone}}</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="four wide column">
-      <ul class="sam-ui small list">
-        <li>
-          <sam-select
-            [hint]="actionsDropdown.config.hint"
-            [name]="actionsDropdown.config.name"
-            [disabled]="actionsDropdown.config.disabled"
-            [options]="actionsDropdown.config.options"
-            [ngModel]="actionsDropdown.defaultOption"
-            (ngModelChange)="actionsDropdownSelect($event)"
-          ></sam-select>
-        </li>
-        <li>
-          <span class="sam-ui mini label">Regional Agency Location</span>
-        </li>
-        <li>
-          <strong>Sub-Branch</strong><br>
-          <span>{{data.subBranch}}</span>
-        </li>
-        <li>
-          <strong>Division</strong><br>
-          <span>{{data.division}}</span>
-        </li>
-        <li>
-          <strong>Created By: </strong><span>{{data.createdBy}}</span><br>
-          <strong>On: </strong> <span>{{data.createdDate|date: 'MMM d, yyyy h:mm a'}}</span>
-        </li>
-        <li>
-          <strong>Last Modified By: </strong><span>{{data.modifiedBy}}</span><br>
-          <strong>On: </strong> <span>{{data.modifiedDate|date: 'MMM d, yyyy h:mm a'}}</span>
-        </li>
-      </ul>
-
-      <sam-modal #modal1
-        [type]="'info'"
-        [title]="'Are You Sure?'"
-        [cancelButtonLabel]="'No'"
-        [submitButtonLabel]="'Yes'"
-        [description]="'Are you sure you want to delete this location? Note: Any updates made in this space will not be reflected in the public view.'"
-        (onClose)="onModalClose($event)"
-        (onSubmit)="deleteRAO($event)"
-      ></sam-modal>
+<div class="sam-ui small subtle menu">
+  <div class="right menu">
+    <a class="sam-ui item" 
+      sam-click-outside
+      (clickOutside)="openDropdown = false"
+      (click)="openDropdown = !openDropdown"
+      style="font-weight: 600;" >
+      {{actionsDropdown.defaultOption}}  
+      <i class="dropdown icon fa fa-caret-down" aria-hidden="true"></i>
+    </a>
+    <div [@dropdown]="'in'" *ngIf="openDropdown" class="workspace-dropdown">
+      <ng-container *ngFor="let option of actionsDropdown.config.options">
+        <ng-container *ngIf="!option.disabled">
+          <a href="javascript:void(0);" 
+            (click)="actionsDropdownSelect(option.value)">
+            {{option.label}}
+          </a>
+        </ng-container>
+      </ng-container>
     </div>
   </div>
 </div>
 
+<div class="sam-ui grid ">
+  <div class="twelve wide column"> 
+    <h3 class="sam-ui header">
+      <ng-container *ngIf="data.title">
+        {{data.title}}
+      </ng-container>
+      <ng-container *ngIf="!data.title">
+        Untitled
+      </ng-container>
+    </h3>
+  </div>
+</div>
 
+<div class="sam-ui equal width grid">
+  
+  <div class="column">
+    <div class="sam-ui medium header">
+      State/Region
+      <div class="sub header">{{data.region}}</div>
+    </div>
+    <div class="sam-ui medium header">
+      Point Of Contact
+      <div class="sub header">
+        {{data.pointOfContact}}
+        <ng-container *ngIf="!data.pointOfContact">
+          &#8212;&#8212;
+        </ng-container>
+      </div>
+    </div>
+    <div class="sam-ui medium header">
+      Address
+      <div class="sub header">
+        {{data.address.streetAddress}}, {{data.address.city}}, {{data.address.state}} {{data.address.zip}}
+      </div>
+    </div>
+    <div class="sam-ui medium header">
+      Phone
+      <div class="sub header">{{data.phone}}</div>
+    </div>
+  </div>
+  
+  <div class="column">
+    <div class="sam-ui medium header">
+      Sub-Branch
+      <div class="sub header">
+        {{data.subBranch}}
+        <ng-container *ngIf="!data.subBranch">
+          &#8212;&#8212;
+        </ng-container>
+      </div>
+    </div>
+    <div class="sam-ui medium header">
+      Division
+      <div class="sub header">
+        {{data.division}}
+        <ng-container *ngIf="!data.division">
+          &#8212;&#8212;
+        </ng-container>
+      </div>
+    </div>
+    <div class="sam-ui medium header">
+      Created 
+      <ng-container *ngIf="data.createdBy">By {{data.createdBy}}</ng-container>
+      <div class="sub header">
+        On {{data.createdDate|date: 'MMM d, yyyy h:mm a'}}
+      </div>
+    </div>
+    <div class="sam-ui medium header">
+      Last Modified 
+      <ng-container *ngIf="data.modifiedBy">By {{data.modifiedBy}}</ng-container>
+      <div class="sub header">
+        On {{data.modifiedDate|date: 'MMM d, yyyy h:mm a'}}
+      </div>
+    </div>
+    <span class="sam-ui basic tiny blue label">
+      Regional Agency Location
+    </span>
+  </div>
+</div>
 
+<sam-modal #modal1
+  [type]="'info'"
+  [title]="'Are You Sure?'"
+  [cancelButtonLabel]="'No'"
+  [submitButtonLabel]="'Yes'"
+  [description]="'Are you sure you want to delete this location? Note: Any updates made in this space will not be reflected in the public view.'"
+  (onClose)="onModalClose($event)"
+  (onSubmit)="deleteRAO($event)">
+</sam-modal>
