@@ -1,8 +1,10 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Location } from '@angular/common';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 
 // Load the implementations that should be tested
@@ -118,9 +120,11 @@ describe('The Sam Feedback component', () => {
         AlertFooterService,
         { provide: ApiService, useClass: ApiServiceStub},
         { provide: IAMService, useClass: IAMServiceStub},
-        { provide: FeedbackService ,useClass: FeedbackServiceStub}
+        { provide: FeedbackService ,useClass: FeedbackServiceStub},
       ]
     });
+
+
 
     fixture = TestBed.createComponent(SamFeedbackComponent);
     component = fixture.componentInstance;
@@ -198,5 +202,26 @@ describe('The Sam Feedback component', () => {
     expect(component.generateFeedbackRes()).toEqual({userId: '', feedbackPath: '', feedbackList: []});
   });
 
+  it("should be able to link to OMB section in policy", () => {
+    fixture.detectChanges();
+    component.OnOMBlinkClick();
+  });
+
+  it("should be able to stop count down", () => {
+    fixture.detectChanges();
+    component.startCountDown();
+    component.stopCountDown();
+    expect(component.showFeedback).toBe(false);
+
+  });
+
+  it("should be able to proceed to other page after clicking on modal window confirm", () => {
+    fixture.detectChanges();
+    component.nextUrl = "/help/test";
+    component.showProceedModal();
+    component.onProceedModalConfirm();
+    component.onProceedModalClose();
+    expect(component.currentUrl).toBe("/help/test");
+  });
 
 });
