@@ -39,8 +39,14 @@ describe('The AlertItem component', () => {
   it('should compile with an error alert', () => {
     component.alert = Alert.FromResponse(error);
     fixture.detectChanges();
+    expect(component.isActiveAlert()).toBeFalsy();
+    expect(component.isExpiredAlert()).toBeFalsy();
     expect(fixture.nativeElement.querySelector('[class*=error]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[class*=warning]')).toBeFalsy();
+    component.edit.subscribe(alert => {
+      expect(alert.title()).toBe("The is an error");
+    });
+    component.onEditClick();
   });
 
   it('should compile with an warning alert', () => {

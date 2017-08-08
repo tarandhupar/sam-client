@@ -26,7 +26,7 @@ class RouterStub {
 }
 
 let systemAlertsStub: any = {
-  getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info]})
+  getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info], _links:{'create':true}})
 };
 
 describe('The AlertsPage component', () => {
@@ -53,7 +53,7 @@ describe('The AlertsPage component', () => {
     expect(true).toBe(true);
   });
 
-  xit('should do a search when a dropdown value changes', async(() => {
+  it('should do a search when a dropdown value changes', async(() => {
     component.filters.statuses = ['active', 'inactive'];
     component.onParamChanged(undefined);
     fixture.whenStable().then(() => {
