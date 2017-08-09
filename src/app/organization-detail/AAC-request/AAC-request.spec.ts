@@ -59,6 +59,7 @@ describe('Create AAC Request Form Page', () => {
 
   it('should be able to fill in contractor org', () => {
     fixture.detectChanges();
+    component.user = {fullName:'test fullname', email:'test@gsa.gov'}
     let contractorTypeName:any = '';
     component.aacOfficeConfig.options.forEach( e => {
       if(e.label.includes("Contract")) contractorTypeName = e.label;
@@ -84,6 +85,20 @@ describe('Create AAC Request Form Page', () => {
       {desc:'Contract Expiry Date', value: '2017-12-12'},
     ]);
     component.formatOfficeInfoError();
+    expect(component.generateAACRequestPostObj()).toEqual({
+      aacExists: false,
+      orgTypeId: 'Contractor Organization',
+      requestorEmailId: 'test@gsa.gov',
+      username: 'test fullname',
+      aacLink: '/aac-confirm',
+      orgName: 'orgA',
+      contractNumber: '123',
+      cageCode: '123',
+      contractAdminName: 'admin',
+      contractExpiryDate: '2017-12-12',
+      requestIds: [],
+      addressDetails: [],
+    });
   });
 
   it('should be able to fill in state/local office org', () => {
