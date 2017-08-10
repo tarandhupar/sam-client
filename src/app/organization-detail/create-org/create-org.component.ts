@@ -11,18 +11,6 @@ import { Location } from "@angular/common";
 import { IAMService } from "api-kit";
 import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
 
-function validDateTime(c: FormControl) {
-  let invalidError = {message: 'Date is invalid'};
-
-  if (c.value === 'Invalid Date') {
-    return invalidError;
-  }
-}
-
-function isRequired(c: FormControl) {
-  if(c.value === '') return {required:true};
-}
-
 @Component ({
   templateUrl: 'create-org.template.html'
 })

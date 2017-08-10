@@ -32,7 +32,93 @@ let activatedRouteStub = {
   }
 };
 
-describe('Organization Detail Profile Page', () => {
+class FHServiceStub {
+  getAccess(orgId){return Observable.of({});}
+  createOrganization(orgObj, parentPath, parentPathName){return Observable.of({});}
+  updateOrganization(orgObj,isMove){return Observable.of({});}
+  getOrganizationById(orgId:string, childHierarchy:boolean=false, parentHierarchy:boolean=true):any{
+    return  Observable.of(
+      {_embedded:
+        [{org:
+        {
+          categoryDesc: "SUB COMMAND",
+          categoryId: "CAT-6",
+          code: "RMAC",
+          createdBy: "DODMIGRATOR",
+          createdDate: 1053388800000,
+          description: "RMAC",
+          fpdsOrgId: "RMAC",
+          fullParentPath: "100000000.100000012.100000117.100000120",
+          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
+          isSourceFpds: true,
+          l1Name: "DEPT OF DEFENSE",
+          l1OrgKey: 100000000,
+          l2Name: "DEPT OF THE ARMY",
+          l3Name: "AMC",
+          l4Name: "RMAC",
+          lastModifiedBy: "FPDSADMIN",
+          lastModifiedDate: 1161993600000,
+          level: 4,
+          name: "RMAC",
+          orgCode: "ORG-2899",
+          orgKey: 100000120,
+          parentOrg: "AMC",
+          parentOrgKey: 100000117,
+          type: "SUB COMMAND",
+          orgAddresses:[]
+        }
+        }]
+      }
+    );
+  }
+  getOrganizationDetail(orgId){return Observable.of(
+    {
+      _embedded:[
+        {
+          org: {
+            categoryDesc: "SUB COMMAND",
+            categoryId: "CAT-6",
+            code: "RMAC",
+            createdBy: "DODMIGRATOR",
+            createdDate: 1053388800000,
+            description: "RMAC",
+            fpdsOrgId: "RMAC",
+            fullParentPath: "100000000.100000012.100000117.100000120",
+            fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
+            isSourceFpds: true,
+            l1Name: "DEPT OF DEFENSE",
+            l1OrgKey: 100000000,
+            l2Name: "DEPT OF THE ARMY",
+            l3Name: "AMC",
+            l4Name: "RMAC",
+            lastModifiedBy: "FPDSADMIN",
+            lastModifiedDate: 1161993600000,
+            level: 4,
+            name: "RMAC",
+            orgCode: "ORG-2899",
+            orgKey: 100000120,
+            parentOrg: "AMC",
+            parentOrgKey: 100000117,
+            type: "SUB COMMAND",
+            orgAddresses:[]
+          }
+        },
+        {
+          _links:[
+            {
+              link:{
+                rel:'sub-tier',
+                method: 'POST',
+              }
+            }
+          ]
+        }
+      ]
+    }
+  );}
+};
+
+fdescribe('Organization Detail Profile Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailProfilePage;
   let fixture:any;
@@ -45,7 +131,7 @@ describe('Organization Detail Profile Page', () => {
         FlashMsgService,
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
-        { provide: FHService ,useClass:FHServiceMock}
+        { provide: FHService ,useClass:FHServiceStub}
       ]
     });
     fixture = TestBed.createComponent(OrgDetailProfilePage);
@@ -57,17 +143,15 @@ describe('Organization Detail Profile Page', () => {
     expect(true).toBe(true);
   });
 
-  it('should have correct parameters and next layer text', () => {
+  it('should have correct parameters', () => {
     fixture.detectChanges();
-    fixture.detectChanges();
-    expect(component.getNextLayer()).toBe("Office");
-    expect(component.currentHierarchyType).toBe("Office");
+    expect(component.currentHierarchyType).toBe("SUB COMMAND");
     expect(component.orgDetails).toEqual([
-      {description:"Office Name", value:"Us Army Robert Morris Acquisitio"},
+      {description:"Sub Command Name", value:"Rmac"},
       {description:"Description", value:""},
       {description:"Shortname", value:""},
-      {description:"Start Date", value:moment(970358400000).format('MM/DD/YYYY')},
-      {description:"Indicate Funding", value:"Funding/Award"},
+      {description:"Start Date", value:""},
+      {description:"End Date", value:""},
     ]);
   });
 
