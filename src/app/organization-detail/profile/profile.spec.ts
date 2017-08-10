@@ -118,7 +118,7 @@ class FHServiceStub {
   );}
 };
 
-fdescribe('Organization Detail Profile Page', () => {
+describe('Organization Detail Profile Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailProfilePage;
   let fixture:any;

@@ -59,7 +59,7 @@ class FHServiceStub {
   }
 };
 
-fdescribe('Create Organization Form Component', () => {
+describe('Create Organization Form Component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgCreateForm;
   let fixture:any;

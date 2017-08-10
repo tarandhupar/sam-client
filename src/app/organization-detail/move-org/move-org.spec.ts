@@ -28,7 +28,7 @@ let activatedRouteStub = {
   }
 };
 
-fdescribe('Move Organization Page', () => {
+describe('Move Organization Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgMovePage;
   let fixture:any;

@@ -69,7 +69,7 @@ class FHServiceStub {
 );}
 };
 
-fdescribe('Create Organization Page', () => {
+describe('Create Organization Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgCreatePage;
   let fixture:any;

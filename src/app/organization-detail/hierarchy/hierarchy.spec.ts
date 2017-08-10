@@ -26,7 +26,7 @@ let activatedRouteStub = {
   }
 };
 
-fdescribe('Organization Hierarchy Page', () => {
+describe('Organization Hierarchy Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgHierarchyPage;
   let fixture:any;
