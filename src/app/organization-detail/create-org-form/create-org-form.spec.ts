@@ -198,7 +198,25 @@ describe('Create Organization Form Component', () => {
       }
     };
     fixture.detectChanges();
+    expect(component.isCreateMode()).toBeFalsy();
     component.generateBasicOrgObj();
     component.onConfirmFormClick();
+  });
+
+  it('should have correct fields for edit a department organization', () => {
+    component.orgFormConfig = {
+      mode: 'update',
+      endDate: '2017-01-01',
+      org: {"orgKey":100040731,"categoryDesc":"DEPARTMENT","categoryId":"CAT-1","createdBy":"MIGRATOR",
+        "createdDate":1064880000000,"description":"POSTAL SERVICE","fpdsOrgId":"1800","cgac":"018",
+        "fullParentPath":"100040731","fullParentPathName":"POSTAL_SERVICE","isSourceFpds":true,"lastModifiedBy":"FPDSADMIN",
+        "lastModifiedDate":1152144000000,"name":"POSTAL SERVICE","orgCode":"ORG-1146","type":"DEPARTMENT","level":1,"code":"1800",
+        "orgAddresses":[],"hierarchy":[],"l1Name":"POSTAL SERVICE","l1OrgKey":100040731},
+    };
+    fixture.detectChanges();
+    expect(component.isAddressNeeded()).toBeFalsy();
+    component.generateBasicOrgObj();
+    component.onConfirmFormClick();
+    expect(component.orgObj).toEqual({orgKey: 100040731, categoryDesc: 'DEPARTMENT', categoryId: 'CAT-1', createdBy: 'MIGRATOR', createdDate: 1064880000000, description: 'POSTAL SERVICE', fpdsOrgId: '1800', cgac: '018', fullParentPath: '100040731', fullParentPathName: 'POSTAL_SERVICE', isSourceFpds: true, lastModifiedBy: 'FPDSADMIN', lastModifiedDate: 1152144000000, name: 'POSTAL SERVICE', orgCode: 'ORG-1146', type: 'DEPARTMENT', level: 1, code: '1800', orgAddresses: [  ], hierarchy: [  ], l1Name: 'POSTAL SERVICE', l1OrgKey: 100040731, startDate: '2017-01-01', summary: '', shortName: ''});
   });
 });

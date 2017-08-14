@@ -32,92 +32,6 @@ let activatedRouteStub = {
   }
 };
 
-class FHServiceStub {
-  getAccess(orgId){return Observable.of({});}
-  createOrganization(orgObj, parentPath, parentPathName){return Observable.of({});}
-  updateOrganization(orgObj,isMove){return Observable.of({});}
-  getOrganizationById(orgId:string, childHierarchy:boolean=false, parentHierarchy:boolean=true):any{
-    return  Observable.of(
-      {_embedded:
-        [{org:
-        {
-          categoryDesc: "SUB COMMAND",
-          categoryId: "CAT-6",
-          code: "RMAC",
-          createdBy: "DODMIGRATOR",
-          createdDate: 1053388800000,
-          description: "RMAC",
-          fpdsOrgId: "RMAC",
-          fullParentPath: "100000000.100000012.100000117.100000120",
-          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
-          isSourceFpds: true,
-          l1Name: "DEPT OF DEFENSE",
-          l1OrgKey: 100000000,
-          l2Name: "DEPT OF THE ARMY",
-          l3Name: "AMC",
-          l4Name: "RMAC",
-          lastModifiedBy: "FPDSADMIN",
-          lastModifiedDate: 1161993600000,
-          level: 4,
-          name: "RMAC",
-          orgCode: "ORG-2899",
-          orgKey: 100000120,
-          parentOrg: "AMC",
-          parentOrgKey: 100000117,
-          type: "SUB COMMAND",
-          orgAddresses:[]
-        }
-        }]
-      }
-    );
-  }
-  getOrganizationDetail(orgId){return Observable.of(
-    {
-      _embedded:[
-        {
-          org: {
-            categoryDesc: "SUB COMMAND",
-            categoryId: "CAT-6",
-            code: "RMAC",
-            createdBy: "DODMIGRATOR",
-            createdDate: 1053388800000,
-            description: "RMAC",
-            fpdsOrgId: "RMAC",
-            fullParentPath: "100000000.100000012.100000117.100000120",
-            fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
-            isSourceFpds: true,
-            l1Name: "DEPT OF DEFENSE",
-            l1OrgKey: 100000000,
-            l2Name: "DEPT OF THE ARMY",
-            l3Name: "AMC",
-            l4Name: "RMAC",
-            lastModifiedBy: "FPDSADMIN",
-            lastModifiedDate: 1161993600000,
-            level: 4,
-            name: "RMAC",
-            orgCode: "ORG-2899",
-            orgKey: 100000120,
-            parentOrg: "AMC",
-            parentOrgKey: 100000117,
-            type: "SUB COMMAND",
-            orgAddresses:[]
-          }
-        },
-        {
-          _links:[
-            {
-              link:{
-                rel:'sub-tier',
-                method: 'POST',
-              }
-            }
-          ]
-        }
-      ]
-    }
-  );}
-};
-
 describe('Organization Detail Profile Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailProfilePage;
@@ -131,7 +45,7 @@ describe('Organization Detail Profile Page', () => {
         FlashMsgService,
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
-        { provide: FHService ,useClass:FHServiceStub}
+        { provide: FHService ,useClass:FHServiceMock}
       ]
     });
     fixture = TestBed.createComponent(OrgDetailProfilePage);
@@ -143,29 +57,45 @@ describe('Organization Detail Profile Page', () => {
     expect(true).toBe(true);
   });
 
-  it('should have correct parameters', () => {
-    fixture.detectChanges();
-    expect(component.currentHierarchyType).toBe("SUB COMMAND");
-    expect(component.orgDetails).toEqual([
-      {description:"Sub Command Name", value:"Rmac"},
-      {description:"Description", value:""},
-      {description:"Shortname", value:""},
-      {description:"Start Date", value:""},
-      {description:"End Date", value:""},
-    ]);
+  it('should have correct parameters', done => {
+
+    let fhs = fixture.debugElement.injector.get(FHService);
+    spyOn(fhs, 'getOrganizationById').and.returnValue(Observable.of({_embedded: [{org: {categoryDesc: "OFFICE",categoryId: "CAT-6",code: "RMAC",createdBy: "DODMIGRATOR",createdDate: 1053388800000,description: "RMAC",fpdsOrgId: "RMAC",fullParentPath: "100000000.100000012.100000117.100000120",fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",isSourceFpds: true,l1Name: "DEPT OF DEFENSE",l1OrgKey: 100000000,l2Name: "DEPT OF THE ARMY",l3Name: "AMC",l4Name: "RMAC",lastModifiedBy: "FPDSADMIN",lastModifiedDate: 1161993600000,level: 4,name: "RMAC",orgCode: "ORG-2899",orgKey: 100000120,parentOrg: "AMC",parentOrgKey: 100000117,type: "OFFICE",orgAddresses:[]}}]}));
+    spyOn(fhs, 'getOrganizationDetail').and.returnValue(Observable.of({_embedded:[{org: {categoryDesc: "OFFICE",categoryId: "CAT-6",code: "RMAC",createdBy: "DODMIGRATOR",createdDate: 1053388800000,description: "RMAC",fpdsOrgId: "RMAC",fullParentPath: "100000000.100000012.100000117.100000120",fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",isSourceFpds: true,l1Name: "DEPT OF DEFENSE",l1OrgKey: 100000000,l2Name: "DEPT OF THE ARMY",l3Name: "AMC",l4Name: "RMAC",lastModifiedBy: "FPDSADMIN",lastModifiedDate: 1161993600000,level: 4,name: "RMAC",orgCode: "ORG-2899",orgKey: 100000120,parentOrg: "AMC",parentOrgKey: 100000117,type: "OFFICE",orgAddresses:[]}},{_links:[{link:{rel:'sub-tier',method: 'POST',}}]}]}));
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.currentHierarchyType).toBe("OFFICE");
+      expect(component.orgDetails).toEqual([
+        {description:"Office Name", value:"Rmac"},
+        {description:"Description", value:""},
+        {description:"Shortname", value:""},
+        {description:"Start Date", value:""},
+        {description:"End Date", value:""},
+        {description:'Indicate Funding', value: ''}
+      ]);
+      done();
+    });
   });
 
-  // it('should switch to correct organization details if click on the link', () => {
-  //   fixture.detectChanges();
-  //   component.onChangeOrgDetail("RMAC");
-  //   expect(component.getNextLayer()).toBe("Office");
-  //   expect(component.currentHierarchyType).toBe("Sub Command");
-  //   expect(component.orgDetails).toEqual([
-  //     {description:"Sub Command Name", value:"Rmac"},
-  //     {description:"Description", value:""},
-  //     {description:"Shortname", value:""},
-  //     {description:"Start Date", value:""},
-  //   ]);
-  // });
+  it('should open to edit organization detail if the source is from fpds', done => {
+    let fhs = fixture.debugElement.injector.get(FHService);
+    spyOn(fhs, 'getOrganizationById').and.returnValue(Observable.of({_embedded: [{org: {categoryDesc: "OFFICE",categoryId: "CAT-6",code: "RMAC",createdBy: "DODMIGRATOR",createdDate: 1053388800000,description: "RMAC",fpdsOrgId: "RMAC",fullParentPath: "100000000.100000012.100000117.100000120",fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",isSourceFpds: true,l1Name: "DEPT OF DEFENSE",l1OrgKey: 100000000,l2Name: "DEPT OF THE ARMY",l3Name: "AMC",l4Name: "RMAC",lastModifiedBy: "FPDSADMIN",lastModifiedDate: 1161993600000,level: 4,name: "RMAC",orgCode: "ORG-2899",orgKey: 100000120,parentOrg: "AMC",parentOrgKey: 100000117,type: "OFFICE",orgAddresses:[]}}]}));
+    spyOn(fhs, 'getOrganizationDetail').and.returnValue(Observable.of({_embedded:[{org: {categoryDesc: "OFFICE",categoryId: "CAT-6",code: "RMAC",createdBy: "DODMIGRATOR",createdDate: 1053388800000,description: "RMAC",fpdsOrgId: "RMAC",fullParentPath: "100000000.100000012.100000117.100000120",fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",isSourceFpds: true,l1Name: "DEPT OF DEFENSE",l1OrgKey: 100000000,l2Name: "DEPT OF THE ARMY",l3Name: "AMC",l4Name: "RMAC",lastModifiedBy: "FPDSADMIN",lastModifiedDate: 1161993600000,level: 4,name: "RMAC",orgCode: "ORG-2899",orgKey: 100000120,parentOrg: "AMC",parentOrgKey: 100000117,type: "OFFICE",orgAddresses:[]}},{_links:[{link:{rel:'sub-tier',method: 'POST',}}]}]}));
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.currentHierarchyType).toBe("OFFICE");
+      expect(component.isEdit).toBeFalsy();
+      expect(component.isFPDSSource).toBeTruthy();
+      component.onEditPageClick();
+      component.editedDescription = "test summary";
+      component.editedShortname = "test short name";
+      component.onSaveEditPageClick();
+      expect(component.orgObj['summary']).toBe("test summary");
+      expect(component.orgObj['shortName']).toBe("test short name");
+      done();
+    });
+  });
 
 });

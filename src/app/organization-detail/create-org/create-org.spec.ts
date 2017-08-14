@@ -12,61 +12,13 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHService } from "api-kit/fh/fh.service";
+import { FHServiceMock } from "api-kit/fh/fh.service.mock";
 import { LocationService } from "api-kit/location/location.service";
 
 class LocationServiceStub {
   validateZipWIthLocation(zip:string, state?:any, city?:any):any{
     return Observable.of({description:'VALID'});
   }
-};
-
-class FHServiceStub {
-  getAccess(orgId){return Observable.of({});}
-  getOrganizationDetail(orgId){return Observable.of(
-  {
-    _embedded:[
-      {
-        org: {
-          categoryDesc: "SUB COMMAND",
-          categoryId: "CAT-6",
-          code: "RMAC",
-          createdBy: "DODMIGRATOR",
-          createdDate: 1053388800000,
-          description: "RMAC",
-          fpdsOrgId: "RMAC",
-          fullParentPath: "100000000.100000012.100000117.100000120",
-          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
-          isSourceFpds: true,
-          l1Name: "DEPT OF DEFENSE",
-          l1OrgKey: 100000000,
-          l2Name: "DEPT OF THE ARMY",
-          l3Name: "AMC",
-          l4Name: "RMAC",
-          lastModifiedBy: "FPDSADMIN",
-          lastModifiedDate: 1161993600000,
-          level: 4,
-          name: "RMAC",
-          orgCode: "ORG-2899",
-          orgKey: 100000120,
-          parentOrg: "AMC",
-          parentOrgKey: 100000117,
-          type: "SUB COMMAND",
-          orgAddresses:[]
-        }
-      },
-      {
-        _links:[
-          {
-            link:{
-              rel:'sub-tier',
-              method: 'POST',
-            }
-          }
-        ]
-      }
-    ]
-  }
-);}
 };
 
 describe('Create Organization Page', () => {
@@ -82,7 +34,7 @@ describe('Create Organization Page', () => {
         FlashMsgService,
         { provide: Router,  useValue:{events:Observable.of({url:"/create-organization"}), navigateByUrl:(url)=>{return url;}} },
         { provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'orgType': 'Office',  'parentID': '100000000',}])}},
-        { provide: FHService ,useClass:FHServiceStub},
+        { provide: FHService ,useClass:FHServiceMock},
         { provide: LocationService ,useClass:LocationServiceStub},
       ]
     });
@@ -95,5 +47,15 @@ describe('Create Organization Page', () => {
     expect(true).toBe(true);
   });
 
+  it('should be able to return correct path id and name', () =>{
+    fixture.detectChanges();
+    let fullParentPath = "100000000.100000012.100000117.100000120";
+    let fullParentPathName = "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC";
+    component.setupHierarchyPathMap(fullParentPath, fullParentPathName);
+    expect(component.hierarchyPath).toEqual(['DEPT OF DEFENSE','DEPT OF THE ARMY','AMC','RMAC']);
+    expect(component.hierarchyPathMap['DEPT OF DEFENSE']).toBe('100000000');
+    expect(component.hierarchyPathMap['DEPT OF THE ARMY']).toBe('100000012');
+    expect(component.hierarchyPathMap['AMC']).toBe('100000117');
+  });
 
 });
