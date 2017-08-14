@@ -11,7 +11,7 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 
 
-fdescribe('FH landing page sidenav component', () => {
+describe('FH landing page sidenav component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:FHSideNav;
   let fixture:any;

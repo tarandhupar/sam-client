@@ -20,7 +20,7 @@ class RouterStub {
 }
 
 
-fdescribe('Federal Hierarchy Landing Page', () => {
+describe('Federal Hierarchy Landing Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:FederalHierarchyPage;
   let fixture:any;
