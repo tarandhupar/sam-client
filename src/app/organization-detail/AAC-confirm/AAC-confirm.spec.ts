@@ -12,14 +12,14 @@ import { SamAPIKitModule } from "api-kit";
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 
 class AACRequestServiceStub{
-  getAACRequestDetail(){
+  getAACRequestDetail(requestId){
     return Observable.of({
       "aac": {
-        "aacId": 1,"orgTypeId": 2,"orgName": "ABC","contractNumber": null,"cageCode": null,"contractExpiryDate": null,
+        "aacId": 1,"orgTypeId": 2,"orgName": "ABC","contractNumber": 12345,"cageCode": 12345,"contractExpiryDate": '2017-01-01',
         "aacExists": true,"requestorEmailId": "nithin@gsa.gov","aacLink": "/test",
         "createdBy": "admin","createdDate": "2017-04-25T21:55:48.695-0400",
         "lastModifiedBy": "admin","lastModifiedDate": "2017-04-25T21:55:48.695-0400",
-        "orgTypeName": "State Organization","contractAdminName": null
+        "orgTypeName": "Contractor","contractAdminName": "Test Admin"
       },
       "addressList": [
         {"addressId": 4,"aacId": 1,"addressTypeId": 1,"street1": "Eisenhover","street2": null,"code": "20170","state": "Virginia","city": "Alexandria","country": "USA","addressTypeName": "Mailing Address"},
@@ -51,9 +51,18 @@ describe('Create AAC Confirm Form Page', () => {
     component = fixture.componentInstance;
   });
 
-  it('should compile without error', () => {
+  it('should have correct fields set for contractor organization', () => {
     fixture.detectChanges();
     expect(true).toBe(true);
+    expect(component.officeInfo).toEqual([
+      {desc:'Does an AAC exist for this organization',value:true},
+      {desc:'Is the request for a Federal Office, State/Local Office or Contractor',value:"Contractor"},
+      { desc: 'Contractor Name', value: 'ABC' },
+      { desc: 'Contract Number', value: 12345 },
+      { desc: 'CAGE Code', value: 12345 },
+      { desc: 'Contract Administrator Name', value: 'Test Admin' },
+      { desc: 'Contract Expiry Date', value: '2017-01-01' }
+    ]);
   });
 
   it('should contain FPDS Report in the reasons for aac request', () => {

@@ -244,32 +244,6 @@ export class OrgDetailProfilePage {
     return index === this.hierarchyPath.length-1? "current-hierarchy-link":"";
   }
 
-  /**
-   * Returns next layer text for button of creating next layer organization
-   * @returns {string}
-   */
-  getNextLayer():string{
-    let res = "";
-    switch (this.currentHierarchyType) {
-      case "Department":
-        res = "Sub-tier Agency";
-        break;
-      case "Agency":
-        res = "Major Command";
-        break;
-      case "Major Command":
-        res= "Sub Command 1";
-        break;
-      case "Office":
-        res= this.currentHierarchyLevel <= 5? "Office":"";
-        break;
-      default:
-        break;
-    }
-
-    return res;
-  }
-
   getSubLayerTypes(){
     let curHierarchy = this.isDoD()? this.dodHierarchy: this.noneDodHierarchy;
     let curHierarchyType = this.currentHierarchyType;

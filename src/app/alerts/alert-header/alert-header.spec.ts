@@ -11,8 +11,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 // Load test data
 import { error, info, warning } from '../alerts-test-data.spec';
 
-let noAlerts = Observable.of([]);
-let fiveAlerts = Observable.of([error, error, warning, info, info]);
+let noAlerts = Observable.of({_embedded: {alertList:[]}});
+let fiveAlerts = Observable.of({_embedded: {alertList:[error, error, warning, info, info]}});
 
 let systemAlertsStub: any = {
   getActive: () => fiveAlerts
@@ -51,7 +51,7 @@ describe('The AlertHeader component', () => {
 
   it('should show an error', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getActive').and.returnValue(Observable.of([error]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of({_embedded: {alertList:[error]}}));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -62,7 +62,7 @@ describe('The AlertHeader component', () => {
 
   it('should show a warning', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getActive').and.returnValue(Observable.of([warning]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of({_embedded: {alertList:[warning]}}));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -73,7 +73,7 @@ describe('The AlertHeader component', () => {
 
   it('should show an info', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getActive').and.returnValue(Observable.of([info]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of({_embedded: {alertList:[info]}}));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));

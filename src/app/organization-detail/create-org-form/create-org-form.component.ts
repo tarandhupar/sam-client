@@ -365,8 +365,8 @@ export class OrgCreateForm {
         }
       );
     }else{
-      this.orgObj.fullParentPath = this.fullParentPath + '.' + this.orgObj.orgKey;
-      this.orgObj.fullParentPathName = this.fullParentPathName + '.' + this.orgObj.name.split(' ').join('_');
+      this.orgObj.fullParentPath = this.fullParentPath === ""? "" + this.orgObj.orgKey: this.fullParentPath + '.' + this.orgObj.orgKey;
+      this.orgObj.fullParentPathName = this.fullParentPathName === ""? this.orgObj.name.split(' ').join('_'): this.fullParentPathName + '.' + this.orgObj.name.split(' ').join('_');
       this.fhService.updateOrganization(this.orgObj,true).subscribe( val => {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isMoveOrgSuccess = true;
