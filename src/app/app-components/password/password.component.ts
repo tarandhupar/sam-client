@@ -3,6 +3,20 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { Validators as $Validators } from '../../authentication/shared';
 
+const css = {
+  sizes: {
+    icon: '2rem',
+  },
+
+  colors: {
+    valid: '#2E8540',
+    invalid: '#E31C3D',
+    background: '#FFFFFF',
+  },
+};
+
+// const styles =
+
 /**
  * PasswordComponent - Password Form with Dynamic Validation
  *
@@ -13,19 +27,57 @@ import { Validators as $Validators } from '../../authentication/shared';
  */
 @Component({
 	selector: 'sam-password',
-  templateUrl: 'password.component.html'
+  templateUrl: 'password.component.html',
+  styles: [`
+    .usa-password .usa-password-progress .icon {
+      position: absolute;
+      width: ${css.sizes.icon};
+      height: ${css.sizes.icon};
+      top: 0px;
+      left: -2rem;
+      margin-top: 0px;
+      margin-left: 0px;
+      text-align: center;
+    }
+
+    .usa-password .usa-password-progress .icon .fa {
+      display: inline-block;
+      top: 1.5px;
+      left: 2px;
+      font-size: 2rem;
+      line-height: 2.3rem;
+      visibility: hidden;
+    }
+
+    .usa-password .usa-password-progress .icon .fa.fa-check {
+      color: ${css.colors.valid};
+      visibility: visible;
+    }
+
+    .usa-password .usa-password-progress .icon .fa.fa-times {
+      color: ${css.colors.invalid};
+    }
+
+    .usa-password .usa-password-progress .icon .fa.fa-times.ng-touched.ng-dirty {
+      visibility: visible;
+    }
+
+    .usa-password .ng-submitted .icon {
+      visibility: visible;
+    }
+  `]
 })
 export class SamPasswordComponent {
   @Input() currentPassword: FormControl;
-  @Input() password:FormControl;
+  @Input() password: FormControl = new FormControl('');
 
   @Input() passwordLabel:string = 'Create Password';
 
   @Input() phrases:string[] = [];
 
-  private confirmPassword = new FormControl(['']);
+  private confirmPassword = new FormControl('');
 
-  protected config = {
+  public config = {
     rules: {
       minlength: 12,
       uppercase: 1,
@@ -41,7 +93,7 @@ export class SamPasswordComponent {
     }
   };
 
-  protected states = {
+  public states = {
     uid: Math.floor(Math.random() * 89999 + 10000),
     toggle: false,
     error: {
@@ -91,12 +143,11 @@ export class SamPasswordComponent {
     ]);
 
     this.confirmPassword.setValue('');
-
     this.password.updateValueAndValidity();
 
     this.password.valueChanges.subscribe(data => this.updateState());
     this.confirmPassword.valueChanges.subscribe(data => {
-      this.updateState()
+      this.updateState();
       this.password.updateValueAndValidity();
     });
   }

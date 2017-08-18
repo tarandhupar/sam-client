@@ -1,6 +1,9 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Financial Information - {{ viewModel.title }}</div>
+<h2 class="sam-ui header">
+  Obligations
+</h2>
+
 <form [formGroup]="finObligationsForm">
-  <div class="usa-grid">
+  <div class="sam-ui segment">
     <div class="fal-label-margin"> Select if applicable</div>
     <sam-checkbox
       [control]="finObligationsForm.controls['isFundedCurrentFY']"
@@ -8,19 +11,25 @@
       [options]="currentFiscalYearCheckboxConfig.options"
        formControlName="isFundedCurrentFY">
     </sam-checkbox>
-    <div [attr.id]="'fal-obligation-obligationList'" class="fal-obligations-label">Obligations</div>
+  </div>
+  
+  <div class="sam-ui segment">
+    <div [attr.id]="'fal-obligation-obligationList'" class="fal-obligations-label">
+      Obligations
+    </div>
     <falObligationFYTable
       [fyYearOptions] = "fyYearOptions"
       [hideAddButton]="hideAddButton"
       [attr.id]="'financial-obligation-fy-table'"
       [obligationsInfo]="obligationsInfo"
       [total] = "totalvalue"
-      (obligationTableActionHandler)="obligationActionHandler($event)" #obligationTable></falObligationFYTable>
-
+      (obligationTableActionHandler)="obligationActionHandler($event)" #obligationTable>
+    </falObligationFYTable>
+    
     <obligation-subform [acCategories]="ac_categories"  [fyYearOptions] = "fyYearOptions" [hideAddButton]="hideAddButton" [attr.id]="'financial-obligation-subform'" (subFormObligActionHandler)="obligationActionHandler($event)"
                          [options] = "options"
                          [toggleAttleatOneEntryError]="toggleAttleatOneEntryError"
-                        #obligationSubForm></obligation-subform>
-
+                        #obligationSubForm>
+    </obligation-subform>
   </div>
 </form>

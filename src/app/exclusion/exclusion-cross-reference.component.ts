@@ -13,9 +13,9 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 			<br />
 			<strong>Exclusion Type: </strong>{{crossReference.exclusionType}}
 			<br />
-			<strong>Active Date: </strong>{{crossReference.activateDate}}
+			<strong>Active Date: </strong>{{crossReference.activateDate | date: 'MMM dd, y'}}
 			<br />
-			<strong>Termination Date: </strong>{{crossReference.terminationDate}}
+			<strong>Termination Date: </strong>{{crossReference.terminationDate != 'Indefinite' ? (crossReference.terminationDate | date: 'MMM dd, y') : crossReference.terminationDate}}
 			<br />
 			<br />
 		</div>

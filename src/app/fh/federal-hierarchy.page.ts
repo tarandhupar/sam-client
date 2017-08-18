@@ -199,6 +199,7 @@ export class FederalHierarchyPage {
   setUserRole(raw){
     let createType = raw._embedded[1]._links[1].link.rel;
     this.userRole = "officeAdmin";
+    this.adminOrgKey = this.user.agencyID;
 
     if(createType === "Sub-Tier"){
       this.userRole = "deptAdmin";
@@ -237,6 +238,7 @@ export class FederalHierarchyPage {
   }
 
   onSelectAdminOrg(val){
+
     this.showAdminOrg = val;
     this.curPage = 0;
     if(this.isDefaultResult()){
@@ -340,7 +342,6 @@ export class FederalHierarchyPage {
       if(orgStatusModel.length === 1 && orgStatusModel[0].toLowerCase() === 'inactive'){
         this.curPageOrgs = [];
       }
-
       this.totalRecords = this.curPageOrgs.length;
       this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
       this.updateRecordsText();

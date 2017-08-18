@@ -76,6 +76,7 @@ export class FALFormOverviewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.createForm();
     this.service.getFunctionalCodesDict().subscribe(
       data => this.parseFunctionalCodes(data),
       error => {
@@ -83,8 +84,7 @@ export class FALFormOverviewComponent implements OnInit {
       });
 
     this.errorService.viewModel = this.viewModel;
-
-    this.createForm();
+    
     if (!this.viewModel.isNew) {
       this.updateForm();
     }

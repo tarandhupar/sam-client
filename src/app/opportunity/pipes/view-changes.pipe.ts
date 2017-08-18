@@ -1010,15 +1010,9 @@ export class ViewChangesPipe implements PipeTransform {
     };
     return differences;
   }
-
-  private findDictionary(key: String, dictionaries: any): any[] {
-    let dictionary = _.find(dictionaries._embedded['dictionaries'], { id: key });
-
-    if (dictionary && typeof dictionary.elements !== undefined) {
-      return dictionary.elements;
-    } else {
-      return [];
-    }
+  
+  private findDictionary(key: any, dictionaries: any): any[] {
+    return dictionaries[key] ? dictionaries[key] : [];
   }
 }
 

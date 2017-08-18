@@ -39,19 +39,7 @@ export class OpportunityService{
 
     return this.oAPIService.call(apiParam);
   }
-
-  getOpportunityDictionary(ids: string) {
-    let apiParam = {
-        name: 'opportunity',
-        suffix: '/dictionaries',
-        oParam: {
-          ids: ids
-        },
-        method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
+  
 
   getPackages(noticeIds: string){
     let apiParam = {

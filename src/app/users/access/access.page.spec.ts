@@ -16,6 +16,8 @@ import { WorkspaceTemplateComponent } from "../../app-templates/workspace/worksp
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { PipesModule } from "../../app-pipes/app-pipes.module";
 import { UserPic } from "../user-pic/user-pic.component";
+import { UserService } from "../user.service";
+import { UserServiceMock } from "../user.service.mock";
 
 let mockActivatedRoute = {
   parent: {
@@ -75,6 +77,7 @@ describe('The User Access Page', () => {
       ],
       providers: [
         AlertFooterService,
+        { provide: UserService, useClass: UserServiceMock },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: UserAccessService, useValue: UserAccessMock },
       ]

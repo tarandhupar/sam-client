@@ -18,6 +18,7 @@ import {ProcessOpportunityHistoryPipe} from "./pipes/process-opportunity-history
 import {SetDisplayFields} from "./pipes/set-display-fields.pipe";
 import {GetResourceTypeInfo} from "./pipes/get-resource-type-info.pipe";
 import {SidenavHelper} from "../app-utils/sidenav-helper";
+import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 
 @Component({
   moduleId: __filename,
@@ -86,7 +87,7 @@ export class OpportunityPage implements OnInit {
   historyByProcurementType: any;
   organization: any;
   currentUrl: string;
-  dictionary: any;
+  //dictionary: any;
   attachments: any = [];
   packages: any = [];
   relatedOpportunities:any;
@@ -106,6 +107,9 @@ export class OpportunityPage implements OnInit {
   private apiStreamSub: Subscription;
   showRevisionMessage: boolean = false;
   qParams: any;
+  dictionariesUpdated: boolean = false;
+  history: any;
+  noHistory: boolean;
 
 
   errorOrganization: any;
@@ -140,6 +144,7 @@ export class OpportunityPage implements OnInit {
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
     private fhService:FHService,
+    private dictionaryService: DictionaryService,
     private location: Location) {
 
     router.events.subscribe(s => {
@@ -506,23 +511,22 @@ export class OpportunityPage implements OnInit {
 
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type,fo_justification_authority').subscribe(data => {
-      // do something with the dictionary api
-      this.dictionary = data;
-    }, err => {
-      console.log('Error loading dictionaries: ', err);
-    });
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('classification_code,naics_code,set_aside_type,fo_justification_authority');
+    if (filteredDictionaries===''){
+      this.dictionariesUpdated = true;
+    } else {
+      this.dictionaryService.getOpportunityDictionary(filteredDictionaries).subscribe(data => {
+        // do something with the dictionary api
+        this.dictionariesUpdated = true;
+      }, err => {
+        console.log('Error loading dictionaries: ', err);
+      });
+    }
   }
 
 
-  private findDictionary(key: String): any[] {
-    let dictionary = _.find(this.dictionary._embedded['dictionaries'], { id: key });
-
-    if (dictionary && typeof dictionary.elements !== undefined) {
-      return dictionary.elements;
-    } else {
-      return [];
-    }
+  private findDictionary(key: any): any[] {
+    return this.dictionaryService.dictionaries[key] ? this.dictionaryService.dictionaries[key] : [];
   }
 
   private loadHistory(opportunity: Observable<any>) {
@@ -540,12 +544,18 @@ export class OpportunityPage implements OnInit {
     });
     historyStream.subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
-        let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
-        let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi, this.qParams);
-        this.processedHistory = pipedHistory.processedHistory;
-        if (pipedHistory.showRevisionMessage){
-          this.showRevisionMessage = pipedHistory.showRevisionMessage;
+        this.history = historyAPI;
+        if (this.history.content.history.length < 1){
+          this.noHistory = true;
+        } else {
+          let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
+          let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi, this.qParams);
+          this.processedHistory = pipedHistory.processedHistory;
+          if (pipedHistory.showRevisionMessage){
+            this.showRevisionMessage = pipedHistory.showRevisionMessage;
+          }
         }
+
       }, err => {
         console.log('Error loading history: ', err);
       });
@@ -692,10 +702,10 @@ export class OpportunityPage implements OnInit {
         if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined') {
           this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
             this.previousOpportunityLocation = data;
-            this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+            this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionaryService.dictionaries, this.opportunityLocation, this.previousOpportunityLocation);
           });
         } else {
-          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionaryService.dictionaries, this.opportunityLocation, this.previousOpportunityLocation);
         }
       }
     }, err => {

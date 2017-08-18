@@ -62,9 +62,8 @@ export class FALAssistanceComponent implements OnInit {
 
   deadlinesList:FormArray = new FormArray([]);
   deadlineSubform:FormGroup = this.fb.group({
-    start:"",
-    end: "",
-    description:""
+    dateRange: ['', [falCustomValidatorsComponent.dateRangeRequired, falCustomValidatorsComponent.dateRangeValidation]],
+    description: ""
   });
   constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {}
 
@@ -73,13 +72,12 @@ export class FALAssistanceComponent implements OnInit {
     this.setDictOptions();
     this.createForm();
 
-    this.falAssistanceForm.valueChanges.subscribe(data => this.updateViewModel(data));
-    this.deadlinesList.valueChanges.subscribe(data => this.updateDeadlineViewModel(data));
-
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
+    this.falAssistanceForm.valueChanges.subscribe(data => this.updateViewModel(data));
   }
+
   setDictOptions(){
     this.service.getAssistanceDict().subscribe(data => {
         for(let flag of data['deadline_flag']){
@@ -100,7 +98,8 @@ export class FALAssistanceComponent implements OnInit {
     this.falAssistanceForm = this.fb.group({
       deadlines: this.fb.group({
         flag: '',
-        description: ''
+        description: '',
+        list: this.fb.array([])
       }),
       preApplicationCoordination: this.fb.group({
         reports: '',
@@ -170,10 +169,6 @@ export class FALAssistanceComponent implements OnInit {
     });
   }
 
-  updateDeadlineViewModel(data){
-    this.viewModel.deadlineList = data;
-  }
-
   updateViewModel(data) {
     //get reports
     let reports = [];
@@ -184,9 +179,14 @@ export class FALAssistanceComponent implements OnInit {
         isSelected: true
       } );
     }
+    for(let item of data.deadlines.list){
+      item.start = (item.dateRange && item.dateRange.startDate ? item.dateRange.startDate : null);
+      item.end = (item.dateRange && item.dateRange.endDate ? item.dateRange.endDate : null);
+    }
 
     this.viewModel.deadlineFlag = data.deadlines.flag || null;
     this.viewModel.deadlineDesc = data.deadlines.description || null;
+    this.viewModel.deadlineList = data.deadlines.list || null;
     this.viewModel.preAppCoordReports = reports;
     this.viewModel.preAppCoordDesc = data.preApplicationCoordination.description || null;
     this.viewModel.appProcIsApp = data.applicationProcedure.isApplicable[0] || null;
@@ -221,9 +221,17 @@ export class FALAssistanceComponent implements OnInit {
     //deadline list
     if(this.viewModel.deadlineList.length > 0){
       for(let assist of this.viewModel.deadlineList){
-        this.deadlineSubform.setValue(assist);
-        let formArr:FormArray = <FormArray>this.deadlinesList;
-        formArr.push(_.cloneDeep(this.deadlineSubform));
+        let item = {
+          dateRange: {
+            startDate: assist.start,
+            endDate: assist.end
+          },
+          description: assist.description
+        };
+
+        this.deadlineSubform.setValue(item);
+        //let formArr:FormArray = <FormArray>this.deadlinesList;
+        (<FormArray>this.falAssistanceForm.get('deadlines.list')).push(_.cloneDeep(this.deadlineSubform));
       }
       this.deadlineSubform.reset();
     }
@@ -266,43 +274,53 @@ export class FALAssistanceComponent implements OnInit {
 
     setTimeout(() => {
       this.updateErrors();
+      //this.updateSubformErrors();
     });
 
   }
 
   formatAssistInfo(assistInfo){
-    let startDate = moment(assistInfo.start).format('MMMM DD, YYYY');
-    let endDate = moment(assistInfo.end).format('MMMM DD, YYYY');
-
     let label = '';
+    if(assistInfo.dateRange) {
+      let startDate = '';
+      let endDate = '';
 
-    if (assistInfo.start || assistInfo.end) {
-      if (assistInfo.start && assistInfo.end) { // when both start and end exists
-        label = startDate + ' - ' + endDate;
-      }
+      if(assistInfo.dateRange.startDate)
+        startDate = moment(assistInfo.dateRange.startDate).format('MMMM DD, YYYY');
 
-      else { // when only one of start and end exists
-        if (assistInfo.start) {
-          label = startDate;
+      if(assistInfo.dateRange.endDate)
+        endDate = moment(assistInfo.dateRange.endDate).format('MMMM DD, YYYY');
+
+
+      if (assistInfo.dateRange.startDate || assistInfo.dateRange.endDate) {
+        if (assistInfo.dateRange.startDate && assistInfo.dateRange.endDate) { // when both start and end exists
+          label = startDate + ' - ' + endDate;
         }
-        if (assistInfo.end) {
-          label = endDate;
-        }
-      }
 
-      label += '. ';
+        else { // when only one of start and end exists
+          if (assistInfo.dateRange.startDate) {
+            label = startDate;
+          }
+          if (assistInfo.dateRange.endDate) {
+            label = endDate;
+          }
+        }
+
+        label += '. ';
+      }
     }
 
     if(assistInfo.description) {
       label += assistInfo.description;
     }
+
     return label;
   }
 
   private updateErrors() {
 
     this.errorService.viewModel = this.viewModel;
-
+    this.errorService.validateDeadlineList();
     this.updateControlError(this.falAssistanceForm.get('deadlines').get('flag'), this.errorService.validateDeadlinesFlag().errors);
     this.updateControlError(this.falAssistanceForm.get('preApplicationCoordination').get('description'), this.errorService.validatePreAppCoordAddInfo().errors);
     this.updateControlError(this.falAssistanceForm.get('selectionCriteria').get('description'), this.errorService.validateSelCritDescription().errors);
@@ -325,7 +343,7 @@ export class FALAssistanceComponent implements OnInit {
   }
 
   fmArrayChange(data){
-    let formArray= <FormArray>this.deadlinesList;
+    let formArray= <FormArray>this.falAssistanceForm.get('deadlines.list');
     while(formArray.value.length>0){
       formArray.removeAt(0);
     }

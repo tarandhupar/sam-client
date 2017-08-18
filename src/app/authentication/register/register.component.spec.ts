@@ -1,17 +1,17 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
+import { cloneDeep, merge } from 'lodash';
+
+import { FHService, IAMService, WrapperService } from 'api-kit';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { FHService, WrapperService } from 'api-kit';
-
-import { AgencyPickerComponent } from '../../app-components/agency-picker/agency-picker.component';
-import { SamKBAComponent, SamPasswordComponent } from '../shared';
+import { AppComponentsModule, AgencyPickerComponent } from 'app-components';
 import { RegisterMainComponent } from './register-main.component';
 
 const response = Observable.of({
@@ -41,7 +41,7 @@ const apiStub = {
   }
 };
 
-xdescribe('[IAM] Registration', () => {
+describe('[IAM] Registration', () => {
   let component: RegisterMainComponent;
   let fixture: ComponentFixture<RegisterMainComponent>;
 
@@ -51,14 +51,12 @@ xdescribe('[IAM] Registration', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
-        SamUIKitModule
+        SamUIKitModule,
+        AppComponentsModule,
       ],
 
       declarations: [
-        AgencyPickerComponent,
         RegisterMainComponent,
-        SamKBAComponent,
-        SamPasswordComponent,
       ],
 
       providers: [
@@ -87,13 +85,13 @@ xdescribe('[IAM] Registration', () => {
 
     fixture = TestBed.createComponent(RegisterMainComponent);
     component = fixture.componentInstance;
+
+    component.ngOnInit();
+    fixture.detectChanges();
   });
 
   it('verify data-binding for email notification setting', () => {
     let checkbox;
-
-    component.ngOnInit();
-    fixture.detectChanges();
 
     checkbox = fixture.debugElement.query(By.css('#email-notification')).nativeElement
 
@@ -105,4 +103,59 @@ xdescribe('[IAM] Registration', () => {
     fixture.detectChanges();
     expect(component.user.emailNotification).toBe(false);
   });
+
+  it('verify form input bindings', async(() => {
+    let form,
+        api = TestBed.get(IAMService),
+        de = fixture.debugElement,
+        kba = de.query(By.css('.kba')).nativeElement,
+        mock = {
+          title:             null,
+          suffix:            '',
+          officeID:          '',
+          userPassword:      '',
+          accountClaimed:    true,
+          emailNotification: null,
+        },
+
+        questions,
+        answers;
+
+    // Load KBA Security Questions
+    api.iam.kba.questions(data => {
+      component.questions[0] = cloneDeep(data.questions);
+      component.questions[1] = cloneDeep(data.questions);
+      component.questions[2] = cloneDeep(data.questions);
+    });
+
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      questions = kba.querySelectorAll('select');
+      answers = kba.querySelectorAll('input');
+
+      mock = merge(mock, {
+        firstName: de.query(By.css('#first-name')).nativeElement.value,
+        middleName: de.query(By.css('#middle-name')).nativeElement.value,
+        lastName: de.query(By.css('#last-name')).nativeElement.value,
+        workPhone: de.query(By.css('#phone-number')).nativeElement.value.toString().replace(/[^0-9]/g, ''),
+        kbaAnswerList: [
+          {
+            questionId: parseInt(questions[0].value),
+            answer: answers[0].value,
+          },
+          {
+            questionId: parseInt(questions[1].value),
+            answer: answers[1].value,
+          },
+          {
+            questionId: parseInt(questions[2].value),
+            answer: answers[2].value,
+          },
+        ]
+      });
+
+      expect(component.userForm.value).toEqual(mock);
+    });
+  }));
 });

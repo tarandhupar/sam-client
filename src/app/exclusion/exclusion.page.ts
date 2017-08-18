@@ -32,6 +32,7 @@ export class ExclusionsPage implements OnInit, OnDestroy {
   public logoInfo: any;
   pageRoute: string;
   selectedPage: number = 0;
+  urlIndex: number = 0;
   entitySideNavContent: any;
   sidenavModel = {
     "label": "Exclusion",
@@ -79,7 +80,9 @@ export class ExclusionsPage implements OnInit, OnDestroy {
         }, (err) => {
           this.errorLogo = true;
         });
-		this.pageRoute = this.currentUrl;
+		this.urlIndex = this.currentUrl.indexOf("?");
+		let url = this.currentUrl.substring(0, this.urlIndex)
+		this.pageRoute = decodeURIComponent(url);
 		this.entitySideNavContent = {
         "label": "Exclusion",
         "route": this.pageRoute,

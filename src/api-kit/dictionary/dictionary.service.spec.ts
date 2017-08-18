@@ -32,7 +32,7 @@ describe('src/api-kit/dictionary/dictionary.service.spec.ts', () => {
   }));
 
   it('DictionaryService unit tests using TestBed: should return response when a dictionary is requested', inject([DictionaryService], (testService: DictionaryService) => {
-    testService.getDictionaryById("yes_no").subscribe((res: Response) => {
+    testService.getProgramDictionaryById("yes_no").subscribe((res: Response) => {
       expect(res['yes_no']).toBeDefined();
       expect(res['yes_no'][0]['elements']).toBeDefined();
       expect(res['yes_no'][0]['description']).toBeDefined();

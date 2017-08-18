@@ -1,110 +1,144 @@
-<workspace-template class="user-roles-directory clearfix">
-  <div workspace-header class="clearfix">
-    <sam-breadcrumbs class='pull-left' [crumbs]="crumbs"></sam-breadcrumbs>
-    <div class="pull-right clearfix">
-      <label class="pull-left" style="margin-top: .4em; margin-right: .3em">Find User</label>
-      <sam-autocomplete class="pull-right"
-                        rmsusers
-                        #userPicker
-                        [ngModelOptions]="{standalone: true}"
-                        [allowAny]="false"
-                        [(ngModel)]="dummySearchValue"
-                        [labelText]="''"
-                        [config]="userConfig"
-                        (enterEvent)="onUserChange($event)">
-      </sam-autocomplete>
-    </div>
+<page
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Role Management">
 
-  </div>
-  <div workspace-left>
-    <div class="clearfix">
-      <a class="pull-right pointer-hover" (click)="onClearAllClick()">Clear all</a>
-    </div>
-    <sam-solo-accordian titleText="Organization">
-      <div class="org-picker-wrapper">
-        <sam-agency-picker
-          #picker
-          [multimode]="false"
-          (organization)="onOrganizationChange($event)"
-        ></sam-agency-picker>
-      </div>
-    </sam-solo-accordian>
-    <sam-solo-accordian titleText="Domain">
+  <sidebar>
+    <div class="sam-ui segment">
+      <h4 class="sam-ui header">Search</h4>
+      <sam-autocomplete
+        #userPicker
+        [ngModelOptions]="{standalone: true}"
+        [allowAny]="true"
+        [(ngModel)]="dummySearchValue"
+        [labelText]="''"
+        [config]="userConfig"
+        (enterEvent)="onUserChange($event)"
+        [httpRequest]="request"
+      ></sam-autocomplete>
+
+      <div class="sam-ui divider"></div>
+
+      <h4 class="sam-ui header">Organization</h4>
+      <sam-agency-picker
+        #picker
+        [multimode]="false"
+        (organization)="onOrganizationChange($event)">
+      </sam-agency-picker>
+
+      <div class="sam-ui divider"></div>
+
+      <h4 class="sam-ui header">Domain</h4>
       <sam-radio-button
         [name]="'domain-select'"
         [options]="domainOptions"
         [(model)]="selectedDomainId"
-        (modelChange)="onSelectDomain($event)"
-      ></sam-radio-button>
-    </sam-solo-accordian>
-    <sam-solo-accordian titleText="Roles" *ngIf="roleOptions && roleOptions.length">
-      <sam-radio-button
-        [name]="'role-select'"
-        [options]="roleOptions"
-        [(model)]="selectedRoleId"
-        (modelChange)="onSelectRole($event)"
-      ></sam-radio-button>
-    </sam-solo-accordian>
-  </div>
-  <div workspace-right>
-    <div class="clearfix">
-      <sam-title-subtitle class='pull-left' titleText="Workspace" subtitle="Role Management"></sam-title-subtitle>
-      <button routerLink='/access/bulk-update' class="pull-right usa-button usa-button-primary m_R-0">Bulk Update</button>
-    </div>
-    <div *ngIf="resultsOnThisPage" class="title-and-result-count clearfix m_T-4x">
-      <div class="result-count text-lighter pull-left" style="line-height: 44px">Showing {{resultCount()}} results</div>
-      <div class="pull-right">
-        <label for="sort-by" style="display: inline-block" class="m_T-0">Sort by</label>
-        <select (change)="doSearch()" id="sort-by" [(ngModel)]="sort" style="display: inline-block; width: initial">
-          <option
-            *ngFor="let option of sortOptions"
-            [value]="option.value"
-          >{{option.label}}</option>
-        </select>
-      </div>
-    </div>
-    <ng-container *ngIf="users && users.length">
-      <div class="user-row" *ngFor="let user of users">
-        <!-- User Icon and name -->
-        <div class="clearfix">
-          <div class="pull-left">
-            <placeholder-profile-pic></placeholder-profile-pic>
-          </div>
-          <div class="pull-left m_L-4x">
-            <h2>{{user.user.fullName}}</h2>
-            <h3 class="m_T-0" *ngIf="user?._links.view_access"><a class="pointer-hover" [routerLink]="['/users', user.user.email, 'access']">{{user.user.email}}</a></h3>
-            <h3 class="m_T-0" *ngIf="!user?._links.view_access">{{user.user.email}}</h3>
-          </div>
-        </div>
+        (modelChange)="onSelectDomain($event)">
+      </sam-radio-button>
 
-        <div class="m_T-2x">
-          <!-- Organization list (if exists) -->
-          <div *ngIf="user.tiers">
-            <div *ngFor="let tier of user.tiers">
-              <strong [ngClass]="tier.name === 'Uncategorized' && 'text-lighter'">{{tier.name}}</strong>
-              <br>
-              <span *ngFor="let org of tier.organizations; let i = index">
-                <span *ngIf="i !== 0">,&nbsp;</span>
-                <span *ngIf="!org.isSelected">{{org.name}}</span>
-                <span class='selected-org' *ngIf="org.isSelected">{{org.name}}</span>
-              </span>
+      <ng-container *ngIf="roleOptions && roleOptions.length">
+        <div class="sam-ui divider"></div>
+        <h4 class="sam-ui header">Roles</h4>
+        <sam-radio-button
+          [name]="'role-select'"
+          [options]="roleOptions"
+          [(model)]="selectedRoleId"
+          (modelChange)="onSelectRole($event)">
+        </sam-radio-button>
+      </ng-container>
+
+      <div class="sam-ui hidden divider"></div>
+
+      <a class="sam-ui dark blue button" (click)="onClearAllClick()">
+        Clear all
+      </a>
+
+    </div>
+    <div class="sam-ui hidden section divider"></div>
+  </sidebar>
+
+  <button routerLink='/access/bulk-update' class="usa-button">
+    Bulk Update
+  </button>
+
+  <!-- Page results -->
+  <results *ngIf="users && users.length"
+    [totalElements]="totalResults"
+    [totalPages]="totalPages"
+    [currentPage]="1"
+    (pageChange)="onPageChange($event)">
+
+    <sam-sort [(ngModel)]="sort"
+                [options]="sortOptions"
+                (ngModelChange)="doSearch()"
+    ></sam-sort>
+
+    <div class="sam-ui segment" *ngFor="let user of users">
+
+      <div class="sam-ui divided items">
+        <div class="item">
+          <!-- User Icon and name -->
+          <!-- <placeholder-profile-pic></placeholder-profile-pic> -->
+          <div class="sam-ui image" style="background-color: transparent;">
+            <img style="width: 50px; opacity: .5;" src="src/assets/img/sam-icons/user-darkgray.png">
+          </div>
+          <div class="content">
+            <h3 class="sam-ui header" *ngIf="user?.user?.fullName">
+              {{user.user.fullName}}
+            </h3>
+            <div class="description">
+              <div class="sam-ui medium header">
+                Email
+                <div class="sub header">
+                  <ng-container *ngIf="user?._links.view_access">
+                    <a [routerLink]="['/users', user.user.email, 'access']">
+                      {{user.user.email}}
+                    </a>
+                  </ng-container>
+                  <ng-container *ngIf="!user?._links.view_access">
+                    {{user.user.email}}
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Organization list (if exists) -->
+              <ng-container *ngIf="user.tiers">
+                <ng-container *ngFor="let tier of user.tiers">
+                  <div class="sam-ui medium header">
+                    <strong [ngClass]="tier.name === 'Unavailable' && 'text-lighter'">{{tier.name === 'Unavailable' ? 'Org type unavailable' : tier.name}}</strong>
+                    <div class="sub header">
+                      <span *ngFor="let org of tier.organizations; let i = index">
+                        <ng-container *ngIf="i !== 0">,&nbsp;</ng-container>
+                        <ng-container *ngIf="!org.isSelected">
+                          {{formatOrgName(org)}}
+                        </ng-container>
+                        <span *ngIf="org.isSelected" [style.background]="org.isSelected ? '#fdb81e' : ''">
+                          {{formatOrgName(org)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
             </div>
-          </div>
 
-          <!-- If no organization list -->
-          <div *ngIf="!user.tiers || !user.tiers.length">
-            <i>No roles assigned for this user</i>
           </div>
         </div>
+      </div>
 
-      </div>
-      <!-- Pagination -->
-      <div class="pagination-row text-center" *ngIf="totalPages && totalPages > 0">
-        <sam-pagination [totalPages]="totalPages" [currentPage]="1" (pageChange)="onPageChange($event)"></sam-pagination>
-      </div>
-    </ng-container>
-    <div class="text-center">
-      <i *ngIf="!(users && users.length)">No results found for selected criteria</i>
+      <!-- If no organization list -->
+      <p *ngIf="!user.tiers || !user.tiers.length">
+        No roles assigned for this user
+      </p>
+
     </div>
-  </div>
-</workspace-template>
+
+  </results>
+
+  <!-- No results -->
+  <p *ngIf="!(users && users.length)">
+    No results found for selected criteria
+  </p>
+
+</page>

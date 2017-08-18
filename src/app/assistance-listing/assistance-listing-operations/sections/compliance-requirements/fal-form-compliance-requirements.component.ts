@@ -1,6 +1,5 @@
 import {Component, OnInit, Input, ViewChild, EventEmitter, Output} from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
-import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
 import { FALFormService } from "../../fal-form.service";
 import { FALFormViewModel } from "../../fal-form.model";
@@ -11,7 +10,7 @@ import {
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 
 @Component({
-  providers: [ProgramService, DictionaryService, FALFormService],
+  providers: [FALFormService],
   selector: 'fal-form-compliance-requirements',
   templateUrl: 'fal-form-compliance-requirements.template.html'
 })
@@ -124,15 +123,14 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
               private dictService: DictionaryService,
               private errorService: FALFormErrorService) {
 
-    dictService.getDictionaryById('cfr200_requirements').subscribe(data => {
-      for(let requirement of data['cfr200_requirements']) {
-        this.policyRequirementsConfig.checkbox.options.push({
-          value: requirement.code,
-          label: requirement.value,
-          name: 'policy-requirements-checkbox-' + requirement.code
-        });
-      }
-    });
+    let filteredDictionaries = this.dictService.filterDictionariesToRetrieve('cfr200_requirements');
+    if (filteredDictionaries===''){
+      this.addRequirements(dictService.dictionaries);
+    } else {
+      dictService.getProgramDictionaryById('cfr200_requirements').subscribe(data => {
+        this.addRequirements(data);
+      });
+    }
   }
 
   ngOnInit() {
@@ -605,5 +603,15 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     fcontrol.clearValidators();
     fcontrol.markAsPristine();
     fcontrol.setErrors(null);
+  }
+
+  addRequirements(data){
+    for(let requirement of data['cfr200_requirements']) {
+      this.policyRequirementsConfig.checkbox.options.push({
+        value: requirement.code,
+        label: requirement.value,
+        name: 'policy-requirements-checkbox-' + requirement.code
+      });
+    }
   }
 }

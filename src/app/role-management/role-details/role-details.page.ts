@@ -9,6 +9,11 @@ import { Title } from "@angular/platform-browser";
   templateUrl: 'role-details.page.html'
 })
 export class RoleDetailsPage {
+  crumbs = [
+    { url: '/workspace', breadcrumb: 'Workspace'},
+    { url: '/access/workspace', breadcrumb: 'Definitions'},
+    { breadcrumb: ''}
+  ];
   mode: 'edit'|'new'|'old' = 'new';
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
@@ -40,6 +45,7 @@ export class RoleDetailsPage {
 
   ngOnInit() {
     this.determineMode();
+    this.crumbs[2].breadcrumb = this.mode === 'new' ? 'New Role' : 'Edit Role';
     this.setTitle();
     this.getAllDomains();
     if (this.mode === 'edit') {
@@ -192,8 +198,10 @@ export class RoleDetailsPage {
         if (this.mode === 'edit') {
           // find the text label for role
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.id);
-          if (r) {
-            this.role = r.label;
+
+          this.role = _.get(defs, '[0].roleDefinitionMapContent[0].role.val');
+          if (this.role) {
+            //this.role = r.label;
             this.originalRole = _.clone(this.role);
           } else {
             this.footerAlert.registerFooterAlert({
@@ -322,7 +330,16 @@ export class RoleDetailsPage {
           this.router.navigateByUrl('/access/workspace');
         },
         err => {
-          this.showGenericServicesError();
+          if (err.status === 409) {
+            this.errors.role = 'This role name exists. Duplicate role names not allowed.';
+            this.footerAlert.registerFooterAlert({
+              description: 'This role name exists. Duplicate role names not allowed.',
+              type: 'error',
+              timer: 3200,
+            })
+          } else {
+            this.showGenericServicesError();
+          }
         }
       );
 

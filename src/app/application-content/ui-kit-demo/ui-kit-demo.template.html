@@ -606,7 +606,7 @@
   <div class="usa-grid">
     <h2 class="usa-width-one">Name Entry &lt;sam-name-entry&gt;</h2>
     <div class="usa-width-one-half">
-      <sam-name-entry [model]="nameModel" [prefix]="'ui-kit'"></sam-name-entry>
+      <sam-name-entry [(ngModel)]="nameModel" [prefix]="'ui-kit'"></sam-name-entry>
     </div>
     <div class="usa-width-one-half">
       <h3>Model</h3>
@@ -760,27 +760,6 @@
   </div>
 </div>
 <div class="usa-grid">
-  <div class="usa-grid">
-    <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
-    <div class="usa-width-one-half">
-      <sam-autocomplete-dropdown [(ngModel)]="searchValue" [name]="searchName" [options]="dropdownSearch"></sam-autocomplete-dropdown>
-    </div>
-    <div class="usa-width-one-half">
-      {{searchValue}}
-    </div>
-  </div>
-
-  <div class="usa-grid">
-    <h2 class="usa-width-one">MultiSelect Dropdown</h2>
-    <div class="usa-width-one-half">
-      <sam-list-display [newValue]="searchValue1" (emitSelectedItems)="getDropdownListItems($event)" [(ngModel)]="testModel1">
-        <sam-autocomplete-dropdown [(ngModel)]="searchValue1" [name]="searchName1" [options]="dropdownSearch1" [button]="button" (onButtonPressed)="getButton($event)"></sam-autocomplete-dropdown>
-      </sam-list-display>
-    </div>
-    <div class="usa-width-one-half">
-      Model value: {{testModel1}}
-    </div>
-  </div>
 
   <div class="usa-grid">
     <h2 class="usa-width-one">SAM Download</h2>

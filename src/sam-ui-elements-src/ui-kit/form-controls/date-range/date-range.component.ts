@@ -3,13 +3,14 @@ import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validators, ValidatorFn, AbstractControl} from "@angular/forms";
 import { SamDateComponent } from "../date/date.component";
 import { SamDateTimeComponent } from "../date-time/date-time.component";
+import {SamFormService} from '../../form-service';
 
 //to do: move these to appropriate locations after validations are figured out for the ui-kit
 function dateRangeValidation(c:AbstractControl){
   if(c.value && c.value.startDate && c.value.endDate){
     let startDateM = moment(c.value.startDate);
     let endDateM = moment(c.value.endDate);
-    if(endDateM.diff(startDateM) < 0){
+    if(startDateM.get('year')>1000 && endDateM.get('year')>1000 && endDateM.diff(startDateM) < 0){
       return {
         dateRangeError: {
           message: "Invalid date range"
@@ -40,7 +41,7 @@ function dateRangeValidation(c:AbstractControl){
   return null;
 }
 function dateRangeRequired(c:AbstractControl){
-  if(!c.value || (!c.value.startDate && !c.value.endDate)){
+  if(c.dirty && (!c.value || (!c.value.startDate && !c.value.endDate))){
     return {
       dateRangeError: {
         message: "This field is required"
@@ -107,6 +108,14 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
   */
   @Input() type: string = "date";
   /**
+  * Toggles validations to display with SamFormService events
+  */
+  @Input() useFormService: boolean;
+  /**
+  * Toggles default component validations
+  */
+  @Input() defaultValidations: boolean = true;
+  /**
   * Event emitted when value changes
   */
   @Output() valueChange = new EventEmitter<any>();
@@ -120,7 +129,7 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
   private endDateValue;
   @ViewChild('wrapper') wrapper;
 
-  constructor() { }
+  constructor(private samFormService:SamFormService) { }
 
   ngOnInit() {
     if(!this.control){
@@ -130,15 +139,28 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
     if(this.control.validator){
       validators.push(this.control.validator);
     }
-    if(this.required){
-      validators.push(dateRangeRequired);
+    if(this.defaultValidations){
+      if(this.required){
+        validators.push(dateRangeRequired);
+      }
+      validators.push(dateRangeValidation);
     }
-    validators.push(dateRangeValidation);
     this.control.setValidators(validators);
-    this.control.valueChanges.subscribe(()=>{
+    if(!this.useFormService){
+      this.control.statusChanges.subscribe(()=>{
+        this.wrapper.formatErrors(this.control);
+      });
       this.wrapper.formatErrors(this.control);
-    });
-    this.wrapper.formatErrors(this.control);
+    }
+    else {
+      this.samFormService.formEventsUpdated$.subscribe(evt=>{
+        if((!evt['root']|| evt['root']==this.control.root) && evt['eventType'] && evt['eventType']=='submit'){
+          this.wrapper.formatErrors(this.control);
+        } else if((!evt['root']|| evt['root']==this.control.root) && evt['eventType'] && evt['eventType']=='reset'){
+          this.wrapper.clearError();
+        }
+      });
+    }
   }
 
   ngOnChanges() {
@@ -153,7 +175,6 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
     let format = this.type!="date-time"? this.INPUT_FORMAT : this.DT_INPUT_FORMAT;
     if (this.startDateValue) {
       // use the forgiving format (that doesn't need 0 padding) for inputs
-
       let m = moment(this.startDateValue, format);
       this.startModel.month = m.month() + 1;
       this.startModel.day = m.date();
@@ -201,8 +222,14 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
   }
 
   dateChange(){
-    let startDateString = this.getDate(this.startModel).format(this.OUTPUT_FORMAT);
-    let endDateString = this.getDate(this.endModel).format(this.OUTPUT_FORMAT);
+    let startDateString = ""; 
+    let endDateString = ""; 
+    if(!this.isClean(this.startModel)){
+      startDateString = this.getDate(this.startModel).format(this.OUTPUT_FORMAT);
+    }
+    if(!this.isClean(this.endModel)){
+      endDateString = this.getDate(this.endModel).format(this.OUTPUT_FORMAT);
+    }
     let output = {
         startDate: startDateString,
         endDate: endDateString
@@ -215,6 +242,12 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
     }
     this.onChange(output);
     this.valueChange.emit(output);
+  }
+
+  isClean(model) {
+    return (model.day===""|| model.day===null) &&
+      (model.month==="" || model.month===null) &&
+      (model.year==="" || model.year===null);
   }
 
   registerOnChange(fn) {
@@ -230,7 +263,7 @@ export class SamDateRangeComponent implements OnInit, OnChanges, ControlValueAcc
   }
 
   writeValue(value) {
-    if(value && typeof value == "object" && value['startDate'] && value['endDate']){
+    if(value && typeof value == "object" && (value['startDate'] || value['endDate'])){
       this.startDateValue = value.startDate;
       this.endDateValue = value.endDate;
       this.parseValueString();

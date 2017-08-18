@@ -111,18 +111,18 @@
       </section>
 
       <div class="sam-ui hidden section divider"></div>
-
-      <!-- Sub-Tier Agencies -->
-      <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0">
-        <ng-container [ngSwitch]="organization.type">
-          <ng-container *ngSwitchCase="'DEPARTMENT'">
+      
+      <!-- Sub-Tier Agencies -->    
+      <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0 && organization.type == 'DEPARTMENT'">
+        <!--<ng-container [ngSwitch]="organization.type">-->
+          <!--<ng-container *ngSwitchCase="'DEPARTMENT'">-->
             <h2 class="sam-ui header">Sub-Tier Agencies</h2>
-          </ng-container>
-          <ng-container *ngSwitchCase="'AGENCY'">
+          <!--</ng-container>-->
+<!--          <ng-container *ngSwitchCase="'AGENCY'">
             <h2 class="sam-ui header">Offices</h2>
-          </ng-container>
-        </ng-container>
-
+          </ng-container>-->
+        <!--</ng-container>-->
+        
         <p>
           Showing results
           <strong>
@@ -155,23 +155,23 @@
         <ng-container *ngSwitchCase="'DEPARTMENT'">
           <h2 class="sam-ui header">Sub-Tier Agencies</h2>
         </ng-container>
-        <ng-container *ngSwitchCase="'AGENCY'">
+<!--        <ng-container *ngSwitchCase="'AGENCY'">
           <h2 class="sam-ui header">Offices</h2>
-        </ng-container>
+        </ng-container>-->
         <div class="sam-ui medium header">
           <ng-container *ngSwitchCase="'DEPARTMENT'">
             <em>No Sub-Tiers are listed under this Department/Ind. Agency</em>
           </ng-container>
-          <ng-container *ngSwitchCase="'AGENCY'">
+<!--          <ng-container *ngSwitchCase="'AGENCY'">
             <em>No Offices are listed under this Sub-Tier</em>
-          </ng-container>
+          </ng-container>-->
         </div>
       </section>
 
       <!-- Pagination -->
-      <sam-pagination *ngIf="organization.type != 'OFFICE'"
-                      (pageChange)="pageChange($event)"
-                      [currentPage]="pageNum"
+      <sam-pagination *ngIf="organization.type == 'DEPARTMENT'" 
+                      (pageChange)="pageChange($event)" 
+                      [currentPage]="pageNum" 
                       [totalPages]="totalPages">
       </sam-pagination>
     </ng-container>

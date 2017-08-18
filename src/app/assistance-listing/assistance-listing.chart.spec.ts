@@ -67,7 +67,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * Basic check that some kind of chart is created
    */
   it('FinancialObligationChart Create Visualization: Should display chart', () => {
-    comp.ngOnChanges({}):
+    comp.ngOnChanges({});
     let chart = fixture.nativeElement.querySelector('#chart');
     expect(chart).not.toBeNull();
     expect(chart).toBeDefined();
@@ -84,7 +84,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * Basic check that some kind of table is created
    */
   it('FinancialObligationChart Create Visualization: Should display table', () => {
-    comp.ngOnChanges({}):
+    comp.ngOnChanges({});
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();

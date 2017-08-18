@@ -9,6 +9,7 @@ import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.s
 import {DateFormatPipe} from "../app-pipes/date-format.pipe";
 import {ProcessWageDeterminationHistory} from "./pipes/process-wd-history.pipe";
 import {SidenavHelper} from "../app-utils/sidenav-helper";
+import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 
 @Component({
   moduleId: __filename,
@@ -25,7 +26,6 @@ export class WageDeterminationPage implements OnInit {
   referenceNumber: any;
   revisionNumber: any;
   currentUrl: string;
-  dictionaries: any;
   services: string;
   servicesArray:any = [];
   constructionTypes: string;
@@ -37,6 +37,7 @@ export class WageDeterminationPage implements OnInit {
   showingLongHistory = false;
   revisionMessage: boolean = false;
   qParams: any;
+  dictionariesUpdated: boolean = false;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
@@ -56,6 +57,7 @@ export class WageDeterminationPage implements OnInit {
     private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe,
     private router: Router,
     private route: ActivatedRoute,
+    private dictionaryService: DictionaryService,
     private wgService: WageDeterminationService) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
@@ -140,13 +142,18 @@ export class WageDeterminationPage implements OnInit {
 
   private loadDictionary() {
     let dictionariesSubject = new ReplaySubject(1);
-    this.wgService.getWageDeterminationDictionary('wdStates, wdCounties, scaServices').subscribe(dictionariesSubject);
-    dictionariesSubject.subscribe(data => {
-      // do something with the dictionary api
-      this.dictionaries = data;
-    }, err => {
-      console.log('Error loading dictionaries: ', err);
-    });
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('wdStates,wdCounties,scaServices');
+    if (filteredDictionaries===''){
+      dictionariesSubject.next(filteredDictionaries);
+    } else {
+      this.dictionaryService.getWageDeterminationDictionary(filteredDictionaries).subscribe(dictionariesSubject);
+      dictionariesSubject.subscribe(data => {
+        this.dictionariesUpdated = true;
+      }, err => {
+        console.log('Error loading dictionaries: ', err);
+      });
+    }
+
     return dictionariesSubject;
   }
 
@@ -176,8 +183,7 @@ export class WageDeterminationPage implements OnInit {
             /** Process States **/
             // given a state code, look up the dictionary entry for that state (returns array of matches)
             let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-            let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
-            let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
+            let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], this.dictionaryService.dictionaries['wdStates'], 'elementId', false, '');
 
             // if a matching state was found, display its name otherwise display a warning message
             eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
@@ -190,8 +196,7 @@ export class WageDeterminationPage implements OnInit {
             } else if (eachLocation.counties != null) {
               // if there are any exceptions, display 'All counties except' before the list of counties
               let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-              let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
-              eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
+              eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, this.dictionaryService.dictionaries['wdCounties']);
             }
           }
 
@@ -225,6 +230,7 @@ export class WageDeterminationPage implements OnInit {
 
   private getServices(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDetermination, dictionaries, routeParam]) => {
+      this.dictionariesUpdated = true;
       //combileLatest has a weird behavior, fix for it
       if (routeParam.revisionnumber == wageDetermination.revisionNumber) {
         if (wageDetermination.services != null) {
@@ -232,8 +238,7 @@ export class WageDeterminationPage implements OnInit {
 
           for (let element of wageDetermination.services) {
             let serviceArray = [];
-            let servicesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'scaServices' }).elements;
-            let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
+            let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], this.dictionaryService.dictionaries['scaServices'], 'elementId', false, "");
             let serviceValue = (result instanceof Array && result.length > 0) ? result[0].value : [];
             let serviceDesc = (result instanceof Array && result.length > 0) ? result[0].description : [];
             serviceArray.push(serviceValue, serviceDesc);

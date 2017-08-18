@@ -3,6 +3,7 @@ import {ProgramService} from "../../../api-kit/program/program.service";
 import * as Cookies from 'js-cookie';
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
 import { FHService } from "../../../api-kit/fh/fh.service";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 
@@ -34,29 +35,54 @@ export class FALFormService {
   }
 
   getFunctionalCodesDict(){
-    return this.dictionaryService.getDictionaryById('functional_codes');
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('functional_codes');
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
 
   getSubjectTermsDict(multiTypeData){
-    return this.dictionaryService.getDictionaryById('program_subject_terms', '100', multiTypeData.join(','));
+    return this.dictionaryService.getProgramDictionaryById('program_subject_terms', '100', multiTypeData.join(','));
   }
 
   getAssistanceDict(){
     let dictionaries = ['deadline_flag', 'date_range'];
-    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
 
   getCriteria_Info_Dictionaries(){
     let dictionaries = ['applicant_types', 'beneficiary_types', 'phasing_assistance', 'assistance_usage_types'];
-    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
   getObligation_Info_Dictionaries(){
-    return this.dictionaryService.getDictionaryById('assistance_type');
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('assistance_type');
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
 
   getContactDict(){
     let dictionaries = ['states', 'countries'];
-    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
 
   getOrganization(id) {
@@ -90,4 +116,10 @@ export class FALFormService {
   getCfdaCode(orgId){
     return this.programService.getCfdaCode(orgId);
   }
+
+  isProgramNumberUnique(programNumber, programId, organizationId){
+    return this.programService.isProgramNumberUnique(programNumber, programId, FALFormService.getAuthenticationCookie(), organizationId);
+
+  }
+
 }

@@ -1,4 +1,4 @@
-import { inject, TestBed } from '@angular/core/testing';
+/*import { inject, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
@@ -42,3 +42,4 @@ describe('Workspace administration component', () => {
   });
 
 });
+*/

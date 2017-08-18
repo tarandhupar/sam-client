@@ -25,29 +25,48 @@ export class AssistanceListingWidgetComponent {
           console.log("Error getting permissions", error);
         });
       this.getProgramCountByStatus();
-      this.getCountRequests();
     }
   }
 
   getProgramCountByStatus() {
-    this.api.getProgramCountByStatus(this.cookieValue).subscribe(res => {
-      this.pendingApprovalCount = res.content['total_pending_listing'];
-      this.rejectedCount = res.content['total_rejected_listing'];
+    this.api.runProgram({Cookie: this.cookieValue, size: 0}).subscribe(res => {
+      if(res._embedded && res._embedded.facets) {
+        for(var facet of res._embedded.facets) {
+          switch(facet['name']) {
+            case 'status':
+                  this.setCounts(facet['buckets']);
+                  break;
+            case 'pendingChangeRequest':
+                  this.setCounts(facet['buckets']);
+                  break;
+          }
+        }
+      }
     },
     error => {
       console.log("Error getting program counts", error);
       this.pendingApprovalCount = null;
       this.rejectedCount = null;
+      this.pendingRequestCount = null;
     });
   }
 
-  getCountRequests() {
-    this.api.getCountPendingRequests(this.cookieValue).subscribe(res => {
-      this.pendingRequestCount = res;
-    },
-    error => {
-      console.log("Error getting request counts", error);
-      this.pendingRequestCount = null;
-    })
+  setCounts(data) {
+    for(var property in data){
+
+      switch(data[property]['name']){
+        case 'total_rejected_listing':
+          this.rejectedCount = data[property]['count'];
+          break;
+        case 'total_pending_listing':
+          this.pendingApprovalCount = data[property]['count'];
+          break;
+        case 'total_change_requests':
+          this.pendingRequestCount = data[property]['count'];
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

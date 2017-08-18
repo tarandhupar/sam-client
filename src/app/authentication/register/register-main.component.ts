@@ -50,8 +50,9 @@ export class RegisterMainComponent {
   };
 
   private token = '';
-  private questions = [];
   private differ: KeyValueDiffer;
+
+  public questions = [];
   public user: User = {
     _id: '',
     email: '',

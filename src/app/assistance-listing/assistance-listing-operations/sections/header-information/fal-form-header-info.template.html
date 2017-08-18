@@ -1,65 +1,85 @@
-<div id="fal-header-title" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}
-</div>
+<h2 class="sam-ui header">
+  Header Information
+</h2>
 
 <form [formGroup]="falHeaderInfoForm">
-  <sam-text *ngIf="!viewModel.isRevision"
-            [maxlength]="144"
-            [hint]="titleHint"
-            [control]="falHeaderInfoForm.controls['title']"
-            [name]="'title-input'"
-            [label]="'Title'"
-            [required]="true"
-            [attr.id]="'title-al-create'"
-            formControlName="title"></sam-text>
-
-  <div *ngIf="viewModel.isRevision">
+  
+  <div class="sam-ui segment">
+    <sam-text 
+      *ngIf="!viewModel.isRevision"
+      [maxlength]="144"
+      [hint]="titleHint"
+      [control]="falHeaderInfoForm.controls['title']"
+      [name]="'title-input'"
+      [label]="'Title'"
+      [required]="true"
+      [attr.id]="'title-al-create'"
+      formControlName="title">
+    </sam-text>
+  </div>
+  
+  <div class="sam-ui segment" *ngIf="viewModel.isRevision">
     Title: {{ viewModel.title }}
   </div>
-
-  <sam-text [hint]="popularNameHint"
-            [control]="falHeaderInfoForm.controls['alternativeNames']"
-            [name]="'alternative-names-input'"
-            [label]="'Popular Name'"
-            [attr.id]="'popular-name'"
-            formControlName="alternativeNames"></sam-text>
-  <div *ngIf="toggleAgencyPicker">
-    <sam-agency-picker *ngIf="!viewModel.isRevision && orgLevels"
-                       [label]="'Federal Agency'"
-                       [showToggle]="true"
-                       [hint]="'List the administering department or independent agency. For Cabinet-level departments, the National Foundation on the Arts and the Humanities, Environmental Protection Agency, and the Federal Emergency Management Agency, the primary organizational subunit name should precede the departmental name.'"
-                       [multimode]="false"
-                       [advancedMode]="false"
-                       [required]="true"
-                       [attr.id]="'fal-header-fed-agency'"
-                       [orgId]="organizationId"
-                       [orgRoot]="orgRoot"
-                       [initial]="organizationId ? [organizationId] : []"
-                       (organization)="onOrganizationChange($event)"
-                       formControlName="federalAgency" #agencyPicker></sam-agency-picker>
+  
+  <div class="sam-ui segment">
+    <sam-text 
+      [hint]="popularNameHint"
+      [control]="falHeaderInfoForm.controls['alternativeNames']"
+      [name]="'alternative-names-input'"
+      [label]="'Popular Name'"
+      [attr.id]="'popular-name'"
+      formControlName="alternativeNames">
+    </sam-text>
   </div>
-  <div *ngIf="(organizationData && (viewModel.isRevision || !toggleAgencyPicker))">
+  
+  <div class="sam-ui segment" *ngIf="toggleAgencyPicker">
+    <sam-agency-picker 
+      *ngIf="!viewModel.isRevision && orgLevels"
+      [label]="'Federal Agency'"
+      [showToggle]="true"
+      [hint]="'List the administering department or independent agency. 
+      For Cabinet-level departments, the National Foundation on the Arts and 
+      the Humanities, Environmental Protection Agency, and the Federal 
+      Emergency Management Agency, the primary organizational subunit name 
+      should precede the departmental name.'"
+      [multimode]="false"
+      [advancedMode]="false"
+      [required]="true"
+      [attr.id]="'fal-header-fed-agency'"
+      [orgId]="organizationId"
+      [orgRoot]="orgRoot"
+      [initial]="organizationId ? [organizationId] : []"
+      (organization)="onOrganizationChange($event)"
+      formControlName="federalAgency" #agencyPicker>
+    </sam-agency-picker>
+  </div>
+  
+  <div *ngIf="(organizationData && (viewModel.isRevision || !toggleAgencyPicker))" class="sam-ui segment">
     {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
   </div>
-
-  <sam-fal-text *ngIf="!viewModel.isRevision"
-                [maxlength]="3"
+  
+  <div *ngIf="!viewModel.isRevision" class="sam-ui segment" [hidden]="autoProgNoGeneration || organizationId == null">
+    <sam-fal-text [maxlength]="3"
                 [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
                 [control]="falHeaderInfoForm.controls['programNumber']"
                 [name]="'programNumber-input'"
-                [label]="'FAL Number'"
+                [label]="'CFDA Number'"
                 [required]="true"
                 [cfdaCode]="falNoPrefix"
                 [pending]="falHeaderInfoForm.controls['programNumber'].pending"
                 [attr.id]="'fal-header-falNo'"
                 [class.hide]="autoProgNoGeneration || organizationId == null"
                 formControlName="programNumber">
-  </sam-fal-text>
-
-  <div *ngIf="viewModel.isRevision">
+    </sam-fal-text>
+  </div>
+  
+  <div *ngIf="viewModel.isRevision" class="sam-ui segment">
     CFDA Number: {{ viewModel.programNumber }}
   </div>
-
-  <sam-autocomplete-multiselect
+  
+  <div class="sam-ui clearing segment">
+    <sam-autocomplete-multiselect
       autofill-falProgram
       [name]="'relatedProgramSearch'"
       formControlName="relatedPrograms"
@@ -70,4 +90,6 @@
       [attr.id]="'related-fal'"
       [hint]="relatedFalHint">
     </sam-autocomplete-multiselect>
+  </div>
+  
 </form>

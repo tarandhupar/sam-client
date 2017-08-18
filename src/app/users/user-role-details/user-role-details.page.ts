@@ -1,6 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { IBreadcrumb } from "sam-ui-kit/types";
 import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
+import { UserAccessService } from "../../../api-kit/access/access.service";
+import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 
 @Component({
   templateUrl: 'user-role-details.template.html'

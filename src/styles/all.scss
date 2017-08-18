@@ -64,7 +64,6 @@ $large: $current-large;
 
 @import '~uswds/src/stylesheets/core/utilities';
 
-
 // Elements -------------- //
 // Styles basic HTML elements
 
@@ -333,6 +332,19 @@ samsearchheader .search-header > .usa-width-one-whole{
     margin-right: 0rem;
   }
 
+}
+
+.crossed-out:after{
+        content: '|';
+        color: #0071bc;
+        display: block;        
+        text-align: center;
+        font-size: 0.8em;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
 }
 
 // Make sidenav use all availabe horizontal space on medium screen

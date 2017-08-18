@@ -707,7 +707,8 @@ export class DetailsComponent {
 
     this.states.submitted = true;
 
-    if(this.agencyPicker) {
+
+    if(this.agencyPicker){
       this.agencyPicker.setOrganizationFromBrowse();
     }
 

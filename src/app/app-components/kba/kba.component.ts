@@ -11,8 +11,8 @@ export class SamKBAComponent {
   @Input('label') label: string = '';
 
   @Input('questions') questions: any[] = [];
-  @Input('question') question: FormControl;
-  @Input('answer') answer: FormControl;
+  @Input('question') question: FormControl = new FormControl();
+  @Input('answer') answer: FormControl = new FormControl('');
 
   @Input('labelKey') questionKey: string = 'question';
   @Input('valueKey') answerKey: string = 'id';

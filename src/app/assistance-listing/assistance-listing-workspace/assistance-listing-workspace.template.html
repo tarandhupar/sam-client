@@ -1,3 +1,10 @@
+<ng-container *ngIf="alerts && alerts.length > 0">
+  <div *ngFor="let alert of alerts; let i = index">
+    <sam-alert [attr.id]="'al-workspace-alert-' + i" [type]="alerts[i].type" [title]="alerts[i].title">
+      <div [innerHTML]="alerts[i].description"></div>
+    </sam-alert>
+  </div>
+</ng-container>
 <page
   *ngIf="permissions"
   theme="inside"
@@ -22,7 +29,7 @@
       </li>
       <li>
         <a routerLink="/workspace/my-feed"
-          [queryParams]="{domain: 'al', event: 'request', pending: true}">
+           [queryParams]="{domain: 'al', event: 'request', pending: true}">
           Pending Requests &nbsp;
           <span class="sam-ui circular red mini label">
             {{ pendingRequestCount }}
@@ -37,12 +44,13 @@
       <!-- Search filter -->
       <div *ngIf="!initLoad" custom-input class="search-bar">
         <h4 class="sam-ui header">Search</h4>
-        <sam-autocomplete class="div-fill"#autocomplete
+        <sam-autocomplete class="div-fill" #autocomplete
                           [(ngModel)]="keyword"
                           (ngModelChange)="workspaceSearchModel($event)"
                           (enterEvent)="workspaceSearchClick()"
                           [config]="workspaceSearchConfig"
                           [options]="[]"
+                          [attr.id]="'fal-workspace-input-search'"
                           [showClearButton]="true"
                           [allowAny]="true"
                           name="appsearch">
@@ -69,10 +77,23 @@
         [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
       </sam-checkbox>
 
+      <!-- Change Request Filter -->
+      <h4 class="sam-ui header">Change Request Pending</h4>
+      <sam-checkbox
+        [(model)]="requestTypeCheckboxModel"
+        (modelChange)="requestTypeModelChanged()"
+        [name]="requestTypeCheckboxConfig.name"
+        [options]="requestTypeCheckboxConfig.options"
+        [label]="requestTypeCheckboxConfig.label"
+        [hint]="requestTypeCheckboxConfig.hint"
+        [errorMessage]="requestTypeCheckboxConfig.errorMessage"
+        [hasSelectAll]="requestTypeCheckboxConfig.hasSelectAll">
+      </sam-checkbox>
+
       <!--Date Filter-->
       <h4 class="sam-ui header">Date</h4>
       <div class="sam-ui secondary pointing menu">
-        <a (click)="selectTab('posted')"  class="item" [ngClass]="getColorClass('posted')">
+        <a (click)="selectTab('posted')" class="item" [ngClass]="getColorClass('posted')">
           Posted
         </a>
         <a (click)="selectTab('modified')" class="item" [ngClass]="getColorClass('modified')">
@@ -100,7 +121,21 @@
 
       <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
       <!--filter button-->
-      <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()' [buttonText]="'Filter'"></sam-button>
+      <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
+                  [buttonText]="'Filter'"></sam-button>
+
+      
+      <!--Agency Picker Filter-->
+      <h4 class="sam-ui header">Federal Agency</h4>
+      <sam-agency-picker-v2 #agencyPickerV2
+        [attr.id] = "'fal-agency-picker-filter'"
+        [ngModel]="agencyPickerModel"
+        [orgRoots]="orgRoots"
+        (ngModelChange)="onOrganizationChange($event)"
+        [limit] = '2'>
+      </sam-agency-picker-v2>
+
+      <br>
 
       <div>
         <sam-button (onClick)='clearAllFilters()' [buttonText]="'Clear All'"></sam-button>
@@ -112,10 +147,10 @@
 
   <!-- Main Content Section -->
   <sam-button *ngIf="permissions['CREATE_FALS']"
-            [buttonType]="'default'"
-            [buttonText]="'Add Assistance Listing' "
-            [buttonClass]="'sam-ui button dark blue'"
-            (onClick)="addAssistanceListingClick()">
+              [buttonType]="'default'"
+              [buttonText]="'Add Assistance Listing' "
+              [buttonClass]="'sam-ui button dark blue'"
+              (onClick)="addAssistanceListingClick()">
   </sam-button>
 
   <!-- No results -->
@@ -124,10 +159,10 @@
   </p>
   <!-- Page results -->
   <results *ngIf="!data.length==0 && !initLoad"
-    [totalElements]="totalCount"
-    [totalPages]="totalPages"
-    [currentPage]="pageNum+1"
-    (pageChange)="pageChange($event-1)">
+           [totalElements]="totalCount"
+           [totalPages]="totalPages"
+           [currentPage]="pageNum+1"
+           (pageChange)="pageChange($event-1)">
 
     <sam-sort [(ngModel)]="sortModel"
               [options]="sortOptions"

@@ -1,51 +1,67 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Compliance Requirements - {{ viewModel.title }}</div>
+<h2 class="sam-ui header">
+  Compliance Requirements
+</h2>
+
 <div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
-  <div class="fal-label-margin fal-label">Policy Requirements</div>
-  <sam-checkbox [name]="policyRequirementsConfig.checkbox.name"
-               [label]="policyRequirementsConfig.checkbox.label"
-               [hint]="policyRequirementsConfig.checkbox.hint"
-               [options]="policyRequirementsConfig.checkbox.options"
-               [attr.id]="'policy-requirements-checkbox'"
-               [formControlName]="'policyRequirementsCheckbox'"
-  ></sam-checkbox>
-  <sam-text-area [name]="policyRequirementsConfig.textarea.name"
-               [label]="policyRequirementsConfig.textarea.label"
-               [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
-               [formControlName]="'policyRequirementsTextarea'"
-  ></sam-text-area>
+  
+  <div class="sam-ui segment">
+    <div class="fal-label-margin fal-label">Policy Requirements</div>
+    <sam-checkbox [name]="policyRequirementsConfig.checkbox.name"
+                 [label]="policyRequirementsConfig.checkbox.label"
+                 [hint]="policyRequirementsConfig.checkbox.hint"
+                 [options]="policyRequirementsConfig.checkbox.options"
+                 [attr.id]="'policy-requirements-checkbox'"
+                 [formControlName]="'policyRequirementsCheckbox'"
+    ></sam-checkbox>
+    <sam-text-area [name]="policyRequirementsConfig.textarea.name"
+                 [label]="policyRequirementsConfig.textarea.label"
+                 [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
+                 [formControlName]="'policyRequirementsTextarea'"
+    ></sam-text-area>
+  </div>
 
-  <samCheckboxToggledTextarea #reportsComp
-                              [options]="reportsConfig"
-                              [attr.id]="'reports-info'"
-                              [formControlName]="'reports'"
-                              [control]="complianceRequirementsGroup.get('reports')"
-  ></samCheckboxToggledTextarea>
+  <div class="sam-ui segment">
+    <samCheckboxToggledTextarea #reportsComp
+                                [options]="reportsConfig"
+                                [attr.id]="'reports-info'"
+                                [formControlName]="'reports'"
+                                [control]="complianceRequirementsGroup.get('reports')"
+    ></samCheckboxToggledTextarea>
+  </div>
 
-  <div class="fal-label-margin fal-label">Audits</div>
-  <samCheckboxToggledTextarea #auditsComp
-                              [options]="auditsConfig"
-                              [attr.id]="'fal-cr-audits'"
-                              [formControlName]="'audits'"
-                              [control]="complianceRequirementsGroup.get('audits')"
-  ></samCheckboxToggledTextarea>
+  <div class="sam-ui segment">
+    <div class="fal-label-margin fal-label">Audits</div>
+    <samCheckboxToggledTextarea #auditsComp
+                                [options]="auditsConfig"
+                                [attr.id]="'fal-cr-audits'"
+                                [formControlName]="'audits'"
+                                [control]="complianceRequirementsGroup.get('audits')"
+    ></samCheckboxToggledTextarea>
+  </div>
 
-  <sam-text-area [label]="'Records'"
-               [hint]="'Describe required records. Include the time period when the records must be kept.'"
-               [name]="'compliance-records'"
-               [control]="records"
-               [attr.id]="'records-textarea'"
-               [formControlName]="'records'"
-  ></sam-text-area>
+  <div class="sam-ui segment">
+    <sam-text-area [label]="'Records'"
+                 [hint]="'Describe required records. Include the time period when the records must be kept.'"
+                 [name]="'compliance-records'"
+                 [control]="records"
+                 [attr.id]="'records-textarea'"
+                 [formControlName]="'records'"
+    ></sam-text-area>
+  </div>
 
-  <samCheckboxToggledTextarea #additionalDocumentationComp
-                              [options]="additionalDocumentationConfig"
-                              [attr.id]="'fal-cr-additional-documentation'"
-                              [formControlName]="'additionalDocumentation'"
-                              [control]="complianceRequirementsGroup.get('additionalDocumentation')"
-  ></samCheckboxToggledTextarea>
+  <div class="sam-ui segment">
+    <samCheckboxToggledTextarea #additionalDocumentationComp
+                                [options]="additionalDocumentationConfig"
+                                [attr.id]="'fal-cr-additional-documentation'"
+                                [formControlName]="'additionalDocumentation'"
+                                [control]="complianceRequirementsGroup.get('additionalDocumentation')"
+    ></samCheckboxToggledTextarea>
+  </div>
 
-  <falFormulaMatchingInput [options]="formulaMatchingConfig"
-                           [formControlName]="'formulaMatching'"
-                           [attr.id]="'formula-matching'"
-  ></falFormulaMatchingInput>
+  <div class="sam-ui segment">
+    <falFormulaMatchingInput [options]="formulaMatchingConfig"
+                             [formControlName]="'formulaMatching'"
+                             [attr.id]="'formula-matching'"
+    ></falFormulaMatchingInput>
+  </div>
 </div>

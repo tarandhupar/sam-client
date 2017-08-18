@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
@@ -50,8 +50,8 @@ const stubs = {
   }
 };
 
-xdescribe('[IAM] UserComponent]', () => {
-  let component: UserComponent;
+describe('[IAM] FSDUserComponent', () => {
+  let component: FSDUserComponent;
   let fixture: ComponentFixture<FSDUserComponent>;
   let debugElement: DebugElement;
 
@@ -59,11 +59,11 @@ xdescribe('[IAM] UserComponent]', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([]),
-        SamUIKitModule
+        SamUIKitModule,
       ],
 
       declarations: [
-        UserComponent
+        FSDUserComponent,
       ],
 
       providers: [
@@ -83,30 +83,32 @@ xdescribe('[IAM] UserComponent]', () => {
       ]
     });
 
-    fixture = TestBed.createComponent(UserComponent);
+    fixture = TestBed.createComponent(FSDUserComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
     fixture.detectChanges();
   });
 
-  it('verify account deactivation', () => {
+  it('verify account deactivation', async(() => {
     let button = fixture.debugElement.query(By.css('sam-button button')).nativeElement;
 
+    spyOn(component, 'confirmDeactivation');
     button.click();
 
     fixture.whenStable().then(() => {
-      expect(component.confirmDeactivation()).toHaveBeenCalled();
+      expect(component.confirmDeactivation).toHaveBeenCalled();
     });
-  });
+  }));
 
-  it('verify password reset', () => {
-    let button = fixture.debugElement.query(By.css('button:last-child')).nativeElement;
+  it('verify password reset', async(() => {
+    let button = fixture.debugElement.query(By.css('#password-reset button')).nativeElement;
 
+    spyOn(component, 'sendPasswordReset');
     button.click();
 
     fixture.whenStable().then(() => {
-      expect(component.sendPasswordReset()).toHaveBeenCalled();
+      expect(component.sendPasswordReset).toHaveBeenCalled();
     });
-  });
+  }));
 });

@@ -5,7 +5,7 @@
     <br>
     <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount' ||
       name=='Potential Vendor Anomaly Report' ||
-      name=='Unique Vendors Report'" style="color: red">ANOMOLY</span></h2> <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount'">ANOMOLY</span>
+      name=='Unique Vendors Report'" style="color: red">ANOMALY</span></h2> <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount'">ANOMALY</span>
     <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
@@ -13,9 +13,11 @@
           <div class="display-block">
             
               <sam-date-range *ngIf="usedPrompts.dateRange" 
-                              [required]="true"
                               [label]="'Date range correspond to the Date Signed on Procurement Awards'"
-                              [(ngModel)]='dateRange' 
+                              [(ngModel)]='dateRangeModel'
+                              #dateRangeVar="ngModel"
+                              [control]="dateRangeVar.control"
+                              [required]="'required'"
                               name='dateRange'>
               </sam-date-range> 
           </div>
@@ -26,25 +28,24 @@
               <sam-text *ngIf="usedPrompts.agencyName"
                         [(ngModel)]="agencyName"
                         [name]="'agencyName'"
-                        [label]="'Agency Name'">
+                        [label]="'Vendor Name'">
               </sam-text>
               <sam-agency-picker-v2 *ngIf="usedPrompts.fHierarchy" 
                                     name="agency-picker"
                                     [(ngModel)]="agencyPicker">
               </sam-agency-picker-v2>
-            </div>
-            <div class="usa-width-one-half report__additionalprompts">
-              <sam-text *ngIf="usedPrompts.contractingRegion"
-                        [(ngModel)]="contractingRegion"
-                        [name]="'contractingRegion'" 
-                        [label]="'Contracting Office Region'">
-              </sam-text>
+              <sam-select *ngIf="usedPrompts.contractingRegion"
+                  name="contractingRegion"
+                  [(ngModel)]="contractingRegion"
+                  [options] = "contractingRegionOptions"
+                  [label] = "'Contracting Office Region'"
+                  (switchStatusChange)="contractingRegionChange($event)">
+              </sam-select>
               <sam-text *ngIf="usedPrompts.orgId" 
                         [(ngModel)]="orgCode"
                         [name]="'orgCode'" 
                         [label]="'Organization'">
               </sam-text>
-              
               <sam-select *ngIf="usedPrompts.includesBases"
                           class="includesBases"
                           [(ngModel)]="includesBases"
@@ -54,7 +55,6 @@
                           (switchStatusChange)="includesBasesStatusChange($event)">
               </sam-select>
             </div>
-
           </div>  
 
           <div class="display-block report__promptBtns">
@@ -69,7 +69,7 @@
                         (click)="reportExecute()">
             </sam-button>
             <sam-button [buttonId]="'defaultBtn'" 
-                        [buttonText]="'Export'" 
+                        [buttonText]="'PDF Export'" 
                         [buttonType]="btnType" 
                         (click)="exportReport()">
             </sam-button>

@@ -31,7 +31,7 @@
         <label class="bold">Organization</label>
         <span>{{details.organization}}</span>
       </div>
-      <h4 class="text-lighter">OBJECTS AND PERMISSIONS</h4>
+      <h4 class="text-lighter">Permissions</h4>
       <ng-container *ngFor="let o of details.objects; let i = index">
         <div class="usa-grid-full" *ngIf="i % 3 === 0">
           <div class="usa-width-one-third" *ngFor="let object of details.objects.slice(i, i+3)">

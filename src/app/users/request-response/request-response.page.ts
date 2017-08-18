@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
@@ -7,6 +7,7 @@ import {  Location } from "@angular/common";
 import { IBreadcrumb } from "sam-ui-kit/types";
 import { PropertyCollector } from "../../app-utils/property-collector";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { SamModalComponent } from "sam-ui-kit/components/modal/modal.component";
 
 @Component({
   templateUrl: './request-response.template.html',
@@ -31,8 +32,9 @@ export class RequestResponsePage {
   private objects = [];
   private role = '';
   private roles = [];
-  private userAccess;
   private myCrumbs: Array<IBreadcrumb> = [];
+
+  @ViewChild('rejectModal') rejectModal: SamModalComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -193,10 +195,6 @@ export class RequestResponsePage {
     this.updateRequest('approve');
   }
 
-  onRejectClick() {
-    this.updateRequest('reject');
-  }
-
   onEscalateClick() {
     this.updateRequest('escalate');
   }
@@ -275,8 +273,8 @@ export class RequestResponsePage {
   }
 
   approveRequest() {
+    this.clearErrors();
     if (!this.validateForm()) {
-      this.clearErrors();
       this.showErrors();
       return;
     }
@@ -363,5 +361,13 @@ export class RequestResponsePage {
 
   goToRoleWorkspace() {
     this.router.navigate(['/access/requests']);
+  }
+
+  onRejectClick() {
+    this.rejectModal.openModal();
+  }
+
+  onRejectConfirm() {
+    this.updateRequest('reject');
   }
 }

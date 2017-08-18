@@ -37,11 +37,6 @@ import {
 
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 import { RoleManagementModule } from "../role-management/role-management.module";
-import {
-  RMSUserServiceImpl,
-  SamRMSUsersServiceAutoDirective
-} from "../users/request-access/username-autocomplete.component";
-import { UserSearchModule } from "../users/user-search.module";
 
 @NgModule({
   imports: [
@@ -56,7 +51,6 @@ import { UserSearchModule } from "../users/user-search.module";
     AppComponentsModule,
     PipesModule,
     Ng2PageScrollModule.forRoot(),
-    UserSearchModule,
   ],
   exports: [],
   declarations: [

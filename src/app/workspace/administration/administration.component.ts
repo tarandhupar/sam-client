@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { IAMService } from 'api-kit';
 
-import { UserAccessService } from 'api-kit/access/access.service';
 import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service';
 import { AdminService } from 'application-content/403/admin.service';
+import { Cookie } from "ng2-cookies";
+import { UserService } from "../../users/user.service";
 
 @Component({
   selector: 'workspace-administration',
@@ -50,16 +51,14 @@ export class AdministrationComponent {
               private route:ActivatedRoute,
               private api:IAMService,
               private alertService: SystemAlertsService,
+              private userService: UserService,
   ) {}
 
   ngOnInit() {
     this.initSession();
     this.getAlertStatistic('Active', this.setActiveAlertsNum);
     this.getAlertStatistic('Draft', this.setDraftAlertsNum);
-
-    if (this.route.snapshot.data['adminLevel'] > 1) {
-      this.toggleControl.rm = true;
-    }
+    this.toggleControl.rm = this.userService.isLoggedIn();
   }
 
   resetHelpDetails() {

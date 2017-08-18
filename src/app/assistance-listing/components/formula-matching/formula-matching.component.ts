@@ -6,7 +6,7 @@ import {DictionaryService} from "api-kit";
 @Component({
   selector: 'falFormulaMatchingInput',
   templateUrl: 'formula-matching.template.html',
-  providers: [ DictionaryService,
+  providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALFormulaMatchingComponent),
@@ -46,15 +46,14 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
 
   constructor(private dictService: DictionaryService) {
-    dictService.getDictionaryById('match_percent').subscribe(data => {
-      for(let percent of data['match_percent']) {
-        this.matchingPercentageOptions.push({
-          value: percent.code,
-          label: percent.value,
-          name: this.name + '-percentage' + percent.value
-        });
-      }
-    });
+    let filteredDictionaries = this.dictService.filterDictionariesToRetrieve('match_percent');
+    if (filteredDictionaries===''){
+      this.addMatchPercent(dictService.dictionaries);
+    } else {
+      dictService.getProgramDictionaryById(filteredDictionaries).subscribe(data => {
+        this.addMatchPercent(data);
+      });
+    }
   }
 
   ngOnInit() {
@@ -266,6 +265,16 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
       return this.model.checkbox.indexOf(value) !== -1;
     } else {
       return false;
+    }
+  }
+  
+  addMatchPercent(data){
+    for (let percent of data['match_percent']) {
+      this.matchingPercentageOptions.push({
+        value: percent.code,
+        label: percent.value,
+        name: this.name + '-percentage' + percent.value
+      });
     }
   }
 }

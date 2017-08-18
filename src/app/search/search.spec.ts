@@ -17,13 +17,14 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
-import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
+import {SearchMultiSelectFilter} from "./search-multi-select-filter/search-multi-select-filter.component";
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
 import {FormsModule} from "@angular/forms";
 import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
-import { SamEligibilityFilter } from "./elegibility-filter/eligibility-filter.component";
-import { SamFunctionalCodesFilter } from "./functional-codes-filter/functional-codes-filter.component";
+import { SamEligibilityFilter } from "./eligibility-filter/eligibility-filter.component";
+import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
+import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 let fixture;
 
 let searchServiceStub = {
@@ -87,9 +88,9 @@ describe('src/app/search/search.spec.ts', () => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
         EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
-        SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
-        SamEligibilityFilter, SamFunctionalCodesFilter],
-      providers: [AlertFooterService, DunsEntityAutoCompleteWrapper ],
+        SearchMultiSelectFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
+        SamEligibilityFilter],
+      providers: [AlertFooterService, DunsEntityAutoCompleteWrapper, SearchDictionariesService, DictionaryService ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,
@@ -134,6 +135,12 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.componentInstance.wdCountyModel = "17606";
     fixture.componentInstance.awardTypeModel = "xyz";
     fixture.componentInstance.contractTypeModel = "abc";
+    fixture.componentInstance.naicsTypeModel = "naics";
+    fixture.componentInstance.pscTypeModel = "psc";
+    fixture.componentInstance.benElSearchString = "beneficiary";
+    fixture.componentInstance.appElSearchString = "applicant";
+    fixture.componentInstance.assistanceTypeFilterModel = "assistance";
+    fixture.componentInstance.dunsListString = "duns";
     fixture.componentInstance.clearAllFilters();
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.isActive).toBe(true);
@@ -141,6 +148,12 @@ describe('src/app/search/search.spec.ts', () => {
       expect(fixture.componentInstance.wdCountyModel).toBe("");
       expect(fixture.componentInstance.awardTypeModel).toBe("");
       expect(fixture.componentInstance.contractTypeModel).toBe("");
+      expect(fixture.componentInstance.naicsTypeModel).toBe("");
+      expect(fixture.componentInstance.pscTypeModel).toBe("");
+      expect(fixture.componentInstance.benElSearchString).toBe("");
+      expect(fixture.componentInstance.appElSearchString).toBe("");
+      expect(fixture.componentInstance.assistanceTypeFilterModel).toBe("");
+      expect(fixture.componentInstance.dunsListString).toBe("");
     });
   });
 
@@ -152,6 +165,20 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       expect(fixture.componentInstance.agencyPicker).toBeDefined();
+    });
+  });
+
+  it('SearchPage: should "check" if FAL filters are defined', () => {
+    fixture.componentInstance.index = "cfda";
+    fixture.componentInstance.keyword = "";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.benElType).toBeDefined();
+      expect(fixture.componentInstance.appElType).toBeDefined();
+      expect(fixture.componentInstance.assistanceTypeOptions).toBeDefined();
     });
   });
 
@@ -167,6 +194,7 @@ describe('src/app/search/search.spec.ts', () => {
       expect(fixture.componentInstance.contractType).toBeDefined();
       expect(fixture.componentInstance.naicsType).toBeDefined();
       expect(fixture.componentInstance.pscType).toBeDefined();
+      expect(fixture.componentInstance.dunsConfiguration).toBeDefined();
     });
   });
 

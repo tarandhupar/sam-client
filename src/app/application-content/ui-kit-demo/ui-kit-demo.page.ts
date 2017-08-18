@@ -3,7 +3,6 @@ import { AlertFooterService } from '../../alerts/alert-footer';
 import { FormControl } from '@angular/forms';
 
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
-import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomplete-dropdown/autocomplete-dropdown.service';
 import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
 
 import { LocationService } from 'api-kit/location/location.service';
@@ -15,7 +14,6 @@ import { Observable } from 'rxjs';
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
   providers: [
-    { provide: AutocompleteService, useClass: AutocompleteDropdownService },
     { provide: CommentsService, useClass: CommentsDemoService }
   ]
 })
@@ -283,14 +281,6 @@ export class UIKitDemoPage {
   dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
   getButton(event) {
     window.alert('You clicked me!');
-  }
-  button: AutocompleteDropdownButton = {
-    label: 'Search',
-    class: '',
-    icon: {
-      class: 'fa fa-search',
-      altText: 'Search'
-    }
   }
 
   // Dropdown Multisleect

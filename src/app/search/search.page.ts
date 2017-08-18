@@ -6,7 +6,6 @@ import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { WageDeterminationService } from "../../api-kit/wage-determination/wage-determination.service";
 import { AlertFooterService } from '../alerts/alert-footer';
-import { OpportunityService } from "../../api-kit/opportunity/opportunity.service";
 import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
 import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
 import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
@@ -40,6 +39,7 @@ export class SearchPage implements OnInit {
   ro_keyword: string = "";
   isSearchComplete: boolean = false;
   showSpinner: boolean = false;
+  agencyPickerModel = [];
 
   // duns entity objects
   dunsModel: any = '';
@@ -48,7 +48,7 @@ export class SearchPage implements OnInit {
   myOptions: any = [];
 
 
-  @ViewChild('agencyPicker') agencyPicker;
+  @ViewChild('agencyPickerV2') agencyPickerV2;
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -373,22 +373,6 @@ export class SearchPage implements OnInit {
         valueProperty: 'label'
       }
     }
-  }
-
-
-  // Functional Codes Object
-  functionalCodesModel: any = '';
-  functionalCodesType = {
-    "name": "Funcitonal Codes",
-    "placeholder": "Search Functional Codes",
-    "selectedLabel": "Selected",
-    "options": [],
-    "config": {
-      keyValueConfig: {
-        keyProperty: 'value',
-        valueProperty: 'label'
-      }
-    }
   };
 
   regionalType = {
@@ -411,10 +395,9 @@ export class SearchPage implements OnInit {
               private router: Router,
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
-              private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
-              private programDictionariesService: DictionaryService) {
+              private dictionaryService: DictionaryService) {
   }
 
   ngOnInit() {
@@ -450,9 +433,9 @@ export class SearchPage implements OnInit {
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
         this.appElSearchString = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
         this.benElSearchString = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
-        this.functionalCodesModel = data['functionalCodes'] && data['functionalCodes'] !== null ? data['functionalCodes'] : '';
         this.assistanceTypeFilterModel = data['assistanceType'] && data['assistanceType'] !== null ? data['assistanceType'] : '';
         this.registrationExclusionCheckboxModel = data['entityType'] && data['entityType'] !== null ? data['entityType'].split(",") : [];
+        this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
         // persist duns filter data
         this.grabPersistData(this.dunsListString);
         this.isSearchComplete = false;
@@ -460,6 +443,15 @@ export class SearchPage implements OnInit {
         this.loadParams();
       });
 
+  }
+
+  setupOrgsFromQS(orgsStr){
+    if(!orgsStr){
+      return [];
+    }
+    let decodedStr = decodeURIComponent(orgsStr);
+    let orgsArray = decodedStr.split(",");
+    return orgsArray;
   }
 
   findInactiveResults() {
@@ -473,11 +465,9 @@ export class SearchPage implements OnInit {
   }
 
   // handles 'organization' emmitted event from agency picker
-  onOrganizationChange(orgId: any) {
-
+  onOrganizationChange(selectedOrgs: any) {
     let organizationStringList = '';
-
-    let stringBuilderArray = orgId.map(function (organizationItem) {
+    let stringBuilderArray = selectedOrgs.map(function (organizationItem) {
       if (organizationStringList === '') {
         organizationStringList += organizationItem.value;
       }
@@ -607,10 +597,6 @@ export class SearchPage implements OnInit {
       qsobj['applicant'] = this.appElSearchString;
     }
 
-    if (this.functionalCodesModel && this.functionalCodesModel.length > 0) {
-      qsobj['functionalCodes'] = this.functionalCodesModel;
-    }
-
     if (this.assistanceTypeFilterModel.length > 0) {
       qsobj['assistanceType'] = this.assistanceTypeFilterModel;
     }
@@ -626,27 +612,27 @@ export class SearchPage implements OnInit {
   runSearch() {
     // showing spinner while data fetches
     this.showSpinner = true;
+    let filteredDictionaries;
     switch (this.index) {
       // fetching data for drop downs
       case 'wd':
-        this.getDictionaryData('wdStates');
-        this.getCountyByState(this.wdStateModel);
+        filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('wdStates,dbraConstructionTypes,scaServices');
+        this.getWageDeterminationDictionaryData(filteredDictionaries);
+        if(this.wdStateModel !== ''){
+          this.getCountyByState(this.wdStateModel);
+        }
         this.determineEnableCountySelect();
         this.determineEnableServicesSelect();
-        this.getDictionaryData('dbraConstructionTypes');
-        this.getDictionaryData('scaServices');
         break;
       case 'opp':
       case 'ei':
       case 'fpds':
-        this.getAwardsDictionaryData('naics_code');
-        this.getAwardsDictionaryData('classification_code');
+        filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('naics_code,classification_code');
+        this.getAwardsDictionaryData(filteredDictionaries);
         break;
       case 'cfda':
-        this.getProgramsDictionaryData('applicant_types');
-        this.getProgramsDictionaryData('beneficiary_types');
-        this.getProgramsDictionaryData('functional_codes');
-        this.getProgramsDictionaryData('assistance_type');
+        filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('applicant_types,beneficiary_types,assistance_type');
+        this.getProgramsDictionaryData(filteredDictionaries);
         break;
       default:
         this.dismissWdAlert = false;
@@ -703,12 +689,11 @@ export class SearchPage implements OnInit {
       duns: this.dunsListString,
       applicant: this.appElSearchString,
       beneficiary: this.benElSearchString,
-      functionalCodes: this.functionalCodesModel,
       assistanceType: this.assistanceTypeFilterModel,
       entityType: this.registrationExclusionCheckboxModel
     }).subscribe(
       data => {
-        
+
         if (data._embedded && data._embedded.results) {
           for (var i = 0; i < data._embedded.results.length; i++) {
             //Modifying FAL data
@@ -759,82 +744,19 @@ export class SearchPage implements OnInit {
   }
 
   // get dictionary data from dictionary API for samselects and map the response array to properly set config options
-  getDictionaryData(id) {
-    this.wageDeterminationService.getWageDeterminationFilterData({
-      ids: id
-    }).subscribe(
-      data => {
-
-        let defaultSelection = {value: '', label: 'Default option', name: 'empty', disabled: false};
-
-        // formatting the array data according to api type to match what UI elements expect
-        // state data
-        if (id === 'wdStates') {
-          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (stateItem) {
-            let newObj = {label: '', value: ''};
-
-            newObj.label = stateItem.value;
-            newObj.value = stateItem.elementId;
-            return newObj;
-          });
-          // adding the default selection row to the array
-          this.selectStateConfig.options = reformattedArray;
-
-          if (this.wdStateModel !== "" && this.initLoad) {
-            this.wdStateObject = reformattedArray.filter((option) => {
-              if (this.wdStateModel.toString() === option.value.toString()) {
-                return option;
-              }
-            })[0];
-          }
+  getWageDeterminationDictionaryData(id) {
+    if (id === ''){
+      this.filterWageDeterminationArray(this.dictionaryService.dictionaries);
+    }else{
+      this.dictionaryService.getWageDeterminationDictionary(id).subscribe(
+        data => {
+          this.filterWageDeterminationArray(data);
+        },
+        error => {
+          console.error("Error!!", error);
         }
-
-        // construction type data
-        else if (id === 'dbraConstructionTypes') {
-          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (constructionItem) {
-            let newObj = {label: '', value: ''};
-
-            newObj.label = constructionItem.value;
-            newObj.value = constructionItem.value;
-            return newObj;
-          });
-
-          this.selectConstructConfig.options = reformattedArray;
-
-          if (this.wdConstructModel !== "" && this.initLoad) {
-            this.wdConstructObject = reformattedArray.filter((option) => {
-              if (option.value.toString() === this.wdConstructModel.toString()) {
-                return option;
-              }
-            })[0];
-          }
-        }
-
-        // scaServices type data
-        else if (id === 'scaServices') {
-          let reformattedArray = data._embedded.dictionaries[0].elements.map(function (serviceItem) {
-            let newObj = {label: '', value: ''};
-
-            newObj.label = serviceItem.value;
-            newObj.value = serviceItem.elementId;
-            return newObj;
-          });
-
-          this.wdNonStandardSelectConfig.options = reformattedArray;
-
-          if (this.wdNonStandardSelectModel !== "" && this.initLoad) {
-            this.wdNonStandardSelectObject = reformattedArray.filter((option) => {
-              if (parseInt(option.value) === parseInt(this.wdNonStandardSelectModel)) {
-                return option;
-              }
-            })[0];
-          }
-        }
-      },
-      error => {
-        console.error("Error!!", error);
-      }
-    );
+      );
+    }
   }
 
   // gets county data back depending on state provided
@@ -872,116 +794,33 @@ export class SearchPage implements OnInit {
   }
 
   getAwardsDictionaryData(id) {
-    this.opportunityService.getOpportunityDictionary(id).subscribe(
-      data => {
-        // formatting the array data according to api type to match what UI elements expect
-        if (id === 'naics_code') {
-          var reformattedArray = data._embedded.dictionaries[0].elements.map(function (naicsItem) {
-            let newObj = {label: '', value: '', type: 'naics'};
-
-            newObj.label = naicsItem.value;
-            newObj.value = naicsItem.code;
-            return newObj;
-          });
-
-          this.naicsType.options = reformattedArray;
-          this.naicsType = Object.assign({}, this.naicsType);
+    if (id === ''){
+      this.filterOpportunityArray(this.dictionaryService.dictionaries);
+    }else{
+      this.dictionaryService.getOpportunityDictionary(id).subscribe(
+        data => {
+          this.filterOpportunityArray(data);
+        },
+        error => {
+          console.error("Error!!", error);
         }
-
-        if (id === 'classification_code') {
-          var reformattedArray = data._embedded.dictionaries[0].elements.map(function (pscItem) {
-            let newObj = {label: '', value: '', type: 'psc'};
-
-            newObj.label = pscItem.value;
-            newObj.value = pscItem.code;
-            return newObj;
-          });
-
-          this.pscType.options = reformattedArray;
-          this.pscType = Object.assign({}, this.pscType);
-        }
-
-      },
-      error => {
-        console.error("Error!!", error);
-      }
-    );
+      );
+    }
   }
 
   getProgramsDictionaryData(id) {
-    this.programDictionariesService.getDictionaryById(id).subscribe(
-      data => {
-        // formatting the array data according to api type to match what UI elements expect
-        if (id === 'applicant_types') {
-          var reformattedArray = data['applicant_types'].map(function (item) {
-            let newObj = {label: '', value: '', type: 'applicant'};
-
-            newObj.label = item.displayValue;
-            newObj.value = item.code;
-            return newObj;
-          });
-
-          this.appElType.options = reformattedArray;
-          this.appElType = Object.assign({}, this.appElType);
+    if (id === ''){
+      this.filterProgramArray(this.dictionaryService.dictionaries);
+    }else{
+      this.dictionaryService.getProgramDictionaryById(id).subscribe(
+        data => {
+          this.filterProgramArray(data);
+        },
+        error => {
+          console.error("Error!!", error);
         }
-
-        if (id === 'beneficiary_types') {
-          var reformattedArray = data['beneficiary_types'].map(function (item) {
-            let newObj = {label: '', value: '', type: 'beneficiary'};
-
-            newObj.label = item.displayValue;
-            newObj.value = item.code;
-            return newObj;
-          });
-
-          this.benElType.options = reformattedArray;
-          this.benElType = Object.assign({}, this.benElType);
-        }
-
-        if (id === 'functional_codes') {
-          let finalArray = [];
-
-          for (let dataItem of data['functional_codes']) {
-            var reformattedArray = dataItem['elements'].map(function (item) {
-              let newObj = {label: '', value: ''};
-
-              newObj.label = item.displayValue;
-              newObj.value = item.element_id;
-              return newObj;
-            });
-            finalArray = finalArray.concat(reformattedArray);
-          }
-
-          this.functionalCodesType.options = finalArray;
-          this.functionalCodesType = Object.assign({}, this.functionalCodesType);
-        }
-
-        if (id === 'assistance_type') {
-
-          let inputArr = [];
-          var reformattedArray = data['assistance_type'].map(function (item) {
-
-            let newObj = {label: '', value: '', type: 'assistance_type'};
-            for (var elements of item.elements) {
-              newObj.label = item.code + " - " + elements.value;
-              newObj.value = elements.element_id;
-              inputArr.push({
-                label: newObj.label,
-                value: newObj.value
-              });
-            }
-
-          });
-          reformattedArray = inputArr;
-          this.assistanceTypeOptions.options = reformattedArray;
-          this.assistanceTypeOptions = Object.assign({}, this.assistanceTypeOptions);
-        }
-
-      },
-      error => {
-        console.error("Error!!", error);
-      }
-    )
+      );
+    }
   }
 
   pageChange(pagenumber) {
@@ -1030,7 +869,9 @@ export class SearchPage implements OnInit {
       this.wdSubjectToCBAModel = '';
     }
     this.pageNum = 0;
-    this.getDictionaryData('dbraConstructionTypes');
+
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('dbraConstructionTypes');
+    this.getWageDeterminationDictionaryData(filteredDictionaries);
 
     this.searchResultsRefresh();
   }
@@ -1064,7 +905,9 @@ export class SearchPage implements OnInit {
     // enable county select if needed
     this.determineEnableCountySelect();
     // call method to get county data per state
-    this.getCountyByState(this.wdStateModel);
+    if (this.wdStateModel !== ''){
+      this.getCountyByState(this.wdStateModel);
+    }
     this.searchResultsRefresh();
   }
 
@@ -1229,12 +1072,6 @@ export class SearchPage implements OnInit {
     this.searchResultsRefresh();
   }
 
-  functionalCodeSelected(evt) {
-    this.functionalCodesModel = evt.toString();
-    this.pageNum = 0;
-    this.searchResultsRefresh();
-  }
-
   assistanceTypeFilterSelected(evt) {
     this.assistanceTypeFilterModel = evt.toString();
     this.pageNum = 0;
@@ -1295,48 +1132,6 @@ export class SearchPage implements OnInit {
     this.searchResultsRefresh();
   }
 
-  wdStateCountyClear() {
-    this.wdStateModel = '';
-    this.wdCountyModel = '';
-    this.searchResultsRefresh();
-  }
-
-  awardIdvFilterClear() {
-    this.awardIDVModel = '';
-    this.awardTypeModel = '';
-    this.contractTypeModel = '';
-    this.searchResultsRefresh();
-  }
-
-  naicsPscFilterClear() {
-    this.naicsTypeModel = '';
-    this.pscTypeModel = '';
-    this.searchResultsRefresh();
-  }
-
-  dunsFilterClear() {
-    this.dunsModelList = [];
-    this.dunsModel = '';
-    this.dunsListString = '';
-    this.searchResultsRefresh();
-  }
-
-  eligibilityFilterClear() {
-    this.appElSearchString = '';
-    this.benElSearchString = '';
-    this.searchResultsRefresh();
-  }
-
-  assistanceTypeFilterClear() {
-    this.assistanceTypeFilterModel = '';
-    this.searchResultsRefresh();
-  }
-
-  functionalCodesFilterClear() {
-    this.functionalCodesModel = '';
-    this.searchResultsRefresh();
-  }
-
   clearAllFilters() {
 
     // clear/reset all top level filters
@@ -1352,14 +1147,12 @@ export class SearchPage implements OnInit {
     this.wdTypeRadClear();
 
     // call clear for agency picker
-    if (this.agencyPicker) {
-      this.agencyPicker.resetBrowse();
+    if (this.agencyPickerV2) {
+      //reset agency filter
+      this.agencyPickerV2.reset();
 
-      // clear the selected organizations
-      this.agencyPicker.onResetClick();
-
-      // clear the keyword search
-      this.agencyPicker.clearSelectedOrgs();
+      //clear advanced agency filter
+      this.agencyPickerV2.clearAdvanced();
     }
 
     // call awards clear filters
@@ -1383,9 +1176,6 @@ export class SearchPage implements OnInit {
 
     //clear assistance type filter
     this.assistanceTypeFilterModel = '';
-
-    // clear functional codes filter
-    this.functionalCodesModel = '';
 
     //set entity type checkbox to default
     if(this.index == 'ei'){
@@ -1452,6 +1242,132 @@ export class SearchPage implements OnInit {
           }
         );
     }
+  }
+
+  filterWageDeterminationArray(data){
+
+    // formatting the array data according to api type to match what UI elements expect
+    // state data
+      let reformattedArray1 = data['wdStates'].map(function (stateItem) {
+        let newObj = {label: '', value: ''};
+
+        newObj.label = stateItem.value;
+        newObj.value = stateItem.elementId;
+        return newObj;
+      });
+      // adding the default selection row to the array
+      this.selectStateConfig.options = reformattedArray1;
+
+      if (this.wdStateModel !== "" && this.initLoad) {
+        this.wdStateObject = reformattedArray1.filter((option) => {
+          if (this.wdStateModel.toString() === option.value.toString()) {
+            return option;
+          }
+        })[0];
+      }
+
+
+    // construction type data
+      let reformattedArray2 = data['dbraConstructionTypes'].map(function (constructionItem) {
+        let newObj = {label: '', value: ''};
+
+        newObj.label = constructionItem.value;
+        newObj.value = constructionItem.value;
+        return newObj;
+      });
+
+      this.selectConstructConfig.options = reformattedArray2;
+
+      if (this.wdConstructModel !== "" && this.initLoad) {
+        this.wdConstructObject = reformattedArray2.filter((option) => {
+          if (option.value.toString() === this.wdConstructModel.toString()) {
+            return option;
+          }
+        })[0];
+      }
+
+    // scaServices type data
+      let reformattedArray3 = data['scaServices'].map(function (serviceItem) {
+        let newObj = {label: '', value: ''};
+
+        newObj.label = serviceItem.value;
+        newObj.value = serviceItem.elementId;
+        return newObj;
+      });
+
+      this.wdNonStandardSelectConfig.options = reformattedArray3;
+
+      if (this.wdNonStandardSelectModel !== "" && this.initLoad) {
+        this.wdNonStandardSelectObject = reformattedArray3.filter((option) => {
+          if (parseInt(option.value) === parseInt(this.wdNonStandardSelectModel)) {
+            return option;
+          }
+        })[0];
+      }
+  }
+
+  filterOpportunityArray(data){
+    // formatting the array data according to api type to match what UI elements expect
+      var reformattedArray1 = data['naics_code'].map(function (naicsItem) {
+        let newObj = {label: '', value: '', type: 'naics'};
+
+        newObj.label = naicsItem.value;
+        newObj.value = naicsItem.code;
+        return newObj;
+      });
+
+      this.naicsType.options = reformattedArray1;
+      this.naicsType = Object.assign({}, this.naicsType);
+
+      var reformattedArray2 = data['classification_code'].map(function (pscItem) {
+        let newObj = {label: '', value: '', type: 'psc'};
+
+        newObj.label = pscItem.value;
+        newObj.value = pscItem.code;
+        return newObj;
+      });
+
+      this.pscType.options = reformattedArray2;
+      this.pscType = Object.assign({}, this.pscType);
+  }
+  filterProgramArray(data){
+    // formatting the array data according to api type to match what UI elements expect
+      var reformattedArray1 = data['applicant_types'].map(function (item) {
+        let newObj = {label: '', value: '', type: 'applicant'};
+
+        newObj.label = item.displayValue;
+        newObj.value = item.code;
+        return newObj;
+      });
+      this.appElType.options = reformattedArray1;
+      this.appElType = Object.assign({}, this.appElType);
+
+      var reformattedArray2 = data['beneficiary_types'].map(function (item) {
+        let newObj = {label: '', value: '', type: 'beneficiary'};
+
+        newObj.label = item.displayValue;
+        newObj.value = item.code;
+        return newObj;
+      });
+      this.benElType.options = reformattedArray2;
+      this.benElType = Object.assign({}, this.benElType);
+
+      let inputArr = [];
+      var reformattedArray4 = data['assistance_type'].map(function (item) {
+        let newObj = {label: '', value: '', type: 'assistance_type'};
+        for (var elements of item.elements) {
+          newObj.label = item.code + " - " + elements.value;
+          newObj.value = elements.element_id;
+          inputArr.push({
+            label: newObj.label,
+            value: newObj.value
+          });
+        }
+
+      });
+      reformattedArray4 = inputArr;
+      this.assistanceTypeOptions.options = reformattedArray4;
+      this.assistanceTypeOptions = Object.assign({}, this.assistanceTypeOptions);
   }
 
 

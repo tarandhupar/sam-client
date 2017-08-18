@@ -12,6 +12,12 @@ import { Title } from "@angular/platform-browser";
 export class ObjectDetailsPage implements OnInit {
   @ViewChild('permission') permissionComponent: SamAutocompleteComponent;
 
+  crumbs = [
+    { url: '/workspace', breadcrumb: 'Workspace'},
+    { url: '/access/workspace', breadcrumb: 'Definitions'},
+    { breadcrumb: ''}
+  ];
+
   mode: 'edit'|'new' = 'new';
   selectedDomains = [];
   selectedDomain;
@@ -42,6 +48,7 @@ export class ObjectDetailsPage implements OnInit {
 
   ngOnInit() {
     this.determineMode();
+    this.crumbs[2].breadcrumb = this.mode === 'new' ? 'New Object' : 'Edit Object';
     this.setTitle();
     this.getAllDomains();
     this.getAllPermissions();

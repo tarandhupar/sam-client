@@ -4,7 +4,7 @@ import { WatchlistType } from "../../../api-kit/watchlist/watchlist.service";
 export class Watchlist {
   private _raw: WatchlistType = {
     type: '',
-    domainId: 'WDL',
+    domainId: 'WD',
     recordId: '',
     active: 'Y',
     frequency: 'daily',
@@ -14,11 +14,11 @@ export class Watchlist {
   constructor() {  }
 
   id(): number {
-    return this._raw.watchlistId;
+    return this._raw.id;
   }
 
   setId(id) {
-    this._raw.watchlistId = id;
+    this._raw.id = id;
   }
 
   active(): string {
@@ -41,6 +41,13 @@ export class Watchlist {
   }
   setRecordId(recordId: string) {
     this._raw.recordId = recordId;
+  }
+
+  type(): string {
+    return this._raw.type;
+  }
+  setType(type: string) {
+    this._raw.type = type;
   }
 
   frequency(): string {

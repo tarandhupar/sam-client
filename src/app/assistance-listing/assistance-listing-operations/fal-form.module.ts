@@ -20,6 +20,7 @@ import { FALFormResolver } from "./fal-form-resolver.service";
 import { FALFormService } from "./fal-form.service";
 import { FALAuthorizationsComponent } from "./sections/authorizations/fal-form-authorizations.component";
 import { FALAssistanceComponent } from "./sections/applying-for-assistance/fal-form-applying-assistance.component";
+import { AppTemplatesModule } from "../../app-templates/index";
 import {
   FAlProgramServiceDirective,
   FALProgramAutoCompleteWrapper
@@ -34,6 +35,7 @@ import {
     AppComponentsModule,
     FALFormRoutes,
     ReactiveFormsModule,
+    AppTemplatesModule,
     FALComponentsModule
   ],
   declarations: [

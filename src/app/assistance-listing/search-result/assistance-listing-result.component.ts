@@ -48,6 +48,10 @@ import * as moment from 'moment/moment';
                 {{data.organizationHierarchy[0].name}}
               </span>
             </li>
+            <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[1]?.level==3">
+              <strong>Office</strong><br>
+              <span>{{data.organizationHierarchy[1].name}}</span>
+            </li>
             <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3">
               <strong>Office</strong><br>
               <span>{{data.organizationHierarchy[2].name}}</span>

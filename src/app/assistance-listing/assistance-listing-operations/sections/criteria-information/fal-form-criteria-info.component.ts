@@ -259,15 +259,15 @@ export class FALFormCriteriaInfoComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.createForm();
+    if (!this.viewModel.isNew) {
+      this.updateForm();
+    }
     this.service.getCriteria_Info_Dictionaries().subscribe(
       data => this.parseDictionariesList(data),
       error => {
         console.error('error retrieving dictionary data', error);
       });
-    this.createForm();
-    if (!this.viewModel.isNew) {
-      this.updateForm();
-    }
 
     setTimeout(() => { // horrible hack to trigger angular change detection
       this.updateErrors();

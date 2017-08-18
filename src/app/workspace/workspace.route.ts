@@ -13,7 +13,6 @@ import SystemRouter from './system/system.route';
 export const routes: Routes = [
   { path: 'workspace',
     component: WorkspacePage,
-    canActivate: [ IsLoggedInGuard ],
   },
   {
     path: 'workspace/fsd',

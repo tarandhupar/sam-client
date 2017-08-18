@@ -1,151 +1,162 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Contact Information - {{ viewModel.title }}</div>
+<h2 class="sam-ui header">
+  Contact Information
+</h2>
+
 <form [formGroup]="falContactInfoForm">
 
-  <h4>Information Contacts</h4>
+  <div class="sam-ui segment">
+    <h4>Information Contacts</h4>
+    
+    <sam-checkbox
+      [control]="falContactInfoForm.controls['useRegionalOffice']"
+      [label]="'Regional or Local Office'"
+      [name]="'regional_local_office'"
+      [options]="checkboxConfig.options"
+      formControlName="useRegionalOffice"></sam-checkbox>
+  </div>
 
-  <sam-checkbox
-    [control]="falContactInfoForm.controls['useRegionalOffice']"
-    [label]="'Regional or Local Office'"
-    [name]="'regional_local_office'"
-    [options]="checkboxConfig.options"
-    formControlName="useRegionalOffice"></sam-checkbox>
+  <div class="sam-ui segment">
+    <sam-text-area [control]="falContactInfoForm.controls['additionalInfo']"
+                 [name]="'addInfo-input'"
+                 [label]="'Additional Information'"
+                 [hint]= "contactadditionalInforamtionHint"
+                 [attr.id]="'additional-contact-info'"
+                 formControlName="additionalInfo"></sam-text-area>
+  </div>
 
-  <sam-text-area [control]="falContactInfoForm.controls['additionalInfo']"
-               [name]="'addInfo-input'"
-               [label]="'Additional Information'"
-               [hint]= "contactadditionalInforamtionHint"
-               [attr.id]="'additional-contact-info'"
-               formControlName="additionalInfo"></sam-text-area>
-
-  <h4 [attr.id]="'fal-contact-list'">Headquaters Office</h4>
-  <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
-
-  <sam-listbuilder
-    [max]="2"
-    [control]="falContactInfoForm.get('contacts')"
-    [formArrayInput]="falContactInfoForm.get('contacts').controls"
-    [formGroupTemplate]="contactsSubform"
-    (formArrayChange)="contactsFormArrayChange($event)"
-    (action)="lbActionHandler($event)">
-    <template #display let-item>
-      <ng-container *ngIf="!item.valid">
-        <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
-      </ng-container>
-      <p>
-        <ng-container *ngIf="item.value.title">{{item.value.title}} </ng-container>{{item.value.fullName}}<br/>
-        <ng-container *ngIf="item.value.streetAddress">{{item.value.streetAddress}}<br/></ng-container>
-        <ng-container *ngIf="item.value.email">Email: {{item.value.email}}<br/></ng-container>
-        <ng-container *ngIf="item.value.phone">Phone: {{item.value.phone}}<br/></ng-container>
-      </p>
-    </template>
-    <template #edit let-item>
-      <form [formGroup]="item">
-        <sam-select
-          [control]="item.controls.contactId"
-          [label]="'Contact'"
-          [name]="'contact-control'"
-          [required]="true"
-          [options]="contactDrpDwnOptions"
-          [disabled]="(mode == 'Edit' ? true : false)"
-          formControlName="contactId"
-          (modelChange)="onParamChanged($event,item)"></sam-select>
-
-        <div id="newContact" [class.hide]="(item.controls.contactId.value != 'new' && mode != 'Edit')">
-
-          <sam-text
-            [control]="item.controls.title"
-            [name]="'title-input'"
-            [label]="'Title'"
-            formControlName="title"></sam-text>
-
-          <sam-text
-            [control]="item.controls.fullName"
-            [name]="'fullName-input'"
-            [label]="'Full Name'"
-            [required]="true"
-            formControlName="fullName"></sam-text>
-
-          <sam-text
-            [control]="item.controls.email"
-            [name]="'email-input'"
-            [label]="'Email'"
-            [required]="true"
-            formControlName="email"></sam-text>
-
-          <!--<sam-phone-entry [control]="item.controls.phone"
-            [required]="true"
-            label="Phone"
-            name="phone-input"
-            formControlName="phone"></sam-phone-entry>
-
-          <sam-phone-entry [control]="item.controls.fax"
-            label="Fax"
-            name="fax-input"
-            formControlName="fax"></sam-phone-entry>-->
-
-          <sam-number
-            [control]="item.controls.phone"
-            [minlength]="10"
-            [maxlength]="10"
-            [name]="'phone-input'"
-            [label]="'Phone'"
-            [required]="true"
-            formControlName="phone"></sam-number>
-
-          <sam-number
-            [control]="item.controls.fax"
-            [minlength]="10"
-            [maxlength]="10"
-            [name]="'fax-input'"
-            [label]="'Fax'"
-            formControlName="fax"></sam-number>
-
-          <sam-text-area
-            [control]="item.controls.streetAddress"
-            [name]="'street-input'"
-            [label]="'Street'"
-            [required]="true"
-            formControlName="streetAddress"></sam-text-area>
-
-          <sam-text
-            [control]="item.controls.city"
-            [name]="'city-input'"
-            [label]="'City'"
-            [required]="true"
-            formControlName="city"></sam-text>
-
+  <div class="sam-ui segment">
+    <h4 [attr.id]="'fal-contact-list'">Headquaters Office</h4>
+    <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
+    
+    <sam-listbuilder
+      [max]="2"
+      [control]="falContactInfoForm.get('contacts')"
+      [formArrayInput]="falContactInfoForm.get('contacts').controls"
+      [formGroupTemplate]="contactsSubform"
+      (formArrayChange)="contactsFormArrayChange($event)"
+      (action)="lbActionHandler($event)">
+      <template #display let-item>
+        <ng-container *ngIf="!item.valid">
+          <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
+        </ng-container>
+        <p>
+          <ng-container *ngIf="item.value.title">{{item.value.title}} </ng-container>{{item.value.fullName}}<br/>
+          <ng-container *ngIf="item.value.streetAddress">{{item.value.streetAddress}}<br/></ng-container>
+          <ng-container *ngIf="item.value.email">Email: {{item.value.email}}<br/></ng-container>
+          <ng-container *ngIf="item.value.phone">Phone: {{item.value.phone}}<br/></ng-container>
+        </p>
+      </template>
+      <template #edit let-item>
+        <form [formGroup]="item">
           <sam-select
-            [control]="item.controls.state"
-            [label]="'State'"
-            [name]="'state-control'"
+            [control]="item.controls.contactId"
+            [label]="'Contact'"
+            [name]="'contact-control'"
             [required]="true"
-            [options]="stateDrpDwnOptions"
-            formControlName="state"></sam-select>
+            [options]="contactDrpDwnOptions"
+            [disabled]="(mode == 'Edit' ? true : false)"
+            formControlName="contactId"
+            (modelChange)="onParamChanged($event,item)"></sam-select>
+    
+          <div id="newContact" [class.hide]="(item.controls.contactId.value != 'new' && mode != 'Edit')">
+    
+            <sam-text
+              [control]="item.controls.title"
+              [name]="'title-input'"
+              [label]="'Title'"
+              formControlName="title"></sam-text>
+    
+            <sam-text
+              [control]="item.controls.fullName"
+              [name]="'fullName-input'"
+              [label]="'Full Name'"
+              [required]="true"
+              formControlName="fullName"></sam-text>
+    
+            <sam-text
+              [control]="item.controls.email"
+              [name]="'email-input'"
+              [label]="'Email'"
+              [required]="true"
+              formControlName="email"></sam-text>
+    
+            <!--<sam-phone-entry [control]="item.controls.phone"
+              [required]="true"
+              label="Phone"
+              name="phone-input"
+              formControlName="phone"></sam-phone-entry>
+    
+            <sam-phone-entry [control]="item.controls.fax"
+              label="Fax"
+              name="fax-input"
+              formControlName="fax"></sam-phone-entry>-->
+    
+            <sam-number
+              [control]="item.controls.phone"
+              [minlength]="10"
+              [maxlength]="10"
+              [name]="'phone-input'"
+              [label]="'Phone'"
+              [required]="true"
+              formControlName="phone"></sam-number>
+    
+            <sam-number
+              [control]="item.controls.fax"
+              [minlength]="10"
+              [maxlength]="10"
+              [name]="'fax-input'"
+              [label]="'Fax'"
+              formControlName="fax"></sam-number>
+    
+            <sam-text-area
+              [control]="item.controls.streetAddress"
+              [name]="'street-input'"
+              [label]="'Street'"
+              [required]="true"
+              formControlName="streetAddress"></sam-text-area>
+    
+            <sam-text
+              [control]="item.controls.city"
+              [name]="'city-input'"
+              [label]="'City'"
+              [required]="true"
+              formControlName="city"></sam-text>
+    
+            <sam-select
+              [control]="item.controls.state"
+              [label]="'State'"
+              [name]="'state-control'"
+              [required]="true"
+              [options]="stateDrpDwnOptions"
+              formControlName="state"></sam-select>
+    
+            <sam-text
+              [control]="item.controls.zip"
+              [name]="'zip-input'"
+              [label]="'Zip'"
+              [required]="true"
+              formControlName="zip"></sam-text>
+    
+            <sam-select
+              [label]="'Country'"
+              [name]="'country-control'"
+              [options]="countryDrpDwnOptions"
+              formControlName="country"></sam-select>
+    
+          </div>
+        </form>
+      </template>
+    </sam-listbuilder>
+  </div>
 
-          <sam-text
-            [control]="item.controls.zip"
-            [name]="'zip-input'"
-            [label]="'Zip'"
-            [required]="true"
-            formControlName="zip"></sam-text>
-
-          <sam-select
-            [label]="'Country'"
-            [name]="'country-control'"
-            [options]="countryDrpDwnOptions"
-            formControlName="country"></sam-select>
-
-        </div>
-      </form>
-    </template>
-  </sam-listbuilder>
-
-  <sam-text
-    [control]="falContactInfoForm.controls['website']"
-    [hint]="websiteHint"
-    [attr.id]="'fal-contact-website'"
-    [name]="'website-input'"
-    [label]="'Website'"
-    formControlName="website">
-  </sam-text>
+  <div class="sam-ui segment">
+    <sam-text
+      [control]="falContactInfoForm.controls['website']"
+      [hint]="websiteHint"
+      [attr.id]="'fal-contact-website'"
+      [name]="'website-input'"
+      [label]="'Website'"
+      formControlName="website">
+    </sam-text>
+  </div>
 </form>

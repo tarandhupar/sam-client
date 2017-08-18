@@ -17,8 +17,16 @@ export class UserService {
       }
 
       return uo;
+    }
+
+    if (Cookie.get('superToken')) {
+      return { uid: Cookie.get('superToken'), firstName: 'super', lastName: 'admin' };
     } else {
       throw new Error('User cookie missing');
     }
+  }
+
+  isLoggedIn(): boolean {
+    return !!(Cookie.get('iPlantDirectoryPro') || Cookie.get('superToken'));
   }
 }

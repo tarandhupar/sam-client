@@ -1,13 +1,18 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
+import * as _ from 'lodash';
 
 @Injectable()
 export class DictionaryService {
 
-  constructor(private oAPIService: WrapperService){}
+  dictionaries: any;
 
-  public getDictionaryById(ids: string, size: string = '', filterElementIds: string = '', keyword = '') {
+  constructor(private oAPIService: WrapperService){
+    this.dictionaries = {};
+  }
+
+  public getProgramDictionaryById(ids: string, size: string = '', filterElementIds: string = '', keyword = '') {
     let oApiParam = {
         name: 'program',
         suffix: '/dictionaries',
@@ -21,18 +26,26 @@ export class DictionaryService {
     };
 
     var obj = this.oAPIService.call(oApiParam).map(data => {
-        data = data._embedded.jSONObjectList;
-        var dictionary = {};
-        for(var dictionaryJSON of data) {
-            dictionaryJSON = dictionaryJSON.content;
-            this.updateTreeNodes(dictionaryJSON.id, dictionaryJSON.elements, null);
-            dictionary[dictionaryJSON.id] = dictionaryJSON.elements;
-        }
-
-        return dictionary;
+       return this.processDictionariesData(data, 'program');
     });
 
     return obj;
+  }
+
+  processDictionariesData(data: any, domain: string){
+    if (domain === 'program'){
+      data = data._embedded.jSONObjectList;
+    } else {
+      data = data._embedded.dictionaries;
+    }
+    for(var dictionaryJSON of data) {
+      if (domain === 'program') {
+        dictionaryJSON = dictionaryJSON.content;
+      }
+      this.updateTreeNodes(dictionaryJSON.id, dictionaryJSON.elements, null);
+      this.dictionaries[dictionaryJSON.id] = dictionaryJSON.elements;
+    }
+    return this.dictionaries;
   }
 
   private updateTreeNodes(dictionaryName:any, elements:any, parent:any) {
@@ -54,6 +67,42 @@ export class DictionaryService {
         default:
             return item.code + " - " + item.value;
     }
+  }
+
+  getOpportunityDictionary(ids: string) {
+    let apiParam = {
+      name: 'opportunity',
+      suffix: '/dictionaries',
+      oParam: {
+        ids: ids
+      },
+      method: 'GET'
+    };
+
+    let obj = this.oAPIService.call(apiParam).map(data => {
+      return this.processDictionariesData(data, 'opportunity');
+    });
+    return obj;
+  }
+
+  getWageDeterminationDictionary(ids: string) {
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/dictionaries',
+      oParam: {
+        ids: ids
+      },
+      method: 'GET'
+    };
+    var obj = this.oAPIService.call(apiParam).map(data => {
+      return this.processDictionariesData(data, 'wdol');
+    });
+
+    return obj;
+  }
+
+  filterDictionariesToRetrieve(dictionaries: string){
+    return (_.difference(dictionaries.split(","), Object.keys(this.dictionaries))).join();
   }
 
 }

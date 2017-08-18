@@ -1,19 +1,21 @@
-<sam-modal #titleModal
-           [showClose]="true"
-           [closeOnOutsideClick]="true"
-           [closeOnEscape]="true"
-           [type]="'warning'"
-           [title]="titleMissingConfig.title"
-           [cancelButtonLabel]="titleMissingConfig.closeText"
-           [description]="titleMissingConfig.description"
-           (onClose)="onTitleModalClose()">
+<sam-modal 
+  #titleModal
+  [showClose]="true"
+  [closeOnOutsideClick]="true"
+  [closeOnEscape]="true"
+  [type]="'warning'"
+  [title]="titleMissingConfig.title"
+  [cancelButtonLabel]="titleMissingConfig.closeText"
+  [description]="titleMissingConfig.description"
+  (onClose)="onTitleModalClose()">
 </sam-modal>
-<sam-complex-form-template
+
+<form-step
   [ngClass]="'assistance-listing-operations'"
   [hidden]="createPermissions === undefined"
   [crumbs]="crumbs"
-  pageTitle="Assistance Listing"
-  [sectionTitle]="falFormViewModel.title"
+  [pageTitle]="falFormViewModel.title ? falFormViewModel.title : 'Assisting Listing'"
+  [sectionTitle]="falFormViewModel.title ? 'Assisting Listing' : 'Add'"
   [sideNavSelection]="sidenavSelection"
   [sideNavModel]="sidenavModel"
   [sectionIndex]="currentSection"
@@ -21,46 +23,81 @@
   [statusBannerLeadingText]="leadingErrorMsg"
   statusBannerType="warning"
   (action)="formActionHandler($event)"
-  (sideNavOutput)="navHandler($event)" (breadcrumbOut)="breadCrumbClick($event)">
+  (sideNavOutput)="navHandler($event)" 
+  (breadcrumbOut)="breadCrumbClick($event)">
+  
   <div status-banner>
-    <fal-error-display #errorDisplay (message)="updateLeadingMsg($event)" (onNavigation)="checkNavigation($event)"></fal-error-display>
+    <fal-error-display #errorDisplay 
+      (message)="updateLeadingMsg($event)" 
+      (onNavigation)="checkNavigation($event)">
+    </fal-error-display>
   </div>
+  
   <div form-sections>
+    
+    <div class="sam-ui hidden divider"></div>
 
-        <fal-form-header-information *ngIf="isSection('header-information')"
-                                     [viewModel]="falFormViewModel"
-                                     (showErrors)="showErrors($event)" #form></fal-form-header-information>
+    <fal-form-header-information 
+      *ngIf="isSection('header-information')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-header-information>
 
-        <fal-form-overview *ngIf="isSection('overview')"
-                           [viewModel]="falFormViewModel"
-                           (showErrors)="showErrors($event)" #form></fal-form-overview>
 
-        <fal-form-authorization *ngIf="isSection('authorization')"
-                                [viewModel]="falFormViewModel"
-                                (showErrors)="showErrors($event)" #form></fal-form-authorization>
+    <fal-form-overview 
+      *ngIf="isSection('overview')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-overview>
 
-        <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')"
-                                  [viewModel]="falFormViewModel" (showErrors)="showErrors($event)" #form></fal-form-obligation-info>
 
-        <fal-form-financial-info-other *ngIf="isSection('financial-information-other')"
-                                       [viewModel]="falFormViewModel"
-                                       (showErrors)="showErrors($event)" #form></fal-form-financial-info-other>
+    <fal-form-authorization 
+      *ngIf="isSection('authorization')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-authorization>
 
-        <fal-form-criteria-info *ngIf="isSection('criteria-information')"
-                                [viewModel]="falFormViewModel"
-                                (showErrors)="showErrors($event)" #form></fal-form-criteria-info>
 
-        <fal-form-assistance *ngIf="isSection('applying-for-assistance')"
-                             [viewModel]="falFormViewModel"
-                             (showErrors)="showErrors($event)" #form></fal-form-assistance>
+    <fal-form-obligation-info 
+      *ngIf="isSection('financial-information-obligations')"
+      [viewModel]="falFormViewModel" 
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-obligation-info>
 
-        <fal-form-compliance-requirements *ngIf="isSection('compliance-requirements')"
-                                          [viewModel]="falFormViewModel"
-                                          (showErrors)="showErrors($event)" #form></fal-form-compliance-requirements>
 
-        <fal-form-contact-info *ngIf="isSection('contact-information')"
-                               [viewModel]="falFormViewModel"
-                               (showErrors)="showErrors($event)" #form></fal-form-contact-info>
+    <fal-form-financial-info-other 
+      *ngIf="isSection('financial-information-other')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-financial-info-other>
+
+
+    <fal-form-criteria-info 
+      *ngIf="isSection('criteria-information')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-criteria-info>
+
+
+    <fal-form-assistance 
+      *ngIf="isSection('applying-for-assistance')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-assistance>
+
+
+    <fal-form-compliance-requirements 
+      *ngIf="isSection('compliance-requirements')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-compliance-requirements>
+
+
+    <fal-form-contact-info 
+      *ngIf="isSection('contact-information')"
+      [viewModel]="falFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </fal-form-contact-info>
 
   </div>
-</sam-complex-form-template>
+</form-step>

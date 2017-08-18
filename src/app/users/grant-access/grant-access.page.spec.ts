@@ -1,8 +1,7 @@
 import { GrantAccessPage } from "./grant-access.page";
-import { UserAccessPage } from "../access/access.page";
 import { GroupByDomainPipe } from "../access/group-by-domain.pipe";
 import { ObjectsAndPermissionsComponent } from "../objects-and-permissions/objects-and-permissions.component";
-import { TestBed } from "@angular/core/testing";
+import { TestBed, async } from "@angular/core/testing";
 import { SamUIKitModule } from "sam-ui-kit/index";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FormsModule } from "@angular/forms";
@@ -13,24 +12,22 @@ import { PageScrollService } from "ng2-page-scroll";
 import { UserAccessMock } from "api-kit/access/access.service.mock";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
-import { routes } from "../users.route";
 import { RequestDetailsComponent } from "../../role-management/request-details/request-details";
-import { RoleTable } from "../role-table/role-table.component";
-import { WorkspaceTemplateComponent } from "../../app-templates/workspace/workspace-template.component";
-import { PendingRequestsComponent } from "../pending-requests/pending-requests.component";
+import { UserServiceMock } from "../user.service.mock";
+import { UserService } from "../user.service";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { Observable } from "rxjs";
+import { FHService } from "../../../api-kit/fh/fh.service";
+import { FHServiceMock } from "../../../api-kit/fh/fh.service.mock";
 
 let activatedRouteStub = {
   snapshot: {
     _lastPathIndex: 0,
+    params: { id: "tim@tim.com"},
+    queryParams: {},
+    data: { mode: 'grant' },
   },
-  parent: {
-    snapshot: {
-      params: { id: "tim@tim.com"}
-    }
-  },
-  queryParams: {
-    subscribe: function() { }
-  }
+  queryParams: Observable.of({})
 };
 
 describe('The GrantAccessPage component', () => {
@@ -53,13 +50,15 @@ describe('The GrantAccessPage component', () => {
         PipesModule
       ],
       providers: [
+        CapitalizePipe,
         AlertFooterService,
         PageScrollService,
         { provide: UserAccessService, useValue: UserAccessMock },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
+        { provide: UserService, useClass: UserServiceMock },
+        { provide: FHService, useClass: FHServiceMock },
       ]
     });
-
     fixture = TestBed.createComponent(GrantAccessPage);
     component = fixture.componentInstance;
   });
@@ -68,25 +67,20 @@ describe('The GrantAccessPage component', () => {
     expect(true).toBe(true);
   });
 
-  // it('should save', async(() => {
-  //   let svc = fixture.debugElement.injector.get(UserAccessService);
-  //   spyOn(svc, 'postAccess');
-  //
-  //   component.ngOnInit();
-  //   fixture.detectChanges();
-  //   component.onOrganizationsChange([{name: "GSA", value: 1}]);
-  //   component.onDomainChange(1);
-  //   fixture.whenStable().then(() => {
-  //     component.onRoleChange(1);
-  //     fixture.detectChanges();
-  //     let permissionCheckbox = fixture.debugElement.query(By.css('.permission-input'));
-  //     permissionCheckbox.nativeElement.click();
-  //     fixture.detectChanges();
-  //     expect(true).toBe(true);
-  //     // FIXME: onGrantClick attempts to change the route and crashes tests
-  //     //component.onGrantClick();
-  //     //expect(svc.postAccess).toHaveBeenCalled();
-  //   });
-  //
-  // }));
+  it('should save grants', done => {
+
+    component.ngOnInit();
+    fixture.detectChanges();
+    component.onOrganizationsChange([{name: "GSA", value: 1}]);
+    component.onDomainChange(1);
+    fixture.whenStable().then(() => {
+      component.onRoleChange(1);
+      fixture.detectChanges();
+      component.onGrantClick();
+      done();
+      // FIXME: onGrantClick attempts to change the route and crashes tests
+      //component.onGrantClick();
+      //expect(svc.postAccess).toHaveBeenCalled();
+    });
+  });
 });

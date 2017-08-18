@@ -308,7 +308,6 @@ describe('src/app/assistance-listing/assistance-listing-change-request/fal-form-
     expect(comp.requestType).toBeDefined();
     expect(comp.requestStatus).toBeDefined();
     expect(comp.programRequest).toBeDefined();
-    expect(comp.programRequestData).toBeDefined();
     expect(comp.programNumberLow).toBeDefined();
     expect(comp.programNumberHigh).toBeDefined();
     expect(comp.cfdaCode).toBeDefined();

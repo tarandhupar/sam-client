@@ -17,9 +17,11 @@ export class WorkspaceWidgetComponent {
   @Input() isExpand: boolean = false;
 
   @Output() onToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  botSectionId: string = "";
+
 
   ngOnInit() {
-    //TODO
+    this.botSectionId = this.title.split(' ').join('-')+'-bot';
   }
 
   onShortcutClick() {
@@ -31,5 +33,8 @@ export class WorkspaceWidgetComponent {
   onToggleBtnClick() {
     this.isExpand = !this.isExpand;
     this.onToggleChange.emit(this.isExpand);
+    if(this.isExpand && document.documentElement.clientHeight - document.getElementById(this.botSectionId).getBoundingClientRect().bottom < 200){
+      window.scrollTo(0,window.pageYOffset+200);
+    }
   }
 }

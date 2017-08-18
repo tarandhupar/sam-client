@@ -4,6 +4,8 @@ import { ValidationErrors } from '../../app-utils/types';
 import { FALSectionNames, FALFieldNames, FALSectionFieldsBiMap } from './fal-form.constants';
 import * as _ from 'lodash';
 import { ReplaySubject, Subject } from "rxjs";
+import { FALFormService } from "./fal-form.service";
+import * as moment from 'moment/moment';
 
 export interface FieldError {
   id?: string,
@@ -29,6 +31,8 @@ export function isFieldErrorList(arg: any): arg is FieldErrorList {
 export class FALFormErrorService {
   private _viewModel: FALFormViewModel;
   private _errors: FieldErrorList;
+
+  constructor(private falFormServive: FALFormService) {}
 
   get viewModel() {
     return this._viewModel;
@@ -262,77 +266,60 @@ export class FALFormErrorService {
     return titleErrors;
   }
 
-  public validateHeaderProgNo(validateFlag = false, rangeLow = 0, rangeHigh = 0, cookie = null, programService = null): Subject<any> {
+  public validateHeaderProgNo(): Subject<any> {
     let errors: ValidationErrors = null;
     let response: Subject<any> = new ReplaySubject(1);
-    let finished = true;
+    let finished = false;
 
-    if(validateFlag) {
+    if(this._viewModel.organizationId) {
+      this.falFormServive.getFederalHierarchyConfigurations(this._viewModel.organizationId).subscribe(data => {
 
-      let progNo;
+        if (!data.programNumberAuto) {
 
-      if (!this._viewModel.programNumber) {
-        errors = this.requiredFieldError('FAL Number field');
-      }
-      else {
+          if (!this._viewModel.programNumber) {
+            errors = this.requiredFieldError('CFDA Number field');
+            finished = true;
+          }
+          else {
 
-        if (this._viewModel.programNumber.indexOf(".") == -1) {
-          progNo = this._viewModel.programNumber;
-        }
-        else {
-          progNo = this._viewModel.programNumber.slice(3);
-        }
+            let progNo = this.getSlicedProgNo();
 
-        if(progNo.length !== 3) {
-          errors = {
-            maxFieldLength: {
-              message: 'FAL Number field - Please enter a three digit number'
-            }
-          };
-        }
-        else if (progNo < rangeLow || progNo > rangeHigh) {
-          errors = {
-            maxFieldLength: {
-              message: 'FAL Number field value falls outside the range defined for this organization'
-            }
-          };
-        }
-        else {
-          finished = false;
-          programService.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, cookie, this._viewModel.organizationId)
-            .subscribe(res => {
-              if(!res['content']['isProgramNumberUnique']) {
-                errors = {
-                  programNumberUnique: {
-                    message: 'CFDA Number already exists. Please enter a valid Number'
-                  }
-                };
-              }
-
-              let falNoErrors = {
-                id: FALFieldNames.FALNO,
-                errors: errors
+            if (progNo.length !== 3) {
+              errors = {
+                maxFieldLength: {
+                  message: 'CFDA Number field - Please enter a three digit number'
+                }
               };
+              finished = true;
+            }
+            else {
 
-              let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-              this.setOrUpdateError(headerErrors, falNoErrors);
+              //Check for No in range
+              this.checkForInRange(progNo, errors, data.programNumberLow, data.programNumberHigh);
+              if (errors) {
+                finished = true;
+              }
+              else {
+                //Check for Unique No
+                this.checkForUniqueProgNo(response, errors);
+              }
+            } //end of else
+          }
+        } //end of if validateFlag
+        else {
+          finished = true;
+        }
 
-              response.next(falNoErrors);
-              response.complete();
-            });
-        } //end of else
-      }
-    } //end of if validateFlag
-
-    if (finished) {
-      let falNoErrors = {
-        id: FALFieldNames.FALNO,
-        errors: errors
-      };
-
-      let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
-      this.setOrUpdateError(headerErrors, falNoErrors);
-
+        if (finished) {
+          let falNoErrors = this.buildProgNoErrorJson(errors);
+          response.next(falNoErrors);
+          response.complete();
+        }
+      });
+    }
+    else {
+      this._viewModel.programNumber = '';
+      let falNoErrors = this.buildProgNoErrorJson(errors);
       response.next(falNoErrors);
       response.complete();
     }
@@ -340,6 +327,59 @@ export class FALFormErrorService {
     return response;
   }
 
+  public getSlicedProgNo(): string{
+    let progNo = '';
+    if (this._viewModel.programNumber.indexOf(".") == -1) {
+      progNo = this._viewModel.programNumber;
+    }
+    else {
+      progNo = this._viewModel.programNumber.slice(3);
+    }
+    return progNo;
+  }
+
+
+  public checkForInRange(progNo, errors, programNumberLow, programNumberHigh){
+    if (progNo < programNumberLow || progNo > programNumberHigh) {
+      errors = {
+        maxFieldLength: {
+          message: 'CFDA Number field value falls outside the range defined for this organization'
+        }
+      };
+    }
+
+    return errors;
+  }
+
+  public checkForUniqueProgNo(response, errors){
+    this.falFormServive.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, this._viewModel.organizationId)
+      .subscribe(res => {
+        if(!res['content']['isProgramNumberUnique']) {
+          errors = {
+            programNumberUnique: {
+              message: 'CFDA Number already exists. Please enter a valid Number'
+            }
+          };
+        }
+
+        let falNoErrors = this.buildProgNoErrorJson(errors);
+
+        response.next(falNoErrors);
+        response.complete();
+      });
+  }
+
+  public buildProgNoErrorJson(errors){
+    let falNoErrors = {
+      id: FALFieldNames.FALNO,
+      errors: errors
+    };
+
+    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+    this.setOrUpdateError(headerErrors, falNoErrors);
+
+    return falNoErrors;
+  }
 
   public validateFederalAgency(): FieldError {
     let agencyErrors = {
@@ -1024,6 +1064,9 @@ export class FALFormErrorService {
       case FALFieldNames.DEADLINES:
         this.validateDeadlinesFlag();
         break;
+      case FALFieldNames.DEADLINES_LIST:
+        this.validateDeadlineList();
+        break;
       case FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO:
         this.validatePreAppCoordAddInfo();
         break;
@@ -1055,6 +1098,71 @@ export class FALFormErrorService {
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
+  }
+
+  public validateDeadlineList():(FieldErrorList | null) {
+    let errors: FieldError[] = [];
+
+    if (this._viewModel.deadlineList.length > 0){
+      let deadlineList = this._viewModel.deadlineList;
+      for (let i = 0; i < deadlineList.length; i++) {
+        let deadlineItem = deadlineList[i];
+        let deadlineError = {
+          id: FALFieldNames.DEADLINES_LIST + i,
+          errors: {}
+        };
+
+        if (!deadlineItem.start) {
+          deadlineError.errors['dateRangeError'] = {
+            message: 'Deadlines: Row ' + (i + 1) + ' Start Date is required'
+          };
+        }
+        else {
+          let startDateM = moment(deadlineItem.start);
+
+          if(!startDateM.isValid() || deadlineItem.start == "Invalid date") {
+            deadlineError.errors['dateRangeError'] = {
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid start date'
+            };
+          }
+
+          if(deadlineItem.end) {
+            let endDateM = moment(deadlineItem.end);
+
+            if(!endDateM.isValid() || deadlineItem.end == "Invalid date") {
+              deadlineError.errors['dateRangeError'] = {
+                message: 'Deadlines: Row ' + (i + 1) + ' Invalid end date'
+              };
+            }
+            else if(startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0){
+              deadlineError.errors['dateRangeError'] = {
+                message: 'Deadlines: Row ' + (i + 1) + ' Invalid date range'
+              };
+            }
+          }
+
+        }
+
+        if (!(_.isEmpty(deadlineError.errors))) {
+          errors.push(deadlineError);
+        }
+        //console.log(deadlineItem);
+      }
+    }
+
+    let deadlineListErrors = {
+      id: FALFieldNames.DEADLINES_LIST,
+      errorList: errors
+    };
+
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    this.setOrUpdateError(sectionErrors, deadlineListErrors);
+
+    if (errors.length > 0) {
+      return deadlineListErrors;
+    } else {
+      return null;
+    }
   }
 
   public validatePreAppCoordAddInfo(): FieldError {

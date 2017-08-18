@@ -20,7 +20,7 @@ import 'rxjs/add/operator/map';
             <span [innerHTML]="data.description"></span>
           </p>
           <ul class="sam-ui small list">
-            <li *ngIf="data.type=='Agency'">
+            <li *ngIf="data.type=='Agency' && data.organizationHierarchy!=null">
               <strong>Department </strong><br>
               <span>{{ data.organizationHierarchy[0].name }}</span>
             </li>

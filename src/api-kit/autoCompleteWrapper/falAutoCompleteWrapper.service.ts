@@ -37,7 +37,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
     }
 
     if (index === 'D') {
-      this.oDictionaryService.getDictionaryById(dictionaryName, size,'',q).subscribe((res) => {
+      this.oDictionaryService.getProgramDictionaryById(dictionaryName, size,'',q).subscribe((res) => {
           results.next(res['program_subject_terms'].reduce((prev, curr) => {
             const newObj = {
               code: curr.element_id,

@@ -2,22 +2,26 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import {FHService} from 'api-kit';
+import { FALFormService } from "../assistance-listing-operations/fal-form.service";
 import * as Cookies from 'js-cookie';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
 import { IBreadcrumb } from "sam-ui-kit/types";
+
 
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing-workspace.template.html',
   providers: [
     ProgramService,
-    FHService
+    FHService,
+    FALFormService
   ]
 })
 
 export class FalWorkspacePage implements OnInit, OnDestroy {
   @ViewChild('autocomplete') autocomplete: any;
+  @ViewChild('agencyPickerV2') agencyPickerV2;
   private MODIFIED = 'modified';
   private POSTED = 'posted';
   private START_DAY = '00:00:00';
@@ -31,6 +35,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   totalCount: any = 0;
   totalPages: any = 0;
   data = [];
+  alerts = [];
   initLoad = true;
   oldKeyword: string = "";
   qParams: any = {};
@@ -56,6 +61,19 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     name: 'fal-status-filter',
     label: '',
     hasSelectAll: 'true'
+  };
+  requestTypeCheckboxModel: any = [];
+  requestTypeCheckboxConfig = {
+    options: [
+      {value: 'archive_request', label: 'Archive', name: 'checkbox-archive'},
+      {value: 'unarchive_request', label: 'Unarchive', name: 'checkbox-unarchive'},
+      {value: 'title_request', label: 'Title Change', name: 'checkbox-title'},
+      {value: 'agency_request', label: 'Agency Change', name: 'checkbox-agency'},
+      {value: 'program_number_request', label: 'Number Change', name: 'checkbox-program-number'},
+    ],
+    name: 'fal-change-request-filter',
+    label: '',
+    hasSelectAll: false
   };
   defaultSort: any = {type:'programNumber', sort:'asc'};
   sortModel: any = this.defaultSort;
@@ -88,15 +106,20 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     { breadcrumb: 'Workspace', url: '/workspace' },
     { breadcrumb: 'Assistance Listings'}
   ];
+  agencyPickerModel = [];
+  previousStringList: string = '';
+  public organizationData: any;
+  public orgLevels: any;
+  public orgRoots: any = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService, private falFormService: FALFormService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     let userPermissionsAPI = this.loadUserPermissions();
     this.loadCountPendingRequest(userPermissionsAPI);
-    this.getStatusCounts(this.cookieValue)
+    this.getOrganizationLevels();
   }
 
   ngOnDestroy() {
@@ -160,6 +183,15 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     if(this.modifiedFrom){
       qsobj['modifiedFrom'] = this.modifiedFrom;
     }
+    if(this.organizationId){
+      qsobj['organizationId'] = this.organizationId;
+    }
+    if(this.requestTypeCheckboxModel){
+      qsobj['requestType'] = this.requestTypeCheckboxModel.toString()
+    }
+    else {
+      qsobj['requestType'] = '';
+    }
 
     return qsobj;
   }
@@ -178,10 +210,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       postedTo: dateResult.postedTo,
       modifiedFrom: dateResult.modifiedFrom,
       modifiedTo: dateResult.modifiedTo,
-      sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type'])
+      sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
+      organizationId: this.organizationId,
+      requestType: this.requestTypeCheckboxModel ? this.requestTypeCheckboxModel.toString() : ''
     }).subscribe(
       data => {
-
         if (data._embedded && data._embedded.program) {
           this.data = data._embedded.program;
           this.totalCount = data.page['totalElements'];
@@ -196,9 +229,30 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         this.initLoad = false;
         //retrieving org names from fhservice by orgids and mapping org.orgKey to org.name
         this.createOrgNameMap();
+
+        if(data._embedded && data._embedded.facets) {
+          for(var facet of data._embedded.facets) {
+            switch(facet['name']) {
+              case 'status':
+                this.statusCheckboxConfig.options = this.buildStatusFilterOptions(facet['buckets']);
+                    break;
+              case 'pendingChangeRequest':
+                this.requestTypeCheckboxConfig.options = this.buildStatusFilterOptions(facet['buckets']);
+                    break;
+            }
+          }
+        }
       },
       error => {
         console.error('Error!!', error);
+        let errorRes = error.json();
+        if (error && (error.status === 502 || error.status === 504)) {
+          this.alerts.push({
+            type: 'error',
+            title: errorRes.error,
+            description: errorRes.message
+          });
+        }
       }
     );
     // construct qParams to pass parameters to object view pages
@@ -243,10 +297,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   private loadUserPermissions(){
-    let apiSubject = new ReplaySubject();
-
+    let apiSubject = new ReplaySubject(1);
     this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(apiSubject);
-
     // runs anytime url changes, takes values from url and sets them into our variables
     apiSubject.subscribe(res => {
       this.permissions = res;
@@ -255,6 +307,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : '';
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
             this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
+            this.requestTypeCheckboxModel = typeof data['requestType'] === "string" ? decodeURI(data['requestType']).split(",") : [];
             this.tab = data['tab'] && typeof data['tab'] === 'string' ? decodeURI(data['tab']) : this.POSTED;
             this.dateRadio =  data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
             this.dateFilterConfig.radSelection = this.dateRadio;
@@ -262,15 +315,35 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.postedTo = data['postedTo'] ? data['postedTo'] : "";
             this.modifiedFrom = data['modifiedFrom'] ? data['modifiedFrom'] : "";
             this.modifiedTo = data['modifiedTo'] ? data['modifiedTo'] : "";
+            this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+            this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
+
+            
             // sets the date models accordingly
             this.modelRebuilder(data);
             this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
-            this.getStatusCounts(this.cookieValue);
             this.runProgram();
           });
+    }, error => {
+        if (error && error.status === 401) {
+          this.alerts.push({
+            type: 'error',
+            title: 'Unauthorized',
+            description: 'Insufficient privileges to get user permission.'
+          });
+        }
     });
 
     return apiSubject;
+  }
+
+  setupOrgsFromQS(orgsStr){
+    if(!orgsStr){
+      return [];
+    }
+    let decodedStr = decodeURIComponent(orgsStr);
+    let orgsArray = decodedStr.split(",");
+    return orgsArray;
   }
 
   private loadCountPendingRequest(apiSource: Observable<any>){
@@ -302,48 +375,53 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   // status filter model change
   statusModelChanged(){
-    let qsobj = this.setupQS();
-    // overwrite the page number to be 1. When filters are changed we do not want to retain page number
-    qsobj['page'] = 1;
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/fal/workspace/'], navigationExtras);
+    this.refreshSearch();
   }
 
-  // gets the count of records in each status for filter
-  getStatusCounts(passedCookie){
-    this.programService.getProgramCountByStatus(passedCookie).subscribe(data => {
-      this.statusCheckboxConfig.options = this.buildStatusFilterOptions(data.content);
-    },
-    error => {
-      console.error('error calling program CountByStatus method');
-    });
+  // change request filter model change
+  requestTypeModelChanged(){
+    this.refreshSearch();
   }
 
-  // builds the options for status filter with counts included from api call -- returns to getStatusCounts()
+  // builds the options for status filter with counts included from api call -- returns to runProgram()
   buildStatusFilterOptions(data){
     var returnOptions = [];
 
     for(var property in data){
       var newObj = {};
-      var isZero = data[property] === 0 ? true : false;
+      data[property]['count'] = data[property]['count'] === null ? 0 : data[property]['count'];
+      var isZero = data[property]['count'] === 0 ? true : false;
 
-      switch(property){
+      switch(data[property]['name']){
         case 'total_archived_listing':
-          newObj = {value: 'archived', label: 'Archived (' + data[property] + ')', name: 'checkbox-archived', disabled: isZero ? true : false};
+          newObj = {value: 'archived', label: 'Archived (' + data[property]['count'] + ')', name: 'checkbox-archived', disabled: isZero ? true : false};
           break;
         case 'total_draft_listing':
-          newObj = {value: 'draft', label: 'Draft (' + data[property] + ')', name: 'checkbox-draft', disabled: isZero ? true : false};
+          newObj = {value: 'draft', label: 'Draft (' + data[property]['count'] + ')', name: 'checkbox-draft', disabled: isZero ? true : false};
           break;
         case 'total_rejected_listing':
-          newObj = {value: 'rejected', label: 'Rejected (' + data[property] + ')', name: 'checkbox-rejected', disabled: isZero ? true : false};
+          newObj = {value: 'rejected', label: 'Rejected (' + data[property]['count'] + ')', name: 'checkbox-rejected', disabled: isZero ? true : false};
           break;
         case 'total_pending_listing':
-          newObj = {value: 'pending', label: 'Pending (' + data[property] + ')', name: 'checkbox-pending', disabled: isZero ? true : false};
+          newObj = {value: 'pending', label: 'Pending (' + data[property]['count'] + ')', name: 'checkbox-pending', disabled: isZero ? true : false};
           break;
         case 'total_published_listing':
-          newObj = {value: 'published', label: 'Published (' + data[property] + ')', name: 'checkbox-published', disabled: isZero ? true : false};
+          newObj = {value: 'published', label: 'Published (' + data[property]['count'] + ')', name: 'checkbox-published', disabled: isZero ? true : false};
+          break;
+        case 'archive_request':
+          newObj = {value: 'archive_request', label: 'Archive (' + data[property]['count'] + ')', name: 'checkbox-archive', disabled: isZero ? true : false};
+          break;
+        case 'unarchive_request':
+          newObj = {value: 'unarchive_request', label: 'Unarchive (' + data[property]['count'] + ')', name: 'checkbox-unarchive', disabled: isZero ? true : false};
+          break;
+        case 'title_request':
+          newObj = {value: 'title_request', label: 'Title Change (' + data[property]['count'] + ')', name: 'checkbox-title', disabled: isZero ? true : false};
+          break;
+        case 'agency_request':
+          newObj = {value: 'agency_request', label: 'Agency Change (' + data[property]['count'] + ')', name: 'checkbox-agency', disabled: isZero ? true : false};
+          break;
+        case 'program_number_request':
+          newObj = {value: 'program_number_request', label: 'Number Change (' + data[property]['count'] + ')', name: 'checkbox-program-number', disabled: isZero ? true : false};
           break;
         default:
           newObj = null;
@@ -413,9 +491,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     // clears the search autocomplete
     this.workspaceSearchModel(null);
     this.statusCheckboxModel = this.defaultStatus;
+    this.requestTypeCheckboxModel = [];
     this.sortModel = this.defaultSort;
+    this.clearAgencyPickerFilter();
     // this clears all date filters as well as refreshes the data on the page
     this.clearDateFilter();
+  }
+
+  clearAgencyPickerFilter(){
+    this.agencyPickerModel = [];
+    this.organizationId = "";
   }
 
   // initiates a search with date filter
@@ -428,13 +513,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.postedFrom = returnObj.postedFrom;
     this.postedTo = returnObj.postedTo;
 
-    let qsobj = this.setupQS();
-    // overwrite the page number to be 1. When filters are changed we do not want to retain page number
-    qsobj['page'] = 1;
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/fal/workspace/'], navigationExtras);
+    this.refreshSearch();
   }
 
 
@@ -581,13 +660,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   // sortBy model change
   sortModelChange(){
-    let qsobj = this.setupQS();
-    // overwrite the page number to be 1. When filters are changed we do not want to retain page number
-    qsobj['page'] = 0;
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/fal/workspace/'], navigationExtras);
+    this.refreshSearch();
   }
 
   setSortModel(sortBy) {
@@ -617,8 +690,66 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       }
     }
 
+    refreshSearch() {
+      let qsobj = this.setupQS();
+      // overwrite the page number to be 1. When filters are changed we do not want to retain page number
+      qsobj['page'] = 1;
+      let navigationExtras: NavigationExtras = {
+        queryParams: qsobj
+      };
+      this.router.navigate(['/fal/workspace/'], navigationExtras);
+    }
 
+    //agency picker change handler
+    onOrganizationChange(selectedOrgs:any){
+      let organizationStringList = '';
+      let stringBuilderArray = selectedOrgs.map(function (organizationItem) {
+        if (organizationStringList === '') {
+          organizationStringList += organizationItem.value;
+        }
+        else {
+          organizationStringList += ',' + organizationItem.value;
+        }
 
+        return organizationStringList;
+      });
 
+      this.previousStringList = this.organizationId;
+
+      // storing current organization string list
+      this.organizationId = organizationStringList;
+
+      this.refreshSearch();
+    }
+
+  getOrganizationLevels() {
+    this.falFormService.getFALPermission('ORG_LEVELS').subscribe(res => {
+      this.orgLevels = res.ORG_LEVELS;
+      if (res && res.ORG_LEVELS) {
+        if (res.ORG_LEVELS.level === 'none') {
+          this.orgRoots.push(res.ORG_LEVELS.org);
+        } else if (res.ORG_LEVELS.org === 'all') {
+          this.orgRoots = [];
+        } else {
+          this.orgRoots.push(res.ORG_LEVELS.org);
+        }
+        //this.getOrganizationName(this.orgRoots);
+      }
+      //clone array to update array reference, fire ngOnChanges
+      this.orgRoots = this.orgRoots.slice(0);
+    });
+  }
+
+  getOrganizationName(orgId: any) {
+    //set organization name
+    this.falFormService.getOrganization(orgId)
+      .subscribe(data => {
+        this.organizationData = data['_embedded'][0]['org'];
+      }, error => {
+        console.error('error retrieving organization', error);
+      });
+
+  }
 }
+
 

@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { PipesModule } from '../../../app-pipes/app-pipes.module';
+import { PipesModule } from 'app-pipes/app-pipes.module';
 
 import { SystemMigrationsComponent } from './system-migrations.component';
 
@@ -52,14 +52,14 @@ describe('[IAM] System Account - Migrations', () => {
     expect(controls).toContain('password');
   });
 
-  xit('verify "Migrate" button click triggers migration event', () => {
+  it('verify "Migrate" button click triggers migration event', () => {
     let spy = spyOn(component, 'migrate'),
         button;
 
     component.initForm();
     fixture.detectChanges();
 
-    button = fixture.nativeElement.querySelector('button[type="submit"]');
+    button = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
     button.click();
 
     expect(component.migrate).toHaveBeenCalled();

@@ -3,6 +3,7 @@ import * as Cookies from 'js-cookie';
 import {ProgramService} from "../../../../api-kit/program/program.service";
 import {DictionaryService} from "../../../../api-kit/dictionary/dictionary.service";
 import {FHService} from "../../../../api-kit/fh/fh.service";
+import {Observable} from "rxjs/Observable";
 
 
 
@@ -42,7 +43,12 @@ export class RAOFormService {
   // call to dictionary service for any drop-down options we need
   getRAODict(){
     let dictionaries = ['states', 'countries', 'regional_office_division'];
-    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
+    if (filteredDictionaries===''){
+      return Observable.of(this.dictionaryService.dictionaries);
+    } else {
+      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+    }
   }
 
   getRAOPermission(type: string) {

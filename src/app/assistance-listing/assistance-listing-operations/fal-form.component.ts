@@ -36,6 +36,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     FALSectionNames.COMPLIANCE_REQUIREMENTS,
     FALSectionNames.CONTACT_INFORMATION
   ];
+  currentFragment: string;
   currentSection: number;
   leadingErrorMsg: string;
   crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
@@ -51,20 +52,20 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   @ViewChildren('form') form;
   private routeSubscribe;
-  private pristineIconClass = 'fa fa-circle-o section-pristine';
-  private updatedIconClass = 'fa fa-check section-updated';
-  private invalidIconClass = 'fa fa-exclamation-triangle section-invalid';
+  private pristineIconClass = '';
+  private updatedIconClass = 'completed';
+  private invalidIconClass = 'error';
 
   sectionLabels: any = [
-    '1. Header Information',
-    '2. Overview',
-    '3. Authorizations',
+    'Header Information',
+    'Overview',
+    'Authorizations',
     'Obligations',
     'Other Financial Info',
-    '5. Criteria for Applying',
-    '6. Applying For Assistance',
-    '7. Compliance Requirements',
-    '8. Contact Information'
+    'Criteria for Applying',
+    'Applying For Assistance',
+    'Compliance Requirements',
+    'Contact Information'
   ];
 
   // todo: find a way to refactor this...
@@ -84,19 +85,14 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       route: "#" + this.sections[2],
       iconClass: this.pristineIconClass
     }, {
-      label: "4. Financial Information",
+      label: this.sectionLabels[3],
       route: "#" + this.sections[3],
-      iconClass: this.pristineIconClass,
-      children: [{
-        label: this.sectionLabels[3],
-        route: "#" + this.sections[3],
-        iconClass: this.pristineIconClass
-      }, {
-        label: this.sectionLabels[4],
-        route: "#" + this.sections[4],
-        iconClass: this.pristineIconClass
-      }]
+      iconClass: this.pristineIconClass
     }, {
+      label: this.sectionLabels[4],
+      route: "#" + this.sections[4],
+      iconClass: this.pristineIconClass
+    }, {  
       label: this.sectionLabels[5],
       route: "#" + this.sections[5],
       iconClass: this.pristineIconClass
@@ -135,18 +131,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.falFormViewModel.programId = this.route.snapshot.params['id'];
         this.errorService.viewModel = this.falFormViewModel;
         this.errorService.initFALErrors();
-
-        this.service.getFederalHierarchyConfigurations(this.falFormViewModel.organizationId).subscribe( data => {
-          let runValidationFlag = !data.programNumberAuto;
-          let highRange = data.programNumberHigh;
-          let lowRange = data.programNumberLow;
-
-          this.errorService.validateHeaderProgNo(runValidationFlag, lowRange, highRange, FALFormService.getAuthenticationCookie(), this.programService).subscribe(res => {
-            this.updateSidenavIcon(FALSectionNames.HEADER);
-            this.showErrors(this.errorService.applicableErrors);
-          });
-
-        });
       });
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
@@ -160,13 +144,15 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.authGuard.checkPermissions('addoredit', this.falFormViewModel.programId ? this.falFormViewModel['_fal'] : res);
       this.createPermissions = res;
     });
+
     this.makeSidenavModel();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      this.updateSidenavIcon(FALSectionNames.HEADER);
       this.determineSection();
-    }, 0);
+    }, 200);
   }
 
   private makeSidenavModel() {
@@ -193,6 +179,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   determineSection() {
     this.route.fragment.subscribe((fragment: string) => {
+      this.currentFragment = fragment;
       let section = '';
 
       if (fragment) {
@@ -333,9 +320,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     section['iconClass'] = iconClass;
 
     // todo: avoid calling this twice on page load
-    if (sectionName === FALSectionNames.OBLIGATIONS || sectionName === FALSectionNames.OTHER_FINANCIAL_INFO) {
-      this.updateFinancialIcon();
-    }
+    // if (sectionName === FALSectionNames.OBLIGATIONS || sectionName === FALSectionNames.OTHER_FINANCIAL_INFO) {
+    //   this.updateFinancialIcon();
+    // }
   }
 
   // todo: find a better way to do this
@@ -392,7 +379,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   onTitleModalClose() {
     this.sidenavSelection = "";
     this.cdr.detectChanges();
-    this.sidenavSelection = "1. Header Information";
+    this.sidenavSelection = "Header Information";
     this.cdr.detectChanges();
     let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
     this.router.navigateByUrl(url);
@@ -464,13 +451,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
             this.afterSaveAction(api);
             if (actionType === 'SideNav') {
               let section = this.sectionLabels[this.currentSection];
-              let sectionLabel;
-              if(section !== 'Obligations' && section !== 'Other Financial Info') {
-                sectionLabel = section.split('.')[1];
-              } else {
-                sectionLabel = section;
-              }
-              this.successFooterAlertModel.description = sectionLabel + ' saved successfully.'
+              this.successFooterAlertModel.description = section + ' saved successfully.'
               this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
               this.navigationOnAction(actionType, navObj);
             }

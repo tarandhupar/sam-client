@@ -57,7 +57,7 @@
                       [multimode]="false"
                       [label]="'Select the office you work for:'"
                       [orgRoot]="user.departmentID"
-                      [(orgId)]="system.department"
+                      [orgId]="system.department"
                       [initial]="system.department ? [system.department] : []"
                       (organization)="setOrganization($event)"></sam-agency-picker>
 
@@ -73,7 +73,7 @@
           <input type="text" id="system-business-name" formControlName="businessName" />
         </sam-label-wrapper>
         <sam-label-wrapper name="system-primary-owner" label="Business Address" [errorMessage]="$errors('businessAddress')" *ngIf="!states.gov">
-          <input type="text" id="system-business-name" formControlName="businessAddress" />
+          <input type="text" id="system-business-address" formControlName="businessAddress" />
         </sam-label-wrapper>
 
         <sam-label-wrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')">
@@ -137,18 +137,18 @@
           <ng-container *ngFor="let poc of detailsForm.controls.pointOfContact.value; let $index = index;">
             <div *ngIf="pocs[$index]" class="usa-system-poc">
               <h4>
-                <a href="javascript:void(0);" [innerText]="pocs[$index].fullName"></a>
+                <a class="fullname" href="javascript:void(0);" [innerText]="pocs[$index].fullName"></a>
                 <div class="usa-edit">
                   <a href="javascript:void(0);" (click)="removePOC($index)">Remove</a>
                 </div>
               </h4>
               <div class="usa-form-group">
                 <label>Email</label>
-                <div class="usa-form-control" [innerText]="pocs[$index].email"></div>
+                <div class="usa-form-control email" [innerText]="pocs[$index].email"></div>
               </div>
               <div class="usa-form-group">
                 <label>Business Phone</label>
-                <div class="usa-form-control" [innerText]="pocs[$index].phone"></div>
+                <div class="usa-form-control phone" [innerText]="pocs[$index].phone"></div>
               </div>
             </div>
           </ng-container>

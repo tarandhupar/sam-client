@@ -82,7 +82,6 @@
           </sam-fal-text>
 
           <sam-text *ngIf="requestType == 'title_request'"
-                    [maxlength]="144"
                     [control]="falChangeRequestForm.controls['newTitle']"
                     [name]="'new-title-input'"
                     [label]="'New Title*'"

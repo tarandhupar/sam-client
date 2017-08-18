@@ -42,7 +42,7 @@ export class UserAccessService {
     return this.apiService
       .call(oApiParam, convertToJSON, queryEncoder)
       .catch(res => {
-        if (res.status === 401 || res.status === 403) {
+        if (res && res.status === 401) {
           this.router.navigate(['/signin']);
         }
         return Observable.throw(res);
@@ -66,7 +66,7 @@ export class UserAccessService {
     return this.callApi(apiOptions, toJson);
   }
 
-  getRoles(queryParams, userName?, adminLevel?: number): Observable< Array<IRole> > {
+  getRoles(queryParams, userName?): Observable< Array<IRole> > {
     let apiOptions: any = {
       name: 'uiroles',
       method: 'GET',
@@ -78,10 +78,6 @@ export class UserAccessService {
 
     if (userName) {
       apiOptions.suffix = '/'+userName+'/';
-    }
-
-    if (typeof adminLevel === 'number') {
-      apiOptions.oParam.adminLevel = adminLevel;
     }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
@@ -161,9 +157,6 @@ export class UserAccessService {
     if (roleKey) {
       apiOptions.oParam.roleKey = ''+roleKey;
     }
-
-    // API umbrella ain't ready for this
-    //this.addAuthHeader(apiOptions);
 
     return this.callApi(apiOptions);
   }
@@ -377,17 +370,6 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  getUserRoleDetails(userId: string, queryParams: any) {
-    let apiOptions: any = {
-      name: 'rms',
-      suffix: '/userprofile/'+userId+'/',
-      method: 'GET',
-      oParam: queryParams
-    };
-
-    return this.callApi(apiOptions);
-  }
-
   // used to determine admin level of logged in user
   getWidget() {
     let apiOptions: any = {
@@ -407,7 +389,7 @@ export class UserAccessService {
       suffix: '/checkaccess/',
       method: 'GET',
       oParam: {}
-    }
+    };
 
     return this.callApi(apiOptions);
   }
@@ -448,11 +430,14 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  bulkUpdate() {
-
-  }
-
   addAuthHeader(options) {
+    let superToken = Cookie.get('superToken');
+    if (superToken) {
+      options.headers = options.headers || {};
+      options.headers['X-Auth-Token'] = '***'+superToken;
+      return;
+    }
+
     let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
 
     if (!iPlanetCookie) {

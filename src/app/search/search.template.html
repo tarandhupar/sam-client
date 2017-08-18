@@ -47,12 +47,13 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !=='wd' && index !=='ei'">
-          <sam-agency-picker #agencyPicker
+          <sam-agency-picker-v2 #agencyPickerV2
             [attr.id] = "'federal-organization-filter'"
             [label]="'Search Federal Organizations'"
-            (organization)="onOrganizationChange($event)"
-            [levelLimit] = '2'>
-          </sam-agency-picker>
+            [ngModel]="agencyPickerModel"
+            (ngModelChange)="onOrganizationChange($event)"
+            [limit] = '2'>
+          </sam-agency-picker-v2>
         </sam-collapsible>
 
         <sam-collapsible  [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
@@ -193,21 +194,21 @@
             (modelChange)="awardIDVRadChanged($event)">
           </sam-radio-button>
           <br/>
-          <sam-contract-type-filter [attr.id]="'award-idv-type-filter'"
-                                    [contractValues]="awardTypeModel"
-                                    (contractValuesChange)="awardTypeSelected($event)"
-                                    [contractOptions]="awardType.options"
-                                    [contractConfig]="awardType"
+          <search-multi-select-filter [attr.id]="'award-idv-type-filter'"
+                                    [selectValues]="awardTypeModel"
+                                    (selectValuesChange)="awardTypeSelected($event)"
+                                    [selectOptions]="awardType.options"
+                                    [selectConfig]="awardType"
                                     class="usa-award-filter award-type-dropdown-list">
-          </sam-contract-type-filter>
+          </search-multi-select-filter>
           <br/>
-          <sam-contract-type-filter [attr.id]="'contract-type-filter'"
+          <search-multi-select-filter [attr.id]="'contract-type-filter'"
                                     class="usa-award-filter contract-type-dropdown-list"
-                                    [contractValues]="contractTypeModel"
-                                    (contractValuesChange)="contractTypeSelected($event)"
-                                    [contractOptions]="contractType.options"
-                                    [contractConfig]="contractType">
-          </sam-contract-type-filter>
+                                    [selectValues]="contractTypeModel"
+                                    (selectValuesChange)="contractTypeSelected($event)"
+                                    [selectOptions]="contractType.options"
+                                    [selectConfig]="contractType">
+          </search-multi-select-filter>
         </sam-collapsible>
 
         <!--Entity Name - DUNS Filter-->
@@ -239,12 +240,13 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index ==='ei'">
-          <sam-agency-picker #agencyPicker
-                             [attr.id] = "'federal-organization-filter-ei'"
-                             [label]="'Search Federal Organizations'"
-                             (organization)="onOrganizationChange($event)"
-                             [levelLimit] = '2'>
-          </sam-agency-picker>
+          <sam-agency-picker-v2 #agencyPickerV2
+            [attr.id] = "'federal-organization-filter-ei'"
+            [label]="'Search Federal Organizations'"
+            [ngModel]="agencyPickerModel"
+            (ngModelChange)="onOrganizationChange($event)"
+            [limit] = '2'>
+          </sam-agency-picker-v2>
           <span>Note: Only Exclusions are associated</span>
         </sam-collapsible>
 
@@ -264,13 +266,13 @@
 
         <!--Assistance Type Filters-->
         <sam-collapsible [label]="'Assistance Type'" [startOpened]="true" *ngIf="index==='cfda' && showRegionalOffices==false">
-          <sam-contract-type-filter [attr.id]= "'assistance-type-filter'"
+          <search-multi-select-filter [attr.id]= "'assistance-type-filter'"
                                     class="usa-award-filter award-type-dropdown-list"
-                                    [contractValues]="assistanceTypeFilterModel"
-                                    (contractValuesChange)="assistanceTypeFilterSelected($event)"
-                                    [contractOptions]="assistanceTypeOptions.options"
-                                    [contractConfig]="assistanceTypeOptions">
-          </sam-contract-type-filter>
+                                    [selectValues]="assistanceTypeFilterModel"
+                                    (selectValuesChange)="assistanceTypeFilterSelected($event)"
+                                    [selectOptions]="assistanceTypeOptions.options"
+                                    [selectConfig]="assistanceTypeOptions">
+          </search-multi-select-filter>
         </sam-collapsible>
         <div class ="sam-ui section divider"></div>
         <button (click)='clearAllFilters()'>Clear All</button>

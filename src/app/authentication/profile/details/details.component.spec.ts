@@ -7,13 +7,10 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 
-import { SamUIKitModule } from 'sam-ui-kit';
-import { FHService, WrapperService } from 'api-kit';
-import { FHWrapperService } from '../../../../api-kit/fh/fhWrapper.service';
-import { AppComponentsModule } from "app/app-components/app-components.module";
+import { FHService, FHWrapperService, WrapperService } from 'api-kit';
 
-import { AgencyPickerComponent } from '../../../app-components/agency-picker/agency-picker.component';
-import { SamKBAComponent, SamPasswordComponent } from '../../shared';
+import { SamUIKitModule } from 'sam-ui-kit';
+import { AppComponentsModule, AgencyPickerComponent } from 'app-components';
 import { DetailsComponent } from './details.component';
 
 const response = Observable.of({
@@ -45,7 +42,7 @@ const apiStub = {
   }
 };
 
-xdescribe('[IAM] User Profile - Details', () => {
+describe('[IAM] User Profile - Details', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
 
@@ -61,8 +58,6 @@ xdescribe('[IAM] User Profile - Details', () => {
 
       declarations: [
         DetailsComponent,
-        SamKBAComponent,
-        SamPasswordComponent,
       ],
 
       providers: [
@@ -99,7 +94,8 @@ xdescribe('[IAM] User Profile - Details', () => {
 
     component.ngOnInit();
     fixture.detectChanges();
-    fixture.debugElement.query(By.css("sam-editor .usa-additional_text")).nativeElement.click();
+
+    fixture.debugElement.query(By.css('#identity sam-editor .usa-additional_text')).nativeElement.click();
     fixture.detectChanges();
     checkbox = fixture.debugElement.query(By.css('#email-notification')).nativeElement;
 

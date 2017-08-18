@@ -73,8 +73,8 @@
             </ng-container>
 
             <ng-container *ngIf="requestType == 'title_request'">
-              <h4 class="sam-ui header">Proposed Title</h4>
-              <strong>{{ toJSON(programRequest.data).title}}</strong>
+              <h4 id="title-label" class="sam-ui header">Proposed Title</h4>
+              <strong id="title-data" >{{ toJSON(programRequest.data).title}}</strong>
               <div class="sam-ui hidden divider"></div>
             </ng-container>
 
@@ -170,8 +170,95 @@
         <ng-container *ngIf="programRequest && programRequestAction && programRequest.completed===true">
           <div class="sam-ui segment">
             <ng-container *ngIf="requestType == 'title_request'">
-              <h4 class="sam-ui header">Proposed Title</h4>
-              <strong>{{ toJSON(programRequest.data).title}}</strong>
+              <h4 id="rejected-title-label" *ngIf="isRequestStatus('rejected')" class="sam-ui header">
+                Rejected Title
+              </h4>
+              <h4 id="approved-title-label" *ngIf="isRequestStatus('approved')" class="sam-ui header">
+                New Title
+              </h4>
+              <h4 id="cancelled-title-label" *ngIf="isRequestStatus('cancelled')" class="sam-ui header">
+                Cancelled Title
+              </h4>
+              <div id="change-title-data" class="sub header">{{ toJSON(programRequest.data).title}}</div>
+              <ng-container *ngIf="isRequestStatus('approved')">
+                <h4 id="previous-title-label" class="sam-ui header">
+                  Previous Title
+                </h4>
+                <div id="previous-title-data" class="sub header">{{ programRequest.program.title}}</div>
+              </ng-container>
+
+            </ng-container>
+            <ng-container *ngIf="requestType == 'program_number_request'">
+              <h4 *ngIf="isRequestStatus('rejected')" class="sam-ui header">
+                Rejected CFDA Number
+              </h4>
+              <h4 *ngIf="isRequestStatus('approved')" class="sam-ui header">
+                New CFDA Number
+              </h4>
+              <h4 *ngIf="isRequestStatus('cancelled')" class="sam-ui header">
+                Cancelled CFDA Number
+              </h4>
+              <div class="sub header">{{ toJSON(programRequest.data).programNumber}}</div>
+              <ng-container *ngIf="isRequestStatus('approved')">
+                <h4 class="sam-ui header">
+                  Previous CFDA Number
+                </h4>
+                <div class="sub header">{{ programRequest.program.programNumber}}</div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="requestType == 'agency_request' && federalHierarchy">
+              <ng-container *ngFor="let fh of federalHierarchy">
+                <ng-container *ngIf="programRequestAction && isRequestStatus('approved')">
+                  <h4 class="sam-ui header">
+                    {{(fh.org.orgKey == programRequest.program.organizationId) ? 'Previous' : 'New' }} Organization
+                  </h4>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l1Name">
+                    Department
+                    <div class="sub header">{{fh.org.l1Name}}</div>
+                  </div>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l2Name">
+                    Sub-Tier
+                    <div class="sub header">{{fh.org.l2Name}}</div>
+                  </div>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l3Name">
+                    Office
+                    <div class="sub header">{{fh.org.l3Name}}</div>
+                  </div>
+                  <div class="sam-ui hidden divider"></div>
+                  <ng-container *ngIf="(fh.org.orgKey == programRequest.program.organizationId) && programRequest.program.programNumber">
+                    <h4 class="sam-ui medium header">
+                      Previous CFDA Number
+                    </h4>
+                    <div class="sub header">{{programRequest.program.programNumber}}</div>
+                  </ng-container>
+                  <ng-container *ngIf="(fh.org.orgKey != programRequest.program.organizationId) && toJSON(programRequest.data).programNumber">
+                    <h4 class="sam-ui medium header">
+                      New CFDA Number
+                    </h4>
+                    <div class="sub header">{{toJSON(programRequest.data).programNumber}}</div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="programRequestAction && (isRequestStatus('rejected') || isRequestStatus('cancelled')) && (fh.org.orgKey != programRequest.program.organizationId)">
+                  <h4 *ngIf="isRequestStatus('rejected')" class="sam-ui header">
+                    Rejected Organization
+                  </h4>
+                  <h4 *ngIf="isRequestStatus('cancelled')" class="sam-ui header">
+                    Cancelled Organization
+                  </h4>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l1Name">
+                    Department
+                    <div class="sub header">{{fh.org.l1Name}}</div>
+                  </div>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l2Name">
+                    Sub-Tier
+                    <div class="sub header">{{fh.org.l2Name}}</div>
+                  </div>
+                  <div class="sam-ui medium header" *ngIf="fh.org.l3Name">
+                    Office
+                    <div class="sub header">{{fh.org.l3Name}}</div>
+                  </div>
+                </ng-container>
+              </ng-container>
             </ng-container>
             <h4 class="sam-ui header">Comments</h4>
             <div id="request-reason" class="sam-ui medium header">

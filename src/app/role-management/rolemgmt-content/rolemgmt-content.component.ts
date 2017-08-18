@@ -23,11 +23,10 @@ export class RoleMgmtContent implements OnInit{
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
   Pagelimit : number;
 
-  selectModel = 'asc';
+  selectModel = {type: 'requested-date', sort: 'asc' };
   selectConfig = {
     options: [
-      {value: 'asc', label: 'Oldest First', name: 'sort-asc'},
-      {value: 'desc', label: 'Newest First', name: 'sort-desc'},
+      {value: 'requested-date', label: 'Requested Date', name: 'requested-date'}
     ]
   };
 
@@ -101,7 +100,7 @@ export class RoleMgmtContent implements OnInit{
   }
 
   onSelectChanged(event){
-    this.sortOrder.emit(event);
+    this.sortOrder.emit(event.sort);
   }
 
   onPageChange(event){
@@ -118,25 +117,8 @@ export class RoleMgmtContent implements OnInit{
     }
   }
 
-  classForRequest(request) {
-    switch (request.status.val.toLowerCase()) {
-      case 'pending': return 'fa-spinner pending-icon';
-      case 'approved': return 'fa-check-circle-o approved-icon';
-      case 'rejected': return 'fa-user-times rejected-icon';
-    }
-  }
-
   shouldShowRespondButton(content) {
     return content._links && content._links.respond_request;
-  }
-
-  showingCountText() {
-    if (!this.count || this.count === 0) {
-      return '';
-    }
-    const first = (this.currPage - 1)* 10 + 1;
-    const last = (this.currPage - 1)*10 + this.currCount;
-    return `Showing ${first}-${last} of ${this.count} results`;
   }
 
   getRolesGranted(request) {

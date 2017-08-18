@@ -18,22 +18,14 @@ import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
-import { DictionaryService } from "./dictionary/dictionary.service";
 import { AACRequestService } from "./aac-request/aac-request.service";
 import { FHWrapperService } from "./fh/fhWrapper.service";
-import { SearchDictionariesService } from "./search/search-dictionaries.service";
 import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
-import { UserAccessMock } from "./access/access.service.mock";
 import { UserSessionService } from "./user-session/user-session.service";
 import { FileExtractsService } from "./file-extracts/file-extracts.service";
 import { PeoplePickerService } from "./people-picker/people-picker.service";
 import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service';
-import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
 import { AgencyPickerAutoCompleteDirective } from "./autoCompleteWrapper/agencyPickerAutoCompleteWrapper.service";
-import { SearchServiceMock } from "./search/search.service.mock";
-import { FHServiceMock } from "./fh/fh.service.mock";
-import { FeedbackServiceMock } from "./feedback/feedback.service.mock";
-import { SystemAlertsServiceMock } from "./system-alerts/system-alerts.service.mock";
 import { WatchlistService } from './watchlist/watchlist.service';
 
 /**
@@ -79,10 +71,8 @@ import { WatchlistService } from './watchlist/watchlist.service';
     LocationService,
     FeedbackService,
     //{ provide: FeedbackService, useClass: FeedbackServiceMock },
-    DictionaryService,
     AACRequestService,
     FHWrapperService,
-    SearchDictionariesService,
     UserSessionService,
     FileExtractsService,
     PeoplePickerService,

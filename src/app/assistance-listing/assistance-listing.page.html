@@ -218,7 +218,7 @@
       <em>These funding amounts do not reflect the award amounts that are displayed on USASpending.gov</em>
 
       <!-- Chart & Table -->
-      <financial-obligation-chart *ngIf='dictionaries && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
+      <financial-obligation-chart *ngIf='dictionariesUpdated === true && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaryService.dictionaries'></financial-obligation-chart>
 
       <div class="sam-ui hidden divider"></div>
 
@@ -286,8 +286,8 @@
       <!-- Types of Assistance -->
       <h3 class="sam-ui dividing header">Types of Assistance</h3>
 
-      <p *ngIf="dictionaries && dictionaries.assistance_type && assistanceTypes">
-        <ng-container *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
+      <p *ngIf="dictionariesUpdated === true && dictionaryService.dictionaries.assistance_type && assistanceTypes">
+        <ng-container *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaryService.dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-assistance-type-' + i">
             {{ item.displayValue }}{{isLast ? '' : ', '}}
           </span>
@@ -328,9 +328,9 @@
       <!-- Applicant Eligibility -->
       <h3 class="sam-ui dividing header">Applicant Eligibility</h3>
 
-      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.applicant_types">
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionariesUpdated === true && dictionaryService.dictionaries.applicant_types">
         <h4 class="sam-ui header">Designations</h4>
-        <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
+        <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaryService.dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-applicant-designation-' + i">
             {{ item.value }}{{isLast ? '' : ', '}}
           </span>
@@ -349,9 +349,9 @@
       <!-- Beneficiary Eligibility -->
       <h3 class="sam-ui dividing header">Beneficiary Eligibility</h3>
 
-      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionariesUpdated === true && dictionaryService.dictionaries.beneficiary_types">
         <h4>Designations</h4>
-        <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
+        <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaryService.dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
         <span class="field" *ngIf="program.data?.eligibility?.beneficiary?.isSameAsApplicant==true" [attr.id]="'program-beneficiary-designation-sameasapplicant'">Beneficiary eligibility is the same as applicant eligibility.</span>
@@ -377,9 +377,9 @@
       <!-- Use of Assistance -->
       <h3 class="sam-ui dividing header">Use of Assistance</h3>
 
-      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionariesUpdated === true && dictionaryService.dictionaries.assistance_usage_types">
         <h4>Designations</h4>
-        <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+        <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaryService.dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </div>
@@ -632,8 +632,8 @@
           <ng-container *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
             <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
                 <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-                  <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
-                    {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  <ng-container *ngIf="item.isSelected == true && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
                   </ng-container>
                 </p>
             </ng-container>
@@ -649,8 +649,8 @@
           <ng-container *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
             <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
                 <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-                  <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
-                    {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  <ng-container *ngIf="item.isSelected == false && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
                   </ng-container>
                 </p>
             </ng-container>
@@ -759,7 +759,7 @@
       <!-- matching requirements -->
       <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
-            Matching Requirements: <ng-container *ngIf="dictionaries && ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'').length > 0">Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'')[0].value }}</ng-container>
+            Matching Requirements: <ng-container *ngIf="dictionariesUpdated === true && ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'').length > 0">Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'')[0].value }}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
 
           <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">

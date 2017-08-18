@@ -94,7 +94,7 @@ export class FALAccountIdentificationCodeComponent implements ControlValueAccess
                 }
             }
         }
-        
+
     }
 
     public changeHandler(){
@@ -103,7 +103,11 @@ export class FALAccountIdentificationCodeComponent implements ControlValueAccess
 
     toString(){
         let model = this.codeForm.value;
-        return model.codePart0 +"-"+ model.codePart1 +"-"+ model.codePart2 +"-"+ model.codePart3 +"-"+ model.codePart4;
+        if(model.codePart0 !== "" || model.codePart1 !== "" || model.codePart2 !== "" || model.codePart3 !== "" || model.codePart4 !== "") {
+          return model.codePart0 + "-" + model.codePart1 + "-" + model.codePart2 + "-" + model.codePart3 + "-" + model.codePart4;
+        } else {
+          return '';
+        }
     }
 
     /** Implement ControlValueAccessor interface **/

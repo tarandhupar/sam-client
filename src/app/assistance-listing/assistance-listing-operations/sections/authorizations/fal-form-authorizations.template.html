@@ -1,25 +1,33 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Authorizations - {{ viewModel.title }}</div>
+<h2 class="sam-ui header">
+  Authorizations
+</h2>
 
 <form [formGroup]="falAuthForm">
 
-  <sam-fieldset-wrapper [attr.id]="'fal-authorization-authList'" [hint]="description">
-  <authInfoTable
-    [hideAddButton]="hideAddButton"
-    [displayAuthInfo]="displayAuthInfo"
-    [subFormErrorIndex]="subFormErrorIndex"
-    (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
-
-  <authSubform [hideAddButton]="hideAddButton"
-               [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
-               (authActionHandler)="authActionHandler($event)"
-               #authSubForm></authSubform>
-
-  </sam-fieldset-wrapper>
-  <sam-text-area
-    [control]="falAuthForm.controls['description']"
-    [name]="'description-input'"
-    [label]="'Description'"
-    [attr.id]="'auth-description'"
-    formControlName="description"></sam-text-area>
+  <div class="sam-ui segment">
+    <sam-fieldset-wrapper [attr.id]="'fal-authorization-authList'" [hint]="description">
+    <authInfoTable
+      [hideAddButton]="hideAddButton"
+      [displayAuthInfo]="displayAuthInfo"
+      [subFormErrorIndex]="subFormErrorIndex"
+      (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
+    
+    <authSubform [hideAddButton]="hideAddButton"
+                 [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
+                 (authActionHandler)="authActionHandler($event)"
+                 #authSubForm></authSubform>
+    
+    </sam-fieldset-wrapper>
+  </div>
+  
+  <div class="sam-ui segment">
+    <sam-text-area
+      [control]="falAuthForm.controls['description']"
+      [name]="'description-input'"
+      [label]="'Description'"
+      [attr.id]="'auth-description'"
+      formControlName="description">
+    </sam-text-area>
+  </div>
 
 </form>

@@ -12,14 +12,14 @@ import Moment = moment.Moment;
       <div class="row">
         <div class="eight wide column">
           <h3 class="award-title">
-            <a *ngIf="data.isActive==true" [routerLink]="['/awards', data._id]" [queryParams]="qParams">
+            <a *ngIf="data.isActive==true && data.identifiers!=null" [routerLink]="['/awards', data._id]" [queryParams]="qParams">
               {{ data.identifiers[0]?.piid }}
             </a>
           </h3>
           <ul class="sam-ui small list">
         	  <li class="modification-number">
               <strong>Modification</strong><br>
-              <span>{{ data.identifiers[0]?.modificationNumber }}</span>
+              <span *ngIf="data.identifiers!=null">{{ data.identifiers[0]?.modificationNumber }}</span>
             </li>
         	  
         	  <li class="vendor-name">
@@ -66,7 +66,7 @@ import Moment = moment.Moment;
             </li>      
             <li class="referenced-idv">
               <strong>Referenced IDV </strong><br>
-              <span>{{ data.identifiers[0]?.referencePiid }}</span>
+              <span *ngIf="data.identifiers!=null">{{ data.identifiers[0]?.referencePiid }}</span>
             </li>
             <li class="date-signed">
               <strong>Date Signed </strong><br>
@@ -78,7 +78,7 @@ import Moment = moment.Moment;
             </li>
             <li class="psc-code">
               <strong>PSC Code </strong><br>
-              <span *ngIf="data.productOrService?.psc">{{ data.productOrService?.psc[0]?.value }} {{ data.productOrService?.psc[0]?.code ? '('+data.productOrService?.psc[0]?.code+')' : "" }}</span>
+              <span *ngIf="data.productOrService?.psc && data.productOrService?.psc!=null">{{ data.productOrService?.psc[0]?.value }} {{ data.productOrService?.psc[0]?.code ? '('+data.productOrService?.psc[0]?.code+')' : "" }}</span>
             </li>   
           </ul>
         </div>

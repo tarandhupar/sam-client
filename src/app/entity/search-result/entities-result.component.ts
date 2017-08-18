@@ -32,9 +32,9 @@ import * as moment from 'moment/moment';
             </li>
             <li>
               <strong>Address</strong><br>
-              {{ data.address.streetAddress }}, {{ data.address.city }}, 
-              {{ data.address.state}} {{data.address.zip}}
-              </li>
+              {{ data.address?.streetAddress }}, {{ data.address?.city }}, 
+              {{ data.address?.state}} {{data.address?.zip}}
+            </li>
           </ul>
   	    </div>
   	    <div class="four wide column">

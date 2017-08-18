@@ -5,16 +5,13 @@ import { RoleDetailsPage } from "./role-details/role-details.page";
 import { RoleDefinitionPage } from "./role-definition/role-definition.page";
 import { DomainsResolve } from "./domains.resolve";
 import { ManageRequestPage } from "./manage-request/manage-request";
-import { RequestAccessResolve } from "./request-access.resolve";
-import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
-import { SuperAdminGuard } from "../application-content/403/super-admin.guard";
-import { DeptAdminGuard } from "../application-content/403/dept-admin.guard";
 import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
 import { DomainDefinitionResolve } from "./domaindefinition.resolve";
 import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 import { CheckAccessGuard } from "../application-content/403/check-access.guard";
+import { RMBackDoorComponent } from "./back-door/back-door.component";
 
 export const routes: Routes = [{
   path: 'access',
@@ -72,5 +69,9 @@ export const routes: Routes = [{
     }
   ]
 }];
+
+if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
+  routes.unshift({ path: 'rm', component: RMBackDoorComponent });
+}
 
 export const routing = RouterModule.forChild(routes);

@@ -10,14 +10,10 @@ import { DeptAdminGuard } from "../application-content/403/dept-admin.guard";
 import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
 import { UserRoleDetailsResolve } from "./user-role-details.resolve";
 import { DomainsResolve } from "../role-management/domains.resolve";
-import { AdminLevelResolve } from "../application-content/403/admin-level.resolve";
-import { UserNameResolve } from "../application-content/403/user-name.resolve";
-import {ProfileGuard} from "../authentication/profile/profile.guard";
 import {IsLoggedInGuard} from "../application-content/403/is-logged-in.guard";
 import { RequestAccessPage } from "./request-access/request-access.page";
 import { RoleCategoriesResolve } from "./roles-categories.resolve";
 import { ViewRequestPage } from "./view-request/view-request.page";
-import { RequestStatusNamesResolve } from "../role-management/request-statuses.resolve";
 import { RequestResponsePage } from "./request-response/request-response.page";
 import { CheckAccessGuard } from "../application-content/403/check-access.guard";
 
@@ -31,7 +27,6 @@ routes.unshift(
   {
     path: 'users',
     canActivateChild: [ IsLoggedInGuard ],
-    resolve: { adminLevel: AdminLevelResolve },
     children: [
       {
         path: ':id/access',
@@ -84,7 +79,6 @@ routes.unshift(
     path: 'profile/access',
     component: UserAccessPage,
     data: { isAdminView: false, pageName: 'profile/access' },
-    resolve: { userName: UserNameResolve },
     canActivate: [ IsLoggedInGuard, CheckAccessGuard ]
   },
   {

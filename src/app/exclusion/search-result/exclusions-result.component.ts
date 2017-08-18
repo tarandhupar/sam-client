@@ -26,11 +26,11 @@ import * as moment from 'moment/moment';
             </li>
             <li>
               <strong>Address</strong><br>
-              {{ data.address.streetAddress }}
+              {{ data.address?.streetAddress }}
               <ng-container *ngIf="data.address?.city && data.address?.streetAddress">,</ng-container> 
-              {{ data.address.city }}
+              {{ data.address?.city }}
               <ng-container *ngIf="data.address?.state && data.address?.city">,</ng-container> 
-              {{ data.address.state}} {{data.address.zip}}
+              {{ data.address?.state}} {{data.address?.zip}}
             </li>
           </ul>
   	    </div>
@@ -42,7 +42,7 @@ import * as moment from 'moment/moment';
             <li>
               <span class="sam-ui mini label">Exclusion</span>
             </li>
-            <li *ngIf="data.classification.code!==null && data.classification.code!==''">
+            <li *ngIf="data.classification?.code!==null && data.classification?.code!==''">
               <strong>Classification</strong><br>
               {{ data.classification.code }}
             </li> 

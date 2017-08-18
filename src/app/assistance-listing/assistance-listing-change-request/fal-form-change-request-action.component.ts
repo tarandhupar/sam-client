@@ -280,7 +280,14 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       this.falChangeRequestActionForm.controls['programNumber'].updateValueAndValidity();
     }
 
-    this.submitChangeRequestAction(actionTypes[this.requestType]);
+    // async form validators
+    if(actionTypes[this.requestType].action == 'agency') {
+      this.falChangeRequestActionForm.statusChanges.first().subscribe(status => {
+        this.submitChangeRequestAction(actionTypes[this.requestType]);
+      });
+    } else {// sync form validators
+      this.submitChangeRequestAction(actionTypes[this.requestType]);
+    }
   }
 
   public rejectRequest() {

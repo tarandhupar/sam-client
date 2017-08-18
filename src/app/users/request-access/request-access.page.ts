@@ -7,6 +7,7 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
 import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
 import { UserService } from "../user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
   templateUrl: './request-access.template.html',
@@ -35,6 +36,12 @@ export class RequestAccessPage {
       valueProperty: 'value'
     }
   };
+
+  breadCrumbs: Array<IBreadcrumb> = [
+    { url: '/profile/details', breadcrumb: 'Profile' },
+    { url: '/profile/access', breadcrumb: 'My Access' },
+    { breadcrumb: 'Request Access'}
+  ];
 
   constructor(
     fb: FormBuilder,

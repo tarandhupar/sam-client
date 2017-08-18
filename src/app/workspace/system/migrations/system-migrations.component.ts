@@ -69,17 +69,6 @@ export class SystemMigrationsComponent {
         }
       });
 
-      for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
-        role = user.gsaRAC[intRole];
-
-        if(this.store.roles[role.system] == undefined)
-          this.store.roles[role.system] = {};
-        if(this.store.roles[role.system][role.username] == undefined)
-          this.store.roles[role.system][role.username] = [];
-
-        this.store.roles[role.system][role.username].push(role);
-      }
-
       this.initForm();
     }, () => {
       if(this.api.iam.isDebug()) {

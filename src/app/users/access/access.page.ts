@@ -8,6 +8,7 @@ import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { UserService } from "../user.service";
 
 @Component({
   templateUrl: 'access.template.html',
@@ -58,12 +59,11 @@ export class UserAccessPage implements OnInit {
 
   private isAdmin: boolean;
   private isFirstRequest: boolean = true;
-  private hideFilters: boolean = true;  
+  private hideFilters: boolean = true;
 
 //hateaos changes
   private canRequest:boolean;
   private canGrant:boolean;
-  private canEdit:boolean;
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
@@ -72,13 +72,15 @@ export class UserAccessPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private capitalize: CapitalizePipe,
+    private userCookieService: UserService,
     )
   {
-    
+
   }
 
   ngOnInit( ) {
-    this.userName = (this.route.snapshot.data['userName']==null) ? this.route.snapshot.params['id'] : this.route.snapshot.data['userName'];
+    let cookieUser = this.userCookieService.getUser() && this.userCookieService.getUser().uid;
+    this.userName = this.route.snapshot.params['id'] || cookieUser;
     this.user.email = this.userName;
     this.onSearchParamChange();
     this.getPendingRequests();
@@ -118,6 +120,7 @@ export class UserAccessPage implements OnInit {
     }
 
     this.userService.getAllUserRoles(this.userName, queryParams).subscribe(res => {
+
       if (res.total === 0) {
         this.totalPages = 0;
       } else {
@@ -131,10 +134,10 @@ export class UserAccessPage implements OnInit {
       if(res._links && res._links.grant_access){
          this.canGrant = true;
          this.isAdmin = true;
-         this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
          this.title = this.isAdmin ? 'ROLE MANAGEMENT' : 'PROFILE';
       }
-     
+
+      this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
 
       if (this.isFirstRequest && res.total > 0) {
         this.hideFilters = false;

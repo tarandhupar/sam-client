@@ -173,7 +173,7 @@
                     CFDA Number
                   </div>
                   <div class="description">
-                    <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('FALNO'))" *ngIf="runValidationFlag"></inline-error-message>
+                    <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('FALNO'))"></inline-error-message>
                     {{program.data?.programNumber}}
                   </div>
                 </div>
@@ -282,9 +282,9 @@
 
       <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNCTIONAL_CODES'))"></inline-error-message>
 
-      <ng-container *ngIf="dictionaries && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
+      <ng-container *ngIf="dictionariesUpdated === true && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
         <ng-container
-          *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
+          *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaryService.dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-functional-code-' + i">
               {{ item.displayValue }}<br>
             </span>
@@ -297,9 +297,9 @@
 
       <inline-error-message [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('SUBJECT_TERMS'))"></inline-error-message>
 
-      <ng-container *ngIf="dictionaries && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
+      <ng-container *ngIf="dictionariesUpdated === true && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
         <ng-container
-          *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
+          *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaryService.dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-subject-terms-' + i">
               {{ item.value }}<br>
             </span>
@@ -367,7 +367,7 @@
       <inline-error-message [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, 0, true)"></inline-error-message>
 
       <table class="sam-ui table celled"
-             *ngIf="dictionaries && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
+             *ngIf="dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
         <thead>
         <tr>
           <th scope="col">
@@ -484,7 +484,7 @@
       <inline-error-message [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, 0, true)"></inline-error-message>
 
       <table class="sam-ui table celled"
-             *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
+             *ngIf="dictionariesUpdated === true && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
         <thead>
         <tr>
           <th scope="col">
@@ -566,9 +566,9 @@
       <!-- Types of Assistance -->
       <h3 class="sam-ui dividing header">Types of Assistance</h3>
 
-      <p *ngIf="dictionaries && dictionaries.assistance_type && assistanceTypes">
+      <p *ngIf="dictionariesUpdated === true && assistanceTypes">
         <ng-container
-          *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
+          *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaryService.dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-assistance-type-' + i">
             {{ item.displayValue }}{{isLast ? '' : ', '}}
           </span>
@@ -613,12 +613,12 @@
       <h3 class="sam-ui dividing header">Applicant Eligibility</h3>
 
       <div class="sam-ui lightest blue segment designation"
-           *ngIf="program.data && dictionaries && dictionaries.applicant_types">
+           *ngIf="program.data && dictionariesUpdated === true">
         <h4 class="sam-ui header">Designations</h4>
         <inline-error-message [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('APPLICANT_LIST'))"></inline-error-message>
 
         <ng-container
-          *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
+          *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaryService.dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-applicant-designation-' + i">
             {{ item.value }}{{isLast ? '' : ', '}}
           </span>
@@ -638,11 +638,11 @@
       <h3 class="sam-ui dividing header">Beneficiary Eligibility</h3>
 
       <div class="sam-ui lightest blue segment designation"
-           *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
+           *ngIf="program.data && dictionariesUpdated === true">
         <h4>Designations</h4>
         <inline-error-message [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('BENEFICIARY_LIST'))"></inline-error-message>
         <ng-container
-          *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
+          *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaryService.dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field"
                 [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
@@ -676,12 +676,12 @@
       <h3 class="sam-ui dividing header">Use of Assistance</h3>
 
       <div class="sam-ui lightest blue segment designation"
-           *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
+           *ngIf="program.data && dictionariesUpdated === true">
         <h4>Designations</h4>
         <inline-error-message [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('ASS_USAGE_LIST'))"></inline-error-message>
 
         <ng-container
-          *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+          *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaryService.dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </div>
@@ -738,6 +738,7 @@
           <!-- repeat over all deadlines. -->
           <span *ngFor="let deadline of program.data?.assistance?.deadlines?.list; let i = index">
             <span class="field" [attr.id]="'program-deadline-dates-' + i">
+              <inline-error-message [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('DEADLINES_LIST'), true, i)"></inline-error-message>
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
               <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
@@ -983,9 +984,9 @@
             <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
               <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
                 <ng-container
-                  *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                  *ngIf="item.isSelected == true && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                   {{ ([item.code] |
-                  filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
                 </ng-container>
               </p>
             </ng-container>
@@ -1004,9 +1005,9 @@
             <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
               <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
                 <ng-container
-                  *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                  *ngIf="item.isSelected == false && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                   {{ ([item.code] |
-                  filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
                 </ng-container>
               </p>
             </ng-container>
@@ -1122,9 +1123,9 @@
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
           Matching Requirements:
           <ng-container
-            *ngIf="dictionaries && ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'').length > 0">
+            *ngIf="dictionariesUpdated === true && ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'').length > 0">
             Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] |
-            filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'')[0].value }}
+            filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'')[0].value }}
           </ng-container>
           {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
 
@@ -1186,8 +1187,7 @@
 
       <inline-error-message [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, 0, true)"></inline-error-message>
 
-      <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
-
+      <div *ngFor="let item of items; let i = index">
         <inline-error-message [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, i)"></inline-error-message>
         <sam-poc [attr.id]="'program-contacts-poc-' + i" [data]="item"></sam-poc>
 
@@ -1232,12 +1232,12 @@
           actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ?
           actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}<b> On: </b>{{
           actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ?
-          actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "None" }}
+          actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "Not Available" }}
         </div>
         <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x"
              *ngIf="actionHistoryAndNote && !publicHistoryIsVisible"><b>Last Modified By: </b>{{
-          actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "None" }} <b>On: </b>{{
-          actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "None" }}
+          actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "Not Available" }} <b>On: </b>{{
+          actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "Not Available" }}
         </div>
         <div *ngIf="publicHistoryIsVisible">
           <sam-history [data]="history"></sam-history>

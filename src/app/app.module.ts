@@ -29,8 +29,6 @@ import { AwardsModule } from './awards';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
-
-
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
@@ -43,10 +41,12 @@ import { WorkspaceModule } from "./workspace/workspace.module";
 import { DataServiceModule } from "./data-service/data-service.module";
 import { FederalHierarchyModule } from "./fh/federal-hierarchy.module";
 import {AuthGuard} from "../api-kit/authguard/authguard.service";
+import {DictionaryService} from "../api-kit/dictionary/dictionary.service";
+import {SearchDictionariesService} from "../api-kit/search/search-dictionaries.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
-  AppState, AuthGuard
+  AppState, AuthGuard, DictionaryService, SearchDictionariesService
 ];
 
 /**

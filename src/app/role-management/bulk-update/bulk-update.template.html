@@ -1,4 +1,7 @@
 <div class="usa-grid m_T-4x bulk-update-page">
+  <div style="padding-bottom: 1.5rem">
+    <sam-breadcrumbs [crumbs]="breadCrumbs"></sam-breadcrumbs>
+  </div>
   <aside class="usa-width-one-fourth">
     <ul class="usa-sidenav-list">
       <li>
@@ -59,7 +62,7 @@
       <h3>Filters</h3>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org && org.name}}</div>
+        <div class="usa-width-five-sixths">{{org && (org.name | capitalize)}}</div>
       </div>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Domain</b></div>
@@ -112,7 +115,7 @@
       <h3>Filters</h3>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org.name}}</div>
+        <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
       </div>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Domain</b></div>
@@ -182,7 +185,7 @@
       <h3>Filters</h3>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org.name}}</div>
+        <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
       </div>
       <div class="usa-grid-full">
         <div class="usa-width-one-sixth"><b>Domain</b></div>

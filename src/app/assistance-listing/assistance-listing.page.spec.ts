@@ -400,7 +400,7 @@ let MockProgramService = {
 };
 
 let MockDictionaryService = {
-  getDictionaryById: (id: string) => {
+  getProgramDictionaryById: (id: string) => {
     return Observable.of({ 'assistance_type:': [
       {
         code: 'B',
@@ -495,7 +495,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
 //    spyMockApiService = jasmine.createSpyObj('MockApiService', ['call']);
 //    spyMockHistoricalIndexService = jasmine.createSpyObj('MockHistoricalIndexService', ['getHistoricalIndexByProgramNumber']);
 //    spyMockFHService = jasmine.createSpyObj('MockFHService', ['getFederalHierarchyById']);
-//    spyMockDictionaryService = jasmine.createSpyObj('MockDictionaryService', ['getDictionaryById']);
+//    spyMockDictionaryService = jasmine.createSpyObj('MockDictionaryService', ['getProgramDictionaryById']);
     // End TODO
     TestBed.configureTestingModule({
       imports: [
@@ -560,13 +560,13 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
 //    expect(spyMockApiService.call).toHaveBeenCalled();
 //    expect(spyMockHistoricalIndexService.getHistoricalIndexByProgramNumber).toHaveBeenCalled();
 //    expect(spyMockFHService.getFederalHierarchyById).toHaveBeenCalled();
-//    expect(spyMockDictionaryService.getDictionaryById).toHaveBeenCalled();
+//    expect(spyMockDictionaryService.getProgramDictionaryById).toHaveBeenCalled();
 
     //checking methods calls with args
 //      expect(spyMockProgramService.getProgramById).toHaveBeenCalledWith('3077ea1df409265fb4378e0e844b8811');
 //      expect(spyMockHistoricalIndexService.getHistoricalIndexByProgramNumber).toHaveBeenCalledWith('3077ea1df409265fb4378e0e844b8811', '15.664');
 //      expect(spyMockFHService.getFederalHierarchyById).toHaveBeenCalledWith('100156642', true, false);
-//      expect(spyMockDictionaryService.getDictionaryById).toHaveBeenCalledWith([
+//      expect(spyMockDictionaryService.getProgramDictionaryById).toHaveBeenCalledWith([
 //        'program_subject_terms',
 //        'date_range',
 //        'match_percent',

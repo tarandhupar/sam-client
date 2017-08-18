@@ -25,7 +25,6 @@ export class AuthGuard implements CanActivate {
 
   checkPermissions(screen: string, program: any) {
     this.viewModel = new FALFormViewModel(program);
-    this.errorService = new FALFormErrorService();
     this.errorService.viewModel = this.viewModel;
     this.errorService.initFALErrors();
     let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
@@ -53,7 +52,7 @@ export class AuthGuard implements CanActivate {
           break;
         case 'addoredit':
           let url;
-          if (this.router.url.indexOf('add') >= 0) {
+          if (this.router.url.indexOf('/add') >= 0) {
             if (program && !program['CREATE_FALS']) {
               this.router.navigate(['accessrestricted']);
             } else if (!this.viewModel.title) {

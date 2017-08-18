@@ -109,12 +109,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   setCustomValidatorsForFALNo(programNumber, code, orgId){
-    if(programNumber !== null && programNumber !== '') {
 
+    if(programNumber !== null && programNumber !== '' && orgId !== null && orgId !== '') {
       this.falHeaderInfoForm.get('programNumber').setValidators(falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh));
 
       if((this.falHeaderInfoForm.get('programNumber').errors && this.falHeaderInfoForm.get('programNumber').errors == null) || !this.falHeaderInfoForm.get('programNumber').errors) {
-
           this.falHeaderInfoForm.get('programNumber')
             .setAsyncValidators(falCustomValidatorsComponent.isProgramNumberUnique(this.programService, code.content.cfdaCode, this.viewModel.programId, FALFormService.getAuthenticationCookie(), orgId));
       }
@@ -163,16 +162,15 @@ export class FALFormHeaderInfoComponent implements OnInit {
       else
         orgId = data.federalAgency;
 
-      this.getFHConfig(orgId);
+      this.getFHConfig(orgId, data['programNumber']);
     }
     else {
       this.autoProgNoGeneration = true;
-    }
-
-    if(!this.autoProgNoGeneration) {
-      this.service.getCfdaCode(orgId).subscribe( (code) => {
-        this.falNoPrefix = code.content.cfdaCode;
-        this.setCustomValidatorsForFALNo(data['programNumber'], code, orgId);
+      this.viewModel.programNumber = '';
+      this.falHeaderInfoForm.get('programNumber').clearAsyncValidators();
+      this.falHeaderInfoForm.get('programNumber').clearValidators();
+      this.falHeaderInfoForm.get('programNumber').patchValue('', {
+        emitEvent: false
       });
     }
 
@@ -228,7 +226,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
       emitEvent: false
     });
 
-    this.getFHConfig(this.organizationId);
+    this.getFHConfig(this.organizationId, this.falNo);
 
     setTimeout( ()=> {
       this.updateErrors();
@@ -249,11 +247,31 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   }
 
-  getFHConfig(orgId){
+  getFHConfig(orgId, progNo){
+
     this.service.getFederalHierarchyConfigurations(orgId).subscribe( data => {
       this.autoProgNoGeneration = data.programNumberAuto;
-      this.programNumberHigh = data.programNumberHigh;
-      this.programNumberLow = data.programNumberLow;
+
+      if(!this.autoProgNoGeneration) {
+        this.service.getCfdaCode(orgId).subscribe( (code) => {
+          this.falNoPrefix = code.content.cfdaCode;
+          this.viewModel.programNumber = progNo ? (this.falNoPrefix + '.' + progNo.replace(/\./g, '')) : null;
+
+          this.falHeaderInfoForm.get('programNumber').patchValue(progNo, {
+            emitEvent: false
+          });
+
+          this.setCustomValidatorsForFALNo(progNo, code, orgId);
+        });
+      }
+      else {
+        if(!this.viewModel.isRevision) {
+          this.viewModel.programNumber = '';
+          this.falHeaderInfoForm.get('programNumber').patchValue('', {
+            emitEvent: false
+          });
+        }// end of if
+      }
     });
   }
 
@@ -287,11 +305,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm.get('title').setErrors(this.errorService.validateHeaderTitle().errors);
     this.markAndUpdateFieldStat('title');
 
-    this.falHeaderInfoForm.get('programNumber').clearValidators();
-    this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
-      return control.errors
-    });
-
     this.falHeaderInfoForm.get('federalAgency').clearValidators();
     this.falHeaderInfoForm.get('federalAgency').setValidators((control) => {
       return control.errors
@@ -299,7 +312,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
     this.markAndUpdateFieldStat('federalAgency');
 
-    this.errorService.validateHeaderProgNo(!this.autoProgNoGeneration, this.programNumberLow, this.programNumberHigh, FALFormService.getAuthenticationCookie(), this.programService).subscribe(res => {
+    this.falHeaderInfoForm.get('programNumber').clearValidators();
+    this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
+      return control.errors
+    });
+    this.errorService.validateHeaderProgNo().subscribe(res => {
       this.falHeaderInfoForm.get('programNumber').setErrors(res.errors);
       this.markAndUpdateFieldStat('programNumber');
       this.showErrors.emit(this.errorService.applicableErrors);
@@ -310,9 +327,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     setTimeout(() => {
       this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
     });
-
   }
-
 
   getOrganizationLevels() {
     this.service.getFALPermission('ORG_LEVELS').subscribe(res => {

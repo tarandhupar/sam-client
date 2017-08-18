@@ -1,15 +1,12 @@
 // angular
-import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-import { Observable } from "rxjs";
 
 // 3rd party
-import { Cookie } from "ng2-cookies";
 import { PageScrollService, PageScrollInstance, PageScrollConfig } from "ng2-page-scroll";
 
 // services
-import { FHService } from "api-kit/fh/fh.service";
 import { UserAccessService } from "api-kit/access/access.service";
 import { IRole } from "api-kit/access/role.interface";
 
@@ -17,15 +14,22 @@ import { IRole } from "api-kit/access/role.interface";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 import { UserAccessModel } from "../access.model";
 import { PropertyCollector } from "../../app-utils/property-collector";
-import { Organization } from "../../organization/organization.model";
 import { SamModalComponent } from "sam-ui-kit/components/modal";
-import {UserService} from "../user.service";
+import { UserService } from "../user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
   templateUrl: 'grant-access.template.html'
 })
 export class GrantAccessPage implements OnInit {
+  breadCrumbs: Array<IBreadcrumb> = [
+    { url: '/workspace', breadcrumb: 'Workspace' },
+    { url: '/access/user-roles-directory', breadcrumb: 'Role Management'},
+    { url: '' /* '/users/{uname}/access'*/, breadcrumb: '' /*'{uname}'*/},
+    { breadcrumb: '{mode} Access' }
+  ];
+
   private errors = {
     role: '',
     domain: '',
@@ -61,7 +65,6 @@ export class GrantAccessPage implements OnInit {
   private objectsEditable: boolean = true;
   private requestId: any = null;
   private request: any;
-  private adminLevel: number;
   private user: any;
 
   @ViewChild('deleteModal') deleteModal: SamModalComponent;
@@ -72,7 +75,6 @@ export class GrantAccessPage implements OnInit {
     private footerAlert: AlertFooterService,
     public router: Router,
     private pageScrollService: PageScrollService,
-    private fhService: FHService,
     private titleService: Title,
     private userCookieService: UserService,
     private capitalize: CapitalizePipe,
@@ -82,12 +84,7 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('User Access');
-    this.adminLevel = this.route.snapshot.data['adminLevel'];
     this.userName = this.route.snapshot.params['id'];
-
-    if (!this.userName) {
-      this.userName = this.route.snapshot.data['userName'];
-    }
 
     this.userCameFromRoleWorkspace = !!this.route.snapshot.queryParams['ref'];
 
@@ -105,6 +102,11 @@ export class GrantAccessPage implements OnInit {
       this.initializePageFromQueryParameters();
     }
     this.user = this.userCookieService.getUser();
+
+    this.breadCrumbs[2].breadcrumb = this.userName;
+    this.breadCrumbs[2].url = `/users/${this.userName}/access`;
+    let m = this.mode === 'grant' ? "Grant" : "Edit";
+    this.breadCrumbs[3].breadcrumb = `${m} Access`;
   }
 
   getAccess() {
@@ -280,9 +282,9 @@ export class GrantAccessPage implements OnInit {
   getRoles() {
     let obs;
     if (this.mode === 'edit') {
-      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName, this.adminLevel).share();
+      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName).share();
     } else {
-      obs = this.userService.getRoles({domainID: this.domain}, undefined, this.adminLevel).share();
+      obs = this.userService.getRoles({domainID: this.domain}, undefined).share();
     }
 
     obs.subscribe(

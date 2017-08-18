@@ -17,7 +17,8 @@ import { System, POC } from '../system.interface';
   templateUrl: './system-profile.component.html',
   providers: [
     FHService,
-    IAMService
+    IAMService,
+    PeoplePickerService,
   ]
 })
 export class SystemProfileComponent {
@@ -80,7 +81,7 @@ export class SystemProfileComponent {
     }
   };
 
-  private detailsForm: FormGroup;
+  public detailsForm: FormGroup;
   public user = {
     _id: '',
     email: '',
@@ -102,7 +103,7 @@ export class SystemProfileComponent {
   };
 
 
-  private system: System = {
+  public system: System = {
     _id: '',
     email: '',
     systemName: '',

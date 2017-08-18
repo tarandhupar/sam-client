@@ -16,6 +16,8 @@ public name = null;
 public desc = null;
 public pwd = null;
 url: SafeResourceUrl;
+mstrEnv;
+mstrServer;
 
 public states = {
     isSignedIn: false
@@ -40,18 +42,27 @@ public states = {
 
 checkSession(cb: () => void) {
     let vm = this;
-
     this.api.iam.user.get(function(user) {
     vm.states.isSignedIn = true;
     vm.user = user;
+    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
+      vm.mstrEnv = 'stg';
+      vm.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
+      vm.mstrEnv = 'test';
+      vm.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/comp") != -1) {
+      vm.mstrEnv = 'dev';
+      vm.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
+    }
     vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
-    ('https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?&evt=3031&src=mstrWeb.3031' +
-    '&hiddensections=path,dockLeft,footer' + '&uid=' + vm.user._id + '&role=' + vm.user.gsaRAC[0].role);
+    ('https://microstrategy'+vm.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+vm.mstrServer+'&Project=SAM_IAE&Port=8443&evt=3031&src=mstrWeb.3031' +
+    '&hiddensections=path,dockLeft,footer');
       cb();
     });
   }
 
-   ngOnInit() {
-     this.showReport = true;
-   }
+  ngOnInit() {
+    this.showReport = true;
+  }
 }

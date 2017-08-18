@@ -19,7 +19,6 @@ import {RequestLabelPipe} from "./pipes/request-label.pipe";
   providers: [
     FHService,
     ProgramService,
-    DictionaryService,
     HistoricalIndexService,
     SidenavHelper,
     RequestLabelPipe
@@ -52,6 +51,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     "children": []
   };
   qParams: any;
+  dictionariesUpdated: boolean = false;
 
 
   private apiSubjectSub: Subscription;
@@ -219,9 +219,10 @@ export class ProgramPage implements OnInit, OnDestroy {
    * @return Observable of Dictionary API
    */
   private loadDictionaries() {
+    let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
+    // construct a stream of dictionary data
     // declare dictionaries to load
     let dictionaries = [
-      'date_range',
       'match_percent',
       'assistance_type',
       'applicant_types',
@@ -229,19 +230,15 @@ export class ProgramPage implements OnInit, OnDestroy {
       'beneficiary_types',
       'cfr200_requirements'
     ];
-
-    let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
-    // construct a stream of dictionary data
-    this.dictionarySub = this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
-
-    var temp: any = {};
-    dictionaryServiceSubject.subscribe(res => {
-      // run whenever dictionary data is updated
-      for (let key in res) {
-        temp[key] = res[key]; // store the dictionary
-      }
-      this.dictionaries = temp;
-    });
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join(','));
+    if (filteredDictionaries===''){
+      this.dictionariesUpdated = true;
+    } else {
+      this.dictionarySub = this.dictionaryService.getProgramDictionaryById(filteredDictionaries).subscribe(dictionaryServiceSubject);
+      dictionaryServiceSubject.subscribe(res => {
+        this.dictionariesUpdated = true;
+      });
+    }
 
     return dictionaryServiceSubject;
   }

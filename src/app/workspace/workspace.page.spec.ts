@@ -12,6 +12,8 @@ import { SamAPIKitModule } from "api-kit";
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceModule } from "./workspace.module";
 import { ProgramService } from "../../api-kit/program/program.service";
+import { UserService } from "../users/user.service";
+import { UserServiceMock } from "../users/user.service.mock";
 
 
 class RouterStub {
@@ -35,11 +37,11 @@ describe('Workspace Page', () => {
       providers: [
         WorkspacePage,
         ProgramService,
+        { provide: UserService, useClass: UserServiceMock },
         {
           provide: ActivatedRoute,
           useValue: {
             'queryParams': Observable.of({ 'user': '6'}),
-            snapshot: { data: { adminLevel: 0 } },
           }
         },
       ]

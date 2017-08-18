@@ -46,7 +46,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     showAdvanced = false;
     @ViewChild(LabelWrapper) wrapper: LabelWrapper;
     ngOnChanges(c){
-        if(c['orgRoots']){
+        if(c['orgRoots'] && this.orgRoots && this.orgRoots.length > 0){
             this.reset();
             this.prepareAdvanced();
             this.serviceOptions = {parent:this.orgRoots[0]};
@@ -219,13 +219,21 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         }
     }
 
-    addSelection(val){
+    addSelection(val,emit:boolean = true){
         if(this.type=="multiple" && !Array.isArray(val)){
-            this.selections.push(val);
+            if(!this.isDuplicateSelection(val)){
+                this.selections.push(val);
+            }
         } else {
             this.selections = val;
         }
-        this.emitSelections();
+        if(emit){
+            this.emitSelections();
+        }
+    }
+
+    isDuplicateSelection(org){
+        return this.selections.includes(org);
     }
 
     emitSelections(){
@@ -234,7 +242,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
 
     serviceCall(orgId, hierarchy: boolean) {
         if(orgId != "") {
-            return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false);
+            return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false, false, 'all', 300);
         } else {
             return this.oFHService.getDepartments();
         }
@@ -258,7 +266,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     }
 
     _filterActiveOrgs(org) {
-        if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active")
+        if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus'].toLowerCase()!="active")
             return false;
         if(!org["org"]['name'])
             return false;
@@ -279,14 +287,12 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             orgKeys = this.type=="single" ? [value] : value;
         }
         if(orgKeys.length>0){
+            this.selections = [];
             this.oFHService.getOrganizations({orgKey:value.join(",")}).subscribe(res=>{
-                let orgs = res["_embedded"]['orgs'].map((val)=>{
-                    let obj = val['org'];
-                    obj['key'] = obj['orgKey'];
-                    return obj;
-                });
+                let orgs = this.formatHierarchy(res["_embedded"]['orgs']);
                 for(let idx in orgs){
-                    this.addSelection(orgs); 
+                    let val = orgs[idx];    
+                    this.addSelection(val,false);
                 }
             });
         } else {

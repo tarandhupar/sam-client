@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 
 @Component({
   selector : 'role-sidenav',
@@ -13,6 +14,7 @@ export class RoleSideNav implements OnInit{
       private router: Router,
       private route: ActivatedRoute,
       private role: UserAccessService,
+      private footerAlerts: AlertFooterService,
       private capitalize: CapitalizePipe
     ){ }
 
@@ -111,13 +113,30 @@ export class RoleSideNav implements OnInit{
       }
       if(this.textErrorMessage === '' && this.newDomain !== ''){
         let domain = {"domainName" : this.newDomain.toUpperCase()};
-        this.role.postDomain(domain).subscribe(res => {
-          this.newDomain = '';
-          let value = JSON.parse(res._body);
-          this.filters.domains.options.push({label: value.domainName, value: value.id, name: value.domainName});
-          let values = this.filters.domains.options.map(this.mapId);
-          this.checkSelected.emit(values.toString());
-        });
+        this.role.postDomain(domain).subscribe(
+          res => {
+            this.newDomain = '';
+            let value = JSON.parse(res._body);
+            this.filters.domains.options.push({label: value.domainName, value: value.id, name: value.domainName});
+            let values = this.filters.domains.options.map(this.mapId);
+            this.checkSelected.emit(values.toString());
+          },
+          err => {
+            if (err.status === 409) {
+              this.footerAlerts.registerFooterAlert({
+                description: 'This domain name already exists',
+                type: 'error',
+                timer: 3200
+              });
+            } else {
+              this.footerAlerts.registerFooterAlert({
+                description: 'Encountered an error while adding this domain.',
+                type: 'error',
+                timer: 3200
+              });
+            }
+          }
+        );
 
       }
 

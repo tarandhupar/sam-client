@@ -87,7 +87,7 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
 
   }
-  
+
   getFederalHierarchyConfigurations(orgId: string, cookie: string) {
     let oApiParam = {
       name: 'program',
@@ -182,6 +182,9 @@ export class ProgramService{
         postedTo: (obj.postedTo == undefined) ? '' : obj.postedTo,
         modifiedFrom: (obj.modifiedFrom == undefined) ? '' : obj.modifiedFrom,
         modifiedTo: (obj.modifiedTo == undefined) ? '' : obj.modifiedTo,
+        organizationId: (obj.organizationId == undefined) ? '' : obj.organizationId,
+        requestType: (obj.requestType == undefined) ? '' : obj.requestType,
+        facets: 'status, pendingChangeRequest'
       },
       headers: {
         "X-Auth-Token": obj.Cookie
@@ -362,20 +365,6 @@ export class ProgramService{
     let oApiParam = {
       name: 'program',
       suffix: '/programRequests/reports/requestCount/pending',
-      oParam: {},
-      headers: {
-        "X-Auth-Token": cookie
-      },
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(oApiParam);
-  }
-
-  getProgramCountByStatus(cookie: string) {
-    let oApiParam = {
-      name: 'program',
-      suffix: '/reports/programCountByStatus',
       oParam: {},
       headers: {
         "X-Auth-Token": cookie

@@ -10,6 +10,11 @@ import { SidebarTemplateComponent } from "./sidebar.component";
 import { ResultsTemplateComponent } from "./results.component";
 
 /**
+ * Pages
+ */
+import { FormStepComponent } from "./pages/form-step.component";
+
+/**
  * This will be replaced by the page templates above
  */
 import { WorkspaceTemplateComponent } from "./workspace/workspace-template.component";
@@ -29,7 +34,8 @@ import { AppComponentsModule } from '../app-components/app-components.module';
     WorkspaceTemplateComponent,
     PageTemplateComponent,
     SidebarTemplateComponent,
-    ResultsTemplateComponent
+    ResultsTemplateComponent,
+    FormStepComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +47,8 @@ import { AppComponentsModule } from '../app-components/app-components.module';
     WorkspaceTemplateComponent,
     PageTemplateComponent,
     SidebarTemplateComponent,
-    ResultsTemplateComponent
+    ResultsTemplateComponent,
+    FormStepComponent
   ],
   providers: [
     PageService

@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, CanActivateChild } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Cookie } from "ng2-cookies";
-import { IAMService } from "api-kit/iam/iam.service";
+import { UserService } from "../../users/user.service";
 
 @Injectable()
 export class IsLoggedInGuard implements CanActivate, CanActivateChild {
-  private iam;
-
-  constructor(private router: Router, _iam: IAMService) {
-    this.iam = _iam.iam;
+  constructor(private router: Router, private user: UserService) {
   }
 
   canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean>|boolean {
@@ -16,13 +13,10 @@ export class IsLoggedInGuard implements CanActivate, CanActivateChild {
   }
 
   canActivate(route: ActivatedRouteSnapshot): Promise<boolean>|boolean {
-    return true;
-
-    // if(!this.iam.user.isSignedIn()) {
-    //   this.router.navigate(['/signin']);
-    //   return false;
-    // }
-    //
-    // return true;
+    const isLoggedIn = this.user.isLoggedIn();
+    if (!isLoggedIn) {
+      this.router.navigate(['/signin']);
+    }
+    return isLoggedIn;
   }
 }

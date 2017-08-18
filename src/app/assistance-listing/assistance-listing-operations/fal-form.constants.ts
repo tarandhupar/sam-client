@@ -53,6 +53,7 @@ export class FALFieldNames {
 
   //Apply for Assistance
   static readonly DEADLINES = 'fal-appForAssist-deadline';
+  static readonly DEADLINES_LIST = 'fal-appForAssist-deadline-list';
   static readonly PREAPPCOORD_ADDITIONAL_INFO = 'fal-appForAssist-pac-addInfo';
   static readonly SELECTION_CRITERIA_DESCRIPTION = 'fal-appForAssist-sc-description';
   static readonly AWARD_PROCEDURE_DESCRIPTION = 'fal-appForAssist-ap-description';
@@ -115,6 +116,7 @@ export const FALSectionFieldsBiMap = (function() {
 
     [FALSectionNames.APPLYING_FOR_ASSISTANCE]: [
       FALFieldNames.DEADLINES,
+      FALFieldNames.DEADLINES_LIST,
       FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO,
       FALFieldNames.SELECTION_CRITERIA_DESCRIPTION,
       FALFieldNames.AWARD_PROCEDURE_DESCRIPTION,

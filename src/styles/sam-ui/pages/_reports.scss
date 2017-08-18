@@ -100,11 +100,18 @@
 
   label[for=contractingRegion],
   label[for=orgCode],
-  label[for=includesBases] {
+  label[for=includesBases],
+  label[for=agencyName] {
     font-weight: 600;
   }
   label[for=includesBases] {
     margin-top: 25px;
+  }
+  label[for=agencyName] {
+   margin-top: 3.9rem;
+  }
+  .usa-additional_text {
+    padding-left: .5rem;
   }
 }
 

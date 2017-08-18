@@ -102,17 +102,15 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       currentFY: this.getCurrentFY().toString(),
       nextFY : (this.getCurrentFY() + 1).toString()
     };
+    this.createForm();
+    if (!this.viewModel.isNew) {
+      this.updateForm();
+    }
     this.service.getObligation_Info_Dictionaries().subscribe(
       data => this.parseDictionariesList(data),
       error => {
         console.error('error retrieving dictionary data', error);
       });
-    this.createForm();
-
-
-    if (!this.viewModel.isNew) {
-      this.updateForm();
-    }
   }
 
   createForm() {
@@ -371,7 +369,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   }
 
   updateObligationsErrors(obligListErrors, flag?: boolean){
-    if(obligListErrors) {
+    if(obligListErrors && this.obligationSubForm.falObligationSubForm.controls['obligations']['controls'].length > 0) {
       for(let errObj of obligListErrors.errorList){
         if(!errObj.errors['noOblig']) {
           let id = errObj.id;

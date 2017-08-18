@@ -1,6 +1,7 @@
 import {AbstractControl, FormControl, AsyncValidatorFn, ValidatorFn, Validators} from "@angular/forms";
 import * as _ from 'lodash';
 import { ValidationErrors } from "../../app-utils/types";
+import * as moment from 'moment/moment';
 
 export class falCustomValidatorsComponent {
 
@@ -203,6 +204,52 @@ export class falCustomValidatorsComponent {
       return {
         required : true
       };
+    }
+    return null;
+  }
+
+  static dateRangeRequired(c:AbstractControl){
+    if(!c.value || !c.value.startDate){
+      return {
+        dateRangeError: {
+          message: "This field is required"
+        }
+      };
+    }
+    return null;
+  }
+
+  static dateRangeValidation(c:AbstractControl){
+    if(c.value && c.value.startDate && c.value.endDate){
+      let startDateM = moment(c.value.startDate);
+      let endDateM = moment(c.value.endDate);
+      if(startDateM.get('year')>1000 && endDateM.get('year')>1000 && endDateM.diff(startDateM) < 0){
+        return {
+          dateRangeError: {
+            message: "Invalid date range"
+          }
+        }
+      }
+    }
+    if (c.value && c.value.startDate){
+      let startDateM = moment(c.value.startDate);
+      if(!startDateM.isValid() || c.value.startDate=="Invalid date"){
+        return {
+          dateRangeError: {
+            message: "Invalid start date"
+          }
+        }
+      }
+    }
+    if (c.value && c.value.endDate){
+      let endDateM = moment(c.value.endDate);
+      if(!endDateM.isValid() || c.value.endDate=="Invalid date"){
+        return {
+          dateRangeError: {
+            message: "Invalid end date"
+          }
+        }
+      }
     }
     return null;
   }

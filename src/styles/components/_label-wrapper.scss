@@ -26,10 +26,12 @@
 
 sam-label-wrapper{
   label{
+    font-weight: 600;
+    max-width: 100%;
+    margin-top: 0;
     overflow:auto;
   }
   .usa-form-hint{
-    max-width: 46rem;
     display: block;
   }
 
@@ -39,20 +41,13 @@ sam-label-wrapper{
 
   .hint-toggle{
     .usa-form-hint{
-      height:3em;
+      height:2.88em;
       overflow:hidden;
       display:block;
     }
   }
   .usa-form-hint-showmore-toggler{
-    display:block;
-    text-align:right;
-    max-width: 46rem;
-    a{
-      &:hover{
-        cursor:pointer;
-      }
-    }
+    margin-bottom: 1.7rem;
   }
   .usa-input-error{
     margin-top: 0;
@@ -76,13 +71,7 @@ sam-fieldset-wrapper{
   }
   .usa-form-hint-showmore-toggler{
     display:block;
-    text-align:right;
-    max-width: 46rem;
-    a{
-      &:hover{
-        cursor:pointer;
-      }
-    }
+    margin-bottom: 1.7rem;
   }
   .usa-input-error{
     margin-top: 0;

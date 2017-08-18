@@ -33,7 +33,6 @@ import { RequestResponsePage } from "./request-response/request-response.page";
 import { UserService } from "./user.service";
 import { UserServiceMock } from "./user.service.mock";
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
-import { UserSearchModule } from "./user-search.module";
 
 @NgModule({
   imports: [
@@ -50,7 +49,6 @@ import { UserSearchModule } from "./user-search.module";
     RoleManagementModule,
     AppTemplatesModule,
     Ng2PageScrollModule.forRoot(),
-    UserSearchModule,
   ],
   exports: [
     UserPic

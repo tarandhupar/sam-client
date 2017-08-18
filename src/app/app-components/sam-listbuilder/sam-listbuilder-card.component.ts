@@ -7,28 +7,7 @@ import * as _ from 'lodash';
 
 @Component ({
     selector: 'sam-listbuilder-card',
-    template: `
-<div class="card">
-    <div>
-        <sam-listbuilder-action 
-            (action)="actionHandler($event)" 
-            [disable]="showEditSubform || disable"
-            [firstOfList]="firstOfList" 
-            [sortable]="sortable" 
-            [endOfList]="endOfList"></sam-listbuilder-action>
-    </div>
-    <hr/>
-    <div *ngIf="!showEditSubform" class="display-view"> 
-        <ng-content select="[display]"></ng-content>
-    </div>
-    <div *ngIf="showEditSubform" class="editor-view">
-        <ng-content select="[edit]"></ng-content>  
-        <div class="button-row">      
-            <button class="usa-button-outline" (click)="cancelEdit()">Cancel</button> 
-            <button class="" (click)="actionHandler('editSubmit')">Done</button>
-        </div>
-    </div>
-</div>`
+    templateUrl: 'sam-listbuilder-card.template.html'
 })
 export class SamListBuilderCardComponent {
     @Input() data;

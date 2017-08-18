@@ -1,4 +1,6 @@
-import {Component, OnInit, OnDestroy, ViewChild, Input, ElementRef} from '@angular/core';
+import {
+  Component, OnInit, OnDestroy, ViewChild, Input, ElementRef, AfterViewInit
+} from '@angular/core';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {Location} from '@angular/common';
 import * as Cookies from 'js-cookie';
@@ -32,25 +34,25 @@ import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
   providers: [
     FHService,
     ProgramService,
-    DictionaryService,
     HistoricalIndexService,
     SidenavHelper,
     FALFormService,
     RequestLabelPipe
   ]
 })
-export class FALReviewComponent implements OnInit, OnDestroy {
+export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
   // Checkboxes Component
   checkboxModel: any = [];
   checkboxConfig = {
     options: [
-      {value: 'true', label: 'Show Public History', name: 'checkbox-action-history'},
+      {value: 'true',  label: 'Show Public History', name: 'checkbox-action-history'},
     ],
     name: 'show-hide-action-history'
   };
+  dictionariesUpdated:boolean = false;
   publicHistoryIsVisible:boolean = true;
   actionHistoryAndNote: any;
-  latestRevision:any
+  latestRevision:any;
   @Input() viewModel: FALFormViewModel;
   @ViewChild('historySection') historySection: ElementRef;
   programRequest: any;
@@ -59,7 +61,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   federalHierarchy: any;
   relatedProgram: any[] = [];
   currentUrl: string;
-  dictionaries: any;
   authorizationIdsGrouped: any[];
   history: any[];
   historicalIndex: any;
@@ -85,11 +86,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     "children": []
   };
   roleFalg: boolean = false;
-  runValidationFlag: boolean = false;
-  lowRange: number = 0;
-  highRange: number = 0;
   qParams: any;
   reviewErrorList = {};
+  items = [];
   @ViewChild('deleteModal') deleteModal;
   modalConfig = {title: 'Delete Draft AL', description: ''};
   changeRequestDropdown: any = {
@@ -271,6 +270,13 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     this.selectedPage = this.sidenavService.getData()[0];
   }
 
+  ngAfterViewInit() {
+    setTimeout( () => {
+      this.reviewErrorList = this.errorService.applicableErrors;
+      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+    }, 400);
+  }
+
   ngOnDestroy() {
     if (this.apiSubjectSub) {
       this.apiSubjectSub.unsubscribe();
@@ -313,6 +319,19 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       this.program = api;
       if (!this.program._links.self) {
         this.router.navigate['accessrestricted'];
+      }
+
+      if(this.program &&this.program.data && this.program.data.contacts && this.program.data.contacts.headquarters) {
+        for (let item of this.program.data.contacts.headquarters) {
+          if(item.state === 'na') {
+            item.state = '';
+          } else if (item.state === '1') {
+            item.state = 'Non-U.S.';
+          } else {
+            item.state = item.state;
+          }
+          this.items.push(item);
+        }
       }
       this.showHideButtons(this.program);
       this.makeSidenav();
@@ -384,20 +403,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     return FALSectionNames[section];
   }
 
-  runValidationForFAL(orgId){
-    this.service.getFederalHierarchyConfigurations(orgId).subscribe( data => {
-      this.runValidationFlag = !data.programNumberAuto;
-      this.highRange = data.programNumberHigh;
-      this.lowRange = data.programNumberLow;
-
-      this.errorService.validateHeaderProgNo(this.runValidationFlag, this.lowRange, this.highRange, FALFormService.getAuthenticationCookie(), this.programService).subscribe(red => {
-        this.reviewErrorList = this.errorService.applicableErrors;
-        this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
-      });
-
-    });
-  }
-
   getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, suffix: string = null, atLeastOneEntryError: boolean = false, errorId: string = null){
 
     let errObj : (FieldError | FieldErrorList) = FALFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
@@ -442,11 +447,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   showHideButtons(program: any) {
     this.viewModel = new FALFormViewModel(program);
-    this.errorService = new FALFormErrorService();
     this.errorService.viewModel = this.viewModel;
     this.errorService.initFALErrors();
-    //bad hack to avoid passing service in constructor in ErrorService - Need a revisit on this.
-
     let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
     this.reviewErrorList = this.errorService.applicableErrors;
     if (program._links) {
@@ -483,33 +485,31 @@ export class FALReviewComponent implements OnInit, OnDestroy {
    * @return Observable of Dictionary API
    */
   private loadDictionaries() {
-    // declare dictionaries to load
-    let dictionaries = [
-      'program_subject_terms',
-      'date_range',
-      'match_percent',
-      'assistance_type',
-      'applicant_types',
-      'assistance_usage_types',
-      'beneficiary_types',
-      'functional_codes',
-      'cfr200_requirements'
-    ];
-
     let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
-    // construct a stream of dictionary data
-    this.dictionarySub = this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
+      // declare dictionaries to load
+      let dictionaries = [
+        'program_subject_terms',
+        'match_percent',
+        'assistance_type',
+        'applicant_types',
+        'assistance_usage_types',
+        'beneficiary_types',
+        'functional_codes',
+        'cfr200_requirements'
+      ];
+    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join(','));
+    if (filteredDictionaries===''){
+      this.dictionariesUpdated = true;
+    } else {
+      // construct a stream of dictionary data
+      this.dictionarySub = this.dictionaryService.getProgramDictionaryById(filteredDictionaries).subscribe(dictionaryServiceSubject);
 
-    var temp: any = {};
-    dictionaryServiceSubject.subscribe(res => {
-      // run whenever dictionary data is updated
-      for (let key in res) {
-        temp[key] = res[key]; // store the dictionary
-      }
-      this.dictionaries = temp;
-    });
-
-    return dictionaryServiceSubject;
+      var temp:any = {};
+      dictionaryServiceSubject.subscribe(res => {
+        this.dictionariesUpdated = true;
+      });
+    }
+      return dictionaryServiceSubject;
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {
@@ -517,7 +517,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      this.runValidationForFAL(api.data.organizationId);
       return this.fhService.getOrganizationById(api.data.organizationId, false);
     });
 
@@ -638,7 +637,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   private getAssistanceType(id): string {
     let filter = new FilterMultiArrayObjectPipe();
-    let result = filter.transform([id], this.dictionaries.assistance_type, 'element_id', true, 'elements');
+    let result = filter.transform([id], this.dictionaryService.dictionaries.assistance_type, 'element_id', true, 'elements');
     return (result instanceof Array && result.length > 0) ? result[0].value : [];
   }
 

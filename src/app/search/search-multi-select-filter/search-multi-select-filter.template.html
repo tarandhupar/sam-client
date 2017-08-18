@@ -1,0 +1,8 @@
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="selectConfig.label"
+                              [name]="selectConfig.name"
+                              [options]="selectOptions"
+                              [keyValueConfig]="selectConfig.config.keyValueConfig"
+                              [ngModel]="selectedOptions"
+                              (ngModelChange)="selectChanged($event)">
+</sam-autocomplete-multiselect>

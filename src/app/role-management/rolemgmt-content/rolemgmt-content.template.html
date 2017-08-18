@@ -1,192 +1,183 @@
-<div class = "rolemgmt-content usa-grid-full ">
-  <!--<div>-->
-    <!--<div class="overview-header">-->
-      <!--<div class="usa-grid-full">-->
-        <!--<div class="usa-width-one-fourth">-->
-          <!--<h3>Requests</h3>-->
-          <!--<div>-->
-            <!--<span class="badge-primary">{{escalatedCount}}</span>-->
-            <!--<a class="pointer-hover" (click)="onEscalatedClick()">Escalated Requests</a>-->
-          <!--</div>-->
-          <!--<div class="m_T-2x">-->
-            <!--<span class="badge-primary">{{pendingCount}}</span>-->
-            <!--<a class="pointer-hover" (click)="onPendingClick()">Pending Requests</a>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="usa-width-one-third">-->
-          <!--<h3>Favorite Organizations</h3>-->
-          <!--<div>-->
-            <!--<a>GSA</a>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<a>Office of Management and Budget</a>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div>-->
-        <!--<button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/workspace'">-->
-          <!--<i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>-->
-          <!--<span class = "inline-block">Back to Workspace Home</span>-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-  <div class = "usa-grid-full">
-    <div>
-      <div>
-        <h2>Role Requests
-          <div class="pull-right">
-            <strong class="sort-label">Sort (Requested Date)</strong>
-            <sam-select
-              class="sort-options"
-              [(model)]="selectModel"
-              [name]="'created-date-sort'"
-              [options]="selectConfig.options"
-              (modelChange)="onSelectChanged($event)">
-            </sam-select>
-          </div>
-        </h2>
-        <h3 class="showing-count">{{showingCountText()}}</h3>
 
-      </div>
+<!-- No results -->
+<p *ngIf="currCount<1" >
+  No records found for selected criteria
+</p>
+
+<!-- Page results -->
+<results *ngIf="currCount > 0"
+  [totalElements]="count"
+  [totalPages]="totalPages"
+  [currentPage]="currPage"
+  (pageChange)="onPageChange($event)">
+
+  <sam-sort [(ngModel)]="selectModel"
+            [options]="selectConfig.options"
+            (ngModelChange)="onSelectChanged($event)">
+  </sam-sort>
+
+  <div class="sam-ui segment" *ngFor="let content of requestDetails">
+
+    <div *ngIf="shouldShowRespondButton(content)"
+      class="sam-ui small subtle menu">
+      <a routerLink = "/access-requests/{{content.id}}/respond"
+          class="active inverted blue item">
+        Respond
+        &nbsp;
+        <i aria-hidden="true" class="fa fa-arrow-circle-right"></i>
+      </a>
     </div>
-  </div>
-  <div *ngIf = "currCount < 1" >
-    <em>No records found for selected criteria</em>
-  </div>
-  <div *ngIf = "currCount > 0">
-    <div  *ngFor = "let content of requestDetails" >
-      <section class = "sec-bor">
-        <div><span class="usa-label-big">{{content.domain.val | capitalize}}</span></div>
-        <div class="request-block">
-          <div class="request-top-block">
-            <div class="usa-grid-full clearfix">
-              <div class="pull-right icon-and-respond">
-                <i class="fa fa-2x" [ngClass]="classForRequest(content)"></i>
-                <button *ngIf = "shouldShowRespondButton(content)" routerLink = "/access-requests/{{content.id}}/respond" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
-              </div>
-              <div class="usa-width-one-third">
-                <div><strong>Requested By</strong></div>
-                <div>{{content.requestorName.toUpperCase()}}</div>
-              </div>
-              <div class="usa-width-one-third">
-                <div><strong>Requested Date</strong></div>
-                <div>{{formatDate(content.createdDate)}}</div>
-              </div>
-              <div class="usa-width-one-sixth">
-                <div>
-                  <strong>Status</strong>
-                </div>
-                <div>{{content.status.val}}</div>
-              </div>
-            </div>
 
-            <div class="usa-grid-full m_T-2x">
-              <!-- Pending -->
-              <ng-container *ngIf="content.status.val.toLowerCase() === 'pending'">
-                <div class="usa-width-one-third">
-                  <div><strong>Supervisor Name</strong></div>
-                  <div>{{content.supervisorName.toUpperCase()}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Supervisor Email</strong></div>
-                  <div>{{content.supervisorEmail}}</div>
-                </div>
-              </ng-container>
+    <div class="sam-ui grid">
 
-              <!-- Escalated -->
-              <ng-container *ngIf="content.status.val.toLowerCase() === 'escalated'">
-                <div class="usa-width-one-third">
-                  <div><strong>Escalated By</strong></div>
-                  <div>{{content.escalatedTo}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Escalation Date</strong></div>
-                  <div>{{formatDate(content.updatedDate)}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Escalated To</strong></div>
-                  <div>---</div>
-                </div>
-              </ng-container>
-
-              <!-- Rejected -->
-              <ng-container *ngIf="content.status.val.toLowerCase() === 'rejected'">
-                <div class="usa-width-one-third">
-                  <div><strong>Rejected By</strong></div>
-                  <div>---</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Rejection Date</strong></div>
-                  <div>{{formatDate(content.updatedDate)}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Rejection Organization</strong></div>
-                  <div>---</div>
-                </div>
-              </ng-container>
-
-              <!-- Approved -->
-              <ng-container *ngIf="content.status.val.toLowerCase() === 'approved'">
-                <div class="usa-width-one-third">
-                  <div><strong>Approved By</strong></div>
-                  <div>{{content.updatedBy}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Approved Date</strong></div>
-                  <div>{{formatDate(content.updatedDate)}}</div>
-                </div>
-                <div class="usa-width-one-third">
-                  <div><strong>Approval Organization</strong></div>
-                  <div>---</div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-
-          <sam-solo-accordian [titleText]="'Comments'">
-            <section class="comment-section" *ngIf="content.requestorMessage">
-              <div class="comment-user-icon">
-                <i class="fa fa-user"></i>
-              </div>
-              <div class="comment-user-name">
-                <strong>Requestor said:</strong>
-              </div>
-              <div class="comment">
-                {{content.requestorMessage}}
-              </div>
-            </section>
-            <section class="comment-section" *ngIf="content.adminMessage">
-              <div class="comment-user-icon">
-                <i class="fa fa-user"></i>
-              </div>
-              <div class="comment-user-name">
-                <strong>Admin said:</strong>
-              </div>
-              <div class="comment">
-                {{content.adminMessage}}
-              </div>
-            </section>
-          </sam-solo-accordian>
-          <sam-solo-accordian [titleText]="'Details'" *ngIf='content.status.val.toLowerCase() === "approved"' class="details-accordion">
-            <div class="usa-grid-full">
-              <div class="usa-width-one-third">
-                <div><strong>Role Granted</strong></div>
-                <div>{{getRolesGranted(content)}}</div>
-              </div>
-              <div class="usa-width-two-thirds">
-                <div><strong>Organizations</strong></div>
-                <div>{{getOrganizations(content)}}</div>
-              </div>
-            </div>
-          </sam-solo-accordian>
+      <div class="row">
+        <div class="twelve wide column">
+          <h3 class="sam-ui header">
+            {{content.domain.val | capitalize}}
+          </h3>
         </div>
-      </section>
+      </div>
+
+      <div class="row">
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Requested By
+            <div class="sub header">{{content.requestorName.toUpperCase()}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Requested Date
+            <div class="sub header">{{formatDate(content.createdDate)}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <span class="sam-ui basic tiny blue label">
+            {{content.status.val}}
+          </span>
+        </div>
+      </div>
+
+      <!-- Pending -->
+      <div class="row" *ngIf="content.status.val.toLowerCase() === 'pending'">
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Supervisor Name
+            <div class="sub header">{{content.supervisorName.toUpperCase()}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Supervisor Email
+            <div class="sub header">{{content.supervisorEmail}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Escalated -->
+      <div class="row" *ngIf="content.status.val.toLowerCase() === 'escalated'">
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Escalated By
+            <div class="sub header">{{content.escalatedTo}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Escalation Date
+            <div class="sub header">{{formatDate(content.updatedDate)}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Escalated To
+            <div class="sub header">&#8212;&#8212;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rejected -->
+      <div class="row" *ngIf="content.status.val.toLowerCase() === 'rejected'">
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Rejected By
+            <div class="sub header">&#8212;&#8212;</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Rejection Date
+            <div class="sub header">{{formatDate(content.updatedDate)}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Rejection Organization
+            <div class="sub header">&#8212;&#8212;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approved -->
+      <div class="row" *ngIf="content.status.val.toLowerCase() === 'approved'">
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Approved By
+            <div class="sub header">{{content.updatedBy}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Approved Date
+            <div class="sub header">{{formatDate(content.updatedDate)}}</div>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="sam-ui medium header">
+            Approval Organization
+            <div class="sub header">&#8212;&#8212;</div>
+          </div>
+        </div>
+      </div>
+
     </div>
+
+    <!-- Comments -->
+    <sam-solo-accordian
+      *ngIf="content.requestorMessage || content.adminMessage"
+      [titleText]="'Comments'">
+      <ng-container *ngIf="content.requestorMessage">
+        <div class="sam-ui medium header">
+          Requestor said
+          <div class="sub header">{{content.requestorMessage}}</div>
+        </div>
+      </ng-container>
+      <div
+        *ngIf="content.requestorMessage && content.adminMessage"
+        class="sam-ui divider">
+      </div>
+      <ng-container *ngIf="content.adminMessage">
+        <div class="sam-ui medium header">
+          Admin said
+          <div class="sub header">{{content.adminMessage}}</div>
+        </div>
+      </ng-container>
+    </sam-solo-accordian>
+
+    <!-- Details -->
+    <sam-solo-accordian
+      [titleText]="'Details'"
+      *ngIf='content.status.val.toLowerCase() === "approved"'>
+      <div class="sam-ui medium header">
+        Role Granted
+        <div class="sub header">{{getRolesGranted(content)}}</div>
+      </div>
+      <div class="sam-ui medium header">
+        Organizations
+        <div class="sub header">{{getOrganizations(content)}</div>
+      </div>
+    </sam-solo-accordian>
+
   </div>
-  <div class = "pag-com">
-    <div *ngIf ="totalPages > 1">
-      <sam-pagination [currentPage]="currPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></sam-pagination>
-    </div>
-  </div>
-</div>
+
+</results>

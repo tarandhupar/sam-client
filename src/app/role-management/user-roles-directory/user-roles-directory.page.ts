@@ -6,6 +6,7 @@ import * as _ from "lodash";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
+import { Observable } from "rxjs";
 
 @Component({
   templateUrl: './user-roles-directory.template.html',
@@ -29,17 +30,15 @@ export class UserRolesDirectoryPage {
   selectedOrganization: string|number|undefined;
   userSearchValue: string = '';
 
+  sort: any = {type:'lastName', sort:'asc'};
   sortOptions = [
-    { value: 'asc', label: 'Last name (A-Z)' },
-    { value: 'desc', label: 'Last name (Z-A)' }
+    { value: 'lastName', label: 'Last name' },
   ];
-  sort: 'asc'|'desc' = 'asc';
 
   // pagination
   page: number = 1;
   pageOffset: number;
   itemsPerPage: number;
-  resultsOnThisPage: number;
   totalResults: number;
   totalPages: number;
 
@@ -52,9 +51,13 @@ export class UserRolesDirectoryPage {
 
   dummySearchValue; //autocomplete makes me do this
 
+
+
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
   @ViewChild('userPicker') userAutoComplete: SamAutocompleteComponent;
+
+  private request: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -79,6 +82,32 @@ export class UserRolesDirectoryPage {
     });
     this.rolesForDomainId = byId;
     this.doSearch();
+  }
+
+  ngOnInit() {
+    this.request = this.userAutoComplete.keyEvents
+      .debounceTime(300)
+      .switchMap(
+        input => {
+          return this.userAccessService.getUserAutoComplete(input)
+            .catch(e => {
+              return Observable.of([]);
+            });
+        }
+      )
+      .map(
+        users => {
+          if (!users) {
+            return [];
+          }
+          return users.map(user => {
+            return {
+              key: user.email,
+              value: `${user.firstName} ${user.lastName} (${user.email })`
+            };
+          });
+        }
+      );
   }
 
   onClearAllClick() {
@@ -110,7 +139,7 @@ export class UserRolesDirectoryPage {
 
   doSearch() {
     let filterOptions: any = {
-      order: this.sort,
+      order: this.sort.sort,
       page: this.page,
     };
 
@@ -130,8 +159,6 @@ export class UserRolesDirectoryPage {
     this.userAccessService.getUserDirectory(filterOptions)
       .subscribe(res => {
         this.users = res.users;
-
-        this.resultsOnThisPage = this.users.length;
         this.totalResults = res.total;
         this.itemsPerPage = res.limit;
         this.pageOffset = res.offset;
@@ -141,7 +168,7 @@ export class UserRolesDirectoryPage {
         this.users.forEach(u => {
           // group by tier type
           let orgsByTier = _.groupBy(u.access, acc => {
-            return acc.organization.type || 'Uncategorized';
+            return acc.organization.type || 'Unavailable';
           });
 
           orgsByTier = _.mapKeys(orgsByTier, (value, key) => {
@@ -159,7 +186,7 @@ export class UserRolesDirectoryPage {
           _.forOwn(orgsByTier, (org, tierName) => {
             let orgs = org.map(o => {
               let v = {
-                name: o.organization.val || o.organization.id,
+                name: this.capitalize.transform(o.organization.val) || o.organization.id,
                 isSelected: o.organization.isSelected
               };
               return v;
@@ -215,14 +242,17 @@ export class UserRolesDirectoryPage {
   }
 
   onUserChange(user) {
-    this.userSearchValue = user.key;
+    this.userSearchValue = user && user.key;
     this.doSearch();
   }
 
-  resultCount() {
-    let pageStart = this.pageOffset + 1;
-    let pageEnd = pageStart + this.resultsOnThisPage - 1;
-    let total = this.totalResults;
-    return `${pageStart}-${pageEnd} of ${total}`;
+  formatOrgName(org) {
+    if (typeof org.name === 'number') {
+      return ''+org.name
+    } else if (typeof org.name === 'string') {
+      return this.capitalize.transform(org.name);
+    } else {
+      return '';
+    }
   }
 }

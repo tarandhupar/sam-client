@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 export const Validators = {
   email(c: FormControl) {
-    const PATTERN = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    const PATTERN = /(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/i;
     return PATTERN.test(c.value) ? null : {
       email: {
         valid: false
@@ -98,12 +98,18 @@ export const Validators = {
       let value = (c.value || '').toLowerCase(),
           match,
           intMatch,
+          short,
+          long,
           valid = true;
 
       if(value.length > 1) {
         for(intMatch = 0; intMatch < matches.length; intMatch++) {
           match = (matches[intMatch] || '').toLowerCase();
-          if(match.length && match.indexOf(value) > -1) {
+
+          long = (value.length > match.length) ? value : match;
+          short = (value.length < match.length) ? value : match;
+
+          if(long.length && long.indexOf(short) > -1) {
             valid = false;
           }
         }

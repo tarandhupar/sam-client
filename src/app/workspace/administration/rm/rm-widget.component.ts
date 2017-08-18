@@ -1,12 +1,13 @@
-import {Component, OnInit} from "@angular/core";
+import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { UserAccessService } from "api-kit/access/access.service";
 import {Router, Route, ActivatedRoute} from "@angular/router";
 import { RMSUserServiceImpl } from "../../../users/request-access/username-autocomplete.component";
+import { ReplaySubject, Subject, Observable, Observer } from "rxjs";
+import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 
 @Component({
   selector: 'rm-widget',
-  templateUrl: './rm-widget.template.html',
-  providers: [RMSUserServiceImpl]
+  templateUrl: './rm-widget.template.html'
 })
 export class RMWidgetComponent implements OnInit {
 
@@ -17,6 +18,7 @@ export class RMWidgetComponent implements OnInit {
     }
   };
 
+  loadingState: 'loading'|'success'|'error' = 'loading';
   pendingCount: number = 0;
   escalatedCount: number = 0;
 
@@ -24,13 +26,15 @@ export class RMWidgetComponent implements OnInit {
   shouldShowEscalated: boolean = false;
   shouldShowRoleDefinitions: boolean = false;
   shouldShowRoleDirectory: boolean = false;
+  
+  @ViewChild('autoComplete') autoComplete: SamAutocompleteComponent;
 
   get shouldShowAnyAdmin() {
     return this.shouldShowEscalated || this.shouldShowPending || this.shouldShowRoleDirectory || this.shouldShowRoleDefinitions;
   }
 
   dummySearchValue; //autocomplete makes me do this
-  loadingAccess: boolean = true;
+  request: Observable<any>;
 
   constructor(
     private router: Router,
@@ -39,9 +43,35 @@ export class RMWidgetComponent implements OnInit {
 
   }
 
+
   ngOnInit() {
+    this.request = this.autoComplete.keyEvents
+      .debounceTime(300)
+      .switchMap(
+        input => {
+          return this.accessService.getUserAutoComplete(input)
+            .catch(e => {
+              return Observable.of([]);
+            });
+        }
+      )
+      .map(
+        users => {
+          if (!users) {
+            return [];
+          }
+          return users.map(user => {
+            return {
+              key: user.email,
+              value: `${user.firstName} ${user.lastName} (${user.email })`
+            };
+          });
+        }
+      );
+
     this.accessService.getWidget().subscribe(
       res => {
+        this.loadingState = 'success';
         if (res._links && res._links.domaindefinition) {
           this.shouldShowRoleDefinitions = true;
         }
@@ -68,10 +98,20 @@ export class RMWidgetComponent implements OnInit {
         });
       },
       err => {
-        this.loadingAccess = false;
-      },
-      () => {
-        this.loadingAccess = false;
+        this.loadingState = 'error';
+      }
+    );
+  }
+
+  getResults(q) {
+    return this.accessService.getUserAutoComplete(q).map(
+      users => {
+        return users.map(user => {
+          return {
+            key: user.email,
+            value: `${user.firstName} ${user.lastName} (${user.email })`
+          };
+        });
       }
     );
   }

@@ -1,45 +1,36 @@
-<div class = "rolemgmt-sidenav">
-  <div>
-    <div class = "filter-color">
-      <h3>Filters
-        <div class = "pull-right filter-icon filter-color">
-          <i class="fa fa-sliders" aria-hidden="true"></i>
-        </div>
-      </h3>
-    </div>
+<div class="sam-ui segment">
+  <h4 class="sam-ui header">Search</h4>
+  <sam-autocomplete
+    name="'users-search'"
+    [options]="requestorIds"
+    [allowAny]="true"
+    [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
+    [(ngModel)]="usersEntered"
+    (enterEvent)="onUserClick($event)">
+  </sam-autocomplete>
 
-    <div>
-      <sam-autocomplete
-        name="'users-search'"
-        [options]="requestorIds"
-        [allowAny]="true"
-        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
-        [(ngModel)]="usersEntered"
-        (ngModelChange)="onUserClick($event)"
-      ></sam-autocomplete>
-      <sam-solo-accordian [titleText]="accordionHeading1">
-        <sam-checkbox
-          #statusCheckboxes
-          (modelChange)="activeFilter($event)"
-          [(ngModel)]="StatusCheckboxModel"
-          [name]="'Access-Status-Checkbox-Filter'"
-          [options]="filters.status.options"
-          [label]="filters.status.label"
-          [hasSelectAll]="'Yes'"
-        >
-        </sam-checkbox>
-      </sam-solo-accordian>
-      <sam-solo-accordian [titleText]="accordionHeading2">
-        <sam-checkbox
-          (modelChange)="domainFilter($event)"
-          [(model)]="DomiansCheckboxModel"
-          [name]="'Domains-Checkbox-Filter'"
-          [options]="filters.domains.options"
-          [label]="filters.domains.label"
-          [hasSelectAll]="'Yes'"
-        >
-        </sam-checkbox>
-      </sam-solo-accordian>
-    </div>
-  </div>
+  <div class="sam-ui divider"></div>
+
+  <h4 class="sam-ui header">{{ accordionHeading1 }}</h4>
+  <sam-checkbox
+    #statusCheckboxes
+    (modelChange)="activeFilter($event)"
+    [(ngModel)]="StatusCheckboxModel"
+    [name]="'Access-Status-Checkbox-Filter'"
+    [options]="filters.status.options"
+    [label]="filters.status.label"
+    [hasSelectAll]="'Yes'">
+  </sam-checkbox>
+
+  <div class="sam-ui divider"></div>
+
+  <h4 class="sam-ui header">{{ accordionHeading2 }}</h4>
+  <sam-checkbox
+    (modelChange)="domainFilter($event)"
+    [(model)]="DomiansCheckboxModel"
+    [name]="'Domains-Checkbox-Filter'"
+    [options]="filters.domains.options"
+    [label]="filters.domains.label"
+    [hasSelectAll]="'Yes'">
+  </sam-checkbox>
 </div>

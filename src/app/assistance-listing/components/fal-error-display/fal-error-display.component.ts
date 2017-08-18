@@ -170,6 +170,11 @@ export class FALErrorDisplayHelperComponent {
       fieldId = FALFieldNames.ACCOUNT_IDENTIFICATION;
     }
 
+    if (fieldId.indexOf(FALFieldNames.DEADLINES_LIST) !== -1) {
+      section = FALSectionNames.APPLYING_FOR_ASSISTANCE;
+      fieldId = FALFieldNames.DEADLINES_LIST;
+    }
+
     if (section) {
       url += '#' + section + '-' + fieldId;
     }

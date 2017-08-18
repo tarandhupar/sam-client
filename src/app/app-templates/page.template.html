@@ -6,20 +6,23 @@
     <!-- Breadcrumbs -->
     <div class="row" *ngIf="breadcrumbs">
       <div class="twelve wide column">
-        <sam-breadcrumbs [crumbs]="breadcrumbs"></sam-breadcrumbs>
+        <sam-breadcrumbs [crumbs]="breadcrumbs" (crumbActionHandler)="breadcrumbHandler($event)">
+        </sam-breadcrumbs>
       </div>
     </div>
     
     <div *ngIf="!breadcrumbs" class="sam-ui hidden divider"></div>
     
-    <div class="row">
+    <div class="row page-content">
       <!-- Sidebar -->
-      <div *ngIf="pageService.sidebar" [ngClass]="pageService.sidebarColumns">
+      <div *ngIf="pageService.sidebar" [ngClass]="pageService.sidebarColumns" style="align-self: start;">
         <ng-content select="sidebar"></ng-content>
       </div>
       
       <!-- Main Content -->
       <div [ngClass]="pageService.mainContentColumns">
+        
+        <ng-content select="[message]"></ng-content>
         
         <!-- Page Title -->
         <h1 *ngIf="title || section"

@@ -5,6 +5,7 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
 import { PropertyCollector } from "../../app-utils/property-collector";
 import { Router } from "@angular/router";
 import {CapitalizePipe} from "../../app-pipes/capitalize.pipe";
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 type TabName = 'filters'|'users'|'access'|'confirmation';
 
@@ -44,6 +45,10 @@ export class BulkUpdateComponent {
   users = [];
   areUsersLoading = false;
   comments = '';
+  breadCrumbs: Array<IBreadcrumb> = [
+    { breadcrumb: 'Role Management', url: '/access/user-roles-directory' },
+    { breadcrumb: 'Bulk Update'}
+  ];
 
   constructor(
     private userService: UserService,

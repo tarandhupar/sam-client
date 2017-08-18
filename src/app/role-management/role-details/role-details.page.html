@@ -1,4 +1,7 @@
 <div class="usa-grid role-details-page">
+  <div>
+    <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+  </div>
   <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Role</h1>
 
   <!-- Domain label or dropdown -->
@@ -36,7 +39,7 @@
     </div>
 
     <div class="m_T-4x">
-      <strong>Objects and Permissions</strong>
+      <strong>Permissions</strong>
     </div>
 
     <!-- Objects and permission -->

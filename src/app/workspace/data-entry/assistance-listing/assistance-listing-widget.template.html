@@ -6,7 +6,8 @@
         <span *ngIf="pendingApprovalCount === 0">Pending Review Requests</span>
       </div>
       <div *ngIf="pendingRequestCount!=null"><span class="usa-font-lead">{{pendingRequestCount == 0 ? '0' : pendingRequestCount}}&nbsp;</span>
-        <a class="al-text">Pending Change Requests</a>
+        <a *ngIf="pendingRequestCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: '', requestType: 'archive_request,unarchive_request,title_request,agency_request,program_number_request'}">Pending Change Requests</a>
+        <span *ngIf="pendingRequestCount === 0">Pending Change Requests</span>
       </div>
       <div *ngIf="rejectedCount!=null"><span class="usa-font-lead">{{rejectedCount == 0 ? '0' : rejectedCount}}&nbsp;</span>
         <a *ngIf="rejectedCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'rejected'}">Rejected Assistance Listings</a>

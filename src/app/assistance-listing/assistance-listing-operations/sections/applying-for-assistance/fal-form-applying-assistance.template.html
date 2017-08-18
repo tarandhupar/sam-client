@@ -1,8 +1,10 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Applying for Assistance - {{ viewModel.title }}</div>
+<h2 class="sam-ui header">
+  Applying for Assistance
+</h2>
 
 <form [formGroup]="falAssistanceForm">
 
-  <div formGroupName="deadlines">
+  <div formGroupName="deadlines" class="sam-ui segment">
 
     <sam-radio-button *ngIf="falAssistanceForm.get('deadlines').get('flag')"
                       [label]="'Deadlines'"
@@ -17,20 +19,25 @@
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
       <sam-listbuilder
-        [formArrayInput]="deadlinesList.controls"
+        [formArrayInput]="falAssistanceForm.get('deadlines.list').controls"
         [formGroupTemplate]="deadlineSubform"  
         (formArrayChange)="fmArrayChange($event)">
-        <template #display let-item>{{formatAssistInfo(item.value)}}</template>
+        <template #display let-item>
+          <ng-container *ngIf="!item.valid">
+            <span class='usa-input-error-message'><sup>*</sup>This deadline information has some errors.</span>
+          </ng-container>
+          {{formatAssistInfo(item.value)}}
+        </template>
         <template #edit let-item>
           <form [formGroup]="item">
-            <sam-date [name]="'start-date'"
-                [label]="'Start Date'"
-                formControlName="start"
-              ></sam-date>
-              <sam-date [name]="'end-date'"
-                [label]="'End Date'"
-                formControlName="end"
-              ></sam-date>
+
+            <sam-date-range
+              [control]="item.get('dateRange')"
+              [defaultValidations]="false"
+              name="deadline-date-range"
+              formControlName="dateRange"
+            ></sam-date-range>
+
               <sam-text-area [attr.id]="'optional-desc-deadline'"
                 [name]="'list-desc'"
                 [label]="'Describe this Deadline'"
@@ -40,7 +47,7 @@
           </form>
         </template>
       </sam-listbuilder>
-      
+
       <sam-text-area [label]="'Other Deadline Information'"
                    [name]="'deadlines-description'"
                    formControlName="description"
@@ -48,7 +55,7 @@
     </div>
   </div>
 
-  <div formGroupName="preApplicationCoordination">
+  <div formGroupName="preApplicationCoordination" class="sam-ui segment">
     <sam-checkbox [label]="'Pre-Application Coordination'"
                  [name]="'preAppCord-checkbox'"
                  [hint]="'Select all that apply'"
@@ -67,7 +74,7 @@
     ></sam-text-area>
   </div>
 
-  <div formGroupName="applicationProcedure">
+  <div formGroupName="applicationProcedure" class="sam-ui segment">
 
     <sam-checkbox [label]="'Application Procedures'"
                  [name]="'appProc-checkbox'"
@@ -86,7 +93,7 @@
 
   </div>
 
-  <div formGroupName="selectionCriteria">
+  <div formGroupName="selectionCriteria" class="sam-ui segment">
 
     <sam-checkbox [label]="'Criteria for Selecting Proposals'"
                   [name]="'selectionCriteria-checkbox'"
@@ -107,7 +114,7 @@
     ></sam-text-area>
   </div>
 
-  <div formGroupName="awardProcedure">
+  <div formGroupName="awardProcedure" class="sam-ui segment">
     <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
                    [label]="'Award Procedure'"
                    [hint]="awardProcedureHint"
@@ -119,7 +126,7 @@
     ></sam-text-area>
   </div>
 
-  <div formGroupName="approval">
+  <div formGroupName="approval" class="sam-ui segment">
     <sam-select *ngIf="falAssistanceForm.get('approval').get('interval')"
                 [label]="'Date Range for Approval/Disapproval'"
                 [hint]="approvalHint"
@@ -139,7 +146,7 @@
     ></sam-text-area>
   </div>
 
-  <div formGroupName="renewal">
+  <div formGroupName="renewal" class="sam-ui segment">
     <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
                 [label]="'Renewals'"
                 [hint]="renewalHint"
@@ -159,7 +166,7 @@
     ></sam-text-area>
   </div>
 
-  <div formGroupName="appeal">
+  <div formGroupName="appeal" class="sam-ui segment">
     <sam-select *ngIf="falAssistanceForm.get('appeal').get('interval')"
                 [label]="'Appeals'"
                 [hint]="appealsHint"

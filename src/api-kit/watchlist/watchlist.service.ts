@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
 import { Cookie } from "ng2-cookies";
+import { Router } from "@angular/router";
 
 export type WatchlistType = {
   active?: string,
-  watchlistId?: number,
+  id?: number,
   domainId?: string,
   type: string
   frequency?: string,
@@ -15,7 +16,7 @@ export type WatchlistType = {
 
 @Injectable()
 export class WatchlistService {
-  constructor(private apiService: WrapperService) {}
+  constructor(private apiService: WrapperService, private router:Router) {}
 
   getByRecordId(watchlist : WatchlistType) {
     let suffixPath = '/' + watchlist.domainId;
@@ -30,13 +31,12 @@ export class WatchlistService {
 
     this.addAuthHeader(apiOptions);
     return this.apiService.call(apiOptions);
-     
-  }
+ }
 
   updateWatchlist(watchlist: WatchlistType) {
     const apiOptions: any = {
       name: 'watchlist',
-      suffix: '/' + watchlist.watchlistId,
+      suffix: '/' + watchlist.id,
       method: 'PUT',
       body: watchlist
     };
@@ -54,7 +54,13 @@ export class WatchlistService {
     };
 
     this.addAuthHeader(apiOptions);
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions)
+          .catch(res => {
+        if (res.status === 401 || res.status === 403 || res.status === 0) {
+          this.router.navigate(['/signin']);
+        }
+        return Observable.throw(res);
+      });
   }
 
   addAuthHeader(options) {

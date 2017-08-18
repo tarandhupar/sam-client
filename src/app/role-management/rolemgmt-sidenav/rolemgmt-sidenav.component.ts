@@ -83,7 +83,6 @@ export class RoleMgmtSidenav implements OnInit{
       this.role.getRequestorIds().subscribe( res => {
         if(res && res.length)
           this.requestorIds = res.map((e) => { return this.mapKeyAndVal(e) });
-        console.log(this.requestorIds);
       });
     }
 
@@ -109,14 +108,13 @@ export class RoleMgmtSidenav implements OnInit{
 
     onUserClick(newValue){
       let c = '';
-      if (typeof newValue === 'object') {
+      if (newValue && newValue.key) {
         c = newValue.key;
       } else if (typeof newValue === 'string') {
         c = newValue;
       }
 
       this.autoCompleteSelected.emit(c);
-      this.usersEntered = '';
     }
 
 }

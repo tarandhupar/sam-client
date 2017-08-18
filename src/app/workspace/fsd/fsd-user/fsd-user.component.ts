@@ -9,6 +9,9 @@ import { KBA } from 'authentication/kba.interface';
 
 @Component({
   templateUrl: './fsd-user.component.html',
+  providers: [
+    IAMService,
+  ]
 })
 export class FSDUserComponent {
   @ViewChild('confirmModal') confirmModal;

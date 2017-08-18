@@ -357,7 +357,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   }
 
   _filterActiveOrgs(org) {
-    if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active")
+    if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus'].toLowerCase()!="active")
       return false;
     if(!org["org"]['name'])
       return false;
@@ -580,7 +580,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
       this.searchMessage = "No matches found";
     } else if(this.searchData.length == 1 || idx !== -1) {
       this.searchMessage = "";
-      this.oFHService.getOrganizationById(this.searchData[idx]['_id'], true).subscribe(data => {
+      this.oFHService.getOrganizationById(this.searchData[idx]['_id'], true, false, 'all', 300).subscribe(data => {
         this.setOrganization(data["_embedded"][0]["org"]);
         this.updateBrowse(data["_embedded"][0]["org"]);
       });
@@ -675,7 +675,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     }
 
     if(selectedOrg) {
-      this.oFHService.getOrganizationById(selectedOrg, true).subscribe(res => {
+      this.oFHService.getOrganizationById(selectedOrg, true, false, 'all', 300).subscribe(res => {
         this.setOrganization(res["_embedded"][0]['org']);
         this.searchMessage = "";
       });
@@ -864,7 +864,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   serviceCall(orgId, hierarchy: boolean) {
     //get Department level of user's organizationId
     if(orgId != "") {
-      return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false);
+      return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false, false, 'all', 300);
     } else {
       return this.oFHService.getDepartments();
     }
