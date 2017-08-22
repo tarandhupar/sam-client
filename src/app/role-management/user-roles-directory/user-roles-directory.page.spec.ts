@@ -32,7 +32,7 @@ let mockActivatedRoute = {
   queryParams: Observable.of({domain: '1'})
 };
 
-fdescribe('The user-roles-directory page', () => {
+describe('The user-roles-directory page', () => {
   let component: UserRolesDirectoryPage;
   let fixture: any;
 

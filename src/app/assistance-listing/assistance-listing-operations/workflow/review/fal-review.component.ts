@@ -54,7 +54,6 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
   actionHistoryAndNote: any;
   latestRevision:any;
   @Input() viewModel: FALFormViewModel;
-  @ViewChild('historySection') historySection: ElementRef;
   programRequest: any;
   program: any;
   programID: any;

@@ -62,7 +62,6 @@ export class OrgDetailProfilePage {
     this.route.parent.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-
         this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
 
       });

@@ -1107,40 +1107,40 @@ export class FALFormErrorService {
       let deadlineList = this._viewModel.deadlineList;
       for (let i = 0; i < deadlineList.length; i++) {
         let deadlineItem = deadlineList[i];
+        let startDateM, endDateM: any;
+
         let deadlineError = {
           id: FALFieldNames.DEADLINES_LIST + i,
           errors: {}
         };
 
         if (!deadlineItem.start) {
-          deadlineError.errors['dateRangeError'] = {
+          deadlineError.errors['startDateError'] = {
             message: 'Deadlines: Row ' + (i + 1) + ' Start Date is required'
           };
         }
         else {
-          let startDateM = moment(deadlineItem.start);
-
+          startDateM = moment(deadlineItem.start);
           if(!startDateM.isValid() || deadlineItem.start == "Invalid date") {
-            deadlineError.errors['dateRangeError'] = {
+            deadlineError.errors['startDateError'] = {
               message: 'Deadlines: Row ' + (i + 1) + ' Invalid start date'
             };
           }
+        }
 
-          if(deadlineItem.end) {
-            let endDateM = moment(deadlineItem.end);
-
-            if(!endDateM.isValid() || deadlineItem.end == "Invalid date") {
-              deadlineError.errors['dateRangeError'] = {
-                message: 'Deadlines: Row ' + (i + 1) + ' Invalid end date'
-              };
-            }
-            else if(startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0){
-              deadlineError.errors['dateRangeError'] = {
-                message: 'Deadlines: Row ' + (i + 1) + ' Invalid date range'
-              };
-            }
+        if(deadlineItem.end) {
+          endDateM = moment(deadlineItem.end);
+          if(!endDateM.isValid() || deadlineItem.end == "Invalid date") {
+            deadlineError.errors['endDateError'] = {
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid end date'
+            };
           }
 
+          if(endDateM.isValid() && startDateM.isValid() && startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0) {
+            deadlineError.errors['dateRangeError'] = {
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid date range'
+            };
+          }
         }
 
         if (!(_.isEmpty(deadlineError.errors))) {

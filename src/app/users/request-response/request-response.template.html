@@ -46,12 +46,12 @@
           <ng-container *ngIf="e">
             <!-- ngFor hack to declare a local variable -->
             <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
-              <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+              <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">
               <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val | capitalize}}</label>
             </div>
             <ng-container *ngIf="object.permission[i+1]">
               <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
-                <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">
                 <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val | capitalize}}</label>
               </div>
             </ng-container>

@@ -318,20 +318,27 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
             this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
 
-            
+
             // sets the date models accordingly
             this.modelRebuilder(data);
             this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
             this.runProgram();
           });
     }, error => {
-        if (error && error.status === 401) {
-          this.alerts.push({
-            type: 'error',
-            title: 'Unauthorized',
-            description: 'Insufficient privileges to get user permission.'
-          });
-        }
+      let errorRes = error.json();
+      if (error && error.status === 401) {
+        this.alerts.push({
+          type: 'error',
+          title: 'Unauthorized',
+          description: 'Insufficient privileges to get user permission.'
+        });
+      } else if (error && (error.status === 502 || error.status === 504)) {
+        this.alerts.push({
+          type: 'error',
+          title: errorRes.error,
+          description: errorRes.message
+        });
+      }
     });
 
     return apiSubject;

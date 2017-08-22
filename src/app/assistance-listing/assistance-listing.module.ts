@@ -32,6 +32,7 @@ import {FALPublishComponent} from "./assistance-listing-operations/workflow/publ
 import {ActionHistoryLabelPipe} from "./pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "./pipes/request-type-label.pipe";
 import { AppTemplatesModule } from "../app-templates/index";
+import {FormatFederalHierarchyType} from "./pipes/format-federal-hierarchy-type.pipe";
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { AppTemplatesModule } from "../app-templates/index";
     HistoricalIndexLabelPipe,
     AssistanceProgramResult,
     AccessRestrictedPage,
-    ActionHistoryPipe
+    ActionHistoryPipe,
+    FormatFederalHierarchyType
   ],
   declarations: [
     AuthorizationPipe,
@@ -77,7 +79,8 @@ import { AppTemplatesModule } from "../app-templates/index";
     ActionHistoryLabelPipe,
     RequestTypeLabelPipe,
     FALRegionalAssistanceFormComponent,
-    FALPublishComponent
+    FALPublishComponent,
+    FormatFederalHierarchyType
   ],
   providers: [
     FALFormErrorService,

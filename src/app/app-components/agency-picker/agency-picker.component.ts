@@ -2,6 +2,7 @@ import { Component, forwardRef, Directive, Input, ElementRef, Renderer, Output, 
 import { ActivatedRoute } from "@angular/router";
 import { FHService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
 
 @Component({
   selector: 'sam-agency-picker',
@@ -10,7 +11,8 @@ import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AgencyPickerComponent),
     multi: true
-  }]
+  },
+  FHTitleCasePipe]
 })
 /**
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
@@ -144,7 +146,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     this.touched = true;
   }
 
-  constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService) {}
+  constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService, public fhTitleCasePipe: FHTitleCasePipe) {}
   private onChange: (_: any) => void = (_: any) => {};
   private onTouched: () => void = () => {};
 
@@ -405,6 +407,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
         let comp = this;
 
         this.autocompleteData = res["_embedded"]["results"].map(function(org) {
+          org.name = comp.fhTitleCasePipe.transform(org.name);
           switch(org['type']) {
             case "DEPARTMENT":
               org.name += comp.levelFormatter(1);
@@ -892,7 +895,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
           if(!this.levelLimit || level < this.levelLimit) {
             this.orgLevels[idx].options = [{
               'value': orgPath[idx],
-              'label': label,
+              'label': this.fhTitleCasePipe.transform(label),
               'name': orgPath[idx]
             }];
 
@@ -932,7 +935,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
       let level = el["org"]["level"];
       let obj = {
         value: el['org']['orgKey'],
-        label: el["org"]["name"] + this.levelFormatter(level),
+        label: this.fhTitleCasePipe.transform(el["org"]["name"]) + this.levelFormatter(level),
         name: el["org"]["orgKey"],
 
       };

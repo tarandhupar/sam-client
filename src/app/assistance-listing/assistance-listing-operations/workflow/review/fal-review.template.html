@@ -158,7 +158,7 @@
               <div *ngIf="federalHierarchy" id="program-fh-information" class="item">
                 <div class="content">
                   <div class="header">
-                    {{federalHierarchy.type}}
+                    {{federalHierarchy.type | formatFederalHierarchyType}}
                   </div>
                   <div class="description">
                     <inline-error-message [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('FEDERAL_AGENCY'))"></inline-error-message>
@@ -1199,7 +1199,7 @@
 
       <div class="sam-ui hidden section divider"></div>
       <div *ngIf="toggleButton" class="sam-ui section divider"></div>
-      <div *ngIf="historyElement" class="sticky-element" sticky-element [element]="historySection">
+      <div *ngIf="historyElement" class="sticky-element" sticky-element [element]="historyElement">
         <ng-container  *ngFor="let text of buttonText; let i=index;">
           <sam-button *ngIf="toggleButton" [buttonText]="text"
                       (onClick)="onButtonClick(text)"

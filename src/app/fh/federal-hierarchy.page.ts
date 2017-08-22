@@ -102,8 +102,9 @@ export class FederalHierarchyPage {
         this.fhService.getDepartmentAdminLanding(status).subscribe( data => {
           //Set up agency admin, dept admin or office admin role
           this.deptOrg = data._embedded[0].org;
-          this.setDeptLogo(data);
+          this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
           this.setUserRole(data);
+          this.setDeptLogo(data);
           this.setCreateOrgTypes();
           this.searchFH();
           this.dataLoaded = true;
@@ -112,8 +113,8 @@ export class FederalHierarchyPage {
         this.setCreateOrgTypes();
         this.searchFH();
         this.dataLoaded = true;
-      }
 
+      }
     }else{
       this.loadDefaultData('active');
     }
@@ -134,9 +135,10 @@ export class FederalHierarchyPage {
       this.fhService.getDepartmentAdminLanding(status).subscribe( data => {
         //Set up agency admin, dept admin or office admin role
         this.deptOrg = data._embedded[0].org;
-        this.setDeptLogo(data);
+        this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
         this.initiatePage(this.deptOrg.hierarchy,this.deptOrg.hierarchy.length);
         this.setUserRole(data);
+        this.setDeptLogo(data);
         this.setCreateOrgTypes();
         this.dataLoaded = true;
       });
@@ -175,9 +177,16 @@ export class FederalHierarchyPage {
   }
 
   setDeptLogo(data){
-    this.deptLogo = "";
-    if(data._embedded[1].links) data._embedded[1]._links.forEach(e => {if(e.link.rel === "logo") this.deptLogo = e.link.href;});
-    if(this.deptLogo === "") this.updateNoLogoUrl();
+    this.fhService.getOrganizationLogo(this.fhService.getOrganizationById(this.adminOrgKey, false),
+      (res) => {
+        if (res != null) {
+          this.deptLogo = {href:res.logo};
+        } else {
+          this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
+        }
+      },
+      (err) => {this.deptLogo = {href:"src/assets/img/logo-not-found.png"};}
+    );
   }
 
   setCreateOrgTypes(){

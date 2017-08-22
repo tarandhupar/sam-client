@@ -9,8 +9,11 @@ import {Observable} from "rxjs/Observable";
 
 export class FALFormService {
 
+   cookie: any;
+  filteredDictionaries: any;
+  dictionaries: any;
   constructor(private programService: ProgramService, private dictionaryService: DictionaryService, private fhService: FHService) {
-
+this.cookie =  Cookies.get('iPlanetDirectoryPro');
   }
 
   //  TODO: Moved to generic authentication service
@@ -35,11 +38,11 @@ export class FALFormService {
   }
 
   getFunctionalCodesDict(){
-    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('functional_codes');
-    if (filteredDictionaries===''){
+    this.filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('functional_codes');
+    if (this.filteredDictionaries===''){
       return Observable.of(this.dictionaryService.dictionaries);
     } else {
-      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+      return this.dictionaryService.getProgramDictionaryById(this.filteredDictionaries);
     }
   }
 
@@ -48,40 +51,40 @@ export class FALFormService {
   }
 
   getAssistanceDict(){
-    let dictionaries = ['deadline_flag', 'date_range'];
-    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
-    if (filteredDictionaries===''){
+    this.dictionaries = ['deadline_flag', 'date_range'];
+    this.filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(this.dictionaries.join());
+    if (this.filteredDictionaries===''){
       return Observable.of(this.dictionaryService.dictionaries);
     } else {
-      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+      return this.dictionaryService.getProgramDictionaryById(this.filteredDictionaries);
     }
   }
 
   getCriteria_Info_Dictionaries(){
-    let dictionaries = ['applicant_types', 'beneficiary_types', 'phasing_assistance', 'assistance_usage_types'];
-    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
-    if (filteredDictionaries===''){
+    this.dictionaries = ['applicant_types', 'beneficiary_types', 'phasing_assistance', 'assistance_usage_types'];
+    this.filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(this.dictionaries.join());
+    if (this.filteredDictionaries===''){
       return Observable.of(this.dictionaryService.dictionaries);
     } else {
-      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+      return this.dictionaryService.getProgramDictionaryById(this.filteredDictionaries);
     }
   }
   getObligation_Info_Dictionaries(){
-    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('assistance_type');
-    if (filteredDictionaries===''){
+    this.filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('assistance_type');
+    if (this.filteredDictionaries===''){
       return Observable.of(this.dictionaryService.dictionaries);
     } else {
-      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+      return this.dictionaryService.getProgramDictionaryById(this.filteredDictionaries);
     }
   }
 
   getContactDict(){
-    let dictionaries = ['states', 'countries'];
-    let filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(dictionaries.join());
-    if (filteredDictionaries===''){
+    this.dictionaries = ['states', 'countries'];
+    this.filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve(this.dictionaries.join());
+    if (this.filteredDictionaries===''){
       return Observable.of(this.dictionaryService.dictionaries);
     } else {
-      return this.dictionaryService.getProgramDictionaryById(filteredDictionaries);
+      return this.dictionaryService.getProgramDictionaryById(this.filteredDictionaries);
     }
   }
 
@@ -89,11 +92,11 @@ export class FALFormService {
     return this.fhService.getOrganizationById(id, false);
   }
 
-  submitFAL(programId: string, data: {}) {
+  submitFAL(programId, data) {
     return this.programService.submitProgram(programId, data, FALFormService.getAuthenticationCookie());
   }
 
-  falWFRequestTypeProgram(programId: string, data: {}, workflowRequestType: string) {
+  falWFRequestTypeProgram(programId, data, workflowRequestType) {
     return this.programService.falWFRequestTypeProgram(programId, data, FALFormService.getAuthenticationCookie(), workflowRequestType);
   }
 

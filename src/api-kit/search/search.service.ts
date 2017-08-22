@@ -27,23 +27,23 @@ export class SearchService {
     }
 
     //Active Only filter
-    if(obj.isActive === true) {
-      oApiParam.oParam['is_active'] = obj.isActive;
+    if(obj.is_active === true) {
+      oApiParam.oParam['is_active'] = obj.is_active;
     }
 
     // wage determination type filter
-    if(typeof obj.wdType !== 'undefined' && obj.organizationId !== null && obj.wdType !== '') {
+    if(typeof obj.wdType !== 'undefined' && obj.organization_id !== null && obj.wdType !== '') {
         oApiParam.oParam['index'] = obj.wdType;
       }
 
     // organization id filter
-    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null && obj.organizationId !== '') {
-      oApiParam.oParam['organization_id'] = obj.organizationId;
+    if(typeof obj.organization_id !== 'undefined' && obj.organization_id !== null && obj.organization_id !== '') {
+      oApiParam.oParam['organization_id'] = obj.organization_id;
     }
 
     // construction type filter
-    if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
-      oApiParam.oParam['construction_type'] = obj.conType;
+    if(typeof obj.construction_type !== 'undefined' && obj.construction_type !== null && obj.construction_type !== '') {
+      oApiParam.oParam['construction_type'] = obj.construction_type;
     }
 
     // selectStateModel
@@ -62,36 +62,36 @@ export class SearchService {
     }
 
     // iseven filter
-    if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
-      if(obj.isEven === 'true'){
+    if(typeof obj.is_even !== 'undefined' && obj.is_even !== null && obj.is_even !== '') {
+      if(obj.is_even === 'true'){
         oApiParam.oParam['is_even'] = true;
       }
-      else if(obj.isEven === 'false'){
+      else if(obj.is_even === 'false'){
         oApiParam.oParam['is_even'] = false;
       }
     }
 
     // isstandard filter
-    if(typeof obj.isStandard !== 'undefined' && obj.isStandard !== null && obj.isStandard !== ''){
-      if(obj.isStandard === 'true'){
+    if(typeof obj.is_standard !== 'undefined' && obj.is_standard !== null && obj.is_standard !== ''){
+      if(obj.is_standard === 'true'){
         oApiParam.oParam['is_standard'] = true;
       }
-      else if(obj.isStandard === 'false'){
+      else if(obj.is_standard === 'false'){
         oApiParam.oParam['is_standard'] = false;
       }
     }
 
     // award Filters
-    if(typeof obj.awardOrIdv !== 'undefined' && obj.awardOrIdv !== null && obj.awardOrIdv !== ''){
-      oApiParam.oParam['award_or_IDV'] = obj.awardOrIdv;
+    if(typeof obj.award_or_idv !== 'undefined' && obj.award_or_idv !== null && obj.award_or_idv !== ''){
+      oApiParam.oParam['award_or_idv'] = obj.award_or_idv;
     }
 
-    if(typeof obj.awardType !== 'undefined' && obj.awardType !== null && obj.awardType !== ''){
-      oApiParam.oParam['award_type'] = obj.awardType;
+    if(typeof obj.award_type !== 'undefined' && obj.award_type !== null && obj.award_type !== ''){
+      oApiParam.oParam['award_type'] = obj.award_type;
     }
 
-    if(typeof obj.contractType !== 'undefined' && obj.contractType !== null && obj.contractType !== ''){
-      oApiParam.oParam['contract_type'] = obj.contractType;
+    if(typeof obj.contract_type !== 'undefined' && obj.contract_type !== null && obj.contract_type !== ''){
+      oApiParam.oParam['contract_type'] = obj.contract_type;
     }
 
     if(typeof obj.naics !== 'undefined' && obj.naics !== null && obj.naics !== ''){
@@ -120,12 +120,12 @@ export class SearchService {
       oApiParam.oParam['beneficiary'] = obj.beneficiary;
     }
 
-    if(typeof obj.assistanceType !== 'undefined' && obj.assistanceType !== null && obj.assistanceType !== ''){
-      oApiParam.oParam['assistance_type'] = obj.assistanceType;
+    if(typeof obj.assistance_type !== 'undefined' && obj.assistance_type !== null && obj.assistance_type !== ''){
+      oApiParam.oParam['assistance_type'] = obj.assistance_type;
     }
 
-    if(typeof obj.entityType !== 'undefined' && obj.entityType !== null && obj.entityType.length == 1 && (obj.entityType.indexOf('ent') > -1 || obj.entityType.indexOf('ex') > -1)) {
-      oApiParam.oParam['index'] = obj.entityType.join(',');
+    if(typeof obj.entity_type !== 'undefined' && obj.entity_type !== null && obj.entity_type.length == 1 && (obj.entity_type.indexOf('ent') > -1 || obj.entity_type.indexOf('ex') > -1)) {
+      oApiParam.oParam['index'] = obj.entity_type.join(',');
     }
 
     return this.oAPIService.call(oApiParam);

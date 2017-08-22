@@ -157,7 +157,7 @@
                 <input [disabled]="permission.isDefault"
                        [attr.id]="permissionId(permission, object)"
                        type="checkbox" class="permission-input"
-                       [ngModel]="!permission.notChecked"
+                       [ngModel]="permission.isCheckable"
                        (click)="onPermissionClick(permission)">
                 <label [attr.for]="permissionId(permission, object)"
                        class="permission-label m_T-2x" >

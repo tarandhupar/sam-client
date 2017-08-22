@@ -4,6 +4,7 @@ import { FHService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR,AbstractControl } from '@angular/forms';
 import { DpmtSelectConfig, AgencySelectConfig, OfficeSelectConfig } from './configs';
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
 import * as _ from 'lodash';
 
 @Component({
@@ -13,7 +14,8 @@ import * as _ from 'lodash';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AgencyPickerV2Component),
     multi: true
-  }]
+  }, 
+  FHTitleCasePipe]
 })
 /**
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
@@ -39,7 +41,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     singleACConfig = {keyValueConfig:{keyProperty: 'key',valueProperty: 'name'}};
     multipleACConfig = {keyProperty: 'key',valueProperty: 'name'};
 
-    constructor(private oFHService:FHService, private cdr:ChangeDetectorRef) {}
+    constructor(private oFHService:FHService, private cdr:ChangeDetectorRef, private fhTitleCasePipe:FHTitleCasePipe) {}
 
     onChange = (_: any)=>{};
     onTouched = ()=>{};
@@ -252,7 +254,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         return data.map((el,idx)=>{
             let level = el["org"]["level"];
             el["org"]["value"] = el["org"]["orgKey"];
-            el["org"]["label"] = el["org"]["name"];
+            el["org"]["label"] = this.fhTitleCasePipe.transform(el["org"]["name"]);
             el["org"]["name"] = el["org"]["name"];
             return el["org"];
         });

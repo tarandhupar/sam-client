@@ -22,6 +22,20 @@
           <span *ngIf="index === 'ei'">Note: Only non-active registrations will be added</span>
         </sam-collapsible>
 
+        <!--keyword filter-->
+        <sam-collapsible [label]="'Keywords'" [startOpened]="true">
+          <sam-autocomplete-multiselect
+            class="usa-award-filter"
+            [attr.id]="'keywordSearch'"
+            [label]="'Keywords'"
+            [name]="'keywordSearchName'"
+            [ngModel]="keywordsModel"
+            (ngModelChange)="keywordsModelChange($event)"
+            [keyValueConfig]="keywordsConfiguration.keyValueConfig"
+            [allowAny]="keywordsConfiguration.allowAny">
+          </sam-autocomplete-multiselect>
+        </sam-collapsible>
+
         <sam-collapsible *ngIf="index === 'ei' && showRegionalOffices==false" [label]="'Entity Type'" [startOpened]="true">
           <!--active checkbox-->
           <sam-checkbox
@@ -274,6 +288,7 @@
                                     [selectConfig]="assistanceTypeOptions">
           </search-multi-select-filter>
         </sam-collapsible>
+
         <div class ="sam-ui section divider"></div>
         <button (click)='clearAllFilters()'>Clear All</button>
       </sam-filters-container>

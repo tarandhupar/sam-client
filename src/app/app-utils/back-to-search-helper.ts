@@ -33,9 +33,9 @@ export class BackToSearch {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : true;
-        this.isStandard = data['isStandard'] && data['isStandard'] !== null ? data['isStandard'] : '';
+        this.organizationId = typeof data['organization_id'] === "string" ? decodeURI(data['organization_id']) : "";
+        this.isActive = data['is_active'] && data['is_active'] === "false" ? false : true;
+        this.isStandard = data['is_standard'] && data['is_standard'] !== null ? data['is_standard'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
       });
   }
@@ -61,10 +61,10 @@ export class BackToSearch {
     else {
       qsobj['page'] = 1;
     }
-    qsobj['isActive'] = this.isActive;
+    qsobj['is_active'] = this.isActive;
 
     if(this.organizationId.length>0){
-      qsobj['organizationId'] = this.organizationId;
+      qsobj['organization_id'] = this.organizationId;
     }
 
     if(this.ro_keyword.length>0){

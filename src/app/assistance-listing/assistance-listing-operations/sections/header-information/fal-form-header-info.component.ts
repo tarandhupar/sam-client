@@ -1,4 +1,4 @@
-import {Component, Input, Output, OnInit, EventEmitter, ViewChild} from "@angular/core";
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormService } from "../../fal-form.service";
 import { FALFormViewModel } from "../../fal-form.model";
@@ -59,12 +59,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
   rpNGModel: any;
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected',
     serviceOptions: {index: 'RP'},
     clearOnSelection: true, showOnEmptyInput: false
   };
 
-  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private programService: ProgramService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private programService: ProgramService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -85,27 +84,26 @@ export class FALFormHeaderInfoComponent implements OnInit {
       'federalAgency': ''
     });
 
-    setTimeout(() => { // horrible hack to trigger angular change detection
-      if (this.viewModel.getSectionStatus(FALSectionNames.HEADER) === 'updated') {
-        this.falHeaderInfoForm.get('title').markAsDirty();
-        this.falHeaderInfoForm.get('title').updateValueAndValidity();
-        this.falHeaderInfoForm.get('alternativeNames').markAsDirty();
-        this.falHeaderInfoForm.get('alternativeNames').updateValueAndValidity();
-        this.falHeaderInfoForm.get('relatedPrograms').markAsDirty();
-        this.falHeaderInfoForm.get('relatedPrograms').updateValueAndValidity();
-        this.falHeaderInfoForm.get('federalAgency').markAsDirty();
-        this.falHeaderInfoForm.get('federalAgency').updateValueAndValidity();
+    this.cdr.detectChanges();
+    if (this.viewModel.getSectionStatus(FALSectionNames.HEADER) === 'updated') {
+      this.falHeaderInfoForm.get('title').markAsDirty();
+      this.falHeaderInfoForm.get('title').updateValueAndValidity();
+      this.falHeaderInfoForm.get('alternativeNames').markAsDirty();
+      this.falHeaderInfoForm.get('alternativeNames').updateValueAndValidity();
+      this.falHeaderInfoForm.get('relatedPrograms').markAsDirty();
+      this.falHeaderInfoForm.get('relatedPrograms').updateValueAndValidity();
+      this.falHeaderInfoForm.get('federalAgency').markAsDirty();
+      this.falHeaderInfoForm.get('federalAgency').updateValueAndValidity();
 
-        // hack to mark agency picker as dirty since it does not support formControl
-        if ((this.agencyPicker) && this.falHeaderInfoForm.get('federalAgency').value == '') {
-          this.agencyPicker.touched = true;
-          this.agencyPicker.checkForFocus(null);
-        }
-        this.falHeaderInfoForm.markAsPristine({onlySelf: true});
-        this.falHeaderInfoForm.get('programNumber').markAsDirty({onlySelf: true});
-        this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
+      // hack to mark agency picker as dirty since it does not support formControl
+      if ((this.agencyPicker) && this.falHeaderInfoForm.get('federalAgency').value == '') {
+        this.agencyPicker.touched = true;
+        this.agencyPicker.checkForFocus(null);
       }
-    });
+      this.falHeaderInfoForm.markAsPristine({onlySelf: true});
+      this.falHeaderInfoForm.get('programNumber').markAsDirty({onlySelf: true});
+      this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
+    }
   }
 
   setCustomValidatorsForFALNo(programNumber, code, orgId){
@@ -139,7 +137,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
     for (let dataItem of data) {
       rpListDisplay.push({code: dataItem.id, name: dataItem.value});
     }
-    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(data);
     this.falHeaderInfoForm.patchValue({
       relatedPrograms: rpListDisplay
     }, {
@@ -182,9 +179,8 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + '.' + data['programNumber'].replace(/\./g, '')) : null;
     this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
 
-    setTimeout(() => {
-      this.updateErrors();
-    });
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
 
   updateViewModelRelatedPrograms(rpListDisplay) {
@@ -228,9 +224,8 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
     this.getFHConfig(this.organizationId, this.falNo);
 
-    setTimeout( ()=> {
-      this.updateErrors();
-    });
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
 
   public onOrganizationChange(org: any) {
@@ -275,27 +270,8 @@ export class FALFormHeaderInfoComponent implements OnInit {
     });
   }
 
-  relatedProgramTypeChange(event) {
-    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(event);
-  }
-
-  relatedProglistChange() {
-    //this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
-  }
-
-  placeholderMsg(multiArray: any) {
-    let PlaceholderMsg = '';
-    if (multiArray.length === 1) {
-      PlaceholderMsg = 'One Type Selected';
-    } else if (multiArray.length > 1) {
-      PlaceholderMsg = 'Multiple Types Selected';
-    } else {
-      PlaceholderMsg = 'None Selected';
-    }
-    return PlaceholderMsg;
-  }
-
-  private updateErrors() {
+  // todo: public for testing purposes
+  public updateErrors() {
     this.errorService.viewModel = this.viewModel;
 
     this.falHeaderInfoForm.get('title').clearValidators();
@@ -324,9 +300,8 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   private markAndUpdateFieldStat(fieldName) {
-    setTimeout(() => {
-      this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
-    });
+    this.cdr.detectChanges();
+    this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
 
   getOrganizationLevels() {
@@ -350,7 +325,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
     //set organization name
     this.service.getOrganization(orgId)
       .subscribe(data => {
-        this.organizationData = data['_embedded'][0]['org'];
+        if(data && data['_embedded'] && data['_embedded'][0] && data['_embedded'][0]['org']) {
+          this.organizationData = data['_embedded'][0]['org'];
+        }
       }, error => {
         console.error('error retrieving organization', error);
       });
