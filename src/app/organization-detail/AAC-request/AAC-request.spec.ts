@@ -12,6 +12,8 @@ import { SamAPIKitModule } from "api-kit";
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
+import { FHService } from "api-kit/fh/fh.service";
+import { FHServiceMock } from "api-kit/fh/fh.service.mock";
 
 class AACRequestServiceStub{
   getAACRequestFormDetail(){
@@ -39,7 +41,8 @@ describe('Create AAC Request Form Page', () => {
       declarations: [ AACRequestPage],
       imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule ],
       providers: [
-        {provide: AACRequestService, useClass: AACRequestServiceStub}
+        {provide: AACRequestService, useClass: AACRequestServiceStub},
+        {provide: FHService, useClass:FHServiceMock},
       ]
     });
     fixture = TestBed.createComponent(AACRequestPage);

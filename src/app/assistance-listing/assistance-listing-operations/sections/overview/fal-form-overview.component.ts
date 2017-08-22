@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
@@ -56,23 +56,19 @@ export class FALFormOverviewComponent implements OnInit {
   //Functional Codes Multiselect
   fcTypeOptions = [];
   fcKeyValue = [];
-  fcNGModel: any;
   fcAutocompleteConfig: any = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name', categoryProperty: 'category'},
-    placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
   };
 
 
   //Subject Terms Multiselect
-  stNGModel: any;
   stAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected',
     serviceOptions: {index: 'D'},
     clearOnSelection: true, showOnEmptyInput: true
   };
 
-  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -84,22 +80,23 @@ export class FALFormOverviewComponent implements OnInit {
       });
 
     this.errorService.viewModel = this.viewModel;
-    
+
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
 
-    setTimeout(() => { // horrible hack to trigger angular change detection
-      this.updateErrors();
-    });
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
   parseFunctionalCodes(data: any) {
     let functionalTypesArr = [];
-    for (let fcData of data['functional_codes']) {
-      for (let data of fcData.elements) {
-        let value = data.code + ' - ' + data.value;
-        this.fcTypeOptions.push({code: data.element_id, name: value, category:fcData.value});
-        this.fcKeyValue[data.element_id] = value;
+    if(data && data['functional_codes']) {
+      for (let fcData of data['functional_codes']) {
+        for (let data of fcData.elements) {
+          let value = data.code + ' - ' + data.value;
+          this.fcTypeOptions.push({code: data.element_id, name: value, category: fcData.value});
+          this.fcKeyValue[data.element_id] = value;
+        }
       }
     }
     this.populateMultiSelect(this.viewModel.functionalCodes, this.fcAutocompleteConfig, functionalTypesArr, this.fcKeyValue,this.fcTypeOptions);
@@ -113,9 +110,8 @@ export class FALFormOverviewComponent implements OnInit {
 
     this.falOverviewForm.valueChanges.subscribe(data => {
       this.updateViewModel(data);
-      setTimeout(() => { // horrible hack to trigger angular change detection
-        this.updateErrors();
-      });
+      this.cdr.detectChanges();
+      this.updateErrors();
     });
 
     if(this.viewModel.subjectTerms && this.viewModel.subjectTerms.length > 0){
@@ -132,7 +128,6 @@ export class FALFormOverviewComponent implements OnInit {
         });
         listDisplay.push({code: id, name: keyValueArray[id],category: item['category']});
       }
-      autoCompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
     }
   }
 
@@ -145,25 +140,22 @@ export class FALFormOverviewComponent implements OnInit {
       'fundedProjects': null
     });
 
-    setTimeout(() => { // horrible hack to trigger angular change detection
-      if (this.viewModel.getSectionStatus(FALSectionNames.OVERVIEW) === 'updated') {
-        this.falOverviewForm.get('fundedProjects').markAsDirty();
-        this.falOverviewForm.get('fundedProjects').updateValueAndValidity();
-        this.falOverviewForm.markAsPristine({onlySelf: true});
-        this.falOverviewForm.get('objective').markAsDirty({onlySelf: true});
-        this.falOverviewForm.get('objective').updateValueAndValidity();
-        this.falOverviewForm.get('description').markAsDirty({onlySelf: true});
-        this.falOverviewForm.get('description').updateValueAndValidity();
-        this.falOverviewForm.get('functionalTypes').markAsDirty({onlySelf: true});
-        this.falOverviewForm.get('functionalTypes').updateValueAndValidity();
-        this.falOverviewForm.get('subjectTermsTypes').markAsDirty({onlySelf: true});
-        this.falOverviewForm.get('subjectTermsTypes').updateValueAndValidity();
-      }
-    });
+    if (this.viewModel.getSectionStatus(FALSectionNames.OVERVIEW) === 'updated') {
+      this.falOverviewForm.get('fundedProjects').markAsDirty();
+      this.falOverviewForm.get('fundedProjects').updateValueAndValidity();
+      this.falOverviewForm.markAsPristine({onlySelf: true});
+      this.falOverviewForm.get('objective').markAsDirty({onlySelf: true});
+      this.falOverviewForm.get('objective').updateValueAndValidity();
+      this.falOverviewForm.get('description').markAsDirty({onlySelf: true});
+      this.falOverviewForm.get('description').updateValueAndValidity();
+      this.falOverviewForm.get('functionalTypes').markAsDirty({onlySelf: true});
+      this.falOverviewForm.get('functionalTypes').updateValueAndValidity();
+      this.falOverviewForm.get('subjectTermsTypes').markAsDirty({onlySelf: true});
+      this.falOverviewForm.get('subjectTermsTypes').updateValueAndValidity();
+    }
   }
 
   updateViewModel(data) {
-    let functionaCodes = [];
     let subjectTerms = [];
     for (let st of data.subjectTermsTypes) {
       subjectTerms.push(st.code);
@@ -177,7 +169,8 @@ export class FALFormOverviewComponent implements OnInit {
     this.viewModel.projects = this.saveProjects(data.fundedProjects);
   }
 
-  private updateErrors() {
+  // todo: public for testing purposes
+  public updateErrors() {
     this.errorService.viewModel = this.viewModel;
     this.updateControlError(this.falOverviewForm.get('objective'), this.errorService.validateObjective().errors);
     this.updateControlError(this.falOverviewForm.get('functionalTypes'), this.errorService.validateFunctionalCodes().errors);
@@ -190,9 +183,8 @@ export class FALFormOverviewComponent implements OnInit {
     control.clearValidators();
     control.setValidators((control) => { return control.errors });
     control.setErrors(errors);
-    setTimeout(() => {
-      control.updateValueAndValidity({onlySelf: true, emitEvent: true});
-    });
+    this.cdr.detectChanges();
+    control.updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
 
   updateForm() {
@@ -206,20 +198,20 @@ export class FALFormOverviewComponent implements OnInit {
       emitEvent: false
     });
 
-    setTimeout(() => { // horrible hack to trigger angular change detection
-      this.updateErrors();
-    });
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
 
   parseSubjectTerms(subjectTerms: any) {
     this.service.getSubjectTermsDict(subjectTerms).subscribe(data => {
       let arr= [];
-      for (let dataItem of data['program_subject_terms']) {
-        let value = dataItem.code + ' - ' + dataItem.value;
-        arr.push({code: dataItem.element_id, name: value});
+      if(data && data['program_subject_terms']) {
+        for (let dataItem of data['program_subject_terms']) {
+          let value = dataItem.code + ' - ' + dataItem.value;
+          arr.push({code: dataItem.element_id, name: value});
+        }
       }
 
-      //this.stAutocompleteConfig.placeholder = this.placeholderMsg(arr);
       this.falOverviewForm.patchValue({
         subjectTermsTypes: arr.length > 0 ? arr : []
       }, {
@@ -230,45 +222,16 @@ export class FALFormOverviewComponent implements OnInit {
 
       this.falOverviewForm.valueChanges.subscribe(data => {
         this.updateViewModel(data);
-        setTimeout(() => { // horrible hack to trigger angular change detection
-          this.updateErrors();
-        });
+        this.cdr.detectChanges();
+        this.updateErrors();
       });
     }, error => {
       console.error('Error Retrieving Subject Terms!!', error);
     });
   }
 
-
-  stTypeChange(event) {
-    this.stAutocompleteConfig.placeholder = this.placeholderMsg(event);
-  }
-
-  stlistChange() {
-    //this.stAutocompleteConfig.placeholder = this.placeholderMsg(this.falOverviewForm.value.stListDisplay);
-  }
-
-  fcTypeChange(event) {
-    this.fcAutocompleteConfig.placeholder = this.placeholderMsg(event);
-  }
-
-  fclistChange() {
-    //this.fcAutocompleteConfig.placeholder = this.placeholderMsg(this.falOverviewForm.value.fcListDisplay);
-  }
-
-  placeholderMsg(multiArray: any) {
-    let PlaceholderMsg = '';
-    if (multiArray.length === 1) {
-      PlaceholderMsg = 'One Type Selected';
-    } else if (multiArray.length > 1) {
-      PlaceholderMsg = 'Multiple Types Selected';
-    } else {
-      PlaceholderMsg = 'None Selected';
-    }
-    return PlaceholderMsg;
-  }
-
-  private saveProjects(fundedProjects) {
+  // todo: public for testing purposes
+  public saveProjects(fundedProjects) {
     let projects: any = {};
     let projectsForm = fundedProjects;
 
@@ -286,7 +249,8 @@ export class FALFormOverviewComponent implements OnInit {
     return projects;
   }
 
-  private loadProjects(projects: any) {
+  // todo: public for testing purposes
+  public loadProjects(projects: any) {
     let projectsForm: any = {
       entries: []
     };

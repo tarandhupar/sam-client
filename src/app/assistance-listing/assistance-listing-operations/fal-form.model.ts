@@ -12,12 +12,13 @@ export class FALFormViewModel {
   private _data: any;
   private _additionalInfo: any;
   private _reason: any;
+  public existing: any;
 
   constructor(fal) {
     this._fal = fal ? fal : {};
     this._data = (fal && fal.data) ? fal.data : {};
     this._programId = (fal && fal.id) ? fal.id : null;
-    this._additionalInfo = (fal && fal.additionalInfo) ? fal.additionalInfo : { sections: [] };
+    this._additionalInfo = (fal && fal.additionalInfo) ? fal.additionalInfo : {sections: []};
   }
 
   // todo: switch to string enum
@@ -25,7 +26,7 @@ export class FALFormViewModel {
   private getSectionInfo(id: string): SectionInfo {
     let sectionInfo: SectionInfo = null;
 
-    if (this._additionalInfo!.sections.length > 0) {
+    if (this._additionalInfo!.sections && this._additionalInfo!.sections.length > 0) {
       for (let section of this._additionalInfo.sections) {
         if (section.id === id) {
           sectionInfo = section;
@@ -39,12 +40,12 @@ export class FALFormViewModel {
   // todo: switch to string enum
   // todo: figure out how to handle null/undefined/etc.
   public getSectionStatus(id: string): string {
-    let existing = this.getSectionInfo(id);
+    this.existing = this.getSectionInfo(id);
     let status = 'pristine'; // all sections are pristine by default
 
-    if (existing) {
-      status = existing.status;
-    } else if(existing === null || existing === undefined) {
+    if (this.existing) {
+      status = this.existing.status;
+    } else if (this.existing === null || this.existing === undefined) {
       status = 'pristine';
     }
 
@@ -53,15 +54,17 @@ export class FALFormViewModel {
 
   // todo: switch to string enum
   public setSectionStatus(id: string, status: string): void {
-    let existing = this.getSectionInfo(id);
+    this.existing = this.getSectionInfo(id);
 
-    if (existing) {
-      existing.status = status;
+    if (this.existing) {
+      this.existing.status = status;
     } else {
-      this._additionalInfo!.sections.push({
-        id: id,
-        status: status
-      });
+      if (this._additionalInfo!.sections) {
+        this._additionalInfo!.sections.push({
+          id: id,
+          status: status
+        });
+      }
     }
   }
 
@@ -90,6 +93,14 @@ export class FALFormViewModel {
 
   get isRevision() {
     return this._fal.revision === true;
+  }
+
+  set addiInfo(addiInfo: any) {
+    this._additionalInfo = addiInfo;
+  }
+
+  get addiInfo() {
+    return this._additionalInfo;
   }
 
   get organizationId() {
@@ -871,6 +882,7 @@ export class FALFormViewModel {
   get reason() {
     return this._reason;
   }
+
   set reason(reason) {
     this._reason = reason;
   }

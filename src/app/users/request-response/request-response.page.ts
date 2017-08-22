@@ -188,7 +188,7 @@ export class RequestResponsePage {
   }
 
   onPermissionClick(perm) {
-    perm.notChecked = !perm.notChecked;
+    perm.isCheckable = !perm.isCheckable;
   }
 
   onApproveClick() {
@@ -280,7 +280,7 @@ export class RequestResponsePage {
     }
     let orgIds = [''+this.org.value];
     let funcs: any = this.objects.map(obj => {
-      let perms = obj.permission.filter((p: any) => p.notChecked).map(p => p.id);
+      let perms = obj.permission.filter((p: any) => !p.isCheckable).map(p => p.id);
       return {
         id: obj.function.id,
         permissions: perms

@@ -250,19 +250,19 @@ export class BulkUpdateComponent {
   }
 
   getSelectedPermissions(object) {
-    let permissions = object.permission.filter(perm => !perm.notChecked).map(perm => {
+    let permissions = object.permission.filter(perm => perm.isCheckable).map(perm => {
       return this.capitalize.transform(perm.val);
     });
     return permissions.join(', ');
   }
 
   onPermissionClick(perm) {
-    perm.notChecked = !perm.notChecked;
+    perm.isCheckable = !perm.isCheckable;
   }
 
   getUnSelectedPermissions() {
     return this.objects.map(obj => {
-      let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
+      let perms = obj.permission.filter(p => !p.isCheckable).map(p => p.id);
       return {
         function: obj.function.id,
         permission: perms

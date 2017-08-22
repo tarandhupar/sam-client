@@ -252,7 +252,7 @@ export class GrantAccessPage implements OnInit {
             let pid = perm.id;
 
             if (!this.userHasPermission(fid, pid)) {
-              perm.notChecked = true;
+              perm.isCheckable = false;
             }
           });
         });
@@ -466,7 +466,7 @@ export class GrantAccessPage implements OnInit {
     //let orgIds = this.orgs.map(org => ''+org.value);
     let orgId = this.org.value;
     let funcs: any = this.objects.map(obj => {
-      let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
+      let perms = obj.permission.filter(p => !p.isCheckable).map(p => p.id);
       return {
         id: obj.function.id,
         permissions: perms
@@ -489,7 +489,7 @@ export class GrantAccessPage implements OnInit {
         );
       } else {
         let funcs2: any = this.objects.map(obj => {
-          let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
+          let perms = obj.permission.filter(p => !p.isCheckable).map(p => p.id);
           return {
             function: obj.function.id,
             permission: perms
@@ -548,7 +548,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   onPermissionClick(perm) {
-    perm.notChecked = !perm.notChecked;
+    perm.notChecked = !perm.isCheckable;
   }
 
   submitButtonText() {

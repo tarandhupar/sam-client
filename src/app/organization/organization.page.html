@@ -111,8 +111,8 @@
       </section>
 
       <div class="sam-ui hidden section divider"></div>
-      
-      <!-- Sub-Tier Agencies -->    
+
+      <!-- Sub-Tier Agencies -->
       <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0 && organization.type == 'DEPARTMENT'">
         <!--<ng-container [ngSwitch]="organization.type">-->
           <!--<ng-container *ngSwitchCase="'DEPARTMENT'">-->
@@ -122,16 +122,16 @@
             <h2 class="sam-ui header">Offices</h2>
           </ng-container>-->
         <!--</ng-container>-->
-        
+
         <p>
           Showing results
           <strong>
             {{min +1}}
             <span class="usa-sr-only">through</span> -
-            {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}
+            {{(totalOrganizationNumber < max) ? totalOrganizationNumber : max}}
           </strong>
           of
-          <strong>{{organization.hierarchy.length}}</strong>
+          <strong>{{totalOrganizationNumber}}</strong>
         </p>
 
         <ul id="org-pagination" class="usa-zebra-list">
@@ -169,9 +169,9 @@
       </section>
 
       <!-- Pagination -->
-      <sam-pagination *ngIf="organization.type == 'DEPARTMENT'" 
-                      (pageChange)="pageChange($event)" 
-                      [currentPage]="pageNum" 
+      <sam-pagination *ngIf="organization.type == 'DEPARTMENT'"
+                      (pageChange)="pageChange($event)"
+                      [currentPage]="pageNum"
                       [totalPages]="totalPages">
       </sam-pagination>
     </ng-container>

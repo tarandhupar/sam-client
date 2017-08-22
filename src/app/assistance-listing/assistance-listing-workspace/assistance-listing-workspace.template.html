@@ -1,3 +1,4 @@
+<!-- Alerts -->
 <ng-container *ngIf="alerts && alerts.length > 0">
   <div *ngFor="let alert of alerts; let i = index">
     <sam-alert [attr.id]="'al-workspace-alert-' + i" [type]="alerts[i].type" [title]="alerts[i].title">
@@ -5,6 +6,7 @@
     </sam-alert>
   </div>
 </ng-container>
+
 <page
   *ngIf="permissions"
   theme="inside"
@@ -124,7 +126,7 @@
       <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
                   [buttonText]="'Filter'"></sam-button>
 
-      
+
       <!--Agency Picker Filter-->
       <h4 class="sam-ui header">Federal Agency</h4>
       <sam-agency-picker-v2 #agencyPickerV2
@@ -142,7 +144,6 @@
       </div>
 
     </div>
-
   </sidebar>
 
   <!-- Main Content Section -->

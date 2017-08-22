@@ -7,6 +7,7 @@ import { GroupByPipe } from './group-by.pipe';
 import { KeysPipe } from './keyspipe.pipe';
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 import { SortArrayOfObjects } from "./sort-array-object.pipe";
+import { FHTitleCasePipe } from "./fhTitleCase.pipe";
 
 @NgModule({
   imports: [],
@@ -17,7 +18,8 @@ import { SortArrayOfObjects } from "./sort-array-object.pipe";
     GroupByPipe,
     KeysPipe,
     OrganizationTypeCodePipe,
-    SortArrayOfObjects
+    SortArrayOfObjects,
+    FHTitleCasePipe
   ],
   declarations: [
     CapitalizePipe,
@@ -26,7 +28,8 @@ import { SortArrayOfObjects } from "./sort-array-object.pipe";
     GroupByPipe,
     KeysPipe,
     OrganizationTypeCodePipe,
-    SortArrayOfObjects
+    SortArrayOfObjects,
+    FHTitleCasePipe
   ],
   providers: [],
 })

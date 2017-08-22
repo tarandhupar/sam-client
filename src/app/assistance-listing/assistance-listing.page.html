@@ -82,7 +82,7 @@
               <div *ngIf="federalHierarchy" id="program-fh-information" class="item">
 								<div class="content">
 									<div class="header">
-										{{federalHierarchy.type}}
+										{{federalHierarchy.type | formatFederalHierarchyType}}
 									</div>
 									<div class="description">
                     {{ federalHierarchy.name || federalHierarchy.agencyName }}

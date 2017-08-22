@@ -54,7 +54,7 @@ import {SearchService} from "../../../api-kit/search/search.service";
                 </div>
                 <p>
                   <strong *ngIf="looking && !hasRecords">No contract data is associated to this federal organization.</strong>
-                  <a *ngIf="looking && hasRecords" href="/search?keyword=&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">
+                  <a *ngIf="looking && hasRecords" href="/search?keyword=&index=fpds&page=1&is_active=true&organization_id={{data._id}}" target="_blank">
                     View Contracts associated with this federal organization
                   </a>
                 </p>

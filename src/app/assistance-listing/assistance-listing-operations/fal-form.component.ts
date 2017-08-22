@@ -92,7 +92,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       label: this.sectionLabels[4],
       route: "#" + this.sections[4],
       iconClass: this.pristineIconClass
-    }, {  
+    }, {
       label: this.sectionLabels[5],
       route: "#" + this.sections[5],
       iconClass: this.pristineIconClass
@@ -198,7 +198,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           if (field) {
             field.scrollIntoView();
           }
-        }, 2000);
+        }, 1000);
       } else {
         this.gotoSection(FALSectionNames.HEADER);
         this.navigateSection();

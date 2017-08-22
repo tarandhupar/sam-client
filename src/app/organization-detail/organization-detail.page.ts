@@ -77,8 +77,10 @@ export class OrgDetailPage {
         this.orgHierarchyTypes = res._embedded[0].orgTypes;
         this.level = res._embedded[0].org.level;
         this.setupHierarchyPathMap(res._embedded[0].org.fullParentPath, res._embedded[0].org.fullParentPathName);
-        this.deptLogo = "src/assets/img/logo-not-found.png";
-        if(!this.deptLogo) this.updateNoLogoUrl();
+
+        this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
+        this.setDeptLogo();
+
         this.dataLoaded = true;
 
       });
@@ -100,6 +102,19 @@ export class OrgDetailPage {
 
   selectCurrentSection(sectionValue){
     this.currentSection = sectionValue;
+  }
+
+  setDeptLogo(){
+    this.fhService.getOrganizationLogo(this.fhService.getOrganizationById(this.orgId, false),
+      (res) => {
+        if (res != null) {
+          this.deptLogo = {href:res.logo};
+        } else {
+          this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
+        }
+      },
+      (err) => {this.deptLogo = {href:"src/assets/img/logo-not-found.png"};}
+    );
   }
 
   updateNoLogoUrl(){

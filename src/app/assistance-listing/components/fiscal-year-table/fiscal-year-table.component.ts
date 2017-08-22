@@ -432,9 +432,9 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     }
     this.currentIndex = this.model.entries.length;
 
-    this.checkboxControl.setValue(this.model.isApplicable ? [] : ['na']);
-    this.fyTableGroup.get('textarea').setValue(this.model.current.description);
-    this.fyTableGroup.get('year').setValue(this.model.current.year);
+    this.checkboxControl.setValue(this.model.isApplicable ? [] : ['na'], { emitEvent: false });
+    this.fyTableGroup.get('textarea').setValue(this.model.current.description, { emitEvent: false });
+    this.fyTableGroup.get('year').setValue(this.model.current.year, { emitEvent: false });
   }
 
   public setDisabledState(isDisabled: boolean) : void {

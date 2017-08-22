@@ -56,8 +56,8 @@
 							<div class="item" [attr.id]="generateID(opportunityFields.HierarchyName, 'header')" *ngIf="organization && shouldBeDisplayed(opportunityFields.HierarchyName)">
 								<div class="content">
 									<div class="header" [ngSwitch]='organization.type'>
-                    <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
-                    <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
+                    <ng-container *ngSwitchCase="'DEPARTMENT'">Department/Ind. Agency</ng-container>
+                    <ng-container *ngSwitchCase="'AGENCY'">Sub-tier</ng-container>
                     <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
 									</div>
 									<div class="description">

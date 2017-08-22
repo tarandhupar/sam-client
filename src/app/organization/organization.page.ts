@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, NavigationEnd,Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
@@ -22,6 +22,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   organizationPerPage: any;
   min: number;
   max: number;
+  totalOrganizationNumber: number;
   errorOrganization: any;
   errorLogo: any;
   private pageNum = 1;
@@ -51,16 +52,17 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
   private loadOrganization() {
     let orgSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
-    this.activatedRoute.params.switchMap(params => {
-      this.errorOrgId = params['id'];
-      this.pageNum = 1;
-      return this.fhService.getOrganizationById(params['id'], true);
+    Observable.combineLatest(this.activatedRoute.params, this.activatedRoute.queryParams, (params: Params, queryParams: Params) => ({ params, queryParams })).switchMap(allParams => {
+      this.errorOrgId = allParams.params['id'];
+      return this.fhService.getOrganizationById(allParams.params['id'], true, false, 'all', 10, this.pageNum);
     }).subscribe(orgSubject); // orgSubject contains a stream of organization api data
 
     this.subscription = orgSubject.subscribe(jsonData => { // whenever the api data is updated
       this.organization = jsonData['_embedded'][0]['org'];
-      this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
-      this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
+      this.totalOrganizationNumber =jsonData['_embedded'][0]['count'];
+      this.totalPages = Math.ceil(this.totalOrganizationNumber / this.showPerPage);
+      this.organizationPerPage = this.sortHierarchyAlphabetically(this.organization.hierarchy);
+      this.setUpMinMax(this.pageNum);
       this.hierarchy = [];
       this.loadHierarchy(Observable.of(jsonData));
     }, err => {
@@ -117,15 +119,15 @@ export class OrganizationPage implements OnInit, OnDestroy {
     return _.sortBy(array, ['name']);
   }
 
-  filterHierarchy(page,array) {
+  setUpMinMax(page) {
     this.min = page * this.showPerPage - this.showPerPage;
     this.max = page * this.showPerPage;
-    return array.slice(this.min,this.max);
   }
 
-  pageChange(pagenumber) {
-    this.pageNum = pagenumber;
-    this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
+  pageChange(pageNumber) {
+    this.pageNum = pageNumber;
+    this.organizationPerPage = this.sortHierarchyAlphabetically(this.organization.hierarchy);
+    this.setUpMinMax(this.pageNum);
     let navigationExtras: NavigationExtras = {
       queryParams: {keyword: this.qParams['keyword'],
                     index: this.qParams['index'],

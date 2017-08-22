@@ -60,9 +60,11 @@ export class App{
     if(window.location.pathname.localeCompare("/fal/workspace") !== 0){
       this.activatedRoute.queryParams.subscribe(
         data => {
-          this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+          //this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+          this.autocomplete.inputValue = "";
+          this.keyword = "";
           this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
-          this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
+          this.isActive = typeof data['is_active'] === "string" ? data['is_active'] : this.isActive;
         });
     }
     this._router.events.subscribe(
@@ -99,9 +101,9 @@ export class App{
   onHeaderSearchEvent(searchObject) {
     var qsobj = this.qs;
     if(searchObject.keyword.length>0){
-      qsobj['keyword'] = searchObject.keyword;
+      qsobj['keywords'] = searchObject.keyword;
     } else {
-      qsobj['keyword'] = '';
+      qsobj['keywords'] = '';
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
@@ -115,28 +117,28 @@ export class App{
     qsobj['ro_keyword'] = null;
 
     if(searchObject.searchField === 'fh') {
-      qsobj['isActive'] = true;
+      qsobj['is_active'] = true;
     } else {
-      qsobj['isActive'] = this.isActive;
+      qsobj['is_active'] = this.isActive;
     }
     if(searchObject.searchField !== 'wd') {
       qsobj['wdType'] = null;
       qsobj['state'] = null;
       qsobj['county'] = null;
-      qsobj['conType'] = null;
+      qsobj['construction_type'] = null;
       qsobj['service'] = null;
-      qsobj['isEven'] = null;
+      qsobj['is_even'] = null;
       qsobj['cba'] = null;
       qsobj['prevP'] = null;
-      qsobj['isStandard'] = null;
+      qsobj['is_standard'] = null;
     }
     if(searchObject.searchField === 'wd' || window.location.pathname.localeCompare("/search/fal/regionalOffices") == 0){
-      qsobj['organizationId'] = null;
+      qsobj['organization_id'] = null;
     }
     if(searchObject.searchField !== 'fpds') {
-      qsobj['awardOrIdv'] = null;
-      qsobj['awardType'] = null;
-      qsobj['contractType'] = null;
+      qsobj['award_or_idv'] = null;
+      qsobj['award_type'] = null;
+      qsobj['contract_type'] = null;
     }
     if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ei') {
       qsobj['naics'] = null;
@@ -146,14 +148,13 @@ export class App{
     if(searchObject.searchField !== 'cfda'){
       qsobj['applicant'] = null;
       qsobj['beneficiary'] = null;
-      qsobj['functionalCodes'] = null;
-      qsobj['assistanceType'] = null;
+      qsobj['assistance_type'] = null;
     }
 
     if(searchObject.searchField !== 'ei') {
-      qsobj['entityType'] = null;
+      qsobj['entity_type'] = null;
     } else {
-      qsobj['entityType'] = ["ent","ex"];
+      qsobj['entity_type'] = ["ent","ex"];
     }
 
     let navigationExtras: NavigationExtras = {

@@ -6,7 +6,7 @@ import {HostListener, Directive, ElementRef, Input} from '@angular/core';
 @Directive({selector: '[sticky-element]'})
 export class StickyElementComponent {
 
-  @Input() element: any;
+  @Input() element: HTMLElement;
 
   @HostListener('window:resize', ['$event'])
   resize(event) {
@@ -27,7 +27,7 @@ export class StickyElementComponent {
 
   makeSticky(event: any) {
     let rect;
-    let element = this.element.nativeElement;
+    let element = this.element;
     let pageOffset = window.pageYOffset;
     if(element) {
       rect = element.getBoundingClientRect();

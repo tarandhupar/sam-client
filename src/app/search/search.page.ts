@@ -391,6 +391,19 @@ export class SearchPage implements OnInit {
     dropdownLimit: 10
   };
 
+  keywordsBuiltString = '';
+  keywordsModel: any = [];
+  keywordsConfiguration = {
+    placeholder: "Keyword Search",
+    selectedLabel: "Keywords",
+    allowAny: true,
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
@@ -412,30 +425,31 @@ export class SearchPage implements OnInit {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : true;
+        this.organizationId = typeof data['organization_id'] === "string" ? decodeURI(data['organization_id']) : "";
+        this.isActive = data['is_active'] && data['is_active'] === "false" ? false : true;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : '';
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
-        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
+        this.wdConstructModel = data['construction_type'] && data['construction_type'] !== null ? data['construction_type'] : '';
         this.wdNonStandardSelectModel = data['service'] && data['service'] !== null ? data['service'] : '';
-        this.wdNonStandardRadModel = data['isEven'] && data['isEven'] !== null ? data['isEven'] : '';
+        this.wdNonStandardRadModel = data['is_even'] && data['is_even'] !== null ? data['is_even'] : '';
         this.wdSubjectToCBAModel = data['cba'] && data['cba'] !== null ? data['cba'] : '';
         this.wdPreviouslyPerformedModel = data['prevP'] && data['prevP'] !== null ? data['prevP'] : '';
-        this.isStandard = data['isStandard'] && data['isStandard'] !== null ? data['isStandard'] : '';
-        this.awardIDVModel = data['awardOrIdv'] && data['awardOrIdv'] !== null ? data['awardOrIdv'] : '';
-        this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
-        this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
+        this.isStandard = data['is_standard'] && data['is_standard'] !== null ? data['is_standard'] : '';
+        this.awardIDVModel = data['award_or_idv'] && data['award_or_idv'] !== null ? data['award_or_idv'] : '';
+        this.awardTypeModel = data['award_type'] && data['award_type'] !== null ? data['award_type'] : '';
+        this.contractTypeModel = data['contract_type'] && data['contract_type'] !== null ? data['contract_type'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
         this.appElSearchString = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
         this.benElSearchString = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
-        this.assistanceTypeFilterModel = data['assistanceType'] && data['assistanceType'] !== null ? data['assistanceType'] : '';
-        this.registrationExclusionCheckboxModel = data['entityType'] && data['entityType'] !== null ? data['entityType'].split(",") : [];
-        this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
+        this.assistanceTypeFilterModel = data['assistance_type'] && data['assistance_type'] !== null ? data['assistance_type'] : '';
+        this.registrationExclusionCheckboxModel = data['entity_type'] && data['entity_type'] !== null ? data['entity_type'].split(",") : [];
+        this.agencyPickerModel = this.setupOrgsFromQS(data['organization_id']);
+        this.keywordsModel = data['keywords'] && data['keywords'] !== null ? this.keywordRebuilder(decodeURI(data['keywords'])) : '';
         // persist duns filter data
         this.grabPersistData(this.dunsListString);
         this.isSearchComplete = false;
@@ -495,9 +509,7 @@ export class SearchPage implements OnInit {
   setupQS(newsearch) {
     var qsobj = {};
     if (this.keyword.length > 0) {
-      qsobj['keyword'] = this.keyword;
-    } else {
-      qsobj['keyword'] = '';
+      qsobj['keywords'] = this.keyword;
     }
 
     if (this.index.length > 0) {
@@ -512,7 +524,7 @@ export class SearchPage implements OnInit {
     else {
       qsobj['page'] = 1;
     }
-    qsobj['isActive'] = this.isActive;
+    qsobj['is_active'] = this.isActive;
 
     //wd or sca type param
     if (this.wdTypeModel.length > 0) {
@@ -521,7 +533,7 @@ export class SearchPage implements OnInit {
 
     //wd dba construction type param
     if (this.wdConstructModel.length > 0) {
-      qsobj['conType'] = this.wdConstructModel;
+      qsobj['construction_type'] = this.wdConstructModel;
     }
 
     //wd state param
@@ -535,7 +547,7 @@ export class SearchPage implements OnInit {
     }
 
     if (this.organizationId.length > 0) {
-      qsobj['organizationId'] = this.organizationId;
+      qsobj['organization_id'] = this.organizationId;
     }
 
     //wd Non Standard drop down param
@@ -545,9 +557,9 @@ export class SearchPage implements OnInit {
 
     //wd Non Standard radio button param
     if (this.wdNonStandardRadModel.length > 0) {
-      qsobj['isEven'] = this.wdNonStandardRadModel;
+      qsobj['is_even'] = this.wdNonStandardRadModel;
       // this rad button determins isStandard as well
-      qsobj["isStandard"] = this.isStandard;
+      qsobj["is_standard"] = this.isStandard;
     }
 
     //wd subject to cba param
@@ -562,15 +574,15 @@ export class SearchPage implements OnInit {
 
     //awardType param
     if (this.awardIDVModel.length > 0) {
-      qsobj['awardOrIdv'] = this.awardIDVModel;
+      qsobj['award_or_idv'] = this.awardIDVModel;
     }
 
     if (this.awardTypeModel.length > 0) {
-      qsobj['awardType'] = this.awardTypeModel;
+      qsobj['award_type'] = this.awardTypeModel;
     }
 
     if (this.contractTypeModel.length > 0) {
-      qsobj['contractType'] = this.contractTypeModel;
+      qsobj['contract_type'] = this.contractTypeModel;
     }
 
     if (this.naicsTypeModel.length > 0) {
@@ -598,12 +610,17 @@ export class SearchPage implements OnInit {
     }
 
     if (this.assistanceTypeFilterModel.length > 0) {
-      qsobj['assistanceType'] = this.assistanceTypeFilterModel;
+      qsobj['assistance_type'] = this.assistanceTypeFilterModel;
     }
 
     if (this.registrationExclusionCheckboxModel.length > 0) {
-      qsobj['entityType'] = this.registrationExclusionCheckboxModel;
+      qsobj['entity_type'] = this.registrationExclusionCheckboxModel;
     }
+
+    if (this.keywordsModel && this.keywordsModel.length > 0) {
+      qsobj['keywords'] = this.keywordSplitter(this.keywordsModel);
+    }
+
 
 
     return qsobj;
@@ -618,7 +635,7 @@ export class SearchPage implements OnInit {
       case 'wd':
         filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('wdStates,dbraConstructionTypes,scaServices');
         this.getWageDeterminationDictionaryData(filteredDictionaries);
-        if(this.wdStateModel !== ''){
+        if(this.wdStateModel !== '') {
           this.getCountyByState(this.wdStateModel);
         }
         this.determineEnableCountySelect();
@@ -667,21 +684,21 @@ export class SearchPage implements OnInit {
     }
     //make api call
     this.searchService.runSearch({
-      keyword: this.keyword,
+      keyword: this.keyword && this.keyword !== '' ? this.keyword : this.keywordSplitter(this.keywordsModel),
       index: this.index,
       pageNum: this.pageNum,
-      organizationId: this.organizationId,
-      isActive: this.isActive,
+      organization_id: this.organizationId,
+      is_active: this.isActive,
       wdType: this.wdTypeModel,
-      conType: this.wdConstructModel,
+      construction_type: this.wdConstructModel,
       state: this.wdStateModel,
       county: this.wdCountyModel,
       service: this.wdNonStandardSelectModel,
-      isEven: this.wdNonStandardRadModel,
-      isStandard: this.isStandard,
-      awardOrIdv: this.awardIDVModel,
-      awardType: this.awardTypeModel,
-      contractType: this.contractTypeModel,
+      is_even: this.wdNonStandardRadModel,
+      is_standard: this.isStandard,
+      award_or_IDV: this.awardIDVModel,
+      award_type: this.awardTypeModel,
+      contract_type: this.contractTypeModel,
       naics: this.naicsTypeModel,
       psc: this.pscTypeModel,
       showRO: this.showRegionalOffices,
@@ -689,8 +706,8 @@ export class SearchPage implements OnInit {
       duns: this.dunsListString,
       applicant: this.appElSearchString,
       beneficiary: this.benElSearchString,
-      assistanceType: this.assistanceTypeFilterModel,
-      entityType: this.registrationExclusionCheckboxModel
+      assistance_type: this.assistanceTypeFilterModel,
+      entity_type: this.registrationExclusionCheckboxModel
     }).subscribe(
       data => {
 
@@ -726,7 +743,10 @@ export class SearchPage implements OnInit {
           this.data['results'] = null;
           this.totalCount = 0;
         }
-
+        // set keywords filter with keywords from response
+        this.keywordsModel = this.keywordRebuilder(data['_embedded']['stringList']);
+        // clear keyword
+        this.keyword = "";
         this.oldKeyword = this.keyword;
         this.initLoad = false;
         this.isSearchComplete = true;
@@ -904,10 +924,6 @@ export class SearchPage implements OnInit {
     this.pageNum = 0;
     // enable county select if needed
     this.determineEnableCountySelect();
-    // call method to get county data per state
-    if (this.wdStateModel !== ''){
-      this.getCountyByState(this.wdStateModel);
-    }
     this.searchResultsRefresh();
   }
 
@@ -1370,5 +1386,68 @@ export class SearchPage implements OnInit {
       this.assistanceTypeOptions = Object.assign({}, this.assistanceTypeOptions);
   }
 
+  keywordsModelChange(value){
+    var spaceDelimitedString="";
+
+    this.keywordsModel = value;
+
+    // build space-delimited string
+    if(value && value.length > 0){
+      spaceDelimitedString = this.keywordSplitter(value);
+    }
+
+    // set normal keyword param with space delimited string
+    this.keywordsBuiltString = spaceDelimitedString;
+
+    // refresh results
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  // splits array into a space-delimited string
+  keywordSplitter(keywordArray){
+    var newString = "";
+
+    if(keywordArray && keywordArray !== ""){
+      // use reduce to separate items into string: item1 + " " + item2 etc
+      newString = keywordArray.reduce(function(accumulator, currentVal){
+        if(accumulator === ""){
+          return currentVal.value;
+        }
+
+        return accumulator + " " + currentVal.value;
+      }, "");
+    }
+
+    return newString;
+  }
+
+  // rebuilds a string or array of values back into a keyword array of objects
+  keywordRebuilder(keywordStringOrArray){
+
+    // if passed value is string
+    if(typeof(keywordStringOrArray) === "string"){
+      // use split to convert string to array
+      var tempArray = keywordStringOrArray.split(' ');
+      // use map to loop through all items and build objects
+      return tempArray.map(function(item){
+        var tempObj = {label:"", value:""};
+        tempObj.label = item;
+        tempObj.value = item;
+        return tempObj;
+      });
+    }
+
+    // if passed value is array
+    else if(Array.isArray(keywordStringOrArray)){
+      // use map to loop through all items and build objects
+      return keywordStringOrArray.map(function(item){
+        var tempObj = {label:"", value:""};
+        tempObj.label = item;
+        tempObj.value = item;
+        return tempObj;
+      });
+    }
+  }
 
 }

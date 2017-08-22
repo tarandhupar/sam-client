@@ -59,16 +59,16 @@ export class AlertHeaderComponent {
 
   fetchAlerts() {
     const MAX_ALERTS: number = 2;
-    this.systemAlerts.getActive(MAX_ALERTS)      
-      .subscribe(alerts => {        
-      if (!alerts._embedded.alertList.length) {
+    this.systemAlerts.getActive(MAX_ALERTS)
+      .subscribe(alerts => {
+      if (!alerts || !alerts._embedded || !alerts._embedded.alertList || !alerts._embedded.alertList.length) {
         this.alerts = [];
         return;
       }
       let alert = [];
 
       alert = alerts._embedded.alertList;
-      alert = alert.map(res => {        
+      alert = alert.map(res => {
         return Alert.FromResponse(res);
       });
 
@@ -87,6 +87,6 @@ export class AlertHeaderComponent {
     }, error => {
       console.error('Encountered an error fetching alerts: ', error);
     });
-  } 
+  }
 
 }
