@@ -27,6 +27,8 @@ import { PeoplePickerService } from "./people-picker/people-picker.service";
 import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service';
 import { AgencyPickerAutoCompleteDirective } from "./autoCompleteWrapper/agencyPickerAutoCompleteWrapper.service";
 import { WatchlistService } from './watchlist/watchlist.service';
+import { MsgFeedService } from "./msg-feed/msg-feed.service";
+import { MsgFeedServiceMock } from "./msg-feed/msg-feed.mock";
 
 /**
  * A module for reusable SAM Web Design components
@@ -77,6 +79,9 @@ import { WatchlistService } from './watchlist/watchlist.service';
     FileExtractsService,
     PeoplePickerService,
     //{ provide: PeoplePickerService, useClass: PeoplePickerServiceMock }
+    MsgFeedService,
+    // { provide: MsgFeedService, useClass: MsgFeedServiceMock }
+
   ]
 })
 export class SamAPIKitModule { }

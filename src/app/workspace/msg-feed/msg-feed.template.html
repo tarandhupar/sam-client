@@ -1,0 +1,52 @@
+<page [breadcrumbs]="crumbs" [section]="'Workspace'" [title]="capitalPipe.transform(curSection)">
+  <sidebar>
+    <msg-feed-sidenav [curSection]="curSection" [curSubSection]="curSubSection" (filterChange)="onFilterChange($event)"></msg-feed-sidenav>
+  </sidebar>
+
+  <div class="usa-width-one-whole msg-feed-content">
+    <div class="usa-width-one-whole">
+      <div class="pull-left p_T-3x">
+        Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
+      </div>
+      <span class="pull-right p_T-3x p_L-1x"><i class="fa msg-feeds-orderby" [ngClass]="getOrderByClass()" (click)="onOrderByChange()"></i></span>
+      <div class="pull-right"><sam-select [name]="'sortBy'" [options]="msgSortOptions" [label]="''"></sam-select></div>
+      <span class="pull-right p_T-3x p_R-1x">Sort By: &nbsp;</span>
+    </div>
+
+    <!--Message Feeds Content-->
+    <div class="usa-width-one-whole msg-feed-items-div" *ngIf="msgFeeds.length > 0">
+      <div class="usa-width-one-whole msg-feed-item" *ngFor="let feed of msgFeeds">
+        <div class="pull-left" style="line-height: 0.5em;">
+          <!--For Alerts-->
+          <div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>
+          <!--For other types of feeds-->
+          <div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>
+
+        </div>
+        <div class="usa-width-two-thirds p_L-2x" *ngIf="feed.type === 'Alert'">
+          <span class="usa-width-one-whole msg-feed-bold">{{feed.title}}</span>
+          <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
+          <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
+        </div>
+        <div class="usa-width-two-thirds p_L-2x p_T-2x" *ngIf="feed.type !== 'Alert'">
+          <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
+          <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
+        </div>
+        <span class="pull-right msg-feed-status m_T-2x p_R-3x" *ngIf="feed.type === 'Request'">{{feed.status}}</span>
+      </div>
+    </div>
+
+    <div class="usa-width-one-whole" *ngIf="msgFeeds.length === 0">
+      No Feeds Available
+    </div>
+
+
+    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="msgFeeds.length > 0">
+      <sam-pagination (pageChange)="onPageNumChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+    </div>
+
+
+  </div>
+</page>
+
+

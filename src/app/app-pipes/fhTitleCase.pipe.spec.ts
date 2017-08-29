@@ -1,6 +1,6 @@
 import { FHTitleCasePipe } from './fhTitleCase.pipe';
 
-fdescribe('src/app/app-pipes/fhTitleCase.pipe.spec.ts', () => {
+describe('src/app/app-pipes/fhTitleCase.pipe.spec.ts', () => {
   let pipe = new FHTitleCasePipe();
   it('FHTitleCasePipe: transforms a string to a string with words in title case', () => {
     let string1 = "COMMERCE, DEPARTMENT OF";
