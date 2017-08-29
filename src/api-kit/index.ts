@@ -22,3 +22,4 @@ export { UserAccessService } from './access/access.service';
 export { UserDirService } from './user-directory/user-directory.service';
 export { WageDeterminationService } from './wage-determination/wage-determination.service';
 export { WrapperService } from './wrapper/wrapper.service';
+export { MsgFeedService } from "./msg-feed/msg-feed.service";

@@ -37,6 +37,9 @@ import {
 
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 import { RoleManagementModule } from "../role-management/role-management.module";
+import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
+import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
+import { AppTemplatesModule } from "../app-templates/index";
 
 @NgModule({
   imports: [
@@ -49,6 +52,7 @@ import { RoleManagementModule } from "../role-management/role-management.module"
     SamUIKitModule,
     SamAPIKitModule,
     AppComponentsModule,
+    AppTemplatesModule,
     PipesModule,
     Ng2PageScrollModule.forRoot(),
   ],
@@ -86,6 +90,12 @@ import { RoleManagementModule } from "../role-management/role-management.module"
     SystemProfileComponent,
     SystemPasswordComponent,
     SystemMigrationsComponent,
+
+    /**
+     * MyFeed
+     */
+    MsgFeedComponent,
+    MsgFeedSideNavComponent,
   ],
   providers: [
     /**

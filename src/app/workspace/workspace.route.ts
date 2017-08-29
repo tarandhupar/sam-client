@@ -9,6 +9,7 @@ import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 
 import FSDRouter from './fsd/fsd.route';
 import SystemRouter from './system/system.route';
+import {MsgFeedComponent} from "./msg-feed/msg-feed.component";
 
 export const routes: Routes = [
   { path: 'workspace',
@@ -28,6 +29,15 @@ export const routes: Routes = [
     canActivateChild: [ IsLoggedInGuard, SystemGuard ],
     children: SystemRouter,
   },
+  {
+    path: 'workspace/myfeed/:section',
+    component: MsgFeedComponent
+  },
+  {
+    path: 'workspace/myfeed/:section/:subsection',
+    component: MsgFeedComponent
+  }
+
 ];
 
 export const routing = RouterModule.forChild(routes);
