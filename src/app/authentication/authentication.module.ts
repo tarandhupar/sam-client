@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SamAPIKitModule } from 'api-kit';
@@ -19,7 +19,7 @@ import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetC
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SamAPIKitModule,

@@ -41,7 +41,7 @@ const apiStub = {
   }
 };
 
-describe('[IAM] Registration', () => {
+describe('[IAM] Sign Up (Main)', () => {
   let component: RegisterMainComponent;
   let fixture: ComponentFixture<RegisterMainComponent>;
 
@@ -158,4 +158,24 @@ describe('[IAM] Registration', () => {
       expect(component.userForm.value).toEqual(mock);
     });
   }));
+
+  it('verify population of error messages', () => {
+    let error,
+        message;
+
+    component.states.alert.type = 'error';
+    component.states.alert.message = 'Test Error Message';
+    component.states.alert.show = true;
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.states.alert.message);
+  });
 });

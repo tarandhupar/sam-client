@@ -7,7 +7,7 @@ export class Watchlist {
     domainId: 'WD',
     recordId: '',
     active: 'Y',
-    frequency: 'daily',
+    frequency: 'instant',
     uri: 'path'
   };
 

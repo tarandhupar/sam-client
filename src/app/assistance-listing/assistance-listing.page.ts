@@ -396,4 +396,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
     }
     return editFlag;
   }
+  
+  
+  public tabsClicked(tab){
+    switch (tab.label) {
+      case 'Auntheticated':
+        this.onEditViewClick();
+        break;
+      default:
+        break;
+    }
+  }
+  
 }

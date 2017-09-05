@@ -48,9 +48,11 @@ export class FALFormErrorService {
 
   get applicableErrors(): FieldErrorList {
     let applicable = _.cloneDeep(this._errors);
-    applicable.errorList = applicable.errorList.filter((section) => {
-      return this._viewModel.getSectionStatus(section.id) === 'updated';
-    });
+    if(applicable && applicable.errorList) {
+      applicable.errorList = applicable.errorList.filter((section) => {
+        return this._viewModel.getSectionStatus(section.id) === 'updated';
+      });
+    }
 
     return applicable;
   }
@@ -271,8 +273,8 @@ export class FALFormErrorService {
     let response: Subject<any> = new ReplaySubject(1);
     let finished = false;
 
-    if(this._viewModel.organizationId) {
-      this.falFormServive.getFederalHierarchyConfigurations(this._viewModel.organizationId).subscribe(data => {
+    if(this._viewModel.organizationId && !this._viewModel.isRevision) {
+      this.falFormServive.getFederalHierarchyConfiguration(this._viewModel.organizationId).subscribe(data => {
 
         if (!data.programNumberAuto) {
 

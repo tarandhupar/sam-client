@@ -1,10 +1,11 @@
 import { Component, ChangeDetectorRef, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild, SimpleChanges } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { FHService } from "api-kit";
+import { FHService, IAMService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR,AbstractControl } from '@angular/forms';
 import { DpmtSelectConfig, AgencySelectConfig, OfficeSelectConfig } from './configs';
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
+import adminLevel from "app/role-management/admin-level";
 import * as _ from 'lodash';
 
 @Component({
@@ -14,7 +15,7 @@ import * as _ from 'lodash';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AgencyPickerV2Component),
     multi: true
-  }, 
+  },
   FHTitleCasePipe]
 })
 /**
@@ -29,6 +30,8 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     @Input() type: string = "multiple";
     @Input() orgRoots = [];//100038381 - "100004222","100001616"
     @Input() limit;
+    @Input() defaultDept:boolean = false;
+    @Input() searchMessage: '';
 
     orgLevels: any[] = [];
 
@@ -41,9 +44,9 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     singleACConfig = {keyValueConfig:{keyProperty: 'key',valueProperty: 'name'}};
     multipleACConfig = {keyProperty: 'key',valueProperty: 'name'};
 
-    constructor(private oFHService:FHService, private cdr:ChangeDetectorRef, private fhTitleCasePipe:FHTitleCasePipe) {}
+    constructor(private oFHService:FHService, private iamService: IAMService, private cdr:ChangeDetectorRef, private fhTitleCasePipe:FHTitleCasePipe) {}
 
-    onChange = (_: any)=>{};
+    onChange = (_: any)=>{ console.error('this will only get called if the component fails to register onChange')};
     onTouched = ()=>{};
     showAdvanced = false;
     @ViewChild(LabelWrapper) wrapper: LabelWrapper;
@@ -51,7 +54,11 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         if(c['orgRoots'] && this.orgRoots && this.orgRoots.length > 0){
             this.reset();
             this.prepareAdvanced();
-            this.serviceOptions = {parent:this.orgRoots[0]};
+            this.serviceOptions['parent'] = this.orgRoots[0];
+            this.singleACConfig['serviceOptions'] = this.serviceOptions;
+        }
+        if(c['defaultDept'] && this.defaultDept && adminLevel.adminLevel !== 0){
+            this.serviceOptions['defaultDept'] = true;
             this.singleACConfig['serviceOptions'] = this.serviceOptions;
         }
     }
@@ -118,7 +125,18 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         if(this.type=="multiple"){
             this.selections = [];
         }
-        if(this.orgRoots.length==0){
+        if(this.defaultDept && adminLevel.adminLevel !== 0){
+            this.iamService.iam.user.get((data)=>{
+                this.orgRoots = [data.departmentID];
+                this.reset();
+                this.prepareAdvanced();
+                this.serviceOptions['parent'] = this.orgRoots[0];
+                this.singleACConfig['serviceOptions'] = this.serviceOptions;
+            }, (err)=>{
+                console.warn("could not load user's org data - ",err);
+            });
+        }
+        else if(this.orgRoots.length==0){
             this.reset();
             this.prepareAdvanced();
         }
@@ -155,18 +173,18 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
 
                 let formattedData;
                 if(oData['hierarchy'] && oData['hierarchy'].length > 0) {
-                     
+
                     for(let idx in this.orgLevels){
                         if(idx>lvl+1){
                             this.orgLevels[idx].options.length = 1;
                             this.orgLevels[idx].options.selectedOrg = "";
                             this.orgLevels[idx].show = false;
-                        } 
+                        }
                     }
                     formattedData = this.formatHierarchy(oData["hierarchy"]);
                     this.setAdvancedOrgOptions(lvl+1,formattedData);
                 }
-                
+
             });
         } else {
             for(var idx in this.orgLevels){
@@ -196,10 +214,10 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 });
                 selectedOrgs.push(orgOption);
             }
-        } 
+        }
         if(selectedOrgs.length>0){
             let org = selectedOrgs[selectedOrgs.length-1];
-            this.addSelection(org); 
+            this.addSelection(org);
             this.showAdvanced = false;
         }
     }
@@ -255,7 +273,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             let level = el["org"]["level"];
             el["org"]["value"] = el["org"]["orgKey"];
             el["org"]["label"] = this.fhTitleCasePipe.transform(el["org"]["name"]);
-            el["org"]["name"] = el["org"]["name"];
+            el["org"]["name"] = this.fhTitleCasePipe.transform(el["org"]["name"]);
             return el["org"];
         });
     }
@@ -290,10 +308,10 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         }
         if(orgKeys.length>0){
             this.selections = [];
-            this.oFHService.getOrganizations({orgKey:value.join(",")}).subscribe(res=>{
+            this.oFHService.getOrganizations({orgKey:orgKeys.join(",")}).subscribe(res=>{
                 let orgs = this.formatHierarchy(res["_embedded"]['orgs']);
                 for(let idx in orgs){
-                    let val = orgs[idx];    
+                    let val = orgs[idx];
                     this.addSelection(val,false);
                 }
             });

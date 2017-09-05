@@ -8,11 +8,13 @@
           <a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="i !== hierarchyPath.length - 1"> > </span>
         </span>
       </div>
-      <div class="usa-width-one-whole m_B-2x">
-        <div class="org-logo-container relative">
-          <img *ngIf="dataLoaded" class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
-          <!--<span class="org-logo-insert-icon"><i class="fa fa-plus"></i></span>-->
-        </div>
+      <div class="usa-width-one-whole m_B-2x org-logo-container relative">
+        <img *ngIf="dataLoaded" class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
+
+        <!--<div class="org-logo-container relative">-->
+          <!--<img *ngIf="dataLoaded" class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">-->
+          <!--&lt;!&ndash;<span class="org-logo-insert-icon"><i class="fa fa-plus"></i></span>&ndash;&gt;-->
+        <!--</div>-->
       </div>
       <ul class="usa-sidenav-list m_B-3x">
         <li class="m_B-3x"><h3>{{orgName}}</h3></li>

@@ -26,7 +26,8 @@ class RouterStub {
 }
 
 let systemAlertsStub: any = {
-  getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info], _links:{'create':true}})
+  getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info], _links:{'create':true}}),
+  getAlertType: () => {return Observable.of(['Informational','Warning','Critical']);}
 };
 
 describe('The AlertsPage component', () => {

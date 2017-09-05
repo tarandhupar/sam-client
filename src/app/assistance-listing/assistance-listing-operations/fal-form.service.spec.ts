@@ -826,11 +826,11 @@ describe('src/app/assistance-listing/assistance-listing-operations/fal-form.serv
     formService.getFALPermission('ORG_LEVELS');
     expect(spyData).toHaveBeenCalledWith(Cookies.get('iPlanetDirectoryPro'), 'ORG_LEVELS');
   }));
-  it('FALFormService.getFederalHierarchyConfigurations: should HaveBeenCalledWith to programService.getFederalHierarchyConfigurations', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {
+  it('FALFormService.getFederalHierarchyConfiguration: should HaveBeenCalledWith to programService.getFederalHierarchyConfiguration', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {
     programService = new ProgramService(wrapperService);
-    let spyData = spyOn(programService, 'getFederalHierarchyConfigurations');
+    let spyData = spyOn(programService, 'getFederalHierarchyConfiguration');
     formService = new FALFormService(programService, dictionaryService, fHService);
-    formService.getFederalHierarchyConfigurations('100004222');
+    formService.getFederalHierarchyConfiguration('100004222');
     expect(spyData).toHaveBeenCalledWith('100004222', Cookies.get('iPlanetDirectoryPro'));
   }));
   it('FALFormService.getCfdaCode: should HaveBeenCalledWith to programService.getCfdaCode', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {

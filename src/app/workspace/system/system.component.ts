@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { IAMService } from 'api-kit';
 
@@ -40,15 +40,12 @@ export class SystemComponent {
   activeRouteClass = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {
-    this.router.events.subscribe((event) => {
-      switch(event.constructor.name) {
-        case 'NavigationEnd':
-          this.checkRoute();
-          this.checkAccess();
-
-          break;
-      }
-    });
+    this.router.events
+     .filter(event => event instanceof NavigationEnd)
+     .subscribe(event => {
+       this.checkRoute();
+       this.checkAccess();
+     });
   }
 
 

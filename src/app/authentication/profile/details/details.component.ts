@@ -102,7 +102,7 @@ export class DetailsComponent {
     }
   };
 
-  private alerts = {
+  public alerts = {
     identity: {
       type: 'error',
       message: '',

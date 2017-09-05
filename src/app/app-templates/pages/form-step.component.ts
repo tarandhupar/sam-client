@@ -35,10 +35,40 @@ import {Component, Input, Output, EventEmitter, ViewChild} from "@angular/core";
       </ng-content>    
       
       <div class="sam-ui divider"></div> 
-      <sam-button [buttonId]="'fal-form-nav-cancel'" buttonType="outline" buttonText="Cancel" (onClick)="formAction('cancel')"></sam-button>
-      <sam-button [buttonId]="'fal-form-nav-back'" buttonType="outline" *ngIf="sectionIndex - 1 >= 0" buttonText="Back" (onClick)="formAction('back')"></sam-button>
-      <sam-button [buttonId]="'fal-form-nav-next'"buttonType="outline" *ngIf="sectionIndex + 1 < numberOfSections" buttonText="Next" (onClick)="formAction('next')"></sam-button>
-      <sam-button [buttonId]="'fal-form-nav-done'" buttonText="Done" (onClick)="formAction('done')"></sam-button>
+      
+      <div grid>
+        <div columns="12" class="right aligned">
+          <sam-button 
+            [buttonId]="'fal-form-nav-cancel'" 
+            buttonType="tertiary" 
+            buttonText="Cancel" 
+            (onClick)="formAction('cancel')">
+          </sam-button>
+          
+          <sam-button 
+            [buttonId]="'fal-form-nav-back'" 
+            buttonType="secondary" 
+            *ngIf="sectionIndex - 1 >= 0" 
+            buttonText="Back" 
+            (onClick)="formAction('back')">
+          </sam-button>
+          
+          <sam-button 
+            [buttonId]="'fal-form-nav-next'"
+            buttonType="secondary" 
+            *ngIf="sectionIndex + 1 < numberOfSections" 
+            buttonText="Next" 
+            (onClick)="formAction('next')">
+          </sam-button>
+          
+          <sam-button 
+            [buttonId]="'fal-form-nav-done'" 
+            buttonText="Done" 
+            (onClick)="formAction('done')">
+          </sam-button>
+        </div>
+      </div>
+      
       <div class="sam-ui divider"></div>
     </page>
   `

@@ -1,9 +1,14 @@
 .sam-actions {
   position: relative;
-  background: #fff;
+  background: transparent;
   display: inline-block;
 
   .usa-button {
+    &.usa-button-primary {
+      background-color: #0071bc;
+      color: white;
+    }
+
     color: #112e51;
     background-color: #fff;
     font-weight: 400;

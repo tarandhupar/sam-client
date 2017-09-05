@@ -3,27 +3,28 @@
 
 <div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
   <div formArrayName="authorizations">
-    <h4>{{subFormLabel}}</h4>
 
     <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="authIndex !== i">
 
-          <sam-checkbox
+        <sam-checkbox
           [control]="authGrp.controls.authType"
-          [label]="'Please select all that apply'"
+          [label]="subFormLabel"
           [name]="'authType'"
+          hint="Please select all that apply"
           [options]="checkboxConfig.options"
           [required]="true"
-          formControlName="authType"></sam-checkbox>
+          formControlName="authType">
+        </sam-checkbox>
 
         <div formGroupName="act" [class.hide]="authGrp.value.authType.indexOf('act') == -1" >
-          <h4>Act</h4>
+          <h4 class="sam-ui header">Act</h4>
           <sam-text
             [control]="authGrp.controls.act.controls.title"
             [name]="'title'"
             [label]="'Title'"
-            formControlName="title"
-          ></sam-text>
+            formControlName="title">
+          </sam-text>
 
           <sam-text
             [control]="authGrp.controls.act.controls.part"
@@ -138,8 +139,8 @@
           ></sam-text>
           </sam-label-wrapper>
         </div>
-
-        <sam-button [buttonId]="'authorization-cancel-btn'" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
+        <div class="sam-ui hidden divider"></div>
+        <sam-button [buttonId]="'authorization-cancel-btn'" buttonType="tertiary" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
         <sam-button [buttonId]="'authorization-confirm-btn'" buttonText="Confirm" (onClick)="onConfirmClick(i)"></sam-button>
       </div>
     </ng-container>

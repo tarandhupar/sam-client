@@ -30,6 +30,7 @@ export class SamKBAComponent {
   }
 
   protected states = {
+    uid: Math.floor(Math.random() * 89999 + 10000),
     type: 'text',
     submitted: false,
     count: 0,

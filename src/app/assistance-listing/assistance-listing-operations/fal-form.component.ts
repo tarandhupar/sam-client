@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, OnDestroy, ViewChildren, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import {FALFormService} from "./fal-form.service";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, NavigationStart, NavigationCancel} from '@angular/router';
 import {FALFormViewModel} from "./fal-form.model";
 import {FALErrorDisplayComponent} from '../components/fal-error-display/fal-error-display.component';
 import {FALSectionNames} from './fal-form.constants';
@@ -20,11 +20,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   falFormViewModel: FALFormViewModel;
   createPermissions: any;
   @ViewChild('titleModal') titleModal;
-  titleMissingConfig = {
-    title: 'No Title Provided',
-    description: 'You must provide a title for this draft assistance listing in order to proceed.',
-    closeText: 'Close'
-  };
+  titleMissingConfig = {title: '', description: '', confirmText: '', cancelText: ''};
   sections: string[] = [
     FALSectionNames.HEADER,
     FALSectionNames.OVERVIEW,
@@ -39,6 +35,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   currentFragment: string;
   currentSection: number;
   leadingErrorMsg: string;
+  globalLinksUrl: string;
+  globalNavigationFlag: boolean = false;
+  modelBtnsNavigationFlag: boolean = false;
   crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
     breadcrumb: 'Workspace',
     urlmock: true
@@ -52,9 +51,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   @ViewChildren('form') form;
   private routeSubscribe;
-  private pristineIconClass = '';
+  private pristineIconClass = 'not started';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
+
 
   sectionLabels: any = [
     'Header Information',
@@ -115,8 +115,21 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
               private errorService: FALFormErrorService, private authGuard: AuthGuard, private cdr: ChangeDetectorRef, private alertFooterService: AlertFooterService,
               private programService: ProgramService) {
     // jump to top of page when changing sections
-    this.routeSubscribe = this.router.events.subscribe(() => {
+    let comp = this;
+    this.routeSubscribe = this.router.events.subscribe(event => {
       window.scrollTo(0, 0);
+      if (event.url === "/" || event.url === "/reports/overview" || event.url === "/workspace" || event.url === "/help/overview"
+        || event.url === "/federal-hierarchy" || event.url === "/data-services" || event.url === "/profile") {
+        comp.globalLinksUrl = event.url;
+        if (comp.globalNavigationFlag) {
+          if (event instanceof NavigationCancel) {
+          }
+        } else {
+          if (event instanceof NavigationStart) {
+            comp.formsDirtyCheck('links');
+          }
+        }
+      }
     });
   }
 
@@ -137,7 +150,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.errorService.viewModel = this.falFormViewModel;
       this.errorService.initFALErrors();
     }
-    this.determineLogin();
+    let flag = this.determineLogin();
+    if (!flag) {
+      return;
+    }
     this.determineSection();
     this.service.getFALPermission('CREATE_FALS').subscribe(res => {
       this.errorDisplayComponent.formatErrors(this.errorService.applicableErrors);
@@ -167,10 +183,14 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (cookie != null) {
       if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
         this.router.navigate(['accessrestricted']);
+        return false;
       }
     } else if (cookie == null) {
       this.router.navigate(['signin']);
+      return false;
     }
+
+    return true;
   }
 
   isSection(sectionName: string) {
@@ -371,18 +391,32 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   breadCrumbClick(event) {
-    if (event === 'Workspace') {
-      this.router.navigate(['/fal/workspace']);
+    let actionType = event;
+    if (actionType === 'Workspace') {
+      this.formsDirtyCheck('Workspace');
+      this.globalLinksUrl = 'fal/workspace';
     }
   }
 
-  onTitleModalClose() {
+  onTitleModalNo() {
+    if(!this.modelBtnsNavigationFlag) {
+    this.globalNavigationFlag = true;
+    this.router.navigateByUrl(this.globalLinksUrl);
+    }
+    this.modelBtnsNavigationFlag = false;
+  }
+
+  onTitleModalYesorClose() {
+    this.modelBtnsNavigationFlag = true;
     this.sidenavSelection = "";
     this.cdr.detectChanges();
     this.sidenavSelection = "Header Information";
     this.cdr.detectChanges();
     let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
+    this.globalLinksUrl = url;
+    this.titleModal.closeModal();
     this.router.navigateByUrl(url);
+
   }
 
   public checkNavigation(target) {
@@ -395,38 +429,50 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   formsDirtyCheck(actionType, navObj?: any) {
-    if (!this.falFormViewModel.title) {
-      this.titleModal.openModal();
+    if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links') {
+      if (!this.falFormViewModel.title) {
+        let title = 'No Title Provided';
+        let description = 'You must provide a title for this draft assistance listing in order to proceed.';
+        let confirmText = 'Close'
+        this.titleModelConfig(title, description, confirmText, '');
+        this.titleModal.openModal();
+      } else {
+        //  TODO: Support partial update?
+        this.checkFormDirtyStatus(actionType, navObj);
+      }
     } else {
-      //  TODO: Support partial update?
-      for (let section of this.form._results) {
-        if (section.falHeaderInfoForm) {
-          this.saveFormOnDirty(section.falHeaderInfoForm, false, navObj, actionType);
-        }
-        if (section.falOverviewForm) {
-          this.saveFormOnDirty(section.falOverviewForm, false, navObj, actionType);
-        }
-        if (section.falAuthForm) {
-          this.saveFormOnDirty(section.falAuthForm, true, navObj, actionType, section.authSubForm.falAuthSubForm);
-        }
-        if (section.finObligationsForm) {
-          this.saveFormOnDirty(section.finObligationsForm, true, navObj, actionType, section.obligationSubForm.falObligationSubForm);
-        }
-        if (section.otherFinancialInfoForm) {
-          this.saveFormOnDirty(section.otherFinancialInfoForm, false, navObj, actionType);
-        }
-        if (section.falCriteriaForm) {
-          this.saveFormOnDirty(section.falCriteriaForm, false, navObj, actionType);
-        }
-        if (section.falAssistanceForm) {
-          this.saveFormOnDirty(section.falAssistanceForm, false, navObj, actionType);
-        }
-        if (section.complianceRequirementsGroup) {
-          this.saveFormOnDirty(section.complianceRequirementsGroup, false, navObj, actionType);
-        }
-        if (section.falContactInfoForm) {
-          this.saveFormOnDirty(section.falContactInfoForm, false, navObj, actionType);
-        }
+      this.checkFormDirtyStatus(actionType, navObj);
+    }
+  }
+
+  checkFormDirtyStatus(actionType, navObj?: any) {
+    for (let section of this.form._results) {
+      if (section.falHeaderInfoForm) {
+        this.saveFormOnDirty(section.falHeaderInfoForm, false, navObj, actionType);
+      }
+      if (section.falOverviewForm) {
+        this.saveFormOnDirty(section.falOverviewForm, false, navObj, actionType);
+      }
+      if (section.falAuthForm) {
+        this.saveFormOnDirty(section.falAuthForm, true, navObj, actionType, section.authSubForm.falAuthSubForm);
+      }
+      if (section.finObligationsForm) {
+        this.saveFormOnDirty(section.finObligationsForm, true, navObj, actionType, section.obligationSubForm.falObligationSubForm);
+      }
+      if (section.otherFinancialInfoForm) {
+        this.saveFormOnDirty(section.otherFinancialInfoForm, false, navObj, actionType);
+      }
+      if (section.falCriteriaForm) {
+        this.saveFormOnDirty(section.falCriteriaForm, false, navObj, actionType);
+      }
+      if (section.falAssistanceForm) {
+        this.saveFormOnDirty(section.falAssistanceForm, false, navObj, actionType);
+      }
+      if (section.complianceRequirementsGroup) {
+        this.saveFormOnDirty(section.complianceRequirementsGroup, false, navObj, actionType);
+      }
+      if (section.falContactInfoForm) {
+        this.saveFormOnDirty(section.falContactInfoForm, false, navObj, actionType);
       }
     }
   }
@@ -445,24 +491,46 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveAction(dirtyFlag, navObj, actionType) {
     if (dirtyFlag) {
-      this.beforeSaveAction();
-      this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
-        .subscribe(api => {
-            this.afterSaveAction(api);
-            if (actionType === 'SideNav') {
-              let section = this.sectionLabels[this.currentSection];
-              this.successFooterAlertModel.description = section + ' saved successfully.'
-              this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
-              this.navigationOnAction(actionType, navObj);
-            }
-            this.navigationOnAction(actionType, navObj);
-          },
-          error => {
-            console.error('error saving assistance listing to api', error);
-          });
+      if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links') {
+        this.saveForm(navObj, actionType);
+      } else {
+        if (!this.falFormViewModel.title) {
+          this.navigateSection();
+          let title = 'No Title Provided';
+          let description = 'You must provide a title in order to save this draft assistance listing. <br>Do you wish to return to the listing to enter a title? <br>Select "yes" to return to the listing, or select "no" to navigate away from the listing without saving.';
+          let confirmText = 'Yes';
+          let cancelText = 'No';
+          this.titleModelConfig(title, description, confirmText, cancelText);
+        } else {
+          this.saveForm(navObj, actionType);
+        }
+      }
     } else {
       this.navigationOnAction(actionType, navObj);
     }
+  }
+
+  titleModelConfig(title, description, confirmText, cancelText) {
+    this.titleModal.openModal();
+    this.titleMissingConfig.title = title;
+    this.titleMissingConfig.description = description;
+    this.titleMissingConfig.confirmText = confirmText;
+    this.titleMissingConfig.cancelText = cancelText;
+  }
+
+  saveForm(navObj, actionType) {
+    this.beforeSaveAction();
+    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
+      .subscribe(api => {
+          this.afterSaveAction(api);
+          let section = this.sectionLabels[this.currentSection];
+          this.successFooterAlertModel.description = section + ' saved successfully.'
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
+          this.navigationOnAction(actionType, navObj);
+        },
+        error => {
+          console.error('error saving assistance listing to api', error);
+        });
   }
 
   navigationOnAction(actionType, navObj) {
@@ -483,5 +551,27 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.gotoNextSection();
       this.navigateSection();
     }
+    if (actionType === 'Workspace') {
+      this.router.navigate(['/fal/workspace']);
+    }
   }
+  
+  onViewClick() {
+    let url = '/programs/' + this.falFormViewModel.programId + '/view';
+    this.router.navigateByUrl(url);
+  }
+  
+  public tabsClicked(tab){
+    switch (tab.label) {
+      case 'Auntheticated':
+        this.onSaveExitClick();
+        break;
+      case 'Public':
+        this.onViewClick();
+        break;
+      default:
+        break;
+    }
+  }
+  
 }

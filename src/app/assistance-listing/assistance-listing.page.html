@@ -25,13 +25,7 @@
         </sam-alert>
       </div>
     </ng-container>
-    <div class="float-right">
-      <sam-button  buttonText="Editor View" *ngIf="canEdit()" (onClick)="onEditViewClick($event)"></sam-button>
-      <a class="fal-table-edit" *ngIf="canEdit()" (click)="onEditViewClick($event)">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-      </a>
 
-    </div>
     <!-- Intro Content -->
     <section id="program-information">
 
@@ -44,6 +38,12 @@
           </h1>
         </div>
       </div>
+      
+      <!-- Tabs -->
+      <tabs-fal 
+        [data]="program" 
+        (tabClick)="tabsClicked($event)">
+      </tabs-fal>
 
 
       <div class="sam-ui padded raised segment">

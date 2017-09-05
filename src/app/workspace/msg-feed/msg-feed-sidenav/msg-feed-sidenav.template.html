@@ -37,7 +37,11 @@
       </sam-checkbox>
     </div>
     <div class="usa-width-one-fourth m_T-5x p_T-2x">
-      <div class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options"><span class="request-count">{{getRequestTypeCount(option)}}</span></div>
+      <ul class="usa-unstyled-list">
+        <li class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options">
+          <label class="m_T-0 request-count pull-right m_R-2x">{{getRequestTypeCount(option)}}</label>
+        </li>
+      </ul>
     </div>
   </div>
 

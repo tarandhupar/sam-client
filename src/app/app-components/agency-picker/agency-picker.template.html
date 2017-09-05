@@ -1,15 +1,13 @@
-<!--<div class='organization-container' [class.borderless]='borderless' [class.usa-input-error]="searchMessage" sam-click-outside (clickOutside)="checkForFocus($event)" sam-tab-outside (tabOutside)="checkForFocus($event)">-->
-
-<div class='organization-container' [class.usa-input-error]="searchMessage" sam-click-outside (clickOutside)="checkForFocus($event)" sam-tab-outside (tabOutside)="checkForFocus($event)">
-
-
-
-  <label [class.usa-input-error-label]="searchMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
-
-  <span *ngIf="hint && showToggle && !toggleOpen" class="usa-form-hint">{{hint | slice:0:123}}</span>
-  <span *ngIf="(hint && toggleOpen) || (hint && !showToggle)" class="usa-form-hint">{{hint}}</span>
-  <div *ngIf="showToggle" class="usa-form-hint-showmore-toggler"><a href="javascript:void(0)" (click)="toggleHint(toggleOpen)" class="">{{ toggleOpen?"less":"more"}}</a></div>
-
+<sam-label-wrapper 
+  [label]="label"
+  required="true"
+  [hint]="hint"
+  [errorMessage]="searchMessage"
+  sam-click-outside 
+  (clickOutside)="checkForFocus($event)" 
+  sam-tab-outside 
+  (tabOutside)="checkForFocus($event)">
+  
   <div class="sam-ui secondary pointing large menu" *ngIf="!advancedMode && !orgRoot">
     <a class="item active" (click)="selectorToggle = false" [ngClass]="{'active': !selectorToggle}" (keyup.enter)="selectorToggle = false" tabindex="0">
       Simple
@@ -17,10 +15,6 @@
     <a class="item" (click)="selectorToggle = true" [ngClass]="{'active': selectorToggle}" (keyup.enter)="selectorToggle = true" tabindex="0">
       Advanced
     </a>
-  </div>
-
-  <div *ngIf="searchMessage">
-    <span class="usa-input-error-message">{{ searchMessage }}</span>
   </div>
 
   <div class="usa-agency-picker-dropdown-area">
@@ -68,5 +62,6 @@
       </span>
     </li>
   </ul>
-
-</div>
+  
+  
+</sam-label-wrapper>

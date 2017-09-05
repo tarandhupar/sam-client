@@ -3,9 +3,33 @@
     <div class="sam-ui hidden divider"></div>
     Back to: <a routerLink="/reports/overviewProto" routerLinkActive="Active">Dynamic Reports</a>
     <br>
-    <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount' ||
-      name=='Potential Vendor Anomaly Report' ||
-      name=='Unique Vendors Report'" style="color: red">ANOMALY</span></h2> <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount'">ANOMALY</span>
+    <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;
+      <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount' ||
+                   name=='Potential Vendor Anomaly Report' ||
+                   name=='Unique Vendors Report' ||
+                   name=='Contract Termination for Default-Cause Report' ||
+                   name=='Subcontracting Plan Report'" style="color: red">ANOMALY</span>
+    </h2>
+    <sam-accordion >
+      <sam-accordion-section  [name]="'Description'" [headerText]="'Description'" >
+        <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
+          <div *ngIf="id">
+            <ul  class="p_L-0x ul-css">
+              <li *ngFor="let report of data.development.admin | repfil: id">
+                <b>
+                  <a href="{{report.name}}"></a>
+                </b>
+                <ul  class="p_L-0x ul-css">
+                  <li>
+                    <p class="p_L-0x">{{report.desc}}</p>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </sam-accordion-section>
+    </sam-accordion>
     <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
@@ -15,9 +39,8 @@
               <sam-date-range *ngIf="usedPrompts.dateRange" 
                               [label]="'Date range correspond to the Date Signed on Procurement Awards'"
                               [(ngModel)]='dateRangeModel'
-                              #dateRangeVar="ngModel"
-                              [control]="dateRangeVar.control"
-                              [required]="'required'"
+                              #dateRange="ngModel"
+                              [control]="dateRange.control"
                               name='dateRange'>
               </sam-date-range> 
           </div>
@@ -25,6 +48,26 @@
           <div class="display-block">
             
             <div class="usa-width-one-half">
+              <sam-autocomplete state
+                                *ngIf="usedPrompts.state"
+                                [(ngModel)]="location.state"
+                                name="state"
+                                [config]="{serviceOptions:'USA', 
+                                           keyValueConfig: {keyProperty: 'key', valueProperty: 'value'},
+                                           dropdownLimit: 10,
+                                           showClearButton: true}" 
+                                [labelText]="'State Code'"
+                                (enterEvent)="updateStateField($event)">
+              </sam-autocomplete>
+              <sam-autocomplete country
+                                *ngIf="usedPrompts.country"
+                                [allowAny]="false" 
+                                [(ngModel)]="location.country" 
+                                name="country"
+                                [labelText]="'Vendor Country Code'" 
+                                [config]="locationConfig" 
+                                (enterEvent)="updateCountryField($event)">
+              </sam-autocomplete>
               <sam-text *ngIf="usedPrompts.agencyName"
                         [(ngModel)]="agencyName"
                         [name]="'agencyName'"
@@ -34,17 +77,15 @@
                                     name="agency-picker"
                                     [(ngModel)]="agencyPicker">
               </sam-agency-picker-v2>
-              <sam-select *ngIf="usedPrompts.contractingRegion"
-                  name="contractingRegion"
-                  [(ngModel)]="contractingRegion"
-                  [options] = "contractingRegionOptions"
-                  [label] = "'Contracting Office Region'"
-                  (switchStatusChange)="contractingRegionChange($event)">
-              </sam-select>
               <sam-text *ngIf="usedPrompts.orgId" 
                         [(ngModel)]="orgCode"
                         [name]="'orgCode'" 
                         [label]="'Organization'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts.piid" 
+                [(ngModel)]="piid"
+                [name]="'piid'" 
+                [label]="'PIID'">
               </sam-text>
               <sam-select *ngIf="usedPrompts.includesBases"
                           class="includesBases"
@@ -54,6 +95,14 @@
                           [label] = "'Includes'"
                           (switchStatusChange)="includesBasesStatusChange($event)">
               </sam-select>
+              <sam-autocomplete *ngIf="usedPrompts.contractingRegion"
+                          name="contractingRegion"
+                          [(ngModel)]="contractingRegion"
+                          [options] = "contractingRegionOptions"
+                          [labelText] = "'Contracting Office Region'"
+                          [config]="{keyValueConfig: {keyProperty: 'name', valueProperty: 'value'}}" 
+                          (switchStatusChange)="contractingRegionChange($event)">
+              </sam-autocomplete>
             </div>
           </div>  
 
@@ -66,12 +115,12 @@
             <sam-button [buttonId]="'defaultBtn'" 
                         [buttonText]="'Execute'" 
                         [buttonType]="btnType"
-                        (click)="reportExecute()">
+                        (click)="validate('execute')">
             </sam-button>
             <sam-button [buttonId]="'defaultBtn'" 
                         [buttonText]="'PDF Export'" 
                         [buttonType]="btnType" 
-                        (click)="exportReport()">
+                        (click)="validate('export')">
             </sam-button>
           </div>
         </form>
@@ -86,7 +135,7 @@
       </sam-alert>
     </div>
     <br><br>
-    <sam-accordion >
+    <sam-accordion>
       <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
@@ -95,11 +144,11 @@
                 <b>
                   <a href="{{report.name}}"></a>
                 </b>
-                <ul  class="p_L-0x ul-css">
-                  <li *ngFor="let item of report.appendix">
+                <div class="p_L-0x ul-css">
+                  <div *ngFor="let item of report.appendix" style="margin-bottom:1em">
                     <p class="p_L-0x">{{item}}</p>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

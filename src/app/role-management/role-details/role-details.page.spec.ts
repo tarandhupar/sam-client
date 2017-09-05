@@ -25,7 +25,7 @@ let mockActivatedRoute = {
       }
     }
   },
-  params: Observable.of({roleId: '2'}),
+  params: Observable.of({roleId: '1'}),
   queryParams: Observable.of({domain: '1'})
 };
 
@@ -71,11 +71,16 @@ describe('The Roles Edit and New pages', () => {
     component.onDomainChange();
     tick();
   }));
-  //
+
   // it('should do more initalization in edit mode', fakeAsync(() => {
   //   let router = fixture.debugElement.injector.get(Router);
   //   router.url = '/edit';
   //   component.ngOnInit();
+  //   component.onDomainChange();
+  //   tick();
+  //   // should allow us to change roles
+  //   component.role = 'NEW ROLE';
+  //   component.onRoleBlur();
   //   tick();
   // }));
 

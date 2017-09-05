@@ -1,6 +1,7 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
+import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
 
 @Component({
   selector: 'msg-feed-sidenav',
@@ -61,7 +62,7 @@ export class MsgFeedSideNavComponent{
     label: 'Domains',
   };
 
-  constructor(private msgFeedService: MsgFeedService){}
+  constructor(private msgFeedService: MsgFeedService, private systemAlertService: SystemAlertsService){}
 
   ngOnInit(){
     this.setCbxControl();
@@ -138,9 +139,9 @@ export class MsgFeedSideNavComponent{
   }
 
   loadAlertType(){
-    this.msgFeedService.getAlertType().subscribe(res => {
+    this.systemAlertService.getAlertTypes().subscribe(res => {
       this.alertTypeCbxConfig.options = [];
-      res.alertType.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
+      res.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
     });
   }
 

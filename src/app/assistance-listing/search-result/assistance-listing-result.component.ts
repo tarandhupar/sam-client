@@ -93,7 +93,7 @@ import * as moment from 'moment/moment';
             </li>
             <li class="item">
               <strong>Last Date Modified</strong><br>
-              {{data.publishDate}}
+              {{data.modifiedDate}}
             </li>
             <li class="item" *ngIf="data.isActive==true">
               <strong>Type Of Assistance</strong><br>
@@ -120,6 +120,7 @@ export class AssistanceListingResult implements OnInit {
 
   ngOnInit(){
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y");
     this.history = _.map(this.data.historicalIndex, function(value){
       return {
         "id": value.historicalIndexId,

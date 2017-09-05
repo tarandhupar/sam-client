@@ -98,18 +98,34 @@ export const Validators = {
       let value = (c.value || '').toLowerCase(),
           match,
           intMatch,
+          pattern,
           short,
           long,
+          isOdd,
           valid = true;
 
       if(value.length > 1) {
         for(intMatch = 0; intMatch < matches.length; intMatch++) {
           match = (matches[intMatch] || '').toLowerCase();
+          isOdd = Math.abs(match.length % 2) == 1;
 
-          long = (value.length > match.length) ? value : match;
-          short = (value.length < match.length) ? value : match;
+          if(isOdd) {
+            match = match.slice(0, -1);
+          }
 
-          if(long.length && long.indexOf(short) > -1) {
+          if(!match.length) {
+            break;
+          }
+
+          pattern = new RegExp(match
+            .replace(/(.{2})/g, match => {
+              match = match.replace(/([\[\]\(\)\.\|\^\$\\])/g, '\\$1'); /* Escape all special characters */
+              match = `(${match})|`;                                    /* Generate pattern with 2 consecutive character groups */
+              return match;
+            }).replace(/\|$/, '')                                       /* Remove trailing '|' */
+          );
+
+          if(value.match(pattern)) {
             valid = false;
           }
         }

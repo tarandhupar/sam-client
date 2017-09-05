@@ -27,7 +27,7 @@
       </div>
       <div class="rm-nav m_H-3x clearfix" *ngIf="shouldShowRoleDefinitions || shouldShowRoleDirectory">
         <a *ngIf="shouldShowRoleDefinitions" [routerLink]="'/access/workspace'" class="pull-left">Role Definitions<i class="text-light-blue fa fa-chevron-circle-right m_L-2x"></i></a>
-        <a *ngIf="shouldShowRoleDirectory" [routerLink]="'/access/user-roles-directory'" class="pull-right">Go to Role Management<i class="text-light-blue fa fa-chevron-circle-right m_L-2x"></i></a>
+        <a *ngIf="shouldShowRoleDirectory" [routerLink]="'/access/roles-directory'" class="pull-right">Go to Roles Directory<i class="text-light-blue fa fa-chevron-circle-right m_L-2x"></i></a>
       </div>
     </div>
     <div [hidden]="shouldShowAnyAdmin">

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './home.route';
 import { AppComponentsModule } from '../../app-components/app-components.module';
@@ -9,7 +9,7 @@ import { HomePage } from './home.page';
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     RouterModule,
     AppComponentsModule,
     SamUIKitModule,

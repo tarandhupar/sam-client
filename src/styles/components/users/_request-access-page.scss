@@ -1,10 +1,21 @@
 .request-access-page {
-  h2 {
-    padding: .5rem;
+  .pointing {
+    margin-top: 0;
   }
 
-  sam-agency-picker .organization-container {
-    max-width: 46rem;
+  .sam-autocomplete-multiselect-input {
+    background-color: white;
+  }
+
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    height: 5.2em;
+  }
+
+  input, select, .sam-autocomplete {
+    width: 100%;
+    max-width: 100%;
   }
 }
 

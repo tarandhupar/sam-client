@@ -47,7 +47,7 @@ const apiStub = {
   }
 };
 
-describe('[IAM] SystemProfileComponent', () => {
+describe('[IAM] System Account Profile', () => {
   let component: SystemProfileComponent;
   let fixture: ComponentFixture<SystemProfileComponent>;
   let debugElement: DebugElement;
@@ -200,4 +200,23 @@ describe('[IAM] SystemProfileComponent', () => {
       });
     });
   }));
+
+  it('verify population of error messages', () => {
+    let error,
+        message;
+
+    component.states.alert.show = true;
+    component.states.alert.message = 'Test Error Message';
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('form sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.states.alert.message);
+  });
 });

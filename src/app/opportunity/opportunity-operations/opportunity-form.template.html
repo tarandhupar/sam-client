@@ -1,0 +1,31 @@
+<sam-modal
+  #titleModal
+  [showClose]="true"
+  [closeOnOutsideClick]="true"
+  [closeOnEscape]="true"
+  [type]="'warning'"
+  [title]="titleMissingConfig.title"
+  [cancelButtonLabel]="titleMissingConfig.closeText"
+  [description]="titleMissingConfig.description"
+  (onClose)="onTitleModalClose()">
+</sam-modal>
+
+<form-step
+  [ngClass]="'opportunities-operations'"
+  [crumbs]="crumbs"
+  [pageTitle]="oppFormViewModel.title ? oppFormViewModel.title : 'Opportunity'"
+  [sectionTitle]="oppFormViewModel.title ? 'Opportunity' : 'Add'"
+  [sideNavSelection]="sidenavSelection"
+  [sideNavModel]="sidenavModel"
+  [sectionIndex]="currentSection"
+  [numberOfSections]="sections.length"
+  (action)="formActionHandler($event)"
+  (breadcrumbOut)="breadCrumbClick($event)">
+
+  <div form-sections>
+  <opp-form-notice-type
+    *ngIf="isSection('notice-type')"
+    [viewModel]="oppFormViewModel"></opp-form-notice-type>
+  </div>
+
+</form-step>

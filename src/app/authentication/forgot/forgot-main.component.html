@@ -10,15 +10,17 @@
           </span>
 
           <div *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submittedCount && answer.invalid }">
-            <label for="answer" [innerText]="question"></label>
             <span class="usa-input-error-message" *ngIf="states.submittedCount && answer.invalid" role="alert">
               <span>Enter a valid answer</span>
             </span>
+            <label for="kba-answer" [innerText]="question"></label>
             <input type="text"
-                   id="answer"
+                   id="kba-answer"
+                   name="answer"
                    autocomplete="off"
                    readonly="readonly"
                    onfocus="this.removeAttribute('readonly');"
+                   title="KBA Security Answer"
                    [formControl]="answer" />
           </div>
 

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { WageDeterminationPage }   from './wage-determination.page';
 import { WageDeterminationDocumentPage } from "./wage-determination-document.page";
 import { routing } from './wage-determination.route';
@@ -12,7 +12,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 @NgModule({
   imports: [
     PipesModule,
-    BrowserModule,
+    CommonModule,
     routing,
     SamUIKitModule,
     AppComponentsModule

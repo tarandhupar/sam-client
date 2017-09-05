@@ -11,14 +11,14 @@ export class PageService {
   set sidebar(value: boolean){
     this._sidebar = value;
     if(this._sidebar && !this.wideSidebar){
-      this.sidebarColumns = "three wide column";
-      this.mainContentColumns = "nine wide column";
+      this.sidebarColumns = "3";
+      this.mainContentColumns = "9";
     }else if(this._sidebar && this.wideSidebar){
-      this.sidebarColumns = "four wide column";
-      this.mainContentColumns = "eight wide column";
+      this.sidebarColumns = "4";
+      this.mainContentColumns = "8";
     }else{
       this.sidebarColumns = "";
-      this.mainContentColumns = "twelve wide column";
+      this.mainContentColumns = "12";
     }
   }
 
@@ -29,8 +29,8 @@ export class PageService {
   set wideSidebar(value: boolean){
     this._wideSidebar = value;
     if(this.wideSidebar && this.sidebar){
-      this.sidebarColumns = "four wide column";
-      this.mainContentColumns = "eight wide column";
+      this.sidebarColumns = "4";
+      this.mainContentColumns = "8";
     }
   }
 

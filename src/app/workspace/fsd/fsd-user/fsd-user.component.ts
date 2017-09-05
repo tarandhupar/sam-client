@@ -37,7 +37,7 @@ export class FSDUserComponent {
     loading: false
   };
 
-  private alerts = {
+  public alerts = {
     deactivate: {
       type: 'error',
       message: '',

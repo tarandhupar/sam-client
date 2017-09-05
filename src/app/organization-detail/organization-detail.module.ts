@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,7 +26,7 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 @NgModule({
   imports: [
     routing,
-    BrowserModule,
+    CommonModule,
     RouterModule,
     HttpModule,
     FormsModule,

@@ -18,8 +18,9 @@
                  id="user-directory-search"
                  name="user-directory-search"
                  placeholder="Find User"
+                 aria-label="user-directory-search"
                  [(ngModel)]="states.search">
-          <button type="submit" class="usa-button-primary usa-button-search">
+          <button type="submit" class="usa-button-primary usa-button-search" aria-label="Search Users">
             <span class="usa-search-submit-text">
               <span class="fa fa-search"></span>
             </span>
@@ -38,14 +39,7 @@
             <span [innerText]="intStart"></span>-<span [innerText]="intEnd"></span> of <span [innerText]="intTotal"></span>
           </th>
           <th class="text-right">
-            <div class="usa-sort-container" *ngIf="sortable">
-              Sort By
-              <sam-select name="user-directory-sort"
-                          [options]="store.sortOptions"
-                          [disabled]="states.loading"
-                          [(model)]="store.sort"
-                          (modelChange)="onSort($event)"></sam-select>
-            </div>
+            <sam-sort [options]="store.sorts" [ngModel]="states.sort" (ngModelChange)="onSort($event)" *ngIf="sortable"></sam-sort>
           </th>
         </tr>
       </thead>

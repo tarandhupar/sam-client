@@ -1,19 +1,30 @@
 sam-sort{
-    .label-wrapper{
-        display:inline-block;
+  display: inline-block;
+  select {
+    margin: 0;
+  }
+  & > div{
+    display: flex;
+    sam-select {
+      align-self: center;
+    }
+    .sam-ui.primary {
+      margin-right: 0;
+    }
+    sam-label-wrapper{
+      & > div{
+        display: flex;
         label{
-            height: 51px;
-            line-height: 45px;
-            margin-top:0;
-            margin-right:5px;
-            display:inline;
+          width: 40%;
+          margin-right: 10px;
+          align-self: center;
+          white-space: nowrap;
         }
-        &>div{
-            display:inline-block;
-        }
+      }
     }
-    select{
-        min-width:140px;
-        display:inline-block;
+    a{
+      margin-left: 5px !important;
+      align-self: center;
     }
+  }
 }

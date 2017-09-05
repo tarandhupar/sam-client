@@ -1,6 +1,6 @@
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
@@ -114,7 +114,7 @@ describe('The Sam Feedback component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [SamFeedbackComponent],
-      imports: [SamUIKitModule, RouterTestingModule, BrowserModule, FormsModule, ReactiveFormsModule],
+      imports: [SamUIKitModule, RouterTestingModule, CommonModule, FormsModule, ReactiveFormsModule],
       providers: [
         FeedbackFormService,
         AlertFooterService,

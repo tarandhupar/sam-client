@@ -20,6 +20,7 @@ module.exports = {
     //{ rel: 'stylesheet', href: '/assets/css/samwds.min.css' }
   ],
   script: [
-
-  ]
+   	{ async: 'async', type: 'text/javascript',src: 'https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA', id: '_fed_an_ua_tag' }
+ 
+    ]
 };

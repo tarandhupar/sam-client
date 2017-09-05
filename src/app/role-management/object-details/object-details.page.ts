@@ -159,7 +159,7 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onDomainChange() {
-    this.accessService.getRoleObjDefinitions('object', ''+this.selectedDomain).subscribe(
+    this.accessService.getDomainDefinition('object', ''+this.selectedDomain).subscribe(
       res => {
         if (this.mode === 'edit') {
           if (!res || !res[0]) {

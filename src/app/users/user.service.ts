@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Cookie } from "ng2-cookies";
+import { IAMService } from 'api-kit';
 
 @Injectable()
 export class UserService {
-  constructor() {}
+  constructor(private api: IAMService) {}
 
   getUser() {
     let cookie = Cookie.get('IAMSession');
@@ -27,6 +28,6 @@ export class UserService {
   }
 
   isLoggedIn(): boolean {
-    return !!(Cookie.get('iPlantDirectoryPro') || Cookie.get('superToken'));
+    return !!(this.api.iam.user.isSignedIn() || Cookie.get('superToken'));
   }
 }

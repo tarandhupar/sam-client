@@ -1,10 +1,10 @@
-<page 
+<page
   *ngIf="permissions"
-  theme="inside" 
+  theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
   title="Regional Assistance Locations">
-  
+
   <sidebar>
     <!-- Navigation -->
     <ul class="usa-sidenav-list">
@@ -19,13 +19,18 @@
         </a>
       </li>
       <li>
-        <a routerLink="/workspace/my-feed" 
+        <a routerLink="/fal/workspace/cfda-numbers">
+          CFDA Numbers
+        </a>
+      </li>
+      <li>
+        <a routerLink="/workspace/my-feed"
           [queryParams]="{domain: 'al', event: 'request', pending: true}">
-          Pending Requests 
+          Pending Requests
         </a>
       </li>
     </ul>
-    
+
     <!-- Filters -->
     <div class="sam-ui segment">
       <h4 class="sam-ui header">Search</h4>
@@ -49,39 +54,39 @@
       </div>
     </div>
   </sidebar>
-  
+
   <sam-button *ngIf="permissions['CREATE_RAO']"
               [buttonType]="'default'"
               [buttonText]="'Create New' "
               [buttonClass]="'sam-ui button dark blue'"
               (onClick)="createNewLocation()">
   </sam-button>
-  
+
   <p *ngIf="permissions['CREATE_RAO'] && !raoExists && !initLoad">
     There are no Regional Agency Offices associated with user's department
   </p>
-  
+
   <!-- Page results -->
-  <results 
-    [totalElements]="totalCount" 
-    [totalPages]="totalPages" 
+  <results
+    [totalElements]="totalCount"
+    [totalPages]="totalPages"
     [currentPage]="pageNum+1"
     (pageChange)="pageChange($event-1)">
-    
+
     <!-- Results -->
     <div class="sam-ui segment" *ngFor="let row of data">
-      <regional-assistance-location-result 
-        [data]="row" 
-        [qParams]="qParams" 
-        [permissions]="permissions" 
+      <regional-assistance-location-result
+        [data]="row"
+        [qParams]="qParams"
+        [permissions]="permissions"
         (recordDeleted)="getRegionalAssistanceLocations()">
       </regional-assistance-location-result>
     </div>
-    
+
     <!-- No results -->
     <p *ngIf="oldKeyword!='' && data.length===0 && !initLoad">
       No results found for '<strong>{{ oldKeyword }}</strong>'
     </p>
   </results>
-  
+
 </page>

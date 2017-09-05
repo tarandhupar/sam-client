@@ -43,6 +43,8 @@ import { FederalHierarchyModule } from "./fh/federal-hierarchy.module";
 import {AuthGuard} from "../api-kit/authguard/authguard.service";
 import {DictionaryService} from "../api-kit/dictionary/dictionary.service";
 import {SearchDictionariesService} from "../api-kit/search/search-dictionaries.service";
+import { SamTitleService } from 'api-kit/title-service/title.service';
+
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -101,7 +103,8 @@ const APP_PROVIDERS = [
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    SamTitleService
   ]
 })
 export class AppModule {

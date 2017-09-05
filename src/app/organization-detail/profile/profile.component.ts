@@ -71,6 +71,7 @@ export class OrgDetailProfilePage {
   isNextLayerCreatable():boolean{return this.currentHierarchyType !== "Office";}
   isEditableField(field):boolean{return ["Description","Shortname","End Date"].indexOf(field) !== -1;}
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
+  isRequestAACIcon(pair):boolean{return !this.isDoD() && pair.value === '' && (pair.code === 'Procurement AAC' || pair.code === 'Non-procurement AAC');}
 
   checkAccess = (user) => {
     this.fhService.getAccess(this.orgId).subscribe(
@@ -193,8 +194,9 @@ export class OrgDetailProfilePage {
   setupOrganizationCodes(org){
     this.orgCodes = [];
     switch (org.type) {
-      case "OFFICE":
-        this.orgCodes.push({code:"AAC Code", value:this.getOrgFieldData(org,"aacCode")});
+      case "OFFICE": case "Office":
+        this.orgCodes.push({code:"Procurement AAC", value:this.getOrgFieldData(org,"procurementAACCode")});
+        this.orgCodes.push({code:"Non-procurement AAC", value:this.getOrgFieldData(org,"nonProcurementAACCode")});
         this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
         break;
       case "AGENCY": case "Sub-Tier": case "Maj Command": case "Sub-Command 1": case "Sub-Command 2": case "Sub-Command 3":

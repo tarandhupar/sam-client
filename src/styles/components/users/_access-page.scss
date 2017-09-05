@@ -11,67 +11,16 @@
 }
 
 .access-page {
-  .pd-l-1em{
-    padding-left: 1em;
+  .usa-alert {
+    min-height: 4.2em;
   }
-  .pd-tb-0d5em{
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+  th {
+    text-align: left;
+    padding: .5rem;
   }
-  .pd-l-0d5em{
-    padding-left: 0.5em;
-  }
-  .pd-l-1d8em{
-    padding-left: 1.8em;
-  }
-  .pd-l-1d3em{
-    padding-left: 1.3em;
-  }
-  .pd-l-1d1em{
-    padding-left: 1.1em;
-  }
-  .pd-r-1em{
-    padding-right: 1em;
-  }
-  .pd-b-3em{
-    padding-bottom: 3em;
-  }
-  .perm-border{
-    border-style: solid;
-    margin-left: 1em;
-    border-width: thin;
-    margin-bottom:1em;
-  }
-  .m-l-1em{
-    margin-left: 1em;
-  }
-  .role-border{
-    border-style: solid;
-    border-width: thin
-  }
-  .m-b-03em{
-    margin-bottom: 3em;
-  }
-  .main-width{
-    width: 90%;
-  }
-  .fa.fa-user {
-    border: 2px solid black;
-    width: 1em;
-    border-radius: .1em;
-  }
-
-  .cursor-pointer:hover {
-    cursor: pointer;
-  }
-
-  sam-agency-picker label {
-    display: none;
-  }
-
-  .org-accordion .usa-accordion-content {
-    padding: 0;
-    overflow: visible;
+  td {
+    padding: .5rem;
+    vertical-align: top;
   }
 
   .results-text {
@@ -79,10 +28,6 @@
   }
 
   .sort-container select {
-    margin: 0;
-  }
-
-  .grant-access-button {
     margin: 0;
   }
 
@@ -103,81 +48,8 @@
     margin-top: .8em;
   }
 
-  .role-block:not(:last-child) {
-    margin-bottom: 1em;
-  }
-
-  .show-permissions-button {
-    margin-top: -8px !important;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   .sam-fieldset-wrapper {
     min-width: 250px;
-  }
-
-  .usa-width-eleven-twelfths {
-    @include span-columns(11);
-  }
-
-  .dropdown-list {
-    overflow-y: auto;
-    max-height:400px;
-
-    input {
-      height: initial;
-    }
-  }
-
-  .modify-role-buttons {
-    margin-right: -5px;
-    margin-top: -10px;
-
-    button {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-
-  .access-cell {
-    color: black;
-    padding: 10px 0;
-  }
-
-  .background-grey {
-    background-color: $color-gray-lightest;
-  }
-
-  .functions-row {
-    padding-left: .5em;
-    padding-right: .5em;
-  }
-
-  .functions-row:not(:last-child) {
-    margin-bottom: 1em;
-  }
-
-  .object-col {
-    word-break: break-all;
-  }
-
-  .first-function {
-    margin-top: 1em;
-  }
-
-  .functions-col {
-    position: relative;
-  }
-
-  .pip-left {
-    position: absolute;
-    width: 0;
-    height: 0;
-    left: -10px;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right:10px solid $color-gray-lightest;
   }
 
   .usa-accordion-button {
@@ -189,73 +61,9 @@
     overflow: hidden;
   }
 
-  .row-action-button {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
-  .underline {
-    text-decoration: underline;
-  }
-
-  .organizations-row {
-    margin-top: 1em;
-  }
   .user-access{
     &.usa-grid-full{
       max-width: initial;
     }
-  }
-  .pending-requests{
-    &.usa-grid-full{
-      max-width: initial;
-    }
-    .m-b-04{
-      margin-bottom: -0.4em;
-    }
-    .req-width{
-      width: 100%
-    }
-    .request-content{
-      margin-left: 0em;
-      margin-right: 0em;
-      padding-bottom: 0.25em;
-    }
-    .request-border {
-      border-style: solid;
-      border-width: thin;
-    }
-    .text-alignm{
-      padding-top: 0.2em;
-    }
-  }
-  .requests-container {
-    .usa-button-transparent {
-      padding: .2em;
-    }
-
-    .request-message {
-      margin-left: -8px;
-    }
-
-    .request-block {
-      border: none;
-    }
-
-    .request-block:not(:last-child) {
-      border-bottom: 1px solid black !important;
-    }
-  }
-
-  .no-underline {
-    text-decoration: none;
-  }
-  .nav-links{
-    padding-top: 7em;
-    padding-bottom: 2em;
-    padding-left: 1em;
-  }
-  .pd-t-1em{
-    padding-top: 1em;
   }
 }

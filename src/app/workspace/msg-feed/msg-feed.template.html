@@ -4,13 +4,12 @@
   </sidebar>
 
   <div class="usa-width-one-whole msg-feed-content">
-    <div class="usa-width-one-whole">
+    <div class="usa-width-one-whole m_B-2x">
       <div class="pull-left p_T-3x">
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
-      <span class="pull-right p_T-3x p_L-1x"><i class="fa msg-feeds-orderby" [ngClass]="getOrderByClass()" (click)="onOrderByChange()"></i></span>
-      <div class="pull-right"><sam-select [name]="'sortBy'" [options]="msgSortOptions" [label]="''"></sam-select></div>
-      <span class="pull-right p_T-3x p_R-1x">Sort By: &nbsp;</span>
+      <sam-sort class="pull-right" [(ngModel)]="sortByModel" [options]="msgSortOptions">
+      </sam-sort>
     </div>
 
     <!--Message Feeds Content-->

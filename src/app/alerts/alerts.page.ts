@@ -54,11 +54,7 @@ export class AlertsPage {
 
   types = {
     label: 'Types',
-    options:   [
-      { label: 'Informational', value: 'Informational', name: 'informational' },
-      { label: 'Error', value: 'Error', name: 'error' },
-      { label: 'Warning', value: 'Warning', name: 'warning' }
-    ]
+    options:   []
   };
 
   datesPublished = [
@@ -104,7 +100,7 @@ export class AlertsPage {
               private api: IAMService,
               private role: UserAccessService,
               private _location: Location) {
-  } 
+  }
 
 
   isAdmin() {
@@ -125,14 +121,22 @@ export class AlertsPage {
   }
 
   ngOnInit() {
+    this.loadAlertType();
     this.doSearch();
 
+  }
+
+  loadAlertType(){
+    this.alertsService.getAlertTypes().subscribe(res => {
+      this.types.options = [];
+      res.forEach(type => {this.types.options.push({value: type, label: type, name: type.toLowerCase()});});
+    });
   }
 
   onNewAlertsReceived(alerts) {
     this._totalAlerts = alerts.total;
     this.links = alerts._links;
-    
+
     this.states.isCreate = this.links.hasOwnProperty('create');
     this.states.isEdit = this.links.hasOwnProperty('edit');
     if(this.states.isCreate || this.states.isEdit){
@@ -151,7 +155,7 @@ export class AlertsPage {
       if(param['status']) {this.filters.statuses = [param['status']];}
     });
     this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
-    
+
   }
 
   getAlerts() : Observable<any> {

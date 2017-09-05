@@ -1,7 +1,7 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
@@ -105,7 +105,7 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     SamListBuilderCardComponent
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
     SamUIKitModule,
     FormsModule,
     RouterModule,

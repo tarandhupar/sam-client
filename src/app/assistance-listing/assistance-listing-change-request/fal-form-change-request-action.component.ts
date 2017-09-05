@@ -100,7 +100,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
   }
 
     private loadOrganizationData(orgId:string){
-      this.programService.getFederalHierarchyConfigurations(orgId, this.cookieValue).subscribe(res => {
+      this.programService.getFederalHierarchyConfiguration(orgId, this.cookieValue).subscribe(res => {
         this.programNumberHigh = res.programNumberHigh;
         this.programNumberLow = res.programNumberLow;
 

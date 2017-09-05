@@ -1,10 +1,10 @@
-<page 
+<page
   *ngIf="permissions"
-  theme="inside" 
+  theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
   title="My feed">
-  
+
   <!-- Sidebar section -->
   <sidebar>
     <!-- Navigation -->
@@ -20,12 +20,17 @@
         </a>
       </li>
       <li>
+        <a routerLink="/fal/workspace/cfda-numbers">
+          CFDA Numbers
+        </a>
+      </li>
+      <li>
         <a class="usa-current">
           Pending Requests
         </a>
       </li>
     </ul>
-    
+
     <!-- Filters -->
     <div class="sam-ui segment">
       <h4 class="sam-ui header">Search</h4>
@@ -38,10 +43,10 @@
                     (onClick)="onFeedSearchClick()">
         </sam-button>
       </div>
-      
+
       <div class="sam-ui divider"></div>
-      
-      <feedsFilter 
+
+      <feedsFilter
         [defaultDomainOption]="defaultDomainOption"
         [defaultEventOption]="defaultEventOption"
         [defaultPendingRequestsOption]="defaultPendingRequestsOption"
@@ -50,20 +55,20 @@
         (pendingRequestsFilterModelChange)="pendingRequestsModelChangeHandler($event)"
         (alRequestTypeModelChange)="requestTypeFilterModelChangeHandler($event)">
       </feedsFilter>
-      
+
     </div>
     <div class="sam-ui hidden section divider"></div>
   </sidebar>
-  
+
   <!-- Page results -->
-  <results 
+  <results
     *ngIf="isAL && isRequest && programRequestList"
-    [totalElements]="totalElements" 
+    [totalElements]="totalElements"
     [showing]="4"
-    [totalPages]="totalPages" 
+    [totalPages]="totalPages"
     [currentPage]="currentPage+1"
     (pageChange)="pageChangeHandler($event)">
-    
+
     <!-- Results -->
     <div class="sam-ui segment">
       <ng-container *ngFor="let row of programRequestList">
@@ -103,17 +108,17 @@
              </div>
            </div>
      </ng-container>
-     
+
      <!-- No results -->
      <p *ngIf="!initLoad && programRequestList.length==0">
       There are no requests under the selected criteria.
      </p>
-     
+
     </div>
   </results>
-  
+
   <p *ngIf="!isAL || !isRequest || !programRequestList">
     There are no results under the selected criteria.
   </p>
-  
-</page> 
+
+</page>

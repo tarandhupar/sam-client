@@ -32,6 +32,7 @@ const SHOW_HIDE_RESTRICTED_PAGES = process.env.SHOW_HIDE_RESTRICTED_PAGES || api
 const IDLE_TIME = process.env.IDLE_TIME || '12';
 const PINGER_TIME = process.env.PINGER_TIME || '14';
 const TIMEOUT_DURATION = process.env.TIMEOUT_DURATION || '2';
+const ENVIRONMENT = process.env.ENVIRONMENT || apiConfig.ENVIRONMENT || '';
 
 if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
@@ -152,7 +153,8 @@ module.exports = webpackMerge(commonConfig, {
       'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES),
       'IDLE_TIME': JSON.stringify(IDLE_TIME),
       'PINGER_TIME': JSON.stringify(PINGER_TIME),
-      'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION)
+      'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION),
+      'ENVIRONMENT': JSON.stringify(ENVIRONMENT)
     }),
 
     /**

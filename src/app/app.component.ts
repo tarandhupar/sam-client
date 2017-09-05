@@ -9,6 +9,7 @@ import { SearchService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
 import { FontChecker } from './app-utils/fontchecker';
 import { UserSessionService } from 'api-kit/user-session/user-session.service';
+import { SamTitleService } from 'api-kit/title-service/title.service';
 
 
 /*
@@ -41,11 +42,16 @@ export class App{
   };
   searchBarConfig = {
     placeholder: "I'm looking for..."
-  }
+  };
 
   showOverlay = false;
 
-  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService, private userSessionService: UserSessionService, private zone: NgZone) {}
+  constructor(private _router: Router,
+              private activatedRoute: ActivatedRoute,
+              private searchService: SearchService,
+              private userSessionService: UserSessionService,
+              private zone: NgZone,
+              private titleService: SamTitleService) {}
 
   ngOnInit() {
     //for browsers that are blocking font downloads, add fallback icons
@@ -53,14 +59,9 @@ export class App{
       error: function() { document.getElementsByTagName("body")[0].classList.add("fa-fallback-icons"); }
     });
 
-    this.searchService.paramsUpdated$.subscribe(
-      obj => {
-        this.setQS(obj);
-      });
     if(window.location.pathname.localeCompare("/fal/workspace") !== 0){
       this.activatedRoute.queryParams.subscribe(
         data => {
-          //this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
           this.autocomplete.inputValue = "";
           this.keyword = "";
           this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
@@ -71,6 +72,8 @@ export class App{
       val => {
         this.showOverlay = false;
         if (val instanceof NavigationEnd) {
+          this.titleService.setTitle(this._router.url);
+
           if(this.userSessionService.idleState === "Not started" && Cookie.check("iPlanetDirectoryPro")){
             this.zone.run(()=>{this.userSessionService.idleDetectionStart(this.sessionModalCB)});
           }
@@ -100,11 +103,21 @@ export class App{
 
   onHeaderSearchEvent(searchObject) {
     var qsobj = this.qs;
+
     if(searchObject.keyword.length>0){
-      qsobj['keywords'] = searchObject.keyword;
+      qsobj['keywords'] = this.autocomplete.inputValue;
     } else {
       qsobj['keywords'] = '';
     }
+
+    if(qsobj['keywords'].length > 0){
+      //default sort for non-blank search
+      qsobj['sort'] = "-relevance"
+    }else{
+      //different default sort by date options for blank search
+      qsobj['sort'] = "-modifiedDate";
+    }
+
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
     } else {
@@ -112,44 +125,6 @@ export class App{
     }
 
     qsobj['page'] = 1;
-
-    //set regionalOffice filter keyword to null on header search event
-    qsobj['ro_keyword'] = null;
-
-    if(searchObject.searchField === 'fh') {
-      qsobj['is_active'] = true;
-    } else {
-      qsobj['is_active'] = this.isActive;
-    }
-    if(searchObject.searchField !== 'wd') {
-      qsobj['wdType'] = null;
-      qsobj['state'] = null;
-      qsobj['county'] = null;
-      qsobj['construction_type'] = null;
-      qsobj['service'] = null;
-      qsobj['is_even'] = null;
-      qsobj['cba'] = null;
-      qsobj['prevP'] = null;
-      qsobj['is_standard'] = null;
-    }
-    if(searchObject.searchField === 'wd' || window.location.pathname.localeCompare("/search/fal/regionalOffices") == 0){
-      qsobj['organization_id'] = null;
-    }
-    if(searchObject.searchField !== 'fpds') {
-      qsobj['award_or_idv'] = null;
-      qsobj['award_type'] = null;
-      qsobj['contract_type'] = null;
-    }
-    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ei') {
-      qsobj['naics'] = null;
-      qsobj['psc'] = null;
-      qsobj['duns'] = null;
-    }
-    if(searchObject.searchField !== 'cfda'){
-      qsobj['applicant'] = null;
-      qsobj['beneficiary'] = null;
-      qsobj['assistance_type'] = null;
-    }
 
     if(searchObject.searchField !== 'ei') {
       qsobj['entity_type'] = null;

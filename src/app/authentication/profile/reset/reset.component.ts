@@ -22,7 +22,7 @@ export class ResetComponent {
     title: 'Reset Password'
   };
 
-  private states = {
+  public states = {
     submitted: false,
     loading: false,
     alert: {

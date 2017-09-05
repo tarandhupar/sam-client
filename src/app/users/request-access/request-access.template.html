@@ -1,65 +1,61 @@
-<div class="request-access-page usa-grid">
-  <div>
-    <sam-breadcrumbs [crumbs]="breadCrumbs"></sam-breadcrumbs>
-  </div>
-  <div class="usa-width-three-fourths">
-    <h1 class="m_T-4x">Request Access</h1>
+<form-only class="request-access-page"
+  theme="inside"
+  section="Profile"
+  title="Request Access">
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <h2 class="p_All-2x usa-bgcolor-gray-lighter">Role Request</h2>
-
-      <!-- Orgs -->
-      <sam-agency-picker
-        formControlName="org"
-        [label]="'Organization'"
-        [multimode]="false"
-        [required]="true"
-        [searchMessage]="errors.org"
-        [orgRoot]="user.departmentID"
-        style="max-width: 400px"
-      ></sam-agency-picker>
-
-      <!-- Role -->
-      <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" [required]="true">
-        <select formControlName="role" (change)="onRoleChange()">
-          <optgroup *ngFor="let group of roleCategories" [attr.label]="group.category">
-            <option *ngFor="let option of group.options" [value]="option.value">{{option.label}}</option>
-          </optgroup>
-        </select>
-      </sam-label-wrapper>
-
-      <!-- Domain -->
-      <!-- TODO: make domain multi-select per new requirement -->
-      <!--<sam-label-wrapper [label]="'Domain'" [errorMessage]="errors.domain" [required]="true">-->
-        <!--<sam-multiselect-dropdown formControlName="domain" name="domain" [options]="domainOptions" [required]="true"></sam-multiselect-dropdown>-->
-      <!--</sam-label-wrapper>-->
-      <sam-select formControlName="domain" [errorMessage]="errors.domain" name="domain" label="Domain" [options]="domainOptions" [required]="true"></sam-select>
-
-      <!-- SuperVisor -->
-      <h2 class="usa-bgcolor-gray-lighter">Supervisor Information</h2>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-half">
-          <sam-text formControlName="superName" label="Supervisor Name" name="supervisor-name" [errorMessage]="errors.superName" [required]="true"></sam-text>
-        </div>
-        <div class="usa-width-one-half">
-          <sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail" [required]="true"></sam-text>
+  <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+    <hr>
+    <p>All fields are required</p>
+    <div class="sam-ui grid">
+      <div class="column eight wide">
+        <sam-text formControlName="superName" label="Supervisor Name" name="supervisor-name" [errorMessage]="errors.superName"></sam-text>
+        <div style="margin-top: .5em">
+          <sam-text formControlName="superEmail" label="Supervisor Email" name="supervisor-email" [errorMessage]="errors.superEmail"></sam-text>
         </div>
       </div>
 
-      <!-- Optional Message -->
-      <h2 class="usa-bgcolor-gray-lighter">Comments</h2>
-      <sam-text-area formControlName="comment" name="comment" label="Please comment on the reason for your request." [required]="false" [errorMessage]="errors.comment"></sam-text-area>
+      <div class="row">
+        <div class="eight wide column">
+          <!-- Orgs -->
+          <sam-agency-picker-v2
+            *ngIf="!isAdmin"
+            formControlName="org"
+            [label]="'Organization'"
+            type="single"
+            [searchMessage]="errors.org"
+            [defaultDept]="!isSuperAdmin"
+            class="clearfix"
+          ></sam-agency-picker-v2>
+          <!-- Role -->
+          <div style="margin-top: .5em">
+            <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
+              <select formControlName="role" (change)="onRoleChange()">
+                <optgroup *ngFor="let group of roleCategories" [attr.label]="group.category">
+                  <option *ngFor="let option of group.options" [value]="option.value">{{option.label}}</option>
+                </optgroup>
+              </select>
+            </sam-label-wrapper>
+          </div>
 
-
-      <!-- Cancel / Confirm -->
-      <div>
-        <div class="pull-right clearfix m_T-4x m_B-4x">
-          <button routerLink="../access" class="pull-left usa-button usa-button-outline m_0" type="button">Cancel</button>
-          <button id="done-button" class="pull-left usa-button usa-button-primary" type="submit">Done</button>
+          <!-- Domain -->
+          <div style="margin-top: .5em">
+            <sam-autocomplete-multiselect formControlName="domains" [errorMessage]="errors.domains" name="domain" label="Domain" [options]="domainOptions"></sam-autocomplete-multiselect>
+          </div>
         </div>
       </div>
-    </form>
+    </div>
 
-  </div>
-</div>
+    <!-- Optional Message -->
+    <sam-text-area label="Comments" formControlName="comment" name="comment" [errorMessage]="errors.comment"></sam-text-area>
+
+    <!-- Cancel / Confirm -->
+    <div>
+      <div class="pull-right clearfix m_T-4x m_B-4x">
+        <button routerLink="../access" class="pull-left usa-button usa-button-transparent m_0" type="button">Cancel</button>
+        <button id="done-button" class="pull-left usa-button usa-button-primary" type="submit">Submit</button>
+      </div>
+    </div>
+  </form>
+
+</form-only>
 

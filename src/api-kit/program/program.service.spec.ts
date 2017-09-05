@@ -44,7 +44,7 @@ describe('src/api-kit/program/program.service.spec.ts', () => {
   it('Program Service: should return response when subscribed to getProgramConfigurations', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '{"organizationId":"100008531", "programNumberLow": 0, "programNumberHigh": 999, "programNumberAuto": true}' }))));
 
-    testService.getFederalHierarchyConfigurations('100008531', '').subscribe((res: Response) => {
+    testService.getFederalHierarchyConfiguration('100008531', '').subscribe((res: Response) => {
       expect(res).toBeDefined();
       expect(res['organizationId']).toBe('100008531');
     });

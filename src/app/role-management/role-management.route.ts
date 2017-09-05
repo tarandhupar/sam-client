@@ -6,8 +6,7 @@ import { RoleDefinitionPage } from "./role-definition/role-definition.page";
 import { DomainsResolve } from "./domains.resolve";
 import { ManageRequestPage } from "./manage-request/manage-request";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
-import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
-import { DomainDefinitionResolve } from "./domaindefinition.resolve";
+import { RolesDirectoryPage } from "./roles-directory/roles-directory.page";
 import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 import { CheckAccessGuard } from "../application-content/403/check-access.guard";
@@ -61,11 +60,10 @@ export const routes: Routes = [{
       data: {pageName:'access/requests'}
     },
     {
-      path: 'user-roles-directory',
-      component: UserRolesDirectoryPage,
+      path: 'roles-directory',
+      component: RolesDirectoryPage,
       canActivate: [CheckAccessGuard],
       data: {pageName:'access/user-roles-directory'},
-      resolve: { domainDefinition: DomainDefinitionResolve }
     }
   ]
 }];

@@ -137,7 +137,7 @@ export class RoleDetailsPage {
     this.domainRoleOptions = null;
     let domain = this.domain || this.selectedDomain;
     let mode = this.mode === 'edit' ? null : 'object';
-    this.accessService.getRoleObjDefinitions(mode, ''+domain, this.roleId).subscribe(
+    this.accessService.getDomainDefinition(mode, ''+domain, this.roleId).subscribe(
       defs => {
         this.domainDefinitions = defs[0];
         this.domainRoleOptions = [];
@@ -197,7 +197,9 @@ export class RoleDetailsPage {
 
         if (this.mode === 'edit') {
           // find the text label for role
-          let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.id);
+          let r = this.domainRoleOptions.find(dr => {
+            return +this.roleId === +dr.id
+          });
 
           this.role = _.get(defs, '[0].roleDefinitionMapContent[0].role.val');
           if (this.role) {
@@ -269,7 +271,6 @@ export class RoleDetailsPage {
       }
     } else {
       let opt = this.domainRoleOptions.find(ro => +ro.id === +this.roleId);
-      let dr = this.domainRoles.find(dr => +dr.role.id === +this.roleId);
       if (!opt) {
         console.error('unable to update role label');
         return;

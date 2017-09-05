@@ -6,12 +6,12 @@ import {
 } from './';
 
 export default [
-  { path: '', component: SystemDirectoryComponent,  data: {
+  { path: '', component: SystemDirectoryComponent, data: {
     breadcrumbs: [
       { breadcrumb: 'System Accounts Directory' },
     ]
   } },
-  { path: 'profile', component: SystemProfileComponent,    data: {
+  { path: 'profile', component: SystemProfileComponent, data: {
     breadcrumbs: [
       { breadcrumb: 'System Accounts', url: '/workspace/system' },
       { breadcrumb: 'System Account Profile' },
@@ -23,12 +23,12 @@ export default [
       { breadcrumb: 'System Account Profile' },
     ]
   } },
-  { path: 'password', component: SystemPasswordComponent,   data: {
+  { path: 'password', component: SystemPasswordComponent, data: {
     breadcrumbs: [
       { breadcrumb: 'System Account Password Reset' },
     ]
   } },
-  { path: 'password/:id', component: SystemPasswordComponent,   data: {
+  { path: 'password/:id', component: SystemPasswordComponent, data: {
     breadcrumbs: [
       { breadcrumb: 'System Accounts', url: '/workspace/system' },
       { breadcrumb: 'System Account Password Reset' },

@@ -1,6 +1,6 @@
 <div class="usa-kba">
   <div class="question">
-    <sam-select [name]="store.question.name"
+    <sam-select [name]="store.question.name + '-' + states.uid"
                [(model)]="$question"
                [options]="$questions"
                [errorMessage]="states.submitted ? states.errors.question : ''"
@@ -9,8 +9,12 @@
     </sam-select>
   </div>
   <div class="answer">
-  <sam-label-wrapper [errorMessage]="(states.submitted && answer.invalid ? states.errors.answer : '')" required="true">
+  <sam-label-wrapper [name]="store.answer.name + '-' + states.uid"
+                     [errorMessage]="(states.submitted && answer.invalid ? states.errors.answer : '')"
+                     [label]="' '"
+                     required="true">
       <input [type]="states.type"
+             [id]="store.answer.name + '-' + states.uid"
              [name]="store.answer.name"
              [formControl]="answer"
              (blur)="secureAnswer($event)"

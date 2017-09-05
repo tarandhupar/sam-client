@@ -112,8 +112,8 @@ this.cookie =  Cookies.get('iPlanetDirectoryPro');
     return this.programService.getPermissions(FALFormService.getAuthenticationCookie(),type);
   }
 
-  getFederalHierarchyConfigurations(orgId: string){
-    return this.programService.getFederalHierarchyConfigurations(orgId, FALFormService.getAuthenticationCookie());
+  getFederalHierarchyConfiguration(orgId: string){
+    return this.programService.getFederalHierarchyConfiguration(orgId, FALFormService.getAuthenticationCookie());
   }
 
   getCfdaCode(orgId){

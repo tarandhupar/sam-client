@@ -5,12 +5,18 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
 import { Cookie } from "ng2-cookies";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 @Injectable()
 export class FHService {
 
-  constructor(private oAPIService: WrapperService, private fhAPIService: FHWrapperService, private _http: Http, private  router: Router) { }
+  constructor(
+    private oAPIService: WrapperService,
+    private fhAPIService: FHWrapperService,
+    private _http: Http,
+    private  router: Router,
+    private route: ActivatedRoute,
+  ) { }
 
   getOrganizations(queryParams = {}) {
     let oApiParam = {
@@ -328,7 +334,9 @@ export class FHService {
       .call(oApiParam, convertToJSON)
       .catch(res => {
         if (res.status === 401) {
-          this.router.navigate(['/signin']);
+          if (!this.router.url.match(/\/workspace/i)) {
+            this.router.navigate(['/signin']);
+          }
         }
         return Observable.throw(res);
       });

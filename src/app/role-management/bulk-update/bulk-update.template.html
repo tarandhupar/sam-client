@@ -24,13 +24,16 @@
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Org -->
-          <sam-agency-picker [label]="'Organization'"
-                             [multimode]="false"
-                             (organization)="onOrganizationChange($event)"
-                             [required]="true"
-                             [searchMessage]="errors.org"
-                             [orgRoot]="user.departmentID"
-          ></sam-agency-picker>
+          <sam-agency-picker-v2
+            [label]="'Organization'"
+            type="single"
+            ngModel
+            (ngModelChange)="onOrganizationChange($event)"
+            [required]="true"
+            [searchMessage]="errors.org"
+            [defaultDept]="true"
+            class="clearfix"
+          ></sam-agency-picker-v2>
 
           <!-- Domain -->
           <sam-select

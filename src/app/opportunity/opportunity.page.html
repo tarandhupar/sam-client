@@ -122,7 +122,7 @@
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
             <i *ngIf="differences?.awardedDuns" class="fa fa-square" aria-hidden="true"></i>
-            <strong>Contractor Awarded DUNS: </strong>
+            <strong>Contractor Awarded UEI: </strong>
             <span>{{ opportunity.data?.award?.awardee?.duns }}</span>
             <span *ngIf="showChangesAwardDetails && differences?.awardedDuns" [attr.aria-label]= "differences?.awardedDunsAria" [innerHTML]="differences?.awardedDuns"></span>
           </li>
@@ -600,7 +600,7 @@
                       </h4>
                       <div class="">
                         <div class="sam-ui medium header">
-                          DUNS
+                          UEI
                           <div class="sub header">
                             {{element.data?.award?.awardee?.duns}}
                           </div>

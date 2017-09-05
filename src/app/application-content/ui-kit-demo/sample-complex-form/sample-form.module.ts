@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { PipesModule } from "app/app-pipes/app-pipes.module";
-import { BrowserModule } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
 import { SamUIKitModule } from "sam-ui-kit/index";
 import { AppComponentsModule } from "app/app-components/app-components.module";
 import { SampleFormRoutes } from "./sample-form.route";
@@ -15,7 +15,7 @@ import { SampleFormService } from "./sample-form.service";
 @NgModule({
   imports: [
     PipesModule,
-    BrowserModule,
+    CommonModule,
     SamUIKitModule,
     AppComponentsModule,
     SampleFormRoutes,

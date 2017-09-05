@@ -13,6 +13,8 @@ import {RAOFormResolver} from "./regional-assistance-locations/regional-assistan
 import { FALFormChangeRequestComponent } from "./assistance-listing-change-request/fal-form-change-request.component";
 import { FALFormChangeRequestActionComponent } from "./assistance-listing-change-request/fal-form-change-request-action.component";
 import {FALPublishComponent} from "./assistance-listing-operations/workflow/publish/fal-publish.component";
+import {CfdaNumbersPage} from "./assistance-listing-workspace/cfda-numbers/cfda-numbers.page";
+import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda-number-management/fal-form-cfda-number-management.component";
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -30,9 +32,11 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
     {path: 'programs/:id/change-request', component: FALFormChangeRequestComponent},
     {path: 'programs/change-request/:id/action', component: FALFormChangeRequestActionComponent},
     {path: 'workspace/my-feed', component: FeedsPage, canActivate: [AuthGuard]},
+    {path: 'fal/workspace/cfda-numbers', component: CfdaNumbersPage, canActivate: [AuthGuard]},
     {path: 'fal/myRegionalOffices/add', component: FALRegionalAssistanceFormComponent, canActivate: [AuthGuard]},
     {path: 'fal/myRegionalOffices/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [AuthGuard]},
-    {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [AuthGuard]}
+    {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [AuthGuard]},
+    {path: 'fal/cfda-management/:id/edit', component: CFDANumberManagementComponent, canActivate: [AuthGuard]},
   );
 }
 export const routing = RouterModule.forChild(routes);

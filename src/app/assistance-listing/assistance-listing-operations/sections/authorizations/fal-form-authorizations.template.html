@@ -5,19 +5,22 @@
 <form [formGroup]="falAuthForm">
 
   <div class="sam-ui segment">
-    <sam-fieldset-wrapper [attr.id]="'fal-authorization-authList'" [hint]="description">
-    <authInfoTable
-      [hideAddButton]="hideAddButton"
-      [displayAuthInfo]="displayAuthInfo"
-      [subFormErrorIndex]="subFormErrorIndex"
-      (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
-    
-    <authSubform [hideAddButton]="hideAddButton"
-                 [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
-                 (authActionHandler)="authActionHandler($event)"
-                 #authSubForm></authSubform>
-    
-    </sam-fieldset-wrapper>
+    <sam-label-wrapper label="Authorization" [attr.id]="'fal-authorization-authList'" [hint]="description">
+      
+      <authInfoTable
+        [hideAddButton]="hideAddButton"
+        [displayAuthInfo]="displayAuthInfo"
+        [subFormErrorIndex]="subFormErrorIndex"
+        (authTableActionHandler)="authActionHandler($event)" #authTable>
+      </authInfoTable>
+      
+      <authSubform [hideAddButton]="hideAddButton"
+                   [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
+                   (authActionHandler)="authActionHandler($event)"
+                   #authSubForm>
+      </authSubform>
+      
+    </sam-label-wrapper>
   </div>
   
   <div class="sam-ui segment">

@@ -22,8 +22,8 @@ export class MsgFeedComponent {
   validSections = ['requests','notifications'];
   validSubSections = {'requests':['received','sent'],'notifications':['subscriptions','announcements','alerts']}
 
-  sortByModel = 'Date';
-  msgSortOptions = [{label:'Date', name:'Date', Value:'Date'}];
+  sortByModel = {type: 'date', sort: 'asc' };
+  msgSortOptions = [{label:'Date', name:'Date', value:'date'}];
 
   orderByIndex = 0;
   orderByOptions = ["asc","desc"];
@@ -118,4 +118,5 @@ export class MsgFeedComponent {
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
   getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
+
 }

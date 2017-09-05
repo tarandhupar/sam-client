@@ -12,6 +12,8 @@ import { OptionsType } from 'sam-ui-kit/types';
 import * as base64 from 'base-64';
 import { ReportsService } from 'api-kit';
 import * as Cookies from 'js-cookie';
+import { SamDateRangeComponent } from 'sam-ui-kit/form-controls/date-range';
+import { StateServiceImpl } from "../../../app-components/location-autocomplete/state-autocomplete/state-autocomplete.component";
 
 @Component({
   providers: [IAMService],
@@ -19,6 +21,8 @@ import * as Cookies from 'js-cookie';
 })
 export class ReportProtoComponent implements OnInit {
   @ViewChild('samAccordionValue') samAccordionValue;
+  @ViewChild('dateRange') dateRange: SamDateRangeComponent;
+  @ViewChild('statePicker') statePicker: StateServiceImpl;
   public id = null;
   public expid = null;
   public name = null;
@@ -38,7 +42,7 @@ export class ReportProtoComponent implements OnInit {
   showReport: boolean = false;
   dateRangeModel = {
     startDate: '',
-    endDate:''
+    endDate:'',
   };
   usedPrompts = {
     dateRange: false,
@@ -46,11 +50,15 @@ export class ReportProtoComponent implements OnInit {
     includesBases: false,
     contractingRegion: false,
     orgId: false,
-    agencyName: false
+    agencyName: false,
+    piid: false,
+    state: false,
+    country: false
   };
   officeId: any = '';
   agencyId: any = '';
   departmentId: any = '';
+  piid = '';
   promptAnswersXML;
   contractingRegion = "";
   orgCode = "";
@@ -63,8 +71,7 @@ export class ReportProtoComponent implements OnInit {
     { name: 'all', label: 'All', value: 'all'},
     { name: 'basesOnly', label: 'Bases Only', value: 'basesOnly'}
   ];
-  contractingRegionOptions: OptionsType[] = [
-    {name:'00',label:'00',value:'00'},{name:'01',label:'01',value:'01'},{name:'02',label:'02',value:'02'},{name:'03',label:'03',value:'03'},{name:'04',label:'04',value:'04'},{name:'05',label:'05',value:'05'},{name:'06',label:'06',value:'06'},{name:'07',label:'07',value:'07'},{name:'08',label:'08',value:'08'},{name:'09',label:'09',value:'09'},{name:'1',label:'1',value:'1'},{name:'10',label:'10',value:'10'},{name:'11',label:'11',value:'11'},{name:'12',label:'12',value:'12'},{name:'13',label:'13',value:'13'},{name:'14',label:'14',value:'14'},{name:'15',label:'15',value:'15'},{name:'16',label:'16',value:'16'},{name:'17',label:'17',value:'17'},{name:'18',label:'18',value:'18'},{name:'19',label:'19',value:'19'},{name:'2',label:'2',value:'2'},{name:'20',label:'20',value:'20'},{name:'21',label:'21',value:'21'},{name:'22',label:'22',value:'22'},{name:'23',label:'23',value:'23'},{name:'24',label:'24',value:'24'},{name:'25',label:'25',value:'25'},{name:'26',label:'26',value:'26'},{name:'27',label:'27',value:'27'},{name:'28',label:'28',value:'28'},{name:'29',label:'29',value:'29'},{name:'3',label:'3',value:'3'},{name:'30',label:'30',value:'30'},{name:'32',label:'32',value:'32'},{name:'33',label:'33',value:'33'},{name:'34',label:'34',value:'34'},{name:'35',label:'35',value:'35'},{name:'36',label:'36',value:'36'},{name:'37',label:'37',value:'37'},{name:'38',label:'38',value:'38'},{name:'39',label:'39',value:'39'},{name:'4',label:'4',value:'4'},{name:'5',label:'5',value:'5'},{name:'50',label:'50',value:'50'},{name:'6',label:'6',value:'6'},{name:'60',label:'60',value:'60'},{name:'65',label:'65',value:'65'},{name:'7',label:'7',value:'7'},{name:'70',label:'70',value:'70'},{name:'75',label:'75',value:'75'},{name:'8',label:'8',value:'8'},{name:'9',label:'9',value:'9'},{name:'90',label:'90',value:'90'},{name:'99',label:'99',value:'99'},{name:'AC',label:'AC',value:'AC'},{name:'AF',label:'AF',value:'AF'},{name:'AK',label:'AK',value:'AK'},{name:'AZ',label:'AZ',value:'AZ'},{name:'BA',label:'BA',value:'BA'},{name:'BC',label:'BC',value:'BC'},{name:'BR',label:'BR',value:'BR'},{name:'C',label:'C',value:'C'},{name:'CA',label:'CA',value:'CA'},{name:'CE',label:'CE',value:'CE'},{name:'CI',label:'CI',value:'CI'},{name:'CN',label:'CN',value:'CN'},{name:'CO',label:'CO',value:'CO'},{name:'CR',label:'CR',value:'CR'},{name:'DC',label:'DC',value:'DC'},{name:'DN',label:'DN',value:'DN'},{name:'EA',label:'EA',value:'EA'},{name:'ER',label:'ER',value:'ER'},{name:'ES',label:'ES',value:'ES'},{name:'EU',label:'EU',value:'EU'},{name:'FA',label:'FA',value:'FA'},{name:'FP',label:'FP',value:'FP'},{name:'GP',label:'GP',value:'GP'},{name:'HQ',label:'HQ',value:'HQ'},{name:'ID',label:'ID',value:'ID'},{name:'IG',label:'IG',value:'IG'},{name:'II',label:'II',value:'II'},{name:'LC',label:'LC',value:'LC'},{name:'MP',label:'MP',value:'MP'},{name:'MT',label:'MT',value:'MT'},{name:'NC',label:'NC',value:'NC'},{name:'NE',label:'NE',value:'NE'},{name:'NM',label:'NM',value:'NM'},{name:'NR',label:'NR',value:'NR'},{name:'NV',label:'NV',value:'NV'},{name:'OC',label:'OC',value:'OC'},{name:'OR',label:'OR',value:'OR'},{name:'OS',label:'OS',value:'OS'},{name:'PC',label:'PC',value:'PC'},{name:'PN',label:'PN',value:'PN'},{name:'RM',label:'RM',value:'RM'},{name:'SC',label:'SC',value:'SC'},{name:'SE',label:'SE',value:'SE'},{name:'SR',label:'SR',value:'SR'},{name:'SW',label:'SW',value:'SW'},{name:'TC',label:'TC',value:'TC'},{name:'UC',label:'UC',value:'UC'},{name:'US',label:'US',value:'US'},{name:'UT',label:'UT',value:'UT'},{name:'W',label:'W',value:'W'},{name:'WH',label:'WH',value:'WH'},{name:'WO',label:'WO',value:'WO'},{name:'WR',label:'WR',value:'WR'},{name:'WY',label:'WY',value:'WY'}
+  contractingRegionOptions = [{name:'00',label:'00',value:'00'},{name:'01',label:'01',value:'01'},{name:'02',label:'02',value:'02'},{name:'03',label:'03',value:'03'},{name:'04',label:'04',value:'04'},{name:'05',label:'05',value:'05'},{name:'06',label:'06',value:'06'},{name:'07',label:'07',value:'07'},{name:'08',label:'08',value:'08'},{name:'09',label:'09',value:'09'},{name:'1',label:'1',value:'1'},{name:'10',label:'10',value:'10'},{name:'11',label:'11',value:'11'},{name:'12',label:'12',value:'12'},{name:'13',label:'13',value:'13'},{name:'14',label:'14',value:'14'},{name:'15',label:'15',value:'15'},{name:'16',label:'16',value:'16'},{name:'17',label:'17',value:'17'},{name:'18',label:'18',value:'18'},{name:'19',label:'19',value:'19'},{name:'2',label:'2',value:'2'},{name:'20',label:'20',value:'20'},{name:'21',label:'21',value:'21'},{name:'22',label:'22',value:'22'},{name:'23',label:'23',value:'23'},{name:'24',label:'24',value:'24'},{name:'25',label:'25',value:'25'},{name:'26',label:'26',value:'26'},{name:'27',label:'27',value:'27'},{name:'28',label:'28',value:'28'},{name:'29',label:'29',value:'29'},{name:'3',label:'3',value:'3'},{name:'30',label:'30',value:'30'},{name:'32',label:'32',value:'32'},{name:'33',label:'33',value:'33'},{name:'34',label:'34',value:'34'},{name:'35',label:'35',value:'35'},{name:'36',label:'36',value:'36'},{name:'37',label:'37',value:'37'},{name:'38',label:'38',value:'38'},{name:'39',label:'39',value:'39'},{name:'4',label:'4',value:'4'},{name:'5',label:'5',value:'5'},{name:'50',label:'50',value:'50'},{name:'6',label:'6',value:'6'},{name:'60',label:'60',value:'60'},{name:'65',label:'65',value:'65'},{name:'7',label:'7',value:'7'},{name:'70',label:'70',value:'70'},{name:'75',label:'75',value:'75'},{name:'8',label:'8',value:'8'},{name:'9',label:'9',value:'9'},{name:'90',label:'90',value:'90'},{name:'99',label:'99',value:'99'},{name:'AC',label:'AC',value:'AC'},{name:'AF',label:'AF',value:'AF'},{name:'AK',label:'AK',value:'AK'},{name:'AZ',label:'AZ',value:'AZ'},{name:'BA',label:'BA',value:'BA'},{name:'BC',label:'BC',value:'BC'},{name:'BR',label:'BR',value:'BR'},{name:'C',label:'C',value:'C'},{name:'CA',label:'CA',value:'CA'},{name:'CE',label:'CE',value:'CE'},{name:'CI',label:'CI',value:'CI'},{name:'CN',label:'CN',value:'CN'},{name:'CO',label:'CO',value:'CO'},{name:'CR',label:'CR',value:'CR'},{name:'DC',label:'DC',value:'DC'},{name:'DN',label:'DN',value:'DN'},{name:'EA',label:'EA',value:'EA'},{name:'ER',label:'ER',value:'ER'},{name:'ES',label:'ES',value:'ES'},{name:'EU',label:'EU',value:'EU'},{name:'FA',label:'FA',value:'FA'},{name:'FP',label:'FP',value:'FP'},{name:'GP',label:'GP',value:'GP'},{name:'HQ',label:'HQ',value:'HQ'},{name:'ID',label:'ID',value:'ID'},{name:'IG',label:'IG',value:'IG'},{name:'II',label:'II',value:'II'},{name:'LC',label:'LC',value:'LC'},{name:'MP',label:'MP',value:'MP'},{name:'MT',label:'MT',value:'MT'},{name:'NC',label:'NC',value:'NC'},{name:'NE',label:'NE',value:'NE'},{name:'NM',label:'NM',value:'NM'},{name:'NR',label:'NR',value:'NR'},{name:'NV',label:'NV',value:'NV'},{name:'OC',label:'OC',value:'OC'},{name:'OR',label:'OR',value:'OR'},{name:'OS',label:'OS',value:'OS'},{name:'PC',label:'PC',value:'PC'},{name:'PN',label:'PN',value:'PN'},{name:'RM',label:'RM',value:'RM'},{name:'SC',label:'SC',value:'SC'},{name:'SE',label:'SE',value:'SE'},{name:'SR',label:'SR',value:'SR'},{name:'SW',label:'SW',value:'SW'},{name:'TC',label:'TC',value:'TC'},{name:'UC',label:'UC',value:'UC'},{name:'US',label:'US',value:'US'},{name:'UT',label:'UT',value:'UT'},{name:'W',label:'W',value:'W'},{name:'WH',label:'WH',value:'WH'},{name:'WO',label:'WO',value:'WO'},{name:'WR',label:'WR',value:'WR'},{name:'WY',label:'WY',value:'WY'}
   ];
   roleData;
   userRoleObject;
@@ -72,11 +79,20 @@ export class ReportProtoComponent implements OnInit {
   testToken;
   mstrEnv;
   mstrServer;
-
   promptAnswersXMLSBG;
   departmentIdSBG: any = '';
   agencyIdSBG: any = '';
   officeIdSBG: any = '';
+  locationConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    }
+  };
+  location = {
+    country: '',
+    state: '' 
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -105,38 +121,49 @@ export class ReportProtoComponent implements OnInit {
     });
   }
 
-  reportExecute() {
-    let vm = this;
-    let evt = '4001';
-    let reportId = "&reportId=" + this.id;
-    vm.showReport = true;
-    vm.samAccordionValue.collapseAll();
-    this.hitUrl(evt, reportId);
-  }
-
   exportReport() {
     let vm = this;
-    let evt = '3069';
-    let documentId = "&documentId=" + this.expid;
-    vm.showReport = true;
-    vm.samAccordionValue.collapseAll();
-    this.hitUrl(evt, documentId);
+    let s = moment(this.dateRangeModel.startDate);
+    let e = moment(this.dateRangeModel.endDate);
+    if (this.contractingRegion == null) {
+      this.contractingRegion = "";
+    }
+    
+    if ((s.isValid() && e.isValid() && s<e) || this.name == 'Contract Detail Report') {
+      let evt = '3069';
+      let documentId = "&documentId=" + this.expid;
+      vm.showReport = true;
+      vm.samAccordionValue.collapseAll();
+      this.hitUrl(evt, documentId);
+    } else {
+      // alert?
+    }
   }
 
   hitUrl(evt, docId) {
     let vm = this;
     if (this.name == "Small Business Goaling Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+'&role=GSA_REPORT_R_DOD_REPORT_USER_9700'+docId+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
+    } else if (this.name == "Contract Detail Report") {
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+'&role=GSA_REPORT_R_DOD_REPORT_USER_9700'+docId+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
     } else {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0&uid='+vm.user._id+'&role=GSA_REPORT_R_DOD_REPORT_USER_9700'+docId+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
     }
-    
-    // this.userRole
   }
 
   resetParameter(){ 
     this.showReport = false;
     this.agencyPicker = [];
+    this.contractingRegion = '';
+    this.orgCode = '';
+    this.piid = '';
+    this.agencyName = '';
+    this.location.state = '';
+    this.location.country = '';
+    // Doesn't have dateRange
+    if (this.name != 'Contract Detail Report') {
+      this.dateRange.control.reset();
+    }
   }
 
   ngOnInit() {
@@ -163,6 +190,9 @@ export class ReportProtoComponent implements OnInit {
     if (this.prompts.indexOf('agencyName') >= 0) {
       this.usedPrompts.agencyName = true;
     }
+    if (this.prompts.indexOf('piid') >= 0) {
+      this.usedPrompts.piid = true;
+    }
     if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
       this.mstrEnv = 'stg';
       this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
@@ -173,6 +203,7 @@ export class ReportProtoComponent implements OnInit {
       this.mstrEnv = 'dev';
       this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
     }
+    
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
@@ -210,62 +241,18 @@ export class ReportProtoComponent implements OnInit {
     this.checkIncludesAgencyName();
     return xmljs.json2xml(this.promptAnswersXML);
   }
+
   generateXMLSBG() {
     if (this.agencyPicker) {
       for (let i in this.agencyPicker) {
         if (this.agencyPicker[i].level == 1) {
-          this.departmentIdSBG = [{
-              type: "element",
-              name: "at",
-              attributes: {
-                  did: "FB2AB4B34DE1D7C3FD6BEA964061C99E",
-                  tp: "12"
-              }
-          }, {
-              type: "element",
-              name: "e",
-              attributes: {
-                  emt: "1",
-                  ei: "FB2AB4B34DE1D7C3FD6BEA964061C99E:" + this.agencyPicker[i].code,
-                  art: "1"
-              }
-          }];
+          this.departmentIdSBG = [{type:"element",name:"at",attributes:{did:"FB2AB4B34DE1D7C3FD6BEA964061C99E",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"FB2AB4B34DE1D7C3FD6BEA964061C99E:"+this.agencyPicker[i].code,art:"1"}}];
         }
         if (this.agencyPicker[i].level == 2) {
-          this.agencyIdSBG = [{
-              type: "element",
-              name: "at",
-              attributes: {
-                  did: "26FAF0F343FB91A7A80566A1F7C37235",
-                  tp: "12"
-              }
-          }, {
-              type: "element",
-              name: "e",
-              attributes: {
-                  emt: "1",
-                  ei: "26FAF0F343FB91A7A80566A1F7C37235:" + this.agencyPicker[i].code,
-                  art: "1"
-              }
-          }];
+          this.agencyIdSBG = [{type:"element",name:"at",attributes:{did:"26FAF0F343FB91A7A80566A1F7C37235",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"26FAF0F343FB91A7A80566A1F7C37235:" + this.agencyPicker[i].code,art:"1"}}];
         }
         if (this.agencyPicker[i].level == 3) {
-          this.officeIdSBG = [{
-              type: "element",
-              name: "at",
-              attributes: {
-                  did: "0156707745DF0346A1B8A7B0002BEBE0",
-                  tp: "12"
-              }
-          }, {
-              type: "element",
-              name: "e",
-              attributes: {
-                  emt: "1",
-                  ei: "0156707745DF0346A1B8A7B0002BEBE0:" + this.agencyPicker[i].code,
-                  art: "1"
-              }
-          }];
+          this.officeIdSBG = [{type:"element",name:"at",attributes:{did:"0156707745DF0346A1B8A7B0002BEBE0",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"0156707745DF0346A1B8A7B0002BEBE0:" + this.agencyPicker[i].code,art:"1"}}];
         }
       }
     }
@@ -302,4 +289,60 @@ export class ReportProtoComponent implements OnInit {
       this.promptAnswersXML.elements[0].elements.push(this.agencyNameXML);
     }
   }
+  
+  validate(evt) {
+    var s = moment(this.dateRangeModel.startDate);
+    var e = moment(this.dateRangeModel.endDate);
+    var duration = moment.duration(e.diff(s));
+    if (this.name == "Potential Vendor Anomaly Report") {
+      if (duration.asYears() > 1.003) {
+        return;
+      }
+      else {
+        if (evt == "execute") {
+          this.reportExecute();
+        }
+        if (evt == "export") {
+          this.exportReport();
+        }
+      }
+    }
+    else {
+      if (evt == "execute") {
+        this.reportExecute();
+      }
+      if (evt == "export") {
+        this.exportReport();
+      }
+    }
+  }
+
+  reportExecute() {
+    let vm = this;
+    let s = moment(this.dateRangeModel.startDate);
+    let e = moment(this.dateRangeModel.endDate);
+    if ((s.isValid() && e.isValid() && s<e) || this.name == 'Contract Detail Report') {
+      let evt = '4001';
+      let reportId = "&reportId=" + this.id;
+      vm.showReport = true;
+      vm.samAccordionValue.collapseAll();
+      this.hitUrl(evt, reportId);
+    } else {
+      // alert?
+    }
+  }
+
+  updateCountryField(val) {
+    this.location.country = val;
+  }
+  
+  updateStateField(val) {
+    this.location.state = val;
+  }
+
+  generateXMLCD() {
+    this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"484D22974FA28152B5B0D3B11CA84E51",tp:"10"},elements:[{type:"text",text:this.piid.toUpperCase()}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"A56EAC9141786FE504C64892852F6F35",tp:"10"},elements:[{type:"text",text:this.piid.toUpperCase()}]}]}]};
+    return xmljs.json2xml(this.promptAnswersXML);
+  }
+
 }

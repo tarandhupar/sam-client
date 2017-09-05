@@ -128,6 +128,10 @@ export class SearchService {
       oApiParam.oParam['index'] = obj.entity_type.join(',');
     }
 
+    if(typeof obj.sort !== 'undefined' && obj.sort !== null && obj.sort !== ''){
+      oApiParam.oParam['sort'] = obj.sort;
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 

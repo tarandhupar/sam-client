@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { IAMService } from 'api-kit';
 
@@ -26,18 +26,17 @@ export class ProfileComponent {
 
   activeRouteClass = '';
 
-  constructor(private router: Router, private api: IAMService) {
-    this.router.events.subscribe((event) => {
-      if(event.constructor.name === 'NavigationEnd') {
-        this.checkRoute();
-      }
-    });
-  }
+  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {}
 
   ngOnInit() {
     this.states.fsd = this.api.iam.user.isFSD();
-
     this.checkRoute();
+
+    this.router.events
+     .filter(event => event instanceof NavigationEnd)
+     .subscribe(event => {
+       this.checkRoute();
+     });
   }
 
   checkRoute() {

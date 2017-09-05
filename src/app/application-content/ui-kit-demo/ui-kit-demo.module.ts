@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -20,7 +20,7 @@ import { CountyServiceDirective } from './county-demo';
 @NgModule({
   imports: [
     routing,
-    BrowserModule,
+    CommonModule,
     RouterModule,
     FormsModule,
     SamUIKitModule,

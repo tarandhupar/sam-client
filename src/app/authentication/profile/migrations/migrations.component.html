@@ -90,7 +90,9 @@
       <tbody>
         <tr *ngFor="let system of store.legacy; let $index = index;">
           <td>
-            <a [href]="system.target" [innerText]="system.name" target="_blank"></a>
+            <a [href]="getTarget(system.target)"
+               [innerText]="system.name"
+               [title]="system.name"></a>
           </td>
           <td [innerText]="system.statuses.migration"></td>
           <td [innerText]="system.statuses.system"></td>

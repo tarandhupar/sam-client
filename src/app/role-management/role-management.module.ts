@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
@@ -21,8 +21,7 @@ import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.t
 import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { RequestDetailsComponent } from "./request-details/request-details";
-import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
-import { DomainDefinitionResolve } from "./domaindefinition.resolve";
+import { RolesDirectoryPage } from "./roles-directory/roles-directory.page";
 import { AppTemplatesModule } from "../app-templates/index";
 import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
@@ -31,7 +30,7 @@ import { RMBackDoorComponent } from "./back-door/back-door.component";
 @NgModule({
   imports: [
     routing,
-    BrowserModule,
+    CommonModule,
     RouterModule,
     HttpModule,
     FormsModule,
@@ -55,13 +54,12 @@ import { RMBackDoorComponent } from "./back-door/back-door.component";
     RoleMgmtWorkspace,
     RoleMgmtSidenav,
     RoleMgmtContent,
-    UserRolesDirectoryPage,
+    RolesDirectoryPage,
     BulkUpdateComponent,
     RMBackDoorComponent,
   ],
   providers: [
     DomainsResolve,
-    DomainDefinitionResolve,
     RequestAccessResolve,
     RequestStatusNamesResolve,
     AlertFooterService,

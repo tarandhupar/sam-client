@@ -3,10 +3,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { isArray, merge } from 'lodash';
 import * as moment from 'moment';
 
+import { SamSortComponent } from '..';
 import { PeoplePickerService } from 'api-kit';
 
-import { Filter, Sort, Options } from './user-directory.interfaces';
-import { User } from '../../../api-kit/iam/api/core/user.ts';
+import { OptionsType } from 'sam-ui-kit/types';
+import { Filter, Sort, Options, PageState } from './user-directory.interfaces';
+import { User } from 'api-kit/iam/api/core/user.ts';
 
 /**
  * UsersDirectory - Users Directory Listing
@@ -24,7 +26,8 @@ import { User } from '../../../api-kit/iam/api/core/user.ts';
  */
 @Component({
 	selector: 'sam-user-directory',
-  templateUrl: 'user-directory.component.html'
+  templateUrl: 'user-directory.component.html',
+  providers: [SamSortComponent],
 })
 export class SamUserDirectoryComponent {
   private states = {
@@ -51,14 +54,11 @@ export class SamUserDirectoryComponent {
 
   private store = {
     dateformat: 'MMM DD, YYYY',
-    sortOptions:  [
-      { label: 'Last Name (ascending)', value: 'lastName|asc' },
-      { label: 'Last Name (descending)', value: 'lastName|desc' },
-      { label: 'Last Log In (ascending)', value: 'lastLogin|asc' },
-      { label: 'Last Log In (descending)', value: 'lastLogin|desc' },
+    sorts:  [
+      <OptionsType>{ name: 'sort-last-name', label: 'Last Name', value: 'lastName' },
+      <OptionsType>{ name: 'sort-last-login', label: 'Last Log In', value: 'lastLogin' },
     ],
 
-    sort: 'lastName|asc',
     cache: []
   };
 
@@ -78,9 +78,9 @@ export class SamUserDirectoryComponent {
     return ['/user', user._id];
   };
 
-  @Output('onSearch') _onSearch: EventEmitter<any> = new EventEmitter();
-  @Output('onSort') _onSort: EventEmitter<any> = new EventEmitter();
-  @Output('onPage') _onPage: EventEmitter<any> = new EventEmitter();
+  @Output('onSearch') _onSearch: EventEmitter<Options> = new EventEmitter();
+  @Output('onSort') _onSort: EventEmitter<Sort> = new EventEmitter();
+  @Output('onPage') _onPage: EventEmitter<PageState> = new EventEmitter();
 
   constructor(private api: PeoplePickerService) {}
 
@@ -96,13 +96,11 @@ export class SamUserDirectoryComponent {
 
   setOptions(options: Options) {
     this.states = merge({}, this.states, options);
-    this.setSort();
+    this.initSort();
   }
 
-  setSort() {
-    if(this.states.sort.type.length && this.states.sort.order.length) {
-      this.store.sort = `${this.states.sort.type}|${this.states.sort.order}`;
-    }
+  initSort() {
+    this.states.sort.order = this.states.sort['sort'] || this.states.sort.order;
   }
 
   get intStart(): number {
@@ -118,13 +116,10 @@ export class SamUserDirectoryComponent {
   }
 
   get sort(): Sort {
-    let mapping = this.store.sort.split('|'),
-        sort= <Sort>{
-          type:  mapping[0] || 'lastName',
-          order: mapping[1] || 'asc'
-        };
-
-    return sort;
+    return <Sort>{
+      type:  this.states.sort.type,
+      order: this.states.sort.order,
+    };
   }
 
   formatDate(value) {
@@ -136,8 +131,10 @@ export class SamUserDirectoryComponent {
   }
 
   onSort(value: string) {
+    this.states.sort = merge({}, this.states.sort, value);
+    this.initSort();
     this.fetch(() => {
-      this._onSort.emit(this.store.sort);
+      this._onSort.emit(this.states.sort);
     });
   }
 
@@ -186,12 +183,13 @@ export class SamUserDirectoryComponent {
   }
 
   search() {
-    let state = merge({}, this.states);
-
-    delete this.states.loading;
-
     this.fetch(() => {
-      this._onSearch.emit(state);
+      this._onSearch.emit(<Options>{
+        search: this.states.search,
+        filter: this.states.filter,
+        page:   this.states.page,
+        sort:   this.states.sort,
+      });
     });
   }
 }

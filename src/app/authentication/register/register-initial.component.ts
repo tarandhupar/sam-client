@@ -14,7 +14,7 @@ import { Cookie } from 'ng2-cookies';
   ]
 })
 export class RegisterInitialComponent {
-  private states = {
+  public states = {
     submitted: false,
     loading: false,
     error: ''

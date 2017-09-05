@@ -8,7 +8,7 @@ export class DomainDefinitionResolve implements Resolve<any> {
   constructor(private accessService: UserAccessService) {}
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this.accessService.getRoleObjDefinitions('role', '').catch(() => {
+    return this.accessService.getDomainDefinition('role', '').catch(() => {
       console.error('unable to retrieve roles for domains');
       return Observable.of([]);
     });

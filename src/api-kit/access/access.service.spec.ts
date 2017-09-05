@@ -46,13 +46,13 @@ describe('UserAccessService', () => {
       expect(connection.request.method).toBe(RequestMethod.Get);
       expect(connection.request.url).toMatch(/uiroles/);
     });
-    service.getRoles({}, 'john');
+    service.getUiRoles({}, 'john');
   })));
 
   it('should get domains', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/domains\?/);
+      expect(connection.request.url).toMatch(/domains\/?/);
     });
     service.getDomains();
   })));
@@ -86,7 +86,7 @@ describe('UserAccessService', () => {
       expect(connection.request.method).toBe(RequestMethod.Get);
       expect(connection.request.url).toMatch(/domainDefinition/i);
     });
-    service.getRoleObjDefinitions('mode', 'domainKey', 1);
+    service.getDomainDefinition('mode', 'domainKey', 1);
   })));
 
   it('should create objects', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {

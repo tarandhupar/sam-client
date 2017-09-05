@@ -13,10 +13,10 @@ import 'rxjs/add/operator/map';
               {{ data.name }}
             </a>
           </h3>
-          <p *ngIf="data.description !== null && data.description.length>150" >
+          <p *ngIf="data.description?.length>150" >
             <span [innerHTML]="data.description | slice:0:150"></span>...
           </p>
-          <p *ngIf="data.description!=null && data.description.length<150">
+          <p *ngIf="data.description?.length<150">
             <span [innerHTML]="data.description"></span>
           </p>
           <ul class="sam-ui small list">

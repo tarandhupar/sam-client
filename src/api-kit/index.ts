@@ -14,6 +14,7 @@ export { OpportunityService } from './opportunity/opportunity.service';
 export { PeoplePickerService } from './people-picker/people-picker.service';
 export { ProgramService } from './program/program.service';
 export { ReportsService } from './reports/reports.service';
+export { SamTitleService } from './title-service/title.service';
 export { SearchService } from './search/search.service';
 export { SuggestionsService } from './search/suggestions.service';
 export { SystemAlertsService } from './system-alerts/system-alerts.service';

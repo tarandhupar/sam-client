@@ -81,12 +81,12 @@ export class RequestResponsePage {
   }
 
   getRoles(selectFirstRole?: boolean) {
-    let options: any = {domainID: this.domain};
+    let options: any = {domainKey: this.domain};
     if (this.role) {
       options.keepRoles = this.role;
     }
     this.userAccessService
-      .getRoles(options)
+      .getUiRoles(options)
       .subscribe(
         perms => {
           this.roles = perms;
@@ -112,8 +112,8 @@ export class RequestResponsePage {
   }
 
   parseRequest(req) {
-    this.initialOrg = [req.organizationId];
-    this.org = { value: req.organizationId };
+    this.initialOrg = ''+req.organizationId;
+    this.org = { orgKey: req.organizationId };
     this.role = req.role.id;
     this.domain = req.domain.id;
 
@@ -158,12 +158,12 @@ export class RequestResponsePage {
     this.userAccessService.getAllUserRoles(req.requestorName,queryParam).subscribe(res => {
       this.username = `${res.user.firstName} ${res.user.lastName}`;
       this.myCrumbs.push({ url: '/workspace', breadcrumb: 'Workspace' });
-      this.myCrumbs.push({ url: '/access/user-roles-directory', breadcrumb: 'Role Management'});
+      this.myCrumbs.push({ url: '/access/roles-directory', breadcrumb: 'Role Management'});
       this.myCrumbs.push({ url: `/users/${this.userId}/access`,breadcrumb : this.username == "undefined undefined" ? "No User Name" :this.username });
       this.myCrumbs.push({breadcrumb: 'Respond to Request'});
     });
 
-    this.userAccessService.getRoles({domainID: this.domain}).subscribe(
+    this.userAccessService.getUiRoles({domainKey: this.domain}).subscribe(
       perms => {
         this.roles = perms;
         this.onRoleChange(this.role);

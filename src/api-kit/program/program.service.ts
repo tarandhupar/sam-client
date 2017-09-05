@@ -88,11 +88,31 @@ export class ProgramService{
 
   }
 
-  getFederalHierarchyConfigurations(orgId: string, cookie: string) {
+  getFederalHierarchyConfiguration(orgId: string, cookie: string) {
     let oApiParam = {
       name: 'program',
       suffix: '/federalHierarchyConfigurations/' + orgId,
       oParam: {},
+      headers: {},
+      method: 'GET'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getFederalHierarchyConfigurations(cookie: string, offset: number) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/federalHierarchyConfigurations/',
+      oParam: {
+        offset: offset
+      },
       headers: {},
       method: 'GET'
     };
@@ -205,6 +225,21 @@ export class ProgramService{
       },
       body: data,
       method: (id == null) ? 'POST' : 'PATCH'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
+  saveCFDAConfiguration(orgId: String = null, data: any, cookie:string){
+    let oApiParam = {
+      name: 'program',
+      suffix: '/federalHierarchyConfigurations/' + orgId,
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      body: data,
+      method: 'PUT'
     };
 
     return this.oAPIService.call(oApiParam, false);

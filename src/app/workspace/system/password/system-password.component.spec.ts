@@ -9,7 +9,7 @@ import { AppComponentsModule } from 'app-components';
 
 import { SystemPasswordComponent } from './system-password.component';
 
-describe('SamKBAComponent', () => {
+describe('[IAM] System Password Reset', () => {
   let component: SystemPasswordComponent,
       fixture: ComponentFixture<SystemPasswordComponent>;
 
@@ -45,4 +45,23 @@ describe('SamKBAComponent', () => {
       expect(component.reset).toHaveBeenCalled();
     });
   }));
+
+  it('verify population of error messages', () => {
+    let error,
+        message;
+
+    component.states.alert.show = true;
+    component.states.alert.message = 'Test Error Message';
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('form sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.states.alert.message);
+  });
 });

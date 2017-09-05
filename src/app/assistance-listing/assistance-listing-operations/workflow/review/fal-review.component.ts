@@ -26,7 +26,7 @@ import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
 import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
-
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
   moduleId: __filename,
@@ -99,6 +99,10 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     permissions: null,
     defaultOption: "Make a Request"
   };
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb:'Home', url:'/',},
+    { breadcrumb: 'Workspace', url: '/workspace' }
+  ];
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -125,9 +129,9 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     timer: 3000
   };
 
-  private pristineIconClass = 'fa fa-circle-o section-pristine';
-  private updatedIconClass = 'fa fa-check section-updated';
-  private invalidIconClass = 'fa fa-exclamation-triangle section-invalid';
+  private pristineIconClass = 'not started';
+  private updatedIconClass = 'completed';
+  private invalidIconClass = 'error';
 
   sectionLabels: any = [
     'Header Information',
@@ -274,6 +278,18 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
       this.reviewErrorList = this.errorService.applicableErrors;
       this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
     }, 400);
+    setTimeout( () => {
+      this.reviewErrorList = this.errorService.applicableErrors;
+      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+    }, 2000);
+    setTimeout( () => {
+      this.reviewErrorList = this.errorService.applicableErrors;
+      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+    }, 5000);
+    setTimeout( () => {
+      this.reviewErrorList = this.errorService.applicableErrors;
+      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
+    }, 12000);
   }
 
   ngOnDestroy() {
@@ -387,6 +403,11 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
       this.authGuard.checkPermissions('review', this.program);
+
+      // Adds page title as the last item in breadcrumbs
+      let pageTitleObj = { breadcrumb: this.program.data.title }
+      this.crumbs.push(pageTitleObj);
+
     }, err => {
       this.router.navigate(['/404']);
     });
@@ -1012,4 +1033,15 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     let url = '/programs/' + this.program.id + '/view';
     this.router.navigateByUrl(url);
   }
+
+  public tabsClicked(tab){
+    switch (tab.label) {
+      case 'Public':
+        this.onViewClick();
+        break;
+      default:
+        break;
+    }
+  }
+
 }

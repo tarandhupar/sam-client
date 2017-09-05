@@ -1,7 +1,7 @@
 import { GrantAccessPage } from "./grant-access.page";
 import { GroupByDomainPipe } from "../access/group-by-domain.pipe";
 import { ObjectsAndPermissionsComponent } from "../objects-and-permissions/objects-and-permissions.component";
-import { TestBed, async } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { SamUIKitModule } from "sam-ui-kit/index";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FormsModule } from "@angular/forms";
@@ -38,7 +38,6 @@ describe('The GrantAccessPage component', () => {
     TestBed.configureTestingModule({
       declarations: [
         GrantAccessPage,
-        GroupByDomainPipe,
         ObjectsAndPermissionsComponent,
         RequestDetailsComponent,
       ],

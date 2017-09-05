@@ -10,9 +10,9 @@ export class OrganizationTypeCodePipe implements PipeTransform {
     };
 
     // check if data items exist, if they do return the label and the data value as properties of an object
-    if(data.aacCode){
+    if(data.procurementAACCode){
       response.label = "Activity Address Code (AAC):";
-      response.value = data.aacCode;
+      response.value = data.procurementAACCode;
     }
     else if(data.cgac){
       response.label = "CGAC Code:";

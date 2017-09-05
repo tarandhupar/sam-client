@@ -22,10 +22,10 @@ import { FALFormOverviewComponent } from '../overview/fal-form-overview.componen
 import { Observable } from 'rxjs';
 import { AppTemplatesModule } from '../../../../app-templates/index';
 
-let MockFormService = jasmine.createSpyObj('MockFormService', ['getRelatedProgramList', 'getFederalHierarchyConfigurations', 'getCfdaCode', 'getFALPermission', 'getOrganization']);
+let MockFormService = jasmine.createSpyObj('MockFormService', ['getRelatedProgramList', 'getFederalHierarchyConfiguration', 'getCfdaCode', 'getFALPermission', 'getOrganization']);
 MockFormService.getFALPermission.and.returnValue(Observable.of({}));
 MockFormService.getOrganization.and.returnValue(Observable.of({}));
-MockFormService.getFederalHierarchyConfigurations.and.returnValue(Observable.of({}));
+MockFormService.getFederalHierarchyConfiguration.and.returnValue(Observable.of({}));
 let MockProgramService = jasmine.createSpyObj('MockProgramService', ['isProgramNumberUnique']);
 let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateHeaderTitle', 'validateFederalAgency', 'applicableErrors']);
 
@@ -142,7 +142,7 @@ describe('FAL Header Info Form', () => {
     let programNumberSpy = spyOnProperty(comp.viewModel, 'programNumber', 'get');
     let orgIdSpy = spyOnProperty(comp.viewModel, 'organizationId', 'get');
 
-    MockFormService.getFederalHierarchyConfigurations.and.returnValue(Observable.of({
+    MockFormService.getFederalHierarchyConfiguration.and.returnValue(Observable.of({
       programNumberAuto: true,
     }));
     comp.updateForm();

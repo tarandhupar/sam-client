@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { OrganizationPage }   from './organization.page.ts';
 import { routing } from './organization.route.ts';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -8,7 +8,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     routing,
     SamUIKitModule,
     PipesModule,

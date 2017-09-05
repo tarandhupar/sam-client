@@ -43,7 +43,9 @@ export class UserAccessService {
       .call(oApiParam, convertToJSON, queryEncoder)
       .catch(res => {
         if (res && res.status === 401) {
-          this.router.navigate(['/signin']);
+          if (!this.router.url.match(/\/workspace/i)) {
+            this.router.navigate(['/signin']);
+          }
         }
         return Observable.throw(res);
       });
@@ -66,7 +68,7 @@ export class UserAccessService {
     return this.callApi(apiOptions, toJson);
   }
 
-  getRoles(queryParams, userName?): Observable< Array<IRole> > {
+  getUiRoles(queryParams, userName?): Observable< Array<IRole> > {
     let apiOptions: any = {
       name: 'uiroles',
       method: 'GET',
@@ -86,9 +88,9 @@ export class UserAccessService {
 
   getDomains(): Observable< IDomain > {
     let apiOptions: any = {
-      name: 'domains',
+      name: 'rms',
       method: 'GET',
-      suffix: '',
+      suffix: '/userdomains/',
     };
 
     this.addAuthHeader(apiOptions);
@@ -129,8 +131,8 @@ export class UserAccessService {
 
   postDomain(domain){
     let apiOptions : any = {
-      name : 'domains',
-      suffix: '/',
+      name : 'rms',
+      suffix: '/domains/',
       method: 'POST',
       body: domain
     };
@@ -138,7 +140,7 @@ export class UserAccessService {
     return this.callApi(apiOptions,false);
   }
 
-  getRoleObjDefinitions(mode : string, domainKey : string, roleKey?) {
+  getDomainDefinition(mode : string, domainKey? : string, roleKey?) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -150,7 +152,7 @@ export class UserAccessService {
       apiOptions.oParam.mode = mode;
     }
 
-    if( domainKey.length > 0 ){
+    if( domainKey && domainKey.length > 0 ){
       apiOptions.oParam.domainKey = domainKey;
     }
 
@@ -366,7 +368,6 @@ export class UserAccessService {
       method: 'GET',
       oParam: queryParams,
     };
-
     return this.callApi(apiOptions);
   }
 
@@ -432,20 +433,17 @@ export class UserAccessService {
 
   addAuthHeader(options) {
     let superToken = Cookie.get('superToken');
-    if (superToken) {
-      options.headers = options.headers || {};
-      options.headers['X-Auth-Token'] = '***'+superToken;
-      return;
+    let iPlanetCookie = Cookie.get('iPlanetDirectoryPro');
+
+    if (iPlanetCookie) {
+      Cookie.delete('superToken');
     }
 
-    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
-
-    if (!iPlanetCookie) {
+    if (!iPlanetCookie && !superToken) {
       return;
     }
-
     options.headers = options.headers || {};
-    options.headers['X-Auth-Token'] = iPlanetCookie;
+    options.headers['X-Auth-Token'] = iPlanetCookie || '***'+superToken;
   }
 
   getOpenRequests(userId: string){

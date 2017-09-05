@@ -7,6 +7,7 @@ import * as Cookies from 'js-cookie';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
 import { IBreadcrumb } from "sam-ui-kit/types";
+import {AlertFooterService} from "../../alerts/alert-footer/alert-footer.service";
 
 
 @Component({
@@ -35,7 +36,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   totalCount: any = 0;
   totalPages: any = 0;
   data = [];
-  alerts = [];
   initLoad = true;
   oldKeyword: string = "";
   qParams: any = {};
@@ -112,7 +112,24 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   public orgLevels: any;
   public orgRoots: any = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService, private falFormService: FALFormService) {
+  keywordsModel: any = [];
+  keywordsConfiguration = {
+    placeholder: "Keyword Search",
+    selectedLabel: "Keywords",
+    allowAny: true,
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
+  serviceErrorFooterAlertModel = {
+    title: "Error",
+    description: "",
+    type: "error"
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService, private falFormService: FALFormService, private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
@@ -130,10 +147,10 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   // builds object we set into url to persist data
   setupQS() {
     let qsobj = {};
-    if(this.keyword.length>0){
-      qsobj['keyword'] = this.keyword;
+    if(this.keywordsModel.length > 0){
+      qsobj['keywords'] = this.keywordSplitter(this.keywordsModel);
     } else {
-      qsobj['keyword'] = '';
+      this.keywordsModel = [];
     }
     if (this.pageNum >= 0) {
       qsobj['page'] = this.pageNum + 1;
@@ -202,7 +219,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
     // make api call
     this.runProgSub = this.programService.runProgram({
-      keyword: this.keyword,
+      keyword: this.keywordSplitter(this.keywordsModel),
       pageNum: this.pageNum,
       Cookie: this.cookieValue,
       status: this.statusCheckboxModel ? this.statusCheckboxModel.toString() : this.defaultStatus,
@@ -247,11 +264,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         console.error('Error!!', error);
         let errorRes = error.json();
         if (error && (error.status === 502 || error.status === 504)) {
-          this.alerts.push({
-            type: 'error',
-            title: errorRes.error,
-            description: errorRes.message
-          });
+          this.serviceErrorFooterAlertModel.description = errorRes.message;
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         }
       }
     );
@@ -289,11 +303,31 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   workspaceSearchClick() {
     this.pageNum = 0;
-    let qsobj = this.setupQS();
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/fal/workspace/'], navigationExtras);
+    // build a new keywords model with keyword
+    this.keywordsModel = this.keywordRebuilder(this.keyword);
+    this.workspaceRefresh();
+    this.keyword = '';
+    this.autocomplete.inputValue = '';
+  }
+
+  keywordsModelChange(value){
+    console.log(value);
+    if(value.length === 1){
+      this.keywordsModel = value;
+    }
+    // TODO: replace this code that removes additonal keywords from filter whenever tier 2 switches to searches against multiple keywords
+    else if(value.length > 1){
+      var tempArray = [];
+      tempArray.push(value[value.length - 1]);
+      this.keywordsModel = tempArray;
+    }
+    else{
+      this.keywordsModel = [];
+    }
+
+    // refresh results
+    this.pageNum = 0;
+    this.workspaceRefresh();
   }
 
   private loadUserPermissions(){
@@ -304,7 +338,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       this.permissions = res;
         this.activatedRoute.queryParams.subscribe(
           data => {
-            this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : '';
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
             this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
             this.requestTypeCheckboxModel = typeof data['requestType'] === "string" ? decodeURI(data['requestType']).split(",") : [];
@@ -317,7 +350,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.modifiedTo = data['modifiedTo'] ? data['modifiedTo'] : "";
             this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
             this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
-
+            this.keywordsModel = data['keywords'] ? this.keywordRebuilder(data['keywords']) : [];
 
             // sets the date models accordingly
             this.modelRebuilder(data);
@@ -327,17 +360,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     }, error => {
       let errorRes = error.json();
       if (error && error.status === 401) {
-        this.alerts.push({
-          type: 'error',
-          title: 'Unauthorized',
-          description: 'Insufficient privileges to get user permission.'
-        });
+        this.serviceErrorFooterAlertModel.description = 'Insufficient privileges to get user permission.'
+        this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
       } else if (error && (error.status === 502 || error.status === 504)) {
-        this.alerts.push({
-          type: 'error',
-          title: errorRes.error,
-          description: errorRes.message
-        });
+        this.serviceErrorFooterAlertModel.description = errorRes.message;
+        this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
       }
     });
 
@@ -486,12 +513,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.postedFrom = "";
     this.postedTo = "";
 
-    this.pageNum = 0;
-    let qsobj = this.setupQS();
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/fal/workspace/'], navigationExtras);
+    this.workspaceRefresh();
   }
 
   clearAllFilters(){
@@ -500,6 +522,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.statusCheckboxModel = this.defaultStatus;
     this.requestTypeCheckboxModel = [];
     this.sortModel = this.defaultSort;
+    this.keywordsModel = [];
     this.clearAgencyPickerFilter();
     // this clears all date filters as well as refreshes the data on the page
     this.clearDateFilter();
@@ -756,6 +779,58 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         console.error('error retrieving organization', error);
       });
 
+  }
+
+  keywordRebuilder(keywordStringOrArray){
+
+    // if passed value is string
+    if(typeof(keywordStringOrArray) === "string"){
+      // use split to convert string to array
+      var tempArray = keywordStringOrArray.split(",");
+      // use map to loop through all items and build objects
+      return tempArray.map(function(item){
+        var tempObj = {label:"", value:""};
+        tempObj.label = item;
+        tempObj.value = item;
+        return tempObj;
+      });
+    }
+
+    // if passed value is array
+    else if(Array.isArray(keywordStringOrArray)){
+      // use map to loop through all items and build objects
+      return keywordStringOrArray.map(function(item){
+        var tempObj = {label:"", value:""};
+        tempObj.label = item;
+        tempObj.value = item;
+        return tempObj;
+      });
+    }
+  }
+
+  keywordSplitter(keywordArray){
+    var newString = "";
+
+    if(keywordArray && keywordArray !== ""){
+      // use reduce to separate items into string: item1 + " " + item2 etc
+      newString = keywordArray.reduce(function(accumulator, currentVal){
+        if(accumulator === ""){
+          return currentVal.value;
+        }
+
+        return accumulator + "," + currentVal.value;
+      }, "");
+    }
+
+    return newString;
+  }
+
+  workspaceRefresh(){
+    let qsobj = this.setupQS();
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/fal/workspace/'], navigationExtras);
   }
 }
 

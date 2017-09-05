@@ -23,6 +23,7 @@ import { PipesModule } from '../../app-pipes/app-pipes.module';
 import { AppComponentsModule } from '../../app-components/app-components.module';
 import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
 import { SamFALTextComponent } from "./fal-text/fal-text.component.ts"
+import { TabsFalComponent } from "./tabs/tabs-fal.component";
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { SamFALTextComponent } from "./fal-text/fal-text.component.ts"
     FALErrorDisplayComponent,
     FALErrorDisplayHelperComponent,
     CustomInlineErrorMessageComponent,
-    SamFALTextComponent
+    SamFALTextComponent,
+    TabsFalComponent
   ],
   exports: [
     FALAccountIdentificationCodeComponent,
@@ -67,7 +69,8 @@ import { SamFALTextComponent } from "./fal-text/fal-text.component.ts"
     FeedsFilterComponent,
     FALErrorDisplayComponent,
     CustomInlineErrorMessageComponent,
-    SamFALTextComponent
+    SamFALTextComponent,
+    TabsFalComponent
   ]
 })
 export class FALComponentsModule {}

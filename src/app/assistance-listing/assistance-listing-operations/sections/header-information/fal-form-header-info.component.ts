@@ -17,7 +17,6 @@ import { ProgramService } from "../../../../../api-kit/program/program.service";
 export class FALFormHeaderInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
-  @ViewChild('agencyPicker') agencyPicker;
 
   falHeaderInfoForm: FormGroup;
 
@@ -45,10 +44,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
   //  TODO Remove and replace with call to FH to get cfdaCode using organization id
   falNoPrefix: string = '';
   public falNo = '';
-  public organizationId: string;
   public organizationData: any;
   public orgLevels: any;
-  public orgRoot: string;
+  public orgRoot: any = [];
   toggleAgencyPicker: boolean = true;
   OrganizationDataOnRole: any;
   autoProgNoGeneration: boolean = true;
@@ -94,12 +92,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
       this.falHeaderInfoForm.get('relatedPrograms').updateValueAndValidity();
       this.falHeaderInfoForm.get('federalAgency').markAsDirty();
       this.falHeaderInfoForm.get('federalAgency').updateValueAndValidity();
-
-      // hack to mark agency picker as dirty since it does not support formControl
-      if ((this.agencyPicker) && this.falHeaderInfoForm.get('federalAgency').value == '') {
-        this.agencyPicker.touched = true;
-        this.agencyPicker.checkForFocus(null);
-      }
       this.falHeaderInfoForm.markAsPristine({onlySelf: true});
       this.falHeaderInfoForm.get('programNumber').markAsDirty({onlySelf: true});
       this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
@@ -154,11 +146,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     let orgId = '';
 
     if(data.federalAgency) {
-      if(data.federalAgency.value)
-        orgId = data.federalAgency.value;
-      else
-        orgId = data.federalAgency;
-
+      orgId = data.federalAgency.orgKey;
       this.getFHConfig(orgId, data['programNumber']);
     }
     else {
@@ -178,6 +166,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
     this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + '.' + data['programNumber'].replace(/\./g, '')) : null;
     this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
+    this.viewModel.organizationId = orgId;
 
     this.cdr.detectChanges();
     this.updateErrors();
@@ -210,41 +199,27 @@ export class FALFormHeaderInfoComponent implements OnInit {
       this.falNoPrefix = '';
     }
     //set organization
-    this.organizationId = this.viewModel.organizationId;
-    this.getOrganizationName(this.organizationId);
+    let organizationId = this.viewModel.organizationId;
+    this.getOrganizationName(organizationId);
 
     this.falHeaderInfoForm.patchValue({
       title: title,
       alternativeNames: popularName,
       programNumber: this.falNo,
-      federalAgency: this.organizationId
+      federalAgency: organizationId
     }, {
       emitEvent: false
     });
 
-    this.getFHConfig(this.organizationId, this.falNo);
+    this.getFHConfig(organizationId, this.falNo);
 
     this.cdr.detectChanges();
     this.updateErrors();
   }
 
-  public onOrganizationChange(org: any) {
-    let orgVal;
-    if (org) {
-      orgVal = org.value;
-    }
-    else {
-      orgVal = null;
-    }
-
-    this.organizationId = orgVal;
-    this.viewModel.organizationId = orgVal;
-
-  }
-
   getFHConfig(orgId, progNo){
 
-    this.service.getFederalHierarchyConfigurations(orgId).subscribe( data => {
+    this.service.getFederalHierarchyConfiguration(orgId).subscribe(data => {
       this.autoProgNoGeneration = data.programNumberAuto;
 
       if(!this.autoProgNoGeneration) {
@@ -310,13 +285,14 @@ export class FALFormHeaderInfoComponent implements OnInit {
       if (res && res.ORG_LEVELS) {
         if (res.ORG_LEVELS.level === 'none') {
           this.toggleAgencyPicker = false;
-          this.orgRoot = res.ORG_LEVELS.org;
+          this.orgRoot = [res.ORG_LEVELS.org];
         } else if (res.ORG_LEVELS.org === 'all') {
-          this.orgRoot = '';
+          this.orgRoot = [];
         } else {
-          this.orgRoot = res.ORG_LEVELS.org;
+          this.orgRoot = [res.ORG_LEVELS.org];
         }
-        this.getOrganizationName(this.orgRoot);
+        let orgId = this.orgRoot.length > 0 ? this.orgRoot[0] : '';
+        this.getOrganizationName(orgId);
       }
     });
   }
@@ -327,10 +303,12 @@ export class FALFormHeaderInfoComponent implements OnInit {
       .subscribe(data => {
         if(data && data['_embedded'] && data['_embedded'][0] && data['_embedded'][0]['org']) {
           this.organizationData = data['_embedded'][0]['org'];
+          if (this.viewModel.isNew && !this.toggleAgencyPicker) {
+            this.getFHConfig(this.organizationData.orgKey, '');
+          }
         }
       }, error => {
         console.error('error retrieving organization', error);
       });
-
   }
 }

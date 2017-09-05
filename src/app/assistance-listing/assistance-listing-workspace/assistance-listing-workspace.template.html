@@ -1,12 +1,3 @@
-<!-- Alerts -->
-<ng-container *ngIf="alerts && alerts.length > 0">
-  <div *ngFor="let alert of alerts; let i = index">
-    <sam-alert [attr.id]="'al-workspace-alert-' + i" [type]="alerts[i].type" [title]="alerts[i].title">
-      <div [innerHTML]="alerts[i].description"></div>
-    </sam-alert>
-  </div>
-</ng-container>
-
 <page
   *ngIf="permissions"
   theme="inside"
@@ -30,6 +21,11 @@
         </a>
       </li>
       <li>
+        <a routerLink="/fal/workspace/cfda-numbers">
+          CFDA Numbers
+        </a>
+      </li>
+      <li>
         <a routerLink="/workspace/my-feed"
            [queryParams]="{domain: 'al', event: 'request', pending: true}">
           Pending Requests &nbsp;
@@ -47,23 +43,37 @@
       <div *ngIf="!initLoad" custom-input class="search-bar">
         <h4 class="sam-ui header">Search</h4>
         <sam-autocomplete class="div-fill" #autocomplete
-                          [(ngModel)]="keyword"
-                          (ngModelChange)="workspaceSearchModel($event)"
-                          (enterEvent)="workspaceSearchClick()"
-                          [config]="workspaceSearchConfig"
-                          [options]="[]"
-                          [attr.id]="'fal-workspace-input-search'"
-                          [showClearButton]="true"
-                          [allowAny]="true"
-                          name="appsearch">
+          [(ngModel)]="keyword"
+          (ngModelChange)="workspaceSearchModel($event)"
+          (enterEvent)="workspaceSearchClick()"
+          [config]="workspaceSearchConfig"
+          [options]="[]"
+          [attr.id]="'fal-workspace-input-search'"
+          [showClearButton]="true"
+          [allowAny]="true"
+          name="appsearch">
         </sam-autocomplete>
         <sam-button class="div-right"
-                    [buttonType]="'default'"
-                    [buttonText]="'Search' "
-                    [buttonClass]="'usa-button usa-search-submit search-btn'"
-                    (onClick)="workspaceSearchClick()">
+          [buttonType]="'default'"
+          [buttonText]="'Search' "
+          [buttonClass]="'usa-button usa-search-submit search-btn'"
+          (onClick)="workspaceSearchClick()">
         </sam-button>
         <div class="sam-ui divider"></div>
+      </div>
+
+      <!--Keywords Filter-->
+      <div>
+        <h4 class="sam-ui header">Keywords</h4>
+        <sam-autocomplete-multiselect
+          class="usa-award-filter"
+          [attr.id]="'keywordSearch'"
+          [name]="'keywordSearchName'"
+          [ngModel]="keywordsModel"
+          (ngModelChange)="keywordsModelChange($event)"
+          [keyValueConfig]="keywordsConfiguration.keyValueConfig"
+          [allowAny]="keywordsConfiguration.allowAny">
+        </sam-autocomplete-multiselect>
       </div>
 
       <!-- Status Filter -->
@@ -130,6 +140,7 @@
       <!--Agency Picker Filter-->
       <h4 class="sam-ui header">Federal Agency</h4>
       <sam-agency-picker-v2 #agencyPickerV2
+        *ngIf="orgRoots && orgRoots.length>0"
         [attr.id] = "'fal-agency-picker-filter'"
         [ngModel]="agencyPickerModel"
         [orgRoots]="orgRoots"

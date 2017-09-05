@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './403.route';
 import { ForbiddenPage } from "./403.page";
@@ -9,7 +9,7 @@ import { CheckAccessGuard } from "./check-access.guard";
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     RouterModule,
     routing
   ],

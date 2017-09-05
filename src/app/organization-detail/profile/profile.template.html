@@ -16,12 +16,6 @@
         Create {{selectConfig.options[0].label}}</button>
     </div>
 
-    <!--<div class="usa-width-one-whole">-->
-      <!--<span *ngFor="let hierarchyName of hierarchyPath; let i = index">-->
-        <!--<a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>-->
-      <!--</span>-->
-    <!--</div>-->
-
     <!-- Detail Section-->
     <div class="usa-width-one-whole m_T-4x">
       <h3>{{currentHierarchyType}} Detail
@@ -48,7 +42,10 @@
       <div class="usa-width-one-whole m_B-4x">
         <p class="m_L-3x m_B-1x" *ngFor="let pair of orgCodes">
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.code}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isRequestAACIcon(pair)">&nbsp;{{pair.value}}</span>
+          <span class="usa-width-two-thirds p_B-1x" *ngIf="isRequestAACIcon(pair)">
+             <a class="usa-button-primary" [routerLink]="['/aac-request']">Request AAC</a>
+          </span>
         </p>
       </div>
       <h3 *ngIf="orgAddresses.length > 0">{{currentHierarchyType}} Address</h3>

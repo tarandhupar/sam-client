@@ -26,7 +26,7 @@ export class SystemPasswordComponent {
     phrases: []
   };
 
-  private states = {
+  public states = {
     initial: true,
     submitted: false,
     loading: false,

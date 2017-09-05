@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { OpportunityPage }   from './opportunity.page';
 import { routing } from './opportunity.route';
 import { PipesModule } from '../app-pipes/app-pipes.module';
@@ -9,15 +9,16 @@ import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
-
+import { OpportunityFormModule } from './opportunity-operations/opportunity-form.module';
 
 @NgModule({
   imports: [
     PipesModule,
-    BrowserModule,
+    CommonModule,
     routing,
     SamUIKitModule,
-    AppComponentsModule
+    AppComponentsModule,
+    OpportunityFormModule
   ],
   exports: [
     OpportunityPage,

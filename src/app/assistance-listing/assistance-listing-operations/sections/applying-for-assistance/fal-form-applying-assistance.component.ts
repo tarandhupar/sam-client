@@ -179,14 +179,27 @@ export class FALAssistanceComponent implements OnInit {
         isSelected: true
       } );
     }
+
+    //deadline list
+    let deadlineList = [];
+
     for(let item of data.deadlines.list){
-      item.start = (item.dateRange && item.dateRange.startDate ? item.dateRange.startDate : null);
-      item.end = (item.dateRange && item.dateRange.endDate ? item.dateRange.endDate : null);
+      let deadlineItem  = {
+        start: '',
+        end: '',
+        description: ''
+      };
+
+      deadlineItem.start = (item.dateRange && item.dateRange.startDate ? item.dateRange.startDate : null);
+      deadlineItem.end = (item.dateRange && item.dateRange.endDate ? item.dateRange.endDate : null);
+      deadlineItem.description = (item.description ? item.description : null);
+
+      deadlineList.push(deadlineItem);
     }
 
     this.viewModel.deadlineFlag = data.deadlines.flag || null;
     this.viewModel.deadlineDesc = data.deadlines.description || null;
-    this.viewModel.deadlineList = data.deadlines.list || null;
+    this.viewModel.deadlineList = deadlineList || null;
     this.viewModel.preAppCoordReports = reports;
     this.viewModel.preAppCoordDesc = data.preApplicationCoordination.description || null;
     this.viewModel.appProcIsApp = data.applicationProcedure.isApplicable[0] || null;

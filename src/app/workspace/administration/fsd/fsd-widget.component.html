@@ -3,7 +3,7 @@
     <span class="fsd-accounts">
       <ul class="list-accounts">
         <li *ngFor="let account of accounts; let $index = index;">
-          <a [routerLink]="['fsd/user', account._id]" [innerText]="account.fullName"></a>
+          <a [routerLink]="['fsd/user', account._id]" [innerText]="account.fullName" preserveQueryParams></a>
         </li>
       </ul>
     </span>
@@ -16,7 +16,7 @@
                         peoplepicker-autofill></sam-autocomplete>
     </span>
   </div>
-  <a class="widget-footer text-right" [routerLink]="['fsd/users']" *ngIf="accounts.length">
+  <a class="widget-footer text-right" [routerLink]="['fsd/users']" preserveQueryParams *ngIf="accounts.length">
     Go to Directory <span class="fa fa-chevron-circle-right"></span>
   </a>
 </div>

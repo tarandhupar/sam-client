@@ -5,7 +5,7 @@ import { UserAccessMock } from "../../../api-kit/access/access.service.mock";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
-import { UserRolesDirectoryPage } from "./user-roles-directory.page";
+import { RolesDirectoryPage } from "./roles-directory.page";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { AppTemplatesModule } from "../../app-templates/index";
 import { AppComponentsModule } from "../../app-components/app-components.module";
@@ -33,13 +33,13 @@ let mockActivatedRoute = {
 };
 
 describe('The user-roles-directory page', () => {
-  let component: UserRolesDirectoryPage;
+  let component: RolesDirectoryPage;
   let fixture: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        UserRolesDirectoryPage
+        RolesDirectoryPage
       ],
       imports: [
         FormsModule,
@@ -56,7 +56,7 @@ describe('The user-roles-directory page', () => {
       ]
     });
 
-    fixture = TestBed.createComponent(UserRolesDirectoryPage);
+    fixture = TestBed.createComponent(RolesDirectoryPage);
     component = fixture.componentInstance;
   });
 

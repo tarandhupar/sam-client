@@ -1,6 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
 import { UserDirectoryPage } from './directory/user-directory.page';
-import { UserAccessPage } from './access/access.page';
 import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
@@ -9,13 +8,13 @@ import { RequestAccessResolve } from "./request-access.resolve";
 import { DeptAdminGuard } from "../application-content/403/dept-admin.guard";
 import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
 import { UserRoleDetailsResolve } from "./user-role-details.resolve";
-import { DomainsResolve } from "../role-management/domains.resolve";
-import {IsLoggedInGuard} from "../application-content/403/is-logged-in.guard";
+import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 import { RequestAccessPage } from "./request-access/request-access.page";
 import { RoleCategoriesResolve } from "./roles-categories.resolve";
 import { ViewRequestPage } from "./view-request/view-request.page";
 import { RequestResponsePage } from "./request-response/request-response.page";
 import { CheckAccessGuard } from "../application-content/403/check-access.guard";
+import { MyAccessPage } from "./access/my-access.page";
 
 export const routes: Routes = [];
 
@@ -30,10 +29,9 @@ routes.unshift(
     children: [
       {
         path: ':id/access',
-        component: UserAccessPage,
-        data: { isAdminView: true, pageName: 'users/:id/access' },
+        component: MyAccessPage,
+        data: { isMyAccess: false, pageName: 'users/:id/access' },
         canActivate: [ CheckAccessGuard ],
-        resolve: { domains: DomainsResolve },
       },
       {
         path: ':id/role-details',
@@ -77,8 +75,8 @@ routes.unshift(
   },
   {
     path: 'profile/access',
-    component: UserAccessPage,
-    data: { isAdminView: false, pageName: 'profile/access' },
+    component: MyAccessPage,
+    data: { isMyAccess: true, pageName: 'profile/access' },
     canActivate: [ IsLoggedInGuard, CheckAccessGuard ]
   },
   {

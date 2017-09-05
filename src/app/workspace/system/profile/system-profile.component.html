@@ -125,8 +125,9 @@
       <h3 id="point-of-contact">Point of Contact</h3>
 
       <div class="content">
-        <sam-autocomplete id="system-poc-search"
-                          name="system-poc-search"
+        <sam-autocomplete [id]="'system-poc-search'"
+                          [name]="'system-poc'"
+                          [labelText]="' '"
                           [config]="store.picker"
                           (enterEvent)="addPOC($event)"
                           [hidden]="!(detailsForm.controls.pointOfContact.length < 3)"

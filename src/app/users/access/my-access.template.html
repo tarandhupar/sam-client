@@ -1,0 +1,104 @@
+<page class="access-page" [section]="'Profile'" [title]="getPageTitle()">
+  <sidebar>
+    <nav *ngIf="isMyAccess">
+      <ul class="usa-sidenav-list">
+        <li *ngFor="let nav of navLinks">
+          <a *ngIf="!nav.active" [routerLink]="nav.routerLink" [innerText]="nav.text"></a>
+          <a *ngIf="nav.active" class="usa-current" [innerText]="nav.text"></a>
+        </li>
+      </ul>
+    </nav>
+    <div style="padding-left: 1.8rem;" [style.margin-top]="isMyAccess ? '2rem' : '10.8rem'">
+      <ng-container *ngIf="roleOptions?.length">
+        <h4 class="sam-ui header">Roles</h4>
+        <sam-checkbox name='role' [(ngModel)]="selectedRoleIds" [options]="roleOptions" (ngModelChange)="onRoleChange()"></sam-checkbox>
+        <div class="sam-ui divider hidden"></div>
+      </ng-container>
+      <ng-container *ngIf="domainOptions?.length">
+        <h4 class="sam-ui header">Domains</h4>
+        <sam-checkbox name='domains' [(ngModel)]="selectedDomainIds" [options]="domainOptions" (ngModelChange)="onDomainChange()"></sam-checkbox>
+      </ng-container>
+    </div>
+
+  </sidebar>
+  <div message *ngIf="requests?.length" class="m_B-4x">
+    <div class="usa-alert usa-alert-info" style="width: 100%; margin-top: 0">
+      <div class="usa-alert-body">
+        <h4>
+          You have
+          <a (click)="requests.showDetails = !requests.showDetails">{{requests.length}} pending role request{{requests.length > 1 ? 's' : ''}}</a>
+        </h4>
+        <div *ngIf="requests && requests.showDetails">
+          <div *ngFor = "let request of requests">
+            <div class = "usa-grid-full">
+              <div class = "usa-width-two-thirds">
+                {{request.role ? (request.role.val | capitalize) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val | capitalize) : 'Unspecified Domain'}} at the {{request.organization ? (request.organization.val | capitalize) : 'Unspecified Organization'}}
+              </div>
+              <div class = "usa-width-one-third">
+                <div class = "usa-width-one-half">{{request.createdDate | dateFormat: 'MMM DD, YYYY'}}</div>
+                <div class = "usa-width-one-half">
+                  <a class="pull-right" [routerLink]="'/access-requests/' + request.id">{{request.status.val | capitalize}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="result === 'success'">
+    <results *ngIf="access?.length"
+             [totalElements]="access.length"
+             [totalPages]="totalPages"
+             [currentPage]="currentPage"
+             (pageChange)="onPageChange($event)">
+
+      <sam-sort [(ngModel)]="sort"
+                [options]="sortOptions"
+                (ngModelChange)="onSearchParamChange()"
+      ></sam-sort>
+      <div result-actions style="display: inline-block">
+        <a *ngIf="canRequest" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['../request-access']" class="sam-ui primary small button" >Request Access</a>
+        <a *ngIf="canGrant" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['../grant-access']" class="sam-ui primary small button" >Grant Access</a>
+      </div>
+      <table *ngIf="access?.length" style="width: 100%; margin-top: 1rem; border: 1px solid black;">
+        <thead style="border-bottom: 1px solid black;">
+        <th>Organization</th>
+        <th>Role</th>
+        <th>Domain(s)</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let roleOrg of access">
+          <td>{{orgName(roleOrg.organization)}}</td>
+          <td>{{roleOrg.role.val | capitalize}}</td>
+          <td>
+            <div *ngFor="let domain of roleOrg.domain">{{domain.val | capitalize}}</div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </results>
+
+    <ng-container *ngIf="numberOfSearches > 1 && !access.length">
+      <div class="p_T-6x text-center" style="min-height: 300px;">
+        <em>No results for selected criteria.</em>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="numberOfSearches === 1 && !access.length">
+      <div class="user-access">
+        <div class="p_T-6x text-center" style="min-height: 300px;">
+          <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>
+          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../grant-access']" >Grant Access</a></span>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="result === 'error'">
+    <sam-alert type="error" [title]="'Error'" [description]="errorMessage"></sam-alert>
+  </ng-container>
+  <ng-container *ngIf="result === 'pending'">
+    <div class="text-center" style="margin-top: 3em;"><sam-spinner></sam-spinner></div>
+  </ng-container>
+
+</page>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,8 +11,6 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UserDirectoryPage } from "./directory/user-directory.page";
 import { ParentOrgsComponent } from "./directory/parent-orgs/parent-orgs.component";
-import { UserAccessPage } from "./access/access.page";
-import { GroupByDomainPipe } from "./access/group-by-domain.pipe";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
@@ -33,11 +31,12 @@ import { RequestResponsePage } from "./request-response/request-response.page";
 import { UserService } from "./user.service";
 import { UserServiceMock } from "./user.service.mock";
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { MyAccessPage } from "./access/my-access.page";
 
 @NgModule({
   imports: [
     routing,
-    BrowserModule,
+    CommonModule,
     RouterModule,
     HttpModule,
     FormsModule,
@@ -54,11 +53,10 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
     UserPic
   ],
   declarations: [
-    UserAccessPage,
+    MyAccessPage,
     GrantAccessPage,
     UserDirectoryPage,
     ParentOrgsComponent,
-    GroupByDomainPipe,
     ObjectsAndPermissionsComponent,
     UserPic,
     PendingRequestsComponent,
@@ -75,7 +73,6 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
     RoleCategoriesResolve,
     CapitalizePipe,
     UserService,
-    //{ provide: UserService, useClass: UserServiceMock }
   ],
 })
 export class UserDirectoryModule { }

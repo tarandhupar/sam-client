@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, NgZone, NgModule, ViewChild } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule }   from '@angular/forms';
 import { routing } from './reports.route';
 import { ReportsPage } from './reports.page';
@@ -25,7 +25,7 @@ import { ReportService } from './report.service';
 @NgModule({
   imports: [
     SamUIKitModule,
-    BrowserModule,
+    CommonModule,
     FormsModule,
     routing,
     AppComponentsModule,

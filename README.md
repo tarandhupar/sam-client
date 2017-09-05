@@ -1,6 +1,5 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
 
-
 <ul>
   <li><a href="#pipeline-workaround">!!!***Pipeline 2.0 workaround***!!!</a></li>
   <li>
@@ -130,8 +129,9 @@ All should be prepended with `$ npm install --global`:
 [https://help.github.com/articles/fork-a-repo/](https://help.github.com/articles/fork-a-repo/)
 1. `$ npm install` or `$ npm update` to make sure you have the latest version of all the packages used in the app.
 1. `$ npm run server` to start the local server (development)
-  - `$ npm run build:prod`
-  - `$ npm run server:prod`
+1. to start the local server (Production), you need to have `docker` installed then
+  - `$ docker build -t sam-nginx .`
+  - `$ docker run -ti --name sam-nginx-app -p 8080:8080 sam-nginx`
 
 > After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
@@ -220,6 +220,16 @@ npm run watch
 npm run test
 ```
 
+running tests without linter
+```bash
+npm run test:no-lint
+```
+
+running tests against common components
+```bash
+npm run test:sam-ui-elements
+```
+
 **Tests + watch**
 
 ```bash
@@ -249,4 +259,5 @@ npm run webdriver:start
 # in another terminal
 npm run e2e:live 
 ```
- \
+
+   

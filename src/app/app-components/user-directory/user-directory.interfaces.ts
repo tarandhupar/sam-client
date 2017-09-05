@@ -9,7 +9,8 @@ export interface Page {
 
 export interface Sort {
   type?:  string;
-  order?: string;
+  order?: string; /* [Compatibility] */
+  sort?:  string;
 };
 
 export interface Options {
@@ -17,4 +18,10 @@ export interface Options {
   filter?: Filter;
   page?:   Page;
   sort?:   Sort;
+};
+
+export interface PageState extends Page {
+  current: number;
+  total:   number;
+  count:   number;
 };

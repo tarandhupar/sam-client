@@ -5,7 +5,7 @@ describe('src/app/app-pipes/organization-type-code.pipe.spec.ts', () => {
 
   it('OrganizationTypeCodePipe: transforms a json response object to an object with label and value', () => {
     let object1 = {
-      aacCode: null,
+      procurementAACCode: null,
       alternativeNames: null,
       description: null,
       fpdsCode:null,
@@ -20,7 +20,7 @@ describe('src/app/app-pipes/organization-type-code.pipe.spec.ts', () => {
     };
 
     let object2 = {
-      aacCode: null,
+      procurementAACCode: null,
       alternativeNames: null,
       description: null,
       fpdsCode:null,

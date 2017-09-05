@@ -155,11 +155,11 @@ export class RegisterMainComponent {
 
   initSession(cb) {
     let onInitSuccess,
-        onInitError;
+      onInitError;
 
     onInitSuccess = ((data) => {
       let userData = merge({}, data.user || {}),
-          phone;
+        phone;
 
       userData._id = userData.id || userData._id || '';
       userData.firstName = userData.firstname || userData.firstName || '';
@@ -243,7 +243,7 @@ export class RegisterMainComponent {
       { 'id': 10, 'question': 'What is your dream job?' },
       { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
       { 'id': 12, 'question': 'What is the title of your favorite book?' }
-   ];
+    ];
 
     this.processKBAQuestions();
 
@@ -290,13 +290,13 @@ export class RegisterMainComponent {
     });
 
     this.userForm.controls['officeID'].setValue(
-       this.user.officeID || this.user.agencyID || this.user.departmentID
+      this.user.officeID || this.user.agencyID || this.user.departmentID
     );
   }
 
   changeQuestion(questionID, $index) {
     let items = cloneDeep(this.store.questions),
-        intQuestion;
+      intQuestion;
 
     this.states.selected[$index] = questionID;
 
@@ -335,8 +335,8 @@ export class RegisterMainComponent {
 
   prepareData() {
     let userData = merge({}, this.user, this.userForm.value),
-        propKey,
-        isRemove;
+      propKey,
+      isRemove;
 
     userData.initials = userData.middleName;
     userData.fullName = [userData.firstName, userData.initials, userData.lastName]
@@ -360,7 +360,7 @@ export class RegisterMainComponent {
       }
 
       isRemove = (isArray(userData[propKey]) && !userData[propKey].length) ||
-                 ((userData[propKey] || '').length == 0);
+        ((userData[propKey] || '').length == 0);
 
       if(isRemove && !propKey.match(/(department|agency|office)ID/)) {
         delete userData[propKey];
@@ -392,12 +392,12 @@ export class RegisterMainComponent {
 
   register() {
     let userData,
-        onError = ((error) => {
-          // Error Promise
-          this.showAlert('error', error.message);
-          this.states.submitted = false;
-          this.states.loading = false;
-        });
+      onError = ((error) => {
+        // Error Promise
+        this.showAlert('error', error.message);
+        this.states.submitted = false;
+        this.states.loading = false;
+      });
 
     this.hideAlert();
     this.validate();

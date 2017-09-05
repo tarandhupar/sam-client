@@ -19,7 +19,7 @@ let comp: FALFormChangeRequestActionComponent;
 let fixture: ComponentFixture<FALFormChangeRequestActionComponent>;
 
 let MockProgramService = {
-  getFederalHierarchyConfigurations: (orgId: string, cookie: string) => {
+  getFederalHierarchyConfiguration: (orgId: string, cookie: string) => {
     return Observable.of({
       "organizationId":"100004222",
       "programNumberLow":0,

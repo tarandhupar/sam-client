@@ -99,7 +99,7 @@ $arrowVerticalSubMenuColor: $white;
 $buttonSize: $relativeMedium;
 $buttonOffset: 0em;
 $buttonMargin: -0.5em 0em;
-$buttonVerticalPadding: $relativeMini;
+$buttonVerticalPadding: .7em;
 
 /* Input */
 $inputSize: $relativeMedium;
@@ -326,7 +326,7 @@ $tabularFluidWidth: calc(100% + #{$tabularFluidOffset} * 2 );
 $tabularActiveBackground: none $white;
 $tabularActiveColor: $selectedTextColor;
 $tabularActiveBoxShadow: none;
-$tabularActiveWeight: bold;
+$tabularActiveWeight: 600;
 
 
 
@@ -885,7 +885,7 @@ $massiveWidth: 25rem;
 .#{$prefix}.menu .item.disabled:hover {
   cursor: default;
   background-color: transparent !important;
-  color: $disabledTextColor;
+  color: $disabledTextColor !important;
 }
 
 

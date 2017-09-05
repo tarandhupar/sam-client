@@ -20,7 +20,7 @@ export class ForgotMainComponent {
   @ViewChild('form') form;
   @ViewChild('samPassword') $password;
 
-  private states = {
+  public states = {
     submittedCount: 0,
     submitted: false,
     reset: false,

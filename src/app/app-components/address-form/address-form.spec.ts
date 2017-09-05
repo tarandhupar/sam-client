@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 import * as moment from 'moment/moment';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';

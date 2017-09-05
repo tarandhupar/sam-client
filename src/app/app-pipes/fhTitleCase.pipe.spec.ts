@@ -9,7 +9,7 @@ describe('src/app/app-pipes/fhTitleCase.pipe.spec.ts', () => {
     let result2 = 'Economic Affairs';
     let string3 = "ADMINISTRATIVE OFFICE OF THE U.S. COURTS";
     let result3 = 'Administrative Office of the U.S. Courts';
-    
+
     expect(pipe.transform(string1)).toBe(result1);
     expect(pipe.transform(string2)).toBe(result2);
     expect(pipe.transform(string3)).toBe(result3);

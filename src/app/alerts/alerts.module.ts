@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { routing } from './alerts.route';
 import { AlertsPage } from './alerts.page';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -13,7 +13,7 @@ import { AlertEditComponent } from './alert-edit/alert-edit.component';
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     routing,

@@ -16,7 +16,7 @@
     <div class="usa-width-one-half">
         <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
         <sam-button buttonText="Reject" (onClick)="onRejectClick($event)"
-                    [buttonType]="(!rejectALForm.valid ? 'disabled' : 'default')"></sam-button>
+                    [buttonDisabled]="((!rejectALForm.valid || rejectALForm.pristine) ? true : false)"></sam-button>
       </div>
   </form>
 </div>

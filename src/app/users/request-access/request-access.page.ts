@@ -1,13 +1,18 @@
 import { Component } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 import { Validators as $Validators } from "../../authentication/shared/validators";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
-import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
 import { UserService } from "../user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { IBreadcrumb } from "sam-ui-kit/types";
+
+function arrayIsRequired(c: FormControl) {
+  if (!c.value || !c.value.length) {
+    return { arrayHasElement: { valid: false } };
+  }
+}
 
 @Component({
   templateUrl: './request-access.template.html',
@@ -17,7 +22,7 @@ export class RequestAccessPage {
   errors = {
     org: '',
     role: '',
-    domain: '',
+    domains: '',
     superName: '',
     superEmail: '',
     comment: '',
@@ -27,8 +32,6 @@ export class RequestAccessPage {
   user: any = {};
   roleCategories = [];
   domainOptions = [];
-  usernames : any;
-  userDetail : string = '';
 
   userConfig = {
     keyValueConfig: {
@@ -55,15 +58,14 @@ export class RequestAccessPage {
     this.form = fb.group({
       org: ['', Validators.required],
       role: ['', Validators.required],
-      domain: ['', Validators.required],
+      domains: ['', arrayIsRequired],
       superName: ['', Validators.required],
       superEmail: ['', [Validators.required, $Validators.email]],
-      comment: '',
+      comment: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    //this.userName = this.route.snapshot.data['userName'];
     this.user = this.userService.getUser();
     this.userName = this.user.uid;
     this.roleCategories = this.route.snapshot.data['roleCategories'].map(
@@ -85,7 +87,7 @@ export class RequestAccessPage {
 
   onRoleChange() {
     let rid = this.form.value.role;
-    this.form.controls['domain'].setValue('');
+    this.form.controls['domains'].setValue('');
     if (!rid) {
       this.domainOptions = [];
     }
@@ -99,16 +101,10 @@ export class RequestAccessPage {
     });
     this.domainOptions = domains.map(dom => {
       return {
-        label: this.capitalize.transform(dom.val),
-        value: dom.id
+        value: this.capitalize.transform(dom.val),
+        key: ''+dom.id
       }
     });
-  }
-
-  clearErrors() {
-    for (let e in this.errors) {
-      this.errors[e] = '';
-    }
   }
 
   showErrors() {
@@ -116,7 +112,7 @@ export class RequestAccessPage {
     keys.forEach(key => {
       let control = this.form.controls[key];
       if (control.errors) {
-        if (control.errors['required']) {
+        if (control.errors['required'] || control.errors['arrayHasElement']) {
           this.errors[key] = `This field is required`;
         } else if (control.errors['email']) {
           this.errors[key] = `Invalid email format`;
@@ -131,11 +127,6 @@ export class RequestAccessPage {
     return this.form.valid;
   }
 
-  updateUserData(val){
-    console.log(this.userDetail);
-    console.log(val);
-  }
-
   onSubmit() {
     if (!this.validate()) {
       this.showErrors();
@@ -146,7 +137,7 @@ export class RequestAccessPage {
       requestorName: this.userName,
       supervisorName: val.superName,
       supervisorEmail: val.superEmail,
-      domainId: val.domain,
+      domainIds: val.domains.map(d => +d.key),
       requestorMessage: val.comment,
       roleId: val.role,
       organization : { id:val.org.value, val:val.org.name}

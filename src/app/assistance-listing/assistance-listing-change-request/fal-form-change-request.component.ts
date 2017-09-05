@@ -88,7 +88,7 @@ export class FALFormChangeRequestComponent implements OnInit {
       this.activatedRoute.queryParams.subscribe(params => {
         this.requestType = params['type'];
         if(this.requestType === 'program_number_request'){
-          this.programService.getFederalHierarchyConfigurations(this.program.data.organizationId, this.cookieValue).subscribe(res => {
+          this.programService.getFederalHierarchyConfiguration(this.program.data.organizationId, this.cookieValue).subscribe(res => {
             this.programNumberLow = res.programNumberLow;
             this.programNumberHigh = res.programNumberHigh;
             this.loadPermission();

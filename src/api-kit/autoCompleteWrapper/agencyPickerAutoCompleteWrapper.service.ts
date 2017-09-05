@@ -12,7 +12,8 @@ export class AgencyPickerAutoCompleteWrapper implements AutocompleteService{
   fetch(val: any, endOfList: boolean, serviceOptions: any) {
     let isCode = val && !isNaN(val);
     let parent = serviceOptions && serviceOptions['parent'] ? serviceOptions['parent'] : null;
-    return this.oFHService.fhSearch(val,1,10,['active'],[],null,isCode,parent).map(res => {
+    let defaultDept = serviceOptions && serviceOptions['defaultDept'] ? serviceOptions['defaultDept'] : null;
+    return this.oFHService.fhSearch(val,1,10,['active'],[],null,isCode,parent,defaultDept).map(res => {
       if(res["_embedded"]) {
         return res["_embedded"].map((val)=>{
           let obj = val['org'];

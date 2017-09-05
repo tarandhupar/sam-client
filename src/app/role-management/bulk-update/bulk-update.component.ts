@@ -46,7 +46,7 @@ export class BulkUpdateComponent {
   areUsersLoading = false;
   comments = '';
   breadCrumbs: Array<IBreadcrumb> = [
-    { breadcrumb: 'Role Management', url: '/access/user-roles-directory' },
+    { breadcrumb: 'Role Management', url: '/access/roles-directory' },
     { breadcrumb: 'Bulk Update'}
   ];
 
@@ -98,9 +98,9 @@ export class BulkUpdateComponent {
   }
 
   getRoles(selectFirstRole?: boolean) {
-    let options: any = {domainID: this.domain};
+    let options: any = {domainKey: this.domain};
     this.userAccessService
-      .getRoles(options)
+      .getUiRoles(options)
       .subscribe(
         perms => {
           this.roles = perms;
@@ -287,7 +287,7 @@ export class BulkUpdateComponent {
 
     this.userAccessService.postAccess(req).subscribe(
       () => {
-        this.router.navigate(['access/user-roles-directory']);
+        this.router.navigate(['access/roles-directory']);
         this.footerAlerts.registerFooterAlert({
           description:`Succesfully updated access for ${users.length} user${users.length > 1 ? 's' : ''}.`,
           title: '',
@@ -349,7 +349,7 @@ export class BulkUpdateComponent {
     let params = {
       domain: this.domain,
       roles: this.existingRole,
-      orgKey: this.org.value,
+      orgKey: this.org.orgKey,
       sort: sort,
       order: order,
     };

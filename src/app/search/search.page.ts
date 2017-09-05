@@ -18,9 +18,9 @@ import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
 })
 
 export class SearchPage implements OnInit {
-
-  keyword: string = "";
+  keywords: string ="";
   index: string = "";
+  prevIndex: string = "";
   organizationId: string = '';
   previousStringList: string = '';
   pageNum = 0;
@@ -40,6 +40,19 @@ export class SearchPage implements OnInit {
   isSearchComplete: boolean = false;
   showSpinner: boolean = false;
   agencyPickerModel = [];
+
+  defaultSortModel: any = {type:'modifiedDate', sort:'desc'};
+  keywordSortModel: any = {type:'relevance', sort:'desc'};
+  sortModel: any = this.defaultSortModel;
+  relevanceSort: any = {label:'Relevance', name:'Relevance', value:'relevance'};
+  sortOptions = [
+    {label:'Relevance', name:'Relevance', value:'relevance'},
+    {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
+  ];
+  sortChange: boolean = false;
+  blankSearch: boolean = true;
+
+  sortBy: string = "";
 
   // duns entity objects
   dunsModel: any = '';
@@ -422,7 +435,7 @@ export class SearchPage implements OnInit {
 
     this.activatedRoute.queryParams.subscribe(
       data => {
-        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+        this.keywords = data['keywords'] ? decodeURI(data['keywords']) : '';
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
         this.organizationId = typeof data['organization_id'] === "string" ? decodeURI(data['organization_id']) : "";
@@ -449,11 +462,14 @@ export class SearchPage implements OnInit {
         this.assistanceTypeFilterModel = data['assistance_type'] && data['assistance_type'] !== null ? data['assistance_type'] : '';
         this.registrationExclusionCheckboxModel = data['entity_type'] && data['entity_type'] !== null ? data['entity_type'].split(",") : [];
         this.agencyPickerModel = this.setupOrgsFromQS(data['organization_id']);
-        this.keywordsModel = data['keywords'] && data['keywords'] !== null ? this.keywordRebuilder(decodeURI(data['keywords'])) : '';
+        this.keywordsModel = this.keywords.length>0 ? this.keywordRebuilder(this.keywords) : [];
+        this.sortModel = typeof data['sort'] === "string" ? this.setSortModel(decodeURI(data['sort'])) : this.defaultSortModel;
         // persist duns filter data
         this.grabPersistData(this.dunsListString);
         this.isSearchComplete = false;
         this.runSearch();
+        this.blankSearch = this.keywordsModel.length === 0;
+        this.setupSortOptions(this.blankSearch);
         this.loadParams();
       });
 
@@ -483,10 +499,10 @@ export class SearchPage implements OnInit {
     let organizationStringList = '';
     let stringBuilderArray = selectedOrgs.map(function (organizationItem) {
       if (organizationStringList === '') {
-        organizationStringList += organizationItem.value;
+        organizationStringList += organizationItem.orgKey;
       }
       else {
-        organizationStringList += ',' + organizationItem.value;
+        organizationStringList += ',' + organizationItem.orgKey;
       }
 
       return organizationStringList;
@@ -497,6 +513,7 @@ export class SearchPage implements OnInit {
     // storing current organization string list
     this.organizationId = organizationStringList;
 
+
     // we only want to change page number when the organization list has changed
     if (this.previousStringList !== this.organizationId) {
       this.pageNum = 0;
@@ -506,12 +523,23 @@ export class SearchPage implements OnInit {
 
   }
 
+  setupSortOptions(blankSearch){
+    var blankSortOptions = [
+      {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
+    ];
+    var querySortOptions = [
+      {label:'Relevance', name:'Relevance', value:'relevance'},
+      {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
+    ];
+    if(!blankSearch){
+      this.sortOptions = querySortOptions;
+    }else{
+      this.sortOptions = blankSortOptions;
+    }
+  }
+
   setupQS(newsearch) {
     var qsobj = {};
-    if (this.keyword.length > 0) {
-      qsobj['keywords'] = this.keyword;
-    }
-
     if (this.index.length > 0) {
       qsobj['index'] = this.index;
     } else {
@@ -520,8 +548,7 @@ export class SearchPage implements OnInit {
 
     if (!newsearch && this.pageNum >= 0) {
       qsobj['page'] = this.pageNum + 1;
-    }
-    else {
+    } else {
       qsobj['page'] = 1;
     }
     qsobj['is_active'] = this.isActive;
@@ -548,6 +575,8 @@ export class SearchPage implements OnInit {
 
     if (this.organizationId.length > 0) {
       qsobj['organization_id'] = this.organizationId;
+    }else{
+      qsobj['organization_id'] = '';
     }
 
     //wd Non Standard drop down param
@@ -619,9 +648,21 @@ export class SearchPage implements OnInit {
 
     if (this.keywordsModel && this.keywordsModel.length > 0) {
       qsobj['keywords'] = this.keywordSplitter(this.keywordsModel);
+
+    } else{
+      qsobj['keywords'] = '';
     }
 
-
+    if(this.keywordsModel && this.keywordsModel.length > 0){
+      if(this.sortModel !== this.keywordSortModel['type'] && this.sortChange){
+        qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+        this.sortChange = false;
+      }else{
+        qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.keywordSortModel['type']);        
+      }
+    }else{
+      qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.defaultSortModel['type']);      
+    }
 
     return qsobj;
   }
@@ -655,9 +696,9 @@ export class SearchPage implements OnInit {
         this.dismissWdAlert = false;
     }
     //make featuredSearch api call only for first page
-    if (this.pageNum <= 0 && this.keyword !== '' && (!this.index || this.index == 'fh' || this.index == 'fpds')) {
+    if (this.pageNum <= 0 && this.keywords !== '' && (!this.index || this.index == 'fh' || this.index == 'fpds')) {
       this.searchService.featuredSearch({
-        keyword: this.keyword
+        keyword: this.keywords
       }).subscribe(
         data => {
           if (data._embedded && data._embedded.featuredResult) {
@@ -684,7 +725,7 @@ export class SearchPage implements OnInit {
     }
     //make api call
     this.searchService.runSearch({
-      keyword: this.keyword && this.keyword !== '' ? this.keyword : this.keywordSplitter(this.keywordsModel),
+      keyword: this.keywordSplitter(this.keywordsModel),
       index: this.index,
       pageNum: this.pageNum,
       organization_id: this.organizationId,
@@ -707,7 +748,8 @@ export class SearchPage implements OnInit {
       applicant: this.appElSearchString,
       beneficiary: this.benElSearchString,
       assistance_type: this.assistanceTypeFilterModel,
-      entity_type: this.registrationExclusionCheckboxModel
+      entity_type: this.registrationExclusionCheckboxModel,
+      sort: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type'])
     }).subscribe(
       data => {
 
@@ -744,10 +786,18 @@ export class SearchPage implements OnInit {
           this.totalCount = 0;
         }
         // set keywords filter with keywords from response
-        this.keywordsModel = this.keywordRebuilder(data['_embedded']['stringList']);
-        // clear keyword
-        this.keyword = "";
-        this.oldKeyword = this.keyword;
+        if(data.hasOwnProperty('_embedded')){
+          if(data['_embedded'].hasOwnProperty('stringList')){
+            this.keywordsModel = this.keywordRebuilder(data['_embedded']['stringList']);
+          }else{
+            this.keywordsModel = [];
+          }
+        }else{
+          this.keywordsModel = [];
+        }
+
+
+        this.oldKeyword = this.keywords;
         this.initLoad = false;
         this.isSearchComplete = true;
       },
@@ -1105,6 +1155,8 @@ export class SearchPage implements OnInit {
     } else {
       this.router.navigate(['/search'], navigationExtras);
     }
+    //reset sort change checker
+    this.sortChange = false;
   }
 
   wdTypeRadClear() {
@@ -1152,6 +1204,7 @@ export class SearchPage implements OnInit {
 
     // clear/reset all top level filters
     this.isActive = true;
+    this.keywordsModel = [];
 
     // call wd clear filters
     this.wdStateObject = null;
@@ -1449,5 +1502,20 @@ export class SearchPage implements OnInit {
       });
     }
   }
+
+    // sortBy model change
+    sortModelChange(){
+      this.pageNum = 0;
+      this.sortChange = true;
+      this.searchResultsRefresh();
+    }
+
+    setSortModel(sortBy) {
+      if(sortBy.substring(0, 1) == '-') {
+        return {type: sortBy.substring(1), sort: 'desc'};
+      } else {
+        return {type: sortBy, sort: 'asc'};
+      }
+    }
 
 }

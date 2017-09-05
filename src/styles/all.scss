@@ -69,7 +69,8 @@ $large: $current-large;
 
 @import '~uswds/src/stylesheets/elements/buttons';
 @import '~uswds/src/stylesheets/elements/figure';
-@import '~uswds/src/stylesheets/elements/inputs';
+//@import '~uswds/src/stylesheets/elements/inputs';
+@import 'sam-ui/vendor/uswds';
 @import '~uswds/src/stylesheets/elements/labels';
 //@import '~uswds/src/stylesheets/elements/list';
 //@import '~uswds/src/stylesheets/elements/table';
@@ -147,9 +148,9 @@ home samsearchbar{
     padding-bottom: 2px;
 }
 
-samsearchheader .search-header > .usa-width-one-whole{
-  height: 40px;
-}
+// samsearchheader .search-header > .usa-width-one-whole{
+//   height: 40px;
+// }
 
 .usa-font-lead {
   font-family: $font-serif;
@@ -176,6 +177,10 @@ samsearchheader .search-header > .usa-width-one-whole{
   font-weight: 600;
 }
 
+.usa-alert{
+  width: 100%;
+}
+
 /*******************************
         Legacy
 *******************************/
@@ -195,7 +200,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/date-entry';
 @import 'components/date-range';
 @import 'components/download';
-@import 'components/label-wrapper';
+// @import 'components/label-wrapper';
 @import 'components/accordion';
 @import 'components/alert';
 @import 'components/authentication';
@@ -273,12 +278,6 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'sam-ui/pages/aac-request';
 @import 'sam-ui/pages/aac-confirm';
 
-// h1,
-// h2{
-//   letter-spacing: -0.5px;
-//   line-height: 1.1;
-//   color: black;
-// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
@@ -322,9 +321,9 @@ samsearchheader .search-header > .usa-width-one-whole{
 
 .sidenav-logo {
   width:160px;
-  height: 160px;
   display: block;
   margin: 0 auto;
+  margin-bottom: 10px;
 }
 
 .falDateFilter{
@@ -355,16 +354,16 @@ samsearchheader .search-header > .usa-width-one-whole{
   }
 }
 
-.search-layout{
-  .showing-results-meta{
-    margin-top:3rem!important;
-  }
-  samselect{
-    label{
-      margin-top:0;
-    }
-  }
-}
+// .search-layout{
+//   .showing-results-meta{
+//     margin-top:3rem!important;
+//   }
+//   samselect{
+//     label{
+//       margin-top:0;
+//     }
+//   }
+// }
 
 select {
   background-position: right .65rem center;

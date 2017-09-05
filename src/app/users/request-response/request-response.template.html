@@ -21,20 +21,25 @@
     </div>
     <hr>
 
-    <sam-agency-picker
-      [label]="'Organization'"
-      [multimode]="false"
-      (organization)="onOrganizationsChange($event)"
-      [required]="true"
-      [searchMessage]="errors.org"
-      [initial]="initialOrg"
-    ></sam-agency-picker>
+    <div class="usa-grid-full">
+      <div class="usa-width-one-half">
+        <sam-agency-picker-v2
+          [label]="'Organization'"
+          [ngModel]="initialOrg"
+          (ngModelChange)="onOrganizationsChange($event)"
+          [required]="true"
+          [searchMessage]="errors.org"
+          [type]="'single'"
+          [defaultDept]="true"
+        ></sam-agency-picker-v2>
 
-    <!-- Domain -->
-    <sam-select name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>
+        <!-- Domain -->
+        <sam-select name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>
 
-    <!-- Role -->
-    <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
+        <!-- Role -->
+        <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
+      </div>
+    </div>
 
     <!-- Objects and Permissions -->
     <h2 class="p_All-2x usa-bgcolor-gray-lighter">Permissions</h2>

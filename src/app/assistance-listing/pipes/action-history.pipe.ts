@@ -24,6 +24,8 @@ export class ActionHistoryPipe implements PipeTransform {
 
     /** Process history into a form usable by history component **/
 
+    //remove send_omb whole item including it's request from the list before processing it
+    actionHistoryArray._embedded.jSONObjectList = _.filter(actionHistoryArray._embedded.jSONObjectList, item => { return (item.action_type != "send_omb") });
 
     let processOrganizationNames = function(historyItem){
       if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){

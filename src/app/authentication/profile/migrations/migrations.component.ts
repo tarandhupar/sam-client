@@ -1,4 +1,5 @@
 import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -27,7 +28,7 @@ export class MigrationsComponent {
     system: 'SAM'
   };
 
-  private states = {
+  public states = {
     submitted: false,
     loading: false,
     confirm: {
@@ -45,6 +46,7 @@ export class MigrationsComponent {
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
+    private sanitizer: DomSanitizer,
     private api: IAMService) {
     this.differ = differs.find({}).create(null);
     this.store.legacy = data;
@@ -153,7 +155,11 @@ export class MigrationsComponent {
     window.location.hash = id;
   }
 
-  alert(message:string, type:string) {
+  getTarget(target: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(`javascript:window.open('${target}');`);
+  }
+
+  alert(message: string, type: string) {
     type = type || 'success';
     message = message || '';
 

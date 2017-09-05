@@ -61,7 +61,7 @@ export class RoleDefinitionPage implements OnInit {
     else
       this.mode = 'object';
 
-    this.role.getRoleObjDefinitions(this.mode,this.domainKey).subscribe(res => {
+    this.role.getDomainDefinition(this.mode,this.domainKey).subscribe(res => {
       this.Data = res;
     });
   }

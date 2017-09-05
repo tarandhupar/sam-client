@@ -1,47 +1,39 @@
-<div style="display: flex;" 
+<div style="display: flex;"
     [style.background-color]="theme == 'inside' ? '#F9F9F9' : ''">
-    
-  <div class="sam-ui container grid">
-    
+
+  <div grid class="container">
+
     <!-- Breadcrumbs -->
-    <div class="row" *ngIf="breadcrumbs">
-      <div class="twelve wide column">
+    <div row *ngIf="breadcrumbs">
+      <div columns="12">
         <sam-breadcrumbs [crumbs]="breadcrumbs" (crumbActionHandler)="breadcrumbHandler($event)">
         </sam-breadcrumbs>
       </div>
     </div>
-    
+
     <div *ngIf="!breadcrumbs" class="sam-ui hidden divider"></div>
-    
-    <div class="row page-content">
+
+    <div row class="page-content">
       <!-- Sidebar -->
-      <div *ngIf="pageService.sidebar" [ngClass]="pageService.sidebarColumns" style="align-self: start;">
+      <div *ngIf="pageService.sidebar" [columns]="pageService.sidebarColumns" style="align-self: start;">
         <ng-content select="sidebar"></ng-content>
       </div>
-      
+
       <!-- Main Content -->
-      <div [ngClass]="pageService.mainContentColumns">
-        
+      <div [columns]="pageService.mainContentColumns">
+
         <ng-content select="[message]"></ng-content>
-        
+
         <!-- Page Title -->
-        <h1 *ngIf="title || section"
-            class="sam-ui header" 
-            style="font-size: 4rem;">
-          <div class="sup header"
-                style="font-weight: 300; font-size: 2.5rem;">
-            {{ section }}
-          </div>
-          {{ title }}
-        </h1>
-        
+        <title-and-section [title]="title" [section]="section"></title-and-section>
+
         <ng-content></ng-content>
-        
+
         <div class="sam-ui hidden divider"></div>
-        
-      </div>  
+
+      </div>
     </div>
-    
+
   </div>
-  
+
 </div>

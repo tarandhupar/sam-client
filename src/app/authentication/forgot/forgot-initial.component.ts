@@ -17,7 +17,7 @@ import { Cookie } from 'ng2-cookies';
 export class ForgotInitialComponent {
   @ViewChild('form') form;
 
-  private states = {
+  public states = {
     submitted: false,
     loading: false,
     error: '',

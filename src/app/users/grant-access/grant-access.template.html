@@ -44,24 +44,17 @@
     </div>
 
     <!-- Orgs -->
-    <sam-agency-picker
-      *ngIf="initialOrg && mode !== 'request'"
-      [label]="'Organization'"
-      [multimode]="false"
-      (organization)="onOrganizationsChange($event)"
+    <sam-agency-picker-v2
+      *ngIf="mode !== 'request'"
+      label="Organization"
+      ngModel
+      type="single"
+      (ngModelChange)="onOrganizationsChange($event)"
       [required]="true"
       [searchMessage]="errors.org"
-      [initial]="initialOrg"
-      [orgRoot]="user.departmentID"
-    ></sam-agency-picker>
-    <sam-agency-picker *ngIf="!initialOrg && mode !== 'request'"
-                       [label]="'Organizations'"
-                       [multimode]="false"
-                       (organization)="onOrganizationsChange($event)"
-                       [required]="true"
-                       [searchMessage]="errors.org"
-                       [orgRoot]="user.departmentID"
-    ></sam-agency-picker>
+      [defaultDept]="true"
+      class="clearfix"
+    ></sam-agency-picker-v2>
 
     <ng-container *ngIf="objects">
       <!-- Read Only -->

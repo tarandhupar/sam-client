@@ -50,7 +50,7 @@ const stubs = {
   }
 };
 
-describe('[IAM] FSDUserComponent', () => {
+describe('[IAM] FSD User Profile', () => {
   let component: FSDUserComponent;
   let fixture: ComponentFixture<FSDUserComponent>;
   let debugElement: DebugElement;
@@ -111,4 +111,42 @@ describe('[IAM] FSDUserComponent', () => {
       expect(component.sendPasswordReset).toHaveBeenCalled();
     });
   }));
+
+  it('verify population of error message for account deactivation', () => {
+    let error,
+        message;
+
+    component.alerts.deactivate.show = true;
+    component.alerts.deactivate.message = 'Test Error Message';
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('#deactivate-account sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.alerts.deactivate.message);
+  });
+
+  it('verify population of error message for password reset', () => {
+    let error,
+        message;
+
+    component.alerts.password.show = true;
+    component.alerts.password.message = 'Test Error Message';
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('#password-reset sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.alerts.password.message);
+  });
 });

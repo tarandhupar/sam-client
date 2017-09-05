@@ -21,7 +21,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
  * SHOW_HIDE_RESTRICTED_PAGES : created to hide components in MINC Environment
  */
 const METADATA = {
-  title: 'SAM Client Starter',
+  title: 'beta.SAM.gov',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
   SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true',
@@ -87,7 +87,7 @@ module.exports = {
     },
 
     // remove other default values
-    modulesDirectories: ['node_modules']
+    modulesDirectories: ['node_modules','app']
 
   },
 

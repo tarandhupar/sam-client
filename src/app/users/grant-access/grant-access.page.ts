@@ -25,7 +25,7 @@ import { IBreadcrumb } from "sam-ui-kit/types";
 export class GrantAccessPage implements OnInit {
   breadCrumbs: Array<IBreadcrumb> = [
     { url: '/workspace', breadcrumb: 'Workspace' },
-    { url: '/access/user-roles-directory', breadcrumb: 'Role Management'},
+    { url: '/access/roles-directory', breadcrumb: 'Role Management'},
     { url: '' /* '/users/{uname}/access'*/, breadcrumb: '' /*'{uname}'*/},
     { breadcrumb: '{mode} Access' }
   ];
@@ -282,9 +282,9 @@ export class GrantAccessPage implements OnInit {
   getRoles() {
     let obs;
     if (this.mode === 'edit') {
-      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName).share();
+      obs = this.userService.getUiRoles({domainKey: this.domain, keepRoles: this.role}, this.userName).share();
     } else {
-      obs = this.userService.getRoles({domainID: this.domain}, undefined).share();
+      obs = this.userService.getUiRoles({domainKey: this.domain}, undefined).share();
     }
 
     obs.subscribe(
@@ -345,7 +345,7 @@ export class GrantAccessPage implements OnInit {
 
   isFormValid() {
     if (this.userCameFromRoleWorkspace) {
-      return this.org && this.domain && this.role && this.messages;
+      return this.org && this.org.orgKey && this.domain && this.role && this.messages;
     }
 
     switch (this.mode) {
@@ -363,7 +363,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   showErrors() {
-    if (!this.org) {
+    if (!this.org || !this.org.orgKey) {
       this.errors.org = 'Organization is required';
     }
 
@@ -464,7 +464,7 @@ export class GrantAccessPage implements OnInit {
     }
 
     //let orgIds = this.orgs.map(org => ''+org.value);
-    let orgId = this.org.value;
+    let orgId = this.org.orgKey;
     let funcs: any = this.objects.map(obj => {
       let perms = obj.permission.filter(p => !p.isCheckable).map(p => p.id);
       return {

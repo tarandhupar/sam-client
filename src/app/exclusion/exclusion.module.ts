@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { ExclusionsPage }   from './exclusion.page.ts';
 import { routing } from './exclusion.route.ts';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -12,7 +11,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
-    BrowserModule,
+    CommonModule,
     routing,
     SamUIKitModule,
     CommonModule,
@@ -20,8 +19,6 @@ import { AppComponentsModule } from "../app-components/app-components.module";
   ],
   exports: [
     ExclusionsPage,
-    BrowserModule,
-    CommonModule,
     ExclusionAddress,
     ExclusionIcon,
     ExclusionNatureEffect,

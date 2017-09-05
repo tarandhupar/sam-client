@@ -82,6 +82,19 @@ export class falCustomValidatorsComponent {
     return flag;
   }
 
+  static numberCheck(control){
+    let flag = null;
+    let regex = new RegExp("^\\d{0,9}$");
+    if (!control.value && control.value.length == 0) {
+      flag = {
+        required: true
+      };
+    }else if(!regex.test(control.value)){
+      flag = {numberCheck: true};
+    }
+    return flag;
+  }
+
   static atLeastOneEntryCheck(control){
     let flag = null;
     if(control.value.length == 0){
@@ -106,9 +119,11 @@ export class falCustomValidatorsComponent {
     }
   }
 
-  static radioButtonRequired(control: AbstractControl): ValidationErrors | null {
+  static radioButtonRequired(control: AbstractControl): ValidationErrors | null{
     let error: ValidationErrors = {
-      required: true
+     requiredField : {
+     message: 'This field is required'
+     }
     };
 
     if (!control.value) {

@@ -12,7 +12,7 @@ import { SamAPIKitModule } from "api-kit";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "api-kit/msg-feed/msg-feed.mock";
 
-fdescribe('Message Feeds page sidenav component', () => {
+describe('Message Feeds page sidenav component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:MsgFeedSideNavComponent;
   let fixture:any;
@@ -29,13 +29,23 @@ fdescribe('Message Feeds page sidenav component', () => {
     component = fixture.componentInstance;
   });
 
-  it('should have correct fields set for requests feeds page', () => {
+  it('should have correct fields set for requests feeds page', done => {
     component.curSection = "Requests";
     fixture.detectChanges();
-    // component.filterChange.subscribe(data => {
-    //   // expect(data).toEqual('inactive');
-    //   done();
-    // });
+    component.filterChange.subscribe(data => {
+      expect(data).toEqual({
+        keyword:"",
+        requestType:[],
+        status:[],
+        alertType:[],
+        domains:[],
+        section:"requests",
+        subSection:"sent",
+      });
+      done();
+    });
+
+    component.onSectionTabClick('requests/sent');
 
   });
 

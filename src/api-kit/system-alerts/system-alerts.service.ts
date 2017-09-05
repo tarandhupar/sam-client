@@ -39,12 +39,12 @@ export class SystemAlertsService {
     // specify defaults
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
-    
+
     this.addAuthHeader(apiOptions);
     return this.apiService.call(apiOptions);
-     
+
   }
-  
+
   /**
    *
    * @param limit: the number of alerts to fetch
@@ -89,7 +89,7 @@ export class SystemAlertsService {
       apiOptions.oParam.order = order;
     }
 
-    this.addAuthHeader(apiOptions);    
+    this.addAuthHeader(apiOptions);
 
     return this.apiService.call(apiOptions);
   }
@@ -126,6 +126,17 @@ export class SystemAlertsService {
       body: {
         alertId: id
       }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getAlertTypes(){
+    let apiOptions: any = {
+      name: 'alerts',
+      suffix: '/alerttypes',
+      method: 'GET',
+      oParam: {}
     };
 
     return this.apiService.call(apiOptions);

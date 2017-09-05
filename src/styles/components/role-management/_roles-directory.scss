@@ -1,8 +1,17 @@
-.user-roles-directory {
-  sam-agency-picker label {
-    display: none;
+.roles-directory {
+  .user-role {
+    margin-top: 1em;
   }
 
+  .sam-actions {
+    button {
+      margin: 0;
+    }
+    .usa-button-primary {
+      margin: 0;
+      height: 4.3rem;
+    }
+  }
   .org-picker-section {
     .usa-accordion-content {
       padding: 0;

@@ -3,15 +3,15 @@
     <span class="system-accounts">
       <ul class="list-accounts">
         <li *ngFor="let account of accounts; let $index = index;">
-          <a [routerLink]="['system/profile', account._id]" [innerText]="account.systemName"></a>
+          <a [routerLink]="['system/profile', account._id]" [innerText]="account.systemName" preserveQueryParams></a>
         </li>
       </ul>
     </span>
     <span class="system-controls text-center">
-      <a class="usa-button usa-button-primary" [routerLink]="['system/profile']">Create</a>
+      <a class="usa-button usa-button-primary" [routerLink]="['system/profile']" preserveQueryParams>Create</a>
     </span>
   </div>
-  <a class="widget-footer text-right" [routerLink]="['system']" *ngIf="accounts.length">
+  <a class="widget-footer text-right" [routerLink]="['system']" preserveQueryParams *ngIf="accounts.length">
     Go to Directory <span class="fa fa-chevron-circle-right"></span>
   </a>
 </div>

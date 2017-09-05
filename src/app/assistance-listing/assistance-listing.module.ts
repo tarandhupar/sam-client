@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { ProgramPage }   from './assistance-listing.page';
 import { FinancialObligationChart } from './assistance-listing.chart';
@@ -33,11 +33,13 @@ import {ActionHistoryLabelPipe} from "./pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "./pipes/request-type-label.pipe";
 import { AppTemplatesModule } from "../app-templates/index";
 import {FormatFederalHierarchyType} from "./pipes/format-federal-hierarchy-type.pipe";
+import {CfdaNumbersPage} from "./assistance-listing-workspace/cfda-numbers/cfda-numbers.page";
+import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda-number-management/fal-form-cfda-number-management.component";
 
 @NgModule({
   imports: [
     PipesModule,
-    BrowserModule,
+    CommonModule,
     SamUIKitModule,
     AppComponentsModule,
     routing,
@@ -80,7 +82,9 @@ import {FormatFederalHierarchyType} from "./pipes/format-federal-hierarchy-type.
     RequestTypeLabelPipe,
     FALRegionalAssistanceFormComponent,
     FALPublishComponent,
-    FormatFederalHierarchyType
+    FormatFederalHierarchyType,
+    CfdaNumbersPage,
+    CFDANumberManagementComponent
   ],
   providers: [
     FALFormErrorService,

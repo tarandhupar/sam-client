@@ -107,4 +107,44 @@ describe('[IAM] User Profile - Details', () => {
     fixture.detectChanges();
     expect(component.user.emailNotification).toBe(false);
   });
+
+  it('verify population of error messages -> "Identity" section', () => {
+    let error,
+        message;
+
+    component.alerts.identity.type = 'error';
+    component.alerts.identity.message = 'Test Error Message';
+    component.alerts.identity.show = true;
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('#identity sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.alerts.identity.message);
+  });
+
+  it('verify population of error messages -> "Organization" section', () => {
+    let error,
+        message;
+
+    component.alerts.business.type = 'error';
+    component.alerts.business.message = 'Test Error Message';
+    component.alerts.business.show = true;
+
+    fixture.detectChanges();
+
+    error = fixture.debugElement.query(By.css('#business sam-alert'));
+
+    if(error && error.nativeElement) {
+      message = error.nativeElement.querySelector('.usa-alert-heading');
+    }
+
+    expect(error).toBeDefined();
+    expect(message.innerHTML).toBe(component.alerts.business.message);
+  });
 });
