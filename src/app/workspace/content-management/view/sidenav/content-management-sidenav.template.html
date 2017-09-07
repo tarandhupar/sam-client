@@ -1,0 +1,50 @@
+
+<div class="help-content-management-sidenav">
+  <ul class="usa-sidenav-list m_B-4x border-top-light-gray border-bottom-light-gray">
+    <li class="cm-tab relative" [ngClass]="{'blue-border':isCurrentSection('data-dictionary')}">
+      <a [ngClass]="getCurrentTabClass('data-dictionary')" (click)="onSectionTabClick('data-dictionary')">Data Dictionary</a>
+      <div class="arrow-right" *ngIf="isCurrentSection('data-dictionary')"></div>
+    </li>
+    <li class="cm-tab relative" [ngClass]="{'blue-border':isCurrentSection('FAQ-repository')}">
+      <a [ngClass]="getCurrentTabClass('FAQ-repository')" (click)="onSectionTabClick('FAQ-repository')">FAQ Repository</a>
+      <div class="arrow-right" *ngIf="isCurrentSection('FAQ-repository')"></div>
+    </li>
+    <li class="cm-tab relative" [ngClass]="{'blue-border':isCurrentSection('video-library')}">
+      <a [ngClass]="getCurrentTabClass('video-library')" (click)="onSectionTabClick('video-library')">Video Library</a>
+      <div class="arrow-right" *ngIf="isCurrentSection('video-library')"></div>
+    </li>
+  </ul>
+
+  <div class="usa-width-one-whole m_B-4x">
+    <legend>Search</legend>
+    <input placeholder="Enter Keyword" (keyup.enter)="contentFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x">
+    <sam-checkbox
+      [(model)]="filterOption.domains"
+      [name]="domainsCbxConfig.name"
+      [options]="domainsCbxConfig.options"
+      [label]="domainsCbxConfig.label"
+      [hasSelectAll]="domainsCbxConfig.hasSelectAll"
+      (modelChange)="contentFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="usa-width-one-whole m_B-1x">
+    <sam-checkbox
+      [(model)]="filterOption.status"
+      [name]="statusCbxConfig.name"
+      [options]="statusCbxConfig.options"
+      [label]="statusCbxConfig.label"
+      [hasSelectAll]="statusCbxConfig.hasSelectAll"
+      (modelChange)="contentFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="usa-width-one-whole">
+    <span class="pull-right"><a (click)="resetFilter()">Clear Filter</a></span>
+  </div>
+  <sam-feedback-sidenav class="m_B-4x" *ngIf="sidenavModel" [model]="sidenavModel"></sam-feedback-sidenav>
+
+</div>

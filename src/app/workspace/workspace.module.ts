@@ -40,6 +40,8 @@ import { RoleManagementModule } from "../role-management/role-management.module"
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
 import { AppTemplatesModule } from "../app-templates/index";
+import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
+import { HelpContentManagementSideNavComponent } from "./content-management/view/sidenav/content-management-sidenav.component";
 
 @NgModule({
   imports: [
@@ -96,6 +98,12 @@ import { AppTemplatesModule } from "../app-templates/index";
      */
     MsgFeedComponent,
     MsgFeedSideNavComponent,
+
+    /**
+     * Help Content Management
+     */
+    HelpContentManagementViewComponent,
+    HelpContentManagementSideNavComponent,
   ],
   providers: [
     /**

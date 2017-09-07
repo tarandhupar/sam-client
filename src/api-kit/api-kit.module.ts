@@ -29,6 +29,7 @@ import { AgencyPickerAutoCompleteDirective } from "./autoCompleteWrapper/agencyP
 import { WatchlistService } from './watchlist/watchlist.service';
 import { MsgFeedService } from "./msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "./msg-feed/msg-feed.mock";
+import { ContentManagementService } from "./content-management/content-management.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -81,6 +82,7 @@ import { MsgFeedServiceMock } from "./msg-feed/msg-feed.mock";
     //{ provide: PeoplePickerService, useClass: PeoplePickerServiceMock }
     MsgFeedService,
     // { provide: MsgFeedService, useClass: MsgFeedServiceMock }
+    ContentManagementService,
 
   ]
 })
