@@ -1,0 +1,50 @@
+<page [breadcrumbs]="crumbs" [section]="'Workspace'" [title]="title">
+  <sidebar>
+    <content-management-sidenav [curSection]="curSection" [curSubSection]="curSubSection" (filterChange)="onFilterChange($event)"></content-management-sidenav>
+  </sidebar>
+
+
+  <div class="usa-width-one-whole help-content-management">
+
+    <div class="usa-width-one-whole m_B-2x">
+      <div class="pull-left p_T-3x">
+        Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
+      </div>
+      <a class="sam-ui primary small button pull-right m_L-2x p_T-4x p_B-3x">New Question</a>
+      <sam-sort class="pull-right" [(ngModel)]="sortByModel" [options]="contentSortOptions" (ngModelChange)="loadContent(filterObj, sortByModel.type, sortByModel.sort, 0)">
+      </sam-sort>
+    </div>
+
+    <!--FAQ Repository Content-->
+    <div class="usa-width-one-whole" *ngIf="contents.length > 0">
+      <div class="usa-width-one-whole content-item" *ngFor="let item of contents; let i = index;">
+        <div class="usa-width-one-whole content-item-header">
+          <div class="usa-width-one-third content-header-type-div">{{item.type}}</div>
+          <div class="usa-width-two-thirds">
+            <sam-actions-dropdown class="pull-right" [actions]="actions" (emitAction)="onContentItemAction($event, i)"></sam-actions-dropdown>
+          </div>
+        </div>
+        <div class="usa-width-one-whole p_L-1x">
+          <h4 class="content-title-text"><a>{{item.title}}</a></h4>
+          <p class="content-description-text"> {{item.description}}</p>
+          <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.referenceId}}</span>
+          <span class="usa-width-one-whole"><strong>Domain: </strong>{{item.domain}}</span>
+          <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.latestUpdate}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="usa-width-one-whole" *ngIf="contents.length === 0">
+      No Content Available
+    </div>
+
+
+    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="contents.length > 0">
+      <sam-pagination (pageChange)="onPageNumChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+    </div>
+
+
+  </div>
+</page>
+
+

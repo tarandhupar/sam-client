@@ -9,7 +9,8 @@ import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 
 import FSDRouter from './fsd/fsd.route';
 import SystemRouter from './system/system.route';
-import {MsgFeedComponent} from "./msg-feed/msg-feed.component";
+import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
+import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 
 export const routes: Routes = [
   { path: 'workspace',
@@ -36,7 +37,11 @@ export const routes: Routes = [
   {
     path: 'workspace/myfeed/:section/:subsection',
     component: MsgFeedComponent
-  }
+  },
+  {
+    path: 'workspace/content-management/:section',
+    component: HelpContentManagementViewComponent
+  },
 
 ];
 

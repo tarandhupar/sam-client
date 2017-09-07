@@ -1,0 +1,44 @@
+@import "help-content-management/help-content-management-sidenav";
+
+.help-content-management{
+
+  .content-item{
+    border: 1.5px solid $color-gray-light;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .content-header-type-div{
+    text-align: center;
+    background-color: $color-gray-lighter;
+    padding: 7px;
+    font-weight: 600;
+  }
+
+  .content-item-header{
+    border-bottom: 1px solid $color-gray-light;
+  }
+
+  .content-item select{
+    border: none;
+    margin: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    height: 35px;
+  }
+
+  .content-title-text{
+    padding: 10px 0 5px 0px;
+    margin-bottom: 0px;
+  }
+
+  .content-description-text{
+    padding-top: 5px;
+    padding-bottom: 8px;
+    margin-bottom: 0px;
+  }
+
+  sam-sort select{
+    min-width: 100px;
+  }
+}
