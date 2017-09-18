@@ -1,0 +1,92 @@
+<form-only class="grant-access"
+  theme="inside"
+  section="Workspace"
+  [title]="pageTitle()">
+
+  <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+    <hr>
+    <p>All fields are required</p>
+
+    <div class="sam-ui grid">
+      <div class="column eight wide">
+        <div style="margin-top: .5em;">
+          <label style="display: inline;">User:&nbsp;</label>
+          <a *ngIf="isGrant()" [routerLink]="'../access'">{{userFullName()}}</a>
+          <span *ngIf="isEdit()">{{userFullName()}}</span>
+        </div>
+        <!-- Orgs -->
+        <div [hidden]="!editingOrg">
+          <sam-agency-picker-v2
+            formControlName="org"
+            [label]="'Organization'"
+            type="single"
+            [searchMessage]="errors.org"
+            [defaultDept]="!isSuperAdmin"
+            class="clearfix"
+            (ngModelChange)="onOrganizationChange($event)"
+          ></sam-agency-picker-v2>
+        </div>
+        <div [hidden]="editingOrg" style="margin-top: .5em">
+          <label style="display: inline">Organization:&nbsp;</label>
+          <span>{{form.get('org')?.value?.name || ""}}</span>
+          <a *ngIf="isGrant()" class="pull-right" (click)="onClickEditOrg()">Edit</a>
+        </div>
+
+        <!-- Role -->
+        <div style="margin-top: .5em">
+          <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
+            <select formControlName="role" (ngModelChange)="onRoleChange($event)">
+              <option *ngFor="let role of roleOptions" [value]="role.value">{{role.label}}</option>
+            </select>
+          </sam-label-wrapper>
+        </div>
+
+        <!-- Domain -->
+        <div style="margin-top: .5em">
+          <sam-autocomplete-multiselect (ngModelChange)="onDomainChange($event)" formControlName="domains" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getDomainOptions()"></sam-autocomplete-multiselect>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions -->
+    <label>Permissions</label>
+    <sam-tabs>
+      <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
+        <ul class="column-wrappable">
+          <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
+            <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
+            <div *ngFor="let permission of func.permissions">
+              <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
+              <label class="permission-label" >{{permission.name}}</label>
+            </div>
+          </li>
+        </ul>
+      </sam-tab>
+    </sam-tabs>
+    <p style="margin-bottom: .5em" *ngIf="!domainTabs?.length"><i>Select a domain.</i></p>
+
+    <!-- Comments -->
+    <label>Comments</label>
+    <div class="sam-ui grid" *ngIf="false">
+      <div row>
+        <div columns="10"><b>{{comment.userName}}</b> - {{comment.text}}</div>
+        <div columns="2">{{comment.date | timeago}}</div>
+      </div>
+    </div>
+    <sam-text-area label='' formControlName="comment" name="comment" [errorMessage]="errors.comment"></sam-text-area>
+
+    <sam-alert type="error" title="Error" [description]="errorMessage" *ngIf="errorMessage"></sam-alert>
+
+    <!-- Cancel / Confirm -->
+    <div class="pull-right clearfix m_T-4x m_B-4x">
+      <button routerLink="../access" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
+      <button type="button" class="usa-button usa-button-secondary m_R-0" (click)="onDeleteClick()">Delete</button>
+      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">Done</button>
+    </div>
+  </form>
+
+</form-only>
+<sam-modal #deleteModal title="Delete Access" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+  <p>Are you sure you want to delete the access for this user?</p>
+</sam-modal>
+

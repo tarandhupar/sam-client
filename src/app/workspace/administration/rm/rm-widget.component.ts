@@ -26,7 +26,7 @@ export class RMWidgetComponent implements OnInit {
   shouldShowEscalated: boolean = false;
   shouldShowRoleDefinitions: boolean = false;
   shouldShowRoleDirectory: boolean = false;
-  
+
   @ViewChild('autoComplete') autoComplete: SamAutocompleteComponent;
 
   get shouldShowAnyAdmin() {
@@ -117,6 +117,6 @@ export class RMWidgetComponent implements OnInit {
   }
 
   onPersonChange(person) {
-    this.router.navigate(['/users', person.key, 'access']);
+    this.router.navigate(['/role-management', 'users', person.key, 'access']);
   }
 }

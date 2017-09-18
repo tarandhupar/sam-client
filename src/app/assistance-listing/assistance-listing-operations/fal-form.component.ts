@@ -8,7 +8,7 @@ import {FALFormErrorService} from './fal-form-error.service';
 import {AuthGuard} from "../../../api-kit/authguard/authguard.service";
 import {MenuItem} from 'sam-ui-kit/components/sidenav';
 import {FilterMultiArrayObjectPipe} from '../../app-pipes/filter-multi-array-object.pipe';
-import {AlertFooterService} from "../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 import {ProgramService} from "../../../api-kit/program/program.service";
 
 @Component({
@@ -20,6 +20,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   falFormViewModel: FALFormViewModel;
   createPermissions: any;
   @ViewChild('titleModal') titleModal;
+  @ViewChild('tabsFalComponent') tabsFalComponent;
   titleMissingConfig = {title: '', description: '', confirmText: '', cancelText: ''};
   sections: string[] = [
     FALSectionNames.HEADER,
@@ -38,6 +39,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   globalLinksUrl: string;
   globalNavigationFlag: boolean = false;
   modelBtnsNavigationFlag: boolean = false;
+  enableDisableWFBtns: boolean = false;
   crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
     breadcrumb: 'Workspace',
     urlmock: true
@@ -48,10 +50,23 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     type: "success",
     timer: 5000
   }
+  notifySuccessFooterAlertModel = {
+    title: "Success",
+    description: "Successfully sent notification.",
+    type: "success",
+    timer: 3000
+  };
+
+  notifyErrorFooterAlertModel = {
+    title: "Error",
+    description: "Error sending notification.",
+    type: "error",
+    timer: 3000
+  };
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   @ViewChildren('form') form;
   private routeSubscribe;
-  private pristineIconClass = 'not started';
+  private pristineIconClass = 'pending';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
 
@@ -143,12 +158,20 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.falFormViewModel = new FALFormViewModel(resolver.fal);
         this.falFormViewModel.programId = this.route.snapshot.params['id'];
         this.errorService.viewModel = this.falFormViewModel;
-        this.errorService.initFALErrors();
+        this.errorService.validateAll().subscribe(
+          (event) => {
+          },
+          (error) => {
+          },
+          () => {
+            this.updateSidenavModel();
+            this.showErrors(this.errorService.applicableErrors);
+          }
+        );
       });
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
       this.errorService.viewModel = this.falFormViewModel;
-      this.errorService.initFALErrors();
     }
     let flag = this.determineLogin();
     if (!flag) {
@@ -160,18 +183,15 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.authGuard.checkPermissions('addoredit', this.falFormViewModel.programId ? this.falFormViewModel['_fal'] : res);
       this.createPermissions = res;
     });
-
-    this.makeSidenavModel();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.updateSidenavIcon(FALSectionNames.HEADER);
       this.determineSection();
     }, 200);
   }
 
-  private makeSidenavModel() {
+  private updateSidenavModel() {
     for (let sectionName of this.sections) {
       this.updateSidenavIcon(sectionName);
     }
@@ -317,7 +337,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     let sectionName = this.sections[this.currentSection];
     this.updateSidenavIcon(sectionName);
 
-    // todo: remove this once each section is updating errors
     this.showErrors(this.errorService.applicableErrors);
   }
 
@@ -399,9 +418,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onTitleModalNo() {
-    if(!this.modelBtnsNavigationFlag) {
-    this.globalNavigationFlag = true;
-    this.router.navigateByUrl(this.globalLinksUrl);
+    if (!this.modelBtnsNavigationFlag) {
+      this.globalNavigationFlag = true;
+      this.router.navigateByUrl(this.globalLinksUrl);
     }
     this.modelBtnsNavigationFlag = false;
   }
@@ -460,13 +479,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.saveFormOnDirty(section.finObligationsForm, true, navObj, actionType, section.obligationSubForm.falObligationSubForm);
       }
       if (section.otherFinancialInfoForm) {
-        this.saveFormOnDirty(section.otherFinancialInfoForm, false, navObj, actionType);
+        this.saveFormOnDirty(section, true, navObj, actionType);
       }
       if (section.falCriteriaForm) {
         this.saveFormOnDirty(section.falCriteriaForm, false, navObj, actionType);
       }
       if (section.falAssistanceForm) {
-        this.saveFormOnDirty(section.falAssistanceForm, false, navObj, actionType);
+        this.saveFormOnDirty(section.falAssistanceForm, true, navObj, actionType, section.falAssistanceForm.controls.deadlines);
       }
       if (section.complianceRequirementsGroup) {
         this.saveFormOnDirty(section.complianceRequirementsGroup, false, navObj, actionType);
@@ -477,15 +496,19 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  saveFormOnDirty(section, subsectionFlag, navObj, actionType, subsection?: any) {
-    if (subsectionFlag === true) {
+  saveFormOnDirty(form, subFormFlag, navObj, actionType, subForm?: any) {
+    if (subFormFlag === true) {
       let dirty = false;
-      if (section.dirty || subsection.dirty) {
+      if (form.otherFinancialInfoForm) {
+        if (form.otherFinancialInfoForm.dirty || form.otherFinancialInfoForm.controls.accountIdentification.dirty || form.otherFinancialInfoForm.controls.tafs.dirty) {
+          dirty = true;
+        }
+      } else if (form.dirty || subForm.dirty) {
         dirty = true;
       }
       this.saveAction(dirty, navObj, actionType);
     } else {
-      this.saveAction(section.dirty, navObj, actionType);
+      this.saveAction(form.dirty, navObj, actionType);
     }
   }
 
@@ -554,24 +577,86 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (actionType === 'Workspace') {
       this.router.navigate(['/fal/workspace']);
     }
+    if (actionType === 'PublicView') {
+      let url = '/programs/' + this.falFormViewModel.programId + '/view';
+      this.router.navigateByUrl(url);
+    }
+    if (actionType === 'Submit') {
+      let url = '/programs/' + this.falFormViewModel.programId + '/submit';
+      this.router.navigateByUrl(url);
+    }
+    if (actionType === 'Notify') {
+      this.notifyAgencyCoordinator();
+    }
+    this.enableDisableWorkflowButtons(this.falFormViewModel['_fal']);
   }
-  
+
   onViewClick() {
-    let url = '/programs/' + this.falFormViewModel.programId + '/view';
-    this.router.navigateByUrl(url);
+    this.formsDirtyCheck('PublicView')
   }
-  
-  public tabsClicked(tab){
+
+  onSubmitClick() {
+    this.formsDirtyCheck('Submit');
+  }
+
+  onNotifyClick() {
+    this.formsDirtyCheck('Notify');
+  }
+
+  notifyAgencyCoordinator() {
+    this.service.sendNotification(this.falFormViewModel.programId)
+      .subscribe(api => {
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifySuccessFooterAlertModel)));
+          this.router.navigate(['/fal/workspace']);
+        },
+        error => {
+          console.error('error sending notification', error);
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyErrorFooterAlertModel)));
+        });
+  }
+
+  public tabsClicked(tab) {
     switch (tab.label) {
-      case 'Auntheticated':
+      case 'Authenticated':
         this.onSaveExitClick();
         break;
       case 'Public':
         this.onViewClick();
         break;
+      case 'Submit':
+        this.onSubmitClick();
+        break;
+      case 'Notify Agency Coordinator':
+        this.onNotifyClick();
+        break;
       default:
         break;
     }
   }
-  
+
+  enableDisableWorkflowButtons(program: any) {
+    this.errorService.viewModel = new FALFormViewModel(program);
+    let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
+
+    if (program._links) {
+      if (program._links['program:submit']) {
+        this.enableDisableButtons(errorFlag);
+
+      } else if (program._links['program:notify:coordinator']) {
+        this.enableDisableButtons(errorFlag);
+      }
+    }
+  }
+
+  enableDisableButtons(errorFlag: boolean) {
+    if (errorFlag === true) {
+      this.tabsFalComponent.toggleButtonOnAccess = true;
+      this.tabsFalComponent.toggleButtonOnErrors = true;
+      this.cdr.detectChanges();
+    } else {
+      this.tabsFalComponent.toggleButtonOnAccess = true;
+      this.tabsFalComponent.toggleButtonOnErrors = false;
+      this.cdr.detectChanges();
+    }
+  }
 }

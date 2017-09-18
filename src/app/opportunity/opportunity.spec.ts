@@ -24,7 +24,7 @@ let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
 
 let MockOpportunityService = {
-  getOpportunityById(id: string) {
+  getOpportunityById(id: string, authToken: string = null) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
       "parent": {

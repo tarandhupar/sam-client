@@ -7,7 +7,6 @@
         <a *ngIf="!nav.routerLink.length" [routerLinkActive]="nav.routerLinkActive" [innerText]="nav.text"></a>
       </li>
     </ul>
-    <a [routerLink]="['/profile', 'access']" class="usa-button usa-button-primary">View My Access</a>
   </aside>
   <section class="usa-width-three-fourths usa-profile" [ngClass]="[activeRouteClass]">
      <router-outlet></router-outlet>

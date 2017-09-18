@@ -6,28 +6,35 @@
 
   <div formGroupName="deadlines" class="sam-ui segment">
 
-    <sam-radio-button *ngIf="falAssistanceForm.get('deadlines').get('flag')"
-                      [label]="'Deadlines'"
-                      [name]="'deadlineFlag-radio-buttons'"
-                      [options]="deadlinesFlagOptions"
-                      [required]="true"
-                      [hint]="deadlineHint"
-                      formControlName="flag"
-                      [attr.id] = "'fal-appForAssist-deadline'"
-                      [control]="falAssistanceForm.get('deadlines').get('flag')"
-    ></sam-radio-button>
+    <sam-radio-button
+      *ngIf="falAssistanceForm.get('deadlines').get('flag')"
+      [label]="'Deadlines'"
+      [name]="'deadlineFlag-radio-buttons'"
+      [options]="deadlinesFlagOptions"
+      [required]="true"
+      [hint]="deadlineHint"
+      formControlName="flag"
+      [attr.id] = "'fal-appForAssist-deadline'"
+      [control]="falAssistanceForm.get('deadlines').get('flag')">
+    </sam-radio-button>
 
-    <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
+    <div id="fal-appForAssist-deadline-list" [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
+
       <sam-listbuilder
         [formArrayInput]="falAssistanceForm.get('deadlines.list').controls"
-        [formGroupTemplate]="deadlineSubform"  
-        (formArrayChange)="fmArrayChange($event)">
+        [formGroupTemplate]="deadlineSubform"
+        (formArrayChange)="fmArrayChange($event)"
+        (action)="listBuilderActionHandler($event)">
+
         <template #display let-item>
           <ng-container *ngIf="!item.valid">
-            <span class='usa-input-error-message'><sup>*</sup>This deadline information has some errors.</span>
+            <span class='usa-input-error-message'>
+              <sup>*</sup>This deadline information has some errors.
+            </span>
           </ng-container>
           {{formatAssistInfo(item.value)}}
         </template>
+
         <template #edit let-item>
           <form [formGroup]="item">
 
@@ -35,23 +42,26 @@
               [control]="item.get('dateRange')"
               [defaultValidations]="false"
               name="deadline-date-range"
-              formControlName="dateRange"
-            ></sam-date-range>
+              formControlName="dateRange">
+            </sam-date-range>
 
-              <sam-text-area [attr.id]="'optional-desc-deadline'"
-                [name]="'list-desc'"
-                [label]="'Describe this Deadline'"
-                formControlName="description"
-                [hint]= "'Optionally provide a description for this deadline'"
-            ></sam-text-area>
+            <sam-text-area
+              [attr.id]="'optional-desc-deadline'"
+              [name]="'list-desc'"
+              [label]="'Describe this Deadline'"
+              formControlName="description"
+              [hint]= "'Optionally provide a description for this deadline'">
+            </sam-text-area>
           </form>
         </template>
       </sam-listbuilder>
 
-      <sam-text-area [label]="'Other Deadline Information'"
-                   [name]="'deadlines-description'"
-                   formControlName="description"
-      ></sam-text-area>
+      <sam-text-area
+        [label]="'Other Deadline Information'"
+        [name]="'deadlines-description'"
+        formControlName="description">
+      </sam-text-area>
+
     </div>
   </div>
 

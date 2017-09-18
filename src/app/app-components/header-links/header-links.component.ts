@@ -1,10 +1,19 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { globals } from '../../globals.ts';
 
 import { IAMService } from 'api-kit';
 
 import { trigger, state, style, animate, transition } from '@angular/core';
+
+interface HeaderLink {
+  linkTitle: string;
+  linkClass: string;
+  linkId: string;
+  linkUrl: string;
+  pageInProgress: boolean;
+  loggedIn?: boolean;
+}
 
 @Component({
   selector: 'sam-header-links',
@@ -71,52 +80,62 @@ export class SamHeaderLinksComponent {
 
   private startCheckOutsideClick: boolean = false;
   private user = null;
-  showNotifications: boolean = false;
-  notifications = [{link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",text:"Made a Title change request in assistance listings"},
-    {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",text:"Made an Archive change request in assistance listings"},
-    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",text:"Requests your assistance listing change approval"},
-    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},];
   private states = {
     isSignedIn: false,
-    menu: false
   };
 
-  private store = {
+  public dropdowns: { [key:string]: HeaderLink[] } = {
     menu: [
-      { text: 'Profile',  routerLink: '/profile' },
-      { text: 'Sign Out', routerLink: '/signout' }
+      {linkTitle:"Home", linkClass:"fa-home", linkId:"header-link-home", linkUrl:"/", pageInProgress:false},
+      {linkTitle:"Reports", linkClass:"fa-area-chart", linkId:"header-link-reports", linkUrl:"/reports/overview", pageInProgress:false},
+      {linkTitle:"Workspace", linkClass:"fa-table", linkId:"header-link-workspace", linkUrl:"/workspace", pageInProgress:false},
+      {linkTitle:"Help", linkClass:"fa-info-circle", linkId:"header-link-help", linkUrl:"/help/overview", pageInProgress:false},
+      {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkId:"header-link-hierarchy", linkUrl:"/federal-hierarchy", pageInProgress:false},
+      {linkTitle:"Data Services", linkClass:"fa-file-text-o", linkId:"header-link-data-service", linkUrl:"/data-services", pageInProgress:false},
+      {linkTitle:"Users", linkClass:"fa-user-plus", linkId:"header-link-users", linkUrl:"/", pageInProgress:true},
+    ],
+
+    profile: [
+      {linkTitle:"Profile", linkClass:"fa-user-circle", linkId:"header-link-profile", linkUrl:"/profile", pageInProgress:false,loggedIn: true},
+      {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkId:"header-link-signout", linkUrl:"/signout", pageInProgress:false,loggedIn: true},
     ]
   };
 
-  public showDropdown:boolean = true;
+  public links = {
+    menu: false,
+    search: false,
+    profile: false,
+    login: false,
+  };
 
-  public dropdownData:any = [
-    {linkTitle:"Home", linkClass:"fa-home", linkId:"header-link-home", linkUrl:"/", pageInProgress:false},
-    {linkTitle:"Reports", linkClass:"fa-area-chart", linkId:"header-link-reports", linkUrl:"/reports/overview", pageInProgress:true},
-    {linkTitle:"Workspace", linkClass:"fa-table", linkId:"header-link-workspace", linkUrl:"/workspace", pageInProgress:false},
-    {linkTitle:"Help", linkClass:"fa-info-circle", linkId:"header-link-help", linkUrl:"/help/overview", pageInProgress:false},
-    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkId:"header-link-hierarchy", linkUrl:"/federal-hierarchy", pageInProgress:false},
-    {linkTitle:"Data Services", linkClass:"fa-file-text-o", linkId:"header-link-data-service", linkUrl:"/data-services", pageInPorgress:false},
-    {linkTitle:"Users", linkClass:"fa-user-plus", linkId:"header-link-users", linkUrl:"/", pageInProgress:true},
-    {linkTitle:"Profile", linkClass:"fa-user", linkId:"header-link-profile", linkUrl:"/profile",pageInProgress:false, loggedIn: true},
-    {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkId:"header-link-signout", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
+  public showDropdown:boolean = true;
+  public startNotificationOutsideClick = false;
+  public showNotifications: boolean = false;
+  public notifications = [
+    {link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",text:"Made a Title change request in assistance listings"},
+    {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",text:"Made an Archive change request in assistance listings"},
+    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",text:"Requests your assistance listing change approval"},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
   ];
 
-  public searchLink = false;
-  public menuLink = false;
-
-  constructor(private _router:Router, private api: IAMService) {
+  constructor(private route: ActivatedRoute, private _router:Router, private api: IAMService) {
     this._router.events.subscribe((event: any) => {
       if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
 
         if (event.urlAfterRedirects.indexOf('/search') != -1 || event.urlAfterRedirects === "/") {
           setTimeout(() => {
-            this.onSearchLinkClick(true);
+            this.onLinkClick('search', true);
           });
         } else {
-          this.onSearchLinkClick(false);
+          this.onLinkClick('search', false);
         }
+      }
+    });
+
+    this.route.queryParams.subscribe(queryParams => {
+      if(queryParams['refresh']) {
+        this.checkSession();
       }
     });
   }
@@ -135,91 +154,97 @@ export class SamHeaderLinksComponent {
     });
   }
 
-  onSearchLinkClick(state:boolean=null){
-    if (this.showDropdown === true && this.menuLink === true) {
-      this.menuLink = false;
-      this.searchLink = true;
-    } else {
-      let finalState = !this.searchLink;
-      if(state!==null){
-        finalState = state;
-      }
-      this.showDropdown = finalState;
-      this.searchLink = this.showDropdown;
-      this.menuLink = false;
+  resetHeader() {
+    let key;
+
+    this.showDropdown = false;
+
+    for(key in this.links) {
+      this.links[key] = false;
     }
   }
 
-  onMenuLinkClick() {
-    if (this.showDropdown === true && this.searchLink === true) {
-      this.searchLink = false;
-      this.menuLink = true;
-    } else {
-      this.showDropdown = !this.menuLink;
-      this.menuLink = this.showDropdown;
-      this.searchLink = false;
+  onLinkClick(key:string = null, state:boolean = null) {
+    let active = !(key && this.links[key]) ? !this.links[key] : null;
+
+    // Toggle Override
+    if(state !== null) {
+      active = state;
+    }
+
+    this.resetHeader();
+
+    // Specific Actions
+    switch(key) {
+      case 'menu':
+        break;
+      case 'search':
+        break;
+      case 'profile':
+        break;
+      case 'login':
+        break;
+    }
+
+    if(active !== null) {
+      this.showDropdown = active;
+      this.links[key] = active;
     }
   }
 
-  onMenuClick(){
-    this.showDropdown = !this.showDropdown;
-    this.onDropdownToggle.emit(this.showDropdown);
-    setTimeout(()=>{
-      this.startCheckOutsideClick = this.showDropdown;
-    });
-  }
-
-  dropdownItemClick(item){
+  onDropdownItemClick(item: HeaderLink) {
     this.closeDropdown();
-    this.menuLink = false;
-    this.searchLink = false;
+    this.links.menu = false;
+    this.links.search = false;
     this._router.navigateByUrl(item.linkUrl);
   }
 
-  closeDropdown(){
+  closeDropdown() {
     this.showDropdown = false;
     this.onDropdownToggle.emit(this.showDropdown);
-    setTimeout(()=>{
+    setTimeout(() => {
       this.startCheckOutsideClick = this.showDropdown;
     });
   }
 
-  onClickOutside(){
+  onClickOutside() {
     if (this.startCheckOutsideClick) {
       this.startCheckOutsideClick = false;
       this.closeDropdown();
     }
   }
 
-  itemToggle(item){
+  itemToggle(item) {
     let returnVal = true;
-    if(!globals.showOptional){
-      if(item.hasOwnProperty('loggedIn')){
+
+    if(!globals.showOptional) {
+      if(item.hasOwnProperty('loggedIn')) {
         returnVal = this.states.isSignedIn && item.loggedIn && !item.pageInProgress;
       } else {
         returnVal = !item.pageInProgress;
       }
     } else {
-      if(item.hasOwnProperty('loggedIn')){
+      if(item.hasOwnProperty('loggedIn')) {
         returnVal = this.states.isSignedIn && item.loggedIn;
       }
     }
+
     return returnVal;
   }
 
-  refreshPage(){
+  refreshPage() {
     window.location.reload();
   }
-  startNotificationOutsideClick = false;
-  notificationStartClick(){
+
+  notificationStartClick() {
     this.showNotifications = !this.showNotifications;
-    setTimeout(()=>{
+    setTimeout(() => {
       this.startNotificationOutsideClick = this.showNotifications;
     });
   }
 
-  onNotificationOutsideClick(){
-    if(this.startNotificationOutsideClick){
+  onNotificationOutsideClick() {
+    if(this.startNotificationOutsideClick) {
       this.showNotifications = false;
       this.startNotificationOutsideClick = false;
     }

@@ -4,7 +4,7 @@ import {FALFormService} from "../../assistance-listing-operations/fal-form.servi
 import {ActivatedRoute, Router} from "@angular/router";
 import {FHService} from "../../../../api-kit/fh/fh.service";
 import {FormGroup, FormBuilder} from "@angular/forms";
-import {AlertFooterService} from "../../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
 import {Location} from "@angular/common";
 import * as Cookies from 'js-cookie';
 import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";

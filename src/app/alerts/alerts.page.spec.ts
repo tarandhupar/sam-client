@@ -12,23 +12,19 @@ import { By } from "@angular/platform-browser";
 import { HttpModule } from '@angular/http';
 import { AlertEditComponent } from "./alert-edit/alert-edit.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";
 import { UserAccessService } from "../../api-kit/access/access.service";
 import { WrapperService } from "../../api-kit/wrapper/wrapper.service";
 
 // load test data
-import { error, info, warning } from './alerts-test-data.spec';
+import { error, info, warning } from '../app-components/alert-header/alerts-test-data.spec';
+import { SystemAlertsServiceMock } from "../../api-kit/system-alerts/system-alerts.service.mock";
 
 class RouterStub {
   navigate(url: string) {
     return url;
   }
 }
-
-let systemAlertsStub: any = {
-  getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info], _links:{'create':true}}),
-  getAlertType: () => {return Observable.of(['Informational','Warning','Critical']);}
-};
 
 describe('The AlertsPage component', () => {
   let component:AlertsPage;
@@ -42,7 +38,7 @@ describe('The AlertsPage component', () => {
         AlertFooterService,
         UserAccessService,
         WrapperService,
-        { provide: SystemAlertsService, useValue: systemAlertsStub },
+        { provide: SystemAlertsService, useClass: SystemAlertsServiceMock },
       ]
     });
 
@@ -64,22 +60,5 @@ describe('The AlertsPage component', () => {
     });
   }));
 
-  it('should handle out of order responses', done => {
-    done();
-    // TODO: Fix this issue so that this test passes
-    // fixture.detectChanges();
-    // let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    // //spyOn(svc, 'getAll').and.returnValue(Observable.of({total: 2, alerts: [error, error]}).delay(50));
-    // svc.getAll = () => { console.log('get all 1'); return Observable.of({total: 1, alerts: [error]}).delay(10); };
-    // component.doSearch();
-    // svc.getAll = () => { console.log('get all 2'); return Observable.of({total: 2, alerts: [error, error]}) };
-    // component.doSearch();
-    // setTimeout(() => {
-    //   fixture.detectChanges();
-    //   const items = fixture.debugElement.queryAll(By.directive(AlertItemComponent));
-    //   expect(items.length).toBe(2);
-    //   done();
-    // }, 20);
-  });
 
 });

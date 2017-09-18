@@ -13,9 +13,11 @@ export class ProfileComponent {
   private store = {
     title: 'My Profile',
     nav: [
-      { text: 'Personal Details', routerLink: ['details'],    routerLinkActive: 'usa-current' },
-      { text: 'Reset Password',   routerLink: ['password'],   routerLinkActive: 'usa-current' },
-      { text: 'Role Migrations',  routerLink: ['migrations'], routerLinkActive: 'usa-current' }
+      { text: 'Personal Details',      routerLink: ['details'],       routerLinkActive: 'usa-current' },
+      { text: 'Reset Password',        routerLink: ['password'],      routerLinkActive: 'usa-current' },
+      { text: 'My Roles',              routerLink: ['access'],        routerLinkActive: 'usa-current' },
+      { text: 'Role Migrations',       routerLink: ['migrations'],    routerLinkActive: 'usa-current' },
+      { text: 'Manage Subscriptions',  routerLink: ['/profile', 'subscriptions'], routerLinkActive: 'usa-current' }
     ],
   };
 

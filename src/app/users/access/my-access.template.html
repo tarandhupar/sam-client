@@ -1,4 +1,4 @@
-<page class="access-page" [section]="'Profile'" [title]="getPageTitle()">
+<page class="access-page" [section]="'Profile'" [title]="getPageTitle()" [breadcrumbs]="isMyAccess ? undefined : crumbs">
   <sidebar>
     <nav *ngIf="isMyAccess">
       <ul class="usa-sidenav-list">
@@ -32,12 +32,12 @@
           <div *ngFor = "let request of requests">
             <div class = "usa-grid-full">
               <div class = "usa-width-two-thirds">
-                {{request.role ? (request.role.val | capitalize) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val | capitalize) : 'Unspecified Domain'}} at the {{request.organization ? (request.organization.val | capitalize) : 'Unspecified Organization'}}
+                {{request.role ? (request.role.val) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val) : 'Unspecified Domain'}} at the {{request.organization ? (request.organization.val | capitalize) : 'Unspecified Organization'}}
               </div>
               <div class = "usa-width-one-third">
                 <div class = "usa-width-one-half">{{request.createdDate | dateFormat: 'MMM DD, YYYY'}}</div>
                 <div class = "usa-width-one-half">
-                  <a class="pull-right" [routerLink]="'/access-requests/' + request.id">{{request.status.val | capitalize}}</a>
+                  <a class="pull-right" [routerLink]="'/role-management/requests/' + request.id">{{request.status.val | capitalize}}</a>
                 </div>
               </div>
             </div>
@@ -64,28 +64,30 @@
       </div>
       <table *ngIf="access?.length" style="width: 100%; margin-top: 1rem; border: 1px solid black;">
         <thead style="border-bottom: 1px solid black;">
-        <th>Organization</th>
-        <th>Role</th>
-        <th>Domain(s)</th>
+          <th>Organization</th>
+          <th>Role</th>
+          <th>Domain(s)</th>
+          <th></th>
         </thead>
         <tbody>
-        <tr *ngFor="let roleOrg of access">
-          <td>{{orgName(roleOrg.organization)}}</td>
-          <td>{{roleOrg.role.val | capitalize}}</td>
-          <td>
-            <div *ngFor="let domain of roleOrg.domain">{{domain.val | capitalize}}</div>
-          </td>
-        </tr>
+          <tr *ngFor="let roleOrg of access" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && 'clickable'">
+            <td>{{orgName(roleOrg.organization)}}</td>
+            <td>{{roleOrg.role.val}}</td>
+            <td>
+              <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
+            </td>
+            <td><i class="fa fa-pencil"></i></td>
+          </tr>
         </tbody>
       </table>
     </results>
 
-    <ng-container *ngIf="numberOfSearches > 1 && !access.length">
+    <ng-container *ngIf="numberOfSearches > 1 && !access?.length">
       <div class="p_T-6x text-center" style="min-height: 300px;">
         <em>No results for selected criteria.</em>
       </div>
     </ng-container>
-    <ng-container *ngIf="numberOfSearches === 1 && !access.length">
+    <ng-container *ngIf="numberOfSearches === 1 && !access?.length">
       <div class="user-access">
         <div class="p_T-6x text-center" style="min-height: 300px;">
           <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>

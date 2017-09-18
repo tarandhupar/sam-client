@@ -7,7 +7,7 @@ import * as Cookies from 'js-cookie';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
 import { IBreadcrumb } from "sam-ui-kit/types";
-import {AlertFooterService} from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
 
 @Component({
@@ -311,7 +311,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   keywordsModelChange(value){
-    console.log(value);
     if(value.length === 1){
       this.keywordsModel = value;
     }
@@ -332,7 +331,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   private loadUserPermissions(){
     let apiSubject = new ReplaySubject(1);
-    this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(apiSubject);
+    this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO, ORG_LEVELS').subscribe(apiSubject);
     // runs anytime url changes, takes values from url and sets them into our variables
     apiSubject.subscribe(res => {
       this.permissions = res;

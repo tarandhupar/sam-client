@@ -14,7 +14,7 @@ export class PeoplePickerAutoCompleteWrapper implements AutocompleteService{
       return this.oPeoplePickerService.getFilteredList({
           fle: val
       }).map(data => {
-        return data._embedded.ldapUserResources.map((value)=>{
+        return data._embedded.userResources.map((value)=>{
           return value.user;
         });
       });

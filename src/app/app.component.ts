@@ -10,6 +10,8 @@ import { Cookie } from 'ng2-cookies';
 import { FontChecker } from './app-utils/fontchecker';
 import { UserSessionService } from 'api-kit/user-session/user-session.service';
 import { SamTitleService } from 'api-kit/title-service/title.service';
+import { SamErrorService } from 'api-kit/error-service';
+import { AlertFooterService } from "./app-components/alert-footer/alert-footer.service";
 
 
 /*
@@ -46,12 +48,16 @@ export class App{
 
   showOverlay = false;
 
+  errorSubscription;
+
   constructor(private _router: Router,
               private activatedRoute: ActivatedRoute,
               private searchService: SearchService,
               private userSessionService: UserSessionService,
               private zone: NgZone,
-              private titleService: SamTitleService) {}
+              private titleService: SamTitleService,
+              private errorService: SamErrorService,
+              private alertFooterService: AlertFooterService) {}
 
   ngOnInit() {
     //for browsers that are blocking font downloads, add fallback icons
@@ -79,6 +85,7 @@ export class App{
           }
 
           const tree = this._router.parseUrl(this._router.url);
+          let root = this._router.url.split('?')[0];
           if(this._router.url == "/") {
             this.autocomplete.inputValue = "";
             this.keyword = "";
@@ -90,11 +97,35 @@ export class App{
             if (element) {
               element.scrollIntoView();
             }
+          } else if(['/search'].indexOf(root)!==-1){
+            //nothing, just don't scroll
           } else {
             window.scrollTo(0,0);
           }
         }
       });
+    /**
+     * LEAVE COMMENTED OUT
+     * 
+     * Once we finish implementing the business rules,
+     * this will send API errors to the alert footer service
+     * and they will all be managed from here.
+     */
+    // this.errorService.addEventListener('newError', (err) => {
+    //   this.alertFooterService.registerFooterAlert({
+    //     type: 'error',
+    //     title: err.message.title,
+    //     description: err.message.description,
+    //     dismiss: 0,
+    //     error: err
+    //   })
+    // }, this);
+
+    // this.alertFooterService.addEventListener('dismiss', (alert) => {
+    //   if (alert.error) {
+    //     this.errorService.removeError(alert.error);
+    //   }
+    // }, this);
   }
 
   get isHeaderWithSearch() {

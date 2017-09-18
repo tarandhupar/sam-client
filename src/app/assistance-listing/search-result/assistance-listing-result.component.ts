@@ -21,7 +21,7 @@ import * as moment from 'moment/moment';
           </h3>
           
           <p *ngIf="data.isActive==true">
-            {{data.objective | slice:0:150}}{{data.objective && data.objective.length > 150 ? '...' : ''}}
+            {{data.objective | slice:0:150}}{{data.objective?.length > 150 ? '...' : ''}}
           </p>
           
           <ul class="sam-ui small list">
@@ -98,7 +98,7 @@ import * as moment from 'moment/moment';
             <li class="item" *ngIf="data.isActive==true">
               <strong>Type Of Assistance</strong><br>
               <ng-container *ngFor="let assistanceType of data.assistanceTypes; let i=index; let last = last">
-                <ng-container *ngFor="let type of assistanceType.hierarchy; let h=index; let isLast = last">
+                <ng-container *ngFor="let type of assistanceType?.hierarchy; let h=index; let isLast = last">
                   <ng-container *ngIf="isLast"><strong>{{ type.code }}</strong> {{ type.code!==null ? '-' : '' }} {{ type.value }}{{ type.value!==null && !last ? ',' : '' }}</ng-container>
                 </ng-container>
               </ng-container>

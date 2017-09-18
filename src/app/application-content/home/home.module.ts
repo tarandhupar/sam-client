@@ -16,8 +16,6 @@ import { HomePage } from './home.page';
     SamAPIKitModule,
     routing
   ],
-  exports: [],
   declarations: [ HomePage ],
-  providers: [],
 })
 export class HomeModule { }

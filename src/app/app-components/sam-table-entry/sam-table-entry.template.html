@@ -1,0 +1,98 @@
+<table class="sam-ui table celled">
+    <thead>
+        <tr>
+            <th *ngFor="let item of columnHeaders;let i = index;">{{item}}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container  *ngFor="let abstractControl of formArrayMirror.controls;let i = index;">
+            <tr [ngClass]="{'active':(mode=='edit' || mode=='add') && i===editIndex}">
+                <ng-container display>
+                    <template [ngTemplateOutlet]="displayTemplate" [ngOutletContext]="{ $implicit: abstractControl }"></template>
+                </ng-container>
+                <td class="actions-cell">
+                    <sam-actions-dropdown 
+                        [disabled]="disableActions"
+                        [actions]="actions[i]">
+                    </sam-actions-dropdown>
+                </td>
+            </tr>
+            <ng-container *ngIf="subRows && abstractControl.get('subRow') && abstractControl.get('subRow').controls.length > 0">
+                <tr>
+                    <td [attr.colspan]="columnHeaders.length+1">
+                        <table class="sam-ui table">
+                            <tr *ngFor="let subAbstractControl of abstractControl.get('subRow').controls; let j = index;"
+                            class="sub-row"
+                            [ngClass]="{'active':(mode=='subEdit' || mode=='subAdd') && editIndex==i && editSubIndex==j}">
+                                <ng-container subDisplay>
+                                    <template [ngTemplateOutlet]="subDisplayTemplate" [ngOutletContext]="{ $implicit: subAbstractControl }"></template>
+                                </ng-container>
+                                <td class="actions-cell">
+                                    <sam-actions-dropdown 
+                                        [disabled]="disableActions"
+                                        [actions]="subActions[i][j]">
+                                    </sam-actions-dropdown>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </ng-container>
+        </ng-container>
+        <tr *ngIf="formArrayMirror.controls.length==0">
+            <td [attr.colspan]="columnHeaders.length+1">You have no entries</td>
+        </tr>
+    </tbody>
+</table>
+<ng-container *ngFor="let abstractControl of formArray.controls;let i = index;">
+    <ng-container *ngIf="(mode=='edit' || mode=='add') && i===editIndex">
+        <ng-container edit>
+            <template [ngTemplateOutlet]="editTemplate" [ngOutletContext]="{ $implicit: abstractControl }"></template>
+        </ng-container>
+        <div class="button-row">      
+            <sam-button *ngIf="mode=='add'" 
+                class="usa-button-outline" 
+                (click)="cancelAdd(i)"
+                buttonType="tertiary"
+                buttonText="Cancel"></sam-button> 
+            <sam-button *ngIf="mode=='edit'" 
+                class="usa-button-outline" 
+                (click)="cancelEdit(i)"
+                buttonType="tertiary"
+                buttonText="Cancel"></sam-button> 
+            <sam-button (click)="submitEdit(i)"
+                buttonType="secondary"
+                buttonText="Done"></sam-button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="(mode=='subEdit' || mode=='subAdd') && subRows && abstractControl.get('subRow')">
+        <ng-container *ngFor="let subAbstractControl of abstractControl.get('subRow').controls; let j = index;">
+            <ng-container *ngIf="editIndex==i && editSubIndex==j">
+                <ng-container subEdit>
+                    <template [ngTemplateOutlet]="subEditTemplate" [ngOutletContext]="{ $implicit: subAbstractControl }"></template>
+                </ng-container>
+                <div class="button-row">      
+                    <sam-button *ngIf="mode=='subAdd'" 
+                        class="usa-button-outline" 
+                        (click)="cancelSubAdd(i,j)"
+                        buttonType="tertiary"
+                        buttonText="Cancel"></sam-button> 
+                    <sam-button *ngIf="mode=='subEdit'" 
+                        class="usa-button-outline" 
+                        (click)="cancelSubEdit(i,j)"
+                        buttonType="tertiary"
+                        buttonText="Cancel"></sam-button> 
+                    <sam-button (click)="submitSubEdit(i,j)"
+                        buttonType="secondary"
+                        buttonText="Done"></sam-button>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</ng-container>
+<sam-button *ngIf="mode==''" 
+    class="sam-ui btn secondary" 
+    (click)="addItem()"
+    [buttonText]="addText"
+    buttonType="secondary"></sam-button>

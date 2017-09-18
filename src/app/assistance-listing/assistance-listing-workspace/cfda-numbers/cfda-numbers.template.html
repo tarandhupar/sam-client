@@ -3,10 +3,10 @@
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
-  title="CFDA Numbers">
+  title="CFDA Number Management">
 
   <!-- Sidebar section -->
-  <sidebar>
+  <sidebar [wide] = "true">
     <!--&lt;!&ndash; Navigation &ndash;&gt;-->
     <ul class="usa-sidenav-list">
       <li>
@@ -21,7 +21,7 @@
       </li>
       <li>
         <a class="usa-current">
-          CFDA Numbers
+          CFDA Number Management
         </a>
       </li>
       <li>
@@ -31,17 +31,26 @@
         </a>
       </li>
     </ul>
+    <sam-agency-picker-v2
+      *ngIf="orgLevels && toggleAgencyPicker"
+      type="single"
+      label="Agency Picker"
+      [ngModel]="selectedOrganization"
+      (ngModelChange)="onOrganizationChange($event)"
+      hint="Pick a single agency"
+      [orgRoots]="orgRoot">
+    </sam-agency-picker-v2>
 
   </sidebar>
 
   <!-- Page results -->
   <results
     *ngIf="processedCfdaNumbers"
-    [totalElements]="cfdaNumbersApi?.page?.totalElements"
-    [showing]="20"
-    [totalPages]="cfdaNumbersApi?.page?.totalPages"
+    [totalElements]="organizations.length"
+    [showing]="showPerPage"
+    [totalPages]="totalPages"
     [currentPage]="currentPage+1"
-    (pageChange)="pageChangeHandler($event)">
+    (pageChange)="pageChange($event)">
 
     <!-- Results -->
     <div class="sam-ui segment">
@@ -61,7 +70,7 @@
                         [buttonClass]="'usa-button-primary'"
                         (onClick)="onEditClick(row.organizationId)">
             </sam-button>
-            <div>Automatic Assignment: {{ row.programNumberAuto == true ? 'On' : 'Off'}}</div>
+            <div>Assignment Type: {{ row.programNumberAuto == true ? 'Automatic' : 'Manual'}}</div>
             <div>Modified Date: {{ row.modifiedDate }}</div>
           </div>
         </div>

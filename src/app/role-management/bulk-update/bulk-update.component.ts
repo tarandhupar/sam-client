@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
-import { UserService } from "../../users/user.service";
+import { UserService } from "../user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { PropertyCollector } from "../../app-utils/property-collector";
 import { Router } from "@angular/router";
 import {CapitalizePipe} from "../../app-pipes/capitalize.pipe";
@@ -46,7 +46,7 @@ export class BulkUpdateComponent {
   areUsersLoading = false;
   comments = '';
   breadCrumbs: Array<IBreadcrumb> = [
-    { breadcrumb: 'Role Management', url: '/access/roles-directory' },
+    { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
     { breadcrumb: 'Bulk Update'}
   ];
 
@@ -69,7 +69,7 @@ export class BulkUpdateComponent {
     this.userAccessService.getDomains().subscribe(
       domains => {
         this.domainOptions = domains._embedded.domainList.map(domain => {
-          return { value: domain.id, label: this.capitalize.transform(domain.domainName) };
+          return { value: domain.id, label: domain.domainName };
         });
         this.domain = domains._embedded.domainList[0].id;
         this.getRoles(true);
@@ -107,7 +107,7 @@ export class BulkUpdateComponent {
           let c = new PropertyCollector(perms);
           let roles = c.collect([[], 'role']);
           this.roleOptions = roles.map(role => {
-            return { label: this.capitalize.transform(role.val), value: role.id };
+            return { label: role.val, value: role.id };
           });
           if (selectFirstRole && this.roles[0] && this.roles[0].role) {
             this.onExistingRoleChange(this.roles[0].role.id);
@@ -287,7 +287,7 @@ export class BulkUpdateComponent {
 
     this.userAccessService.postAccess(req).subscribe(
       () => {
-        this.router.navigate(['access/roles-directory']);
+        this.router.navigate(['role-management/roles-directory']);
         this.footerAlerts.registerFooterAlert({
           description:`Succesfully updated access for ${users.length} user${users.length > 1 ? 's' : ''}.`,
           title: '',

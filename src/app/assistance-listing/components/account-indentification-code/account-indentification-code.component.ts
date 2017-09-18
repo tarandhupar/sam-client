@@ -71,7 +71,7 @@ export class FALAccountIdentificationCodeComponent implements ControlValueAccess
     // http://stackoverflow.com/a/15595732
     // todo: fix edge cases (tab is broken)
     public onKeyDown(event) {
-        if(event.key.match(/[0-9]/)==null && ['Tab','Backspace','Delete'].indexOf(event.key)==-1){
+        if(event.key.match(/[0-9]/)==null && ['Tab','Backspace','Delete','ArrowRight','ArrowLeft'].indexOf(event.key)==-1){
             event.preventDefault();
             return;
         }

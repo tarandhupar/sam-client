@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Router} from "@angular/router";
-import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
@@ -20,6 +20,7 @@ export class FALPublishComponent implements OnInit {
   submitReason: string;
   approveProgramId: string;
   data: any;
+  btnDisabled: boolean = true;
   successFooterAlertModel = {
     title: "Success",
     description: "Publish Successful.",
@@ -97,6 +98,13 @@ export class FALPublishComponent implements OnInit {
     let url = this.router.url;
     url = url.replace("publish", "review");
     this.router.navigateByUrl(url);
+  }
+
+  onTextChange(event) {
+    if (event.target.value != null && event.target.value.trim() != '')
+      this.btnDisabled = false;
+    else
+      this.btnDisabled = true;
   }
 }
 

@@ -10,7 +10,7 @@ import {Router, RouterModule} from "@angular/router";
 import {FALFormService} from "./fal-form.service";
 import * as Cookies from 'js-cookie';
 
-describe('src/app/assistance-listing/assistance-listing-operations/fal-form.service.spec.ts', () => {
+xdescribe('src/app/assistance-listing/assistance-listing-operations/fal-form.service.spec.ts', () => {
   let formService: FALFormService;
   beforeEach(() => {
 

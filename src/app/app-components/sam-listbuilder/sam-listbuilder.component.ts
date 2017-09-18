@@ -19,9 +19,12 @@ export class SamListBuilderComponent {
     @Input() sortable:boolean = true;
     @Input() sortingFn;
     @Input() control:AbstractControl;
+    @Input() hideDefaultBtns:boolean= false;
+    @Input() submitFunc: Function;
+    @Input() cancelFunc: Function;
     @Output() formArrayChange:EventEmitter<any> = new EventEmitter();
     @Output() action:EventEmitter<any> = new EventEmitter();
-    
+
     @ContentChild('edit', {read: TemplateRef}) editTemplate: TemplateRef<any>;
     @ContentChild('display', {read: TemplateRef}) displayTemplate: TemplateRef<any>;
     @ViewChild('wrapper') wrapper;
@@ -39,6 +42,7 @@ export class SamListBuilderComponent {
         if(this.control){
             this.control.statusChanges.subscribe(() => {
                 this.wrapper.formatErrors(this.control);
+                this.cdr.detectChanges();
             });
             this.wrapper.formatErrors(this.control);
         }
@@ -54,6 +58,7 @@ export class SamListBuilderComponent {
             this.model[i].setParent(null);
             this.model[i].markAsDirty();
             this.model[i].updateValueAndValidity({onlySelf:true,emitEvent:true});
+            this.cdr.detectChanges();
             this.recursivelyMarkAndValidate(this.model[i]);
         }
     }
@@ -69,6 +74,7 @@ export class SamListBuilderComponent {
             let subControl = control.get(key);
             subControl.markAsDirty();
             subControl.updateValueAndValidity({onlySelf:true,emitEvent:true});
+            this.cdr.detectChanges();
             this.recursivelyMarkAndValidate(subControl);
         }
     }
@@ -93,7 +99,7 @@ export class SamListBuilderComponent {
     move(array, from, to) {
         if( to === from ) return array;
 
-        var target = array[from];                         
+        var target = array[from];
         var increment = to < from ? -1 : 1;
 
         for(var k = from; k != to; k += increment){
@@ -117,14 +123,14 @@ export class SamListBuilderComponent {
             let index = event.data;
             this.model.splice(index,1);
             this.formArrayChange.emit(this.model);
-        } 
+        }
         if(event.type=="moveup"){
             let index = event.data;
             let item = this.model[index];
             this.editIndex = null;
             this.model = this.move(this.model,index,index-1);
             this.formArrayChange.emit(this.model);
-        } 
+        }
         if(event.type=="movedown"){
             let index = event.data;
             let item = this.model[index];

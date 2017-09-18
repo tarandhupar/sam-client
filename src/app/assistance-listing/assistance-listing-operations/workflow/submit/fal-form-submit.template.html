@@ -10,12 +10,13 @@
                  [name]="'submission-comment'"
                  [required]="true"
                  formControlName="reason"
-                 [control]="falSubmitForm.controls['reason']">
+                 [control]="falSubmitForm.controls['reason']"
+                 (inputEventChange)="onTextChange($event)">
   </sam-text-area>
     <div class="usa-width-one-half">
       <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
       <sam-button buttonText="Submit to OMB" (onClick)="onSubmitOMBClick($event)"
-                  [buttonDisabled]="((!falSubmitForm.valid || falSubmitForm.pristine) ? true : false)"></sam-button>
+                  [buttonDisabled]="btnDisabled"></sam-button>
     </div>
   </form>
 </div>

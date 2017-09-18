@@ -44,7 +44,7 @@
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.code}}:</h4></span>
           <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isRequestAACIcon(pair)">&nbsp;{{pair.value}}</span>
           <span class="usa-width-two-thirds p_B-1x" *ngIf="isRequestAACIcon(pair)">
-             <a class="usa-button-primary" [routerLink]="['/aac-request']">Request AAC</a>
+             <a class="usa-button-primary" (click)="onAACRequestClick(pair)">Request AAC</a>
           </span>
         </p>
       </div>
@@ -61,5 +61,6 @@
   <sam-alert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
   <sam-alert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></sam-alert>
   <sam-alert class="org-detail-alert-message" (dismiss)="dismissMoveOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="orgObj.name+' successfully moved under '+ orgObj.fullParentPath.split('.').pop()" *ngIf="flashMsgService.isMoveOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
+  <sam-alert class="org-detail-alert-message" (dismiss)="dismissAACRequestFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your AAC Request has been submitted.'" *ngIf="flashMsgService.isAACRequestSuccess && flashMsgService.isFlashMsgShow" ></sam-alert>
 
 </div>

@@ -2,7 +2,7 @@
 
   .cm-tab{
     border: 2px $color-gray-lightest solid !important;
-    border-bottom: none;
+    border-bottom: none !important;
   }
 
   .cm-current-tab{
@@ -23,10 +23,6 @@
     border-top: 7px solid transparent;
     border-bottom: 7px solid transparent;
     border-left: 7px solid $color-cool-blue;
-  }
-
-  .border-top-light-gray{
-    border-top: 2px $color-gray-lightest solid;
   }
 
   .border-bottom-light-gray{

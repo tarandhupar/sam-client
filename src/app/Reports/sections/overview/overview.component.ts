@@ -11,7 +11,9 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { globals } from '../../app/globals';
 import { FavoritePipe } from './favorite.pipe';
 import * as _ from 'lodash';
-import * as Cookies from 'js-cookie';
+import * as Cookie from 'js-cookie';
+import { Report } from '../../report';
+import * as base64 from 'base-64';
 
 export const REPORTS_PER_PAGE: number = 10;
 
@@ -33,19 +35,8 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   public liked = true;
   public favorite = false;
   public admin = false;
-  data: {
-    development: {
-      admin: [string, Boolean, string, string, Boolean, string],
-      user: [string, Boolean, string, string, Boolean, string]
-    },
-    test: {
-      admin: [string, Boolean, string, string, Boolean, string],
-      user: [string, Boolean, string, string, Boolean, string]
-    },
-    production: {
-      admin: [string, Boolean, string, string, Boolean, string],
-      user: [string, Boolean, string, string, Boolean, string]
-    }
+  data = {
+    reports: []
   };
   currentPage: number = 1;
   totalReportCount: number = 0;
@@ -56,27 +47,18 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   item: any = [1, false];
   API_UMBRELLA_URL: string;
   mode = 'Observable';
+  reports;
+  completedReports = [];
+  roleData;
+  userRoleObject;
+  userRole;
+  mstrEnv;
+  mstrServer;
 
   constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
-  private api: IAMService, private http: Http ) {
-    /*this.http.get('src/assets/dynamicMincReports.json')
-      .map(res => res.json())
-      .subscribe(data => {
-          this.data = data;
-          this.zone.runOutsideAngular(() => {
-            this.checkSession(() => {
-              this.zone.run(() => {
-                // Callback
-              });
-            });
-          });
-        },
-        err => console.log(err),
-        () => console.log('Completed'));*/
-  }
+                private api: IAMService, private http: Http ) {}
 
   ngAfterViewInit() {
-    console.log(this.myVars.toArray().length);
   }
 
   selectItem(index): void {
@@ -85,25 +67,25 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   addUser( id ) {
-    this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
+    this.reportsService.savePreference(id, this.data, Cookie.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
-        error => console.log(error),
-        () => console.log('Completed')
+        error => console.log(error)
       );
   }
 
   deleteUser(id) {
-    this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
+    this.reportsService.savePreference(id, this.data, Cookie.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
-        error => console.log(error),
-        () => console.log('Completed')
+        error => console.log(error)
       );
   }
+
   totalPages(): number {
     return Math.floor((this.totalReportCount) / REPORTS_PER_PAGE) + 1;
   }
+
   onParamChanged(page) {
     // if this is a page change, the page parameter is > 1
     if (page) {
@@ -113,6 +95,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     }
     this.getReports();
   }
+
   getReports() {
     let startIndex: number = (this.currentPage - 1) * REPORTS_PER_PAGE;
     let endIndex: number = startIndex + REPORTS_PER_PAGE;
@@ -127,103 +110,73 @@ export class OverviewComponent implements OnInit, AfterViewInit {
 
     this.currentReports = this.dbReports.slice(startIndex, endIndex);
   }
+
   ngOnInit() {
-    this.http.get('src/assets/dynamicMincReports.json')
-      .map(res => res.json())
-      .subscribe(data => {
-          this.data = data;
-          this.zone.runOutsideAngular(() => {
-            this.checkSession(() => {
-              this.zone.run(() => {
-                // Callback
+    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
+      this.mstrEnv = 'stg';
+      this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
+      this.mstrEnv = 'test';
+      this.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/comp") != -1) {
+      this.mstrEnv = 'dev';
+      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
+    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
+      this.mstrEnv = 'dev';
+      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
+    }
+    this.http.get('src/assets/report-configs/'+this.mstrEnv+'-reports.json')
+        .map(res => res.json())
+        .subscribe(data => {
+            this.data = data;
+            this.zone.runOutsideAngular(() => {
+              this.checkSession(() => {
+                this.zone.run(() => {
+                  // Callback
+                });
               });
             });
-          });
-        },
-        err => console.log(err),
-        () => console.log('Completed'));
+          },
+          err => console.log(err));
+    // this.reportsService.getUserRole(Cookie.get('iPlanetDirectoryPro')).subscribe(
+    //     data => {
+    //       this.roleData = data;
+    //       let encodedToken = this.roleData.token.split(".");
+    //       this.userRoleObject = JSON.parse(base64.decode(encodedToken[1]));
+    //       this.userRole = this.userRoleObject.domainMapContent[0].roleMapContent[0].role.val;
+    //     },
+    //     error => console.log(error)
+    //   );  
   }
 
   checkSession( cb: () => void ) {
     let vm = this;
-    this.api.iam.user.get(function(user, error) {
+    let completedReports = [];
+    this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
-      vm.userRoles = user.gsaRAC;
-      
-      let isReportsUser = false;
-      let isReportsAdmin = false;
-
-      for (let _i = 0; _i < vm.userRoles.length; _i++) {
-        if (vm.userRoles[_i].indexOf('GSA_REPORT_R') >= 0) {
-          isReportsUser = true;
-        }
-
-        if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
-          isReportsAdmin = true;
-        }
-
-        if (isReportsUser && isReportsAdmin) {
-          // User is an Admin user
-          vm.states.isAdmin = true;
-          vm.admin = vm.states.isAdmin;
-        }
-      }
-
+      let isReportsUser = true; // change to false after RM added
+      let isReportsAdmin = true;
+      vm.states.isAdmin = true;
+      vm.admin = vm.states.isAdmin;
       vm.user = user;
-      if ( ENV === 'development') {
-        if (vm.admin) {
-          vm.dbReports = vm.data.development.admin;
-        } else {
-          vm.dbReports = vm.data.development.user;
-        }
-        /*else if (ENV === 'test') {
-         if (vm.admin) {
-         vm.dbReports = vm.data.test.admin;
-         } else {
-         vm.dbReports = vm.data.test.user;
-         }
-         } else if ( ENV === 'production') {
-         if (vm.admin) {
-         vm.dbReports = vm.data.production.admin;
-         } else {
-         vm.dbReports = vm.data.production.user;
-         }
-         }*/
-      } else if (_.includes(API_UMBRELLA_URL, 'comp')) {
-        if (vm.admin) {
-          vm.dbReports = vm.data.development.admin;
-        } else {
-          vm.dbReports = vm.data.development.user;
-        }
-      } else if (_.includes(API_UMBRELLA_URL, 'minc')) {
-        if (vm.admin) {
-          vm.dbReports = vm.data.test.admin;
-        } else {
-          vm.dbReports = vm.data.test.user;
-        }
-      } else if (_.includes(API_UMBRELLA_URL, 'prodlike')) {
-        if (vm.admin) {
-          vm.dbReports = vm.data.production.admin;
-        } else {
-          vm.dbReports = vm.data.production.user;
-        }
-      } else if (_.includes(API_UMBRELLA_URL, 'prod')) {
-        if (vm.admin) {
-          vm.dbReports = vm.data.production.admin;
-        } else {
-          vm.dbReports = vm.data.production.user;
-        }
-      }
-      vm.totalReportCount = vm.dbReports.length;
+      vm.dbReports = vm.data.reports;
+
       let sortedArray = vm.dbReports.slice(0);
       sortedArray.sort((first, second): number => {
         if (first.name < second.name) return -1;
         if (first.name > second.name) return 1;
         return 0;
       });
-      vm.dbReports = sortedArray;
+      for (let report of sortedArray) {
+        if (report.complete) {
+          completedReports.push(report);
+        }
+      }
+      vm.dbReports = completedReports;
+      vm.totalReportCount = completedReports.length;
       vm.getReports();
+      
       cb();
     });
   }

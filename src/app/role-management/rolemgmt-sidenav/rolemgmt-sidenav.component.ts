@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { SamCheckboxComponent } from "sam-ui-kit/form-controls/checkbox/checkbox.component";
-import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 @Component({
   selector: 'rolemgmt-sidenav',
@@ -34,12 +33,9 @@ export class RoleMgmtSidenav implements OnInit{
 
 
     constructor(
-      private router: Router,
       private route: ActivatedRoute,
       private role: UserAccessService,
-      private capitalize: CapitalizePipe,
     ){
-
 
     }
 
@@ -87,15 +83,15 @@ export class RoleMgmtSidenav implements OnInit{
     }
 
     mapKeyAndVal(val){
-      return {key : val, value : this.capitalize.transform(val)};
+      return {key : val, value : val};
     }
 
     mapLabelAndValue(val){
-      return {label : this.capitalize.transform(val.status), value : val.id};
+      return {label : val.status, value : val.id};
     }
 
     mapDomainLabelAndVal(val){
-      return {label : this.capitalize.transform(val.domainName), value: val.id};
+      return {label : val.domainName, value: val.id};
     }
 
     activeFilter(event){

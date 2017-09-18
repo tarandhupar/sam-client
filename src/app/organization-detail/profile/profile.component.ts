@@ -138,6 +138,14 @@ export class OrgDetailProfilePage {
     this.isEdit = true;
   }
 
+  onAACRequestClick(pair){
+    if(pair.desc === 'Procurement AAC'){
+      this._router.navigateByUrl("aac-request/procurement/"+this.orgId);
+    }else{
+      this._router.navigateByUrl("aac-request/non-procurement/"+this.orgId);
+    }
+  }
+
   setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
     this.setupHierarchyPath(fullParentPathName);
 
@@ -295,6 +303,11 @@ export class OrgDetailProfilePage {
   }
 
   dismissCreateOrgInfoAlert(){
+    this.flashMsgService.resetFlags();
+  }
+
+  dismissAACRequestFlashAlert(){
+    this.flashMsgService.hideFlashMsg();
     this.flashMsgService.resetFlags();
   }
 }

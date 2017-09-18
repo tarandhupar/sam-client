@@ -20,7 +20,7 @@
 
     <div *ngIf="shouldShowRespondButton(content)"
       class="sam-ui small subtle menu">
-      <a routerLink = "/access-requests/{{content.id}}/respond"
+      <a routerLink = "/role-management/requests/{{content.id}}/respond"
           class="active inverted blue item">
         Respond
         &nbsp;
@@ -33,7 +33,7 @@
       <div class="row">
         <div class="twelve wide column">
           <h3 class="sam-ui header">
-            {{content.domain.val | capitalize}}
+            {{content.domain.val}}
           </h3>
         </div>
       </div>

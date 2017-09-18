@@ -95,6 +95,20 @@ export class FALFormViewModel {
     return this._fal.revision === true;
   }
 
+  get isNewDraft() {
+    if(this._fal.revision === false && this._fal.archived === false && this._fal.status && this._fal.status.code === "draft")
+      return true;
+
+    return false;
+  }
+
+  get isRejected(){
+    if(this._fal.status && this._fal.status.code === "rejected")
+      return true;
+
+    return false;
+  }
+
   set addiInfo(addiInfo: any) {
     this._additionalInfo = addiInfo;
   }

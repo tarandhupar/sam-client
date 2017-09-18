@@ -1,6 +1,6 @@
 <div class="usa-grid-full p_B-6x reports-content relative">
   <aside class="usa-width-one-fourth p_T-2x" *ngIf="isCurrentSection('overview') || isCurrentSection('static') ||
-  isCurrentSection('adhoc') || isCurrentSection('favorites') || isCurrentSection('overviewProto')">
+  isCurrentSection('adhoc') || isCurrentSection('favorites') || isCurrentSection('overview')">
     <div sam-sticky limit=1200 container="reports-content">
       <h3>Navigation</h3>
       <ul class="usa-sidenav-list">
@@ -12,12 +12,18 @@
           
         </li> -->
         <li>
-          <a [ngClass]="getSectionClass('overviewProto')" (click)="changeSection('overviewProto')"
-             [routerLink]="['/reports/overviewProto']">
+          <a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')"
+             [routerLink]="['/reports/overview']">
             Dynamic Reports
           </a>
           <span *ngIf="states.isSignedIn">        
-            <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('overviewProto')">
+            <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('overview')">
+              <li>
+                <a [ngClass]="getSubSectionClass('myreports')" (click)="changeSubSection('myreports')"
+                  [routerLink]="['/reports/myreports']">
+                  My Reports
+                </a>
+              </li>
               <li>
                 <a #ScheduledReports [ngClass]="getSubSectionClass('ScheduledReports')"
                    (click)="changeSubSection('ScheduledReports',ScheduledReports)"
@@ -28,6 +34,7 @@
             </ul>
           </span>
         </li>
+        
         <li>
           <a [ngClass]="getSectionClass('static')" (click)="changeSection('static')"
              [routerLink]="['/reports/static']">
@@ -71,8 +78,7 @@
           </ul>
           </div>-->
         </li>
-        <span *ngIf="states.isSignedIn">
-        <li>
+        <li *ngIf="states.isSignedIn">
           <a [ngClass]="getSectionClass('favorites')" (click)="changeSection('favorites')"
              [routerLink]="['/reports/favorites']">
             Favorites
@@ -112,13 +118,12 @@
             </li>
           </ul>-->
         </li>
-        </span>
       </ul>
     </div>
   </aside>
   <div [ngClass]="{'usa-width-one-whole': isCurrentSection('') && isCurrentSection('') &&
   isCurrentSection('') && isCurrentSection(''), 'usa-width-three-fourths': isCurrentSection('overview') ||
-  isCurrentSection('static') || isCurrentSection('adhoc') || isCurrentSection('favorites') || isCurrentSection('overviewProto')}">
+  isCurrentSection('static') || isCurrentSection('adhoc') || isCurrentSection('favorites') || isCurrentSection('overview')}">
     <div class="usa-width-one-whole m_L-4x">
       <!--Content for Sections-->
       <router-outlet></router-outlet>

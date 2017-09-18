@@ -336,50 +336,30 @@ export class DetailsComponent {
         getMockUser = ((promise) => {
           let intQuestion;
 
-          merge(this.user, {
-            _id: 'doe.john@gsa.gov',
-            email: 'doe.john@gsa.gov',
+          this.api.iam.user.get(user => {
+            this.user = user;
 
-            middleName: 'J',
-            firstName: 'John',
-            initials: 'J',
-            lastName: 'Doe',
+            if(ENV && ENV == 'test') {
+              delete this.user['departmentID'];
+              delete this.user['agencyID'];
+              delete this.user['officeID'];
+            }
 
-            workPhone: '12401234568',
+            for(intQuestion in this.user.kbaAnswerList) {
+              this.questions.push(this.store.questions);
+            }
 
-            departmentID: 100006688,
-            agencyID: 0,
-            officeID: 100173623,
+            this.store.questions = this.store.questions.map((question, intQuestion) => {
+              // Create reverse lookup while remapping
+              this.store.indexes[question.id] = intQuestion;
+              question['disabled'] = false;
+              return question;
+            });
 
-            kbaAnswerList: [
-              { questionId: 1, answer: this.repeater(' ', 8) },
-              { questionId: 3, answer: this.repeater(' ', 8) },
-              { questionId: 5, answer: this.repeater(' ', 8) }
-            ],
+            this.initQuestions();
 
-            emailNotification: false
-          });
-
-          if(ENV && ENV == 'test') {
-            delete this.user['departmentID'];
-            delete this.user['agencyID'];
-            delete this.user['officeID'];
-          }
-
-          for(intQuestion in this.user.kbaAnswerList) {
-            this.questions.push(this.store.questions);
-          }
-
-          this.store.questions = this.store.questions.map((question, intQuestion) => {
-            // Create reverse lookup while remapping
-            this.store.indexes[question.id] = intQuestion;
-            question['disabled'] = false;
-            return question;
-          });
-
-          this.initQuestions();
-
-          promise(this.user);
+            promise(this.user);
+          })
         });
 
     fn = this.api.iam.isDebug() ? getMockUser : getSessionUser;

@@ -23,22 +23,22 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
             <strong>{{ service?.value }}</strong> - <span [innerHTML]="service?.description"></span>
           </p>
           
-          <ng-container *ngIf="data.location?.additionalInfo?.content==null && data.location?.states!=null">
+          <ng-container *ngIf="data.location?.additionalInfo?.content==null && data.location?.states && data.location?.states!=null">
             <ul *ngFor="let state of data.location?.states; let i=index" class="sam-ui small list">
               <li class="wd-state-0">
                 <strong>State </strong><br>
                 <span>{{ state?.name }}</span>
               </li>
-              <li class="wd-counties-0" *ngIf="state.isStateWide==false">
+              <li class="wd-counties-0" *ngIf="state?.isStateWide==false">
                 <strong>County/ies </strong><br>
-                <ng-container *ngFor="let county of state.counties?.include; let isLast=last">
+                <ng-container *ngFor="let county of state?.counties?.include; let isLast=last">
                   {{county?.value}}{{ isLast ? '' : ', '}}
                 </ng-container>
               </li>
-              <li class="wd-counties-0" *ngIf="state.isStateWide==true">
+              <li class="wd-counties-0" *ngIf="state?.isStateWide==true">
                 <strong>County/ies </strong><br>
-                Statewide {{state.counties?.exclude?.length>0 ? 'Except' : ''}}
-                <ng-container *ngFor="let county of state.counties?.exclude; let isLast=last">
+                Statewide {{state?.counties?.exclude?.length>0 ? 'Except' : ''}}
+                <ng-container *ngFor="let county of state?.counties?.exclude; let isLast=last">
                   {{county?.value}}{{ isLast ? '' : ', '}}
                 </ng-container>
               </li>
@@ -86,7 +86,7 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
             <li  class="wd-services" *ngIf="data._type=='wdSCA'">
               <strong>Service</strong><br>
               <span *ngFor="let service of data.services; let isLast=last">
-                {{ service.value }}{{ isLast ? '' : ', ' }}
+                {{ service?.value }}{{ isLast ? '' : ', ' }}
               </span>
               <span *ngIf="data.services == null">
               Standard (Area-Wide) Wage Determination
@@ -122,7 +122,7 @@ export class WageDeterminationResult implements OnInit {
     if(this.data.publishDate!==null) {
     this.data.publishDate = moment(this.data.publishDate).format("MMM DD, YYYY");
     }
-    if(this.data.location!==null) {
+    if(this.data.location && this.data.location!==null) {
       if (this.data.location.states && this.data.location.states !== null) {
         for (var i = 0; i < this.data.location.states.length; i++) {
           if (this.data.location.states[i].counties && this.data.location.states[i].counties.include !== null) {

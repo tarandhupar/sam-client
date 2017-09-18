@@ -14,6 +14,12 @@ export class MsgFeedSideNavComponent{
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
+  @Input() typeIdMap: any = {};
+  @Input() roleCount = 0;
+  @Input() titleChangeCount = 0;
+  @Input() numberChangeCount = 0;
+  @Input() recievedCount = 0;
+
   filterOption = {
     keyword:"",
     requestType:[],
@@ -24,16 +30,6 @@ export class MsgFeedSideNavComponent{
     subSection:"",
   };
 
-  cbxControl = {
-    requestType: true,
-    status: true,
-    alertType: true,
-    domains: true,
-  };
-
-  requestTotalCount = 10;
-  requestSentTotalCount = 6;
-  requestReceivedTotalCount = 4;
   requestTypeCbxConfig = {
     options: [],
     name: 'Request Type',
@@ -41,11 +37,7 @@ export class MsgFeedSideNavComponent{
   };
 
   statusCbxConfig = {
-    options: [
-      {value: 'Pending', label: 'Pending', name: 'Pending'},
-      {value: 'Approved', label: 'Approved', name: 'Approved'},
-      {value: 'Rejected', label: 'Rejected', name: 'Rejected'},
-    ],
+    options: [],
     name: 'Status',
     label: 'Status',
   };
@@ -65,8 +57,12 @@ export class MsgFeedSideNavComponent{
   constructor(private msgFeedService: MsgFeedService, private systemAlertService: SystemAlertsService){}
 
   ngOnInit(){
-    this.setCbxControl();
     this.loadFilterData();
+  }
+
+  ngOnChanges(){
+
+    this.loadCounts();
   }
 
   isCurrentSection(section):boolean{return this.curSection === section;}
@@ -81,10 +77,8 @@ export class MsgFeedSideNavComponent{
     let dividerIndex = sectionStr.indexOf('/');
     this.curSection = sectionStr.substr(0, dividerIndex === -1? sectionStr.length:dividerIndex);
     this.curSubSection = sectionStr.substr(dividerIndex === -1? sectionStr.length:dividerIndex + 1);
-    this.filterOption.section = this.curSection;
-    this.filterOption.subSection = this.curSubSection;
 
-    this.setCbxControl();
+    this.loadFilterData();
     this.resetFilterFields();
     this.msgFilterOptionChange();
 
@@ -94,25 +88,10 @@ export class MsgFeedSideNavComponent{
   }
 
   msgFilterOptionChange(){
-
+    this.filterOption.section = this.curSection;
+    this.filterOption.subSection = this.curSubSection;
     // emit event for msg feed to search for current filter messages
     this.filterChange.emit(this.filterOption);
-  }
-
-  /* Set up proper checkbox to show on each section or subsection*/
-  setCbxControl(){
-    Object.keys(this.cbxControl).forEach( key => {this.cbxControl[key] = true;});
-    if(this.curSection !== 'requests') {
-      this.cbxControl.requestType = false;
-      this.cbxControl.status = false;
-    }
-
-    if(this.curSubSection !== 'subscriptions') this.cbxControl.domains = false;
-    if(this.curSubSection !== 'alerts') this.cbxControl.alertType = false;
-    if(this.curSection === 'notifications' && this.curSubSection === '') {
-      this.cbxControl.domains = true;
-      this.cbxControl.alertType = true;
-    }
   }
 
   resetFilterFields(){
@@ -123,43 +102,63 @@ export class MsgFeedSideNavComponent{
     this.filterOption.domains = [];
   }
 
-  getRequestTypeCount(option){
-    if(this.isCurrentPath('requests/sent')){
-      return option.sentCount;
-    }else if(this.isCurrentPath('requests/received')){
-      return option.receivedCount;
-    }
-    return option.sentCount + option.receivedCount;
-  }
-
   loadFilterData(){
-    this.loadAlertType();
-    this.loadRequestsTypeAndCount();
-    this.loadDomains();
-  }
+    let typeStr = this.curSubSection === ""? this.curSection: this.curSubSection;
+    this.msgFeedService.getFilters(this.typeIdMap[typeStr]).subscribe(data =>{
+      this.loadRequestsTypeAndCount(data.requestTypes);
+      this.loadRequestStatus(data.requestStatus);
+      this.loadAlertType(data.alertTypes);
+      this.loadDomains(data.domainTypes);
 
-  loadAlertType(){
-    this.systemAlertService.getAlertTypes().subscribe(res => {
-      this.alertTypeCbxConfig.options = [];
-      res.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
     });
   }
 
-  loadRequestsTypeAndCount(){
-    this.msgFeedService.getRequestsType().subscribe(res => {
-      this.requestTypeCbxConfig.options = [];
-      res.RequestsType.forEach(type => {this.requestTypeCbxConfig.options.push({value: type, label: type, name: type, sentCount:res[type]['sentCount'], receivedCount:res[type]['receivedCount'],});});
-      this.requestReceivedTotalCount = res.totalCount['receivedCount'];
-      this.requestSentTotalCount = res.totalCount['sentCount'];
-      this.requestTotalCount = this.requestReceivedTotalCount + this.requestSentTotalCount;
-    });
-
+  loadAlertType(alertTypes){
+    this.alertTypeCbxConfig.options = [];
+    if(alertTypes){
+      alertTypes.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
+    }
   }
 
-  loadDomains(){
-    this.msgFeedService.getDomains().subscribe(res => {
-      this.domainsCbxConfig.options = [];
-      res.Domains.forEach(domain => {this.domainsCbxConfig.options.push({value: domain, label: domain, name: domain});});
+  loadRequestsTypeAndCount(requestTypes){
+    this.requestTypeCbxConfig.options = [];
+    if(requestTypes){
+      requestTypes.forEach(type => {
+        this.requestTypeCbxConfig.options.push({value: type.requestTypeId, label: type.requestTypeNames, name: type.requestTypeNames, count:0});
+      });
+      this.loadCounts();
+    }
+  }
+
+  loadRequestStatus(requestStatus){
+    this.statusCbxConfig.options = [];
+    if(requestStatus){
+      requestStatus.forEach(status => {
+        this.statusCbxConfig.options.push({value: status.requestStatusId, label: status.requestStatus, name: status.requestStatus});
+      });
+    }
+  }
+
+
+  loadDomains(domainTypes){
+    this.domainsCbxConfig.options = [];
+    if(domainTypes){
+      domainTypes.forEach(domain => {
+        if(domain.isActive)
+          this.domainsCbxConfig.options.push({value: domain.id, label: domain.domainName, name: domain.domainName});
+      });
+    }
+  }
+
+  loadCounts(){
+    this.requestTypeCbxConfig.options.forEach(e =>{
+      if(e.label.includes('Role'))e.count = this.roleCount;
+      if(e.label.includes('Title'))e.count = this.titleChangeCount;
+      if(e.label.includes('Number'))e.count = this.numberChangeCount;
     });
+  }
+
+  hasActiveItem(option):boolean{
+    return option.count && option.count > 0;
   }
 }

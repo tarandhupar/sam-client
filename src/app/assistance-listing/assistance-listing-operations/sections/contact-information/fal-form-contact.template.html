@@ -29,121 +29,35 @@
     <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
     
     <sam-listbuilder
+      #contactLB
       [max]="2"
+      [hideDefaultBtns]="true"
       [control]="falContactInfoForm.get('contacts')"
       [formArrayInput]="falContactInfoForm.get('contacts').controls"
       [formGroupTemplate]="contactsSubform"
       (formArrayChange)="contactsFormArrayChange($event)"
       (action)="lbActionHandler($event)">
       <template #display let-item>
-        <ng-container *ngIf="!item.valid">
+        <ng-container *ngIf="item.get('poc').errors">
           <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
         </ng-container>
         <p>
-          <ng-container *ngIf="item.value.title">{{item.value.title}} </ng-container>{{item.value.fullName}}<br/>
-          <ng-container *ngIf="item.value.streetAddress">{{item.value.streetAddress}}<br/></ng-container>
-          <ng-container *ngIf="item.value.email">Email: {{item.value.email}}<br/></ng-container>
-          <ng-container *ngIf="item.value.phone">Phone: {{item.value.phone}}<br/></ng-container>
+          <ng-container *ngIf="item.value.poc.title">{{item.value.poc.title}} </ng-container>{{item.value.poc.fullName}}<br/>
+          <ng-container *ngIf="item.value.poc.streetAddress">{{item.value.poc.streetAddress}}<br/></ng-container>
+          <ng-container *ngIf="item.value.poc.email">Email: {{item.value.poc.email}}<br/></ng-container>
+          <ng-container *ngIf="item.value.poc.phone">Phone: {{item.value.poc.phone}}<br/></ng-container>
         </p>
       </template>
       <template #edit let-item>
         <form [formGroup]="item">
-          <sam-select
-            [control]="item.controls.contactId"
-            [label]="'Contact'"
-            [name]="'contact-control'"
-            [required]="true"
-            [options]="contactDrpDwnOptions"
-            [disabled]="(mode == 'Edit' ? true : false)"
-            formControlName="contactId"
-            (modelChange)="onParamChanged($event,item)"></sam-select>
-    
-          <div id="newContact" [class.hide]="(item.controls.contactId.value != 'new' && mode != 'Edit')">
-    
-            <sam-text
-              [control]="item.controls.title"
-              [name]="'title-input'"
-              [label]="'Title'"
-              formControlName="title"></sam-text>
-    
-            <sam-text
-              [control]="item.controls.fullName"
-              [name]="'fullName-input'"
-              [label]="'Full Name'"
-              [required]="true"
-              formControlName="fullName"></sam-text>
-    
-            <sam-text
-              [control]="item.controls.email"
-              [name]="'email-input'"
-              [label]="'Email'"
-              [required]="true"
-              formControlName="email"></sam-text>
-    
-            <!--<sam-phone-entry [control]="item.controls.phone"
-              [required]="true"
-              label="Phone"
-              name="phone-input"
-              formControlName="phone"></sam-phone-entry>
-    
-            <sam-phone-entry [control]="item.controls.fax"
-              label="Fax"
-              name="fax-input"
-              formControlName="fax"></sam-phone-entry>-->
-    
-            <sam-number
-              [control]="item.controls.phone"
-              [minlength]="10"
-              [maxlength]="10"
-              [name]="'phone-input'"
-              [label]="'Phone'"
-              [required]="true"
-              formControlName="phone"></sam-number>
-    
-            <sam-number
-              [control]="item.controls.fax"
-              [minlength]="10"
-              [maxlength]="10"
-              [name]="'fax-input'"
-              [label]="'Fax'"
-              formControlName="fax"></sam-number>
-    
-            <sam-text-area
-              [control]="item.controls.streetAddress"
-              [name]="'street-input'"
-              [label]="'Street'"
-              [required]="true"
-              formControlName="streetAddress"></sam-text-area>
-    
-            <sam-text
-              [control]="item.controls.city"
-              [name]="'city-input'"
-              [label]="'City'"
-              [required]="true"
-              formControlName="city"></sam-text>
-    
-            <sam-select
-              [control]="item.controls.state"
-              [label]="'State'"
-              [name]="'state-control'"
-              [required]="true"
-              [options]="stateDrpDwnOptions"
-              formControlName="state"></sam-select>
-    
-            <sam-text
-              [control]="item.controls.zip"
-              [name]="'zip-input'"
-              [label]="'Zip'"
-              [required]="true"
-              formControlName="zip"></sam-text>
-    
-            <sam-select
-              [label]="'Country'"
-              [name]="'country-control'"
-              [options]="countryDrpDwnOptions"
-              formControlName="country"></sam-select>
-    
-          </div>
+          <sam-poc-entry #poc
+            formControlName="poc"
+            [manualList]="true"
+            [listBuilder]="contactLB"
+            [valueFormat]="'{fullName}, {email}'"
+            [pocOptions]="contactDrpDwnOptions" 
+            [nameOptions]="contactNameOptions"
+            [emailOptions]="contactEmailOptions"></sam-poc-entry>
         </form>
       </template>
     </sam-listbuilder>

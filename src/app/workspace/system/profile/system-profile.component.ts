@@ -210,7 +210,7 @@ export class SystemProfileComponent {
         this.api.picker
           .getPerson(userID, {})
           .catch(response => Observable.of({
-            user : {
+            user: {
               _id: userID,
               email: userID,
               firstName: userID,
@@ -269,7 +269,7 @@ export class SystemProfileComponent {
   }
 
   initPointOfContact(items: POC[]) {
-    return items.map(item => new FormControl(item));;
+    return items.map(item => new FormControl(item));
   }
 
   setControlValue(key, value) {

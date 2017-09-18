@@ -12,6 +12,8 @@ import * as _ from 'lodash';
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
 import {SidenavHelper} from '../app-utils/sidenav-helper';
 import {RequestLabelPipe} from "./pipes/request-label.pipe";
+import {FALFormService} from "./assistance-listing-operations/fal-form.service";
+import {AlertFooterService} from "../app-components/alert-footer/alert-footer.service";
 
 @Component({
   moduleId: __filename,
@@ -52,7 +54,18 @@ export class ProgramPage implements OnInit, OnDestroy {
   };
   qParams: any;
   dictionariesUpdated: boolean = false;
-
+  notifySuccessFooterAlertModel = {
+    title: "Success",
+    description: "Successfully sent notification.",
+    type: "success",
+    timer: 3000
+  };
+  notifyErrorFooterAlertModel = {
+    title: "Error",
+    description: "Error sending notification.",
+    type: "error",
+    timer: 3000
+  };
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -69,7 +82,9 @@ export class ProgramPage implements OnInit, OnDestroy {
               private historicalIndexService: HistoricalIndexService,
               private programService: ProgramService,
               private fhService: FHService,
-              private dictionaryService: DictionaryService) {
+              private dictionaryService: DictionaryService,
+              private service: FALFormService,
+              private alertFooterService: AlertFooterService,) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -341,15 +356,16 @@ export class ProgramPage implements OnInit, OnDestroy {
       return;
     }
 
-
     if ((new Date(this.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
-      this.alerts.push({
-        'labelname': 'not-updated-since', 'config': {
-          'type': 'warning', 'title': '', 'description': 'Note: \n\
+      if (this.program.status.code === 'published' && !this.program.archived) {
+        this.alerts.push({
+          'labelname': 'not-updated-since', 'config': {
+            'type': 'warning', 'title': '', 'description': 'Note: \n\
 This Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
 Please contact the issuing agency listed under "Contact Information" for more information.'
-        }
-      });
+          }
+        });
+      }
     }
   }
 
@@ -396,16 +412,58 @@ Please contact the issuing agency listed under "Contact Information" for more in
     }
     return editFlag;
   }
-  
-  
+
+  tabsNavigation(tabType) {
+    let url;
+    if(tabType === 'Authenticated') {
+      url = '/programs/' + this.program.id + '/review';
+    }
+    if(tabType === 'Submit') {
+      url = '/programs/' + this.program.id + '/submit';
+    }
+    if(tabType === 'Reject') {
+      url = '/programs/' + this.program.id + '/reject';
+    }
+    if(tabType === 'Publish') {
+      url = '/programs/' + this.program.id + '/publish';
+    }
+    if(tabType === 'Notify') {
+      this.notifyAgencyCoordinator();
+    }
+    this.router.navigateByUrl(url);
+  }
+  notifyAgencyCoordinator() {
+    this.service.sendNotification(this.program.id)
+      .subscribe(api => {
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifySuccessFooterAlertModel)));
+          this.router.navigate(['/fal/workspace']);
+        },
+        error => {
+          console.error('error sending notification', error);
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyErrorFooterAlertModel)));
+        });
+  }
+
   public tabsClicked(tab){
     switch (tab.label) {
-      case 'Auntheticated':
-        this.onEditViewClick();
+      case 'Authenticated':
+        this.tabsNavigation('Authenticated');
+        break;
+      case 'Submit':
+        this.tabsNavigation('Submit');
+        break;
+      case 'Reject':
+        this.tabsNavigation('Reject');
+        break;
+      case 'Publish':
+        this.tabsNavigation('Publish');
+        break;
+      case 'Notify Agency Coordinator':
+        this.tabsNavigation('Notify');
         break;
       default:
         break;
     }
   }
-  
+
 }

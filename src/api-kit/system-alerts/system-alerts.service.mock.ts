@@ -10,4 +10,8 @@ export class SystemAlertsServiceMock {
   getActive() {
     return Observable.of({"_embedded":{"alertList":[{"alertId":34,"rank":null,"createdDate":"2017-07-21T19:56:14.106-0400","createdBy":"Admin","lastModifiedBy":"Admin","lastModifiedDate":"2017-07-21T19:56:14.106-0400","status":null,"content":{"title":"Test","description":"Test","severity":"Error","begins":"2017-07-21T15:56:14.106-0400","expires":null,"published":"2017-07-21T15:56:13.000-0400","isExpiresIndefinite":"N"}},{"alertId":32,"rank":null,"createdDate":"2017-07-20T20:18:15.654-0400","createdBy":"Admin","lastModifiedBy":"Admin","lastModifiedDate":"2017-07-20T20:18:15.654-0400","status":null,"content":{"title":"Critical Alert New-2","description":"Critical error description","severity":"Error","begins":"2017-07-20T16:18:15.654-0400","expires":"2018-02-19T18:41:21.000-0500","published":"2017-01-31T18:41:21.000-0500","isExpiresIndefinite":"N"}}]},"_links":{"self":{"href":"https://38alertsservicesminc.apps.prod-iae.bsp.gsa.gov/alert/v2/alerts?limit=2&offset=0"}}});
   }
+
+  getAlertTypes() {
+    return Observable.of(['Informational','Warning','Critical']);
+  }
 }

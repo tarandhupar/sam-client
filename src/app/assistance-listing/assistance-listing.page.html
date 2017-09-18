@@ -8,7 +8,7 @@
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       </ng-container>
       <ng-container *ngIf="program && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
+        <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="'Organization Logo'" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
       <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
@@ -38,10 +38,10 @@
           </h1>
         </div>
       </div>
-      
+
       <!-- Tabs -->
-      <tabs-fal 
-        [data]="program" 
+      <tabs-fal
+        [data]="program"
         (tabClick)="tabsClicked($event)">
       </tabs-fal>
 

@@ -16,7 +16,7 @@ import * as moment from 'moment/moment';
             <span *ngIf="data.isActive==false">{{ data.name }}</span>
           </h3>
           <ul class="sam-ui small list">
-            <li *ngIf="data.dunsNumber!==null && data.dunsNumber!==''">
+            <li *ngIf="data.dunsNumber && data.dunsNumber!==null">
               <strong>Unique Entity Identifier (UEI)</strong><br>
               {{ data.dunsNumber }}
             </li>
@@ -67,7 +67,7 @@ export class ExclusionsResult implements OnInit {
   samNumberConcat: string;
   orgIdConcat: string;
   typeConcat: string;
-  cageCodeConcat: string;
+  ctCodeConcat: string;
   isFirm: boolean = false;
 
   constructor() {
@@ -92,17 +92,17 @@ export class ExclusionsResult implements OnInit {
       this.typeConcat = 'NA';
     }
 
-    if (this.data.cageCode != null && this.data.cageCode.length > 0) {
-      this.cageCodeConcat = this.data.cageCode;
+    if (this.data.ctCode != null && this.data.ctCode.length > 0) {
+      this.ctCodeConcat = this.data.ctCode;
     } else {
-      this.cageCodeConcat = 'NA';
+      this.ctCodeConcat = 'NA';
     }
 
     if (this.data.classification != null && this.data.classification.code === 'Firm') {
       this.isFirm = true;
     }
 
-    this.uniqueIdentifier = this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
+    this.uniqueIdentifier = this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.ctCodeConcat;
 
     if (this.data.activationDate !== null) {
       this.data.activationDate = moment(this.data.activationDate).format("MMM D, Y");

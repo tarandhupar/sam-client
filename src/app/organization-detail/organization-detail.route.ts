@@ -24,7 +24,12 @@ export const routes: Routes = [
     component: OrgCreatePage,
   },
   {
-    path: 'aac-request',
+    path: 'aac-request/procurement/:orgId',
+    component: AACRequestPage,
+    canActivate: [AACRequestGuard]
+  },
+  {
+    path: 'aac-request/non-procurement/:orgId',
     component: AACRequestPage,
     canActivate: [AACRequestGuard]
   },

@@ -5,7 +5,7 @@ import { SimpleFormDemoPage } from './simple-form-demo.page';
 export let routes: Routes = [];
 
 if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
-  routes.unshift({ path: 'ui-kit', component: UIKitDemoPage });
+  routes.unshift({ path: '', component: UIKitDemoPage });
   routes.unshift({ path: 'simple-form-demo', component: SimpleFormDemoPage });
 }
 

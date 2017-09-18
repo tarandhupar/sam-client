@@ -8,7 +8,7 @@ import { Router } from "@angular/router";
  */
 @Component({
   selector: 'sam-watch-button',
-  template: `<button style="border:none; background-color:#ffffff; color:#0071bc" [disabled]="disabled" (click)="onClick($event)" type="button" onMouseOver="this.style.background-color='#ffffff'">
+  template: `<button style="border:none; background-color:Transparent; color:#0071bc" [disabled]="disabled" (click)="onClick($event)" type="button" onMouseOver="this.style.background-color='Transparent'">
    <span *ngIf="!subscribed">
     <span class="fa-stack crossed-out" aria-hidden="true" title="Subscribe">
       <i class="fa fa-newspaper-o fa-stack-1x"></i>
@@ -30,6 +30,8 @@ export class SamWatchComponent implements OnInit{
   @Input() type:string;
 
   @Input() recordId: string;
+
+  @Input() fromPage: string;
 
   //@Output() click: EventEmitter<Watchlist> = new EventEmitter<Watchlist>();
 
@@ -61,13 +63,20 @@ export class SamWatchComponent implements OnInit{
   } 
 
   ngOnInit() {
-    if(!this.watchlist) {
-      this.watchlist = new Watchlist();
+    this.watchlist = new Watchlist();
+    if(this.fromPage) {
+        if(this.fromPage === 'manage') {
+          this.subscribed = true;
+        }
+    }
+     if(true) {
+    //else if(!this.watchlist) {
+      
       this.watchlist.setActive('N');
       this.watchlist.setDomainId(this.domainId);
       this.watchlist.setRecordId(this.recordId);
       this.watchlist.setType(this.type);
-     this.watchlistService.getByRecordId(this.watchlist.raw()).subscribe(resWatch => {  
+      this.watchlistService.getByRecordId(this.watchlist.raw()).subscribe(resWatch => {  
         if(resWatch)    {
           
           let tmpWatchlist = Watchlist.FromResponse(resWatch);
@@ -93,8 +102,13 @@ export class SamWatchComponent implements OnInit{
    // console.log("subscribed flag before api call :" + this.subscribed);
     (this.subscribed) ? this.watchlist.setActive('N') : this.watchlist.setActive('Y');
    // console.log("new active flag: " + this.watchlist.active() );
-     this.watchlist.setUri(this.router.url);
-    if(!this.watchlist.id()) {
+   if(this.fromPage) {
+      if(this.fromPage === 'manage') {
+        this.watchlist.setUri(this.router.url);
+      }
+    }
+    this.watchlist.setUri(this.router.url);
+    if(!this.watchlist.id()) {      
       this.watchlistService.createWatchlist(this.watchlist.raw()).subscribe(resWatch => {
       this.watchlist = Watchlist.FromResponse(resWatch);
       this.subscribed = !this.subscribed;

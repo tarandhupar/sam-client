@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import { OpportunityService, FHService } from 'api-kit';
+import { Response} from '@angular/http';
+import { OpportunityService, FHService, EntityService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from './opportunity.fields';
@@ -19,6 +20,7 @@ import {SetDisplayFields} from "./pipes/set-display-fields.pipe";
 import {GetResourceTypeInfo} from "./pipes/get-resource-type-info.pipe";
 import {SidenavHelper} from "../app-utils/sidenav-helper";
 import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
+import * as Cookies from 'js-cookie';
 
 @Component({
   moduleId: __filename,
@@ -110,8 +112,15 @@ export class OpportunityPage implements OnInit {
   dictionariesUpdated: boolean = false;
   history: any;
   noHistory: boolean;
-
-
+  keyword: string;
+  ivls: any;
+  ivlSort: any = { "type":"contractorCageNumber", "sort":"desc" };
+  ivlSortOptions = [
+    { label: "UEI", value: "contractorDuns" },
+    { label: "Entity Name", value: "contractorName" },
+    { label: "POC Last Name", value: "contactLastName" }
+  ];
+  ivlNaicsCodeList: any;
   errorOrganization: any;
   errorLogo: any;
   awardSort: string = "awardDate"; //default
@@ -129,6 +138,7 @@ export class OpportunityPage implements OnInit {
   private ready: boolean = false;
 
   // On load select first item on sidenav component
+  selectedPageLabel: string;
   selectedPage: number = 0;
   pageRoute: string;
   pageFragment: string;
@@ -136,6 +146,7 @@ export class OpportunityPage implements OnInit {
     "label": "Contract Opportunities",
     "children": []
   };
+  authToken: string;
 
   constructor(
     private sidenavService: SidenavService,
@@ -145,6 +156,7 @@ export class OpportunityPage implements OnInit {
     private opportunityService:OpportunityService,
     private fhService:FHService,
     private dictionaryService: DictionaryService,
+    private entityService: EntityService,
     private location: Location) {
 
     router.events.subscribe(s => {
@@ -161,6 +173,8 @@ export class OpportunityPage implements OnInit {
   }
 
   ngOnInit() {
+    this.authToken = Cookies.get('iPlanetDirectoryPro');
+
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
@@ -176,6 +190,8 @@ export class OpportunityPage implements OnInit {
     this.checkChanges(previousOpportunityAPI);
     let packagesOpportunities = this.loadPackages(historyAPI);
     let totalAttachmentsCount = this.getTotalAttachmentsCount(opportunityAPI, historyAPI, packagesOpportunities);
+    //load IVLS
+    let ivls = this.getIVLs(opportunityAPI);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -187,7 +203,7 @@ export class OpportunityPage implements OnInit {
     // Assumes DOM its ready when opportunites, packages and related opportutnies API calls are done
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
-    let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities, totalAttachmentsCount).delay(2000);
+    let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities, totalAttachmentsCount, ivls).delay(2000);
     this.sidenavHelper.DOMComplete(this, DOMReady$);
   }
 
@@ -204,7 +220,7 @@ export class OpportunityPage implements OnInit {
       this.showChangesClassification = false;
       this.showChangesContactInformation = false;
       this.showChangesAwardDetails = false;
-      return this.opportunityService.getOpportunityById(params['id']);
+      return this.opportunityService.getOpportunityById(params['id'], this.authToken);
     });
 
     this.apiStreamSub = apiStream.subscribe(opportunitySubject);
@@ -270,7 +286,7 @@ export class OpportunityPage implements OnInit {
          let index = _.result(_.find(opportunity.content.history, { 'notice_id': this.opportunity.opportunityId }), 'index');
          index--;
          let id = _.result(_.find(opportunity.content.history, { 'index': index }), 'notice_id');
-         return this.opportunityService.getOpportunityById(id);
+         return this.opportunityService.getOpportunityById(id, this.authToken);
        } 
      });// attach subject to stream  
     opportunityStream.subscribe(opportunitySubject);
@@ -285,7 +301,7 @@ export class OpportunityPage implements OnInit {
     let parentOpportunityStream = opportunityAPI.switchMap(api => {
       if (api.parent != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
-        return this.opportunityService.getOpportunityById(api.parent.opportunityId);
+        return this.opportunityService.getOpportunityById(api.parent.opportunityId, this.authToken);
       } else {
         return Observable.of(null); // if there is no parent, just return a single null
       }
@@ -337,6 +353,75 @@ export class OpportunityPage implements OnInit {
       console.log('Error loading related opportunities: ', err);
     });
     return relatedOpportunitiesSubject;
+  }
+
+  private getIVLs(opportunityAPI : Observable<any>) {
+    let ivlSubject = new ReplaySubject(1);
+    let ivlStream = opportunityAPI.switchMap(opportunity => {
+      if (opportunity._links && opportunity._links.ivl != null) {
+        let sort = ((this.ivlSort.sort == 'desc') ? '-' : '') + this.ivlSort.type; 
+        return this.opportunityService.getOpportunityIVLs(this.authToken, opportunity.opportunityId, this.keyword, this.pageNum, this.showPerPage, sort)
+      .switchMap(ivls => {
+        if(ivls != null && ivls.hasOwnProperty('_embedded') && ivls.hasOwnProperty('page')) {
+          this.ivls = ivls;
+
+          let ivlSideNavContent = {
+            "label": "Interested Vendors List",
+            "route": this.pageRoute,
+            "field": this.opportunityFields.IVL
+          };
+
+          this.sidenavHelper.updateSideNav(this, true, ivlSideNavContent);
+          return Observable.from(ivls['_embedded']['ivl']);
+        } else {
+          return [];
+        }
+      })
+      .concatMap(ivl => {
+        if(ivl != null && ivl.hasOwnProperty('contractorDuns')) {
+          return this.entityService.getCoreDataById(ivl.contractorDuns)
+          .catch(error => {
+            return Observable.of(null);
+          });
+        } else {
+          return Observable.of(null);
+        }
+      })
+      .toArray(); // optional: this will wait for the previous part of the stream to complete and return an array of all results, remove this if you want to receive every result as a single "next"
+//        .retryWhen(
+//          errors => {
+//            return this.route.params;
+//        });
+      } else {
+        return Observable.of(null);
+      }
+    });
+
+    ivlStream.subscribe(ivlSubject);
+
+    ivlSubject.subscribe(naicsList => {
+      this.ivlNaicsCodeList = naicsList;
+      if(this.ivls != null && this.ivls.hasOwnProperty('_embedded')) {
+        this.ivls['_embedded']['ivl'].forEach((ivl, idx) => {
+          if(ivl.hasOwnProperty('contractorDuns') && ivl['contractorDuns'] != null) {
+            _.forEach(naicsList, item => {
+              if(item != null && item.hasOwnProperty('entityInfo') && item['entityInfo'].hasOwnProperty('coreData') &&
+              item['entityInfo']['coreData'].hasOwnProperty('generalInfo') && item['entityInfo']['coreData']['generalInfo'].hasOwnProperty('duns') &&
+              item['entityInfo']['coreData']['generalInfo']['duns'] == ivl['contractorDuns'] && item['entityInfo'].hasOwnProperty('assertions')) {
+                this.ivls['_embedded']['ivl'][idx]['naics'] = item['entityInfo']['assertions'];
+              }
+            });
+          }
+        });
+      }
+    });
+
+    return ivlSubject;
+  }
+
+  private reloadIVLs(pageNumber: number) {
+    this.pageNum = pageNumber;
+    this.getIVLs(this.opportunityAPI);
   }
 
   private reloadRelatedOpportunities() {
@@ -645,6 +730,7 @@ export class OpportunityPage implements OnInit {
   }
 
   selectedItem(item){
+    this.selectedPageLabel = this.sidenavService.getSelectedModel().label;
     this.selectedPage = this.sidenavService.getData()[0];
   }
 

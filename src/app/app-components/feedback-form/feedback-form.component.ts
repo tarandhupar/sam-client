@@ -5,7 +5,7 @@ import { IAMService } from "api-kit/iam/iam.service";
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Validators as $Validators } from '../../authentication/shared/validators';
 import { FormControl, Validators } from '@angular/forms';
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { FeedbackFormService } from "./feedback-form.service";
 
 
@@ -346,15 +346,18 @@ export class SamFeedbackComponent {
     this.feedbackService.getAllQuestions().subscribe(
       res => {
         this.questionData = [];
-        res._embedded.questionList.forEach( q => {
-          let questionItem = {
-            type : q.question_options.type,
-            description : q.questionDesc,
-            selections : q.question_options.options,
-            id : q.questionId
-          };
-          this.questionData.push(questionItem);
-        });
+        if(res._embedded && res._embedded.questionList){
+          res._embedded.questionList.forEach( q => {
+            let questionItem = {
+              type : q.question_options.type,
+              description : q.questionDesc,
+              selections : q.question_options.options,
+              id : q.questionId
+            };
+            this.questionData.push(questionItem);
+          });
+        }
+
         this.resetAll();
       },
       error => {

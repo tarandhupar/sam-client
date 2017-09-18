@@ -27,7 +27,7 @@ MockFormService.getCriteria_Info_Dictionaries.and.returnValue(Observable.of({}))
 
 let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateCriteriaDocumentation', 'validateApplicantList', 'validateBeneficiaryList', 'validateLengthTimeDesc', 'validateAwardedType', 'validateAssistanceUsageList', 'validateAssUsageDesc', 'validateCriteriaUsageRes', 'validateCriteriaUseDisFunds', 'validateCriteriaUseLoanTerms']);
 
-describe('FAL Criteria Info Form', () => {
+xdescribe('FAL Criteria Info Form', () => {
   let comp: FALFormCriteriaInfoComponent;
   let fixture: ComponentFixture<FALFormCriteriaInfoComponent>;
 

@@ -2,7 +2,7 @@
   <div *ngIf = "isRole()">
     <div *ngFor = "let domain of roleDef let x = index">
       <div class="usa-width-five-sixths">
-        <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val | capitalize}}</span></div>
+        <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
         <div *ngIf = "!domain.roleDefinitionMapContent || domain.roleDefinitionMapContent.length == 0" class = "content-label">
           <h3><i>No roles found for this domain</i></h3>
         </div>
@@ -10,7 +10,7 @@
           <div class = "section-spc">
             <div class = "usa-grid-full header-bg-color">
               <div class = "usa-width-one-half">
-                <h3 class= "collapsible-header">{{role.role.val | capitalize}}</h3>
+                <h3 class= "collapsible-header">{{role.role.val}}</h3>
               </div>
               <div class = "usa-width-one-half p_T-1em">
                 <div class = "pull-right">
@@ -33,11 +33,11 @@
                 <div *ngFor = "let func of role.functionContent">
                   <div class = "usa-grid-full line-spacing">
                     <div class = "usa-width-one-third">
-                      <h4>{{func.function.val | capitalize}}</h4>
+                      <h4>{{func.function.val}}</h4>
                     </div>
                     <div class = "usa-width-two-thirds">
                       <h4><span *ngFor = "let perm of func.permission; let isLast = last">
-                        {{perm.val | capitalize}} {{isLast ? '' : ', '}}
+                        {{perm.val}} {{isLast ? '' : ', '}}
                       </span>
                       </h4>
                     </div>

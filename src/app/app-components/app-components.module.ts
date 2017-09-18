@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SamUIKitModule } from 'sam-ui-kit';
-import { SamAPIKitModule } from 'api-kit';
+import { SamUIKitModule } from '../../sam-ui-elements/src/ui-kit';
+import { SamAPIKitModule } from '../../api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { AgencyPickerV2Component } from './agency-picker-v2/agency-picker-v2.component';
 import { SamSearchHeaderComponent } from './search-header/search-header.component';
@@ -19,6 +19,7 @@ import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.co
 import { SamFooterComponent } from './footer/footer.component';
 import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
+import { SamLoginComponent } from './login/login.component';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
@@ -28,7 +29,6 @@ import { SamCountryServiceAutoDirective } from "./location-autocomplete/country-
 import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autocomplete/state-autocomplete/state-autocomplete.component";
 import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-autocomplete/county-autocomplete/county-autocomplete.component";
 import { CityServiceImpl, SamCityServiceAutoDirective } from "./location-autocomplete/city-autocomplete/city-autocomplete.component";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
@@ -38,7 +38,6 @@ import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.
 import { SamEditorComponent } from "./editor/editor.component";
 import { SamTitleSubtitleComponent } from "./title-subtitle/title-subtitle.component";
 import { SamCreatePageTemplateComponent } from "./create-page-template/create-page-template.component";
-import { PlaceholderProfilePic } from "./placeholder-profile-pic/placeholder-profile-pic.component";
 import { SamComplexFormTemplateComponent } from "./complex-form-template/complex-form-template.component";
 import { StickyElementComponent } from "./sticky-element/sticky-element.componet";
 import { SamKBAComponent } from './kba/kba.component';
@@ -52,7 +51,12 @@ import { SamListBuilderComponent } from './sam-listbuilder/sam-listbuilder.compo
 import { SamListBuilderCardComponent } from './sam-listbuilder/sam-listbuilder-card.component';
 import { SamListBuilderActionComponent } from './sam-listbuilder/sam-listbuilder-action.component';
 import { SamWatchComponent } from './watchlist/watchlist.component';
-
+import { AlertHeaderComponent } from './alert-header';
+import { AlertFooterComponent } from './alert-footer';
+import { RequestDetailsComponent } from './request-details/request-details';
+import { SamLocationComponent } from './location-component';
+import { SamTableEntryComponent } from './sam-table-entry/sam-table-entry.component';
+import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
 
 /**
  * A module for reusable SAM Web Design components
@@ -60,6 +64,8 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
 @NgModule({
   declarations: [
     AgencyPickerComponent,
+    AlertHeaderComponent,
+    AlertFooterComponent,
     SamSearchHeaderComponent,
     SamWellComponent,
     SamSectionComponent,
@@ -70,6 +76,7 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
+    SamLoginComponent,
     ListResultsMessageComponent,
     FormFieldComponent,
     ObjectFormModel,
@@ -78,17 +85,12 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     SamFeedbackComponent,
     SamFeedbackSidenavComponent,
     FalTableComponent,
-    SamCountryServiceAutoDirective,
-    SamStateServiceAutoDirective,
-    SamCountyServiceAutoDirective,
-    SamCityServiceAutoDirective,
     OrgAddrFormComponent,
     SamSoloAccordian,
     SamStatusBannerComponent,
     SamEditorComponent,
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,
-    PlaceholderProfilePic,
     SamComplexFormTemplateComponent,
     StickyElementComponent,
     SamKBAComponent,
@@ -102,7 +104,11 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     SamWatchComponent,
     SamListBuilderComponent,
     SamListBuilderActionComponent,
-    SamListBuilderCardComponent
+    SamListBuilderCardComponent,
+    SamLocationComponent,
+    RequestDetailsComponent,
+    SamTableEntryComponent,
+    SamPOCEntryComponent
   ],
   imports: [
     CommonModule,
@@ -115,6 +121,8 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
   ],
   exports: [
     AgencyPickerComponent,
+    AlertHeaderComponent,
+    AlertFooterComponent,
     SamSearchHeaderComponent,
     SamWellComponent,
     SamSectionComponent,
@@ -125,6 +133,7 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
+    SamLoginComponent,
     ListResultsMessageComponent,
     SamSearchbarComponent,
     SamFeedbackComponent,
@@ -133,16 +142,12 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     ObjectFormModel,
     ObjectSidebarComponent,
     FalTableComponent,
-    SamCountryServiceAutoDirective,
-    SamStateServiceAutoDirective,
-    SamCountyServiceAutoDirective,
     OrgAddrFormComponent,
     SamSoloAccordian,
     SamStatusBannerComponent,
     SamEditorComponent,
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,
-    PlaceholderProfilePic,
     SamComplexFormTemplateComponent,
     StickyElementComponent,
     SamKBAComponent,
@@ -153,14 +158,14 @@ import { SamWatchComponent } from './watchlist/watchlist.component';
     SamSortComponent,
     SamNotificationsComponent,
     SamWatchComponent,
-    SamListBuilderComponent
+    SamListBuilderComponent,
+    RequestDetailsComponent,
+    SamLocationComponent,
+    SamTableEntryComponent,
+    SamPOCEntryComponent
   ],
   providers: [
     SamFeedbackComponent,
-    StateServiceImpl,
-    CountyServiceImpl,
-    CityServiceImpl,
-    AlertFooterService,
     FeedbackFormService,
     //RMSUserServiceImpl,
   ]

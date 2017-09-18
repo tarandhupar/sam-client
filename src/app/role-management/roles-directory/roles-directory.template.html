@@ -35,7 +35,7 @@
 
       <ng-container *ngIf="roleOptions && roleOptions.length">
         <h4 class="sam-ui header">Roles</h4>
-        <div style="max-height: 20em; overflow-y: auto; padding-left: 4px; position: relative;">
+        <div style="max-height: 20em; overflow-y: auto; padding-left: 4px; position: relative; overflow-x: hidden;">
           <sam-checkbox
             [name]="'role-select'"
             [options]="roleOptions"
@@ -48,7 +48,7 @@
       <ng-container *ngIf="domainOptions && domainOptions.length">
         <div class="sam-ui divider"></div>
         <h4 class="sam-ui header">Domains</h4>
-        <div style="max-height: 20em; overflow-y: auto; padding-left: 4px; position: relative;">
+        <div style="max-height: 320px; overflow-y: auto; padding-left: 4px; position: relative;">
           <sam-checkbox
             [name]="'domain-select'"
             [options]="domainOptions"

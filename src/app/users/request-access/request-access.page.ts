@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms"
 import { Validators as $Validators } from "../../authentication/shared/validators";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
-import { UserService } from "../user.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { UserService } from "../../role-management/user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { IBreadcrumb } from "sam-ui-kit/types";
 
@@ -32,13 +32,6 @@ export class RequestAccessPage {
   user: any = {};
   roleCategories = [];
   domainOptions = [];
-
-  userConfig = {
-    keyValueConfig: {
-      keyProperty: 'key',
-      valueProperty: 'value'
-    }
-  };
 
   breadCrumbs: Array<IBreadcrumb> = [
     { url: '/profile/details', breadcrumb: 'Profile' },
@@ -72,7 +65,7 @@ export class RequestAccessPage {
       cat => {
         let options = cat.roles.map(role => {
           return {
-            label: this.capitalize.transform(role.role.val),
+            label: role.role.val,
             value: role.role.id,
             domains: role.domains,
           };
@@ -101,7 +94,7 @@ export class RequestAccessPage {
     });
     this.domainOptions = domains.map(dom => {
       return {
-        value: this.capitalize.transform(dom.val),
+        value: dom.val,
         key: ''+dom.id
       }
     });

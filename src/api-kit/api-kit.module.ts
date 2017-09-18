@@ -29,7 +29,15 @@ import { AgencyPickerAutoCompleteDirective } from "./autoCompleteWrapper/agencyP
 import { WatchlistService } from './watchlist/watchlist.service';
 import { MsgFeedService } from "./msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "./msg-feed/msg-feed.mock";
+
+import { SubscriptionsService } from "./subscriptions/subscriptions.service";
+import { SubscriptionsServiceMock } from "./subscriptions/subscriptions.mock";
 import { ContentManagementService } from "./content-management/content-management.service";
+import { SamCountryServiceAutoDirective } from "./autoCompleteWrapper/location-autocomplete/country-autocomplete/country-autocomplete.service";
+import { SamStateServiceAutoDirective, StateServiceImpl } from "./autoCompleteWrapper/location-autocomplete/state-autocomplete/state-autocomplete.service";
+import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./autoCompleteWrapper/location-autocomplete/county-autocomplete/county-autocomplete.service";
+import { CityServiceImpl, SamCityServiceAutoDirective } from "./autoCompleteWrapper/location-autocomplete/city-autocomplete/city-autocomplete.service";
+
 
 /**
  * A module for reusable SAM Web Design components
@@ -40,13 +48,21 @@ import { ContentManagementService } from "./content-management/content-managemen
     SuggestionsServiceDirective,
     PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective,
-    AgencyPickerAutoCompleteDirective
+    AgencyPickerAutoCompleteDirective,
+    SamCountryServiceAutoDirective,
+    SamStateServiceAutoDirective,
+    SamCountyServiceAutoDirective,
+    SamCityServiceAutoDirective
   ],
   exports: [
     SuggestionsServiceDirective,
     PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective,
-    AgencyPickerAutoCompleteDirective
+    AgencyPickerAutoCompleteDirective,
+    SamCountryServiceAutoDirective,
+    SamStateServiceAutoDirective,
+    SamCountyServiceAutoDirective,
+    SamCityServiceAutoDirective
   ],
   imports: [
     HttpModule,
@@ -82,8 +98,12 @@ import { ContentManagementService } from "./content-management/content-managemen
     //{ provide: PeoplePickerService, useClass: PeoplePickerServiceMock }
     MsgFeedService,
     // { provide: MsgFeedService, useClass: MsgFeedServiceMock }
-    ContentManagementService,
 
+    SubscriptionsService,
+    ContentManagementService,
+    StateServiceImpl,
+    CountyServiceImpl,
+    CityServiceImpl
   ]
 })
 export class SamAPIKitModule { }

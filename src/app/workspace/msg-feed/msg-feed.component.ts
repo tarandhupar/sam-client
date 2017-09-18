@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   templateUrl: './msg-feed.template.html',
@@ -14,6 +15,16 @@ export class MsgFeedComponent {
     { breadcrumb: '' }
   ];
 
+  typeIdMap: any = {
+    'requests': '1,2',
+    'notifications': '3,4,5',
+    'sent': '1',
+    'received': '2',
+    'subscriptions': '3',
+    'announcements': '4',
+    'alerts': '5',
+  };
+
   recordsPerPage = 10;
 
   curSection:string = "";
@@ -22,8 +33,11 @@ export class MsgFeedComponent {
   validSections = ['requests','notifications'];
   validSubSections = {'requests':['received','sent'],'notifications':['subscriptions','announcements','alerts']}
 
-  sortByModel = {type: 'date', sort: 'asc' };
-  msgSortOptions = [{label:'Date', name:'Date', value:'date'}];
+  sortByModel = {type: 'reqDate', sort: 'asc' };
+  msgSortOptions = [
+    {label:'Request Date', name:'Date', value:'reqDate'},
+    {label:'Respond Date', name:'Date', value:'respDate'},
+  ];
 
   orderByIndex = 0;
   orderByOptions = ["asc","desc"];
@@ -48,7 +62,12 @@ export class MsgFeedComponent {
   };
   msgFeeds = [];
 
-  constructor(private route:ActivatedRoute, private _router:Router, private msgFeedService:MsgFeedService, private capitalPipe: CapitalizePipe){}
+  roleCount;
+  titleChangeCount;
+  numberChangeCount;
+  recievedCount;
+
+  constructor(private route:ActivatedRoute, private _router:Router, private msgFeedService:MsgFeedService, private capitalPipe: CapitalizePipe, private _sanitizer: DomSanitizer){}
 
   ngOnInit(){
     this.route.params.subscribe(
@@ -59,7 +78,7 @@ export class MsgFeedComponent {
         this.crumbs[1].breadcrumb = this.capitalPipe.transform(this.curSection);
         this.filterObj.section = this.curSection;
         this.filterObj.subSection = this.curSubSection;
-        this.loadFeeds(this.filterObj, this.sortByModel, this.orderByOptions[this.orderByIndex], this.curPage);
+        this.loadFeeds(this.getTypeIdStr(this.filterObj), this.filterObj, this.sortByModel, this.curPage+1);
       });
   }
 
@@ -78,31 +97,40 @@ export class MsgFeedComponent {
   onFilterChange(filterObj){
     this.filterObj = filterObj;
     this.curPage = 0;
-    this.loadFeeds(this.filterObj, this.sortByModel, this.orderByOptions[this.orderByIndex], this.curPage);
+    this.loadFeeds(this.getTypeIdStr(filterObj), this.filterObj, this.sortByModel, this.curPage+1);
   }
 
   /* update message feeds based on sortBy field changes*/
-  onSortSelectModelChange(){}
+  onSortSelectModelChange(event){
+    this.curPage = 0;
+    this.loadFeeds(this.getTypeIdStr(this.filterObj), this.filterObj, event, this.curPage+1);
+  }
 
   /* update message feeds based on page num changes*/
   onPageNumChange(pageNum){
     this.curPage = pageNum;
-    this.loadFeeds(this.filterObj, this.sortByModel, this.orderByOptions[this.orderByIndex], this.curPage);
+    this.loadFeeds(this.getTypeIdStr(this.filterObj), this.filterObj, this.sortByModel, this.curPage+1);
   }
 
-  /* update message feeds based on orderBy obj changes*/
-  onOrderByChange(){
-    this.orderByIndex = 1 - this.orderByIndex;
-    this.curPage = 0;
-    //this.loadFeeds()
-  }
+  /* search message feeds with filter, sortby, page number*/
+  loadFeeds(typeId, filterObj, sortBy, page){
 
-  /* search message feeds with filter, sortby, page number and order*/
-  loadFeeds(filterObj, sortBy, order, page){
-    this.msgFeedService.getFeeds(filterObj, sortBy, order, page, this.recordsPerPage).subscribe(data => {
-      this.msgFeeds = data['feeds'];
-      this.totalRecords = data['totalCount'];
+    this.msgFeedService.getFeeds(typeId, filterObj, sortBy, page, this.recordsPerPage).subscribe(data => {
+
+      if(filterObj.section === "requests"){
+        this.msgFeeds = data['requestFeeds'];
+        this.totalRecords = data['totalRecords'];
+        this.recievedCount = data['recievedCount'];
+        this.roleCount = data['roleCount'];
+        this.numberChangeCount = data['numberChangeCount'];
+        this.titleChangeCount = data['titleChangeCount'];
+      } else if(filterObj.section === 'notifications'){
+        this.msgFeeds = data['notificationFeeds'];
+        this.totalRecords = data['notificationCount'];
+      }
+
       this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+
       this.updateRecordsText();
     });
   }
@@ -118,5 +146,10 @@ export class MsgFeedComponent {
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
   getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
+
+  getTypeIdStr(filterObj):string{
+    let filterTypeStr = filterObj.subSection === ""? filterObj.section: filterObj.subSection;
+    return this.typeIdMap[filterTypeStr];
+  }
 
 }

@@ -224,7 +224,7 @@ export class falCustomValidatorsComponent {
   }
 
   static dateRangeRequired(c:AbstractControl){
-    if(!c.value || !c.value.startDate){
+    if(c.dirty && (!c.value || !c.value.startDate)){
       return {
         dateRangeError: {
           message: "This field is required"
@@ -255,6 +255,7 @@ export class falCustomValidatorsComponent {
       }
     }
 
+    //console.log("c",c);
     if (c.value && c.value.startDate){
       let startDateM = moment(c.value.startDate);
       if(!startDateM.isValid() || c.value.startDate == "Invalid date"){

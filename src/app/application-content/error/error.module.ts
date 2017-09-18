@@ -14,8 +14,6 @@ import { GenericErrorPage } from './error.page';
     SamAPIKitModule,
     routing
   ],
-  exports: [],
   declarations: [ GenericErrorPage ],
-  providers: [],
 })
 export class ErrorModule { }

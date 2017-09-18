@@ -3,10 +3,7 @@ import { DataServicePage } from "./data-service.page";
 
 
 export const routes: Routes = [
-  {
-    path: 'data-services',
-    component: DataServicePage,
-  }
+  { path: '', component: DataServicePage, }
 ];
 
 export const routing = RouterModule.forChild(routes);

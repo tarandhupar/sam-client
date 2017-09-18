@@ -18,8 +18,10 @@ export class SamListBuilderCardComponent {
     @Input() endOfList: boolean;
     @Input() showEditSubform: boolean = false;
     @Input() addMode: boolean = false;
+    @Input() hideDefaultBtns: boolean = false;
     @Output() action = new EventEmitter();
     private cachedData;
+    constructor(private cdr:ChangeDetectorRef){}
     actionHandler(action){
         let data;
         if(action=="edit"){
@@ -50,11 +52,13 @@ export class SamListBuilderCardComponent {
             this.showEditSubform=false;
             data = this.index;
         }
+        this.cdr.detectChanges();
         this.action.emit({type:action,data:data});
     }
 
     cancelEdit(){
         this.showEditSubform = false;
+        this.cdr.detectChanges();
         if(this.addMode){
             this.action.emit({type:'add-cancel',data:this.index});
         } else {

@@ -19,7 +19,7 @@
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
-        <sam-phone-entry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></sam-phone-entry>
+        <sam-phone-entry formControlName="workPhone" [control]="userForm.get('workPhone')" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></sam-phone-entry>
       </fieldset>
       <fieldset class="office" *ngIf="states.isGov">
         <legend>Office</legend>

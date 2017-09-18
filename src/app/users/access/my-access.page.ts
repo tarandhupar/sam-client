@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
-import { OptionsType } from "sam-ui-kit/types";
+import {Router} from '@angular/router';
+import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
+import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { UserService } from "../user.service";
+import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
 
 @Component({
@@ -17,8 +18,9 @@ export class MyAccessPage implements OnInit {
   private navLinks = [
     { text: 'Personal Details', routerLink: ['/profile/details'] },
     { text: 'Reset Password',   routerLink: ['/profile/password'] },
-    { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },
     { text: 'My Roles', active: true },
+    { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },
+    { text: 'Manage Subscriptions',  routerLink: ['/profile/subscriptions'] },
   ];
   sort: any = {type:'org', sort:'asc'};
   sortOptions = [
@@ -42,6 +44,7 @@ export class MyAccessPage implements OnInit {
   private errorMessage: string = '';
   private isMyAccess: boolean = false;
   private numberOfSearches: number = 0;
+  private crumbs = [];
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
@@ -50,6 +53,7 @@ export class MyAccessPage implements OnInit {
     private capitalize: CapitalizePipe,
     private userCookieService: UserService,
     private route: ActivatedRoute,
+    private router: Router,
   )
   {
 
@@ -87,26 +91,38 @@ export class MyAccessPage implements OnInit {
     this.userService.getAllUserRoles(this.userName, queryParams).subscribe(
       res => {
         try {
-          this.getPaginationVariables(res);
-          this.getAccessPriveleges(res);
-
-          this.access = res.access;
-
-          this.setRoleOptions(res.roles);
-          this.setDomainOptions(res.domains);
           this.result = 'success';
-
-          if (!this.isMyAccess) {
-            this.getUserDisplayName(res);
-          }
 
           if (this.numberOfSearches === 0) {
             this.getPendingRequests();
           }
 
           this.numberOfSearches++;
+
+          if (!this.isMyAccess) {
+            this.getUserDisplayName(res);
+          }
+
+          if (!res) {
+            this.access = [];
+            return;
+          }
+
+          this.getAccessPriveleges(res);
+
+          this.getPaginationVariables(res);
+
+          this.access = res.access;
+
+          if (res.roles && res.roles.length) {
+            this.setRoleOptions(res.roles);
+          }
+
+          if (res.domains && res.domains.length) {
+            this.setDomainOptions(res.domains);
+          }
         } catch(error) {
-          console.error('Invalid syntax for role data');
+          console.error('Invalid syntax for role data', error);
           this.result = 'error';
           this.errorMessage = "There was a syntax error while processing role data.";
         }
@@ -157,12 +173,19 @@ export class MyAccessPage implements OnInit {
       console.warn('user name missing');
       this.fullName = "";
     }
+
+    let c: Array<IBreadcrumb> = [
+      { breadcrumb: 'Workspace', url: '/workspace' },
+      { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
+      { breadcrumb: this.fullName },
+    ];
+    this.crumbs = c;
   }
 
   setRoleOptions(roles) {
     this.roleOptions = roles.map(r => {
       return {
-        label: this.capitalize.transform(r.val),
+        label: r.val,
         value: r.id,
         name: r.val,
       }
@@ -172,7 +195,7 @@ export class MyAccessPage implements OnInit {
   setDomainOptions(domains) {
     this.domainOptions = domains.map(d => {
       return {
-        label: this.capitalize.transform(d.val),
+        label: d.val,
         value: d.id,
         name: d.val,
       }
@@ -203,5 +226,24 @@ export class MyAccessPage implements OnInit {
 
   getPageTitle() {
     return this.isMyAccess ? 'My Roles' : this.fullName;
+  }
+
+  onRowClick(access) {
+    if (this.isMyAccess) {
+      return;
+    }
+
+    try {
+      let qp = {
+        domains: access.domain.map(d => d.id),
+        role: access.role.id,
+        org: access.organization.id,
+      };
+      this.router.navigate(["../edit-access"], { queryParams: qp, relativeTo: this.route});
+    } catch(err) {
+      console.error(err);
+    }
+
+
   }
 }

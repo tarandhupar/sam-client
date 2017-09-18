@@ -7,7 +7,7 @@ import * as Cookies from 'js-cookie';
 import {ProgramService} from "../../../api-kit/program/program.service";
 import {ChangeRequestService} from "../../../api-kit/program/change-request.service";
 import {falCustomValidatorsComponent} from "../validators/assistance-listing-validators";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
 
 interface ChangeRequestModel {

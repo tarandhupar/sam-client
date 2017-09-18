@@ -6,7 +6,7 @@ import { SamUIKitModule } from "sam-ui-kit/index";
 import { RouterTestingModule } from "@angular/router/testing";
 import { UserAccessMock } from "../../../api-kit/access/access.service.mock";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component } from "@angular/core";
 import { Observable } from "rxjs";

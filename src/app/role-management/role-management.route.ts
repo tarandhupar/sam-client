@@ -11,12 +11,41 @@ import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 import { CheckAccessGuard } from "../application-content/403/check-access.guard";
 import { RMBackDoorComponent } from "./back-door/back-door.component";
+import { ViewRequestPage } from "./view-request/view-request.page";
+import { RequestResponsePage } from "./request-response/request-response.page";
+import { RequestAccessResolve } from "./request-access.resolve";
+import { MyAccessPage } from "../users/access/my-access.page";
+import { GrantOrEditAccess } from "./grant-or-edit-access/grant-or-edit-access";
+import { RoleCategoriesResolve } from "../users/roles-categories.resolve";
 
 export const routes: Routes = [{
-  path: 'access',
+  path: '',
   resolve: { domains: DomainsResolve },
   canActivateChild: [IsLoggedInGuard],
   children: [
+    {
+      path: 'users',
+      children: [
+        {
+          path: ':id/access',
+          component: MyAccessPage,
+          data: { isMyAccess: false, pageName: 'users/:id/access' },
+          canActivate: [ CheckAccessGuard ],
+        },
+        {
+          path: ':id/edit-access',
+          component: GrantOrEditAccess,
+          canActivate: [ CheckAccessGuard ],
+          data: { grantOrEdit: 'edit', pageName: 'users/:id/edit-access' },
+        },
+        {
+          path: ':id/grant-access',
+          component: GrantOrEditAccess,
+          canActivate: [ CheckAccessGuard ],
+          data: { grantOrEdit: 'grant', pageName: 'users/:id/grant-access' },
+        },
+      ]
+    },
     {
       path: 'bulk-update',
       component: BulkUpdateComponent,
@@ -64,7 +93,25 @@ export const routes: Routes = [{
       component: RolesDirectoryPage,
       canActivate: [CheckAccessGuard],
       data: {pageName:'access/user-roles-directory'},
-    }
+    },
+    {
+      path: 'requests/:requestId',
+      component: ViewRequestPage,
+      data: { pageName: 'access-requests/:id' },
+      canActivate: [ IsLoggedInGuard, CheckAccessGuard ],
+      resolve: {
+        request: RequestAccessResolve,
+      },
+    },
+    {
+      path: 'requests/:requestId/respond',
+      component: RequestResponsePage,
+      data: { pageName: 'access-requests/:id/respond' },
+      canActivate: [ IsLoggedInGuard, CheckAccessGuard ],
+      resolve: {
+        request: RequestAccessResolve,
+      },
+    },
   ]
 }];
 

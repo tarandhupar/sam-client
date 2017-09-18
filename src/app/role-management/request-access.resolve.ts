@@ -2,7 +2,7 @@ import { Resolve, ActivatedRouteSnapshot, Router, ActivatedRoute } from "@angula
 import { UserAccessService } from "../../api-kit/access/access.service";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";
 
 @Injectable()
 export class RequestAccessResolve implements Resolve<any> {
@@ -20,7 +20,7 @@ export class RequestAccessResolve implements Resolve<any> {
 
     return this.accessService.getPendingRequestById(rid)
       .catch(() => {
-        this.router.navigateByUrl('/access/requests');
+        this.router.navigateByUrl('/role-management/requests');
         this.footerAlerts.registerFooterAlert({
           description: "The request ID was not found or there was an error with a required service.",
           type: 'error',

@@ -1,0 +1,50 @@
+<div class="msg-feed-sidenav">
+  <nav>
+      <ul class="usa-sidenav-list">
+        <li *ngFor="let nav of navLinks">
+          <a *ngIf="!nav.active" [routerLink]="nav.routerLink" [innerText]="nav.text"></a>
+          <a *ngIf="nav.active" class="usa-current" [innerText]="nav.text"></a>
+        </li>
+      </ul>
+   </nav>
+    &nbsp;
+
+  <div class="usa-width-one-whole m_B-4x">
+    <legend>Search Subscripitons</legend>
+    <input placeholder="Find name or type of the record" (keyup.enter)="subscriptionFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+  </div>
+
+  <div class="m_B-4x" *ngIf="cbxControl.frequency">
+    <sam-checkbox
+      [(model)]="filterOption.frequency"
+      [name]="frequencyCbxConfig.name"
+      [options]="frequencyCbxConfig.options"
+      [label]="frequencyCbxConfig.label"
+      [hasSelectAll]="frequencyCbxConfig.hasSelectAll"
+      (modelChange)="subscriptionFilterOptionChange()">
+    </sam-checkbox>
+  </div>  
+
+  <div class="m_B-4x" *ngIf="cbxControl.domains">
+    <sam-checkbox
+      [(model)]="filterOption.domains"
+      [name]="domainsCbxConfig.name"
+      [options]="domainsCbxConfig.options"
+      [label]="domainsCbxConfig.label"
+      [hasSelectAll]="domainsCbxConfig.hasSelectAll"
+      (modelChange)="subscriptionFilterOptionChange()">
+    </sam-checkbox>
+  </div>  
+
+  <div class="m_B-4x" *ngIf="cbxControl.feedType">
+      <sam-checkbox
+        [(model)]="filterOption.feedType"
+        [name]="feedTypeCbxConfig.name"
+        [options]="feedTypeCbxConfig.options"
+        [label]="feedTypeCbxConfig.label"
+        [hasSelectAll]="feedTypeCbxConfig.hasSelectAll"
+        (modelChange)="subscriptionFilterOptionChange()">
+      </sam-checkbox>
+  </div>  
+
+</div>

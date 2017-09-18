@@ -7,12 +7,12 @@ import { Observable }    from 'rxjs/Observable';
 @Injectable()
 export class AgencyPickerAutoCompleteWrapper implements AutocompleteService{
   constructor(private oFHService:FHService) {}
-  
+
   //sam-ui-kit autocomplete
   fetch(val: any, endOfList: boolean, serviceOptions: any) {
     let isCode = val && !isNaN(val);
     let parent = serviceOptions && serviceOptions['parent'] ? serviceOptions['parent'] : null;
-    let defaultDept = serviceOptions && serviceOptions['defaultDept'] ? serviceOptions['defaultDept'] : null;
+    let defaultDept = !!(serviceOptions && serviceOptions['defaultDept']);
     return this.oFHService.fhSearch(val,1,10,['active'],[],null,isCode,parent,defaultDept).map(res => {
       if(res["_embedded"]) {
         return res["_embedded"].map((val)=>{
@@ -26,9 +26,9 @@ export class AgencyPickerAutoCompleteWrapper implements AutocompleteService{
       }
     });
   }
-  
+
   setFetchMethod(newVal){
-    
+
   }
 
   //should match what's in app/app-pipes/fhTitleCase.pipe
@@ -46,7 +46,7 @@ export class AgencyPickerAutoCompleteWrapper implements AutocompleteService{
       if (i==0) {
         piece = piece.charAt(0).toUpperCase() + piece.substring(1,piece.length);;
       }
-      
+
       if (capitalizeAll.indexOf(piece.toLowerCase())!=-1){
         piece = piece.toUpperCase();
       }

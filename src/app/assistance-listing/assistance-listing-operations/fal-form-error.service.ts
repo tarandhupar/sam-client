@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FALFormViewModel } from './fal-form.model';
 import { ValidationErrors } from '../../app-utils/types';
-import { FALSectionNames, FALFieldNames, FALSectionFieldsBiMap } from './fal-form.constants';
+import { FALSectionNames, FALFieldNames } from './fal-form.constants';
 import * as _ from 'lodash';
 import { ReplaySubject, Subject } from "rxjs";
 import { FALFormService } from "./fal-form.service";
@@ -32,7 +32,80 @@ export class FALFormErrorService {
   private _viewModel: FALFormViewModel;
   private _errors: FieldErrorList;
 
-  constructor(private falFormServive: FALFormService) {}
+  private _fieldValidatorFnMap = {
+    // Header Information
+    [FALFieldNames.TITLE]: this.validateHeaderTitle,
+    [FALFieldNames.FEDERAL_AGENCY]: this.validateFederalAgency,
+    [FALFieldNames.FALNO]: this.validateHeaderProgNo,
+
+    // Overview
+    [FALFieldNames.OBJECTIVE]: this.validateObjective,
+    [FALFieldNames.FUNDED_PROJECTS]: this.validateFundedProjects,
+    [FALFieldNames.FUNCTIONAL_CODES]: this.validateFunctionalCodes,
+    [FALFieldNames.SUBJECT_TERMS]: this.validateSubjectTerms,
+
+    // Authorization
+    [FALFieldNames.AUTHORIZATION_LIST]: this.validateAuthList,
+
+    // Financial Obligations
+    [FALFieldNames.OBLIGATION_LIST]: this.validateObligationList,
+
+    // Other Financial Info
+    [FALFieldNames.PROGRAM_ACCOMPLISHMENTS]: this.validateProgramAccomplishments,
+    [FALFieldNames.ACCOUNT_IDENTIFICATION]: this.validateAccountIdentification,
+    [FALFieldNames.TAFS_CODES]: this.validateTafsCodes,
+
+    // Criteria
+    [FALFieldNames.DOCUMENTATION]: this.validateCriteriaDocumentation,
+    [FALFieldNames.APPLICANT_LIST]: this.validateApplicantList,
+    [FALFieldNames.BENEFICIARY_LIST]: this.validateBeneficiaryList,
+    [FALFieldNames.LENGTH_TIME_DESC]: this.validateLengthTimeDesc,
+    [FALFieldNames.AWARDED_TYPE]: this.validateAwardedType,
+    [FALFieldNames.ASS_USAGE_LIST]: this.validateAssistanceUsageList,
+    [FALFieldNames.ASS_USAGE_DESC]: this.validateAssUsageDesc,
+    [FALFieldNames.USAGE_RESTRICTIONS]: this.validateCriteriaUsageRes,
+    [FALFieldNames.USE_DIS_FUNDS]: this.validateCriteriaUseDisFunds,
+    [FALFieldNames.USE_LOAN_TERMS]: this.validateCriteriaUseLoanTerms,
+
+    // Applying for Assistance
+    [FALFieldNames.DEADLINES]: this.validateDeadlinesFlag,
+    [FALFieldNames.DEADLINES_LIST]: this.validateDeadlineList,
+    [FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO]: this.validatePreAppCoordAddInfo,
+    [FALFieldNames.SELECTION_CRITERIA_DESCRIPTION]: this.validateSelCritDescription,
+    [FALFieldNames.AWARD_PROCEDURE_DESCRIPTION]: this.validateAwardProcDescription,
+    [FALFieldNames.APPROVAL_INTERVAL]: this.validateApprovalInterval,
+    [FALFieldNames.RENEWAL_INTERVAL]: this.validateRenewalInterval,
+    [FALFieldNames.APPEAL_INTERVAL]: this.validateAppealInterval,
+
+    // Compliance Requirement
+    [FALFieldNames.COMPLIANCE_REPORTS]: this.validateComplianceReports,
+    [FALFieldNames.OTHER_AUDIT_REQUIREMENTS]: this.validateComplianceAudits,
+    [FALFieldNames.ADDITIONAL_DOCUMENTATION]: this.validateAdditionDocumentation,
+
+    // Contact Information
+    [FALFieldNames.CONTACT_LIST]: this.validateContactList,
+    [FALFieldNames.CONTACT_WEBSITE]: this.validateContactWebsite,
+  };
+
+  constructor(private falFormService: FALFormService) {
+    let initSectionError = (id, label): FieldErrorList => {
+      return { id, label, errorList: [] };
+    };
+
+    this._errors = {
+      errorList: [
+        initSectionError(FALSectionNames.HEADER, 'Header Information'),
+        initSectionError(FALSectionNames.OVERVIEW, 'Overview'),
+        initSectionError(FALSectionNames.AUTHORIZATION, 'Authorization'),
+        initSectionError(FALSectionNames.OBLIGATIONS, 'Obligations'),
+        initSectionError(FALSectionNames.OTHER_FINANCIAL_INFO, 'Other Financial Information'),
+        initSectionError(FALSectionNames.CRITERIA_INFO, 'Criteria for Applying'),
+        initSectionError(FALSectionNames.APPLYING_FOR_ASSISTANCE, 'Applying for Assistance'),
+        initSectionError(FALSectionNames.COMPLIANCE_REQUIREMENTS, 'Compliance Requirements'),
+        initSectionError(FALSectionNames.CONTACT_INFORMATION, 'Contact Information'),
+      ]
+    };
+  }
 
   get viewModel() {
     return this._viewModel;
@@ -73,63 +146,49 @@ export class FALFormErrorService {
     return false; // null, undefined, or invalid type
   }
 
-  public initFALErrors(): void {
-    this._errors = {
-      errorList: [
-        {
-          id: FALSectionNames.HEADER,
-          label: 'Header Information',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.OVERVIEW,
-          label: 'Overview',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.AUTHORIZATION,
-          label: 'Authorization',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.OBLIGATIONS,
-          label: 'Obligations',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.OTHER_FINANCIAL_INFO,
-          label: 'Other Financial Information',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.CRITERIA_INFO,
-          label: 'Criteria for Applying',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.APPLYING_FOR_ASSISTANCE,
-          label: 'Applying for Assistance',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.COMPLIANCE_REQUIREMENTS,
-          label: 'Compliance Requirements',
-          errorList: []
-        },
-        {
-          id: FALSectionNames.CONTACT_INFORMATION,
-          label: 'Contact Information',
-          errorList: []
-        }
-      ]
-    };
+  // todo: review how to handle exceptions -- actions taken on completion but does returned observable still complete??
+  public validateAll(): Subject<any> {
+    let response: Subject<any> = new ReplaySubject(1);
+    let async = [FALFieldNames.FALNO]; // list of fields to be validated asynchronously
 
-    // todo: use string enums ??
-    Object.keys(FALSectionFieldsBiMap.sectionFields).forEach((section) => {
-      FALSectionFieldsBiMap.sectionFields[section].forEach((field) => {
-        this.validate(section, field);
-      });
+    // validate all synchronous fields first
+    Object.keys(this._fieldValidatorFnMap).forEach((field) => {
+      if (async.indexOf(field) < 0) {
+
+        // field is not async so just call its validator
+        let validatorFn = this._fieldValidatorFnMap[field].bind(this);
+        validatorFn();
+      }
     });
+
+    // emit event - all synchronous fields validated
+    response.next({ type: 'allSyncValidated' });
+
+    // if there are any asynchronous fields, validate them separately
+    if (async.length > 0) {
+      let completed = 0; // # of completed async validations counter
+      async.map((field) => {
+
+        // field is async so subscribe to the validator
+        let validatorFn = this._fieldValidatorFnMap[field].bind(this);
+        (validatorFn() as Subject<any>).subscribe((result) => {
+
+          // emit event - specific async field validated
+          response.next({ type: 'asyncValidated', field });
+
+          // check whether all async validations are completed
+          if (++completed === async.length) {
+            // emit event - all asynchronous fields validated
+            response.next({ type: 'allAsyncValidated' });
+            response.complete();
+          }
+        });
+      });
+    } else { // else there are no asynchronous fields so complete immediately
+      response.complete();
+    }
+
+    return response;
   }
 
   public static findErrorById(fieldErrorList: FieldErrorList, id: string): (FieldError | FieldErrorList | null) {
@@ -145,7 +204,7 @@ export class FALFormErrorService {
   }
 
   public static findSectionErrorById(fieldErrorList: any, sectionId: string, fieldId: string = null): (FieldError | FieldErrorList | null) {
-    if(fieldErrorList && fieldErrorList.errorList.length > 0) {
+    if(fieldErrorList && fieldErrorList.errorList && fieldErrorList.errorList.length > 0) {
       for (let error of fieldErrorList.errorList) {
         if (error.id && error.id === sectionId) {
           if(fieldId) {
@@ -175,38 +234,6 @@ export class FALFormErrorService {
       }
     } else {
       fieldErrorList.errorList.push(error);
-    }
-  }
-
-  public validate(sectionName: string, fieldName: string): void {
-    switch (sectionName) {
-      case FALSectionNames.HEADER:
-        this.validateHeaderInfo(fieldName);
-        break;
-      case FALSectionNames.OVERVIEW:
-        this.validateOverview(fieldName);
-        break;
-      case FALSectionNames.AUTHORIZATION:
-        this.validateAuthorization(fieldName);
-        break;
-      case FALSectionNames.OBLIGATIONS:
-        this.validateObligation(fieldName);
-        break;
-      case FALSectionNames.OTHER_FINANCIAL_INFO:
-        this.validateOtherFinancialInfo(fieldName);
-        break;
-      case FALSectionNames.CRITERIA_INFO:
-        this.validateCriteria(fieldName);
-        break;
-      case FALSectionNames.APPLYING_FOR_ASSISTANCE:
-        this.validateApplyingForAssistance(fieldName);
-        break;
-      case FALSectionNames.COMPLIANCE_REQUIREMENTS:
-        this.validateComplianceRequirement(fieldName);
-        break;
-      case FALSectionNames.CONTACT_INFORMATION:
-        this.validateContactInformation(fieldName);
-        break;
     }
   }
 
@@ -242,19 +269,6 @@ export class FALFormErrorService {
 
   // Header Information Section
   // --------------------------------------------------------------------------
-  public validateHeaderInfo(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.TITLE:
-        this.validateHeaderTitle();
-        break;
-      case FALFieldNames.FEDERAL_AGENCY:
-        this.validateFederalAgency();
-        break;
-      case FALFieldNames.FALNO:
-        this.validateHeaderProgNo();
-        break;
-    }
-  }
 
   public validateHeaderTitle(): FieldError {
     let titleErrors = {
@@ -273,16 +287,11 @@ export class FALFormErrorService {
     let response: Subject<any> = new ReplaySubject(1);
     let finished = false;
 
-    if(this._viewModel.organizationId && !this._viewModel.isRevision) {
-      this.falFormServive.getFederalHierarchyConfiguration(this._viewModel.organizationId).subscribe(data => {
+    if(this._viewModel.organizationId && (this._viewModel.isNewDraft || this._viewModel.isRejected || this._viewModel.programId === null) ) {
+      this.falFormService.getFederalHierarchyConfiguration(this._viewModel.organizationId).subscribe(data => {
 
         if (!data.programNumberAuto) {
-
-          if (!this._viewModel.programNumber) {
-            errors = this.requiredFieldError('CFDA Number field');
-            finished = true;
-          }
-          else {
+          if (this._viewModel.programNumber) {
 
             let progNo = this.getSlicedProgNo();
 
@@ -295,7 +304,6 @@ export class FALFormErrorService {
               finished = true;
             }
             else {
-
               //Check for No in range
               this.checkForInRange(progNo, errors, data.programNumberLow, data.programNumberHigh);
               if (errors) {
@@ -306,6 +314,10 @@ export class FALFormErrorService {
                 this.checkForUniqueProgNo(response, errors);
               }
             } //end of else
+          }
+          else {
+            errors = this.requiredFieldError('CFDA Number field');
+            finished = true;
           }
         } //end of if validateFlag
         else {
@@ -320,7 +332,11 @@ export class FALFormErrorService {
       });
     }
     else {
-      this._viewModel.programNumber = '';
+
+      if(!this.viewModel.organizationId) {
+        this._viewModel.programNumber = '';
+      }
+
       let falNoErrors = this.buildProgNoErrorJson(errors);
       response.next(falNoErrors);
       response.complete();
@@ -329,7 +345,7 @@ export class FALFormErrorService {
     return response;
   }
 
-  public getSlicedProgNo(): string{
+  public getSlicedProgNo(): string {
     let progNo = '';
     if (this._viewModel.programNumber.indexOf(".") == -1) {
       progNo = this._viewModel.programNumber;
@@ -354,7 +370,7 @@ export class FALFormErrorService {
   }
 
   public checkForUniqueProgNo(response, errors){
-    this.falFormServive.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, this._viewModel.organizationId)
+    this.falFormService.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, this._viewModel.organizationId)
       .subscribe(res => {
         if(!res['content']['isProgramNumberUnique']) {
           errors = {
@@ -397,23 +413,6 @@ export class FALFormErrorService {
 
   // Overview Section
   // --------------------------------------------------------------------------
-  public validateOverview(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.OBJECTIVE:
-        this.validateObjective();
-        break;
-      case FALFieldNames.FUNDED_PROJECTS:
-        this.validateFundedProjects();
-        break;
-      case FALFieldNames.FUNCTIONAL_CODES:
-        this.validateFunctionalCodes();
-        break;
-      case FALFieldNames.SUBJECT_TERMS:
-        this.validateSubjectTerms();
-        break;
-    }
-  }
-
   public validateObjective(): FieldError {
     let objectiveErrors = {
       id: FALFieldNames.OBJECTIVE,
@@ -498,14 +497,6 @@ export class FALFormErrorService {
 
   // Authorization
   // --------------------------------------------------------------------------
-  public validateAuthorization(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.AUTHORIZATION_LIST:
-        this.validateAuthList();
-        break;
-    }
-  }
-
   public validateAuthList(): (FieldErrorList | null) {
     let errors: FieldError[] = [];
 
@@ -596,14 +587,6 @@ export class FALFormErrorService {
 
   // Financial Obligations
   // --------------------------------------------------------------------------
-  public validateObligation(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.OBLIGATION_LIST:
-        this.validateObligationList();
-        break;
-    }
-  }
-
   public validateObligationList(): (FieldErrorList | null) {
     let errors: FieldError[] = [];
     if (this._viewModel.obligations && this._viewModel.obligations.length > 0) {
@@ -678,20 +661,6 @@ export class FALFormErrorService {
 
   // Other Financial Info Section
   // --------------------------------------------------------------------------
-  public validateOtherFinancialInfo(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.PROGRAM_ACCOMPLISHMENTS:
-        this.validateProgramAccomplishments();
-        break;
-      case FALFieldNames.ACCOUNT_IDENTIFICATION:
-        this.validateAccountIdentification();
-        break;
-      case FALFieldNames.TAFS_CODES:
-        this.validateTafsCodes();
-        break;
-    }
-  }
-
   public validateProgramAccomplishments(): (FieldErrorList | null) {
     let errors: FieldError[] = [];
 
@@ -881,42 +850,6 @@ export class FALFormErrorService {
 
   // Criteria Section
   // --------------------------------------------------------------------------
-
-  public validateCriteria(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.DOCUMENTATION:
-        this.validateCriteriaDocumentation();
-        break;
-      case FALFieldNames.APPLICANT_LIST:
-        this.validateApplicantList();
-        break;
-      case FALFieldNames.BENEFICIARY_LIST:
-        this.validateBeneficiaryList();
-        break;
-      case FALFieldNames.LENGTH_TIME_DESC:
-        this.validateLengthTimeDesc();
-        break;
-      case FALFieldNames.AWARDED_TYPE:
-        this.validateAwardedType();
-        break;
-      case FALFieldNames.ASS_USAGE_LIST:
-        this.validateAssistanceUsageList();
-        break;
-      case FALFieldNames.ASS_USAGE_DESC:
-        this.validateAssUsageDesc();
-        break;
-      case FALFieldNames.USAGE_RESTRICTIONS:
-        this.validateCriteriaUsageRes();
-        break;
-      case FALFieldNames.USE_DIS_FUNDS:
-        this.validateCriteriaUseDisFunds();
-        break;
-      case FALFieldNames.USE_LOAN_TERMS:
-        this.validateCriteriaUseLoanTerms();
-        break;
-    }
-  }
-
   validateCriteriaDocumentation(): FieldError {
     let isApplicable = this._viewModel.documentation.isApplicable;
     let documentation = this._viewModel.documentation.description;
@@ -1061,35 +994,6 @@ export class FALFormErrorService {
 
   // Applying for Assistance Section
   // --------------------------------------------------------------------------
-  public validateApplyingForAssistance(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.DEADLINES:
-        this.validateDeadlinesFlag();
-        break;
-      case FALFieldNames.DEADLINES_LIST:
-        this.validateDeadlineList();
-        break;
-      case FALFieldNames.PREAPPCOORD_ADDITIONAL_INFO:
-        this.validatePreAppCoordAddInfo();
-        break;
-      case FALFieldNames.SELECTION_CRITERIA_DESCRIPTION:
-        this.validateSelCritDescription();
-        break;
-      case FALFieldNames.AWARD_PROCEDURE_DESCRIPTION:
-        this.validateAwardProcDescription();
-        break;
-      case FALFieldNames.APPROVAL_INTERVAL:
-        this.validateApprovalInterval();
-        break;
-      case FALFieldNames.APPEAL_INTERVAL:
-        this.validateAppealInterval();
-        break;
-      case FALFieldNames.RENEWAL_INTERVAL:
-        this.validateRenewalInterval();
-        break;
-    }
-  }
-
   public validateDeadlinesFlag(): FieldError {
     let fieldErrors = {
       id: FALFieldNames.DEADLINES,
@@ -1148,7 +1052,6 @@ export class FALFormErrorService {
         if (!(_.isEmpty(deadlineError.errors))) {
           errors.push(deadlineError);
         }
-        //console.log(deadlineItem);
       }
     }
 
@@ -1272,20 +1175,6 @@ export class FALFormErrorService {
 
   // Compliance Requirement
   // --------------------------------------------------------------------------
-  validateComplianceRequirement(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.COMPLIANCE_REPORTS:
-        this.validateComplianceReports();
-        break;
-      case FALFieldNames.OTHER_AUDIT_REQUIREMENTS:
-        this.validateComplianceAudits();
-        break;
-      case FALFieldNames.ADDITIONAL_DOCUMENTATION:
-        this.validateAdditionDocumentation();
-        break;
-    }//end of switch
-  }
-
   public validateComplianceReports(): (FieldErrorList | null) {
     let errors: FieldError[] = [];
     if (this._viewModel.complianceReports) {
@@ -1381,17 +1270,6 @@ export class FALFormErrorService {
 
   // Contact Information
   // --------------------------------------------------------------------------
-  validateContactInformation(fieldName: string): void {
-    switch (fieldName) {
-      case FALFieldNames.CONTACT_LIST:
-        this.validateContactList();
-        break;
-      case FALFieldNames.CONTACT_WEBSITE:
-        this.validateContactWebsite();
-        break;
-    }//end of switch
-  }
-
   public validateContactList(): (FieldErrorList | null){
     let errors: FieldError[] = [];
 

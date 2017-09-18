@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, OnDestroy, ViewChild, Input, ElementRef, AfterViewInit
+  Component, OnInit, OnDestroy, ViewChild, Input, ElementRef
 } from '@angular/core';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {Location} from '@angular/common';
@@ -17,7 +17,7 @@ import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.se
 import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {HistoricalIndexLabelPipe} from "../../../pipes/historical-index-label.pipe";
 import {FALFormService} from "../../fal-form.service";
-import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
 import {FALFormErrorService, FieldError, FieldErrorList} from "../../fal-form-error.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {RequestLabelPipe} from "../../../pipes/request-label.pipe";
@@ -40,7 +40,7 @@ import { IBreadcrumb } from "sam-ui-kit/types";
     RequestLabelPipe
   ]
 })
-export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FALReviewComponent implements OnInit, OnDestroy {
   // Checkboxes Component
   checkboxModel: any = [];
   checkboxConfig = {
@@ -101,7 +101,7 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'Workspace', url: '/workspace' }
+    { breadcrumb: 'Workspace', urlmock: true }
   ];
 
   private apiSubjectSub: Subscription;
@@ -129,7 +129,7 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     timer: 3000
   };
 
-  private pristineIconClass = 'not started';
+  private pristineIconClass = 'pending';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
 
@@ -273,25 +273,6 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedPage = this.sidenavService.getData()[0];
   }
 
-  ngAfterViewInit() {
-    setTimeout( () => {
-      this.reviewErrorList = this.errorService.applicableErrors;
-      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
-    }, 400);
-    setTimeout( () => {
-      this.reviewErrorList = this.errorService.applicableErrors;
-      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
-    }, 2000);
-    setTimeout( () => {
-      this.reviewErrorList = this.errorService.applicableErrors;
-      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
-    }, 5000);
-    setTimeout( () => {
-      this.reviewErrorList = this.errorService.applicableErrors;
-      this.updateSidenavIcons(FALSectionNames.HEADER, this.sectionLabels[0]);
-    }, 12000);
-  }
-
   ngOnDestroy() {
     if (this.apiSubjectSub) {
       this.apiSubjectSub.unsubscribe();
@@ -348,8 +329,20 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
           this.items.push(item);
         }
       }
-      this.showHideButtons(this.program);
-      this.makeSidenav();
+
+      // Run validations
+      this.viewModel = new FALFormViewModel(this.program);
+      this.errorService.viewModel = this.viewModel;
+      this.errorService.validateAll().subscribe(
+        (event) => {},
+        (error) => {},
+        () => {
+          this.showHideButtons(this.program);
+          this.reviewErrorList = this.errorService.applicableErrors;
+          this.makeSidenav();
+        }
+      );
+
       this.setAlerts();
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -466,9 +459,6 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showHideButtons(program: any) {
-    this.viewModel = new FALFormViewModel(program);
-    this.errorService.viewModel = this.viewModel;
-    this.errorService.initFALErrors();
     let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
     this.reviewErrorList = this.errorService.applicableErrors;
     if (program._links) {
@@ -810,7 +800,16 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
       'config': {
         'type': 'info',
         'title': '',
-        'description': 'This is the currently published version of this program.'
+        'description': 'This is the currently published version of this assistance listing.'
+      }
+    };
+
+    let archivedAlert = {
+      'labelname': 'archived-fal-alert',
+      'config': {
+        'type': 'info',
+        'title': '',
+        'description': 'This is the most recent version of this archived assistance listing.'
       }
     };
 
@@ -833,9 +832,13 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
 
       case 'published':
-        // alert for latest published version, which is only shown to logged in users
+        // alert for latest published/archived version, which is only shown to logged in users
         if (this.cookieValue && this.program.latest === true) {
-          this.alerts.push(publishedAlert);
+          if (this.program.archived) {
+            this.alerts.push(archivedAlert);
+          } else {
+            this.alerts.push(publishedAlert);
+          }
         }
         break;
 
@@ -926,7 +929,7 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onButtonClick(event) {
+/*  onButtonClick(event) {
     if (event) {
       if (event === 'Submit') {
         let url = '/programs/' + this.program.id + '/submit';
@@ -941,7 +944,7 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
         this.notifyAgencyCoordinator();
       }
     }
-  }
+  }*/
 
   notifyAgencyCoordinator() {
     this.service.sendNotification(this.program.id)
@@ -1029,19 +1032,50 @@ export class FALReviewComponent implements OnInit, OnDestroy, AfterViewInit {
   navHandler(obj) {
     this.router.navigate([], {fragment: obj.route.substring(1)});
   }
-  onViewClick() {
-    let url = '/programs/' + this.program.id + '/view';
+  tabsNavigation(tabType) {
+    let url;
+    if(tabType === 'Public') {
+      url = '/programs/' + this.program.id + '/view';
+    }
+    if(tabType === 'Submit') {
+      url = '/programs/' + this.program.id + '/submit';
+    }
+    if(tabType === 'Reject') {
+      url = '/programs/' + this.program.id + '/reject';
+    }
+    if(tabType === 'Publish') {
+      url = '/programs/' + this.program.id + '/publish';
+    }
+    if(tabType === 'Notify') {
+      this.notifyAgencyCoordinator();
+    }
     this.router.navigateByUrl(url);
   }
 
   public tabsClicked(tab){
     switch (tab.label) {
       case 'Public':
-        this.onViewClick();
+        this.tabsNavigation('Public');
+        break;
+      case 'Submit':
+        this.tabsNavigation('Submit');
+        break;
+      case 'Reject':
+        this.tabsNavigation('Reject');
+        break;
+      case 'Publish':
+        this.tabsNavigation('Publish');
+        break;
+      case 'Notify Agency Coordinator':
+        this.tabsNavigation('Notify');
         break;
       default:
         break;
     }
   }
-
+  breadcrumbHandler(event) {
+    if(event === 'Workspace') {
+      this.router.navigateByUrl('fal/workspace');
+    }
+  }
 }

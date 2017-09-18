@@ -106,23 +106,16 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
-  getFederalHierarchyConfigurations(cookie: string, offset: number) {
+  getFederalHierarchyConfigurations(orgKeys: string) {
     let oApiParam = {
       name: 'program',
       suffix: '/federalHierarchyConfigurations/',
       oParam: {
-        offset: offset
+        orgKeys: orgKeys
       },
       headers: {},
       method: 'GET'
     };
-
-    if(typeof cookie !== 'undefined' && cookie !== ''){
-      oApiParam.headers = {
-        "X-Auth-Token": cookie
-      };
-    }
-
     return this.oAPIService.call(oApiParam);
   }
 

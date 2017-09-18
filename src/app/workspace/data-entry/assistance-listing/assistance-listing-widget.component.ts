@@ -18,7 +18,7 @@ export class AssistanceListingWidgetComponent {
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     if(this.cookieValue!=null) {
-      this.api.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(res => {
+      this.api.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO, ORG_LEVELS').subscribe(res => {
           this.permissions = res;
         },
         error => {

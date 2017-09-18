@@ -42,7 +42,6 @@ export const routes: Routes = [
     path: 'workspace/content-management/:section',
     component: HelpContentManagementViewComponent
   },
-
 ];
 
 export const routing = RouterModule.forChild(routes);

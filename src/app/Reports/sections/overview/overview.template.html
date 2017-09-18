@@ -2,10 +2,10 @@
   <div class="sam-ui hidden divider"></div>
   <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
-    Sam.gov reports can be used to support analysis of federal spending including geographical analysis,
-    market analysis, and analysis on the impact of the congressional and presidential initiatives in socio-economic
-    areas such as small business spending. The data is also a reliable basis for measuring and assessing the impact
-    of Federal acquisition policy and management improvement.
+    Sam.gov reports can be used to support analysis of federal spending including geographical analysis, market analysis, and
+    analysis on the impact of the congressional and presidential initiatives in socio-economic areas such as small business
+    spending. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and
+    management improvement.
   </p>
   <div class="usa-grid-full">
     <h3 class="p_L-3x">Dynamic Reports</h3>
@@ -13,10 +13,9 @@
       <p class="p_L-8x">
         We have pre-built many of the reports people run regularly, providing quick access to information people need most.
         <br><br>
-      </p>
-      <span *ngIf="states.showSignIn">
+        <span *ngIf="states.showSignIn">
         <div class="centered">
-          <p class="p_L-8x">Sign in to access dynamic reports</p><br>
+          <p>Sign in to access dynamic reports</p><br>
           <a routerLink="/signin"><button type="button" class="usa-button">Sign In</button></a>
         </div>
         <br><br>
@@ -30,22 +29,21 @@
           </a>
         </div>
       </span>
+      </p>
     </div>
     <section class="usa-grid-full">
       <div class="grid-name1">
-        <!--<span *ngIf="states.isSignedIn">-->
-        <span>
-          <p class="p_L-8x">
+        <span *ngIf="states.isSignedIn">
+           <p class="p_L-8x reportCount">
             Showing {{currentReportStartIndex}}-{{currentReportEndIndex}} out of {{totalReportCount}} reports
-          </p>
+          </p> 
         </span>
       </div>
       <div class="grid-date1">
         <div class="p_R-0x">
-          <span>
-          <!--<span *ngIf="states.isSignedIn" >-->
+          <span *ngIf="states.isSignedIn">
             <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
-               (pageChange)="onParamChanged($event)">
+                           (pageChange)="onParamChanged($event)">
             </sam-pagination>
           </span>
         </div>
@@ -55,8 +53,8 @@
           <div class="usa-grid-full">
             <div class="usa-grid-full">
               <div class="grid-name">
-                <a [routerLink]="['../report',item.id,item.name, item.desc]">
-                <b >{{item.name  }}</b>
+                <a [routerLink]="['../report', item.id]">
+                  <b>{{item.name  }}</b>
                 </a>
                 <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;
                   <span>{{item.app}}</span>
@@ -71,7 +69,7 @@
                     </i>
                     <i *ngIf="selectedIdx !== item.id" [ngClass]="item.favorite ? 'fa fa-star' : 'fa fa-star-o'"></i>
                     <span class="usa-sr-only">click to add {{item.name}} to your favorites</span>
-                  </a>
+                </a>
                 </span>
               </div>
             </div>
@@ -83,11 +81,11 @@
               {{item.verb}}
             </div>
             <div class="usa-grid-full">
-              <sam-accordion >
+              <sam-accordion>
                 <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
-                  <div  class="grid-name"></div>
-                  <div class="grid-date"><i class="fa fa-trash"></i></div>
-                  <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
+                  <div class="grid-name">Coming Soon!</div>
+
+                  <!-- <div class="grid-date"><i class="fa fa-trash"></i></div> -->
                 </sam-accordion-section>
               </sam-accordion>
             </div>
@@ -95,10 +93,9 @@
         </li>
       </ul>
     </section>
-    <span>
-    <!--<span *ngIf="states.isSignedIn">-->
+    <span *ngIf="states.isSignedIn">
       <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
-               (pageChange)="onParamChanged($event)">
+                     (pageChange)="onParamChanged($event)">
       </sam-pagination>
     </span>
   </div>

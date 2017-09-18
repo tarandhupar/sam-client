@@ -1,7 +1,10 @@
 import { clone, indexOf, merge } from 'lodash';
-import { isDebug } from './modules/helpers';
+import { config, isDebug } from './modules/helpers';
 
+import * as Cookies from 'js-cookie';
 import * as moment from 'moment';
+
+Cookies.defaults = config.cookies(15);
 
 const LDAP_MAPPINGS = {
   // Reverse Mappings
@@ -170,5 +173,14 @@ export class User {
   get entity(): boolean {
     //TODO
     return false;
+  }
+
+  static getCache(): { [key: string]: number|boolean|string } {
+    return Cookies.getJSON('IAMSession');
+  }
+
+  static updateCache(data: { [key: string]: number|boolean|string }) {
+    data = merge(Cookies.getJSON('IAMSession') || {}, data || {});
+    Cookies.set('IAMSession', data, config.cookies(15));
   }
 }

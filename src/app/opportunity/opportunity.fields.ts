@@ -6,6 +6,9 @@ export enum OpportunityFields {
   HierarchyName = <any>'hierarchy-level',
   Location = <any>'location',
 
+    // IVL Summary
+  IVL = <any>'ivl-summary',
+
     // Awards Summary
   AwardSummary = <any>'award-summary',
 

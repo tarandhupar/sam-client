@@ -13,9 +13,16 @@
     </div>
     <div *ngIf="showEditSubform" class="editor-view">
         <ng-content select="[edit]"></ng-content>  
-        <div class="button-row">      
-            <button class="usa-button-outline" (click)="cancelEdit()">Cancel</button> 
-            <button class="" (click)="actionHandler('editSubmit')">Done</button>
+        <div class="button-row" *ngIf="!hideDefaultBtns">
+            <sam-button 
+              buttonText="Cancel"
+              buttonType="tertiary"
+              (click)="cancelEdit()">
+            </sam-button>
+            <sam-button 
+              buttonText="Done"
+              (click)="actionHandler('editSubmit')">
+            </sam-button>
         </div>
     </div>
 </div>

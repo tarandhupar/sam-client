@@ -242,7 +242,6 @@ export class FHService {
         'pageSize':pageSize,
         'orderBy': 'level',
         'ascending': 'asc',
-        'defaultDept': isDefaultDept,
       }
     };
     if(status.length === 1) apiOptions.oParam['status']= status[0];
@@ -254,6 +253,9 @@ export class FHService {
     }
     if(parent){
       apiOptions.oParam['parent'] = parent;
+    }
+    if(isDefaultDept) {
+      apiOptions.oParam['defaultDept'] = 'true';
     }
     return this.callApi(apiOptions, true);
   }

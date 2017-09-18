@@ -91,7 +91,7 @@ export class RolesDirectoryPage {
     this.domainOptions = domains.map(dom => {
       return {
         name: dom.id,
-        label: this.capitalize.transform(dom.val),
+        label: dom.val,
         value: dom.id,
       };
     });
@@ -104,7 +104,7 @@ export class RolesDirectoryPage {
     this.roleOptions = roles.map(r => {
       return {
         name: r.id,
-        label: this.capitalize.transform(r.val),
+        label: r.val,
         value: r.id,
       };
     });
@@ -225,7 +225,11 @@ export class RolesDirectoryPage {
     this.totalResults = res.total;
     this.itemsPerPage = res.limit;
     this.totalPages = Math.floor((res.total - 1) / res.limit) + 1;
-    this.currentPage = Math.floor(res.offset / res.limit) + 1;
+    if (typeof res.offset === 'number' && typeof res.limit === 'number' && res.limit !== 0) {
+      this.currentPage = Math.floor(res.offset / res.limit) + 1;
+    } else {
+      this.currentPage = 1;
+    }
   }
 
   onOrganizationChange(org) {
@@ -266,7 +270,7 @@ export class RolesDirectoryPage {
   }
 
   onBulkUpdate() {
-    this.router.navigate(['/access/bulk-update']);
+    this.router.navigate(['/role-management/bulk-update']);
   }
 
   fullName(user) {
@@ -288,9 +292,9 @@ export class RolesDirectoryPage {
   onUserAction(action, user) {
     const userName = user.user.email;
     if (action.name === 'grant_access') {
-      this.router.navigate(['/users', userName, 'grant-access']);
+      this.router.navigate(['/role-management', 'users', userName, 'grant-access']);
     } else {
-      this.router.navigate(['/users', userName, 'access']);
+      this.router.navigate(['/role-management', 'users', userName, 'access']);
     }
   }
 

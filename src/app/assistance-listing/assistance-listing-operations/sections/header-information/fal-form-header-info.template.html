@@ -4,9 +4,8 @@
 
 <form [formGroup]="falHeaderInfoForm">
 
-  <div class="sam-ui segment">
+  <div class="sam-ui segment" *ngIf="!viewModel.isRevision">
     <sam-text
-      *ngIf="!viewModel.isRevision"
       [maxlength]="144"
       [hint]="titleHint"
       [control]="falHeaderInfoForm.controls['title']"
@@ -33,9 +32,8 @@
     </sam-text>
   </div>
 
-  <div class="sam-ui segment" *ngIf="toggleAgencyPicker">
+  <div class="sam-ui segment" *ngIf="!viewModel.isRevision && orgLevels && toggleAgencyPicker">
     <sam-agency-picker-v2
-      *ngIf="!viewModel.isRevision && orgLevels && toggleAgencyPicker"
       [control]="falHeaderInfoForm.controls['federalAgency']"
       [label]="'Federal Agency'"
       [hint]="'List the administering department or independent agency.
@@ -47,6 +45,7 @@
       [attr.id]="'fal-header-fed-agency'"
       [orgRoots]="orgRoot"
       type="single"
+      [editOnFlag]="false"
       formControlName="federalAgency">
     </sam-agency-picker-v2>
 
@@ -57,7 +56,8 @@
   </div>
 
   <div *ngIf="!viewModel.isRevision" class="sam-ui segment" [hidden]="autoProgNoGeneration || viewModel.organizationId == null">
-    <sam-fal-text [maxlength]="3"
+    <sam-fal-text
+                [maxlength]="3"
                 [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
                 [control]="falHeaderInfoForm.controls['programNumber']"
                 [name]="'programNumber-input'"
@@ -66,7 +66,6 @@
                 [cfdaCode]="falNoPrefix"
                 [pending]="falHeaderInfoForm.controls['programNumber'].pending"
                 [attr.id]="'fal-header-falNo'"
-                [class.hide]="autoProgNoGeneration || viewModel.organizationId == null"
                 formControlName="programNumber">
     </sam-fal-text>
   </div>

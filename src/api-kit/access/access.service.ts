@@ -44,7 +44,7 @@ export class UserAccessService {
       .catch(res => {
         if (res && res.status === 401) {
           if (!this.router.url.match(/\/workspace/i)) {
-            this.router.navigate(['/signin']);
+            this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
           }
         }
         return Observable.throw(res);
@@ -116,16 +116,54 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  postAccess(access: any, userName?, queryParams = {}) {
-    let suffix = userName ? '/' + userName + '/' : '/';
+  // Deprecated but functional as of today
+  postAccessDeprecated(body: any, userName?, queryParams = {}) {
+    let suffix = userName ? '/access/' + userName + '/' : '/access/';
     let apiOptions: any = {
-      name: 'access',
+      name: 'rms',
       suffix: suffix,
       method: 'POST',
-      body: access,
+      body: body,
       oParam: queryParams
     };
 
+    return this.callApi(apiOptions, false);
+  }
+
+  postAccess(body: any) {
+    let suffix = '/access';
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: suffix,
+      method: 'POST',
+      body: body,
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions, false);
+  }
+
+  putAccess(body: any) {
+    let suffix = '/access';
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: suffix,
+      method: 'PUT',
+      body: body,
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions, false);
+  }
+
+  deleteAccess(body: any) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/access',
+      method: 'DELETE',
+      body: body,
+      oParam: {},
+    }
     return this.callApi(apiOptions, false);
   }
 
@@ -140,7 +178,7 @@ export class UserAccessService {
     return this.callApi(apiOptions,false);
   }
 
-  getDomainDefinition(mode : string, domainKey? : string, roleKey?) {
+  getDomainDefinition(mode : string, domainKey? : string, roleKey?, userName?) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -158,6 +196,10 @@ export class UserAccessService {
 
     if (roleKey) {
       apiOptions.oParam.roleKey = ''+roleKey;
+    }
+
+    if (userName) {
+      apiOptions.oParam.user = userName;
     }
 
     return this.callApi(apiOptions);

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuard } from "../../../api-kit/authguard/authguard.service";
 import { OpportunityFormService } from "./opportunity-form.service";
 import { OpportunityFormViewModel } from "./opportunity-form.model";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { OpportunitySectionNames } from './opportunity-form-constants';
 

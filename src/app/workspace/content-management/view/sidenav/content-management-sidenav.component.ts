@@ -85,16 +85,22 @@ export class HelpContentManagementSideNavComponent{
   }
 
   loadFilterData(){
-    this.loadDomains();
-  }
-
-  loadDomains(){
-    this.msgFeedService.getDomains().subscribe(res => {
-      this.domainsCbxConfig.options = [];
-      res.Domains.forEach(domain => {this.domainsCbxConfig.options.push({value: domain, label: domain, name: domain});});
+    this.msgFeedService.getFilters('3').subscribe(data =>{
+      this.loadDomains(data.domainTypes);
     });
   }
-  
+
+  loadDomains(domainTypes){
+    this.domainsCbxConfig.options = [];
+    if(domainTypes){
+      domainTypes.forEach(domain => {
+        if(domain.isActive)
+          this.domainsCbxConfig.options.push({value: domain.id, label: domain.domainName, name: domain.domainName});
+      });
+      this.domainsCbxConfig.options.push({value: 'other', label: 'Other Domain', name: 'Other Domain'});
+    }
+  }
+
   resetFilter(){
     this.resetFilterFields();
     this.filterChange.emit(this.filterOption);

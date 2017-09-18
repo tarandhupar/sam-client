@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable } from "rxjs";
 import { UserAccessService } from "api-kit/access/access.service";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+
 import adminLevel from "../../role-management/admin-level";
 
 /*
@@ -69,7 +70,7 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
           return Observable.of(false);
         }
         if (status === 401) {
-          this.router.navigate(['/signin']);
+          this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
           this.alertFooter.registerFooterAlert({
             title: "",
             description: "You must be logged in to perform his action.",

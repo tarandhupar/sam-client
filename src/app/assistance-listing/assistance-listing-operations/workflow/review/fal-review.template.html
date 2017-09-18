@@ -13,47 +13,48 @@
 </sam-modal>
 
 
-<page 
+<page
+  (breadcrumbOut)="breadcrumbHandler($event)"
   *ngIf="program"
-  theme="inside" 
+  theme="inside"
   [breadcrumbs]="crumbs"
   section="Assistance Listings"
   [title]="program?.data?.title">
-  
+
   <sidebar>
     <div sam-sticky limit=1200 container="page-content">
       <!-- Logo -->
-      <ng-container 
+      <ng-container
         *ngIf="program && logoUrl && !errorOrganization">
-        <img 
-          class="sidenav-logo" 
-          id="program-logo" 
-          [src]="logoUrl" 
-          [alt]="logoInfo" 
-          [title]="logoInfo" 
+        <img
+          class="sidenav-logo"
+          id="program-logo"
+          [src]="logoUrl"
+          [alt]="logoInfo"
+          [title]="logoInfo"
           width="160px">
       </ng-container>
-      
+
       <!-- Logo not availabe-->
-      <ng-container 
+      <ng-container
         *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
-        <img 
-          src="src/assets/img/logo-not-available.png" 
-          class="sidenav-logo" 
-          alt="Logo Not Available" 
+        <img
+          src="src/assets/img/logo-not-available.png"
+          class="sidenav-logo"
+          alt="Logo Not Available"
           width="160px">
       </ng-container>
 
       <!--Side Navigation-->
-      <sam-sidenav 
+      <sam-sidenav
         type="step"
-        (data)="navHandler($event)" 
-        [labelLookup]="sideNavSelection" 
+        (data)="navHandler($event)"
+        [labelLookup]="sideNavSelection"
         [model]="sideNavModel">
       </sam-sidenav>
     </div>
   </sidebar>
-  
+
   <!--Edit Modal-->
   <sam-modal #editModal
              [showClose]="true"
@@ -66,37 +67,37 @@
              [cancelButtonLabel]="'Cancel'"
              (onSubmit)="onEditModalSubmit($event)">
   </sam-modal>
-  
+
   <ng-container message>
-    
-    <sam-status-banner 
-      [type]="'warning'" 
-      *ngIf="checkForErrors() && reviewErrorList.errorList.length > 0">
+
+    <sam-status-banner
+      [type]="'warning'"
+      *ngIf="checkForErrors() && reviewErrorList && reviewErrorList.errorList && reviewErrorList.errorList.length > 0">
       <div leading-content>{{statusBannerLeadingText}}</div>
       <div main-content>
-        <fal-error-display 
-          [validationErrors]="reviewErrorList" 
+        <fal-error-display
+          [validationErrors]="reviewErrorList"
           (message)="updateBannerText($event)">
         </fal-error-display>
       </div>
     </sam-status-banner>
 
     <!-- Alerts -->
-    <ng-container 
-      *ngIf="programID && latestRevision && (programID !== latestRevision.id)">
+    <ng-container
+      *ngIf="programID && latestRevision && this.program.status.code === 'published' && (programID !== latestRevision.id)">
       <sam-alert [type]="'info'" [title]="''">
-        Note: This is a previously published revision for this Assistance Listing. 
-        To view the most recent revision, please click 
+        Note: This is a previously published revision for this Assistance Listing.
+        To view the most recent published revision, please click
         <a [routerLink]="['/programs', latestRevision.id, 'review']">here</a>.
       </sam-alert>
     </ng-container>
 
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
-        <sam-alert 
-          [attr.id]="'program-alert-' + i" 
-          labelname="alerts[i].labelname" 
-          [type]="alerts[i].config.type" 
+        <sam-alert
+          [attr.id]="'program-alert-' + i"
+          labelname="alerts[i].labelname"
+          [type]="alerts[i].config.type"
           [title]="alerts[i].config.title">
           <div [innerHTML]="alerts[i].config.description"></div>
           <ng-container *ngIf="alert.labelname === 'published-fal-alert'">
@@ -109,13 +110,13 @@
         </sam-alert>
       </div>
     </ng-container>
-    
+
   </ng-container>
-  
-  <inline-error-message 
+
+  <inline-error-message
     [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))">
   </inline-error-message>
-  
+
   <!-- Pending Request Button -->
   <ng-container *ngIf="programRequest">
     <a class="sam-ui primary button right labeled icon"
@@ -124,13 +125,13 @@
       {{ programRequest.requestType?.value | requestLabel }}
     </a>
   </ng-container>
-  
+
   <!-- Tabs -->
-  <tabs-fal 
-    [data]="program" 
+  <tabs-fal
+    [data]="program"
     (tabClick)="tabsClicked($event)">
   </tabs-fal>
-  
+
   <!-- <div class="sam-ui tabular menu">
     <span class="active item">
       Aunthenticated
@@ -140,7 +141,7 @@
       class="item">
       Edit
     </a>
-    <a *ngIf="program && !program.archived" 
+    <a *ngIf="program && !program.archived"
       (click)="onViewClick()"
       class="item">
       Public
@@ -161,13 +162,13 @@
         </div>
       </span>
     </ng-container>
-    <a *ngIf="canDelete()" 
+    <a *ngIf="canDelete()"
       (click)="onDeleteClick()"
       class="item">
       <div class="sam-ui negative button">Delete</div>
     </a>
     <div class="right menu" style="position: relative;">
-      <wrapper-fal-change-request-dropdown 
+      <wrapper-fal-change-request-dropdown
         *ngIf="changeRequestDropdown.permissions"
         [name]="changeRequestDropdown.config.name"
         [hint]="changeRequestDropdown.config.hint"
@@ -180,12 +181,23 @@
       </wrapper-fal-change-request-dropdown>
     </div>
   </div> -->
-  
+
   <!-- Intro segment -->
   <section id="program-information">
     <div class="sam-ui segment">
+
+      <!-- Edit Button -->
+      <a *ngIf="canEdit()"
+         (click)="onEditClick(['#header-information'])"
+         class="sam-ui top right attached mini blue label"
+         style="z-index: 1;">
+        Edit Section
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </a>
+
       <div class="sam-ui grid">
         <div class="column">
+
           <div class="sam-ui relaxed divided list">
 
             <div *ngIf="errorOrganization" class="item">
@@ -218,7 +230,7 @@
                   {{federalHierarchy.type | formatFederalHierarchyType}}
                 </div>
                 <div class="description">
-                  <inline-error-message 
+                  <inline-error-message
                     [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('FEDERAL_AGENCY'))">
                   </inline-error-message>
                   {{ federalHierarchy.name || federalHierarchy.agencyName }}
@@ -232,7 +244,7 @@
                   CFDA Number
                 </div>
                 <div class="description">
-                  <inline-error-message 
+                  <inline-error-message
                     [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('FALNO'))">
                   </inline-error-message>
                   {{program.data?.programNumber}}
@@ -264,7 +276,7 @@
             </div>
 
             <div class="item" *ngIf="program.data?.programNumber">
-              <a target="_blank" class="field" id="'grants-dot-gov-link" 
+              <a target="_blank" class="field" id="'grants-dot-gov-link"
                  href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
                 View available opportunities on Grants.gov related to this Assistance Listing
               </a>
@@ -275,50 +287,50 @@
       </div>
     </div>
   </section>
-  
+
   <!-- Overview Section -->
   <section id="program-overview">
 
     <a name="#/programs/{{programID}}/review#overview"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="overview">Overview</h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#overview'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
           <!-- Objectives -->
           <h3 class="sam-ui dividing header">Objectives</h3>
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('OBJECTIVE'))">
           </inline-error-message>
-          
+
           <p id="program-objective">
             {{program.data?.objective}}
           </p>
 
           <div class="sam-ui hidden divider"></div>
-          
+
           <!-- Examples of Funded Projects -->
           <h3 class="sam-ui dividing header">Examples of Funded Projects</h3>
           <div [ngSwitch]="program.data?.projects?.isApplicable">
             <ng-container *ngSwitchCase="true">
               <ng-container *ngFor="let item of program.data?.projects?.list; let i = index">
-                <p [attr.id]="'program-project-example-' + i" 
+                <p [attr.id]="'program-project-example-' + i"
                   *ngIf="!item.fiscalYear || (item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1)">
 
-                  <inline-error-message 
+                  <inline-error-message
                     [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNDED_PROJECTS'), true, i)">
                   </inline-error-message>
 
@@ -330,9 +342,9 @@
               Not Applicable
             </p>
           </div>
-          
+
           <!-- Assistance Listing Description -->
-          <ng-container 
+          <ng-container
             *ngIf="program.data?.description && program.data?.description != ''">
             <div class="sam-ui hidden divider"></div>
             <h3 class="sam-ui dividing header">Assistance Listing Description</h3>
@@ -349,10 +361,10 @@
             </div>
           </h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNCTIONAL_CODES'))">
           </inline-error-message>
-          
+
           <ng-container *ngIf="dictionariesUpdated === true && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
             <ng-container
               *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaryService.dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
@@ -362,16 +374,16 @@
             </ng-container>
             <div class="sam-ui hidden divider"></div>
           </ng-container>
-          
+
           <!-- Subject Terms -->
           <h3 class="sam-ui dividing header ">
             <i class="icon fa fa-lock" aria-hidden="true"></i>
             <div class="content">
-              Subject Terms 
+              Subject Terms
             </div>
           </h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('SUBJECT_TERMS'))">
           </inline-error-message>
 
@@ -389,36 +401,36 @@
     </div>
 
   </section>
-  
+
   <!-- Authorizations -->
   <section id="program-authorizations">
-    
+
     <a name="#/programs/{{programID}}/review#authorizations"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="authorizations">Authorizations</h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#authorization'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
-          
-          <inline-error-message 
+
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, 0, true)">
           </inline-error-message>
 
           <div *ngFor="let item of authorizationIdsGrouped; let i = index">
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, i)">
             </inline-error-message>
             <p [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
@@ -429,41 +441,41 @@
           </p>
         </div>
       </div>
-      
+
     </div>
 
   </section>
-  
+
   <!--Financials-->
   <section id="program-financials">
-    
+
     <a name="#/programs/{{programID}}/review#financial-information"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="financial-information">
       Financial Information
     </h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#financial-information-obligations'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached vertically padded">
         <div columns="12">
-          
-          <inline-error-message 
+
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, 0, true)">
           </inline-error-message>
-          
-          <table 
+
+          <table
             class="sam-ui table celled"
             *ngIf="dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
             <thead>
@@ -481,15 +493,15 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container 
+              <ng-container
                 *ngFor="let item of program.data?.financial?.obligations; let i=index">
                 <tr>
                   <td>
-                    <inline-error-message 
-                      [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, i, false, 'missingAssistanceType')" 
+                    <inline-error-message
+                      [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, i, false, 'missingAssistanceType')"
                       *ngIf="!item.assistanceType">
                     </inline-error-message>
-                    <ng-container 
+                    <ng-container
                       *ngIf="item.assistanceType">
                       {{ getAssistanceType(item.assistanceType) }}
                     </ng-container>
@@ -562,11 +574,11 @@
 
           <div [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
             <ng-container *ngSwitchCase="true">
-              <inline-error-message 
+              <inline-error-message
                 [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, 0, true)">
               </inline-error-message>
               <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
-                <inline-error-message 
+                <inline-error-message
                   [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, i)"
                   *ngIf="(item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1) || !item.fiscalYear">
                 </inline-error-message>
@@ -585,26 +597,26 @@
           <!-- Account Identification -->
           <h3 class="sam-ui dividing header">Account Identification</h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('ACCOUNT_IDENTIFICATION'), true, 0, true)">
           </inline-error-message>
 
           <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('ACCOUNT_IDENTIFICATION'), true, i)">
             </inline-error-message>
-            <span [attr.id]="'program-account-identification-' + i" 
+            <span [attr.id]="'program-account-identification-' + i"
               *ngIf="account.description">
               {{account.code}}-{{account.description}}
             </span>
-            <span [attr.id]="'program-account-identification-' + i" 
+            <span [attr.id]="'program-account-identification-' + i"
               *ngIf="!account.description">
               {{account.code}}
             </span>
           </p>
-          
+
           <div class="sam-ui hidden divider"></div>
-          
+
           <!-- TAFS Codes -->
           <h3 class="sam-ui dividing header ">
             <i aria-hidden="true" class="icon fa fa-lock"></i>
@@ -613,11 +625,11 @@
             </div>
           </h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, 0, true)">
           </inline-error-message>
 
-          <table 
+          <table
             class="sam-ui table celled"
             *ngIf="dictionariesUpdated === true && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
             <thead>
@@ -631,42 +643,42 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container 
+              <ng-container
                 *ngFor="let tafs of program.data.financial.treasury.tafs; let i=index">
                 <tr>
                   <!-- Table tafs data -->
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidDepartmentCode')">
                     </inline-error-message>
                     {{ tafs.departmentCode }}
                   </td>
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidAccountCode')">
                     </inline-error-message>
                     {{ tafs.accountCode }}
                   </td>
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidSubAccountCode')">
                     </inline-error-message>
                     {{ tafs.subAccountCode }}
                   </td>
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidTransferAgency')">
                     </inline-error-message>
                     {{ tafs.allocationTransferAgency }}
                   </td>
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidFY1')">
                     </inline-error-message>
                     {{ tafs.fy1 }}
                   </td>
                   <td>
-                    <inline-error-message 
+                    <inline-error-message
                       [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidFY2')">
                     </inline-error-message>
                     {{ tafs.fy2 }}
@@ -675,36 +687,36 @@
               </ng-container>
             </tbody>
           </table>
-          
+
         </div>
       </div>
-      
+
     </div>
-    
+
   </section>
 
   <!--Criteria for Applying-->
   <section id="program-application-criteria">
 
     <a name="#/programs/{{programID}}/review#criteria-for-applying"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="criteria-for-applying">
       Criteria for Applying
     </h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#criteria-information'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
           <!-- Types of Assistance -->
@@ -725,19 +737,19 @@
           <h3 class="sam-ui dividing header">Credentials and Documentation</h3>
 
           <p>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('DOCUMENTATION'))">
             </inline-error-message>
 
             <ng-container
               *ngIf="program.data?.eligibility?.documentation?.description && program.data?.eligibility?.documentation?.isApplicable == true">
-              
+
               <span id="program-elegibility-documentation">
                 {{program.data.eligibility?.documentation?.description}}
               </span>
 
               <ng-container *ngIf="program.data.compliance?.CFR200Requirements?.questions">
-                <ng-container 
+                <ng-container
                   *ngFor="let item of program.data.compliance?.CFR200Requirements?.questions">
                   <!-- OMBCircularA87 is subpartC-->
                   <ng-container *ngIf="item.code === 'subpartC'">
@@ -762,7 +774,7 @@
           <div class="sam-ui lightest blue segment"
                *ngIf="program.data && dictionariesUpdated === true">
             <h4 class="sam-ui header">Designations</h4>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('APPLICANT_LIST'))">
             </inline-error-message>
             <ng-container
@@ -787,7 +799,7 @@
           <div class="sam-ui lightest blue segment"
                *ngIf="program.data && dictionariesUpdated === true">
             <h4 class="sam-ui header">Designations</h4>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('BENEFICIARY_LIST'))">
             </inline-error-message>
             <ng-container
@@ -815,19 +827,19 @@
             Length and Time Phasing of Assistance
           </h3>
           <p>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('LENGTH_TIME_DESC'))">
             </inline-error-message>
             <span id="program-assistance-lengthtime">
               {{program.data?.eligibility?.limitation?.description}}
             </span>
 
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('AWARDED_TYPE'))">
             </inline-error-message>
-            <span id="program-assistance-method" 
+            <span id="program-assistance-method"
               *ngIf="program.data?.eligibility?.limitation?.awarded">
-              Method of awarding/releasing assistance: 
+              Method of awarding/releasing assistance:
               {{program.data.eligibility?.limitation?.awarded}}
             </span>
           </p>
@@ -840,7 +852,7 @@
           <div class="sam-ui lightest blue segment"
                *ngIf="program.data && dictionariesUpdated === true">
             <h4 class="sam-ui header">Designations</h4>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('ASS_USAGE_LIST'))">
             </inline-error-message>
 
@@ -853,7 +865,7 @@
           </div>
 
           <p>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('ASS_USAGE_DESC'))">
             </inline-error-message>
             <span id="program-usage-assistance-usage"
@@ -861,12 +873,12 @@
               {{ program.data?.eligibility?.assistanceUsage?.description }}
             </span>
 
-            <span id="program-usage-rules" 
+            <span id="program-usage-rules"
               *ngIf="program.data?.eligibility?.usage?.rules?.description">
               {{ program.data?.eligibility?.usage?.rules?.description }}
             </span>
 
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('USAGE_RESTRICTIONS'))">
             </inline-error-message>
             <span id="program-usage-restrictions"
@@ -874,7 +886,7 @@
               {{ program.data.eligibility?.usage?.restrictions?.description }}
             </span>
 
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('USE_DIS_FUNDS'))">
             </inline-error-message>
             <span id="program-usage-discretionary-fund"
@@ -890,33 +902,33 @@
           </p>
         </div>
       </div>
-      
+
     </div>
-    
+
   </section>
 
   <!--Applying for Assistance-->
   <section id="program-application-information">
 
     <a name="#/programs/{{programID}}/review#applying-for-assistance"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="applying-for-assistance">
       Applying for Assistance
     </h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#applying-for-assistance'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
           <!-- Deadlines -->
@@ -927,7 +939,7 @@
               <!-- repeat over all deadlines. -->
               <span *ngFor="let deadline of program.data?.assistance?.deadlines?.list; let i = index">
                 <span [attr.id]="'program-deadline-dates-' + i">
-                  <inline-error-message 
+                  <inline-error-message
                     [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('DEADLINES_LIST'), true, i)">
                   </inline-error-message>
                   <ng-container *ngIf="deadline.start">
@@ -943,12 +955,12 @@
             </ng-container>
 
             <p id="program-deadline-contact" *ngSwitchCase="'contact'">
-              Contact the headquarters or regional office, as appropriate for 
+              Contact the headquarters or regional office, as appropriate for
               application deadlines
             </p>
 
             <p id="program-deadline-na" *ngSwitchDefault>
-              <inline-error-message 
+              <inline-error-message
                 [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('DEADLINES'))">
               </inline-error-message>
             </p>
@@ -957,7 +969,7 @@
               {{program.data?.assistance?.deadlines?.description}}
             </p>
           </div>
-          
+
           <div class="sam-ui hidden divider"></div>
 
           <!-- Preapplication Coordination -->
@@ -1014,7 +1026,7 @@
               </ng-container>
 
               <!-- additional content-->
-              <inline-error-message 
+              <inline-error-message
                 [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('PREAPPCOORD_ADDITIONAL_INFO'))">
               </inline-error-message>
 
@@ -1033,15 +1045,15 @@
           <!-- Application Procedures -->
           <h3 class="sam-ui dividing header">Application Procedures</h3>
 
-          <ng-container 
+          <ng-container
             *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <ng-container *ngIf="item.code === 'subpartE'">
               <p *ngIf="item.isSelected == true" id="program-application-procedures-a102">
-                2 CFR 200, Uniform Administrative Requirements, Cost Principles, and 
+                2 CFR 200, Uniform Administrative Requirements, Cost Principles, and
                 Audit Requirements for Federal Awards applies to this program.
               </p>
               <p *ngIf="item.isSelected == false" id="program-application-procedures-a102">
-                This program is excluded from coverage under 2 CFR 200, Uniform 
+                This program is excluded from coverage under 2 CFR 200, Uniform
                 Administrative Requirements, Cost Principles, and Audit
                 Requirements for Federal Awards.
               </p>
@@ -1051,7 +1063,7 @@
           <!-- additional content-->
           <div id="program-application-procedures">
             <p *ngIf="program.data?.assistance?.applicationProcedure?.isApplicable">
-              Funding opportunities notices for this listing will be posted on 
+              Funding opportunities notices for this listing will be posted on
               <a href="https://www.grants.gov" target="_blank">Grants.gov</a>.
             </p>
             <p>{{program.data?.assistance?.applicationProcedure?.description}}</p>
@@ -1064,7 +1076,7 @@
 
           <ng-container [ngSwitch]="program.data?.assistance?.selectionCriteria?.isApplicable">
             <p id="program-selection-criteria" *ngSwitchCase="true">
-              <inline-error-message 
+              <inline-error-message
                 [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('SELECTION_CRITERIA_DESCRIPTION'))">
               </inline-error-message>
               {{program.data?.assistance?.selectionCriteria?.description}}
@@ -1089,7 +1101,7 @@
           <!-- Date Range for Approval/Disapproval -->
           <h3 class="sam-ui dividing header">Date Range for Approval/Disapproval</h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('APPROVAL_INTERVAL'))">
           </inline-error-message>
 
@@ -1114,7 +1126,7 @@
           <!-- Renewals -->
           <h3 class="sam-ui dividing header">Renewals</h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('RENEWAL_INTERVAL'))">
           </inline-error-message>
 
@@ -1139,11 +1151,11 @@
           <!-- Appeals -->
           <h3 class="sam-ui dividing header">Appeals</h3>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('APPEAL_INTERVAL'))">
           </inline-error-message>
 
-          <p id="program-application-appeal-interval" 
+          <p id="program-application-appeal-interval"
             [ngSwitch]="program.data?.assistance?.appeal?.interval">
             <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
             <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
@@ -1166,38 +1178,38 @@
 
   <!--Compliance requirements-->
   <section id="program-compliance-requirements">
-    
+
     <a name="#/programs/{{programID}}/review#compliance-requirements"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="compliance-requirements">
       Compliance Requirements
     </h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#compliance-requirements'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
-          
+
           <!-- Policy Requirements -->
           <h3 class="sam-ui dividing header">Policy Requirements</h3>
-          
-          <ng-container 
+
+          <ng-container
             *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length > 0">
             <p>
               The following 2CFR policy requirements apply to this assistance listing:
             </p>
-            
+
             <ng-container
               *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
               <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
@@ -1210,19 +1222,19 @@
                 </p>
               </ng-container>
             </ng-container>
-            
+
             <ng-container
               *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
               <p><em>Not Applicable</em></p>
             </ng-container>
-            
+
             <div class="sam-ui hidden divider"></div>
 
             <p>
-              The following 2CFR policy requirements are excluded from coverage under 
+              The following 2CFR policy requirements are excluded from coverage under
               this assistance listing:
             </p>
-            
+
             <ng-container
               *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
               <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
@@ -1235,12 +1247,12 @@
                 </p>
               </ng-container>
             </ng-container>
-            
+
             <p *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
               <em>Not Applicable</em>
             </p>
           </ng-container>
-          
+
           <p class="field" *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length == 0">
             <em>Not Applicable</em>
           </p>
@@ -1253,7 +1265,7 @@
           <p id="program-postaward-reports"
              *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length > 0">
             <ng-container *ngFor="let item of program.data?.compliance?.reports; let i = index">
-              <inline-error-message 
+              <inline-error-message
                 [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('COMPLIANCE_REPORTS'), true, '-textarea' + i)">
               </inline-error-message>
               <span *ngIf="item.isSelected == true" [attr.id]="'program-postaward-reports-' + item.code">
@@ -1268,7 +1280,7 @@
           <h3 class="sam-ui dividing header">Audits</h3>
 
           <p>
-            <ng-container 
+            <ng-container
               *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
               <ng-container *ngIf="item.code === 'subpartF'">
                 <span *ngIf="item.isSelected == true" id="program-postaward-audit-a133">
@@ -1286,7 +1298,7 @@
             </ng-container>
           </p>
 
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('OTHER_AUDIT_REQUIREMENTS'))">
           </inline-error-message>
 
@@ -1317,7 +1329,7 @@
           </h3>
 
           <p>
-            <inline-error-message 
+            <inline-error-message
               [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('ADDITIONAL_DOCUMENTATION'))">
             </inline-error-message>
 
@@ -1330,7 +1342,7 @@
 
           <!-- Formula and Matching Requirements -->
           <h3 class="sam-ui dividing header">Formula and Matching Requirements</h3>
-          
+
           <!-- statutory formula-->
           <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formula">
             <div id="program-assistance-formula" *ngSwitchCase="true">
@@ -1348,7 +1360,7 @@
           </ng-container>
 
           <!-- matching requirements -->
-          <ng-container 
+          <ng-container
             [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
             <div id="program-assistance-matching" *ngSwitchCase="true">
               Matching Requirements:
@@ -1388,58 +1400,58 @@
               MOE requirements are not applicable to this assistance listing.
             </div>
           </ng-container>
-          
+
         </div>
       </div>
     </div>
-    
+
   </section>
 
   <!--Contact information-->
   <section id="program-contact-information">
-    
+
     <a name="#/programs/{{programID}}/review#contact-information"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="contact-information">Contact Information</h2>
-    
+
     <div class="sam-ui segment">
-      
+
       <!-- Edit Button -->
-      <a *ngIf="canEdit()" 
+      <a *ngIf="canEdit()"
         (click)="onEditClick(['#contact-information'])"
         class="sam-ui top right attached mini blue label"
         style="z-index: 1;">
         Edit Section
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </a>
-      
+
       <div grid class="attached">
         <div columns="12">
-          
+
           <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
-          
-          <span id="program-contacts-local" 
-            *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> 
-            <a [routerLink]="['/search/fal/regionalOffices']" 
+
+          <span id="program-contacts-local"
+            *ngIf="program.data?.contacts?.local?.flag == 'appendix'">
+            <a [routerLink]="['/search/fal/regionalOffices']"
               [queryParams]="{ organizationId: federalHierarchy?.orgKey }">
               See Regional Agency Offices.
-            </a> 
+            </a>
             {{program.data.contacts['local']?.description }}
           </span>
-          
-          <span id="program-contacts-local" 
-            *ngIf="program.data?.contacts?.local?.flag == 'none'"> 
+
+          <span id="program-contacts-local"
+            *ngIf="program.data?.contacts?.local?.flag == 'none'">
             None. {{program.data.contacts['local']?.description }}
           </span>
 
           <h3 class="sam-ui dividing header">Headquarters Office:</h3>
-          
-          <inline-error-message 
+
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, 0, true)">
           </inline-error-message>
-          
+
           <div *ngFor="let item of items; let i = index">
             <inline-error-message [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, i)">
             </inline-error-message>
@@ -1447,10 +1459,10 @@
           </div>
 
           <strong>Website: </strong>
-          <inline-error-message 
+          <inline-error-message
             [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_WEBSITE'))">
           </inline-error-message>
-          
+
           <ng-container *ngIf="!program.data?.website || program.data?.website == null ">
             No Data Available
           </ng-container>
@@ -1459,37 +1471,37 @@
           </ng-container>
 
           <div *ngIf="toggleButton" class="sam-ui section divider"></div>
-          <div *ngIf="historyElement" 
-            class="sticky-element" 
-            sticky-element 
+          <!--<div *ngIf="historyElement"
+            class="sticky-element"
+            sticky-element
             [element]="historyElement">
             <ng-container *ngFor="let text of buttonText; let i=index;">
-              <sam-button 
-                *ngIf="toggleButton" 
+              <sam-button
+                *ngIf="toggleButton"
                 [buttonText]="text"
                 (onClick)="onButtonClick(text)"
                 [buttonDisabled]="enableDisableBtn">
               </sam-button>
             </ng-container>
-          </div>
+          </div>-->
         </div>
       </div>
-    
+
     </div>
-    
+
   </section>
 
   <!--History Section-->
   <section #historySection id="program-history">
-    
+
     <a name="#/programs/{{programID}}/view#history"></a>
-    
+
     <div class="sam-ui hidden divider"></div>
-    
+
     <h2 class="sam-ui header" id="history">
       {{actionHistoryAndNote && !publicHistoryIsVisible ? "Action History" : "History"}}
     </h2>
-    
+
     <div class="sam-ui segment">
       <sam-checkbox
         *ngIf="actionHistoryAndNote"
@@ -1499,7 +1511,7 @@
         [options]="checkboxConfig.options"
         (modelChange)="showHidePublicHistory($event)">
       </sam-checkbox>
-      
+
       <div class="sam-ui info message"
         *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
         <div class="header">
@@ -1507,36 +1519,36 @@
           This history is only visible to managers of this listing
         </div>
       </div>
-      
+
       <div class="sam-ui message"
         *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
         <strong>Created By: </strong>
         {{actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ?
         actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}
-        
+
         <strong> On: </strong>
         {{actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ?
         actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "Not Available" }}
       </div>
-      
+
       <div class="sam-ui message"
         *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
         <strong>Last Modified By: </strong>
-        {{actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "Not Available" }} 
+        {{actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "Not Available" }}
         <strong>On: </strong>
         {{actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "Not Available" }}
       </div>
-      
+
       <ng-container *ngIf="publicHistoryIsVisible">
         <sam-history [data]="history"></sam-history>
       </ng-container>
-      
-      <sam-history 
-        *ngIf="!publicHistoryIsVisible" 
+
+      <sam-history
+        *ngIf="!publicHistoryIsVisible"
         [data]="actionHistoryAndNote">
       </sam-history>
     </div>
-    
+
   </section>
-  
+
 </page>

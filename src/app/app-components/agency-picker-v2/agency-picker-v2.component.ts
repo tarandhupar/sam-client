@@ -32,6 +32,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     @Input() limit;
     @Input() defaultDept:boolean = false;
     @Input() searchMessage: '';
+    @Input() editOnFlag: boolean = true;
 
     orgLevels: any[] = [];
 
@@ -312,10 +313,11 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 let orgs = this.formatHierarchy(res["_embedded"]['orgs']);
                 for(let idx in orgs){
                     let val = orgs[idx];
-                    this.addSelection(val,false);
+                    this.addSelection(val,this.editOnFlag);
                 }
             });
         } else {
+
             this.selections = value;
         }
     }

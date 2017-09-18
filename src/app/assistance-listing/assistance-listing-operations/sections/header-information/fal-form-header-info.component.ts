@@ -68,6 +68,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.createForm();
     this.populateMultiList();
     this.getOrganizationLevels();
+
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
@@ -146,7 +147,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
     let orgId = '';
 
     if(data.federalAgency) {
-      orgId = data.federalAgency.orgKey;
+      if(typeof data.federalAgency === 'object')
+        orgId = data.federalAgency.orgKey;
+      else
+        orgId = data.federalAgency;
+
       this.getFHConfig(orgId, data['programNumber']);
     }
     else {
@@ -220,6 +225,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
   getFHConfig(orgId, progNo){
 
     this.service.getFederalHierarchyConfiguration(orgId).subscribe(data => {
+
       this.autoProgNoGeneration = data.programNumberAuto;
 
       if(!this.autoProgNoGeneration) {
@@ -264,10 +270,11 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.markAndUpdateFieldStat('federalAgency');
 
     this.falHeaderInfoForm.get('programNumber').clearValidators();
-    this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
-      return control.errors
-    });
+
     this.errorService.validateHeaderProgNo().subscribe(res => {
+      this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
+        return control.errors;
+      });
       this.falHeaderInfoForm.get('programNumber').setErrors(res.errors);
       this.markAndUpdateFieldStat('programNumber');
       this.showErrors.emit(this.errorService.applicableErrors);
@@ -305,6 +312,9 @@ export class FALFormHeaderInfoComponent implements OnInit {
           this.organizationData = data['_embedded'][0]['org'];
           if (this.viewModel.isNew && !this.toggleAgencyPicker) {
             this.getFHConfig(this.organizationData.orgKey, '');
+            this.falHeaderInfoForm.get('federalAgency').patchValue(this.organizationData.orgKey, {
+              emitEvent: false
+            });
           }
         }
       }, error => {

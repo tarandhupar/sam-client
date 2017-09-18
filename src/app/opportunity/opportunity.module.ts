@@ -10,9 +10,11 @@ import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { OpportunityFormModule } from './opportunity-operations/opportunity-form.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
+    FormsModule,
     PipesModule,
     CommonModule,
     routing,

@@ -2,13 +2,12 @@
   <ul class="usa-sidenav-list m_B-4x border-top-black border-bottom-black">
     <li class="relative" *ngIf="isCurrentSection('requests')">
       <a [ngClass]="getCurrentTabClass('requests')" (click)="onSectionTabClick('requests')">Requests</a>
-      <span class="request-total-count" *ngIf="!isCurrentPath('requests/sent') && !isCurrentPath('requests/received')">{{requestTotalCount}}</span>
+      <span class="request-total-count" *ngIf="!isCurrentPath('requests/sent') && !isCurrentPath('requests/received')">{{recievedCount}}</span>
     </li>
     <ul class="usa-sidenav-list border-top-black sublist" *ngIf="isCurrentSection('requests')">
       <li class="relative"><a [ngClass]="getCurrentTabClass('requests/sent')" (click)="onSectionTabClick('requests/sent')">Sent</a>
-        <span class="request-total-count" *ngIf="isCurrentPath('requests/sent')">{{requestSentTotalCount}}</span></li>
       <li class="relative"><a [ngClass]="getCurrentTabClass('requests/received')" (click)="onSectionTabClick('requests/received')">Received</a>
-        <span class="request-total-count" *ngIf="isCurrentPath('requests/received')">{{requestReceivedTotalCount}}</span></li>
+        <span class="request-total-count" *ngIf="isCurrentPath('requests/sent') || isCurrentPath('requests/received')">{{recievedCount}}</span></li>
     </ul>
     <li *ngIf="isCurrentSection('notifications')">
       <a [ngClass]="getCurrentTabClass('notifications')" (click)="onSectionTabClick('notifications')">Notifications</a>
@@ -25,7 +24,7 @@
     <input placeholder="Find Message" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
   </div>
 
-  <div class="usa-width-one-whole m_B-4x" *ngIf="cbxControl.requestType">
+  <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0">
     <div class="usa-width-three-fourths">
       <sam-checkbox
         [(model)]="filterOption.requestType"
@@ -36,16 +35,17 @@
         (modelChange)="msgFilterOptionChange()">
       </sam-checkbox>
     </div>
-    <div class="usa-width-one-fourth m_T-5x p_T-2x">
+    <div class="usa-width-one-fourth m_T-5x p_T-2x" *ngIf="!isCurrentPath('requests/sent')">
       <ul class="usa-unstyled-list">
         <li class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options">
-          <label class="m_T-0 request-count pull-right m_R-2x">{{getRequestTypeCount(option)}}</label>
+          <label class="m_T-0 request-count pull-right m_R-2x" *ngIf="hasActiveItem(option)">{{option.count}}</label>
+          <label class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">&nbsp;</label>
         </li>
       </ul>
     </div>
   </div>
 
-  <div class="m_B-4x" *ngIf="cbxControl.status">
+  <div class="m_B-4x" *ngIf="statusCbxConfig.options.length > 0">
     <sam-checkbox
       [(model)]="filterOption.status"
       [name]="statusCbxConfig.name"
@@ -56,7 +56,7 @@
     </sam-checkbox>
   </div>
 
-  <div class="m_B-4x" *ngIf="cbxControl.alertType">
+  <div class="m_B-4x" *ngIf="alertTypeCbxConfig.options.length > 0">
     <sam-checkbox
       [(model)]="filterOption.alertType"
       [name]="alertTypeCbxConfig.name"
@@ -67,7 +67,7 @@
     </sam-checkbox>
   </div>
 
-  <div class="m_B-4x" *ngIf="cbxControl.domains">
+  <div class="m_B-4x" *ngIf="domainsCbxConfig.options.length > 0">
     <sam-checkbox
       [(model)]="filterOption.domains"
       [name]="domainsCbxConfig.name"

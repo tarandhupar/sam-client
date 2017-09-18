@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import * as _ from 'lodash';
 import { Title } from "@angular/platform-browser";
 
@@ -11,7 +11,7 @@ import { Title } from "@angular/platform-browser";
 export class RoleDetailsPage {
   crumbs = [
     { url: '/workspace', breadcrumb: 'Workspace'},
-    { url: '/access/workspace', breadcrumb: 'Definitions'},
+    { url: '/role-managmement/workspace', breadcrumb: 'Definitions'},
     { breadcrumb: ''}
   ];
   mode: 'edit'|'new'|'old' = 'new';
@@ -163,29 +163,49 @@ export class RoleDetailsPage {
         if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
           this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
             if (this.mode === 'new') {
-              return {
-                id: f.function.id,
-                name: f.function.val,
-                permissions: f.permission.map(perm => {
+              let perms = f.permission.map(perm => {
+                if (perm) {
                   return {
                     label: perm.val,
                     value: perm.id,
                     isDefault: false,
                     isSelected: false,
                   };
-                })
+                } else {
+                  return {
+                    label: 'ERROR',
+                    value: -1,
+                    isSelected: false,
+                    isDefault: false,
+                  }
+                }
+
+              });
+              return {
+                id: f.function.id,
+                name: f.function.val,
+                permissions: perms
               };
             } else if (this.mode === 'edit') {
               return {
                 id: f.function.id,
                 name: f.function.val,
                 permissions: f.permission.map(perm => {
-                  return {
-                    label: perm.val,
-                    value: perm.id,
-                    isDefault: false,
-                    isSelected: false,
-                  };
+                  if (perm) {
+                    return {
+                      label: perm.val,
+                      value: perm.id,
+                      isDefault: false,
+                      isSelected: false,
+                    };
+                  } else {
+                    return {
+                      label: 'ERROR',
+                      value: -1,
+                      isSelected: false,
+                      isDefault: false,
+                    }
+                  }
                 })
               };
             } else {
@@ -328,7 +348,7 @@ export class RoleDetailsPage {
             type: 'success',
             timer: 3200,
           });
-          this.router.navigateByUrl('/access/workspace');
+          this.router.navigateByUrl('/role-management/workspace');
         },
         err => {
           if (err.status === 409) {
@@ -360,7 +380,7 @@ export class RoleDetailsPage {
       return typeof dr.id !== 'undefined';
     });
 
-    let allFuncs = this.permissionOptions.map(obj => {
+    let allFuncs = this.permissionOptions.filter(obj => obj.val !== -1).map(obj => {
       if (+obj.id === 0) {
         return;
       }

@@ -8,7 +8,7 @@ import {
   NavigationExtras
 } from '@angular/router';
 import { Cookie } from 'ng2-cookies';
-import {error} from "../../alerts/alerts-test-data.spec";
+import {error} from "../../app-components/alert-header/alerts-test-data.spec";
 
 @Injectable()
 export class AACRequestGuard implements CanActivate {

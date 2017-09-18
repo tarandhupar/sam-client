@@ -17,26 +17,33 @@ import * as moment from 'moment/moment';
           <p *ngIf="latestDescription!=null">
             <span [innerHTML]="latestDescription.content | slice:0:150"></span>...
           </p>
-          <p *ngIf="data.description!=null && data.description.length<150">
-            <span [innerHTML]="data.description"></span>
+          <p class= "service-classification">
+            <strong>Service Classifications</strong><br>
+            <span *ngIf="data.psc">{{data.psc[0]?.value}}</span><br>
+            <span *ngIf="data.naics">{{data.naics[0]?.value}}</span>
           </p>
           <ul class="sam-ui small list">
             <li *ngIf="data.type?.value == 'Award Notice'">
             <strong>Awardee</strong><br>
-            <span>{{data.award?.awardee?.name}} <span *ngIf="data.award?.awardee?.duns!=null && data.award?.awardee?.duns.length > 0">({{data.award?.awardee?.duns}})</span></span>
+            <span>{{data.award?.awardee?.name}} <span *ngIf="data.award?.awardee?.duns!=null && data.award?.awardee?.duns?.length > 0">({{data.award?.awardee?.duns}})</span></span>
             </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Department/Ind. Agency</strong><br>
-              <a *ngIf="data.isActive==true && data.organizationHierarchy[0].organizationId.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
+              <a *ngIf="data.isActive==true && data.organizationHierarchy[0]?.organizationId?.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
                 {{data.organizationHierarchy[0]?.name}}
               </a>
-              <span *ngIf="data.organizationHierarchy[0].organizationId.length >= 12">
+              <span *ngIf="data.organizationHierarchy[0]?.organizationId?.length >= 12">
                 {{data.organizationHierarchy[0]?.name}}
               </span>
             </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Sub-tier</strong><br>
-              {{ data.organizationHierarchy[1]?.name }}
+              <a *ngIf="data.isActive==true && data.organizationHierarchy[1]?.organizationId?.length < 12" [routerLink]="['/organization', data.organizationHierarchy[1].organizationId]" [queryParams]="qParams">
+                {{data.organizationHierarchy[1]?.name}}
+              </a>
+              <span *ngIf="data.organizationHierarchy[1]?.organizationId?.length >= 12">
+                {{data.organizationHierarchy[1]?.name}}
+              </span>
             </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Office</strong><br>
@@ -62,8 +69,16 @@ import * as moment from 'moment/moment';
               <br>
               {{ data.solicitationNumber }}
             </li>
-            <li class="item">
-              <strong>Posted Date</strong><br>
+            <li *ngIf="data.responseDate" class="item">
+              <strong>Current Response Date</strong><br>
+              {{ data.responseDate  }}
+            </li>
+            <li *ngIf="data.modifiedDate" class="item">
+              <strong>Last Modified Date</strong><br>
+              {{ data.modifiedDate  }} <a *ngIf="data.modifications?.count > 0" [routerLink]="['/opportunities', data._id]" [queryParams]="qParams" fragment="{{oppHistoryFragment}}">({{ data.modifications?.count}})</a>
+            </li>
+            <li *ngIf="data.publishDate" class="item">
+              <strong>Last Published Date</strong><br>
               {{ data.publishDate  }}
             </li>
             <li class="item">
@@ -75,10 +90,9 @@ import * as moment from 'moment/moment';
                 {{data.originalType?.value}}
               </ng-container>
             </li>
-            <li class= "service-classification">
-            <strong>Service Classifications</strong><br>
-            <span *ngIf="data.psc != null">{{data?.psc[0].value}}</span><br>
-            <span *ngIf="data.naics != null">{{data?.naics[0].value}}</span>
+            <li *ngIf="data.solicitation?.setAside" class="item">
+              <strong>Primary Set Aside</strong><br>
+              <span>{{data.solicitation?.setAside?.value}}</span><br>
             </li>
           </ul>
         </div>
@@ -90,10 +104,20 @@ export class OpportunitiesResult implements OnInit{
   @Input() data: any;
   @Input() qParams:any = {};
   latestDescription: string;
+  oppHistoryFragment: string = 'opportunity-history';
   constructor() {}
 
   ngOnInit(){
-    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    if(this.data.publishDate){
+      this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    }
+    if(this.data.responseDate){
+      this.data.responseDate = moment(this.data.responseDate).format("MMM D, Y");
+    }
+    if(this.data.modifiedDate){
+      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y");
+    }
+
     if (this.data.descriptions) {
       let sorted = this.data.descriptions.sort((d1, d2) => {
         if (d1['lastModifiedDate'] > d2['lastModifiedDate']) {

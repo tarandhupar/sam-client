@@ -16,7 +16,7 @@ import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
-import { AlertFooterService } from '../alerts/alert-footer';
+import { AlertFooterService } from '../app-components/alert-footer';
 import {SearchMultiSelectFilter} from "./search-multi-select-filter/search-multi-select-filter.component";
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";

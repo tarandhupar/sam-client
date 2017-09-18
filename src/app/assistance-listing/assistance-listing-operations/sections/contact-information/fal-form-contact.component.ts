@@ -1,12 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, Input, Output, ViewChildren, ViewChild, EventEmitter,QueryList } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl,Validators } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
+import { LocationService } from 'api-kit/location/location.service';
 import { UUID } from "angular2-uuid";
 import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 import * as _ from 'lodash';
+import { SamPOCEntryComponent } from "../../../../app-components/poc-entry";
+import { Observable } from "rxjs";
 
 @Component({
   providers: [FALFormService],
@@ -16,6 +19,8 @@ import * as _ from 'lodash';
 export class FALFormContactInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
+  @ViewChildren('poc') pocs: QueryList<SamPOCEntryComponent>;
+  @ViewChild('contactLB') contactLB;
   falContactInfoForm: FormGroup;
   progTitle: string;
   hideAddButton: boolean = false;
@@ -28,10 +33,11 @@ export class FALFormContactInfoComponent implements OnInit {
   mode: string;
   contactDrpDwnInfo = [];
   sectionStatus: string = '';
-  contactDrpDwnOptions = [{label: "None Selected", value: 'na'},
-    {label: "New Contact", value: 'new'}];
+  contactDrpDwnOptions = [{value: "New Contact", key: 'new'}];
+  contactNameOptions = [];
+  contactEmailOptions = [];
 
-  stateDrpDwnOptions = [{label: "None Selected", value: 'na'}];
+  stateDrpDwnOptions = [{value: "None Selected", key: 'na'}];
   countryDrpDwnOptions = [];
 
   contactadditionalInforamtionHint:string = `<p>Identify Federal regional or local offices that may be contacted about this listing.</p>
@@ -52,16 +58,18 @@ export class FALFormContactInfoComponent implements OnInit {
                         <p>List the Website address of the administering office at the headquarters level.</p>`;
   constructor(private fb: FormBuilder,
               private service: FALFormService,
-              private errorService: FALFormErrorService) {
+              private errorService: FALFormErrorService,
+              private locationService: LocationService,
+              private cdr: ChangeDetectorRef) {
 
 
     this.service.getContactDict().subscribe(data => {
       for (let state of data['states']) {
-        this.stateDrpDwnOptions.push({label: state.value, value: state.code});
+        this.stateDrpDwnOptions.push({value: state.value, key: state.code});
       }
 
       for (let country of data['countries']) {
-        this.countryDrpDwnOptions.push({label: country.value, value: country.code});
+        this.countryDrpDwnOptions.push({value: country.value, key: country.code});
       }
     });
 
@@ -69,10 +77,22 @@ export class FALFormContactInfoComponent implements OnInit {
       for (let contact of api._embedded.contacts) {
 
         this.contactDrpDwnOptions.push({
-          label: contact.fullName + ", " + contact.email,
-          value: contact.contactId
+          value: contact.fullName + ", " + contact.email,
+          key: contact.contactId
         });
-
+        if(contact.email){
+          this.contactNameOptions.push({
+            key: contact.fullName,
+            value: contact.fullName
+          });
+        }
+        if(contact.email){
+          this.contactEmailOptions.push({
+            key: contact.email,
+            value: contact.email
+          });
+        }
+        this.contactDrpDwnOptions = this.contactDrpDwnOptions.slice();
         this.contactDrpDwnInfo[contact.contactId] = contact;
       }
 
@@ -110,7 +130,7 @@ export class FALFormContactInfoComponent implements OnInit {
       'website': ['', falCustomValidatorsComponent.checkURLPattern],
       'useRegionalOffice': '',
       'additionalInfo': '',
-      'contacts': this.fb.array([], falCustomValidatorsComponent.atLeastOneEntryCheck)
+      'contacts': this.fb.array([])
     });
 
     setTimeout(() => { // horrible hack to trigger angular change detection
@@ -130,17 +150,19 @@ export class FALFormContactInfoComponent implements OnInit {
 
   initContacts() {
     return this.fb.group({
-      contactId: ['na'],
-      title: [''],
-      fullName: [''],
-      email: ['', [falCustomValidatorsComponent.checkEmailPattern,Validators.required]],
-      phone: [''],
-      fax: [''],
-      streetAddress: [''],
-      city: [''],
-      state: ['na', falCustomValidatorsComponent.selectRequired],
-      zip: [''],
-      country: ['US']
+      poc:[{
+        contactId: 'na',
+        title: '',
+        fullName: '',
+        email: '',
+        phone: '',
+        fax: '',
+        streetAddress: '',
+        city: '',
+        state: '',
+        zip: '',
+        country: {key:"USA",value:'United States'}
+      },SamPOCEntryComponent.pocValidations]
     });
   }
 
@@ -245,12 +267,50 @@ export class FALFormContactInfoComponent implements OnInit {
 
     let headquarters = this.viewModel.headquarters;
     let index = 0;
-    const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-    for (let contact of headquarters) {
-      let c = this.initContacts();
-      c.patchValue(contact);
-      control.push(c);
-    }
+    let contacts = <FormArray>this.falContactInfoForm.controls['contacts'];
+
+    Observable.zip(
+      this.locationService.getAllStates("USA"),
+      this.locationService.getAllContries(),
+      function(data1,data2){
+        return {
+          state: data1,
+          country: data2,
+        }
+      }
+    ).subscribe((data)=>{
+      const control = contacts;
+      for (let contact of headquarters) {
+        let c = this.initContacts();
+        if(contact.state){
+          let obj = {};
+          obj['key'] = contact.state;
+          let stateObj = data['state']._embedded.stateList.find((row)=>{
+            if(contact.state==row.stateCode){
+              return true;
+            }
+          });
+          obj['value'] = stateObj && stateObj['state'] ? stateObj['state'] : obj['key'];
+          contact.state = obj;
+        }
+        if(contact.country){
+          let obj = {};
+          obj['key'] = contact.country;
+          let countryObj = data['country']._embedded.countryList.find((row)=>{
+            if(contact.country==row.countrycode){
+              return true;
+            }
+          });
+          obj['value'] = countryObj && countryObj['country'] ? countryObj['country'] : obj['key'];
+          contact.country = obj;
+        }
+        c.patchValue({
+          poc:contact
+        });
+        control.push(c);
+      }
+      this.contactLB.setupModel();
+    });
 
     this.contactsInfo = this.falContactInfoForm.value.contacts;
 
@@ -265,20 +325,27 @@ export class FALFormContactInfoComponent implements OnInit {
     let contacts = [];
     let regLocalOffice = '';
     let counter = 0;
-
-    for (let contact of this.falContactInfoForm.value.contacts) {
+    let formContactsArr = _.cloneDeep(this.falContactInfoForm.value.contacts);
+    for (let contact of formContactsArr) {
       let generateUUID = false;
 
-      if (contact.contactId == 'na' || contact.contactId == 'new') {
+      if (contact.poc.contactId == 'na' || contact.poc.contactId == 'new') {
         generateUUID = true;
       }
 
       if (generateUUID) {
         let uuid = UUID.UUID().replace(/-/g, "");
-        contact.contactId = uuid;
+        contact.poc.contactId = uuid;
       }
 
-      contacts.push(contact);
+      if(contact.poc.state && typeof contact.poc.state == "object"){
+        contact.poc.state = contact.poc.state['key'];
+      }
+      if(contact.poc.country && typeof contact.poc.country == "object"){
+        contact.poc.country = contact.poc.country['key'];
+      }
+
+      contacts.push(contact.poc);
       counter++;
     }
 
@@ -304,7 +371,6 @@ export class FALFormContactInfoComponent implements OnInit {
 
     this.viewModel.website = data.website;
     this.viewModel.contacts = data.contacts;
-
     setTimeout(() => {
       this.updateErrors();
     });
@@ -312,30 +378,7 @@ export class FALFormContactInfoComponent implements OnInit {
 
   private updateSubformErrors(){
     this.errorService.viewModel = this.viewModel;
-    this.setSubFormErrors(this.errorService.validateContactList());
     this.showErrors.emit(this.errorService.applicableErrors);
-  }
-
-  private setSubFormErrors(contactsErrorList){
-    this.subFormErrorIndex = {};
-    if(contactsErrorList) {
-      let fieldList = ['fullName', 'email', 'phone', 'fax', 'streetAddress', 'city', 'state', 'zip'];
-
-      for(let errObj of contactsErrorList.errorList){
-        if(!errObj.errors['noContact']) {
-          let id = errObj.id;
-          id = id.substr(id.length - 1);
-
-          for(let fieldName of fieldList) {
-            let fcontrol = this.falContactInfoForm.controls['contacts']['controls'][id].get(fieldName);
-            fcontrol.markAsDirty();
-            fcontrol.updateValueAndValidity({onlySelf: true, emitEvent: true});
-          }
-
-          this.subFormErrorIndex[id] = true;
-        }//end of if
-      }//end of for
-    }//end of if
   }
 
   private updateErrors() {
@@ -344,10 +387,12 @@ export class FALFormContactInfoComponent implements OnInit {
     if(contactErrors){
       let formArr = <FormArray>this.falContactInfoForm.get('contacts');
       if(contactErrors.errorList[0]['errors']['noContact']){
-        formArr.setErrors(contactErrors.errorList[0]['errors']);
+        formArr.setErrors(contactErrors.errorList[0]['errors'],{emitEvent:true});
+      } else {
+        this.contactLB.wrapper.clearError();
       }
+      this.cdr.detectChanges();
     }
-
 
     this.falContactInfoForm.get('website').clearValidators();
     this.falContactInfoForm.get('website').setValidators((control) => { return control.errors });
@@ -366,17 +411,19 @@ export class FALFormContactInfoComponent implements OnInit {
   }
 
   contactsSubform:FormGroup = this.fb.group({
-    contactId: ['na'],
-    title: [''],
-    fullName: [''],
-    email: ['', [falCustomValidatorsComponent.checkEmailPattern,Validators.required]],
-    phone: [''],
-    fax: [''],
-    streetAddress: [''],
-    city: [''],
-    state: ['na', falCustomValidatorsComponent.selectRequired],
-    zip: [''],
-    country: ['US']
+    poc:[{
+      contactId: 'na',
+      title: '',
+      fullName: '',
+      email: '',
+      phone: '',
+      fax: '',
+      streetAddress: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: {key:"USA",value:'United States'}
+    },SamPOCEntryComponent.pocValidations]
   });
 
   contactsFormArrayChange(data){
@@ -401,6 +448,9 @@ export class FALFormContactInfoComponent implements OnInit {
       this.updateErrors();
     } else if (event=="edit"){
       this.mode = "Edit";
+    } else if (event=="delete"){
+      formArray.markAsDirty();
+      this.updateErrors();
     }
   }
 }

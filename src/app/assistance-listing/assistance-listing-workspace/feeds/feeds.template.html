@@ -14,14 +14,14 @@
           Assistance Listings
         </a>
       </li>
-      <li>
+      <li *ngIf="permissions['CREATE_RAO']">
         <a routerLink="/fal/myRegionalOffices">
           Manage Assistance Locations
         </a>
       </li>
       <li>
-        <a routerLink="/fal/workspace/cfda-numbers">
-          CFDA Numbers
+        <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
+          CFDA Number Management
         </a>
       </li>
       <li>

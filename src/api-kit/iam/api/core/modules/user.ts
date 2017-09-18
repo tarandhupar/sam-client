@@ -19,7 +19,7 @@ function yesOrNo(value) {
 function getMockUserAccount() {
   const answer = '        ';
 
-  return {
+  return merge(User.getCache(), {
     _id: 'doe.john@gsa.gov',
     email: 'doe.john@gsa.gov',
 
@@ -32,8 +32,8 @@ function getMockUserAccount() {
     workPhone: '12401234568',
 
     departmentID: 100006688,
-    agencyID: 0,
-    officeID: 100173623,
+    agencyID: 0, // 100141921
+    officeID: 0, // 100170334
 
     kbaAnswerList: [
       { questionId: 1, answer: answer },
@@ -76,7 +76,7 @@ function getMockUserAccount() {
         templated: true
       }
     }
-  };
+  });
 }
 
 /**
@@ -295,17 +295,17 @@ export const user = {
 
     if(auth) {
       // Verify User Session Cache
-      if(Cookies.getJSON('IAMSession')) {
-        $success(new User(Cookies.getJSON('IAMSession')));
+      if(User.getCache()) {
+        $success(new User(User.getCache()));
       } else {
         request
           .get(endpoint)
           .set(auth)
-          .then(function(response) {
+          .then(response => {
             let $user: User = new User(response.body);
-            Cookies.set('IAMSession', response.body, config.cookies(15));
+            User.updateCache(response.body);
             $success($user);
-          }, function(response) {
+          }, response => {
             core.$base.removeSession();
             $error(exceptionHandler(response.body));
           });
@@ -362,7 +362,8 @@ export const user = {
 
     data.emailNotification = yesOrNo(data.emailNotification);
 
-    if(logger(data)) {
+    if(logger(merge(User.getCache() || {}, userData))) {
+      User.updateCache(data);
       return;
     }
 
@@ -371,9 +372,8 @@ export const user = {
         .patch(endpoint)
         .set(auth)
         .send(data)
-        .then((response) => {
-          let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
-          Cookies.set('IAMSession', $user, config.cookies(15));
+        .then(response => {
+          User.updateCache(data);
           $success(response.body);
         }, $error);
     } else {
@@ -408,6 +408,11 @@ export const user = {
 
   isSignedIn() {
     if(isDebug()) {
+      // Allow other modules that depend on IAMSession for checking user session to use debug mode
+      if(!User.getCache()) {
+        User.updateCache(getMockUserAccount());
+      }
+
       return this.states.auth;
     } else {
       return Cookies.get('iPlanetDirectoryPro') ? true : false;
@@ -418,7 +423,7 @@ export const user = {
     if(isDebug()) {
       return this.states.fsd;
     } else {
-      const user = new User(Cookies.getJSON('IAMSession') || {});
+      const user = new User(User.getCache() || {});
       return this.isSignedIn() && user['fsd'] ? true : false;
     }
   },
@@ -427,7 +432,7 @@ export const user = {
     if(isDebug()) {
       return this.states.system;
     } else {
-      const user = new User(Cookies.getJSON('IAMSession') || {});
+      const user = new User(User.getCache() || {});
       return this.isSignedIn() && user['systemAccount'] ? true : false;
     }
   }

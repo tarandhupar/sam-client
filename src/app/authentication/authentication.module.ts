@@ -12,7 +12,6 @@ import { AuthenticationService } from './authentication.service.ts';
 import { AuthenticationRouter } from './authentication.route';
 
 // Page Components
-import { LoginComponent } from './login';
 import { RegisterGuard, RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
 import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
@@ -31,11 +30,6 @@ import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetC
   ],
 
   declarations: [
-    /**
-     * Login
-     */
-    LoginComponent,
-
     /**
      * Register
      */

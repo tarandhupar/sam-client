@@ -13,14 +13,13 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     routing,
     SamUIKitModule,
     CommonModule,
-	AppComponentsModule
+	  AppComponentsModule
   ],
   exports: [
     EntityPage,
     CommonModule,
     EntityObjectPOC,
     EntityObjectAddress
-    
   ],
   declarations: [
     EntityPage,

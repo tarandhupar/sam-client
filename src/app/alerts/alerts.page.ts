@@ -5,11 +5,11 @@ import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.s
 import { Observable } from "rxjs";
 import { Cookie } from 'ng2-cookies';
 import moment = require("moment");
-import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";
 import { AlertItemComponent } from "./alert-item/alert-item.component"
 import { IAMService } from "api-kit";
 import { UserAccessService } from "../../api-kit/access/access.service";
-import { UserAccessModel } from "../../app/users/access.model";
+import { UserAccessModel } from "../role-management/access.model";
 import { Location } from "@angular/common";
 
 export const ALERTS_PER_PAGE: number = 5;
@@ -25,8 +25,6 @@ export class AlertsPage {
   _totalAlerts:number;
   links : any;
   alertmessage : string = '';
-
-  private userAccessModel: UserAccessModel;
 
   currentPage: number = this.defaultPage();
   sortField = this.defaultSort();

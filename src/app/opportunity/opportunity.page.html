@@ -10,7 +10,7 @@
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       </ng-container>
       <ng-container *ngIf="opportunity && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="'Organization Logo'" width="160px" height="160px">
       </ng-container>
 
       <!--Side Navigation-->
@@ -493,7 +493,7 @@
      </div>
 
 
-    <div [class.hide]="selectedPage !== 1">
+    <div *ngIf="selectedPage > 0 && (selectedPageLabel == 'Award Notices' || selectedPageLabel == 'Award Summary')">
 
       <section  [attr.id]="generateID(opportunityFields.AwardSummary)"
                 *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)">
@@ -555,7 +555,7 @@
           </h2>
 
           <div class="sam-ui vertically middle aligned padded grid">
-            <div class="five wide column">
+            <div class="nine wide column">
               <p>
                 Showing results
                 <strong>
@@ -567,15 +567,12 @@
                 <strong>{{relatedOpportunitiesMetadata.count}}</strong>
               </p>
             </div>
-            <div class="four wide column middle right aligned">
-              <strong>Sort by</strong>
-            </div>
             <div class="three wide column">
-
               <sam-select class="sort-select"
                           [(model)]="awardSort"
                           [options]="awardSortOptions"
                           [name]='awardSort'
+                          [label]="'Sort by'"
                           (modelChange)="reloadRelatedOpportunities()">
               </sam-select>
             </div>
@@ -659,6 +656,149 @@
                       [totalPages]="totalPages">
       </sam-pagination>
 
+    </div>
+    
+    <div *ngIf="selectedPage > 0 && selectedPageLabel == 'Interested Vendors List'">
+
+      <section  [attr.id]="generateID(opportunityFields.IVL)"
+                *ngIf="ivls">
+
+        <div class="sam-ui hidden divider"></div>
+
+        <div class="usa-width-one-whole">
+          <div class="pull-right">
+            <input type="text" [(ngModel)] = "keyword">
+            <sam-button
+              [buttonType]="'default'"
+              [buttonText]="'Search' "
+              [buttonClass]="'usa-button usa-search-submit search-btn'"
+              (onClick)="reloadIVLs(0)">
+            </sam-button>
+          </div>
+        </div>
+        <h2 class="sam-ui header" id="opportunity-ivl-summary">
+          Interested Vendors List
+        </h2>
+
+        <div class="sam-ui info message">
+          <div class="header">
+            <i class="fa fa-id-badge" aria-hidden="true"></i>
+            This vendor list is only visible to owners of this opportunity
+          </div>
+        </div>
+
+        <div class="sam-ui vertically middle aligned padded grid">
+          <div class="five wide column">
+            <p>
+              Showing results
+              <strong>
+                {{ivls.page.number+1}}
+                <span class="usa-sr-only">through</span> -
+                {{ivls.page.totalPages}}
+              </strong>
+              of
+              <strong>{{ivls.page.totalElements}}</strong>
+            </p>
+          </div>
+          <div class="three wide column middle right aligned">
+          </div>
+          <div class="four wide column">
+            <sam-sort
+              [options]="ivlSortOptions" 
+              [(ngModel)]="ivlSort" 
+              (ngModelChange)="reloadIVLs(0)">
+            </sam-sort>
+          </div>
+        </div>
+
+        <div class="sam-ui grid" id="ivl-list" tabindex="-1" *ngIf="ivls.page?.totalElements > 0">
+          <ng-container *ngFor="let element of ivls._embedded?.ivl">
+
+            <div class="sam-ui hidden divider"></div>
+            <div tabindex="0">
+              
+              <a *ngIf="element.contractorDuns" class="sam-ui" [routerLink]="['/entity', element.contractorDuns]">
+                {{ element.contractorName }}
+              </a>
+              <ng-container *ngIf="!element.contractorDuns" class="sam-ui">
+                {{ element.contractorName }}
+              </ng-container>
+              <div class="sam-ui equal width divided segment grid">
+                <div class="row">
+                  <div class="column">
+                      <div class="sam-ui medium header">
+                        UEI (Unique Entity Identifier)
+                        <div class="sub header">
+                          {{element.contractorDuns}}
+                        </div>
+                      </div>
+                      <div class="sam-ui medium header">
+                        CAGE Code
+                        <div class="sub header">
+                          {{element.contractorCageNumber}}
+                        </div>
+                      </div>
+                  </div>
+                  <div class="column">
+                      <div class="sam-ui medium header">
+                        Address
+                        <div class="sub header">
+                          {{ element.contractorStreet }} {{ element.contractorCity }} {{ element.contractorState }} {{ element.contractorZip }} {{ element.contractorCountry }}
+                        </div>
+                      </div>
+                  </div>
+                  <div class="column">
+                      <div class="sam-ui medium header">
+                        Contact
+                        <div class="sub header">
+                          {{element.contactFirstName}} {{element.contactLastName}} <br />
+                          <ng-container *ngIf="element.contactEmail"><strong><i class="fa fa-envelope-o" aria-hidden="true"></i></strong> <a href="mailto:{{element.contactEmail}}">{{element.contactEmail}}</a> <br></ng-container>
+                          <ng-container *ngIf="element.contactPhone"><strong><i class="fa fa-phone" aria-hidden="true"></i></strong> {{element.contactPhone}}<br></ng-container>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="row" *ngIf="ivlNaicsCodeList && element.naics && element.contractorDuns && dictionariesUpdated === true">
+                  <div class="usa-width-one-whole">
+                    <sam-accordion>
+                      <sam-accordion-section headerText="NAICS Classifications" name="aria-friendly-section-name">
+                        <table>
+                          <thead>
+                            <tr>
+                              <!--<th>NAICS</th>-->
+                              <th>Name</th>
+                              <th>Small Business?</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <ng-container *ngFor="let naics of element.naics.naicsList | filterMultiArrayObject:findDictionary('naics_code'):'code':false:''">
+                            <tr>
+                              <!--<td>{{ naics.code }}</td>-->
+                              <td>
+                                {{ naics.value }}
+                              </td>
+                              <td>N/A</td>
+                            </tr>
+                          </ng-container>
+                          </tbody>
+                        </table>
+                      </sam-accordion-section>
+                    </sam-accordion>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <ng-container *ngIf="ivls.page.totalElements == 0">
+          No results found.
+        </ng-container>
+      </section>
+      <sam-pagination *ngIf="ivls.page && ivls.page.totalPages && ivls.page.totalPages > 0"
+        (pageChange)="reloadIVLs($event-1)"
+        [currentPage]="ivls.page.number+1"
+        [totalPages]="ivls.page.totalPages">
+      </sam-pagination>
     </div>
 
     <br><br>

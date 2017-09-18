@@ -15,40 +15,39 @@ import { App } from './app.component';
 import { AppState } from './app.service';
 import { AuthenticationModule } from './authentication';
 import { HomeModule } from './application-content/home';
-import { AlertsModule } from './alerts';
-import { HelpModule } from './Help';
-import { ReportsModule } from './Reports';
 import { PageNotFoundErrorPage } from './application-content/404';
-import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { WageDeterminationModule } from './wage-determination';
 import { EntityModule } from './entity';
 import { ExclusionModule } from './exclusion';
-import { AwardsModule } from './awards';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
-import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
-import { UserDirectoryModule } from './users';
+import { UsersModule } from './users';
 import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
-import { RoleManagementModule } from "./role-management/role-management.module";
 import { FALFormModule } from "./assistance-listing/assistance-listing-operations/fal-form.module";
 import { ForbiddenModule } from "./application-content/403/403.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
-import { DataServiceModule } from "./data-service/data-service.module";
-import { FederalHierarchyModule } from "./fh/federal-hierarchy.module";
-import {AuthGuard} from "../api-kit/authguard/authguard.service";
-import {DictionaryService} from "../api-kit/dictionary/dictionary.service";
-import {SearchDictionariesService} from "../api-kit/search/search-dictionaries.service";
+import { AuthGuard } from "../api-kit/authguard/authguard.service";
+import { DictionaryService } from "../api-kit/dictionary/dictionary.service";
+import { SearchDictionariesService } from "../api-kit/search/search-dictionaries.service";
 import { SamTitleService } from 'api-kit/title-service/title.service';
+import { SamErrorService } from 'api-kit/error-service';
+import { AlertFooterService } from './app-components/alert-footer/alert-footer.service';
 
 
 // Application wide providers
 const APP_PROVIDERS = [
-  AppState, AuthGuard, DictionaryService, SearchDictionariesService
+  AppState,
+  AuthGuard,
+  DictionaryService,
+  SearchDictionariesService,
+  SamTitleService,
+  SamErrorService,
+  AlertFooterService
 ];
 
 /**
@@ -70,28 +69,19 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES),
 
     // Page View Modules
-    UserDirectoryModule,
+    UsersModule,
     AuthenticationModule,
     ProgramModule,
     OpportunityModule,
     EntityModule,
     ExclusionModule,
-    AwardsModule,
     OrganizationModule,
     HomeModule,
-    AlertsModule,
-    HelpModule,
-    ReportsModule,
     SearchModule,
-    ErrorModule,
-    UIKitDemoModule,
     WageDeterminationModule,
     OrganizationDetailModule,
-    RoleManagementModule,
     ForbiddenModule,
     WorkspaceModule,
-    DataServiceModule,
-    FederalHierarchyModule,
 
     //  Data Entry
     FALFormModule,
@@ -104,7 +94,6 @@ const APP_PROVIDERS = [
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
     APP_PROVIDERS,
-    SamTitleService
   ]
 })
 export class AppModule {

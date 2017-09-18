@@ -135,7 +135,7 @@
                           #picker></sam-autocomplete>
 
         <div class="usa-system-pocs">
-          <ng-container *ngFor="let poc of detailsForm.controls.pointOfContact.value; let $index = index;">
+          <ng-container *ngFor="let poc of pocs; let $index = index;">
             <div *ngIf="pocs[$index]" class="usa-system-poc">
               <h4>
                 <a class="fullname" href="javascript:void(0);" [innerText]="pocs[$index].fullName"></a>
@@ -166,7 +166,7 @@
         All your My Access information will permanantely be inaccessible.
       </div>
 
-      <sam-button id="button-deactivate" [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
+      <sam-button buttonId="button-deactivate" buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
 
       <sam-alert type="error" [title]="states.alert.message" [hidden]="!states.alert.show" [showClose]="true" (dismiss)="alert()"></sam-alert>
     </section>

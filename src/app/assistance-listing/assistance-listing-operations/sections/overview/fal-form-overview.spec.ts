@@ -27,7 +27,7 @@ MockFormService.getSubjectTermsDict.and.returnValue(Observable.of({}));
 
 let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateObjective', 'validateFunctionalCodes', 'validateSubjectTerms', 'validateFundedProjects', 'applicableErrors']);
 
-describe('FAL Overview Form', () => {
+xdescribe('FAL Overview Form', () => {
   let comp: FALFormOverviewComponent;
   let fixture: ComponentFixture<FALFormOverviewComponent>;
 

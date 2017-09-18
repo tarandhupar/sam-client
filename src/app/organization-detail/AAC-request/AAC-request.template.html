@@ -1,120 +1,130 @@
-<section class="aac-request-page usa-grid" (keyup.enter)="onEnterKeyClicked()">
-  <div class="usa-width-one-fourth">&nbsp;</div>
+<div class="usa-width-one-whole p_L-8x"><sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs></div>
+<section class="aac-request-page usa-grid" (keyup.enter)="onEnterKeyClicked()" *ngIf="dataLoaded">
 
   <!--Edit AAC Request Page-->
-  <div class="usa-width-two-thirds" [hidden]="!requestIsEdit">
-    <h2 class="p_T-3x">Request Activity Address Code (AAC)</h2>
-    <div class="usa-width-one-whole aac-request-div-underline">
-      <p class="p_T-3x p_B-4x">Lorum ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-        ex ea commodo consequat.</p>
-      <span>Note: All fields are required unless marked optional.</span>
+  <div class="usa-width-one-whole m_T-3x" *ngIf="requestIsEdit">
+    <div class="usa-width-one-whole aac-request-section-border">
+      <h3 class="aac-request-gray-title m_B-0">PROFILE</h3>
+      <h2 class="m_T-0" *ngIf="isProcurementAAC">Request Procurement Activity Address Code (AAC)</h2>
+      <h2 class="m_T-0" *ngIf="!isProcurementAAC">Request Non-Procurement Activity Address Code (AAC)</h2>
+      <div class="usa-width-one-whole">
+        <p class="p_T-3x p_B-4x" *ngIf="isProcurementAAC">Procurement AAC's are for award actions, financial assistance and/or funding. If you will not use the AAC for these actions, please
+          return to the office details page and click the request button for 'Non-procurement AAC'.</p>
+        <p class="p_T-3x p_B-4x" *ngIf="!isProcurementAAC">Non-procurement AAC's are for ordering, requisitioning, personal property reporting or transfer, shipping or billing. If you will not use
+          the AAC for these actions, please return to the office details page and click the request button for 'Procurement AAC'.</p>
+        <!--<span>Note: All fields are required unless marked optional.</span>-->
+      </div>
     </div>
-    <div class="usa-width-one-whole aac-request-div-underline">
-      <h3 class="p_T-2x">AAC Information</h3>
+
+    <!--<div class="usa-width-one-whole aac-request-div-underline">-->
+    <!--<h3 class="p_T-2x">AAC Information</h3>-->
+    <!--<div class="usa-width-one-whole aac-information-section">-->
+    <!--<sam-label-wrapper [label]="aacTypeRadioConfig.label" [name]="aacTypeRadioConfig.name">-->
+    <!--<sam-radio-button [(model)]="aacTypeRadioModel" [options]="aacTypeRadioConfig.options" [label]="''" [name]="aacTypeRadioConfig.name" [errorMessage]="aacTypeRadioConfig.errorMessage">-->
+    <!--</sam-radio-button>-->
+    <!--</sam-label-wrapper>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="usa-width-one-whole aac-request-section-border" *ngIf="isSingleAACRequest()">
+      <!--<h3 class="p_T-2x">Requesting Office Information</h3>-->
       <div class="usa-width-one-whole aac-information-section">
-        <sam-label-wrapper [label]="aacTypeRadioConfig.label" [name]="aacTypeRadioConfig.name">
-          <sam-radio-button [(model)]="aacTypeRadioModel" [options]="aacTypeRadioConfig.options" [label]="''" [name]="aacTypeRadioConfig.name" [errorMessage]="aacTypeRadioConfig.errorMessage">
-          </sam-radio-button>
-        </sam-label-wrapper>
+        <!--<sam-label-wrapper [label]="aacExistRadioConfig.label" [name]="aacExistRadioConfig.name">-->
+        <!--<sam-radio-button [(model)]="aacExistRadioModel" [options]="aacExistRadioConfig.options" [label]="''" [hint]="aacExistRadioConfig.hint" [name]="aacExistRadioConfig.name" [errorMessage]="aacExistRadioConfig.errorMessage">-->
+        <!--</sam-radio-button>-->
+        <!--</sam-label-wrapper>-->
+
+        <!--<sam-label-wrapper [label]="aacOfficeConfig.label" [name]="aacOfficeConfig.name">-->
+        <!--<sam-radio-button [(model)]="aacOfficeRadioModel" [options]="aacOfficeConfig.options" [label]="''" [hint]="aacOfficeConfig.hint" [name]="aacOfficeConfig.name" [errorMessage]="aacOfficeConfig.errorMessage">-->
+        <!--</sam-radio-button>-->
+        <!--</sam-label-wrapper>-->
+
+        <div class="usa-width-two-thirds aac-contractor-section m_T-2x">
+          <div class="usa-width-one-whole">
+            <h4 class="usa-width-one-third"><strong>Department</strong></h4>
+            <div class="usa-width-two-thirds">
+              <div class="usa-width-one-whole">{{capitalizePipe.transform(org.l1Name)}}</div>
+              <div class="usa-width-one-whole aac-request-gray-title">CGAC : {{getCGACText(l1Org)}}</div>
+            </div>
+          </div>
+          <div class="usa-width-one-whole">
+            <h4 class="usa-width-one-third"><strong>Sub Tier</strong></h4>
+            <div class="usa-width-two-thirds">
+              <div class="usa-width-one-whole">{{capitalizePipe.transform(org.l2Name)}}</div>
+              <div class="usa-width-one-whole aac-request-gray-title">CGAC : {{getCGACText(l2Org)}}</div>
+            </div>
+          </div>
+          <div class="usa-width-one-whole">
+            <h4 class="usa-width-one-third"><strong>Office</strong></h4>
+            <div class="usa-width-two-thirds">{{capitalizePipe.transform(org.name)}}</div>
+          </div>
+
+        </div>
+        <!--<sam-agency-picker *ngIf=" aacOfficeRadioModel.includes('Federal')" (organization)="getFederalOrgName($event)" [label]="'Organization Name'" [multimode]="false" [required]="true" [searchMessage]="aacFederalOrgNameErrorMsg"></sam-agency-picker>-->
+        <!--<form class="usa-width-two-thirds aac-contractor-section" *ngIf=" aacOfficeRadioModel.includes('State')" [formGroup]="stateOfficeForm">-->
+        <!--<sam-text #stateOfficeName  [control]="contractorForm.get('stateOfficeName')" formControlName="stateOfficeName" [name]="'org-name-input'" [label]="'Organization Name'" [required]="true"></sam-text>-->
+        <!--</form>-->
+        <!--<form class="usa-width-two-thirds aac-contractor-section" *ngIf=" aacOfficeRadioModel.includes('Contract')" [formGroup]="contractorForm">-->
+        <!--<sam-text #contractName [required]='true' [control]="contractorForm.get('contractName')" formControlName="contractName" [name]="'contract-name-input'" [label]="'Contractor Name'"></sam-text>-->
+        <!--<sam-text #contractNum [required]='true' [control]="contractorForm.get('contractNum')" formControlName="contractNum" [name]="'contract-number-input'" [label]="'Contract Number'"></sam-text>-->
+        <!--<sam-text #contractCAGECode [required]='true' [control]="contractorForm.get('cageCode')" formControlName="cageCode" [name]="'cage-input'" [label]="'CAGE Code (For CAGE code reference: https://cage.dla.mil/)'"></sam-text>-->
+        <!--<sam-text #contractAdmin [required]='true' [control]="contractorForm.get('contractAdmin')" formControlName="contractAdmin" [name]="'admin-name-input'" [label]="'Contract Administration Name'"></sam-text>-->
+        <!--<sam-label-wrapper #contractorExpireDateWrapper [required]='true' class="usa-width-two-thirds" [label]="'Contract Expire Date'" [name]="'expire-date'">-->
+        <!--<sam-date (valueChange)="setContractExpireDate($event)" [label]="''" name='expire-date'></sam-date>-->
+        <!--</sam-label-wrapper>-->
+        <!--</form>-->
+
       </div>
     </div>
-    <div class="usa-width-one-whole aac-request-div-underline" *ngIf="isSingleAACRequest()">
-      <h3 class="p_T-2x">Requesting Office Information</h3>
-      <div class="usa-width-one-whole aac-information-section p_B-5x">
-        <sam-label-wrapper [label]="aacExistRadioConfig.label" [name]="aacExistRadioConfig.name">
-          <sam-radio-button [(model)]="aacExistRadioModel" [options]="aacExistRadioConfig.options" [label]="''" [hint]="aacExistRadioConfig.hint" [name]="aacExistRadioConfig.name" [errorMessage]="aacExistRadioConfig.errorMessage">
-          </sam-radio-button>
-        </sam-label-wrapper>
 
-        <sam-label-wrapper [label]="aacOfficeConfig.label" [name]="aacOfficeConfig.name">
-          <sam-radio-button [(model)]="aacOfficeRadioModel" [options]="aacOfficeConfig.options" [label]="''" [hint]="aacOfficeConfig.hint" [name]="aacOfficeConfig.name" [errorMessage]="aacOfficeConfig.errorMessage">
-          </sam-radio-button>
-        </sam-label-wrapper>
-
-        <sam-agency-picker *ngIf="aacOfficeRadioModel.includes('Federal')" (organization)="getFederalOrgName($event)" [label]="'Organization Name'" [multimode]="false" [required]="true" [searchMessage]="aacFederalOrgNameErrorMsg"></sam-agency-picker>
-        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel.includes('State')" [formGroup]="stateOfficeForm">
-          <sam-text #stateOfficeName  [control]="contractorForm.get('stateOfficeName')" formControlName="stateOfficeName" [name]="'org-name-input'" [label]="'Organization Name'" [required]="true"></sam-text>
-        </form>
-        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel.includes('Contract')" [formGroup]="contractorForm">
-          <sam-text #contractName [required]='true' [control]="contractorForm.get('contractName')" formControlName="contractName" [name]="'contract-name-input'" [label]="'Contractor Name'"></sam-text>
-          <sam-text #contractNum [required]='true' [control]="contractorForm.get('contractNum')" formControlName="contractNum" [name]="'contract-number-input'" [label]="'Contract Number'"></sam-text>
-          <sam-text #contractCAGECode [required]='true' [control]="contractorForm.get('cageCode')" formControlName="cageCode" [name]="'cage-input'" [label]="'CAGE Code (For CAGE code reference: https://cage.dla.mil/)'"></sam-text>
-          <sam-text #contractAdmin [required]='true' [control]="contractorForm.get('contractAdmin')" formControlName="contractAdmin" [name]="'admin-name-input'" [label]="'Contract Administration Name'"></sam-text>
-          <sam-label-wrapper #contractorExpireDateWrapper [required]='true' class="usa-width-two-thirds" [label]="'Contract Expire Date'" [name]="'expire-date'">
-            <sam-date (valueChange)="setContractExpireDate($event)" [label]="''" name='expire-date'></sam-date>
-          </sam-label-wrapper>
-        </form>
-
+    <div class="usa-width-one-whole" *ngIf="isSingleAACRequest()">
+      <!--<h3 class="p_T-2x">Office Address Information</h3>-->
+      <div class="usa-width-one-whole aac-address-section aac-request-section-border m_R-6x">
+        <sam-address-form class="usa-width-one-half"  [orgAddrModel]="mailAddr" [showAddIcon]="false" [showCloseIcon]="false"></sam-address-form>
       </div>
-    </div>
-    <div class="usa-width-one-whole aac-request-div-underline" *ngIf="isSingleAACRequest()">
-      <h3 class="p_T-2x">Reason for AAC Request</h3>
-      <div class="usa-width-one-whole aac-information-section p_B-4x">
-        <sam-label-wrapper [label]="aacReasonCbxConfig.label" [name]="aacReasonCbxConfig.name" [required]="true">
-          <sam-checkbox [(model)]="aacReasonCbxModel" [name]="aacReasonCbxConfig.name" [options]="aacReasonCbxConfig.options" [label]="''" [errorMessage]="aacReasonCbxConfig.errorMessage" [hasSelectAll]="false">
+      <div class="usa-width-one-whole aac-address-section aac-request-section-border m_R-6x">
+        <div class="usa-width-one-half relative">
+          <sam-checkbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Billing Address', $event)" [(model)]="billingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
           </sam-checkbox>
-        </sam-label-wrapper>
-        <form class="usa-width-two-thirds aac-fpds-report-code-section p_T-4x p_B-4x" *ngIf="isReasonContainsFPDSReport()" [formGroup]="fpdsReportForm">
-          <sam-text #agencyCode [required]='true' [control]="fpdsReportForm.get('agencyCode')" formControlName="agencyCode" [name]="'agency-code-input'" [label]="'Sub-tier Agency Code'"></sam-text>
-          <sam-text #cgacCode [required]='true' [control]="fpdsReportForm.get('cgacCode')" formControlName="cgacCode" [name]="'cgac-input'" [label]="'CGAC Code'"></sam-text>
-        </form>
+          <sam-address-form  [orgAddrModel]="billAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideBillingForm"></sam-address-form>
+        </div>
       </div>
-    </div>
-    <div class="usa-width-one-whole aac-request-div-underline p_B-6x" *ngIf="isSingleAACRequest()">
-      <h3 class="p_T-2x">Office Address Information</h3>
-      <div class="usa-width-one-whole aac-address-section">
-        <sam-address-form  [orgAddrModel]="mailAddr" [showAddIcon]="false" [showCloseIcon]="false"></sam-address-form>
-      </div>
-      <div class="usa-width-one-whole aac-address-section relative m_T-2x" *ngIf="isAddrTypeRequired('Billing Address')">
-        <sam-checkbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Billing Address', $event)" [(model)]="billingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
-        </sam-checkbox>
-        <sam-address-form  [orgAddrModel]="billAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideBillingForm"></sam-address-form>
-      </div>
-      <div class="usa-width-one-whole aac-address-section relative m_T-2x" *ngIf="isAddrTypeRequired('Shipping Address')">
-        <sam-checkbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Shipping Address', $event)" [(model)]="shippingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
-        </sam-checkbox>
-        <sam-address-form  [orgAddrModel]="shipAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideShippingForm"></sam-address-form>
+      <div class="usa-width-one-whole aac-address-section aac-request-section-border m_R-6x">
+        <div class="usa-width-one-half relative">
+          <sam-checkbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Shipping Address', $event)" [(model)]="shippingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
+          </sam-checkbox>
+          <sam-address-form  [orgAddrModel]="shipAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideShippingForm"></sam-address-form>
+        </div>
       </div>
     </div>
     <div class="usa-width-one-whole p_B-6x" *ngIf="isSingleAACRequest() || isMultiAACRequest()">
-      <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewAACRequestClick()">Review <i class="fa fa-arrow-right"></i></button>
+      <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewAACRequestClick()">Review</button>
       <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelAACRequestClick()">Cancel</button>
     </div>
   </div>
 
   <!--Review AAC Request Page-->
-  <div class="usa-width-two-thirds" *ngIf="requestIsReview">
-    <h2 class="p_T-3x">Confirm AAC Request</h2>
-    <div class="usa-width-one-whole aac-request-div-underline">
-      <p class="p_T-3x p_B-4x">Lorum ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-        ex ea commodo consequat.</p>
+  <div class="usa-width-one-whole" *ngIf="requestIsReview">
+    <div class="usa-width-one-whole aac-request-section-border">
+      <h2 class="p_T-3x">Confirm AAC Request</h2>
+      <div class="usa-width-one-whole">
+        <p class="p_T-3x p_B-4x">Lorum ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+          ex ea commodo consequat.</p>
+      </div>
     </div>
-    <div class="usa-width-one-whole aac-request-div-underline p_B-6x">
-      <h3 class="p_T-2x p_B-4x">Requesting Office Information</h3>
+
+    <div class="usa-width-one-whole aac-request-section-border">
+      <h3 class="p_T-2x p_B-4x">Requesting Information</h3>
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of aacOfficeInfo">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.desc}}:</h4></span>
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{pair.value}}</p>
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{pair.value}}<br>
+          <span class="usa-width-one-whole aac-request-gray-title" *ngIf="pair.desc==='Department'">CGAC : {{getCGACText(l1Org)}}</span>
+          <span class="usa-width-one-whole aac-request-gray-title" *ngIf="pair.desc==='Sub Tier'">CGAC : {{getCGACText(l2Org)}}</span>
+        </p>
       </div>
     </div>
-    <div class="usa-width-one-whole aac-request-div-underline p_B-6x">
-      <h3 class="p_T-2x p_B-4x">Reason for AAC Request</h3>
-      <div class="usa-width-one-whole m_L-3x m_B-1x">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Provide Purpose for AAC Request:</h4></span>
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x"><span *ngFor="let val of aacReasonCbxModel">&nbsp;{{val}}<br></span></p>
-      </div>
-      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Sub-tier Agency Code:</h4></span>
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{fpdsReportForm.get("agencyCode").value}}</p>
-      </div>
-      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>CGAC Code:</h4></span>
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{fpdsReportForm.get("cgacCode").value}}</p>
-      </div>
-    </div>
-    <div class="usa-width-one-whole aac-request-div-underline p_B-6x">
-      <h3 class="p_T-2x p_B-4x">Office Address Information</h3>
+    <div class="usa-width-one-whole aac-request-section-border">
+      <h3 class="p_T-2x p_B-4x">Address Information</h3>
       <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrType}}:</h4></span>
         <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.street1}}<br>
@@ -122,19 +132,19 @@
       </p>
     </div>
     <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onSubmitFormClick()">Confirm</button>
-    <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()"><i class="fa fa-arrow-left"></i>Edit</button>
+    <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()">Edit</button>
   </div>
 
   <!--After confirmation, show the thank you note-->
-  <div class="usa-width-one-half aac-request-confirm-div" *ngIf="requestIsConfirm">
-      <h2 class="p_T-6x">Thank you.</h2>
-      <p>Your AAC request has been sent to administrator. What would you like to do next?</p>
-      <p>
-        <span><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;<a href="/aac-request">Submit another AAC request</a></span><br>
-        <span><i class="fa fa-home"></i>&nbsp;&nbsp;<a routerLink="/">Return to SAM.gov Home</a></span><br>
-      </p>
-  </div>
+  <!--<div class="usa-width-one-half aac-request-confirm-div" *ngIf="requestIsConfirm">-->
+    <!--<h2 class="p_T-6x">Thank you.</h2>-->
+    <!--<p>Your AAC request has been sent to administrator. What would you like to do next?</p>-->
+    <!--<p>-->
+      <!--<span><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;<a href="/aac-request">Submit another AAC request</a></span><br>-->
+      <!--<span><i class="fa fa-home"></i>&nbsp;&nbsp;<a routerLink="/">Return to SAM.gov Home</a></span><br>-->
+    <!--</p>-->
+  <!--</div>-->
 
-  <sam-alert *ngIf="successAlertMsg" class="aac-request-alert-message" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your AAC Request has been submitted'"></sam-alert>
+  <!--<sam-alert *ngIf="successAlertMsg" class="aac-request-alert-message" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your AAC Request has been submitted'"></sam-alert>-->
 
 </section>

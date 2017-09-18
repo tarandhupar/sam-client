@@ -13,7 +13,7 @@ import { SamFeedbackComponent } from "./feedback-form.component";
 import { FeedbackService } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { ApiService } from "../../../api-kit/iam/api/index";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { FeedbackFormService } from "./feedback-form.service";
 
 class ApiServiceStub{

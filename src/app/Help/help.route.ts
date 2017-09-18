@@ -14,7 +14,7 @@ import { SamFeedbackComponent } from '../app-components/feedback-form/feedback-f
 
 export const routes: Routes = [
   {
-    path: 'help',
+    path: '',
     component: HelpPage,
     canDeactivate:[SamFeedbackComponent],
     children: [

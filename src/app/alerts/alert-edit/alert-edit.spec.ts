@@ -5,7 +5,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertEditComponent } from './alert-edit.component';
 import { Alert } from '../alert.model';
-import { error } from '../alerts-test-data.spec';
+import { error } from '../../app-components/alert-header/alerts-test-data.spec';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import * as moment from 'moment';

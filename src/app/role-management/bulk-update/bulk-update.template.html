@@ -154,7 +154,7 @@
         <h4 class="text-lighter m_T-4x">Permissions</h4>
         <div class="p_All-3x" style="background-color: #f1f1f1" *ngIf="objects && objects.length">
           <div *ngFor="let object of objects">
-            <b class="m_B-0">{{object.function.val | capitalize}}</b>
+            <b class="m_B-0">{{object.function.val}}</b>
             <div class="sam-ui two column wide grid">
               <div class="column" *ngFor="let permission of object.permission">
                 <input [disabled]="permission.isDefault"
@@ -164,7 +164,7 @@
                        (click)="onPermissionClick(permission)">
                 <label [attr.for]="permissionId(permission, object)"
                        class="permission-label m_T-2x" >
-                  {{permission.val | capitalize}}
+                  {{permission.val}}
                 </label>
               </div>
             </div>
@@ -215,7 +215,7 @@
         <h4>Permissions</h4>
         <div style="border: 1px solid grey; padding: .5em">
           <div class="usa-grid-full" *ngFor="let obj of getSelectedObjects()">
-            <div class="usa-width-one-fourth"><b>{{obj.function.val | capitalize}}</b></div>
+            <div class="usa-width-one-fourth"><b>{{obj.function.val}}</b></div>
             <div class="usa-width-three-fourths">{{getSelectedPermissions(obj)}}</div>
           </div>
         </div>

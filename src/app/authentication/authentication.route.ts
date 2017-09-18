@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 /**
  * Components & Guards
  */
-import { LoginComponent } from './login';
+import { SamLoginComponent } from 'app-components';
 import { ProfileGuard, ProfileComponent } from './profile';
 import { RegisterGuard, RegisterComponent } from './register';
 import { ForgotComponent } from './forgot';
@@ -16,7 +16,7 @@ import ProfileRoutes from './profile/profile.routes';
 import RegisterRoutes from './register/register.routes';
 
 export const routes: Routes = [
-  { path: 'signin',    component: LoginComponent },
+  { path: 'signin',    component: SamLoginComponent },
   { path: 'signout',   component: ProfileComponent,  canActivate: [ProfileGuard] },
   { path: 'signup',    component: RegisterComponent, canActivateChild: [RegisterGuard], children: RegisterRoutes },
   { path: 'forgot',    component: ForgotComponent,                                      children: ForgotRoutes },

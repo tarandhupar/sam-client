@@ -61,7 +61,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
       this.router.navigate(['accessrestricted']);
     }
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, CREATE_RAO, ORG_ID').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, CREATE_RAO, ORG_ID, ORG_LEVELS').subscribe(res => {
       this.permissions = res;
       if (!this.permissions['CREATE_RAO']) {
         this.router.navigate(['accessrestricted']);

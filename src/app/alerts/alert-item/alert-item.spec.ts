@@ -10,7 +10,7 @@ import { Alert } from '../alert.model';
 import { DateFormatPipe } from '../../app-pipes/date-format.pipe';
 
 // Load test data
-import { error, info, warning } from '../alerts-test-data.spec';
+import { error, info, warning } from '../../app-components/alert-header/alerts-test-data.spec';
 import { AlertEditComponent } from '../alert-edit/alert-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 

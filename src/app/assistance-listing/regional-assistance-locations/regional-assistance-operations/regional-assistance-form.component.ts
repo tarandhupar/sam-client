@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {RAOFormService} from "./regional-assistance-form.service";
 import {RAOFormViewModel} from "./regional-assistance-form.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AlertFooterService} from "../../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
 import {AuthGuard} from "../../../../api-kit/authguard/authguard.service";
 
 @Component({

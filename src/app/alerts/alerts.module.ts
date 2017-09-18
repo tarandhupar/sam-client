@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { routing } from './alerts.route';
 import { AlertsPage } from './alerts.page';
 import { SamUIKitModule } from 'sam-ui-kit';
+import { AppComponentsModule } from '../app-components/app-components.module';
 import { AlertItemComponent } from './alert-item/alert-item.component';
 import { PipesModule } from '../app-pipes/app-pipes.module';
-import { AlertHeaderComponent } from './alert-header/alert-header.component';
-import { AlertFooterComponent } from './alert-footer/alert-footer.component';
-import { AlertFooterService } from './alert-footer/alert-footer.service';
+import { AlertFooterService } from '../app-components/alert-footer/alert-footer.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertEditComponent } from './alert-edit/alert-edit.component';
 
@@ -18,10 +17,14 @@ import { AlertEditComponent } from './alert-edit/alert-edit.component';
     FormsModule,
     routing,
     SamUIKitModule,
+    AppComponentsModule,
     PipesModule
   ],
-  exports: [ AlertHeaderComponent, AlertFooterComponent ],
-  declarations: [ AlertsPage, AlertItemComponent, AlertHeaderComponent, AlertFooterComponent, AlertEditComponent ],
-  providers: [ AlertFooterService ],
+  declarations: [
+    AlertsPage,
+    AlertItemComponent,
+    AlertEditComponent
+  ],
+  providers: [],
 })
 export class AlertsModule { }

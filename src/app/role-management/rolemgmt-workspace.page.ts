@@ -120,7 +120,7 @@ export class RoleMgmtWorkspace implements OnInit{
           order: this.order,
         }
       };
-      this.router.navigate(['access/requests'], extras);
+      this.router.navigate(['role-management/requests'], extras);
 
       this.Details = res.userAccessRequestList;
       this.totalRequest = res.count;

@@ -1,19 +1,27 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class OpportunityService{
+export class OpportunityService {
 
-  constructor(private oAPIService: WrapperService){}
+  constructor(private oAPIService: WrapperService) { }
 
-  getOpportunityById(id: string) {
+  getOpportunityById(id: string, authToken: string = null) {
     let apiParam = {
-        name: 'opportunity',
-        suffix: '/opportunities/' + id,
-        oParam: {},
-        method: 'GET'
+      name: 'opportunity',
+      suffix: '/opportunities/' + id,
+      oParam: {},
+      headers: {},
+      method: 'GET'
     };
+
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
+      apiParam.headers = {
+        "X-Auth-Token": authToken
+      }
+    }
 
     return this.oAPIService.call(apiParam);
   }
@@ -31,22 +39,41 @@ export class OpportunityService{
 
   getOpportunityLocationById(id: string) {
     let apiParam = {
-        name: 'opportunity',
-        suffix: '/opportunities/' + id + '/location',
-        oParam: {},
-        method: 'GET'
+      name: 'opportunity',
+      suffix: '/opportunities/' + id + '/location',
+      oParam: {},
+      method: 'GET'
     };
 
     return this.oAPIService.call(apiParam);
   }
-  
 
-  getPackages(noticeIds: string){
+  getOpportunityIVLs(accessToken: string, noticeId: string, keyword: string, page: number, size: number, sort: string): Observable<any> {
+    let apiParam = {
+      name: 'opportunity',
+      suffix: '/opportunities/' + noticeId + '/ivl',
+      oParam: {
+        'keyword': keyword,
+        'page': page,
+        'size': size,
+        'sortBy': sort,
+        'includeCount': true
+      },
+      method: 'GET',
+      headers: {
+        "X-Auth-Token": accessToken
+      },
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getPackages(noticeIds: string) {
     let apiParam = {
       name: 'opportunity',
       suffix: '/opportunities/attachments',
       oParam: {
-        'noticeIds':noticeIds
+        'noticeIds': noticeIds
       },
       method: 'GET'
     };
@@ -54,12 +81,12 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  getPackagesCount(noticeIds: string){
+  getPackagesCount(noticeIds: string) {
     let apiParam = {
       name: 'opportunity',
       suffix: '/opportunities/packages/count',
       oParam: {
-        'noticeIds':noticeIds
+        'noticeIds': noticeIds
       },
       method: 'GET'
     };
@@ -68,7 +95,7 @@ export class OpportunityService{
   }
 
 
-  getRelatedOpportunitiesByIdAndType(id:string, type:string, page:number, sort:string){
+  getRelatedOpportunitiesByIdAndType(id: string, type: string, page: number, sort: string) {
     let apiParam = {
       name: 'opportunity',
       suffix: '/opportunities/' + id + '/relatedopportunities',

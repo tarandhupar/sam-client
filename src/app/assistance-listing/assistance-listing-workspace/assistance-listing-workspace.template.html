@@ -21,8 +21,8 @@
         </a>
       </li>
       <li>
-        <a routerLink="/fal/workspace/cfda-numbers">
-          CFDA Numbers
+        <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
+          CFDA Number Management
         </a>
       </li>
       <li>
@@ -140,7 +140,7 @@
       <!--Agency Picker Filter-->
       <h4 class="sam-ui header">Federal Agency</h4>
       <sam-agency-picker-v2 #agencyPickerV2
-        *ngIf="orgRoots && orgRoots.length>0"
+        *ngIf="(orgRoots && orgRoots.length>0) || (orgLevels && orgLevels['org'] === 'all')"
         [attr.id] = "'fal-agency-picker-filter'"
         [ngModel]="agencyPickerModel"
         [orgRoots]="orgRoots"

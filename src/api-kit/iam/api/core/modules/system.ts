@@ -30,9 +30,8 @@ function getMockSystemAccount(index) {
     primaryOwnerEmail: `primary-owner-email-${index}@email.com`,
 
     pointOfContact: [
-      { firstName: 'Tester', lastName: '#1', email: 'test.user@yahoo.com',   phone: '12223334444' },
-      { firstName: 'Tester', lastName: '#2', email: 'test.user@gmail.com',   phone: '15556667777' },
-      { firstName: 'Tester', lastName: '#3', email: 'test.user@hotmail.com', phone: '16667778888' }
+      'chiukk1@gmail.com',
+      'chiu_kevin@bah.com',
     ]
   };
 }

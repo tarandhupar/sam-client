@@ -133,7 +133,7 @@ describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
     };
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: mockData }))));
 
-    testService.getOpportunityById("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
+    testService.getOpportunityById("fee2e0e30ce63b7bc136aeff32096c1d", null).subscribe((res: Response) => {
       expect(res['opportunityId']).toBeDefined();
       expect(res['opportunityId']).toBe('213ji321hu3jk123');
     });

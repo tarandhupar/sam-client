@@ -26,6 +26,8 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
   @Output() public showErrors = new EventEmitter();
 
   public otherFinancialInfoForm: FormGroup;
+  acctIdentifcationModel: any;
+  tafsModel: any;
 
   rangeAndAverageHint:string = `<p>Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.</p>
                                 <p>First, list a representative range (smallest to largest) of the amounts of financial assistance available. 
@@ -344,6 +346,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
   });
 
   acctIdentifcationFormArrayChange(data){
+    this.acctIdentifcationModel = data;
     let formArray= <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
     while(formArray.value.length>0){
       formArray.removeAt(0);
@@ -355,14 +358,16 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       formArray.push(control);
     }
   }
-  acctIdentificationActionHandler(event){
-    let formArray= <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
-    if(event=="add-cancel"){
+
+  acctIdentificationActionHandler(event) {
+    let formArray = <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
+    if ((event === 'delete' && this.acctIdentifcationModel && this.acctIdentifcationModel.length === 0) || event === 'add-cancel' || event === 'editSubmit') {
       formArray.markAsDirty();
       this.updateErrors();
     }
   }
   tafsFormArrayChange(data){
+    this.tafsModel = data;
     let formArray= <FormArray>this.otherFinancialInfoForm.get('tafs');
     while(formArray.value.length>0){
       formArray.removeAt(0);
@@ -376,7 +381,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
   }
   tafsActionHandler(event){
     let formArray= <FormArray>this.otherFinancialInfoForm.get('tafs');
-    if(event=="add-cancel"){
+    if((event === 'delete' && this.tafsModel && this.tafsModel.length === 0) || event === 'add-cancel' || event === 'editSubmit'){
       formArray.markAsDirty();
       this.updateErrors();
     }

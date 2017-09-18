@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { WageDeterminationService } from "../../api-kit/wage-determination/wage-determination.service";
-import { AlertFooterService } from '../alerts/alert-footer';
+import { AlertFooterService } from '../app-components/alert-footer';
 import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
 import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
 import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
@@ -44,13 +44,16 @@ export class SearchPage implements OnInit {
   defaultSortModel: any = {type:'modifiedDate', sort:'desc'};
   keywordSortModel: any = {type:'relevance', sort:'desc'};
   sortModel: any = this.defaultSortModel;
+  oldSortModel: any = this.defaultSortModel;
   relevanceSort: any = {label:'Relevance', name:'Relevance', value:'relevance'};
   sortOptions = [
     {label:'Relevance', name:'Relevance', value:'relevance'},
+    {label:'Title', name:'Title', value:'title'},
     {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
   ];
   sortChange: boolean = false;
   blankSearch: boolean = true;
+  pageUpdate: boolean = false;
 
   sortBy: string = "";
 
@@ -525,10 +528,12 @@ export class SearchPage implements OnInit {
 
   setupSortOptions(blankSearch){
     var blankSortOptions = [
+      {label:'Title', name:'Title', value:'title'},
       {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
     ];
     var querySortOptions = [
       {label:'Relevance', name:'Relevance', value:'relevance'},
+      {label:'Title', name:'Title', value:'title'},
       {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
     ];
     if(!blankSearch){
@@ -648,20 +653,42 @@ export class SearchPage implements OnInit {
 
     if (this.keywordsModel && this.keywordsModel.length > 0) {
       qsobj['keywords'] = this.keywordSplitter(this.keywordsModel);
-
+      this.blankSearch = false;
     } else{
       qsobj['keywords'] = '';
+      this.blankSearch = true;
     }
 
-    if(this.keywordsModel && this.keywordsModel.length > 0){
-      if(this.sortModel !== this.keywordSortModel['type'] && this.sortChange){
-        qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
-        this.sortChange = false;
-      }else{
-        qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.keywordSortModel['type']);        
+    //If changing sort option, reset to default sort order for that option
+    if(this.oldSortModel['type'] !== this.sortModel['type']){
+      switch(this.sortModel['type']){
+          case 'relevance':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'modifiedDate':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'title':
+            this.sortModel['sort'] = 'asc';
+            break;
       }
+    }
+
+    //Set sort for keyword search and blank search based on sort option change or page change
+    if(!this.blankSearch){
+        if(this.sortChange || this.pageUpdate){
+          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+          this.pageUpdate = false;
+        }else{
+          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.keywordSortModel['type']);
+        }
     }else{
-      qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.defaultSortModel['type']);      
+        if(this.sortChange || this.pageUpdate){
+          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+          this.pageUpdate = false;
+        }else{
+          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.defaultSortModel['type']);
+        }
     }
 
     return qsobj;
@@ -737,7 +764,7 @@ export class SearchPage implements OnInit {
       service: this.wdNonStandardSelectModel,
       is_even: this.wdNonStandardRadModel,
       is_standard: this.isStandard,
-      award_or_IDV: this.awardIDVModel,
+      award_or_idv: this.awardIDVModel,
       award_type: this.awardTypeModel,
       contract_type: this.contractTypeModel,
       naics: this.naicsTypeModel,
@@ -786,7 +813,7 @@ export class SearchPage implements OnInit {
           this.totalCount = 0;
         }
         // set keywords filter with keywords from response
-        if(data.hasOwnProperty('_embedded')){
+        if(!this.showRegionalOffices && data.hasOwnProperty('_embedded')){
           if(data['_embedded'].hasOwnProperty('stringList')){
             this.keywordsModel = this.keywordRebuilder(data['_embedded']['stringList']);
           }else{
@@ -895,6 +922,7 @@ export class SearchPage implements OnInit {
 
   pageChange(pagenumber) {
     this.pageNum = pagenumber;
+    this.pageUpdate = true;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -1146,6 +1174,7 @@ export class SearchPage implements OnInit {
 
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh() {
+    this.pageUpdate = true;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -1205,6 +1234,9 @@ export class SearchPage implements OnInit {
     // clear/reset all top level filters
     this.isActive = true;
     this.keywordsModel = [];
+    this.setupSortOptions(true);
+    this.oldSortModel = this.defaultSortModel;
+    this.sortModel = this.defaultSortModel;
 
     // call wd clear filters
     this.wdStateObject = null;
@@ -1447,6 +1479,9 @@ export class SearchPage implements OnInit {
     // build space-delimited string
     if(value && value.length > 0){
       spaceDelimitedString = this.keywordSplitter(value);
+      this.sortModel = this.keywordSortModel;
+    }else{
+      this.sortModel = this.defaultSortModel;
     }
 
     // set normal keyword param with space delimited string
@@ -1504,14 +1539,16 @@ export class SearchPage implements OnInit {
   }
 
     // sortBy model change
-    sortModelChange(){
-      this.pageNum = 0;
+    sortModelChange(event){
       this.sortChange = true;
+      this.oldSortModel = this.sortModel;
+      this.sortModel = event;
+      this.pageNum = 0;
       this.searchResultsRefresh();
     }
 
     setSortModel(sortBy) {
-      if(sortBy.substring(0, 1) == '-') {
+      if(sortBy.substring(0, 1) === '-') {
         return {type: sortBy.substring(1), sort: 'desc'};
       } else {
         return {type: sortBy, sort: 'asc'};

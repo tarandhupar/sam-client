@@ -60,7 +60,7 @@ export class FeedsPage implements OnInit {
     });
 
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, ORG_LEVELS, CREATE_RAO').subscribe(res => {
       this.permissions = res;
       if (!this.permissions['FAL_LISTING']) {
         this.router.navigate['accessrestricted'];

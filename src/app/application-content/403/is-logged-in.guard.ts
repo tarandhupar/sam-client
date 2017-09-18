@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Cookie } from "ng2-cookies";
-import { UserService } from "../../users/user.service";
+import { UserService } from "../../role-management/user.service";
 
 @Injectable()
 export class IsLoggedInGuard implements CanActivate, CanActivateChild {
@@ -15,7 +15,7 @@ export class IsLoggedInGuard implements CanActivate, CanActivateChild {
   canActivate(route: ActivatedRouteSnapshot): Promise<boolean>|boolean {
     const isLoggedIn = this.user.isLoggedIn();
     if (!isLoggedIn) {
-      this.router.navigate(['/signin']);
+      this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
     }
     return isLoggedIn;
   }

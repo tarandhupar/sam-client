@@ -96,20 +96,18 @@
                          formControlName="comment">
           </sam-text-area>
         </div>
-
-        <sam-button [buttonType]="buttonType"
-                    [attr.id]="'submit-btn'"
-                    [buttonText]="submitButtonText"
-                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                    (onClick)="submitChangeRequest()">
-        </sam-button>
         <sam-button [buttonType]="buttonType"
                     [attr.id]="'cancel-btn'"
                     [buttonText]="'Cancel'"
                     [buttonClass]="'usa-button-primary usa-search-submit'"
                     (onClick)="cancelChangeRequest()">
         </sam-button>
-
+        <sam-button [buttonType]="buttonType"
+                    [attr.id]="'submit-btn'"
+                    [buttonText]="submitButtonText"
+                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                    (onClick)="submitChangeRequest()">
+        </sam-button>
       </form>
     </div>
   </div>

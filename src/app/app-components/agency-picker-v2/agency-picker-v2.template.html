@@ -13,7 +13,8 @@
             agencypicker-autofill
             [ngModel]="selections"
             (ngModelChange)="addSelection($event)"
-            [config]="singleACConfig">
+            [config]="singleACConfig"
+            [showClearButton] = "true">
         </sam-autocomplete>
         <sam-autocomplete-multiselect
             *ngIf="type=='multiple'"

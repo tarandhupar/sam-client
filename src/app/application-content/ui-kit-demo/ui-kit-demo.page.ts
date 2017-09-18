@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { AlertFooterService } from '../../alerts/alert-footer';
-import { FormControl } from '@angular/forms';
+import { AlertFooterService } from '../../app-components/alert-footer';
+
+import { FormControl,FormBuilder,FormGroup } from '@angular/forms';
 
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
 import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
@@ -18,8 +19,60 @@ import { Observable } from 'rxjs';
   ]
 })
 export class UIKitDemoPage {
+  tableFormArray = this.fb.array([this.fb.group({
+    col1:"TestVal1",
+    col2:"TestVal2",
+    col3:"TestVal3",
+    subRow: this.fb.array([this.fb.group({
+      subcol1: "SubTestVal1",
+      subcol2: "SubTestVal2",
+      subcol3: "SubTestVal3",
+    })])
+  }),this.fb.group({
+    col1:"TestValA",
+    col2:"TestValB",
+    col3:"TestValC",
+    subRow: this.fb.array([this.fb.group({
+      subcol1: "SubTestValA",
+      subcol2: "SubTestValB",
+      subcol3: "SubTestValC",
+    }), this.fb.group({
+      subcol1: "SubTestValD",
+      subcol2: "SubTestValE",
+      subcol3: "SubTestValF",
+    })])
+  })]);
+  tableFormItemTemplate = this.fb.group({
+    col1:"",
+    col2:"",
+    col3:"",
+    subRow: this.fb.array([])
+  });
+  tableSubFormItemTemplate = this.fb.group({
+    subcol1: "",
+    subcol2: "",
+    subcol3: "",
+  });
+
   @ViewChild('image') image: ElementRef;
   @ViewChild('dropper') dropzone: ElementRef;
+
+  /** New Location Group Component Vars ***************************************/
+  locationConfig = {
+    state: {},
+    county: {},
+    country: {},
+    zip: {}
+  }
+
+  locationFormGroup = new FormGroup({
+    city: new FormControl(),
+    country: new FormControl(),
+    county: new FormControl(),
+    state: new FormControl(),
+    zip: new FormControl(),
+  })
+  /** End Location Group Vars *************************************************/
 
   readURL(event) {
     const image = this.image;
@@ -82,7 +135,7 @@ export class UIKitDemoPage {
   autocompletePeoplePickerConfig = {
     keyValueConfig: {
       keyProperty: 'mail',
-      valueProperty: 'commonName',
+      valueProperty: 'givenName',
       subheadProperty: 'mail'
     }
   };
@@ -575,7 +628,8 @@ export class UIKitDemoPage {
   };
 
 
-  constructor(private alertFooterService: AlertFooterService, private locationService: LocationService) {  }
+  constructor(private alertFooterService: AlertFooterService, private locationService: LocationService,
+    private fb: FormBuilder) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {

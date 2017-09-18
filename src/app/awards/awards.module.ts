@@ -16,15 +16,6 @@ import { AwardsAddress } from './awards-address.component.ts';
     SamUIKitModule,
     CommonModule
   ],
-  exports: [
-    AwardsPage,
-    CommonModule,
-    DatexPipe,
-    PhonePipe,
-    ZipCodePipe,
-    BusCategoriesPipe,
-    AwardsAddress
-  ],
   declarations: [
     AwardsPage,
     DatexPipe,

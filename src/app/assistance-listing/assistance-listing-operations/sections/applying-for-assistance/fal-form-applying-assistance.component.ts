@@ -22,6 +22,7 @@ export class FALAssistanceComponent implements OnInit {
   hideAddButton: boolean = false;
   assistInfoDisp: any = [];
   falAssistanceForm: FormGroup;
+  deadlineModel: any;
 
   deadlineHint:string =`<p>By what date(s) or between what dates must an application be received by the Federal agency? If the deadline for submission of application is not available, a statement such as the following should be entered: Contact the headquarters (or regional office, as appropriate) for application deadlines. Where this information is not available, agencies should inform GSA as soon as possible after it becomes available. The phrase "See the Federal Register for deadline dates" is not sufficient. 
                         Specific dates must be given. If there are no deadlines, select "None."</p>`;
@@ -292,6 +293,7 @@ export class FALAssistanceComponent implements OnInit {
 
   }
 
+
   formatAssistInfo(assistInfo){
     let label = '';
     if(assistInfo.dateRange) {
@@ -356,6 +358,7 @@ export class FALAssistanceComponent implements OnInit {
   }
 
   fmArrayChange(data){
+    this.deadlineModel = data;
     let formArray= <FormArray>this.falAssistanceForm.get('deadlines.list');
     while(formArray.value.length>0){
       formArray.removeAt(0);
@@ -366,5 +369,9 @@ export class FALAssistanceComponent implements OnInit {
       formArray.markAsDirty();
       formArray.push(control);
     }
+  }
+  listBuilderActionHandler(event) {
+    if((event === 'delete' && this.deadlineModel && this.deadlineModel.length === 0)  || event === 'add-cancel' || event === 'editSubmit')
+      this.falAssistanceForm.get('deadlines').markAsDirty({onlySelf: true});
   }
 }

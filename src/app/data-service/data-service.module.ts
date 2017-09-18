@@ -10,7 +10,6 @@ import { routing } from './data-service.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { DataServicePage } from "./data-service.page";
 
 
@@ -31,8 +30,6 @@ import { DataServicePage } from "./data-service.page";
   declarations: [
     DataServicePage,
   ],
-  providers: [
-    AlertFooterService,
-  ],
+  providers: [],
 })
 export class DataServiceModule { }

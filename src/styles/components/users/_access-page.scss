@@ -23,6 +23,17 @@
     vertical-align: top;
   }
 
+  tr:hover.clickable {
+    background-color: #ececec;
+    cursor: pointer;
+    .fa-pencil {
+      opacity: 1;
+    }
+  }
+  tr:not(:hover) .fa-pencil, :not(.clickable) .fa-pencil {
+    opacity: 0;
+  }
+
   .results-text {
     line-height: 4.4rem;
   }

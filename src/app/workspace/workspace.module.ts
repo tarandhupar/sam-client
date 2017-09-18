@@ -11,7 +11,6 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { PipesModule } from '../app-pipes/app-pipes.module';
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceWidgetComponent } from "./workspace-widget/workspace-widget.component";
 import { SearchReportComponent } from "./search-report/search-report.component";
@@ -36,12 +35,12 @@ import {
 } from "./administration";
 
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
-import { RoleManagementModule } from "../role-management/role-management.module";
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
 import { AppTemplatesModule } from "../app-templates/index";
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 import { HelpContentManagementSideNavComponent } from "./content-management/view/sidenav/content-management-sidenav.component";
+import { UserService } from "../role-management/user.service";
 
 @NgModule({
   imports: [
@@ -107,15 +106,11 @@ import { HelpContentManagementSideNavComponent } from "./content-management/view
   ],
   providers: [
     /**
-     * Services
-     */
-    AlertFooterService,
-
-    /**
      * Route Guards
      */
     FSDGuard,
     SystemGuard,
+    UserService,
   ],
 })
 export class WorkspaceModule { }

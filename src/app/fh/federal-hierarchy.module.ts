@@ -10,7 +10,6 @@ import { routing } from './federal-hierarchy.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { FederalHierarchyPage } from "./federal-hierarchy.page";
 import { FHSideNav } from "./fh-sidenav/fh-sidenav.component";
 
@@ -32,8 +31,6 @@ import { FHSideNav } from "./fh-sidenav/fh-sidenav.component";
     FederalHierarchyPage,
     FHSideNav,
   ],
-  providers: [
-    AlertFooterService,
-  ],
+  providers: [],
 })
 export class FederalHierarchyModule { }

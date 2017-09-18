@@ -17,6 +17,7 @@
   <div class="usa-width-one-third">
       <a *ngIf="permissions['CREATE_FALS']" class="usa-button usa-button-primary al-button" [routerLink]="['/programs/add']">Create a New Listing</a>
       <a *ngIf="permissions['CREATE_RAO']" class="usa-button usa-button-primary al-button" [routerLink]="['/fal/myRegionalOffices']">Manage Assistance Locations</a>
+    <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" class="usa-button usa-button-primary al-button" [routerLink]="['/fal/workspace/cfda-numbers']">Manage CFDA Numbers</a>
   </div>
   </div>
   <a class="widget-footer text-right" [routerLink]="['/fal/workspace']">

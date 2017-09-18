@@ -25,9 +25,6 @@ export class AuthGuard implements CanActivate {
 
   checkPermissions(screen: string, program: any) {
     this.viewModel = new FALFormViewModel(program);
-    this.errorService.viewModel = this.viewModel;
-    this.errorService.initFALErrors();
-    let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
 
     if (Cookies.get('iPlanetDirectoryPro') !== undefined && SHOW_HIDE_RESTRICTED_PAGES === 'true') {
       let pathArray = this.router.url.split("/");
@@ -36,9 +33,20 @@ export class AuthGuard implements CanActivate {
         case 'submit':
           if (program && program._links && !program._links['program:submit']) {
             this.router.navigate(['accessrestricted']);
-          } else if (program._links['program:submit'] && errorFlag === true) {
-            this.redirectionUrl(id, 'review');
           }
+
+          // re-validate all data
+          this.errorService.viewModel = this.viewModel;
+          this.errorService.validateAll().subscribe(
+            (event) => {},
+            (error) => {},
+            () => {
+              let errorFlag = FALFormErrorService.hasErrors(this.errorService.errors);
+              if (program._links['program:submit'] && errorFlag === true) {
+                this.redirectionUrl(id, 'review');
+              }
+            }
+          );
           break;
         case 'reject':
           if (program && program._links && !program._links['program:request:reject']) {

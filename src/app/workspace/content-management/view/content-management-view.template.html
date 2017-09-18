@@ -10,7 +10,7 @@
       <div class="pull-left p_T-3x">
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
-      <a class="sam-ui primary small button pull-right m_L-2x p_T-4x p_B-3x">New Question</a>
+      <a class="sam-ui primary small button pull-right m_L-2x question-button">New Question</a>
       <sam-sort class="pull-right" [(ngModel)]="sortByModel" [options]="contentSortOptions" (ngModelChange)="loadContent(filterObj, sortByModel.type, sortByModel.sort, 0)">
       </sam-sort>
     </div>

@@ -5,7 +5,7 @@ import { IAMService } from 'api-kit';
 import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service';
 import { AdminService } from 'application-content/403/admin.service';
 import { Cookie } from "ng2-cookies";
-import { UserService } from "../../users/user.service";
+import { UserService } from "../../role-management/user.service";
 
 @Component({
   selector: 'workspace-administration',

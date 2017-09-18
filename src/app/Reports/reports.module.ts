@@ -4,10 +4,8 @@ import { FormsModule }   from '@angular/forms';
 import { routing } from './reports.route';
 import { ReportsPage } from './reports.page';
 import { OverviewComponent } from './sections/overview/overview.component';
-import { OverviewProtoComponent } from './sections/overviewProto/overviewProto.component';
 import { ScheduledComponent } from './sections/overview/scheduled/scheduled.component';
 import { ReportComponent } from './sections/report/report.component';
-import { ReportProtoComponent } from './sections/reportProto/reportProto.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
@@ -21,6 +19,7 @@ import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
 import { ReportService } from './report.service';
+import { MyReportsComponent } from './sections/myreports/myreports.component';
 
 @NgModule({
   imports: [
@@ -36,14 +35,13 @@ import { ReportService } from './report.service';
   declarations: [
     ReportsPage,
     OverviewComponent,
-    OverviewProtoComponent,
     ScheduledComponent,
     ReportComponent,
     AdhocComponent,
     FavoritesComponent,
     StaticComponent,
     ReportsPipe,
-    ReportProtoComponent
+    MyReportsComponent
   ],
   providers: [IAMService, ReportsService, ReportService],
 })

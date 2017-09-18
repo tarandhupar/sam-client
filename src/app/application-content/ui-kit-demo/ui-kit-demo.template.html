@@ -1,5 +1,196 @@
-<div class="sam-ui-kit">
+<div class="sam-ui grid container">
+  <div class="twelve wide column">
+      <div class="sam-ui segment">
+          <h2 class="sam-ui header">
+            Table-Entry 
+            <div class="sub header">&lt; sam-table-entry &gt;</div>
+          </h2>
+        <sam-table-entry 
+          [formArray]="tableFormArray"
+          [columnHeaders]="['Col1','Col2','Col3']"
+          subRows="true"
+          [controlTemplate]="tableFormItemTemplate"
+          [subControlTemplate]="tableSubFormItemTemplate">
+          <template #display let-control>
+            <td class="one wide">{{control.value.col1}}</td>
+            <td class="four wide">{{control.value.col2}}</td>
+            <td class="four wide">{{control.value.col3}}</td>
+          </template>
 
+          <template #subDisplay let-subControl>
+            <td class="one wide">{{subControl.value.subcol1}}</td>
+            <td class="four wide">{{subControl.value.subcol2}}</td>
+            <td class="four wide">{{subControl.value.subcol3}}</td>
+          </template>
+
+          <template #edit let-control>
+            <div [formGroup]="control">
+              <sam-text
+                name="col1"
+                label="Column 1"
+                [control]="control.get('col1')"
+                formControlName="col1"></sam-text>
+              <sam-text
+                name="col2"
+                label="Column 2"
+                [control]="control.get('col2')"
+                formControlName="col2"></sam-text>
+              <sam-text
+                name="col3"
+                label="Column 3"
+                [control]="control.get('col3')"
+                formControlName="col3"></sam-text>
+            </div>
+          </template>
+
+          <template #subEdit let-control>
+              <div [formGroup]="control">
+                <sam-text
+                  name="subcol1"
+                  label="Sub-Column 1"
+                  [control]="control.get('subcol1')"
+                  formControlName="subcol1"></sam-text>
+                <sam-text
+                  name="subcol2"
+                  label="Sub-Column 2"
+                  [control]="control.get('subcol2')"
+                  formControlName="subcol2"></sam-text>
+                <sam-text
+                  name="subcol3"
+                  label="Sub-Column 3"
+                  [control]="control.get('subcol3')"
+                  formControlName="subcol3"></sam-text>
+              </div>
+            </template>
+        </sam-table-entry>
+      </div>
+  </div>
+</div>
+<div class="sam-ui hidden section divider"></div>
+
+<!-- Buttons -->
+<div class="sam-ui grid container">
+  <div class="twelve wide column">
+    <div class="sam-ui segment">
+      <h2 class="sam-ui header">
+        Buttons 
+        <div class="sub header">&lt; sam-button &gt;</div>
+      </h2>
+      
+      <!-- Actions -->
+      <h3 class="sam-ui header">Actions</h3>
+      <sam-button 
+        [buttonId]="'primaryBtn'" 
+        [buttonText]="'Primary'" 
+        [buttonType]="'primary'" 
+        (click)="onDefaultBtnClick()">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'secondaryBtn'" 
+        [buttonText]="'Secondary'" 
+        [buttonType]="'secondary'" 
+        (click)="onDefaultBtnClick()">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'tertiaryBtn'" 
+        [buttonText]="'Tertiary'" 
+        [buttonType]="'tertiary'" 
+        (click)="onDefaultBtnClick()">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'negativeBtn'" 
+        [buttonText]="'Negative'" 
+        [buttonType]="'negative'" 
+        (click)="onDefaultBtnClick()">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'submitBtn'" 
+        [buttonText]="'Submit'" 
+        [buttonType]="'submit'" 
+        (click)="onDefaultBtnClick()">
+      </sam-button>
+      
+      <!-- State: Disabled -->
+      <h3 class="sam-ui header">Disabled</h3>
+      <sam-button 
+        [buttonId]="'primaryDisabledBtn'" 
+        [buttonText]="'Primary'" 
+        [buttonType]="'primary'" 
+        buttonDisabled=true>
+      </sam-button>
+      <sam-button 
+        [buttonId]="'secondaryDisabledBtn'" 
+        [buttonText]="'Secondary'" 
+        [buttonType]="'secondary'" 
+        buttonDisabled=true >
+      </sam-button>
+      <sam-button 
+        [buttonId]="'tertiaryDisabledBtn'" 
+        [buttonText]="'Tertiary'" 
+        [buttonType]="'tertiary'" 
+        buttonDisabled=true >
+      </sam-button>
+      <sam-button 
+        [buttonId]="'negativeDisabledBtn'" 
+        [buttonText]="'Negative'" 
+        [buttonType]="'negative'" 
+        buttonDisabled=true >
+      </sam-button>
+      <sam-button 
+        [buttonId]="'submitDisabledBtn'" 
+        [buttonText]="'Submit'" 
+        [buttonType]="'submit'" 
+        buttonDisabled=true >
+      </sam-button>
+      
+      <!-- Size -->
+      <h3 class="sam-ui header">Size</h3>
+      <sam-button 
+        [buttonId]="'smallBtn'" 
+        [buttonText]="'Small'" 
+        [buttonSize]="'small'">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'mediumBtn'" 
+        [buttonText]="'Medium'">
+      </sam-button>
+      <sam-button 
+        [buttonId]="'largeBtn'" 
+        [buttonText]="'Large'" 
+        [buttonSize]="'large'">
+      </sam-button>
+
+    </div>
+  </div>
+</div>
+
+<div class="sam-ui hidden section divider"></div>
+
+
+<div class="sam-ui-kit">
+  <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <sam-poc-entry></sam-poc-entry>
+    </div>
+  </div>
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Location Group</h2>
+    <sam-location-component class="usa-width-one"
+      [cityConfig]="{name: 'city'}"
+      [stateConfig]="{name: 'state'}"
+      [countryConfig]="{name: 'country'}"
+      [countyConfig]="{name: 'county'}"
+      [zipConfig]="{name: 'zip'}">
+    </sam-location-component><br/>
+  </div>
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+        <sam-autocomplete-multiselect state class="usa-width-one-half" 
+                                  label="State" required="true"
+                                  [keyValueConfig]="multiselectConfigSelectable">
+        </sam-autocomplete-multiselect>
+    </div>
+  </div> <br/> 
   <div class="usa-grid">
     <div class="usa-width-one-half">
       <h2>SAM agency-picker-v2 &lt;sam-agency-picker-v2&gt;</h2>
@@ -23,6 +214,7 @@
       <p>{{ agv2_selections2 | json }}</p>
     </div>
   </div>
+  
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM Sort &lt;sam-sort&gt;</h2>
@@ -283,39 +475,7 @@
      <sam-autocomplete county [(ngModel)]="locationOutput" [id]="'h1231029380938489'" [labelText]="'County Picker'" [config]="locationDemoConfig"></sam-autocomplete>
     </div>
   </div>
-
-
-  <div class="usa-grid">
-    <h2>Button Component &lt;sam-button&gt;</h2>
-    <div class="usa-width-one-whole">
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Default'" [buttonType]="btnType" (click)="onDefaultBtnClick()"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'altBtn'" [buttonText]="'Alt'" [buttonType]="'alt'"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'secondaryBtn'" [buttonText]="'Secondary'" [buttonType]="'secondary'"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'grayBtn'" [buttonText]="'Gray'" [buttonType]="'gray'"></sam-button>
-      </div>
-    </div>
-    <div class="usa-width-one-whole">
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'outlineBtn'" [buttonText]="'Outline'" [buttonType]="'outline'"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'invertedBtn'" [buttonText]="'Inverted'" [buttonType]="'inverted'"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'disabledBtn'" [buttonText]="'Disabled'" [buttonType]="'disabled'"></sam-button>
-      </div>
-      <div class="usa-width-one-fourth">
-        <sam-button [buttonId]="'bigBtn'" [buttonText]="'Big'" [buttonType]="'big'"></sam-button>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="usa-grid">
     <h2>Label Component &lt;sam-label&gt;</h2>

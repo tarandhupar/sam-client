@@ -98,7 +98,7 @@
                              #agencyPicker>
           </sam-agency-picker>
 
-          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)" *ngIf="user.workPhone"></sam-phone-entry>
+          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)"></sam-phone-entry>
       </div>
     </sam-editor>
   </section>
@@ -134,8 +134,8 @@
       Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
       be permanently inaccessible and you will need to re-register to access SAM.gov.
     </div>
-    <div class="usa-button-controls">
-      <sam-button [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
+    <div class="usa-button-controls text-left">
+      <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
     </div>
   </section>
 </div>

@@ -3,7 +3,7 @@ import * as moment from 'moment/moment';
 import { Router } from '@angular/router';
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
 import {RAOFormService} from "../regional-assistance-operations/regional-assistance-form.service";
-import {AlertFooterService} from "../../../alerts/alert-footer/alert-footer.service";
+import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
 
 // Animation
 import { trigger, state, style, animate, transition } from '@angular/core';

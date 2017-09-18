@@ -12,11 +12,12 @@
       [label]="'OMB/RMO Comment'"
       [required]="true"
       formControlName="ombComment"
+      (inputEventChange)="onTextChange($event)"
     ></sam-text-area>
     <div class="usa-width-one-half">
         <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
         <sam-button buttonText="Reject" (onClick)="onRejectClick($event)"
-                    [buttonDisabled]="((!rejectALForm.valid || rejectALForm.pristine) ? true : false)"></sam-button>
+                    [buttonDisabled]="btnDisabled"></sam-button>
       </div>
   </form>
 </div>

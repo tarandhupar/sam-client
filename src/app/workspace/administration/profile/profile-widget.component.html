@@ -23,23 +23,20 @@
         <div class="usa-width-two-thirds" *ngIf="!states.public">
           <div class="usa-width-one-third widget-section">
             <h1>My Access</h1>
-            <a class="usa-button usa-button-outline shortcut" [routerLink]="['/profile/request-access']">Request Access</a>
-            <a class="usa-button usa-button-outline shortcut" [routerLink]="['/profile/migrations']">Migrate Accounts</a>
+            <a class="usa-button shortcut" [routerLink]="['/profile/request-access']">Request Access</a>
+            <a class="usa-button shortcut" [routerLink]="['/profile/migrations']">Migrate Accounts</a>
 
-            <a class="widget-footer text-right" [routerLink]="['/profile/access']">
+            <a class="widget-footer" [routerLink]="['/profile/access']">
               Go to My Access <span class="fa fa-chevron-circle-right"></span>
             </a>
           </div>
-          <div class="usa-width-one-third widget-section">
+          <div class="usa-width-two-thirds widget-section">
             <h1>My Profile</h1>
-            <a class="usa-button shortcut" [routerLink]="['/profile/password']">Request Your Password</a>
-            <a class="usa-button usa-button-outline shortcut"
-               href="#kba"
-               [routerLink]="['/profile']"
-               [queryParams]="{ edit: 'kba' }"
-               pageScroll>Update Security Questions</a>
+            <a class="usa-button shortcut" [routerLink]="['/profile/password']">Reset Your Password</a>
+            <a class="usa-button shortcut" href="#kba" [routerLink]="['/profile']" [queryParams]="{ edit: 'kba' }" pageScroll>Update Security Questions</a>
+            <a class="usa-button shortcut" [routerLink]="['/profile/subscriptions']">Manage Subscriptions</a>
 
-            <a class="widget-footer text-right" [routerLink]="['/profile']">
+            <a class="widget-footer" [routerLink]="['/profile']">
               Go to My Profile <span class="fa fa-chevron-circle-right"></span>
             </a>
           </div>

@@ -343,8 +343,6 @@ export class RegisterMainComponent {
       .join(' ')
       .replace(/\s+/, ' ');
 
-    userData.workPhone = this.user.workPhone;
-
     // Clean up empty properties
     for(propKey in userData) {
       switch(propKey) {
@@ -378,7 +376,6 @@ export class RegisterMainComponent {
 
   validate() {
     this.nameEntry.setSubmitted();
-    this.phoneEntry.check();
     this.passwordComponent.setSubmitted();
 
     if(this.states.isGov) {

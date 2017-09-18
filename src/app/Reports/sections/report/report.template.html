@@ -1,43 +1,17 @@
 <div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
   <section class="usa-grid-full">
     <div class="sam-ui hidden divider"></div>
-    Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
+    Back to: <a routerLink="/reports/overview" routerLinkActive="Active">Dynamic Reports</a>
     <br>
-    <h2 class="m_T-2x">{{name}}</h2>
-    <!--<sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue>-->
-      <!--<sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">-->
-        <!--<form (ngSubmit)="onSubmit()" #reportForm="ngForm">-->
-        <!--<p class="p_L-1x">Date Range</p>-->
-        <!--<p class="p_L-0x">"From Date" and "To Date" correspond to the "Date Signed" on the procurement awards</p>-->
-        <!--<div class="display-block">-->
-        <!--<sam-date name="from-date" [(ngModel)]='dateFromModel'></sam-date>-->
-        <!--<sam-date name="to-date" [(ngModel)]='dateToModel'></sam-date>-->
-        <!--</div>-->
-        <!--<sam-agency-picker #agencyPicker name="agency-picker"-->
-                           <!--[label]="'Search Federal Organizations'"-->
-                           <!--(organization)="onOrganizationChange($event)" [(ngModel)]="agencyPickerValue">-->
-        <!--</sam-agency-picker>-->
-        <!--<div class="usa-width-one-fourth">-->
-          <!--<sam-button [buttonId]="'defaultBtn'" [buttonText]="'Clear'" [buttonType]="btnType"-->
-                      <!--(click)="resetParameter()"></sam-button>-->
-          <!--<sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType"-->
-                      <!--(click)="reportExecute()"></sam-button>-->
-        <!--</div>-->
-        <!--</form>-->
-      <!--</sam-accordion-section>-->
-    <!--</sam-accordion>-->
-    <br>
-    <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
-    <br>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-whole">
-        <sam-alert class="full-width" [type]="'info'"
-               [description]="'DoD report data that are funded by DoD are delayed 90 days for non DoD users.'">
-        </sam-alert>
-      </div>
-    </div>
+    <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;
+      <span *ngIf="name=='IDVs whose Orders are over the Ceiling Amount' ||
+        name=='Potential Vendor Anomaly Report' ||
+        name=='Unique Vendors Report' ||
+        name=='Contract Termination for Default-Cause Report' ||
+        name=='Subcontracting Plan Report'" style="color: red">ANOMALY</span>
+    </h2>
     <sam-accordion >
-      <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
+      <sam-accordion-section  [name]="'Description'" [headerText]="'Description'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
             <ul  class="p_L-0x ul-css">
@@ -46,10 +20,144 @@
                   <a href="{{report.name}}"></a>
                 </b>
                 <ul  class="p_L-0x ul-css">
-                  <li *ngFor="let item of report.appendix">
-                    <p class="p_L-0x">{{item}}</p>
+                  <li>
+                    <p class="p_L-0x">{{report.desc}}</p>
                   </li>
                 </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </sam-accordion-section>
+    </sam-accordion>
+    <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
+      <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
+        <form #reportForm="ngForm">
+          <div class="display-block">
+              <sam-date-range *ngIf="usedPrompts.dateRange" 
+                [label]="'Date range correspond to the Date Signed on Procurement Awards'"
+                [(ngModel)]='dateRangeModel'
+                #dateRange="ngModel"
+                [control]="dateRange.control" 
+                [required]="'Required'" 
+                name='dateRange'>
+              </sam-date-range>
+              <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">A Date Range can not exceed 12 {{maxRange}}.  Please refine your date criteria.</p> 
+          </div>
+
+          <div class="display-block">
+            
+            <div class="usa-width-one-half">
+              <sam-autocomplete state
+                *ngIf="usedPrompts.state"
+                [(ngModel)]="location.state"
+                name="state"
+                [config]="{serviceOptions:'USA', 
+                  keyValueConfig: {keyProperty: 'key', valueProperty: 'value'},
+                  dropdownLimit: 10,
+                  showClearButton: true}" 
+                [labelText]="'State Code'"
+                (enterEvent)="updateStateField($event)">
+              </sam-autocomplete>
+              <sam-autocomplete country
+                *ngIf="usedPrompts.country"
+                [allowAny]="false" 
+                [(ngModel)]="location.country" 
+                name="country"
+                [labelText]="'Vendor Country Code'" 
+                [config]="locationConfig" 
+                (enterEvent)="updateCountryField($event)">
+              </sam-autocomplete>
+              <sam-text *ngIf="usedPrompts.agencyName"
+                [(ngModel)]="agencyName"
+                [name]="'agencyName'"
+                [label]="'Vendor Name'">
+              </sam-text>
+              <sam-agency-picker-v2 *ngIf="usedPrompts.fHierarchy" 
+                name="agency-picker"
+                [orgRoots]="userOrg" 
+                [(ngModel)]="agencyPicker">
+              </sam-agency-picker-v2>
+              <sam-text *ngIf="usedPrompts.orgId" 
+                [(ngModel)]="orgCode"
+                [name]="'orgCode'" 
+                [label]="'Organization'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts.piid" 
+                [(ngModel)]="piid"
+                [name]="'piid'" 
+                [label]="'PIID'">
+              </sam-text>
+              <sam-select *ngIf="usedPrompts.includesBases"
+                class="includesBases"
+                [(ngModel)]="includesBases"
+                name="includesBases" 
+                [options] = "basesOptions"
+                [label] = "'Includes'"
+                (switchStatusChange)="includesBasesStatusChange($event)">
+              </sam-select>
+              <sam-select *ngIf="usedPrompts.contractingRegion"
+                name="contractingRegion"
+                [(ngModel)]="contractingRegion"
+                [options] = "contractingRegionOptions"
+                [label] = "'Contracting Office Region'"
+                (switchStatusChange)="contractingRegionChange($event)">
+              </sam-select>
+            </div>
+          </div>  
+
+          <div class="display-block report__promptBtns">
+            <sam-button [buttonId]="'defaultBtn'" 
+              [buttonText]="'Clear'" 
+              [buttonType]="btnType"
+              (click)="resetParameter()">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" 
+              [buttonText]="'Execute'" 
+              [buttonType]="btnType"
+              (click)="validate('execute')">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" 
+              [buttonText]="'PDF Export'" 
+              [buttonType]="btnType" 
+              (click)="validate('export')">
+            </sam-button>
+            <sam-button *ngIf="localEnv" 
+            [buttonId]="'defaultBtn'" 
+              [buttonText]="'TEST'" 
+              [buttonType]="btnType" 
+              (click)="test()">
+            </sam-button>
+          </div>
+        </form>
+      </sam-accordion-section>
+    </sam-accordion>
+    <br>
+    <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
+    <br>
+    <div class="usa-width-one-whole">
+      <sam-alert style="margin-top: 0" class="full-width" 
+        [type]="'info'"
+        [description]="'DoD report data that are funded by DoD are delayed 90 days for non DoD users.'">
+          <br/><br/>The maximum number of rows allowed is 150,000.
+ For better results, please further limit your report search criteria by reducing the date range or providing more specific information where applicable.
+      </sam-alert>
+    </div>
+    <br><br>
+    <sam-accordion>
+      <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
+        <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
+          <div *ngIf="id">
+            <ul  class="p_L-0x ul-css">
+              <li *ngFor="let report of data.reports | repfil: id">
+                <b>
+                  <a href="{{report.name}}"></a>
+                </b>
+                <div class="p_L-0x ul-css">
+                  <div *ngFor="let item of report.appendix" style="margin-bottom:1em">
+                    <p class="p_L-0x">{{item}}</p>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

@@ -81,7 +81,7 @@
       </div>
 
       <div class="usa-button-controls">
-        <sam-button [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
+        <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
         <sam-alert [type]="alerts.deactivate.type"
                    [title]="alerts.deactivate.message"
                    [showClose]="true"
@@ -96,7 +96,7 @@
       </div>
 
       <div class="usa-button-controls">
-        <button type="button" class="usa-button-outline usa-button-outline-alt" (click)="sendPasswordReset()">Send</button>
+        <sam-button buttonType="tertiary" buttonText="Send" (onClick)="sendPasswordReset"></sam-button>
         <sam-alert [type]="alerts.password.type"
                    [title]="alerts.password.message"
                    [showClose]="true"

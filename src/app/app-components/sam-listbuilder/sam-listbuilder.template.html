@@ -9,6 +9,7 @@
     [disable]="showEditSubform"
     [index]="i"   
     [firstOfList]="i==0" 
+    [hideDefaultBtns]="hideDefaultBtns"
     [endOfList]="i==model.length-1">
     <ng-container display>
         <template [ngTemplateOutlet]="displayTemplate" [ngOutletContext]="{ $implicit: row }"></template>
@@ -17,4 +18,9 @@
         <template [ngTemplateOutlet]="editTemplate" [ngOutletContext]="{ $implicit: row }"></template>
     </ng-container>
 </sam-listbuilder-card>
-<button class="add-button usa-button-outline" *ngIf="(!max || (max && model.length<max)) && !showEditSubform" (click)="showAdd()">Add Entry</button>
+
+<sam-button 
+  *ngIf="(!max || (max && model.length<max)) && !showEditSubform" 
+  buttonText="Add Entry"
+  (click)="showAdd()">
+</sam-button>

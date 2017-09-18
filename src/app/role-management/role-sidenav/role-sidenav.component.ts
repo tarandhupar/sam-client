@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
 @Component({
   selector : 'role-sidenav',
@@ -69,11 +69,11 @@ export class RoleSideNav implements OnInit{
     }
 
     mapLabelAndName(val) {
-      return { label: this.capitalize.transform(val.domainName), value: val.id, name: val.domainName };
+      return { label: val.domainName, value: val.id, name: val.domainName };
     }
 
     mapLabel(val) {
-      return this.capitalize.transform(val.domainName);
+      return val.domainName;
     }
 
     mapId(val){

@@ -12,8 +12,8 @@ import { SamAPIKitModule } from "api-kit";
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceModule } from "./workspace.module";
 import { ProgramService } from "../../api-kit/program/program.service";
-import { UserService } from "../users/user.service";
-import { UserServiceMock } from "../users/user.service.mock";
+import { UserService } from "../role-management/user.service";
+import { UserServiceMock } from "../role-management/user.service.mock";
 
 
 class RouterStub {

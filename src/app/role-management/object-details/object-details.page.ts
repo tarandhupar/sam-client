@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import * as _ from 'lodash';
 import { Title } from "@angular/platform-browser";
 
@@ -14,7 +14,7 @@ export class ObjectDetailsPage implements OnInit {
 
   crumbs = [
     { url: '/workspace', breadcrumb: 'Workspace'},
-    { url: '/access/workspace', breadcrumb: 'Definitions'},
+    { url: '/role-management/workspace', breadcrumb: 'Definitions'},
     { breadcrumb: ''}
   ];
 
@@ -222,7 +222,7 @@ export class ObjectDetailsPage implements OnInit {
           type: 'success',
           timer: 3200,
         });
-        this.router.navigate(['/access/workspace']);
+        this.router.navigate(['/role-management/workspace']);
       },
       err => {
         this.showGenericServicesError();

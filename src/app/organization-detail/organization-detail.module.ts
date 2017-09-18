@@ -10,7 +10,6 @@ import { routing } from './organization-detail.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { OrgDetailPage } from "./organization-detail.page";
 import { OrgDetailProfilePage } from "./profile/profile.component";
 import { OrgCreatePage } from "./create-org/create-org.component";
@@ -48,7 +47,6 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
     AACConfirmPage,
   ],
   providers: [
-    AlertFooterService,
     FlashMsgService,
     AACRequestGuard,
     CapitalizePipe,
