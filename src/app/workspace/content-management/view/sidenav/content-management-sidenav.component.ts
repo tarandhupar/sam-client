@@ -1,5 +1,5 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 
 @Component({
@@ -8,22 +8,19 @@ import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 })
 export class HelpContentManagementSideNavComponent{
 
-  @Input() curSection: string = "";
-  @Input() curSubSection: string = "";
+  @Input() filterOption = {
+    keyword:"",
+    status:[],
+    domains:[],
+    section:"",
+    subSection:"",
+  };
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
   sidenavModel = {
     "label": "Content Management",
     "children": []
-  };
-
-  filterOption = {
-    keyword:"",
-    status:[],
-    domains:[],
-    section:"",
-    subSection:"",
   };
 
   statusCbxConfig = {
@@ -43,37 +40,28 @@ export class HelpContentManagementSideNavComponent{
     label: 'Domains',
   };
 
-  constructor(private msgFeedService: MsgFeedService){}
+  constructor(private msgFeedService: MsgFeedService, private _router: Router, private route: ActivatedRoute){}
 
   ngOnInit(){
     this.loadFilterData();
   }
 
-  isCurrentSection(section):boolean{return this.curSection === section;}
-  isCurrentPath(str):boolean{
-    let pathStr = this.curSection + (this.curSubSection ===''? '': '/'+this.curSubSection) ;
-    return str === pathStr;
-  }
-  getCurrentTabClass(str):string{return this.isCurrentPath(str) ? 'cm-current-tab':'';}
+  isCurrentSection(section):boolean{return this.filterOption.section === section;}
+  getCurrentTabClass(str):string{return this.isCurrentSection(str) ? 'cm-current-tab':'';}
 
   onSectionTabClick(sectionStr){
     // Set up current section and sub section
     let dividerIndex = sectionStr.indexOf('/');
-    this.curSection = sectionStr.substr(0, dividerIndex === -1? sectionStr.length:dividerIndex);
-    this.curSubSection = sectionStr.substr(dividerIndex === -1? sectionStr.length:dividerIndex + 1);
-    this.filterOption.section = this.curSection;
-    this.filterOption.subSection = this.curSubSection;
+    this.filterOption.section = sectionStr.substr(0, dividerIndex === -1? sectionStr.length:dividerIndex);
+    this.filterOption.subSection = sectionStr.substr(dividerIndex === -1? sectionStr.length:dividerIndex + 1);
 
     this.resetFilterFields();
-    this.contentFilterOptionChange();
-
-    // May want to update counts for requests again
 
     // emit event for msg feed to update url
+    this.contentFilterOptionChange();
   }
 
   contentFilterOptionChange(){
-
     // emit event for msg feed to search for current filter messages
     this.filterChange.emit(this.filterOption);
   }
@@ -86,7 +74,7 @@ export class HelpContentManagementSideNavComponent{
 
   loadFilterData(){
     this.msgFeedService.getFilters('3').subscribe(data =>{
-      this.loadDomains(data.domainTypes);
+      if(data['domainTypes']) this.loadDomains(data['domainTypes']);
     });
   }
 

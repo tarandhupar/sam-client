@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './content-management-view.template.html',
@@ -27,8 +28,18 @@ export class HelpContentManagementViewComponent {
 
   validSections = ['data-dictionary','video-library', 'FAQ-repository'];
 
-  sortByModel = {type: 'latest update', sort: 'asc' };
-  contentSortOptions = [{label:'Latest Update', name:'Latest Update', value:'latest update'}];
+  sortByModel = {
+    'FAQ-repository': {type: 'latest update', sort: 'asc' },
+    'data-dictionary': {type: 'alphabetical', sort: 'asc' },
+    'video-library': {type: 'relevance', sort: 'asc' },
+  };
+
+  sortOptionsMap = {
+    'FAQ-repository': [{label:'Latest Update', name:'Latest Update', value:'latest update'}],
+    'data-dictionary': [{label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
+    'video-library': [{label:'Relevance', name:'Relevance', value:'relevance'},
+      {label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
+  };
 
   //current results num data variables
   curStart = 0;
@@ -49,7 +60,11 @@ export class HelpContentManagementViewComponent {
 
   contents = [];
 
-
+  createTextMap = {
+    'data-dictionary': "New Definition",
+    'FAQ-repository': "New Question",
+    'video-library': "New Video",
+  };
 
   constructor(private route:ActivatedRoute, private _router:Router, private contentManagementService:ContentManagementService, private capitalPipe: CapitalizePipe){}
 
@@ -57,14 +72,16 @@ export class HelpContentManagementViewComponent {
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
-        this.curSection = params['section'];
-        this.curSubSection = params['subsection']? params['subsection']:'';
-        this.title = this.getSectionTitle(this.curSection);
-        this.crumbs[1].breadcrumb = this.title;
-        this.filterObj.section = this.curSection;
-        this.filterObj.subSection = this.curSubSection;
-        this.loadContent(this.filterObj, this.sortByModel.type, this.sortByModel.sort, this.curPage);
-
+        if(this.curSection !== params['section']){
+          this.curSection = params['section'];
+          this.curSubSection = params['subsection']? params['subsection']:'';
+          this.title = this.getSectionTitle(this.curSection);
+          this.crumbs[1].breadcrumb = this.title;
+          this.filterObj.section = this.curSection;
+          this.filterObj.subSection = this.curSubSection;
+          this.loadQueryParamsFromURL(this.route.snapshot.queryParams);
+          this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
+        }
       });
   }
 
@@ -76,18 +93,38 @@ export class HelpContentManagementViewComponent {
   onFilterChange(filterObj){
     this.filterObj = filterObj;
     this.curPage = 0;
-    this.loadContent(this.filterObj, this.sortByModel.type, this.sortByModel.sort, this.curPage);
+    if(filterObj.section !== this.curSection){
+      this.curSection = filterObj.section;
+      this.sortByModel[this.curSection] = {type: this.sortOptionsMap[this.curSection][0].value, sort:'asc'};
+    }
+    this.updateURL();
+    this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
   }
 
   /* update message feeds based on page num changes*/
   onPageNumChange(pageNum){
     this.curPage = pageNum;
-    this.loadContent(this.filterObj, this.sortByModel.type, this.sortByModel.sort, this.curPage);
+    this.updateURL();
+    this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
+  }
+
+  onSortModelChange(sortModel){
+    this.curPage = 0;
+    this.updateURL();
+    this.loadContent(this.filterObj, sortModel, this.curPage);
   }
 
   /* search message feeds with filter, sortby, page number and order*/
-  loadContent(filterObj, sortBy, order, page){
-    this.contentManagementService.getFAQContent(filterObj, sortBy, order, page, this.recordsPerPage).subscribe(data => {
+  loadContent(filterObj, sort, page){
+    let content;
+    if(filterObj.section.toLowerCase().includes('data')){
+      content = this.contentManagementService.getDataDictionaryContent(filterObj, sort, page, this.recordsPerPage);
+    }else if(filterObj.section.toLowerCase().includes('faq')){
+      content = this.contentManagementService.getFAQContent(filterObj, sort, page, this.recordsPerPage);
+    }else if(filterObj.section.toLowerCase().includes('video')){
+      content = this.contentManagementService.getVideoLibraryContent(filterObj, sort, page, this.recordsPerPage);
+    }
+    content.subscribe(data => {
       this.contents = data['contents'];
       this.totalRecords = data['totalCount'];
       this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
@@ -100,6 +137,27 @@ export class HelpContentManagementViewComponent {
     this.curEnd = (this.curPage + 1) * this.recordsPerPage;
     if( this.curEnd >= this.totalRecords) this.curEnd = this.totalRecords;
     if( this.totalRecords === 0) this.curStart = 0;
+  }
+
+  updateURL(){
+    let navigationExtras: NavigationExtras = {queryParams: {}};
+    if(this.curPage > 0) navigationExtras.queryParams['page'] = this.curPage+1;
+    if(this.filterObj.domains.length > 0) navigationExtras.queryParams['domain'] = this.filterObj.domains.join(',');
+    if(this.filterObj.status.length > 0) navigationExtras.queryParams['status'] = this.filterObj.status.join(',');
+    if(this.filterObj.keyword !== "") navigationExtras.queryParams['q'] = this.filterObj.keyword;
+    if(this.sortByModel[this.curSection]['sort'] !== 'asc') navigationExtras.queryParams['order'] = this.sortByModel[this.curSection]['sort'] ;
+    if(this.sortByModel[this.curSection]['type'] !== this.sortOptionsMap[this.curSection][0].value) navigationExtras.queryParams['sort'] = this.sortByModel[this.curSection]['type'];
+    this._router.navigate(['/workspace/content-management/'+this.filterObj.section], navigationExtras);
+
+  }
+
+  loadQueryParamsFromURL(queryParams){
+    if(queryParams['q'])this.filterObj.keyword = queryParams['q'];
+    if(queryParams['status'])this.filterObj.status = queryParams['status'].split(',');
+    if(queryParams['domains'])this.filterObj.domains = queryParams['domains'].split(',');
+    if(queryParams['sort'])this.sortByModel[this.curSection]['type'] = queryParams['sort'];
+    if(queryParams['order'])this.sortByModel[this.curSection]['sort'] = queryParams['order'];
+    if(queryParams['page'])this.curPage = queryParams['page']-1;
   }
 
   getSectionTitle(section){
