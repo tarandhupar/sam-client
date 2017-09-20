@@ -20,7 +20,7 @@ class RouterStub {
   navigate(url: string) { return url; }
 }
 
-describe('Workspace Page', () => {
+xdescribe('Workspace Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:WorkspacePage;
   let fixture:any;

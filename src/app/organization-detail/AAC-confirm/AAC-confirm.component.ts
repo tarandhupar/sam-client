@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
-import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
+import { AACRequestService } from 'api-kit/aac-request/aac-request.service';
 
 @Component ({
   templateUrl: 'AAC-confirm.template.html'

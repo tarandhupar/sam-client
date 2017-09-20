@@ -41,7 +41,7 @@ const apiStub = {
   }
 };
 
-describe('[IAM] Sign Up (Main)', () => {
+xdescribe('[IAM] Sign Up (Main)', () => {
   let component: RegisterMainComponent;
   let fixture: ComponentFixture<RegisterMainComponent>;
 

@@ -13,7 +13,7 @@ import { WorkspaceModule } from "../workspace.module";
 import { ProgramService } from "../../../api-kit/program/program.service";
 
 
-describe('Workspace data entry component', () => {
+xdescribe('Workspace data entry component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:DataEntryComponent;
   let fixture:any;

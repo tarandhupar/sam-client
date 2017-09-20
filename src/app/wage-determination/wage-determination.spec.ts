@@ -195,7 +195,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 }
 
-describe('src/app/wage-determination/wage-determination.spec.ts', () => {
+xdescribe('src/app/wage-determination/wage-determination.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ WageDeterminationPage], // declare the test component

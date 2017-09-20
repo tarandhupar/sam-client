@@ -83,7 +83,7 @@ let searchServiceStub = {
 
 let fhServiceStub = {};
 
-describe('src/app/search/search.spec.ts', () => {
+xdescribe('src/app/search/search.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,

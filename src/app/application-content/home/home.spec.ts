@@ -12,7 +12,7 @@ class RouterStub {
   navigate(url: string) { return url; }
 }
 
-describe('Home', () => {
+xdescribe('Home', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [

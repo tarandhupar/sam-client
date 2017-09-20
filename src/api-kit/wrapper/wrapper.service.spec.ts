@@ -10,7 +10,7 @@ import {
 
 import { WrapperService } from '../wrapper/wrapper.service'
 
-describe('src/api-kit/wrapper/wrapper.service.spec.ts', () => {
+xdescribe('src/api-kit/wrapper/wrapper.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [

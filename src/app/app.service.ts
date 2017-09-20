@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AppState {
-  _state = { };
+  _state = { 
+    isDefaultHeader:true
+  };
 
   constructor() {
 

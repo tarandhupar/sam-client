@@ -238,6 +238,7 @@ export class MyAccessPage implements OnInit {
         domains: access.domain.map(d => d.id),
         role: access.role.id,
         org: access.organization.id,
+        orgName: access.organization.val,
       };
       this.router.navigate(["../edit-access"], { queryParams: qp, relativeTo: this.route});
     } catch(err) {

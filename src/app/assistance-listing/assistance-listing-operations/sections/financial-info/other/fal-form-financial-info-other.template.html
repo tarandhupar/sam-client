@@ -27,6 +27,12 @@
       label="Account Identification"
       [hint]="accountIdentificationConfigHint"
       [required]="true"
+      [deleteModalFlag]="true"
+      [deleteModalConfig]="{
+        title:'Delete this Account Identification',
+        type:'error',
+        description:'Are you sure you want to delete this Account Identification?'
+      }"
       [attr.id]="'fal-financial-info-account-identification'"
       [control]="otherFinancialInfoForm.get('accountIdentification')"
       [formArrayInput]="otherFinancialInfoForm.get('accountIdentification').controls"
@@ -67,6 +73,12 @@
       label="TAFS Codes - Unique Treasury Appropriation Fund Symbols"
       [hint]="tafsHint"
       [required]="true"
+      [deleteModalFlag]="true"
+      [deleteModalConfig]="{
+        title:'Delete this TAFS code',
+        type:'error',
+        description:'Are you sure you want to delete this TAFS code?'
+      }"
       [attr.id]="'fal-financial-info-tafs-codes'"
       [control]="otherFinancialInfoForm.get('tafs')"
       [formArrayInput]="otherFinancialInfoForm.get('tafs').controls"

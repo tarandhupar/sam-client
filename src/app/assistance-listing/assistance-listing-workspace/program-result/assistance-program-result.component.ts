@@ -67,7 +67,7 @@ export class AssistanceProgramResult implements OnInit {
 
   toggleBgColor() {
     if (this.data.status !== null && (typeof this.data.status.code !== 'undefined' && this.data.status.code !== null)) {
-      if (this.data.status.code === 'draft' || this.data.status.code === 'revised') {
+      if (this.data.status.code === 'draft' || this.data.status.code === 'draft_review' || this.data.status.code === 'revised') {
         this.randomColor = this.statusCodeBgColor[0];
       } else if (this.data.status.code === 'rejected') {
         this.randomColor = this.statusCodeBgColor[1];

@@ -76,7 +76,7 @@
             <td>
               <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
             </td>
-            <td><i class="fa fa-pencil"></i></td>
+            <td><i *ngIf="!isMyAccess" class="fa fa-pencil"></i></td>
           </tr>
         </tbody>
       </table>

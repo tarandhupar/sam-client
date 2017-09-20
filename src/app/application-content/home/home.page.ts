@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
-import { globals } from '../../globals.ts';
+import { globals } from '../../globals';
+import { AppState } from 'app/app.service';
 
 @Component({
   selector: 'home',
@@ -49,15 +50,15 @@ export class HomePage {
   showDetail = false;
 
 
-  constructor(private _router:Router) {
+  constructor(private _router:Router, private state: AppState) {
   }
 
   ngOnInit() {
-    globals.isDefaultHeader = false;
+    this.state.set('isDefaultHeader',false);
   }
 
   ngOnDestroy() {
-    globals.isDefaultHeader = true;
+    this.state.set('isDefaultHeader',true);
   }
 
 

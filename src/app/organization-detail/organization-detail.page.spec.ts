@@ -23,7 +23,7 @@ let activatedRouteStub = {
 
 };
 
-describe('Organization Detail Page', () => {
+xdescribe('Organization Detail Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailPage;
   let fixture:any;

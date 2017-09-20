@@ -4,7 +4,7 @@ import { globals } from '../../globals.ts';
 
 import { IAMService } from 'api-kit';
 
-import { trigger, state, style, animate, transition } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface HeaderLink {
   linkTitle: string;
@@ -89,10 +89,9 @@ export class SamHeaderLinksComponent {
       {linkTitle:"Home", linkClass:"fa-home", linkId:"header-link-home", linkUrl:"/", pageInProgress:false},
       {linkTitle:"Reports", linkClass:"fa-area-chart", linkId:"header-link-reports", linkUrl:"/reports/overview", pageInProgress:false},
       {linkTitle:"Workspace", linkClass:"fa-table", linkId:"header-link-workspace", linkUrl:"/workspace", pageInProgress:false},
-      {linkTitle:"Help", linkClass:"fa-info-circle", linkId:"header-link-help", linkUrl:"/help/overview", pageInProgress:false},
-      {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkId:"header-link-hierarchy", linkUrl:"/federal-hierarchy", pageInProgress:false},
       {linkTitle:"Data Services", linkClass:"fa-file-text-o", linkId:"header-link-data-service", linkUrl:"/data-services", pageInProgress:false},
       {linkTitle:"Users", linkClass:"fa-user-plus", linkId:"header-link-users", linkUrl:"/", pageInProgress:true},
+      {linkTitle:"Help", linkClass:"fa-info-circle", linkId:"header-link-help", linkUrl:"/help/overview", pageInProgress:false},
     ],
 
     profile: [

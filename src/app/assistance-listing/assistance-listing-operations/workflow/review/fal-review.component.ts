@@ -100,8 +100,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     defaultOption: "Make a Request"
   };
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'Workspace', urlmock: true }
+    {breadcrumb: 'Home', url: '/'},
+    {breadcrumb: 'My Workspace', urlmock: true},
+    {breadcrumb: 'Assistance Workspace', urlmock: true}
   ];
 
   private apiSubjectSub: Subscription;
@@ -300,7 +301,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   /**
    * @return Observable of Program API
    */
-  private loadProgram() {
+  private loadProgram() : ReplaySubject<any>{
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
@@ -656,7 +657,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     document.body.scrollTop = 0;
   }
 
-  private loadUserPermissions(apiSource: Observable<any>) {
+  private loadUserPermissions(apiSource: Observable<any>): ReplaySubject<any> {
     let apiSubject = new ReplaySubject(1);
 
     let apiStream = apiSource.switchMap(api => {
@@ -739,7 +740,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   }
 
   public canDelete() {
-    return this.program.status && this.program.status.code === 'draft' && this.program._links && this.program._links['program:delete'];
+    return this.program.status && (this.program.status.code === 'draft' || this.program.status.code === 'draft_review') && this.program._links && this.program._links['program:delete'];
   }
 
   public onEditClick(page: string[]) {
@@ -929,23 +930,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
   }
 
-/*  onButtonClick(event) {
-    if (event) {
-      if (event === 'Submit') {
-        let url = '/programs/' + this.program.id + '/submit';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Reject') {
-        let url = '/programs/' + this.program.id + '/reject';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Publish') {
-        let url = '/programs/' + this.program.id + '/publish';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Notify Agency Coordinator') {
-        this.notifyAgencyCoordinator();
-      }
-    }
-  }*/
-
   notifyAgencyCoordinator() {
     this.service.sendNotification(this.program.id)
       .subscribe(api => {
@@ -983,7 +967,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     let filter = new FilterMultiArrayObjectPipe();
     let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
-    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'draft_review' || this.program.status.code === 'rejected') ? iconClass : null;
   }
 
   // todo: find a better way to do this
@@ -1011,7 +995,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       }
     }
 
-    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'draft_review' || this.program.status.code === 'rejected') ? iconClass : null;
   }
 
 
@@ -1074,8 +1058,11 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
   }
   breadcrumbHandler(event) {
-    if(event === 'Workspace') {
-      this.router.navigateByUrl('fal/workspace');
+    if(event === 'My Workspace') {
+      this.router.navigateByUrl('/workspace');
+    }
+    if(event === 'Assistance Workspace') {
+      this.router.navigateByUrl('/fal/workspace');
     }
   }
 }

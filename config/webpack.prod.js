@@ -152,9 +152,11 @@ module.exports = webpackMerge(commonConfig, {
       'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL),
       'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES),
       'IDLE_TIME': JSON.stringify(IDLE_TIME),
+      'GIT_LOG': JSON.stringify(helpers.gitLog()),
+      'BUILD_DATE': JSON.stringify(helpers.date()),
       'PINGER_TIME': JSON.stringify(PINGER_TIME),
       'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION),
-      'ENVIRONMENT': JSON.stringify(ENVIRONMENT)
+      'ENVIRONMENT': JSON.stringify(ENVIRONMENT),
     }),
 
     /**

@@ -9,7 +9,7 @@ import { PipesModule } from 'app-pipes/app-pipes.module';
 
 import { MigrationsComponent } from './migrations.component';
 
-describe('[IAM] User Profile - Migrations', () => {
+xdescribe('[IAM] User Profile - Migrations', () => {
   let component: MigrationsComponent;
   let fixture: ComponentFixture<MigrationsComponent>;
 

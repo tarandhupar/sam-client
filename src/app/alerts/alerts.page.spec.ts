@@ -26,7 +26,7 @@ class RouterStub {
   }
 }
 
-describe('The AlertsPage component', () => {
+xdescribe('The AlertsPage component', () => {
   let component:AlertsPage;
   let fixture:any;
 

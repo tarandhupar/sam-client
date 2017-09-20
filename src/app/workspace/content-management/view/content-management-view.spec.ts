@@ -26,7 +26,7 @@ let activatedRouteStub = {
 
 };
 
-describe('Help content management Page', () => {
+xdescribe('Help content management Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component: HelpContentManagementViewComponent;
   let fixture:any;

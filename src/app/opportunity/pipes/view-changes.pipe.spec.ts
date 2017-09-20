@@ -1,6 +1,6 @@
 import { ViewChangesPipe } from "./view-changes.pipe";
 
-describe('src/app/opportunity/pipes/view-changes.pipe.spec.ts', () => {
+xdescribe('src/app/opportunity/pipes/view-changes.pipe.spec.ts', () => {
   let pipe = new ViewChangesPipe();
   let dictionaries = {"_embedded": {
     "dictionaries":[{

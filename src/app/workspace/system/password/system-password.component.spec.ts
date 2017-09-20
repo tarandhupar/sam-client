@@ -9,7 +9,7 @@ import { AppComponentsModule } from 'app-components';
 
 import { SystemPasswordComponent } from './system-password.component';
 
-describe('[IAM] System Password Reset', () => {
+xdescribe('[IAM] System Password Reset', () => {
   let component: SystemPasswordComponent,
       fixture: ComponentFixture<SystemPasswordComponent>;
 

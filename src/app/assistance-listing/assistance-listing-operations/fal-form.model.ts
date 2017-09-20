@@ -96,7 +96,7 @@ export class FALFormViewModel {
   }
 
   get isNewDraft() {
-    if(this._fal.revision === false && this._fal.archived === false && this._fal.status && this._fal.status.code === "draft")
+    if(this._fal.revision === false && this._fal.archived === false && this._fal.status && (this._fal.status.code === "draft" || this._fal.status.code === 'draft_review'))
       return true;
 
     return false;

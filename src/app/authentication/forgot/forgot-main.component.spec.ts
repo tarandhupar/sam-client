@@ -8,7 +8,7 @@ import { AppComponentsModule } from 'app-components';
 
 import { ForgotMainComponent } from './forgot-main.component';
 
-describe('[IAM] Forgot Password (Main)', () => {
+xdescribe('[IAM] Forgot Password (Main)', () => {
   let component: ForgotMainComponent;
   let fixture: ComponentFixture<ForgotMainComponent>;
 

@@ -10,6 +10,7 @@ import {MenuItem} from 'sam-ui-kit/components/sidenav';
 import {FilterMultiArrayObjectPipe} from '../../app-pipes/filter-multi-array-object.pipe';
 import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 import {ProgramService} from "../../../api-kit/program/program.service";
+import {IBreadcrumb} from "sam-ui-kit/types";
 
 @Component({
   moduleId: __filename,
@@ -39,11 +40,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   globalLinksUrl: string;
   globalNavigationFlag: boolean = false;
   modelBtnsNavigationFlag: boolean = false;
-  enableDisableWFBtns: boolean = false;
-  crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
-    breadcrumb: 'Workspace',
+  crumbs: Array<IBreadcrumb> = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
+    breadcrumb: 'My Workspace',
     urlmock: true
-  }, {breadcrumb: 'Assistance Listing', urlmock: false}];
+  }, {breadcrumb: 'Assistance Workspace', urlmock: true}];
   successFooterAlertModel = {
     title: "Success",
     description: "",
@@ -181,6 +181,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.service.getFALPermission('CREATE_FALS').subscribe(res => {
       this.errorDisplayComponent.formatErrors(this.errorService.applicableErrors);
       this.authGuard.checkPermissions('addoredit', this.falFormViewModel.programId ? this.falFormViewModel['_fal'] : res);
+      this.updateBreadCrumbs();
       this.createPermissions = res;
     });
   }
@@ -411,10 +412,17 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   breadCrumbClick(event) {
     let actionType = event;
-    if (actionType === 'Workspace') {
+    if (actionType === 'My Workspace') {
+      this.globalNavigationFlag = true;
       this.formsDirtyCheck('Workspace');
+      this.globalLinksUrl =  '/workspace';
+
+    }
+    if (actionType === 'Assistance Workspace') {
+      this.formsDirtyCheck('falWorkspace');
       this.globalLinksUrl = 'fal/workspace';
     }
+
   }
 
   onTitleModalNo() {
@@ -434,6 +442,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
     this.globalLinksUrl = url;
     this.titleModal.closeModal();
+    this.globalNavigationFlag = false;
     this.router.navigateByUrl(url);
 
   }
@@ -448,7 +457,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   formsDirtyCheck(actionType, navObj?: any) {
-    if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links') {
+    if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links' && actionType !== 'falWorkspace') {
       if (!this.falFormViewModel.title) {
         let title = 'No Title Provided';
         let description = 'You must provide a title for this draft assistance listing in order to proceed.';
@@ -514,7 +523,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveAction(dirtyFlag, navObj, actionType) {
     if (dirtyFlag) {
-      if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links') {
+      if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links' && actionType !== 'falWorkspace') {
         this.saveForm(navObj, actionType);
       } else {
         if (!this.falFormViewModel.title) {
@@ -575,6 +584,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.navigateSection();
     }
     if (actionType === 'Workspace') {
+      this.router.navigate(['/workspace']);
+    }
+    if (actionType === 'falWorkspace') {
       this.router.navigate(['/fal/workspace']);
     }
     if (actionType === 'PublicView') {
@@ -588,6 +600,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (actionType === 'Notify') {
       this.notifyAgencyCoordinator();
     }
+    this.updateBreadCrumbs();
     this.enableDisableWorkflowButtons(this.falFormViewModel['_fal']);
   }
 
@@ -658,5 +671,14 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tabsFalComponent.toggleButtonOnErrors = false;
       this.cdr.detectChanges();
     }
+  }
+
+  updateBreadCrumbs() {
+    if (this.falFormViewModel.programId) {
+      this.crumbs.push({breadcrumb: this.falFormViewModel.title, urlmock: false});
+    } else {
+      this.crumbs.push({breadcrumb: 'New Assistance Listing', urlmock: false});
+    }
+    this.cdr.detectChanges();
   }
 }

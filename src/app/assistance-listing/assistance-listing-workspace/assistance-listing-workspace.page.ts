@@ -329,7 +329,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.workspaceRefresh();
   }
 
-  private loadUserPermissions(){
+  private loadUserPermissions(): ReplaySubject<any>{
     let apiSubject = new ReplaySubject(1);
     this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO, ORG_LEVELS').subscribe(apiSubject);
     // runs anytime url changes, takes values from url and sets them into our variables

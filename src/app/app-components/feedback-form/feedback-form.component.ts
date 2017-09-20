@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, NavigationStart, RouterStateSnapshot } from '@angular/router';
 import { FeedbackService, feedbackResItemType } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -83,14 +83,16 @@ export class SamFeedbackComponent {
     this.setUpFeedbackQuestions();
     this.routerSubscription = this.router.events.subscribe(
       val => {
-        if(this.currentUrl === ""){
-          this.currentUrl = val.url;
-        }else{
-          this.nextUrl = val.url;
-          if(!this.isUrlInSamePage(this.currentUrl, this.nextUrl) && this.showunsubmittedWarning()){
-            this.showProceedModal();
+        if(val instanceof NavigationStart){
+          if(this.currentUrl === ""){
+            this.currentUrl = val['url'];
           }else{
-            this.currentUrl = this.nextUrl;
+            this.nextUrl = val['url'];
+            if(!this.isUrlInSamePage(this.currentUrl, this.nextUrl) && this.showunsubmittedWarning()){
+              this.showProceedModal();
+            }else{
+              this.currentUrl = this.nextUrl;
+            }
           }
         }
       });

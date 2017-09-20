@@ -135,6 +135,8 @@ module.exports = webpackMerge(commonConfig, {
       'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL),
       'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES),
       'IDLE_TIME': JSON.stringify(IDLE_TIME),
+      'BUILD_DATE': JSON.stringify(helpers.date()),
+      'GIT_LOG': JSON.stringify(helpers.gitLog()),
       'PINGER_TIME': JSON.stringify(PINGER_TIME),
       'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION),
       'ENVIRONMENT':JSON.stringify(ENVIRONMENT)
@@ -176,7 +178,7 @@ module.exports = webpackMerge(commonConfig, {
     historyApiFallback: {
       rewrites: [
         {
-          from: /^\/(users|fsd|workspace)\/.*$/,
+          from: /^\/(role-management\/users|fsd|workspace)\/.*$/,
           to: function() {
             return '/';
           }

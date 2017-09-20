@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { FHWrapperService} from './fhWrapper.service';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
+import { Observable,ReplaySubject } from 'rxjs';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
 import { Cookie } from "ng2-cookies";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -110,7 +110,7 @@ export class FHService {
     return this.callApi(oApiParam, true);
   }
 
-  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+  getOrganizationLogo(organizationAPI: Observable<any>|ReplaySubject<any>, cbSuccessFn: any, cbErrorFn: any) {
     organizationAPI.subscribe(org => {
       // Do some basic null checks
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {

@@ -14,7 +14,7 @@ import { ContentManagementServiceMock } from "api-kit/content-management/content
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "api-kit/msg-feed/msg-feed.mock";
 
-describe('Help content management page sidenav component', () => {
+xdescribe('Help content management page sidenav component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:HelpContentManagementSideNavComponent;
   let fixture:any;

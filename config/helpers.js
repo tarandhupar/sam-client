@@ -1,7 +1,5 @@
-/**
- * @author: @AngularClass
- */
 var path = require('path');
+const { execSync } = require('child_process');
 
 // Helper functions
 var ROOT = path.resolve(__dirname, '..');
@@ -26,6 +24,16 @@ function checkNodeImport(context, request, cb) {
   cb();
 }
 
+function gitLog() {
+  return execSync('git log --pretty="%h - %s" -1 || echo "Git log failed"').toString().replace('\n', '');
+}
+
+function date() {
+  return execSync('date').toString().replace('\n', '');
+}
+
+exports.date = date;
+exports.gitLog = gitLog;
 exports.hasProcessFlag = hasProcessFlag;
 exports.isWebpackDevServer = isWebpackDevServer;
 exports.root = root;

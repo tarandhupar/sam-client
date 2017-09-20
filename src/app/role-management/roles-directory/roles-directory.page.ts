@@ -255,7 +255,11 @@ export class RolesDirectoryPage {
   }
 
   onUserChange(user) {
-    this.userSearchValue = user && user.key;
+    if (typeof user === 'string') {
+      this.userSearchValue = user;
+    } else if (typeof  user === 'object') {
+      this.userSearchValue = user && user.key;
+    }
     this.doSearch();
   }
 

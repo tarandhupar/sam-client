@@ -26,8 +26,9 @@ export class HelpPage {
   ngOnInit(){
 
     this.router.events.subscribe(
-      val => {
-        if(!(val instanceof  NavigationCancel)){
+      value => {
+        if(!(value instanceof  NavigationCancel)){
+          let val = <NavigationCancel>value;
           this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
           this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
 

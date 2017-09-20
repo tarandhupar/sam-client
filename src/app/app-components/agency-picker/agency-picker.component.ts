@@ -50,7 +50,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   @ViewChild("autocompletelist") autocompletelist;
 
 
-  private searchTimer: NodeJS.Timer = null;
+  private searchTimer = null;
 
   autocompletePreselect = "";
   searchTerm = "";

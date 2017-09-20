@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { WageDeterminationService } from './wage-determination.service';
 
-describe('src/api-kit/wage-determination/wage-determination.service.spec.ts', () => {
+xdescribe('src/api-kit/wage-determination/wage-determination.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
