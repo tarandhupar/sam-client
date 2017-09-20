@@ -47,7 +47,7 @@ const apiStub = {
   }
 };
 
-describe('[IAM] System Account Profile', () => {
+xdescribe('[IAM] System Account Profile', () => {
   let component: SystemProfileComponent;
   let fixture: ComponentFixture<SystemProfileComponent>;
   let debugElement: DebugElement;

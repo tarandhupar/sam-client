@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { TransitionToSamComponent } from './transition-to-sam.component';
 import { HelpModule } from '../../help.module';
 
-describe("Transition Roadmap page in online help",()=>{
+xdescribe("Transition Roadmap page in online help",()=>{
   let component:TransitionToSamComponent;
   let fixture: any;
   let releaseData: any = [

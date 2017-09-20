@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ReferenceLibraryComponent } from "./reference-library.component";
 import { HelpModule } from "../../help.module";
 
-describe('Reference Library page in online help', () => {
+xdescribe('Reference Library page in online help', () => {
   let component:ReferenceLibraryComponent;
   let fixture:any;
   

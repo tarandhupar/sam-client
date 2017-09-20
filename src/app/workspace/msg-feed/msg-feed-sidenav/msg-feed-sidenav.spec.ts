@@ -12,7 +12,7 @@ import { SamAPIKitModule } from "api-kit";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "api-kit/msg-feed/msg-feed.mock";
 
-describe('Message Feeds page sidenav component', () => {
+xdescribe('Message Feeds page sidenav component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:MsgFeedSideNavComponent;
   let fixture:any;

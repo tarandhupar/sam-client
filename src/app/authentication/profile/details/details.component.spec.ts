@@ -42,7 +42,7 @@ const apiStub = {
   }
 };
 
-describe('[IAM] User Profile - Details', () => {
+xdescribe('[IAM] User Profile - Details', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
 

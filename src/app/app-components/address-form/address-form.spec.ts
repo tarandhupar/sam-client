@@ -19,7 +19,7 @@ class LocationServiceStub {
   }
 };
 
-describe('Organization Address Form component', () => {
+xdescribe('Organization Address Form component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgAddrFormComponent;
   let fixture:any;

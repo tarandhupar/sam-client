@@ -8,7 +8,7 @@ import { AppComponentsModule } from 'app-components';
 
 import { ResetComponent } from './reset.component';
 
-describe('[IAM] User Profile - Password Reset', () => {
+xdescribe('[IAM] User Profile - Password Reset', () => {
   let component: ResetComponent;
   let fixture: ComponentFixture<ResetComponent>;
 

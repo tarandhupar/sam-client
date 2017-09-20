@@ -14,7 +14,7 @@ import { FHService } from "../../../api-kit/fh/fh.service";
 import { FHServiceMock } from "../../../api-kit/fh/fh.service.mock";
 import { Router } from "@angular/router";
 
-describe('The Bulk Update Component', () => {
+xdescribe('The Bulk Update Component', () => {
   let component: BulkUpdateComponent;
   let fixture: any;
 

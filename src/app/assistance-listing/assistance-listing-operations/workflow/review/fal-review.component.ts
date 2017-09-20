@@ -100,8 +100,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     defaultOption: "Make a Request"
   };
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'Workspace', urlmock: true }
+    {breadcrumb: 'Home', url: '/'},
+    {breadcrumb: 'My Workspace', urlmock: true},
+    {breadcrumb: 'Assistance Workspace', urlmock: true}
   ];
 
   private apiSubjectSub: Subscription;
@@ -929,23 +930,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
   }
 
-/*  onButtonClick(event) {
-    if (event) {
-      if (event === 'Submit') {
-        let url = '/programs/' + this.program.id + '/submit';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Reject') {
-        let url = '/programs/' + this.program.id + '/reject';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Publish') {
-        let url = '/programs/' + this.program.id + '/publish';
-        this.router.navigateByUrl(url);
-      } else if (event === 'Notify Agency Coordinator') {
-        this.notifyAgencyCoordinator();
-      }
-    }
-  }*/
-
   notifyAgencyCoordinator() {
     this.service.sendNotification(this.program.id)
       .subscribe(api => {
@@ -1074,8 +1058,11 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
   }
   breadcrumbHandler(event) {
-    if(event === 'Workspace') {
-      this.router.navigateByUrl('fal/workspace');
+    if(event === 'My Workspace') {
+      this.router.navigateByUrl('/workspace');
+    }
+    if(event === 'Assistance Workspace') {
+      this.router.navigateByUrl('/fal/workspace');
     }
   }
 }

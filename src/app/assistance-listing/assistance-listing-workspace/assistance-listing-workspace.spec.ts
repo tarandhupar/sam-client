@@ -44,7 +44,7 @@ var workspaceServiceStub = {
 };
 
 
-describe('FalWorkspacePage', () => {
+xdescribe('FalWorkspacePage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [FalWorkspacePage, PageTemplateComponent, AssistanceProgramResult,FALWrapperChangeRequestDropdownComponent,FALChangeRequestDropdownComponent,RequestLabelPipe],

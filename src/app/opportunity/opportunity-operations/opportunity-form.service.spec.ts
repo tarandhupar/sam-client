@@ -8,7 +8,7 @@ import { DictionaryService } from "../../../api-kit/dictionary/dictionary.servic
 import { Router, RouterModule } from "@angular/router";
 import { OpportunityFormService } from "./opportunity-form.service";
 
-describe('src/app/opportunity/opportunity-operations/opportunity-form.service.ts', () => {
+xdescribe('src/app/opportunity/opportunity-operations/opportunity-form.service.ts', () => {
   let formService: OpportunityFormService;
   beforeEach(() => {
 

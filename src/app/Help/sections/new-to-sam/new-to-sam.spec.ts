@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NewToSamComponent } from "./new-to-sam.component";
 import { HelpModule } from "../../help.module";
 
-describe("New to Sam.gov page in help page", ()=>{
+xdescribe("New to Sam.gov page in help page", ()=>{
   let component: NewToSamComponent;
   let fixture: any;
 

@@ -50,7 +50,7 @@ const stubs = {
   }
 };
 
-describe('[IAM] FSD User Profile', () => {
+xdescribe('[IAM] FSD User Profile', () => {
   let component: FSDUserComponent;
   let fixture: ComponentFixture<FSDUserComponent>;
   let debugElement: DebugElement;

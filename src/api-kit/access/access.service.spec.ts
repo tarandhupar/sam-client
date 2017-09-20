@@ -5,7 +5,7 @@ import { WrapperService } from "../wrapper/wrapper.service";
 import { UserAccessService } from "./access.service";
 import { RouterTestingModule } from "@angular/router/testing";
 
-describe('UserAccessService', () => {
+xdescribe('UserAccessService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ RouterTestingModule ],
