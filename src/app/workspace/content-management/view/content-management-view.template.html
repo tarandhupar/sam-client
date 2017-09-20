@@ -1,6 +1,6 @@
 <page [breadcrumbs]="crumbs" [section]="'Workspace'" [title]="title">
   <sidebar>
-    <content-management-sidenav [filterOption]="filterObj" (filterChange)="onFilterChange($event)"></content-management-sidenav>
+    <content-management-sidenav [curSection]="curSection" [curSubSection]="curSubSection" (filterChange)="onFilterChange($event)"></content-management-sidenav>
   </sidebar>
 
 
@@ -10,11 +10,12 @@
       <div class="pull-left p_T-3x">
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
-      <a class="sam-ui primary small button pull-right m_L-2x question-button">{{createTextMap[curSection]}}</a>
-      <sam-sort class="pull-right" [(ngModel)]="sortByModel[curSection]" [options]="sortOptionsMap[curSection]" (ngModelChange)="onSortModelChange($event)"></sam-sort>
+      <a class="sam-ui primary small button pull-right m_L-2x question-button">New Question</a>
+      <sam-sort class="pull-right" [(ngModel)]="sortByModel" [options]="contentSortOptions" (ngModelChange)="loadContent(filterObj, sortByModel.type, sortByModel.sort, 0)">
+      </sam-sort>
     </div>
 
-    <!--FAQ Repository Content or Data Dictionary Content-->
+    <!--FAQ Repository Content-->
     <div class="usa-width-one-whole" *ngIf="contents.length > 0">
       <div class="usa-width-one-whole content-item" *ngFor="let item of contents; let i = index;">
         <div class="usa-width-one-whole content-item-header">
@@ -23,26 +24,12 @@
             <sam-actions-dropdown class="pull-right" [actions]="actions" (emitAction)="onContentItemAction($event, i)"></sam-actions-dropdown>
           </div>
         </div>
-        <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'FAQ-repository' || curSection === 'data-dictionary'">
+        <div class="usa-width-one-whole p_L-1x">
           <h4 class="content-title-text"><a>{{item.title}}</a></h4>
           <p class="content-description-text"> {{item.description}}</p>
           <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.referenceId}}</span>
           <span class="usa-width-one-whole"><strong>Domain: </strong>{{item.domain}}</span>
           <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.latestUpdate}}</span>
-        </div>
-        <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'video-library'">
-          <div class="usa-width-two-thirds">
-            <h4 class="content-title-text"><a>{{item.title}}</a></h4>
-            <p class="content-description-text"> {{item.description}}</p>
-            <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.referenceId}}</span>
-            <span class="usa-width-one-whole"><strong>Keywords: </strong>{{item.keywords}}</span>
-            <span class="usa-width-one-whole"><strong>Domains: </strong>{{item.domains}}</span>
-          </div>
-          <div class="usa-width-one-third relative ">
-            <img class="video-image" src="src/assets/img/blank_icon.png">
-            <a class="video-play-icon"><i class="fa fa-play-circle"></i></a>
-            <span class="video-time">{{item.video.time}}</span>
-          </div>
         </div>
       </div>
     </div>

@@ -269,7 +269,7 @@ export class WageDeterminationPage implements OnInit {
     })
   }
 
-  private loadHistory(wageDetermination: Observable<any>) {
+  private loadHistory(wageDetermination: ReplaySubject<any>) {
 
     let historySubject = new ReplaySubject(1);
     wageDetermination.subscribe(wageDeterminationAPI => {

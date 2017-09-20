@@ -57,9 +57,14 @@ export class GrantOrEditAccess {
   ) {
     let defaultOrg = userService.getUser().departmentID;
 
-    if (!defaultOrg) {
+    if (this.isGrant() && !defaultOrg) {
       this.errorMessage = 'Unable to determine your department id';
       this.submitEnabled = false;
+      return;
+    }
+
+    if (this.isEdit()) {
+      defaultOrg = this.route.snapshot.queryParams['org'];
     }
 
     this.form = fb.group({
@@ -81,6 +86,14 @@ export class GrantOrEditAccess {
 
     if (this.isEdit()) {
       this.parseInitialRolesAndDomains();
+    }
+  }
+
+  orgName() {
+    if (this.isGrant()) {
+      return this.form.get('org').value.name || "";
+    } else {
+      return this.route.snapshot.queryParams['orgName'];
     }
   }
 
@@ -207,7 +220,7 @@ export class GrantOrEditAccess {
                           return {
                             id: perm.id,
                             name: perm.val,
-                            checked: !perm.isCheckable || !!perm.isDefault,
+                            checked: perm.isCheckable || !!perm.isDefault,
                             disabled: !!perm.isDefault,
                           };
                         }

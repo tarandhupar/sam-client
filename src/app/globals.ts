@@ -1,6 +1,5 @@
 'use strict';
 export let globals = {
-  isDefaultHeader: true,
   showOptional : SHOW_OPTIONAL === 'true' || ENV === 'development',
   searchFilterConfig: [
     {value: '', label: 'All Domains', width: '130'},

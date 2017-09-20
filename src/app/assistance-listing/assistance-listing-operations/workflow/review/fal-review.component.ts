@@ -300,7 +300,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   /**
    * @return Observable of Program API
    */
-  private loadProgram() {
+  private loadProgram() : ReplaySubject<any>{
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
@@ -656,7 +656,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     document.body.scrollTop = 0;
   }
 
-  private loadUserPermissions(apiSource: Observable<any>) {
+  private loadUserPermissions(apiSource: Observable<any>): ReplaySubject<any> {
     let apiSubject = new ReplaySubject(1);
 
     let apiStream = apiSource.switchMap(api => {
@@ -739,7 +739,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   }
 
   public canDelete() {
-    return this.program.status && this.program.status.code === 'draft' && this.program._links && this.program._links['program:delete'];
+    return this.program.status && (this.program.status.code === 'draft' || this.program.status.code === 'draft_review') && this.program._links && this.program._links['program:delete'];
   }
 
   public onEditClick(page: string[]) {
@@ -983,7 +983,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     let filter = new FilterMultiArrayObjectPipe();
     let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
-    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'draft_review' || this.program.status.code === 'rejected') ? iconClass : null;
   }
 
   // todo: find a better way to do this
@@ -1011,7 +1011,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       }
     }
 
-    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'rejected') ? iconClass : null;
+    section['iconClass'] = (this.program.status.code === 'draft' || this.program.status.code === 'draft_review' || this.program.status.code === 'rejected') ? iconClass : null;
   }
 
 

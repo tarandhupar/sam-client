@@ -18,6 +18,12 @@ export class SamListBuilderComponent {
     @Input() max:number = null;
     @Input() sortable:boolean = true;
     @Input() sortingFn;
+    @Input() deleteModalFlag;
+    @Input() deleteModalConfig = {
+        title: 'test',
+        type: "error",
+        description: 'xzcvzcxvzcxv',
+    };
     @Input() control:AbstractControl;
     @Input() hideDefaultBtns:boolean= false;
     @Input() submitFunc: Function;
@@ -28,6 +34,7 @@ export class SamListBuilderComponent {
     @ContentChild('edit', {read: TemplateRef}) editTemplate: TemplateRef<any>;
     @ContentChild('display', {read: TemplateRef}) displayTemplate: TemplateRef<any>;
     @ViewChild('wrapper') wrapper;
+    @ViewChild('modal') modal;
     @ViewChildren('cards') cards;
 
     editIndex:number;
@@ -35,6 +42,7 @@ export class SamListBuilderComponent {
     returnModel = [];
     showAddSubform: boolean = false;
     showEditSubform: boolean = false;
+    
 
     constructor(private cdr: ChangeDetectorRef){}
     ngOnInit(){
@@ -120,6 +128,16 @@ export class SamListBuilderComponent {
             this.editRow(index,data);
         }
         if(event.type=="delete"){
+            if(this.deleteModalFlag){
+                this.modal.openModal();
+            }
+            else {
+                let index = event.data;
+                this.model.splice(index,1);
+                this.formArrayChange.emit(this.model);
+            }
+        }
+        if(event.type=="deleteModal"){
             let index = event.data;
             this.model.splice(index,1);
             this.formArrayChange.emit(this.model);
@@ -152,5 +170,10 @@ export class SamListBuilderComponent {
             this.formArrayChange.emit(this.model);
         }
         this.action.emit(event.type);
+    }
+
+    onModalClose(){
+        this.modal.closeModal();
+        this.cardHandler({type:'deleteModal'});
     }
 }

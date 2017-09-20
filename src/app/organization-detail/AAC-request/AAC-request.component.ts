@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
-import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
+import { AACRequestService } from 'api-kit/aac-request/aac-request.service';
 import { FHService } from 'api-kit/fh/fh.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { Observable } from "rxjs";

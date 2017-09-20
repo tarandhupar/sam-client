@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 @Injectable()
 export class SampleFormResolver implements Resolve<SampleFormViewModel> {
   constructor(private service: SampleFormService) {}
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<SampleFormViewModel> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     let id = route.params['id'];
     return Observable.of({});//api kit observable here
   }

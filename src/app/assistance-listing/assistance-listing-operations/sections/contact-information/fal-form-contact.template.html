@@ -32,6 +32,12 @@
       #contactLB
       [max]="2"
       [hideDefaultBtns]="true"
+      [deleteModalFlag]="true"
+      [deleteModalConfig]="{
+        title:'Delete this Contact',
+        type:'error',
+        description:'Are you sure you want to delete this Contact?'
+      }"
       [control]="falContactInfoForm.get('contacts')"
       [formArrayInput]="falContactInfoForm.get('contacts').controls"
       [formGroupTemplate]="contactsSubform"

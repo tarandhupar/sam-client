@@ -12,7 +12,7 @@ export type WatchlistType = {
   frequency?: string,
   recordId?: string,
   uri? :string
-}
+} 
 
 @Injectable()
 export class WatchlistService {

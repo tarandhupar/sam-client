@@ -250,7 +250,7 @@ export class TabsFalComponent implements OnInit{
   }
 
   public canDelete() {
-    return this.data.status && this.data.status.code === 'draft' && this.data._links && this.data._links['program:delete'];
+    return this.data.status && (this.data.status.code === 'draft' || this.data.status.code === 'draft_review') && this.data._links && this.data._links['program:delete'];
   }
 
   /*

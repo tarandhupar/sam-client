@@ -40,12 +40,12 @@ export class ActionHistoryPipe implements PipeTransform {
     return this.subject;
   }
 
-  private loadOrganizationNames(orgIds) {
+  private loadOrganizationNames(orgIds): ReplaySubject<any> {
     let apiSubject = new ReplaySubject(1);
 
     if (orgIds == "" ){
       this.orgNames = {};
-      return Observable.of({});
+      return null;
     }
 
     // construct a stream of federal hierarchy data

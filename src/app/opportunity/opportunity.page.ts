@@ -207,7 +207,7 @@ export class OpportunityPage implements OnInit {
     this.sidenavHelper.DOMComplete(this, DOMReady$);
   }
 
-  private loadOpportunity() {
+  private loadOpportunity() :ReplaySubject<any>{
     let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     let apiStream = this.route.params.switchMap((params) => { // construct a stream of opportunity data
@@ -275,29 +275,28 @@ export class OpportunityPage implements OnInit {
     this.sidenavHelper.updateSideNav(this, true, opportunitySideNavContent);
   }
 
-  private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
+  private loadPreviousOpportunityVersion(historyAPI: Observable<any>|ReplaySubject<any>){
     let opportunitySubject = new ReplaySubject(1);
 
-
-    let opportunityStream = historyAPI.switchMap(opportunity => {
-       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){
-         return Observable.of(null); 
+    let opportunityStream = historyAPI.switchMap( opportunity => {
+       if (!(this.opportunity['data']['type'] === "m") || opportunity['content']['history'].length < 2){
+         return Observable.of(null);
        } else {
          let index = _.result(_.find(opportunity.content.history, { 'notice_id': this.opportunity.opportunityId }), 'index');
          index--;
          let id = _.result(_.find(opportunity.content.history, { 'index': index }), 'notice_id');
          return this.opportunityService.getOpportunityById(id, this.authToken);
-       } 
-     });// attach subject to stream  
+       }
+     });// attach subject to stream
     opportunityStream.subscribe(opportunitySubject);
     opportunitySubject.subscribe(api => {
     });
-    return opportunitySubject; 
+    return opportunitySubject;
   }
 
-  private loadParentOpportunity(opportunityAPI: Observable<any>){
+  private loadParentOpportunity(opportunityAPI: Observable<any>|ReplaySubject<any>){
     let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
-
+    
     let parentOpportunityStream = opportunityAPI.switchMap(api => {
       if (api.parent != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
@@ -317,7 +316,7 @@ export class OpportunityPage implements OnInit {
     return parentOpportunitySubject;
   }
 
-  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
+  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>|ReplaySubject<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     let relatedOpportunitiesStream = opportunityAPI.switchMap(opportunity => {
       this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
@@ -429,7 +428,7 @@ export class OpportunityPage implements OnInit {
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
   }
 
-  private loadOrganization(opportunityAPI: Observable<any>) {
+  private loadOrganization(opportunityAPI: Observable<any>|ReplaySubject<any>) {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
@@ -460,7 +459,7 @@ export class OpportunityPage implements OnInit {
     return organizationSubject;
   }
 
-  private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
+  private loadOpportunityLocation(opportunityApiStream: Observable<any>|ReplaySubject<any>) {
     opportunityApiStream.subscribe(opAPI => {
       if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
         this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
@@ -470,7 +469,7 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-  private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>){
+  private getTotalAttachmentsCount(opportunity: Observable<any>|ReplaySubject<any>, historyAPI: Observable<any>|ReplaySubject<any>, packagesOpportunities: Observable<any>|ReplaySubject<any>){
     let attachmentCountSubject = new ReplaySubject(1);
     let historyNoticeIds: string;
     let attachmentCountStream = historyAPI.switchMap(api =>{
@@ -520,7 +519,7 @@ export class OpportunityPage implements OnInit {
   }
 
 
-  private loadPackages(historyAPI: Observable<any>){
+  private loadPackages(historyAPI: Observable<any>|ReplaySubject<any>){
     let packagesSubject = new ReplaySubject(1);
     let historyNoticeIds: string;
     let packagesStream = historyAPI.switchMap(api =>{
@@ -614,7 +613,7 @@ export class OpportunityPage implements OnInit {
     return this.dictionaryService.dictionaries[key] ? this.dictionaryService.dictionaries[key] : [];
   }
 
-  private loadHistory(opportunity: Observable<any>) {
+  private loadHistory(opportunity: Observable<any>|ReplaySubject<any>) {
     let historySubject = new ReplaySubject(1);
     let tempOpportunityApi;
     let historyStream = opportunity.switchMap(opportunityAPI => {
@@ -780,7 +779,7 @@ export class OpportunityPage implements OnInit {
   }
 
 
-  private checkChanges(previousOpportunityAPI: Observable<any>){
+  private checkChanges(previousOpportunityAPI: Observable<any>|ReplaySubject<any>){
     previousOpportunityAPI.subscribe(api => {
       if(api != null) {
         this.previousOpportunityVersion = api;

@@ -2,297 +2,332 @@
 
   <!--filters aside-->
   <aside class="usa-width-one-third">
+    
+    <div class ="sam-ui hidden divider"></div>
+    
+    <div class="sam-ui segment">
+      <!-- Status -->
+      <ng-container *ngIf="index !== 'fh' && showRegionalOffices==false">
+        <h4 class="sam-ui header">Status</h4>
+        <!--active checkbox-->
+        <sam-checkbox
+          [(model)]="checkboxModel"
+          [name]="checkboxConfig.name"
+          [options]="checkboxConfig.options"
+          [label]="checkboxConfig.label"
+          [hint]="checkboxConfig.hint"
+          [errorMessage]="checkboxConfig.errorMessage"
+          [hasSelectAll]="checkboxConfig.hasSelectAll"
+          (modelChange)="activeFilter($event)">
+        </sam-checkbox>
+        <span *ngIf="index === 'ei'">
+          Note: Only non-active registrations will be added
+        </span>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-    <div>&nbsp;</div>
-    <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
-    <div>
-      <sam-filters-container>
-        <sam-collapsible *ngIf="index !== 'fh' && showRegionalOffices==false" [label]="'Status'" [startOpened]="true">
-          <!--active checkbox-->
-          <sam-checkbox
-            [(model)]="checkboxModel"
-            [name]="checkboxConfig.name"
-            [options]="checkboxConfig.options"
-            [label]="checkboxConfig.label"
-            [hint]="checkboxConfig.hint"
-            [errorMessage]="checkboxConfig.errorMessage"
-            [hasSelectAll]="checkboxConfig.hasSelectAll"
-            (modelChange)="activeFilter($event)">
-          </sam-checkbox>
-          <span *ngIf="index === 'ei'">Note: Only non-active registrations will be added</span>
-        </sam-collapsible>
+      <!--keyword filter-->
+      <ng-container *ngIf="showRegionalOffices==false">
+        <h4 class="sam-ui header">Keywords</h4>
+        <sam-autocomplete-multiselect
+          class="usa-award-filter"
+          [attr.id]="'keywordSearch'"
+          [label]="'Keywords'"
+          [name]="'keywordSearchName'"
+          [ngModel]="keywordsModel"
+          (ngModelChange)="keywordsModelChange($event)"
+          [keyValueConfig]="keywordsConfiguration.keyValueConfig"
+          [allowAny]="keywordsConfiguration.allowAny">
+        </sam-autocomplete-multiselect>
+        <div class="sam-ui divider"></div>
+      </ng-container>
+      
+      <!-- Entity Type -->
+      <ng-container *ngIf="index === 'ei' && showRegionalOffices==false">
+        <h4 class="sam-ui header">Entity Type</h4>
+        <!--active checkbox-->
+        <sam-checkbox
+          [model]="registrationExclusionCheckboxModel"
+          [name]="registrationExclusionCheckboxConfig.name"
+          [options]="registrationExclusionCheckboxConfig.options"
+          [label]="registrationExclusionCheckboxConfig.label"
+          (modelChange)="registrationExclusionCheckboxFilter($event)">
+        </sam-checkbox>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <!--keyword filter-->
-        <sam-collapsible *ngIf="showRegionalOffices==false" [label]="'Keywords'" [startOpened]="true">
-          <sam-autocomplete-multiselect
-            class="usa-award-filter"
-            [attr.id]="'keywordSearch'"
-            [label]="'Keywords'"
-            [name]="'keywordSearchName'"
-            [ngModel]="keywordsModel"
-            (ngModelChange)="keywordsModelChange($event)"
-            [keyValueConfig]="keywordsConfiguration.keyValueConfig"
-            [allowAny]="keywordsConfiguration.allowAny">
-          </sam-autocomplete-multiselect>
-        </sam-collapsible>
+      <ng-container *ngIf="showRegionalOffices==true">
+        <h4 class="sam-ui header">Keyword</h4>
+        <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-suggestions
+                          [(ngModel)]="ro_keyword"
+                          (ngModelChange)="regionalOfficeSearchEvent($event)"
+                          [index]="'ro'"
+                          [id]="'regional-office'"
+                          [showClearButton]="true"
+                          [allowAny]="true"
+                          [config]="regionalType"
+                          name="regionalsearch">
+        </sam-autocomplete>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <sam-collapsible *ngIf="index === 'ei' && showRegionalOffices==false" [label]="'Entity Type'" [startOpened]="true">
-          <!--active checkbox-->
-          <sam-checkbox
-            [model]="registrationExclusionCheckboxModel"
-            [name]="registrationExclusionCheckboxConfig.name"
-            [options]="registrationExclusionCheckboxConfig.options"
-            [label]="registrationExclusionCheckboxConfig.label"
-            (modelChange)="registrationExclusionCheckboxFilter($event)">
-          </sam-checkbox>
-        </sam-collapsible>
+      <ng-container *ngIf="index !=='wd' && index !=='ei'">
+        <h4 class="sam-ui header">Federal Organizations</h4>
+        <sam-agency-picker-v2 #agencyPickerV2
+          [attr.id] = "'federal-organization-filter'"
+          [label]="'Search Federal Organizations'"
+          [ngModel]="agencyPickerModel"
+          (ngModelChange)="onOrganizationChange($event)"
+          [limit] = '2'>
+        </sam-agency-picker-v2>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <sam-collapsible *ngIf="showRegionalOffices==true" [label]="'Keyword'" [startOpened]="true">
-          <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-suggestions
-                            [(ngModel)]="ro_keyword"
-                            (ngModelChange)="regionalOfficeSearchEvent($event)"
-                            [index]="'ro'"
-                            [id]="'regional-office'"
-                            [showClearButton]="true"
-                            [allowAny]="true"
-                            [config]="regionalType"
-                            name="regionalsearch">
-          </sam-autocomplete>
-        </sam-collapsible>
+      <ng-container *ngIf="index === 'wd' && showRegionalOffices==false">
+        <h4 class="sam-ui header">Wage Determination Type</h4>
+        <!--wage determination DBA or SCA radio buttons-->
+        <sam-radio-button
+          [(model)]="wdTypeModel"
+          [options]="wdTypeConfig.options"
+          [label]="wdTypeConfig.label"
+          [hint]="wdTypeConfig.hint"
+          [name]="wdTypeConfig.name"
+          [errorMessage]="wdTypeConfig.errorMessage"
+          (modelChange)="wdFilterChange($event)">
+        </sam-radio-button>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !=='wd' && index !=='ei'">
-          <sam-agency-picker-v2 #agencyPickerV2
-            [attr.id] = "'federal-organization-filter'"
-            [label]="'Search Federal Organizations'"
-            [ngModel]="agencyPickerModel"
-            (ngModelChange)="onOrganizationChange($event)"
-            [limit] = '2'>
-          </sam-agency-picker-v2>
-        </sam-collapsible>
+      <!--Location Filter-->
+      <ng-container *ngIf="index === 'wd' && showRegionalOffices==false && wdTypeModel">
+        <h4 class="sam-ui header">Location</h4>
+        <!--state autocomplete-->
+        <sam-autocomplete [ngModel]="wdStateObject"
+                          (ngModelChange)="stateChange($event)"
+                          [name]="selectStateConfig.name"
+                          [id]="selectStateConfig.name"
+                          [labelText]="selectStateConfig.label"
+                          [hint]="selectStateConfig.hint"
+                          [options]="selectStateConfig.options"
+                          [config]="selectStateConfig"
+                          [disabled]="selectStateConfig.disabled">
+        </sam-autocomplete>
+        <!--county autocomplete-->
+        <sam-autocomplete [ngModel]="countyObject"
+                          (ngModelChange)="countyChange($event)"
+                          [name]="selectCountyConfig.name"
+                          [id]="selectCountyConfig.name"
+                          [labelText]="selectCountyConfig.label"
+                          [hint]="selectCountyConfig.hint"
+                          [options]="selectCountyConfig.options"
+                          [config]="selectStateConfig"
+                          [disabled]="selectCountyConfig.disabled">
+        </sam-autocomplete>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <sam-collapsible  [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
-          <!--wage determination DBA or SCA radio buttons-->
-          <sam-radio-button
-            [(model)]="wdTypeModel"
-            [options]="wdTypeConfig.options"
-            [label]="wdTypeConfig.label"
-            [hint]="wdTypeConfig.hint"
-            [name]="wdTypeConfig.name"
-            [errorMessage]="wdTypeConfig.errorMessage"
-            (modelChange)="wdFilterChange($event)">
-          </sam-radio-button>
-        </sam-collapsible>
+      <!--*** DBA Specif Filters ***-->
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'dbra' && showRegionalOffices==false">
+        <h4 class="sam-ui header">DBA: Construction Type</h4>
+        <!--construction type drop down-->
+        <sam-autocomplete [ngModel]="wdConstructObject"
+                          (ngModelChange)="constructionTypeChange($event)"
+                          [name]="selectConstructConfig.name"
+                          [id]="selectConstructConfig.name"
+                          [labelText]="selectConstructConfig.label"
+                          [hint]="selectConstructConfig.hint"
+                          [options]="selectConstructConfig.options"
+                          [config]="selectConstructConfig"
+                          [disabled]="selectConstructConfig.disabled">
 
-        <!--Location Filter-->
-        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false && wdTypeModel">
-          <!--state autocomplete-->
-          <sam-autocomplete [ngModel]="wdStateObject"
-                            (ngModelChange)="stateChange($event)"
-                            [name]="selectStateConfig.name"
-                            [id]="selectStateConfig.name"
-                            [labelText]="selectStateConfig.label"
-                            [hint]="selectStateConfig.hint"
-                            [options]="selectStateConfig.options"
-                            [config]="selectStateConfig"
-                            [disabled]="selectStateConfig.disabled">
-          </sam-autocomplete>
-          <!--county autocomplete-->
-          <sam-autocomplete [ngModel]="countyObject"
-                            (ngModelChange)="countyChange($event)"
-                            [name]="selectCountyConfig.name"
-                            [id]="selectCountyConfig.name"
-                            [labelText]="selectCountyConfig.label"
-                            [hint]="selectCountyConfig.hint"
-                            [options]="selectCountyConfig.options"
-                            [config]="selectStateConfig"
-                            [disabled]="selectCountyConfig.disabled">
-          </sam-autocomplete>
-        </sam-collapsible>
+        </sam-autocomplete>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
+      <!--*** SCA Specific Filters ***-->
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && showRegionalOffices==false">
+        <h4 class="sam-ui header">SCA: Previously Performed</h4>
+        <!--previously performed-->
+        <sam-radio-button
+          [(model)]="wdPreviouslyPerformedModel"
+          [options]="wdPreviouslyPerformedConfig.options"
+          [label]="wdPreviouslyPerformedConfig.label"
+          [hint]="wdPreviouslyPerformedConfig.hint"
+          [name]="wdPreviouslyPerformedConfig.name"
+          [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
+          (modelChange)="wdPreviouslyPerformedChanged($event)">
+        </sam-radio-button>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
+        <h4 class="sam-ui header">SCA: Subject to CBA</h4>
+        <!--Subject to CBA-->
+        <sam-radio-button
+          [(model)]="wdSubjectToCBAModel"
+          [options]="wdSubjectToCBAConfig.options"
+          [label]="wdSubjectToCBAConfig.label"
+          [hint]="wdSubjectToCBAConfig.hint"
+          [name]="wdSubjectToCBAConfig.name"
+          [errorMessage]="wdSubjectToCBAConfig.errorMessage"
+          (modelChange)="wdSubjectToCBAChanged($event)">
+        </sam-radio-button>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
+        <h4 class="sam-ui header">SCA: Non-Standard Services</h4>
+        <!--Non-Standard Services radio buttons-->
+        <sam-radio-button *ngIf="wdPreviouslyPerformedModel !== 'prevPerfNo'"
+          [(model)]="wdNonStandardRadModel"
+          [options]="wdNonStandardRadConfig.optionsWithEven"
+          [label]="wdNonStandardRadConfig.label"
+          [hint]="wdNonStandardRadConfig.hint"
+          [name]="wdNonStandardRadConfig.name"
+          [errorMessage]="wdNonStandardRadConfig.errorMessage"
+          (modelChange)="wdNonStandardRadChanged($event)">
+        </sam-radio-button>
 
-        <!--*** DBA Specif Filters ***-->
-        <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra' && showRegionalOffices==false">
+        <sam-radio-button *ngIf="wdPreviouslyPerformedModel === 'prevPerfNo'"
+                          [(model)]="wdNonStandardRadModel"
+                          [options]="wdNonStandardRadConfig.optionsWithoutEven"
+                          [label]="wdNonStandardRadConfig.label"
+                          [hint]="wdNonStandardRadConfig.hint"
+                          [name]="wdNonStandardRadConfig.name"
+                          [errorMessage]="wdNonStandardRadConfig.errorMessage"
+                          (modelChange)="wdNonStandardRadChanged($event)">
+        </sam-radio-button>
 
-          <!--construction type drop down-->
-          <sam-autocomplete [ngModel]="wdConstructObject"
-                            (ngModelChange)="constructionTypeChange($event)"
-                            [name]="selectConstructConfig.name"
-                            [id]="selectConstructConfig.name"
-                            [labelText]="selectConstructConfig.label"
-                            [hint]="selectConstructConfig.hint"
-                            [options]="selectConstructConfig.options"
-                            [config]="selectConstructConfig"
-                            [disabled]="selectConstructConfig.disabled">
+        <!--Non-Standard Services drop down select-->
+        <sam-autocomplete [ngModel]="wdNonStandardSelectObject"
+                          (ngModelChange)="wdNonStandardSelectChanged($event)"
+                          [options]="wdNonStandardSelectConfig.options"
+                          [config]="wdNonStandardSelectConfig"
+                          [labelText]="wdNonStandardSelectConfig.label"
+                          [name]="wdNonStandardSelectConfig.name"
+                          [id]="wdNonStandardSelectConfig.name"
+                          [hint]="wdNonStandardSelectConfig.hint"
+                          [disabled]="wdNonStandardSelectConfig.disabled">
+        </sam-autocomplete>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          </sam-autocomplete>
-        </sam-collapsible>
+      <!--Awards specific Filters-->
+      <ng-container *ngIf="index==='fpds' && showRegionalOffices==false">
+        <h4 class="sam-ui header">Contract Type</h4>
+        <sam-radio-button
+          [(model)]="awardIDVModel"
+          [options]="awardIDVRadConfig.options"
+          [label]="awardIDVRadConfig.label"
+          [hint]="awardIDVRadConfig.hint"
+          [name]="awardIDVRadConfig.name"
+          [errorMessage]="awardIDVRadConfig.errorMessage"
+          (modelChange)="awardIDVRadChanged($event)">
+        </sam-radio-button>
+        
+        <search-multi-select-filter [attr.id]="'award-idv-type-filter'"
+                                  [selectValues]="awardTypeModel"
+                                  (selectValuesChange)="awardTypeSelected($event)"
+                                  [selectOptions]="awardType.options"
+                                  [selectConfig]="awardType"
+                                  class="usa-award-filter award-type-dropdown-list">
+        </search-multi-select-filter>
 
-        <!--*** SCA Specific Filters ***-->
-        <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca' && showRegionalOffices==false">
+        <search-multi-select-filter [attr.id]="'contract-type-filter'"
+                                  class="usa-award-filter contract-type-dropdown-list"
+                                  [selectValues]="contractTypeModel"
+                                  (selectValuesChange)="contractTypeSelected($event)"
+                                  [selectOptions]="contractType.options"
+                                  [selectConfig]="contractType">
+        </search-multi-select-filter>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          <!--previously performed-->
-          <sam-radio-button
-            [(model)]="wdPreviouslyPerformedModel"
-            [options]="wdPreviouslyPerformedConfig.options"
-            [label]="wdPreviouslyPerformedConfig.label"
-            [hint]="wdPreviouslyPerformedConfig.hint"
-            [name]="wdPreviouslyPerformedConfig.name"
-            [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
-            (modelChange)="wdPreviouslyPerformedChanged($event)">
-          </sam-radio-button>
-        </sam-collapsible>
+      <!--Entity Name - DUNS Filter-->
+      <ng-container *ngIf="index==='fpds' || index === 'opp' || index === 'ei'">
+        <h4 class="sam-ui header">Entity Name/UEI</h4>
+        <sam-autocomplete-multiselect autofill-entityduns
+                                      class="usa-award-filter"
+                                      [attr.id]="'entityDuns'"
+                                      [label]="'Entity Name/UEI'"
+                                      [name]="'Test'"
+                                      [ngModel]="dunsModelList"
+                                      (ngModelChange)="dunsModelChange($event)"
+                                      [keyValueConfig]="dunsConfiguration.keyValueConfig">
 
-        <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
-                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
+        </sam-autocomplete-multiselect>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          <!--Subject to CBA-->
-          <sam-radio-button
-            [(model)]="wdSubjectToCBAModel"
-            [options]="wdSubjectToCBAConfig.options"
-            [label]="wdSubjectToCBAConfig.label"
-            [hint]="wdSubjectToCBAConfig.hint"
-            [name]="wdSubjectToCBAConfig.name"
-            [errorMessage]="wdSubjectToCBAConfig.errorMessage"
-            (modelChange)="wdSubjectToCBAChanged($event)">
-          </sam-radio-button>
-        </sam-collapsible>
+      <!--NAICS - PSC Filters-->
+      <ng-container *ngIf="(index==='fpds' || index === 'opp' || index === 'ei') && showRegionalOffices==false">
+        <h4 class="sam-ui header">Service Classifications</h4>
+        <sam-naics-psc-filter [attr.id]= "'naics-psc-filter'"
+                              [pscValues]="pscTypeModel"
+                              (pscValuesChange)="pscTypeSelected($event)"
+                              [pscOptions]="pscType.options"
+                              [pscConfig]="pscType"
+                              [naicsValues]="naicsTypeModel"
+                              (naicsValuesChange)="naicsTypeSelected($event)"
+                              [naicsOptions]="naicsType.options"
+                              [naicsConfig]="naicsType">
+        </sam-naics-psc-filter>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-        <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
-                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
+      <ng-container *ngIf="index ==='ei'">
+        <h4 class="sam-ui header">Federal Organizations</h4>
+        <sam-agency-picker-v2 #agencyPickerV2
+          [attr.id] = "'federal-organization-filter-ei'"
+          [label]="'Search Federal Organizations'"
+          [ngModel]="agencyPickerModel"
+          (ngModelChange)="onOrganizationChange($event)"
+          [limit] = '2'>
+        </sam-agency-picker-v2>
+        <span>Note: Only Exclusions are associated</span>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          <!--Non-Standard Services radio buttons-->
-          <sam-radio-button *ngIf="wdPreviouslyPerformedModel !== 'prevPerfNo'"
-            [(model)]="wdNonStandardRadModel"
-            [options]="wdNonStandardRadConfig.optionsWithEven"
-            [label]="wdNonStandardRadConfig.label"
-            [hint]="wdNonStandardRadConfig.hint"
-            [name]="wdNonStandardRadConfig.name"
-            [errorMessage]="wdNonStandardRadConfig.errorMessage"
-            (modelChange)="wdNonStandardRadChanged($event)">
-          </sam-radio-button>
+      <!--Eligibility - Filter-->
+      <ng-container  *ngIf="(index==='cfda')">
+        <h4 class="sam-ui header">Eligibility</h4>
+        <sam-eligibility-filter [attr.id]="'eligibility-filter'"
+                                [beneficiaryValues]="benElSearchString"
+                                (beneficiaryValuesChange)="benElSelected($event)"
+                                [beneficiaryOptions]="benElType.options"
+                                [beneficiaryConfig]="benElType"
+                                [applicantValues]="appElSearchString"
+                                (applicantValuesChange)="appElSelected($event)"
+                                [applicantOptions]="appElType.options"
+                                [applicantConfig]="appElType">
+        </sam-eligibility-filter>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          <sam-radio-button *ngIf="wdPreviouslyPerformedModel === 'prevPerfNo'"
-                            [(model)]="wdNonStandardRadModel"
-                            [options]="wdNonStandardRadConfig.optionsWithoutEven"
-                            [label]="wdNonStandardRadConfig.label"
-                            [hint]="wdNonStandardRadConfig.hint"
-                            [name]="wdNonStandardRadConfig.name"
-                            [errorMessage]="wdNonStandardRadConfig.errorMessage"
-                            (modelChange)="wdNonStandardRadChanged($event)">
-          </sam-radio-button>
+      <!--Assistance Type Filters-->
+      <ng-container *ngIf="index==='cfda' && showRegionalOffices==false">
+        <h4 class="sam-ui header">Assistance Type</h4>
+        <search-multi-select-filter [attr.id]= "'assistance-type-filter'"
+                                  class="usa-award-filter award-type-dropdown-list"
+                                  [selectValues]="assistanceTypeFilterModel"
+                                  (selectValuesChange)="assistanceTypeFilterSelected($event)"
+                                  [selectOptions]="assistanceTypeOptions.options"
+                                  [selectConfig]="assistanceTypeOptions">
+        </search-multi-select-filter>
+        <div class="sam-ui divider"></div>
+      </ng-container>
 
-          <!--Non-Standard Services drop down select-->
-          <sam-autocomplete [ngModel]="wdNonStandardSelectObject"
-                            (ngModelChange)="wdNonStandardSelectChanged($event)"
-                            [options]="wdNonStandardSelectConfig.options"
-                            [config]="wdNonStandardSelectConfig"
-                            [labelText]="wdNonStandardSelectConfig.label"
-                            [name]="wdNonStandardSelectConfig.name"
-                            [id]="wdNonStandardSelectConfig.name"
-                            [hint]="wdNonStandardSelectConfig.hint"
-                            [disabled]="wdNonStandardSelectConfig.disabled">
-          </sam-autocomplete>
-        </sam-collapsible>
-
-        <!--Awards specific Filters-->
-        <sam-collapsible  [label]="'Contract Type'" [startOpened]="true" *ngIf="index==='fpds' && showRegionalOffices==false">
-          <sam-radio-button
-            [(model)]="awardIDVModel"
-            [options]="awardIDVRadConfig.options"
-            [label]="awardIDVRadConfig.label"
-            [hint]="awardIDVRadConfig.hint"
-            [name]="awardIDVRadConfig.name"
-            [errorMessage]="awardIDVRadConfig.errorMessage"
-            (modelChange)="awardIDVRadChanged($event)">
-          </sam-radio-button>
-          <br/>
-          <search-multi-select-filter [attr.id]="'award-idv-type-filter'"
-                                    [selectValues]="awardTypeModel"
-                                    (selectValuesChange)="awardTypeSelected($event)"
-                                    [selectOptions]="awardType.options"
-                                    [selectConfig]="awardType"
-                                    class="usa-award-filter award-type-dropdown-list">
-          </search-multi-select-filter>
-          <br/>
-          <search-multi-select-filter [attr.id]="'contract-type-filter'"
-                                    class="usa-award-filter contract-type-dropdown-list"
-                                    [selectValues]="contractTypeModel"
-                                    (selectValuesChange)="contractTypeSelected($event)"
-                                    [selectOptions]="contractType.options"
-                                    [selectConfig]="contractType">
-          </search-multi-select-filter>
-        </sam-collapsible>
-
-        <!--Entity Name - DUNS Filter-->
-        <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ei'">
-          <sam-autocomplete-multiselect autofill-entityduns
-                                        class="usa-award-filter"
-                                        [attr.id]="'entityDuns'"
-                                        [label]="'Entity Name/UEI'"
-                                        [name]="'Test'"
-                                        [ngModel]="dunsModelList"
-                                        (ngModelChange)="dunsModelChange($event)"
-                                        [keyValueConfig]="dunsConfiguration.keyValueConfig">
-
-          </sam-autocomplete-multiselect>
-        </sam-collapsible>
-
-        <!--NAICS - PSC Filters-->
-        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ei') && showRegionalOffices==false">
-          <sam-naics-psc-filter [attr.id]= "'naics-psc-filter'"
-                                [pscValues]="pscTypeModel"
-                                (pscValuesChange)="pscTypeSelected($event)"
-                                [pscOptions]="pscType.options"
-                                [pscConfig]="pscType"
-                                [naicsValues]="naicsTypeModel"
-                                (naicsValuesChange)="naicsTypeSelected($event)"
-                                [naicsOptions]="naicsType.options"
-                                [naicsConfig]="naicsType">
-          </sam-naics-psc-filter>
-        </sam-collapsible>
-
-        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index ==='ei'">
-          <sam-agency-picker-v2 #agencyPickerV2
-            [attr.id] = "'federal-organization-filter-ei'"
-            [label]="'Search Federal Organizations'"
-            [ngModel]="agencyPickerModel"
-            (ngModelChange)="onOrganizationChange($event)"
-            [limit] = '2'>
-          </sam-agency-picker-v2>
-          <span>Note: Only Exclusions are associated</span>
-        </sam-collapsible>
-
-        <!--Eligibility - Filter-->
-        <sam-collapsible [label]="'Eligibility'" [startOpened]="true" *ngIf="(index==='cfda')">
-          <sam-eligibility-filter [attr.id]="'eligibility-filter'"
-                                  [beneficiaryValues]="benElSearchString"
-                                  (beneficiaryValuesChange)="benElSelected($event)"
-                                  [beneficiaryOptions]="benElType.options"
-                                  [beneficiaryConfig]="benElType"
-                                  [applicantValues]="appElSearchString"
-                                  (applicantValuesChange)="appElSelected($event)"
-                                  [applicantOptions]="appElType.options"
-                                  [applicantConfig]="appElType">
-          </sam-eligibility-filter>
-        </sam-collapsible>
-
-        <!--Assistance Type Filters-->
-        <sam-collapsible [label]="'Assistance Type'" [startOpened]="true" *ngIf="index==='cfda' && showRegionalOffices==false">
-          <search-multi-select-filter [attr.id]= "'assistance-type-filter'"
-                                    class="usa-award-filter award-type-dropdown-list"
-                                    [selectValues]="assistanceTypeFilterModel"
-                                    (selectValuesChange)="assistanceTypeFilterSelected($event)"
-                                    [selectOptions]="assistanceTypeOptions.options"
-                                    [selectConfig]="assistanceTypeOptions">
-          </search-multi-select-filter>
-        </sam-collapsible>
-
-        <div class ="sam-ui section divider"></div>
-        <button (click)='clearAllFilters()'>Clear All</button>
-      </sam-filters-container>
+      <div class ="sam-ui  hidden divider"></div>
+      
+      <sam-button 
+        buttonType="secondary"
+        buttonText="Clear All" 
+        (click)='clearAllFilters()'>
+      </sam-button>
     </div>
+    
+    <div class ="sam-ui section hidden divider"></div>
+    
   </aside>
 
   <div class="usa-width-two-thirds">

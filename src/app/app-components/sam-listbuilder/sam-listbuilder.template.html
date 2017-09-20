@@ -1,3 +1,9 @@
+<sam-modal [showClose]="true" #modal 
+    [title]="deleteModalConfig.title" 
+    [type]="deleteModalConfig.type" 
+    [description]="deleteModalConfig.description" 
+    [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
+</sam-modal>
 <sam-label-wrapper #wrapper [label]="label" [hint]="hint" [required]="required"></sam-label-wrapper>
 <h4>Entries</h4>
 <p *ngIf="model && model.length==0">You have no entries</p>
@@ -12,10 +18,10 @@
     [hideDefaultBtns]="hideDefaultBtns"
     [endOfList]="i==model.length-1">
     <ng-container display>
-        <template [ngTemplateOutlet]="displayTemplate" [ngOutletContext]="{ $implicit: row }"></template>
+        <ng-template [ngTemplateOutlet]="displayTemplate" [ngOutletContext]="{ $implicit: row }"></ng-template>
     </ng-container>
     <ng-container edit>
-        <template [ngTemplateOutlet]="editTemplate" [ngOutletContext]="{ $implicit: row }"></template>
+        <ng-template [ngTemplateOutlet]="editTemplate" [ngOutletContext]="{ $implicit: row }"></ng-template>
     </ng-container>
 </sam-listbuilder-card>
 

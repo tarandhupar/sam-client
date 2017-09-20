@@ -24,6 +24,12 @@
         [formArrayInput]="falAssistanceForm.get('deadlines.list').controls"
         [formGroupTemplate]="deadlineSubform"
         (formArrayChange)="fmArrayChange($event)"
+        [deleteModalFlag]="true"
+        [deleteModalConfig]="{
+          title:'Delete this deadline',
+          type:'error',
+          description:'Are you sure you want to delete this deadline?'
+        }"
         (action)="listBuilderActionHandler($event)">
 
         <template #display let-item>

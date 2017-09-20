@@ -9,6 +9,8 @@ import { SYSTEM_ALERTS_PAGE_PATH } from "../../alerts/alerts.route";
 })
 export class SamFooterComponent {
   alertsUrl: string = SYSTEM_ALERTS_PAGE_PATH;
+  buildDate: string = BUILD_DATE;
+  gitLog: string = GIT_LOG;
 
   constructor() {
   }

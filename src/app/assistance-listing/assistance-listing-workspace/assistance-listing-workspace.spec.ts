@@ -11,6 +11,7 @@ import {SamAutocompleteComponent} from "../../../sam-ui-elements/src/ui-kit/form
 import {FALWrapperChangeRequestDropdownComponent} from "../components/change-request-dropdown/wrapper-change-request-dropdown.component";
 import {FALChangeRequestDropdownComponent} from "../components/change-request-dropdown/change-request-dropdown.component";
 import {RequestLabelPipe} from "../pipes/request-label.pipe";
+import { PageTemplateComponent } from "../../app-templates/page.component";
 
 
 
@@ -46,7 +47,7 @@ var workspaceServiceStub = {
 describe('FalWorkspacePage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FalWorkspacePage, AssistanceProgramResult,FALWrapperChangeRequestDropdownComponent,FALChangeRequestDropdownComponent,RequestLabelPipe],
+      declarations: [FalWorkspacePage, PageTemplateComponent, AssistanceProgramResult,FALWrapperChangeRequestDropdownComponent,FALChangeRequestDropdownComponent,RequestLabelPipe],
       providers: [],
       imports: [
         SamUIKitModule,

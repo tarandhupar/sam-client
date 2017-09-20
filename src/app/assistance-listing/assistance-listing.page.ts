@@ -152,7 +152,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   /**
    * @return Observable of Program API
    */
-  private loadProgram() {
+  private loadProgram(): ReplaySubject<any> {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
@@ -352,7 +352,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   private checkCurrentFY() {
     // check if this program has changed in this FY, if not, display an alert
     // does not apply to draft FALs
-    if (this.program.status && this.program.status.code && this.program.status.code === 'draft') {
+    if (this.program.status && this.program.status.code && (this.program.status.code === 'draft' || this.program.status.code === 'draft_review')) {
       return;
     }
 

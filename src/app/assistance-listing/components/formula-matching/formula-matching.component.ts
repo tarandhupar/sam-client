@@ -18,7 +18,11 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   private model: any = {
     checkbox: []
   }; // internally maintained model - should never be null or undefined
-
+  public name: string;
+  public label: string;
+  public hint: string;
+  public required: boolean;
+  
   public formulaMatchingOptions = [
     // todo: fix undefined names
     { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
@@ -35,10 +39,7 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public matchingPercentageOptions = [];
 
   @Input() options: any; // all inputs are passed through a single options object
-  public name: string;
-  public label: string;
-  public hint: string;
-  public required: boolean;
+  
 
   private _ordering: any;
   public formulaMatchingGroup: FormGroup;

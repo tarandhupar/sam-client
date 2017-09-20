@@ -692,11 +692,11 @@ constructor(private router:Router, private route:ActivatedRoute) {}
     this.loadSubSectionContent(this.curSubSection);
     this.router.events.subscribe(
       val => {
-        if(val.url.startsWith(this.baseURL)){
+        if(val['url'].startsWith(this.baseURL)){
           let subSection = "";
-          let start = val.url.indexOf("#");
+          let start = val['url'].indexOf("#");
           if(start > 0){
-            subSection = val.url.substr(start+1,val.url.length-start-1);
+            subSection = val['url'].substr(start+1,val['url'].length-start-1);
             this.setWDOLList(subSection);
           }else{
             subSection = "assistanceListings";

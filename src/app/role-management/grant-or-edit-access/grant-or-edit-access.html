@@ -28,7 +28,7 @@
         </div>
         <div [hidden]="editingOrg" style="margin-top: .5em">
           <label style="display: inline">Organization:&nbsp;</label>
-          <span>{{form.get('org')?.value?.name || ""}}</span>
+          <span>{{orgName()}}</span>
           <a *ngIf="isGrant()" class="pull-right" (click)="onClickEditOrg()">Edit</a>
         </div>
 
@@ -80,7 +80,7 @@
     <!-- Cancel / Confirm -->
     <div class="pull-right clearfix m_T-4x m_B-4x">
       <button routerLink="../access" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
-      <button type="button" class="usa-button usa-button-secondary m_R-0" (click)="onDeleteClick()">Delete</button>
+      <button type="button" class="usa-button usa-button-secondary m_R-0" (click)="onDeleteClick()" *ngIf="isEdit()">Delete</button>
       <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">Done</button>
     </div>
   </form>

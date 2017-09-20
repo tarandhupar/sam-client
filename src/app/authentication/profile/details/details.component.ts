@@ -627,7 +627,7 @@ export class DetailsComponent {
       key = keys[intKey];
       controlValue = controls[key] ? controls[key].value : this.user[key];
 
-      if(controlValue.toString().length || key.match(/^(initials)$/)) {
+      if(controlValue.toString().length || key.match(/^(initials|suffix)$/)) {
         userData[key] = controlValue;
       }
 

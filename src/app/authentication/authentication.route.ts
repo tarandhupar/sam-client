@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 /**
  * Components & Guards
  */
-import { SamLoginComponent } from 'app-components';
+import { SamLoginComponent } from 'app/app-components/login/login.component';
 import { ProfileGuard, ProfileComponent } from './profile';
 import { RegisterGuard, RegisterComponent } from './register';
 import { ForgotComponent } from './forgot';
