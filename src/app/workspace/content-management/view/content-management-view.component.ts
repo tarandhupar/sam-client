@@ -72,16 +72,18 @@ export class HelpContentManagementViewComponent {
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
-        if(this.curSection !== params['section']){
+        if(params['section'] !== this.curSection){
           this.curSection = params['section'];
           this.curSubSection = params['subsection']? params['subsection']:'';
           this.title = this.getSectionTitle(this.curSection);
           this.crumbs[1].breadcrumb = this.title;
           this.filterObj.section = this.curSection;
           this.filterObj.subSection = this.curSubSection;
+          this.sortByModel[this.curSection] = {type: this.sortOptionsMap[this.curSection][0].value, sort:'asc'};
           this.loadQueryParamsFromURL(this.route.snapshot.queryParams);
           this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
         }
+
       });
   }
 
@@ -93,25 +95,21 @@ export class HelpContentManagementViewComponent {
   onFilterChange(filterObj){
     this.filterObj = filterObj;
     this.curPage = 0;
-    if(filterObj.section !== this.curSection){
-      this.curSection = filterObj.section;
-      this.sortByModel[this.curSection] = {type: this.sortOptionsMap[this.curSection][0].value, sort:'asc'};
-    }
     this.updateURL();
-    this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
+    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
   }
 
   /* update message feeds based on page num changes*/
   onPageNumChange(pageNum){
     this.curPage = pageNum;
     this.updateURL();
-    this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
+    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
   }
 
   onSortModelChange(sortModel){
     this.curPage = 0;
     this.updateURL();
-    this.loadContent(this.filterObj, sortModel, this.curPage);
+    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, sortModel, this.curPage);
   }
 
   /* search message feeds with filter, sortby, page number and order*/
