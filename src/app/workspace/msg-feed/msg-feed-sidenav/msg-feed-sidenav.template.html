@@ -13,15 +13,40 @@
       <a [ngClass]="getCurrentTabClass('notifications')" (click)="onSectionTabClick('notifications')">Notifications</a>
     </li>
     <ul class="usa-sidenav-list border-top-black sublist" *ngIf="isCurrentSection('notifications')">
-      <li><a [ngClass]="getCurrentTabClass('notifications/subscriptions')" (click)="onSectionTabClick('notifications/subscriptions')">Subscriptions</a></li>
-      <li><a [ngClass]="getCurrentTabClass('notifications/announcements')" (click)="onSectionTabClick('notifications/announcements')">Announcements</a></li>
+      <li *ngIf="isSignedIn"><a [ngClass]="getCurrentTabClass('notifications/subscriptions')" (click)="onSectionTabClick('notifications/subscriptions')">Subscriptions</a></li>
+      <!--<li><a [ngClass]="getCurrentTabClass('notifications/announcements')" (click)="onSectionTabClick('notifications/announcements')">Announcements</a></li>-->
       <li><a [ngClass]="getCurrentTabClass('notifications/alerts')" (click)="onSectionTabClick('notifications/alerts')">Alerts</a></li>
     </ul>
   </ul>
 
   <div class="usa-width-one-whole m_B-4x">
-    <legend>Keyword</legend>
-    <input placeholder="Find Message" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+    <legend>Search {{getSearchText()}}</legend>
+    <input placeholder="Find {{getSearchText()}}" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
+    <sam-autocomplete-multiselect
+      hint=""
+      label="Search Requester"
+      peoplepicker-autofill
+      [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
+      [(ngModel)]="filterOption.requester">
+    </sam-autocomplete-multiselect>
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
+    <sam-autocomplete-multiselect
+      hint=""
+      label="Search Approver"
+      peoplepicker-autofill
+      [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
+      [(ngModel)]="filterOption.approver">
+    </sam-autocomplete-multiselect>
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x">
+    <legend class="m_B-0">Organization</legend>
+    <sam-agency-picker-v2></sam-agency-picker-v2>
   </div>
 
   <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0">
@@ -67,6 +92,17 @@
     </sam-checkbox>
   </div>
 
+  <div class="m_B-4x" *ngIf="alertStatusCbxConfig.options.length > 0">
+    <sam-checkbox
+      [(model)]="filterOption.alertStatus"
+      [name]="alertStatusCbxConfig.name"
+      [options]="alertStatusCbxConfig.options"
+      [label]="alertStatusCbxConfig.label"
+      [hasSelectAll]="alertStatusCbxConfig.hasSelectAll"
+      (modelChange)="msgFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
   <div class="m_B-4x" *ngIf="domainsCbxConfig.options.length > 0">
     <sam-checkbox
       [(model)]="filterOption.domains"
@@ -76,5 +112,9 @@
       [hasSelectAll]="domainsCbxConfig.hasSelectAll"
       (modelChange)="msgFilterOptionChange()">
     </sam-checkbox>
+  </div>
+
+  <div class="usa-width-one-whole">
+    <span class="pull-right"><a (click)="resetFilter()">Clear Filter</a></span>
   </div>
 </div>

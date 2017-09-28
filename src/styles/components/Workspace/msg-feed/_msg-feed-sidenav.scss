@@ -60,4 +60,13 @@
     font-weight: 400;
     margin-bottom: 0.5em;
   }
+
+  sam-autocomplete-multiselect label{
+    font-weight: 600;
+    font-size: 110%;
+  }
+
+  input::-webkit-input-placeholder{
+    font-style: italic;
+  }
 }

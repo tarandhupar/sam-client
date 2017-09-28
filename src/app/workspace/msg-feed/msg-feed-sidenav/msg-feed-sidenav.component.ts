@@ -2,15 +2,15 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
+import { IAMService } from "api-kit/iam/iam.service";
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 
 @Component({
   selector: 'msg-feed-sidenav',
   templateUrl: 'msg-feed-sidenav.template.html'
 })
 export class MsgFeedSideNavComponent{
-
-  @Input() curSection: string = "";
-  @Input() curSubSection: string = "";
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
@@ -20,12 +20,16 @@ export class MsgFeedSideNavComponent{
   @Input() numberChangeCount = 0;
   @Input() recievedCount = 0;
 
-  filterOption = {
+  @Input() filterOption = {
     keyword:"",
     requestType:[],
     status:[],
     alertType:[],
+    alertStatus:[],
     domains:[],
+    requester:[],
+    approver:[],
+    orgs:[],
     section:"",
     subSection:"",
   };
@@ -48,26 +52,63 @@ export class MsgFeedSideNavComponent{
     label: 'Alert Type',
   };
 
+  alertStatusCbxConfig = {
+    options: [],
+    name: 'Alert Status',
+    label: 'Alert Status',
+  };
+
   domainsCbxConfig = {
     options: [],
     name: 'Domains',
     label: 'Domains',
   };
 
-  constructor(private msgFeedService: MsgFeedService, private systemAlertService: SystemAlertsService){}
+  isSignedIn = false;
+
+  autocompletePeoplePickerConfig = {
+    keyValueConfig: {
+      keyProperty: 'mail',
+      valueProperty: 'givenName',
+      subheadProperty: 'mail'
+    }
+  };
+
+  constructor(private msgFeedService: MsgFeedService,
+              private systemAlertService: SystemAlertsService,
+              private _router:Router,
+              private iamService: IAMService,
+              private capitalPipe: CapitalizePipe,){}
 
   ngOnInit(){
-    this.loadFilterData();
+    this.signInCheck();
   }
 
   ngOnChanges(){
-
     this.loadCounts();
   }
 
-  isCurrentSection(section):boolean{return this.curSection === section;}
+  signInCheck(){
+    this.iamService.iam.checkSession(
+      (user) => {
+        this.isSignedIn = true;
+        this.loadFilterData();
+      },
+      (error) => {
+        // if(this.curSection.toLowerCase() === 'requests'){
+        //   this._router.navigate(['/signin'],{queryParams: { redirect: '/workspace/content-management/requests'}});
+        // }else{
+        //   this.loadFilterData();
+        // }
+        this.loadFilterData();
+
+      }
+    );
+  }
+
+  isCurrentSection(section):boolean{return this.filterOption.section === section;}
   isCurrentPath(str):boolean{
-    let pathStr = this.curSection + (this.curSubSection ===''? '': '/'+this.curSubSection) ;
+    let pathStr = this.filterOption.section + (this.filterOption.subSection ===''? '': '/'+this.filterOption.subSection) ;
     return str === pathStr;
   }
   getCurrentTabClass(str):string{return this.isCurrentPath(str) ? 'usa-current':'';}
@@ -75,21 +116,16 @@ export class MsgFeedSideNavComponent{
   onSectionTabClick(sectionStr){
     // Set up current section and sub section
     let dividerIndex = sectionStr.indexOf('/');
-    this.curSection = sectionStr.substr(0, dividerIndex === -1? sectionStr.length:dividerIndex);
-    this.curSubSection = sectionStr.substr(dividerIndex === -1? sectionStr.length:dividerIndex + 1);
+    this.filterOption.section = sectionStr.substr(0, dividerIndex === -1? sectionStr.length:dividerIndex);
+    this.filterOption.subSection = sectionStr.substr(dividerIndex === -1? sectionStr.length:dividerIndex + 1);
 
     this.loadFilterData();
     this.resetFilterFields();
     this.msgFilterOptionChange();
 
-    // May want to update counts for requests again
-
-    // emit event for msg feed to update url
   }
 
   msgFilterOptionChange(){
-    this.filterOption.section = this.curSection;
-    this.filterOption.subSection = this.curSubSection;
     // emit event for msg feed to search for current filter messages
     this.filterChange.emit(this.filterOption);
   }
@@ -100,16 +136,19 @@ export class MsgFeedSideNavComponent{
     this.filterOption.status = [];
     this.filterOption.alertType = [];
     this.filterOption.domains = [];
+    this.filterOption.requester = [];
+    this.filterOption.approver = [];
+    this.filterOption.orgs = [];
   }
 
   loadFilterData(){
-    let typeStr = this.curSubSection === ""? this.curSection: this.curSubSection;
+    let typeStr = this.filterOption.subSection === ""? this.filterOption.section: this.filterOption.subSection;
     this.msgFeedService.getFilters(this.typeIdMap[typeStr]).subscribe(data =>{
       this.loadRequestsTypeAndCount(data.requestTypes);
       this.loadRequestStatus(data.requestStatus);
       this.loadAlertType(data.alertTypes);
+      this.loadAlertStatus(data.alertStatus);
       this.loadDomains(data.domainTypes);
-
     });
   }
 
@@ -117,6 +156,13 @@ export class MsgFeedSideNavComponent{
     this.alertTypeCbxConfig.options = [];
     if(alertTypes){
       alertTypes.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
+    }
+  }
+  
+  loadAlertStatus(alertStatus){
+    this.alertStatusCbxConfig.options = [];
+    if(alertStatus){
+      alertStatus.forEach(status => {this.alertStatusCbxConfig.options.push({value: status, label: status, name: status});});
     }
   }
 
@@ -139,7 +185,6 @@ export class MsgFeedSideNavComponent{
     }
   }
 
-
   loadDomains(domainTypes){
     this.domainsCbxConfig.options = [];
     if(domainTypes){
@@ -152,13 +197,29 @@ export class MsgFeedSideNavComponent{
 
   loadCounts(){
     this.requestTypeCbxConfig.options.forEach(e =>{
-      if(e.label.includes('Role'))e.count = this.roleCount;
-      if(e.label.includes('Title'))e.count = this.titleChangeCount;
-      if(e.label.includes('Number'))e.count = this.numberChangeCount;
+      if(e.label.includes('Role'))e['count'] = this.roleCount;
+      if(e.label.includes('Title'))e['count'] = this.titleChangeCount;
+      if(e.label.includes('Number'))e['count'] = this.numberChangeCount;
     });
   }
 
   hasActiveItem(option):boolean{
     return option.count && option.count > 0;
   }
+
+  getSearchText(){
+    let searchText = "";
+    if(this.filterOption.section.toLowerCase() === 'notifications'){
+      searchText = this.filterOption.subSection === ''? this.filterOption.section: this.filterOption.subSection;
+    }else{
+      searchText = "requests";
+    }
+    return this.capitalPipe.transform(searchText);
+  }
+
+  resetFilter(){
+    this.resetFilterFields();
+    this.filterChange.emit(this.filterOption);
+  }
+
 }

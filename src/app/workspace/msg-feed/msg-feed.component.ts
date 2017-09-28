@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import {DomSanitizer} from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
+import * as moment from 'moment';
 
 @Component({
   templateUrl: './msg-feed.template.html',
@@ -29,15 +30,21 @@ export class MsgFeedComponent {
 
   curSection:string = "";
   curSubSection:string = "";
+  title:string = "";
 
   validSections = ['requests','notifications'];
-  validSubSections = {'requests':['received','sent'],'notifications':['subscriptions','announcements','alerts']}
+  validSubSections = {'requests':['received','sent'],'notifications':['subscriptions','announcements','alerts']};
 
-  sortByModel = {type: 'reqDate', sort: 'asc' };
-  msgSortOptions = [
-    {label:'Request Date', name:'Date', value:'reqDate'},
-    {label:'Respond Date', name:'Date', value:'respDate'},
-  ];
+  sortByModel = {};
+  msgSortOptions = [];
+
+  sortOptionsMap = {
+    'requests': [
+      {label:'Request Date', name:'Date', value:'reqDate'},
+      {label:'Respond Date', name:'Date', value:'respDate'},
+    ],
+    'notifications': [{label:'Received Date', name:'Date', value:'recDate'}],
+  };
 
   orderByIndex = 0;
   orderByOptions = ["asc","desc"];
@@ -56,7 +63,11 @@ export class MsgFeedComponent {
     requestType:[],
     status:[],
     alertType:[],
+    alertStatus:[],
     domains:[],
+    requester:[],
+    approver:[],
+    orgs:[],
     section:"",
     subSection:"",
   };
@@ -76,8 +87,11 @@ export class MsgFeedComponent {
         this.curSection = params['section'];
         this.curSubSection = params['subsection']? params['subsection']:'';
         this.crumbs[1].breadcrumb = this.capitalPipe.transform(this.curSection);
+        this.msgSortOptions = this.sortOptionsMap[this.curSection.toLowerCase()];
+        this.sortByModel = {type: this.msgSortOptions[0].value, sort: 'asc' };
         this.filterObj.section = this.curSection;
         this.filterObj.subSection = this.curSubSection;
+        this.setTitle(this.curSection, this.curSubSection);
         this.loadFeeds(this.getTypeIdStr(this.filterObj), this.filterObj, this.sortByModel, this.curPage+1);
       });
   }
@@ -97,6 +111,7 @@ export class MsgFeedComponent {
   onFilterChange(filterObj){
     this.filterObj = filterObj;
     this.curPage = 0;
+    this.updateSection(this.filterObj);
     this.loadFeeds(this.getTypeIdStr(filterObj), this.filterObj, this.sortByModel, this.curPage+1);
   }
 
@@ -143,13 +158,45 @@ export class MsgFeedComponent {
     if( this.totalRecords === 0) this.curStart = 0;
   }
 
+  updateSection(filterObj){
+    this.curSection = filterObj.section;
+    this.curSubSection = filterObj.subSection;
+    this.setTitle(this.curSection, this.curSubSection);
+    console.log(this.title);
+  }
+
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
-  getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
+  getAlertFeedClass(feed){
+    if(feed.alertTypeName.toLowerCase().includes('information')){
+      return 'usa-alert-info';
+    }
+    return "usa-alert-" + feed.alertTypeName.toLowerCase();
+  }
 
   getTypeIdStr(filterObj):string{
     let filterTypeStr = filterObj.subSection === ""? filterObj.section: filterObj.subSection;
     return this.typeIdMap[filterTypeStr];
   }
 
+  setTitle(section, subsection){
+    this.title = "";
+    if(section.toLowerCase() === 'requests'){
+      this.title = subsection === ''? section: subsection + " " + section;
+    }else{
+      this.title = subsection === ''? section: subsection;
+    }
+  }
+
+  transformDateStr(dateStr):string{
+    let date = moment(dateStr).utc().format('MMM DD YYYY hh:mmA');
+    let now = moment().utc().format('MMM DD YYYY');
+    if(moment(dateStr).utc().isSame(now,'year')){
+      if(moment(dateStr).utc().isSame(now,'month') && moment(dateStr).utc().isSame(now,'day')){
+        return moment(dateStr).utc().format('hh:mmA');
+      }
+      return moment(dateStr).utc().format('MMM DD hh:mmA');
+    }
+    return date;
+  }
 }

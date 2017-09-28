@@ -14,58 +14,50 @@
 <!-- Images -->
 <div class="sam-ui container">
   <div class="sam-ui grid images-section">
-    <div class="column center aligned">
-      <img class="sam-ui image" src="src/assets/img/home-main.jpg">
-    </div>
-  </div>
-</div>
-
-<!--  Free Banner  -->
-<div class="sam-ui container">
-  <div class="sam-ui center aligned padded grid">
-    <div class="light blue row">
-      <div class="column">
-        <ul class="sam-ui horizontal bulleted large list">
-          <li class="item">100% Free to Use</li>
-        </ul>
+    <div class="twelve wide tablet twelve wide computer column">
+      <div class="sam-ui three column stackable grid">
+        <div class="sam-ui column center aligned relative">
+          <img class="sam-ui image aligned" src="src/assets/img/home-1.jpg">
+          <a style="position: absolute; left: 40%; top: 40%; opacity: .8; font-size: 50px;"
+             href="https://youtu.be/5uciZ431AGo"
+             target="welcome-SAM-video">
+            <i class="fa fa-play-circle-o fa-lg" style="color:white"></i>
+          </a>
+          <div class="row" style="background-color: #112e51; color: white; position: absolute; right: 10px; left: 10px; bottom: 12px">Welcome to beta.SAM.gov</div>
+        </div>
+        <div class="column center aligned">
+          <img class="sam-ui image" src="src/assets/img/home-2.jpg">
+        </div>
+        <div class="column center aligned">
+          <img class="sam-ui image" src="src/assets/img/home-3.jpg">
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Main Content -->
 <div class="sam-ui container">
   <div class="sam-ui vertically very padded stackable grid">
-    <div class="twelve wide tablet four wide computer column">
-      <div class="sam-ui grid">
-        <div class="row">
-          <div class="column">
-            <a [routerLink]="['/help/new']" class="sam-ui dark blue fluid button">
-              <i class="icon fa fa-map-marker"></i>
-              New to beta.SAM.gov
-            </a>
-          </div>
+    <div class="twelve wide column">
+      <div class="sam-ui three column vertically stackable grid">
+        <div class="column">
+          <h2 class="sam-ui header">
+            <i class="fa fa-flag" aria-hidden="true" style="color: #e21c3d;"></i>
+            SAM is FREE
+          </h2>
+          <p>
+            Gain access to data in a variety of formats. Perform searches,
+            download extracts.
+          </p>
+          <ul class="sam-ui bulleted list">
+            <li>100% Free to Use</li>
+            <li>Free to Search</li>
+            <li>Free to Run Reports</li>
+            <li>Free to Register</li>
+          </ul>
         </div>
-        <div class="row">
-          <div class="column">
-            <a [routerLink]="['/help/accounts']" class="sam-ui dark blue fluid button">
-              <i class="icon fa fa-user"></i>
-              User Accounts
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="column">
-            <a [routerLink]="['/help/transition']" class="sam-ui dark blue fluid button">
-              <i class="icon fa fa-map-signs"></i>
-              What's Next
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="twelve wide tablet eight wide computer column">
-      <div class="sam-ui two column stackable padded grid">
         <div class="column">
           <h2 class="sam-ui header">
             <img alt="Award Data" src="src/assets/img/sam-icons/award-data-gray.png" style="padding-right: 5px; width: 40px; vertical-align: middle;">
@@ -101,6 +93,59 @@
                 <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_FederalHierarchy-Guide.pdf" target="Federal Hierarchy">Federal Hierarchy</a></li>
               </ul>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sam-ui hidden divider"></div>
+
+<div class="sam-ui padded grid">
+  <div class="dark blue row">
+    <div class="twelve wide column">
+      <div class="sam-ui container">
+        <div class="sam-ui four column vertically padded stackable grid">
+          <div class="column center aligned">
+            <a class="sam-ui medium inverted header">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-map-marker fa-stack-1x" style="color: #112e51;"></i>
+              </span>
+              <br>
+              New to SAM.gov
+            </a>
+          </div>
+          <div class="column center aligned">
+            <a class="sam-ui medium inverted header">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-user-circle-o fa-stack-1x" style="color: #112e51;"></i>
+              </span>
+              <br>
+              User Accounts
+            </a>
+          </div>
+          <div class="column center aligned">
+            <a class="sam-ui medium inverted header">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-map-signs fa-stack-1x" style="color: #112e51;"></i>
+              </span>
+              <br>
+              Transition Activities
+            </a>
+          </div>
+          <div class="column center aligned">
+            <a class="sam-ui medium inverted header">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-video-camera fa-stack-1x" style="color: #112e51;"></i>
+              </span>
+              <br>
+              Video Tutorials
+            </a>
           </div>
         </div>
       </div>
