@@ -55,9 +55,13 @@ declare var API_UMBRELLA_URL: string;
 declare var API_UMBRELLA_KEY: string;
 declare var SHOW_OPTIONAL: string;
 declare var SHOW_HIDE_RESTRICTED_PAGES: string;
-declare var IDLE_TIME:string;
-declare var PINGER_TIME:string;
-declare var TIMEOUT_DURATION:string;
+declare var IDLE_TIME: string;
+declare var GIT_LOG: string;
+declare var BUILD_DATE: string;
+declare var PINGER_TIME: string;
+declare var TIMEOUT_DURATION: string;
+// Determine which environment is running on
+declare var ENVIRONMENT: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -71,8 +75,11 @@ interface GlobalEnvironment {
   SHOW_OPTIONAL;
   SHOW_HIDE_RESTRICTED_PAGES;
   IDLE_TIME;
+  GIT_LOG;
+  BUILD_DATE;
   PINGER_TIME;
   TIMEOUT_DURATION;
+  ENVIRONMENT;
 
   SystemJS: SystemJS;
   System: SystemJS;
