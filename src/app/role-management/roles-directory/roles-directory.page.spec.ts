@@ -7,7 +7,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { RolesDirectoryPage } from "./roles-directory.page";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { AppTemplatesModule } from "../../app-templates/index";
+// import { AppTemplatesModule } from "../../app-templates/index";
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { RouterTestingModule } from "@angular/router/testing";
 
@@ -45,7 +45,7 @@ xdescribe('The user-roles-directory page', () => {
         FormsModule,
         ReactiveFormsModule,
         SamUIKitModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
         AppComponentsModule,
         RouterTestingModule,
       ],

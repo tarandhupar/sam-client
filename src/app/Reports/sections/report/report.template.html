@@ -52,10 +52,7 @@
                 *ngIf="usedPrompts.state"
                 [(ngModel)]="location.state"
                 name="state"
-                [config]="{serviceOptions:'USA', 
-                  keyValueConfig: {keyProperty: 'key', valueProperty: 'value'},
-                  dropdownLimit: 10,
-                  showClearButton: true}" 
+                [config]="autocompleteStateConfig" 
                 [labelText]="'State Code'"
                 (enterEvent)="updateStateField($event)">
               </sam-autocomplete>
@@ -103,6 +100,13 @@
                 [label] = "'Contracting Office Region'"
                 (switchStatusChange)="contractingRegionChange($event)">
               </sam-select>
+              <sam-text *ngIf="usedPrompts.fiscalYear" 
+                [(ngModel)]="fiscalYear"
+                [name]="'fiscalYear'" 
+                [label]="'Fiscal Year'"
+                [maxlength]="4"
+                (keypress)="_keyPress($event)">
+              </sam-text>
             </div>
           </div>  
 

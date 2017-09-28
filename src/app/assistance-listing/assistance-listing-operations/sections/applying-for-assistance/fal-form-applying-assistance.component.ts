@@ -1,12 +1,12 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, ViewChild, Input, OnInit, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import {FALFormService} from "../../fal-form.service";
-import { FormBuilder, FormGroup, FormArray, Validators } from "@angular/forms";
+import {FormBuilder, FormGroup, FormArray, Validators} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
-import { FALFormErrorService } from '../../fal-form-error.service';
-import { FALSectionNames } from '../../fal-form.constants';
+import {falCustomValidatorsComponent} from "../../../validators/assistance-listing-validators";
+import {FALFormErrorService} from '../../fal-form-error.service';
+import {FALSectionNames} from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -17,58 +17,66 @@ import { FALSectionNames } from '../../fal-form.constants';
 export class FALAssistanceComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
-
+  @ViewChild('lb') listBuilder;
   progTitle: string;
   hideAddButton: boolean = false;
   assistInfoDisp: any = [];
   falAssistanceForm: FormGroup;
   deadlineModel: any;
 
-  deadlineHint:string =`<p>By what date(s) or between what dates must an application be received by the Federal agency? If the deadline for submission of application is not available, a statement such as the following should be entered: Contact the headquarters (or regional office, as appropriate) for application deadlines. Where this information is not available, agencies should inform GSA as soon as possible after it becomes available. The phrase "See the Federal Register for deadline dates" is not sufficient. 
+  deadlineHint: string = `<p>By what date(s) or between what dates must an application be received by the Federal agency? If the deadline for submission of application is not available, a statement such as the following should be entered: Contact the headquarters (or regional office, as appropriate) for application deadlines. Where this information is not available, agencies should inform GSA as soon as possible after it becomes available. The phrase "See the Federal Register for deadline dates" is not sufficient. 
                         Specific dates must be given. If there are no deadlines, select "None."</p>`;
   addDeadlineHint: string = `List all deadlines in the application process. Enter each deadline separately.`;
-  appProcedureHint:string = `For eligible applicants (including intermediate levels), identified under the Applicant Eligibility section,
+  appProcedureHint: string = `For eligible applicants (including intermediate levels), identified under the Applicant Eligibility section,
                           what are the basic procedural steps required by the Federal agency in the application process, beginning with the lowest level and ending eventually with the Federal government?
                           Do OMB Circular No. A-102 or A-100 Apply? Are there any Other Application Procedures?`;
-  awardProcedureHint:string = `<p>Describe how assistance is awarded. Include who approves the award and how assistance is distributed.</p>
+  awardProcedureHint: string = `<p>Describe how assistance is awarded. Include who approves the award and how assistance is distributed.</p>
                                <p>Give the basic procedural steps for awarding assistance beginning with the organizational components of the Federal agency that has final approval authority for the application and end with the lowest level at which Federal resources are expended. 
                                State if the assistance passes through the initial applicant for further distribution to other groups in the private sector. 
                                These steps should be consistent with the steps identified in the Application Procedure subsection above.</p>`;
-  approvalHint:string = `<p>Select the range that best represents how much time the approval process takes.</p>
+  approvalHint: string = `<p>Select the range that best represents how much time the approval process takes.</p>
                          <p>In terms of days, what is a representative range of the time required for the application or request to be approved or disapproved. 
                          If, in the case of certain nonfinancial assistance programs this is not relevant, select "Not applicable."</p>`;
 
-  renewalHint:string = `<p>Select the range that best represents when an awardee may apply for a renewal or extension.</p>
+  renewalHint: string = `<p>Select the range that best represents when an awardee may apply for a renewal or extension.</p>
                         <p>Are renewals or extensions available? What are the procedures for such? If there are no renewals, enter "None." 
                         If this does not apply to a particular program, select "Not applicable." Describe any additional information necessary.</p>`;
 
-  appealsHint:string = `<p>Select the range that best represents how long an applicant has to appeal a decision.</p>
+  appealsHint: string = `<p>Select the range that best represents how long an applicant has to appeal a decision.</p>
                         <p>For applications not approved, what appeal procedure and/or allowable rework time is available? If there is no appeal or rework time, select "None." 
                         If this does not apply to the particular program, select "Not applicable." Describe any additional information necessary.</p>`;
 
 
   public deadlinesFlagOptions = [];
-  public dateRangeOptions = [{ label: 'None Selected', value: 'na'}];
+  public dateRangeOptions = [{label: 'None Selected', value: 'na'}];
 
   public preAppCordOptions = [
-    { label: 'An environmental impact statement is required for this program.', value: 'statement' },
-    { label: 'An environmental impact assessment is required for this program.', value: 'assessment'},
-    { label: 'Executive Order 12372, "Intergovernmental Review of Federal Programs," applies to this listing.', value: 'ExecutiveOrder12372'},
-    { label: 'Other pre-application coordination is required.', value: 'otherRequired' }
+    {label: 'An environmental impact statement is required for this program.', value: 'statement'},
+    {label: 'An environmental impact assessment is required for this program.', value: 'assessment'},
+    {
+      label: 'Executive Order 12372, "Intergovernmental Review of Federal Programs," applies to this listing.',
+      value: 'ExecutiveOrder12372'
+    },
+    {label: 'Other pre-application coordination is required.', value: 'otherRequired'}
   ];
 
-  public appProcOptions = [{ label: 'Funding contract opportunities notices for this listing will be posted on Grants.gov', value: true }];
+  public appProcOptions = [{
+    label: 'Funding contract opportunities notices for this listing will be posted on Grants.gov',
+    value: true
+  }];
 
-  public selectionCriteriaOptions = [{ label: 'There are criteria for selection proposals.', value: true }];
+  public selectionCriteriaOptions = [{label: 'There are criteria for selection proposals.', value: true}];
 
-  deadlinesList:FormArray = new FormArray([]);
-  deadlineSubform:FormGroup = this.fb.group({
+  deadlinesList: FormArray = new FormArray([]);
+  deadlineSubform: FormGroup = this.fb.group({
     dateRange: ['', [falCustomValidatorsComponent.dateRangeRequired, falCustomValidatorsComponent.dateRangeValidation]],
     description: ""
   });
-  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {}
 
-  ngOnInit(){
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private cdr: ChangeDetectorRef) {
+  }
+
+  ngOnInit() {
 
     this.setDictOptions();
     this.createForm();
@@ -76,17 +84,25 @@ export class FALAssistanceComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
-    this.falAssistanceForm.valueChanges.subscribe(data => this.updateViewModel(data));
+    this.falAssistanceForm.valueChanges.subscribe(data => {
+        this.updateViewModel(data)
+        this.updateErrors();
+      this.cdr.detectChanges();
+      }
+    );
   }
 
-  setDictOptions(){
+  setDictOptions() {
     this.service.getAssistanceDict().subscribe(data => {
-        for(let flag of data['deadline_flag']){
-          this.deadlinesFlagOptions.push({label:flag.value, value:flag.code});
+        if (data['deadline_flag'] && data['deadline_flag'].length > 0) {
+          for (let flag of data['deadline_flag']) {
+            this.deadlinesFlagOptions.push({label: flag.value, value: flag.code});
+          }
         }
-
-        for(let dr of data['date_range']){
-          this.dateRangeOptions.push({ label: dr.value, value:dr.code });
+        if (data['date_range'] && data['date_range'].length > 0) {
+          for (let dr of data['date_range']) {
+            this.dateRangeOptions.push({label: dr.value, value: dr.code});
+          }
         }
       },
       error => {
@@ -95,7 +111,7 @@ export class FALAssistanceComponent implements OnInit {
 
   }
 
-  createForm(){
+  createForm() {
     this.falAssistanceForm = this.fb.group({
       deadlines: this.fb.group({
         flag: '',
@@ -131,61 +147,64 @@ export class FALAssistanceComponent implements OnInit {
       })
     });
 
-    setTimeout(() => { // horrible hack to trigger angular change detection
-      if (this.viewModel.getSectionStatus(FALSectionNames.APPLYING_FOR_ASSISTANCE) === 'updated') {
-        // todo: find way to shorten this...
-        this.falAssistanceForm.markAsPristine({onlySelf: true});
-        this.falAssistanceForm.get('deadlines').get('flag').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('deadlines').get('flag').updateValueAndValidity();
-        this.falAssistanceForm.get('deadlines').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('deadlines').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('preApplicationCoordination').get('reports').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('preApplicationCoordination').get('reports').updateValueAndValidity();
-        this.falAssistanceForm.get('preApplicationCoordination').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('preApplicationCoordination').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('applicationProcedure').get('isApplicable').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('applicationProcedure').get('isApplicable').updateValueAndValidity();
-        this.falAssistanceForm.get('applicationProcedure').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('applicationProcedure').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('selectionCriteria').get('isApplicable').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('selectionCriteria').get('isApplicable').updateValueAndValidity();
-        this.falAssistanceForm.get('selectionCriteria').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('selectionCriteria').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('awardProcedure').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('awardProcedure').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('approval').get('interval').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('approval').get('interval').updateValueAndValidity();
-        this.falAssistanceForm.get('approval').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('approval').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('appeal').get('interval').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('appeal').get('interval').updateValueAndValidity();
-        this.falAssistanceForm.get('appeal').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('appeal').get('description').updateValueAndValidity();
-        this.falAssistanceForm.get('renewal').get('interval').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('renewal').get('interval').updateValueAndValidity();
-        this.falAssistanceForm.get('renewal').get('description').markAsDirty({onlySelf: true});
-        this.falAssistanceForm.get('renewal').get('description').updateValueAndValidity();
+    this.manualFormDirty();
+    this.cdr.detectChanges();
+  }
 
-      }
-    });
+  manualFormDirty() {
+    if (this.viewModel.getSectionStatus(FALSectionNames.APPLYING_FOR_ASSISTANCE) === 'updated') {
+      // todo: find way to shorten this...
+      this.falAssistanceForm.markAsPristine({onlySelf: true});
+      this.falAssistanceForm.get('deadlines').get('flag').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('deadlines').get('flag').updateValueAndValidity();
+      this.falAssistanceForm.get('deadlines').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('deadlines').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('preApplicationCoordination').get('reports').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('preApplicationCoordination').get('reports').updateValueAndValidity();
+      this.falAssistanceForm.get('preApplicationCoordination').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('preApplicationCoordination').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('applicationProcedure').get('isApplicable').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('applicationProcedure').get('isApplicable').updateValueAndValidity();
+      this.falAssistanceForm.get('applicationProcedure').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('applicationProcedure').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('selectionCriteria').get('isApplicable').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('selectionCriteria').get('isApplicable').updateValueAndValidity();
+      this.falAssistanceForm.get('selectionCriteria').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('selectionCriteria').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('awardProcedure').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('awardProcedure').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('approval').get('interval').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('approval').get('interval').updateValueAndValidity();
+      this.falAssistanceForm.get('approval').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('approval').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('appeal').get('interval').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('appeal').get('interval').updateValueAndValidity();
+      this.falAssistanceForm.get('appeal').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('appeal').get('description').updateValueAndValidity();
+      this.falAssistanceForm.get('renewal').get('interval').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('renewal').get('interval').updateValueAndValidity();
+      this.falAssistanceForm.get('renewal').get('description').markAsDirty({onlySelf: true});
+      this.falAssistanceForm.get('renewal').get('description').updateValueAndValidity();
+    }
   }
 
   updateViewModel(data) {
     //get reports
     let reports = [];
-    for(let report of data.preApplicationCoordination.reports){
-
-      reports.push( {
-        reportCode: report,
-        isSelected: true
-      } );
+    if (data.preApplicationCoordination.reports && data.preApplicationCoordination.reports.length > 0) {
+      for (let report of data.preApplicationCoordination.reports) {
+        reports.push({
+          reportCode: report,
+          isSelected: true
+        });
+      }
     }
 
     //deadline list
     let deadlineList = [];
 
-    for(let item of data.deadlines.list){
-      let deadlineItem  = {
+    for (let item of data.deadlines.list) {
+      let deadlineItem = {
         start: '',
         end: '',
         description: ''
@@ -214,10 +233,6 @@ export class FALAssistanceComponent implements OnInit {
     this.viewModel.appealDesc = data.appeal.description || null;
     this.viewModel.renewalInterval = (data.renewal.interval == 'na' ? null : data.renewal.interval);
     this.viewModel.renewalDesc = data.renewal.description || null;
-
-    setTimeout(() => {
-      this.updateErrors();
-    });
   }
 
   updateForm() {
@@ -226,15 +241,17 @@ export class FALAssistanceComponent implements OnInit {
     this.progTitle = this.viewModel.title;
 
     //report
-    let reports = this.viewModel.preAppCoordReports;
-    let reportArr = [];
-    for(let report of reports){
-      reportArr.push(report.reportCode);
+    if (this.viewModel.preAppCoordReports && this.viewModel.preAppCoordReports.length > 0) {
+      let reports = this.viewModel.preAppCoordReports;
+      let reportArr = [];
+      for (let report of reports) {
+        reportArr.push(report.reportCode);
+      }
     }
 
     //deadline list
-    if(this.viewModel.deadlineList.length > 0){
-      for(let assist of this.viewModel.deadlineList){
+    if (this.viewModel.deadlineList && this.viewModel.deadlineList.length > 0) {
+      for (let assist of this.viewModel.deadlineList) {
         let item = {
           dateRange: {
             startDate: assist.start,
@@ -247,63 +264,64 @@ export class FALAssistanceComponent implements OnInit {
         //let formArr:FormArray = <FormArray>this.deadlinesList;
         (<FormArray>this.falAssistanceForm.get('deadlines.list')).push(_.cloneDeep(this.deadlineSubform));
       }
+      this.listBuilder.setupModel();
       this.deadlineSubform.reset();
     }
 
     this.falAssistanceForm.patchValue({
-     deadlines:{
-      flag: this.viewModel.deadlineFlag,
-      description: this.viewModel.deadlineDesc
-     },
-     preApplicationCoordination:{
-      reports: reportArr,
-      description: this.viewModel.preAppCoordDesc
-     },
-     applicationProcedure:{
-      isApplicable: ( this.viewModel.appProcIsApp == false ? [] : [this.viewModel.appProcIsApp]),
-      description: this.viewModel.appProcDesc
-     },
-     selectionCriteria: {
-      isApplicable: (this.viewModel.selCriteriaIsApp == false ? [] : [this.viewModel.selCriteriaIsApp]),
-      description: this.viewModel.selCriteriaDesc
-     },
-     awardProcedure: {
-      description: this.viewModel.awardProcDesc
-     },
-     approval: {
-      interval: this.viewModel.approvalInterval,
-      description: this.viewModel.approvalDesc
-     },
-     appeal: {
-      interval: this.viewModel.appealInterval,
-      description: this.viewModel.appealDesc
-     },
-     renewal: {
-      interval:  this.viewModel.renewalInterval,
-      description:  this.viewModel.renewalDesc
-     }
-     }, {
+      deadlines: {
+        flag: this.viewModel.deadlineFlag,
+        description: this.viewModel.deadlineDesc
+      },
+      preApplicationCoordination: {
+        reports: reportArr,
+        description: this.viewModel.preAppCoordDesc
+      },
+      applicationProcedure: {
+        isApplicable: ( this.viewModel.appProcIsApp == false ? [] : [this.viewModel.appProcIsApp]),
+        description: this.viewModel.appProcDesc
+      },
+      selectionCriteria: {
+        isApplicable: (this.viewModel.selCriteriaIsApp == false ? [] : [this.viewModel.selCriteriaIsApp]),
+        description: this.viewModel.selCriteriaDesc
+      },
+      awardProcedure: {
+        description: this.viewModel.awardProcDesc
+      },
+      approval: {
+        interval: this.viewModel.approvalInterval,
+        description: this.viewModel.approvalDesc
+      },
+      appeal: {
+        interval: this.viewModel.appealInterval,
+        description: this.viewModel.appealDesc
+      },
+      renewal: {
+        interval: this.viewModel.renewalInterval,
+        description: this.viewModel.renewalDesc
+      }
+    }, {
       emitEvent: false
     });
 
-    setTimeout(() => {
-      this.updateErrors();
-      //this.updateSubformErrors();
-    });
+    this.falAssistanceForm.markAsPristine({onlySelf: true});
+    this.manualFormDirty();
 
+    this.updateErrors();
+    this.cdr.detectChanges();
   }
 
 
-  formatAssistInfo(assistInfo){
+  public formatAssistInfo(assistInfo) {
     let label = '';
-    if(assistInfo.dateRange) {
+    if (assistInfo.dateRange) {
       let startDate = '';
       let endDate = '';
 
-      if(assistInfo.dateRange.startDate)
+      if (assistInfo.dateRange.startDate)
         startDate = moment(assistInfo.dateRange.startDate).format('MMMM DD, YYYY');
 
-      if(assistInfo.dateRange.endDate)
+      if (assistInfo.dateRange.endDate)
         endDate = moment(assistInfo.dateRange.endDate).format('MMMM DD, YYYY');
 
 
@@ -325,7 +343,7 @@ export class FALAssistanceComponent implements OnInit {
       }
     }
 
-    if(assistInfo.description) {
+    if (assistInfo.description) {
       label += assistInfo.description;
     }
 
@@ -348,30 +366,32 @@ export class FALAssistanceComponent implements OnInit {
     this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  private updateControlError(control, errors){
+  private updateControlError(control, errors) {
     control.clearValidators();
-    control.setValidators((control) => { return control.errors });
-    control.setErrors(errors);
-    setTimeout(() => {
-      control.updateValueAndValidity({onlySelf: true, emitEvent: true});
+    control.setValidators((control) => {
+      return control.errors
     });
+    control.setErrors(errors);
+    this.cdr.detectChanges();
+    control.updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
 
-  fmArrayChange(data){
+  fmArrayChange(data) {
     this.deadlineModel = data;
-    let formArray= <FormArray>this.falAssistanceForm.get('deadlines.list');
-    while(formArray.value.length>0){
+    let formArray = <FormArray>this.falAssistanceForm.get('deadlines.list');
+    while (formArray.value.length > 0) {
       formArray.removeAt(0);
     }
-    for(var idx in data){
+    for (var idx in data) {
       let control = _.cloneDeep(this.deadlineSubform);
       control.setValue(data[idx].value);
       formArray.markAsDirty();
       formArray.push(control);
     }
   }
+
   listBuilderActionHandler(event) {
-    if((event === 'delete' && this.deadlineModel && this.deadlineModel.length === 0)  || event === 'add-cancel' || event === 'editSubmit')
+    if ((event === 'delete' && this.deadlineModel && this.deadlineModel.length === 0) || event === 'add-cancel' || event === 'editSubmit')
       this.falAssistanceForm.get('deadlines').markAsDirty({onlySelf: true});
   }
 }

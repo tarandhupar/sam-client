@@ -19,7 +19,7 @@ import { AppComponentsModule } from '../../../../app-components/app-components.m
 import { FALComponentsModule } from '../../../components/index';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { AppTemplatesModule } from '../../../../app-templates/index';
+// import { AppTemplatesModule } from '../../../../app-templates/index';
 
 let MockFormService = jasmine.createSpyObj('MockFormService', ['getFunctionalCodesDict', 'getSubjectTermsDict']);
 MockFormService.getFunctionalCodesDict.and.returnValue(Observable.of({}));
@@ -55,7 +55,7 @@ xdescribe('FAL Overview Form', () => {
         RouterTestingModule,
         SamUIKitModule,
         ReactiveFormsModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
       ]
     }).overrideComponent(FALFormOverviewComponent, {
       set: {

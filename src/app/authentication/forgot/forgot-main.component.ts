@@ -196,7 +196,7 @@ export class ForgotMainComponent {
           case 412:
             this.$password.setConsecutiveValidationError();
             break;
-          case 406:
+          case 400:
             this.$password.setCustomError('password', error.message);
             break;
           default:

@@ -29,34 +29,33 @@
       </thead>
       <tbody>
       <tr *ngFor="let row of subscriptions">
-          <td scope="row" style="padding:0em 0.5em">{{row.recordId}}</td> 
-          <td scope="row" style="padding:0em 0.5em">{{row.type}}</td> 
-          <td scope="row" style="padding:0em 0.5em">{{row.lastModified}}</td> 
+          <td scope="row" style="padding:0em 0.5em">{{row.recordId}}</td>
+          <td scope="row" style="padding:0em 0.5em">{{row.type}}</td>
+          <td scope="row" style="padding:0em 0.5em">{{row.lastModified}}</td>
           <td scope="row" style="padding:0em 0.5em">
-            <sam-select class="usa-width-one-fourth" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options" 
-                        [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled" (ngModelChange)='onFrequencyTypeSelect($event,row.id)'></sam-select>
-           
-          </td> 
+            <sam-select class="usa-width-one-fourth" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options"
+                        [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled"></sam-select>
+
+          </td>
           <td scope="row" style="width: 10%; text-align: center; padding:0em 0.5em">
               <sam-checkbox
                 [model]="(row.myFeed === 'Y') ? [row.myFeed] : []"
                 [name]="'MyFeed'"
-                [options]="myFeedCbxConfig.options"
-                (modelChange)="onMyFeedCheck($event,row.id)">
+                [options]="myFeedCbxConfig.options">
               </sam-checkbox>
-          </td> 
+          </td>
           <td scope="row" style="white-space: nowrap; padding:0em 0.5em">
             <sam-watch-button [domainId] = "row.domainId" [type] = "row.type" [recordId]="row.recordId" [fromPage]="'manage'"></sam-watch-button>
-          </td> 
+          </td>
       </tr>
       </tbody>
     </table>
   </div>
       <!-- div class="usa-width-one-whole msg-feed-item" *ngFor="let record of recordList">
         <div class="pull-left" style="line-height: 0.5em;">
-          
+
           <div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>
-          
+
           <div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>
 
         </div>

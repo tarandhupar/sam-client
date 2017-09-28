@@ -6,11 +6,12 @@ import {ProgramService} from "../../../api-kit/program/program.service";
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
 import {FHWrapperService} from "../../../api-kit/fh/fhWrapper.service";
-import {Router, RouterModule} from "@angular/router";
+import {Router} from "@angular/router";
 import {FALFormService} from "./fal-form.service";
 import * as Cookies from 'js-cookie';
+import {RouterTestingModule} from "@angular/router/testing";
 
-xdescribe('src/app/assistance-listing/assistance-listing-operations/fal-form.service.spec.ts', () => {
+describe('src/app/assistance-listing/assistance-listing-operations/fal-form.service.spec.ts', () => {
   let formService: FALFormService;
   beforeEach(() => {
 
@@ -24,10 +25,12 @@ xdescribe('src/app/assistance-listing/assistance-listing-operations/fal-form.ser
         FHService,
         FHWrapperService,
         MockBackend,
-        {provide: Router, useClass: RouterModule},
         {
           provide: Http,
         },
+      ],
+      imports: [
+        RouterTestingModule,
       ],
     });
   });

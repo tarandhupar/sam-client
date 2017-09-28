@@ -162,7 +162,6 @@ export class MsgFeedComponent {
     this.curSection = filterObj.section;
     this.curSubSection = filterObj.subSection;
     this.setTitle(this.curSection, this.curSubSection);
-    console.log(this.title);
   }
 
   /* Get css classes*/

@@ -11,8 +11,10 @@ import { SamErrorService } from '../error-service';
 export class WrapperService {
     private APIs: any = {
         "opportunity": "/opps/v1",
+        "contractOpportunity": "/opps/v2",
         "search": "/sgs/v1/search",
         "featuredSearch": "/sgs/v1/search/featured",
+        "savedSearch": "/preferences/v1/search",
         "program": "/fac/v1/programs",
         "fh" : "/federalorganizations/v1",
         "fhDetail": "/federalorganizations/v2",
@@ -115,13 +117,8 @@ export class WrapperService {
 
     return this._http
       .request(oRequest)
-      .catch(response => {
-        // LEAVE COMMENTED OUT
-        // We are gathering further business rules
-        // befor we turn this on.
-        // this._errorService
-        //   .addError({ req: oApiParam, res: response });
-        return Observable.of(response);
+      .catch(error => {
+        return Observable.throw(error);
       })
       .map((res: Response) => { return (convertToJSON) ? res.json() : res; } );
   }

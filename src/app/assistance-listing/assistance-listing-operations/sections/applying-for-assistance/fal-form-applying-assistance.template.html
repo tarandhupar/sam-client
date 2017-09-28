@@ -20,28 +20,29 @@
 
     <div id="fal-appForAssist-deadline-list" [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
 
-      <sam-listbuilder
+      <sam-listbuilder #lb
         [formArrayInput]="falAssistanceForm.get('deadlines.list').controls"
         [formGroupTemplate]="deadlineSubform"
         (formArrayChange)="fmArrayChange($event)"
+        addEntryText="Add Deadline"
         [deleteModalFlag]="true"
         [deleteModalConfig]="{
-          title:'Delete this deadline',
-          type:'error',
-          description:'Are you sure you want to delete this deadline?'
+          title:'Delete Deadline',
+          type:'warning',
+          description:'Please confirm that you want to delete deadline.'
         }"
         (action)="listBuilderActionHandler($event)">
 
-        <template #display let-item>
+        <ng-template #display let-item>
           <ng-container *ngIf="!item.valid">
             <span class='usa-input-error-message'>
               <sup>*</sup>This deadline information has some errors.
             </span>
           </ng-container>
           {{formatAssistInfo(item.value)}}
-        </template>
+        </ng-template>
 
-        <template #edit let-item>
+        <ng-template #edit let-item>
           <form [formGroup]="item">
 
             <sam-date-range
@@ -59,7 +60,7 @@
               [hint]= "'Optionally provide a description for this deadline'">
             </sam-text-area>
           </form>
-        </template>
+        </ng-template>
       </sam-listbuilder>
 
       <sam-text-area

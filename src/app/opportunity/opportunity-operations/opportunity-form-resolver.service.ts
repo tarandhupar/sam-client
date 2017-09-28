@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { OpportunityFormService } from "./opportunity-form.service";
-import { OpportunityFormViewModel } from "./opportunity-form.model";
+import { OpportunityFormService } from "./framework/service/opportunity-form.service";
+import { OpportunityFormViewModel } from "./framework/data-model/opportunity-form.model";
 import { Observable } from "rxjs";
 
 @Injectable()

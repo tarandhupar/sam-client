@@ -95,13 +95,11 @@ export class MsgFeedSideNavComponent{
         this.loadFilterData();
       },
       (error) => {
-        // if(this.curSection.toLowerCase() === 'requests'){
-        //   this._router.navigate(['/signin'],{queryParams: { redirect: '/workspace/content-management/requests'}});
-        // }else{
-        //   this.loadFilterData();
-        // }
-        this.loadFilterData();
-
+        if(this.filterOption.section.toLowerCase() === 'requests'){
+          this._router.navigate(['/signin'],{queryParams: { redirect: '/workspace/content-management/requests'}});
+        }else{
+          this.loadFilterData();
+        }
       }
     );
   }
@@ -158,7 +156,7 @@ export class MsgFeedSideNavComponent{
       alertTypes.forEach(type => {this.alertTypeCbxConfig.options.push({value: type, label: type, name: type});});
     }
   }
-  
+
   loadAlertStatus(alertStatus){
     this.alertStatusCbxConfig.options = [];
     if(alertStatus){

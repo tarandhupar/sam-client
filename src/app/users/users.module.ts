@@ -11,18 +11,15 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/objects-and-permissions.component";
-import { RoleManagementModule } from "../role-management/role-management.module";
 import { RequestAccessResolve } from "./request-access.resolve";
 import { PendingRequestsComponent } from "./pending-requests/pending-requests.component";
 import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
 import { UserRoleDetailsResolve } from "./user-role-details.resolve";
-import { AppTemplatesModule } from "../app-templates/index";
+// import { AppTemplatesModule } from "../app-templates/index";
 import { RequestAccessPage } from "./request-access/request-access.page";
 import { RoleCategoriesResolve } from "./roles-categories.resolve";
 import { ViewRequestPage } from "../role-management/view-request/view-request.page";
 import { RequestResponsePage } from "../role-management/request-response/request-response.page";
-import { UserServiceMock } from "../role-management/user.service.mock";
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import { MyAccessPage } from "./access/my-access.page";
 import { SubscriptionsComponent } from "./subscriptions/subscriptions.component";
@@ -41,7 +38,7 @@ import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant
     SamAPIKitModule,
     PipesModule,
     AppComponentsModule,
-    AppTemplatesModule,
+    // AppTemplatesModule,
     Ng2PageScrollModule.forRoot(),
   ],
   exports: [
@@ -53,9 +50,6 @@ import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant
     RequestAccessPage,
     ViewRequestPage,
     RequestResponsePage,
-     /**
-     * My Subscriptions
-     */
     SubscriptionsComponent,
     SubscriptionsSideNavComponent,
     GrantOrEditAccess,

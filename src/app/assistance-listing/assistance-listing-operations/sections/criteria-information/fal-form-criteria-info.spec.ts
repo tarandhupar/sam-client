@@ -20,14 +20,14 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ProgramService} from '../../../../../api-kit/program/program.service';
 import {FALFormOverviewComponent} from '../overview/fal-form-overview.component';
 import {Observable} from 'rxjs';
-import {AppTemplatesModule} from '../../../../app-templates/index';
+// import {AppTemplatesModule} from '../../../../app-templates/index';
 
 let MockFormService = jasmine.createSpyObj('MockFormService', ['getCriteria_Info_Dictionaries']);
 MockFormService.getCriteria_Info_Dictionaries.and.returnValue(Observable.of({}));
 
 let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateCriteriaDocumentation', 'validateApplicantList', 'validateBeneficiaryList', 'validateLengthTimeDesc', 'validateAwardedType', 'validateAssistanceUsageList', 'validateAssUsageDesc', 'validateCriteriaUsageRes', 'validateCriteriaUseDisFunds', 'validateCriteriaUseLoanTerms']);
 
-xdescribe('FAL Criteria Info Form', () => {
+describe('FAL Criteria Info Form', () => {
   let comp: FALFormCriteriaInfoComponent;
   let fixture: ComponentFixture<FALFormCriteriaInfoComponent>;
 
@@ -55,7 +55,7 @@ xdescribe('FAL Criteria Info Form', () => {
         RouterTestingModule,
         SamUIKitModule,
         ReactiveFormsModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
       ]
     }).overrideComponent(FALFormCriteriaInfoComponent, {
       set: {

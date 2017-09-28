@@ -58,7 +58,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
     serviceOptions: {index: 'RP'},
-    clearOnSelection: true, showOnEmptyInput: false
   };
 
   constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private programService: ProgramService, private cdr: ChangeDetectorRef) {

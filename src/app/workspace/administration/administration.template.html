@@ -1,4 +1,4 @@
-<div class="usa-width-one-whole m_L-3x workspace-administration-section relative" [ngClass]="states.public ? 'grid-public' : 'grid-federal'">
+<div class="usa-width-one-whole workspace-administration-section relative" [ngClass]="states.public ? 'grid-public' : 'grid-federal'">
   <div class="profile-widget m_T-3x" [ngClass]="states.public ? 'usa-width-one-half' : 'usa-width-one-whole'">
     <workspace-widget [isExpand]="states.expanded.profile" title="Profile" [shortcut]="states.public ? shortcuts.profile : false" (onToggleChange)="toggleHelpDetail('profile')">
       <profile-widget [user]="user" *ngIf="user"></profile-widget>

@@ -45,7 +45,8 @@ export class ActionHistoryPipe implements PipeTransform {
 
     if (orgIds == "" ){
       this.orgNames = {};
-      return null;
+      Observable.of({}).subscribe(apiSubject);
+      return apiSubject;
     }
 
     // construct a stream of federal hierarchy data

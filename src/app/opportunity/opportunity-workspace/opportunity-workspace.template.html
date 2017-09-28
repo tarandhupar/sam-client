@@ -1,0 +1,87 @@
+<page
+  *ngIf="showOpp"
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Contract Opportunities">
+
+  <!-- Sidebar section -->
+  <sidebar>
+
+    <!-- Navigation -->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a class="usa-current">
+          Contract Opportunities
+        </a>
+      </li>
+    </ul>
+
+    <!-- Filters -->
+    <div class="sam-ui segment">
+
+      <!-- Search filter -->
+      <div *ngIf="!initLoad" custom-input class="search-bar">
+        <h4 class="sam-ui header">Search</h4>
+        <sam-autocomplete class="div-fill" #autocomplete
+                          [(ngModel)]="keyword"
+                          (ngModelChange)="workspaceSearchModel($event)"
+                          (enterEvent)="workspaceSearchClick()"
+                          [config]="workspaceSearchConfig"
+                          [options]="[]"
+                          [attr.id]="'opp-workspace-input-search'"
+                          [allowAny]="true"
+                          name="appsearch">
+        </sam-autocomplete>
+        <sam-button class="div-right"
+                    [buttonType]="'default'"
+                    [buttonText]="'Search' "
+                    [buttonClass]="'usa-button usa-search-submit search-btn'"
+                    (onClick)="workspaceSearchClick()">
+        </sam-button>
+        <div class="sam-ui divider"></div>
+      </div>
+
+      <!--Keywords Filter-->
+      <div>
+        <h4 class="sam-ui header">Keywords</h4>
+        <sam-autocomplete-multiselect
+          class="usa-award-filter"
+          [attr.id]="'keywordSearch'"
+          [name]="'keywordSearchName'"
+          [ngModel]="keywordsModel"
+          (ngModelChange)="keywordsModelChange($event)"
+          [keyValueConfig]="keywordsConfiguration.keyValueConfig"
+          [allowAny]="keywordsConfiguration.allowAny">
+        </sam-autocomplete-multiselect>
+      </div>
+
+      <br>
+
+    </div>
+  </sidebar>
+
+  <!-- No results -->
+  <p *ngIf="data.length==0 && !initLoad">
+    No results found for '<strong>{{ oldKeyword }}</strong>'
+  </p>
+  <!-- Page results -->
+  <results *ngIf="!data.length==0 && !initLoad"
+           [totalElements]="totalCount"
+           [totalPages]="totalPages"
+           [currentPage]="pageNum+1"
+           (pageChange)="pageChange($event-1)">
+
+    <!-- Results -->
+    <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">
+      <opportunity-result
+        [data]="row"
+        [qParams]="qParams"
+        [permissions]="permissions">
+      </opportunity-result>
+    </div>
+
+
+  </results>
+
+</page>

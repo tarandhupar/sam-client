@@ -1,0 +1,68 @@
+<div class="sam-ui grid ">
+  <div class="twelve wide column">
+    <h3 class="sam-ui header">
+      <a *ngIf="data.data.title"
+         [routerLink]="['/opportunities', data.id]">
+        {{data.data.title}}
+      </a>
+      <ng-container *ngIf="!data.data.title">
+        Untitled
+      </ng-container>
+    </h3>
+  </div>
+</div>
+
+<div class="sam-ui equal width grid">
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      Notice Number
+      <div *ngIf="!data.data.solicitationNumber" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.data.solicitationNumber}}</div>
+    </div>
+
+    <div class="sam-ui medium header">
+      Type
+      <div *ngIf="!data.data.type" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.noticeType}}</div>
+    </div>
+
+    <div class="sam-ui medium header">
+      Office
+      <div *ngIf="!data.officeName" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.officeName}}</div>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      Posted Date
+      <div class="sub header">{{data.publishedDate}}</div>
+    </div>
+
+    <div class="sam-ui medium header" *ngIf="data.publishedDate">
+      Response Date
+      <div class="sub header">{{data.data?.solicitation?.deadlines?.response}}</div>
+    </div>
+
+    <div class="sam-ui medium header" *ngIf="data.data?.archive?.date">
+      Archive Date
+      <div class="sub header">{{data.data?.archive?.date}}</div>
+    </div>
+
+    <span class="sam-ui basic tiny blue label"
+          style="margin-top: 10px;">
+      <ng-container *ngIf="data.archived">Archived</ng-container>
+      <ng-container *ngIf="!data.archived">{{data.status.value}}</ng-container>
+    </span>
+
+  </div>
+
+</div>
+

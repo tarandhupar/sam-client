@@ -13,6 +13,19 @@
     background-repeat: no-repeat;
   }
 
+  table tbody tr:hover {
+    cursor: pointer;
+    background-color: #E9E9E9;
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid black;
+  }
+
+  tr td {
+    padding: .5em;
+  }
+
   .usa-sidenav-list {
     pointer-events: none;
   }

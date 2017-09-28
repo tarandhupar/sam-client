@@ -14,7 +14,7 @@ export class SubscriptionsSideNavComponent{
     { text: 'Personal Details', routerLink: ['/profile/details'] },
     { text: 'Reset Password',   routerLink: ['/profile/password'] },
     { text: 'My Roles',  routerLink: ['/profile/role-details'] },
-    { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },    
+    { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },
     { text: 'Manage Subscriptions', active: true },
   ];
 
@@ -74,12 +74,12 @@ export class SubscriptionsSideNavComponent{
     Object.keys(this.cbxControl).forEach( key => {this.cbxControl[key] = true;});
   }
 
-  resetFilterFields(){
-    this.filterOption.keyword = "";
-    this.filterOption.feedType = [];
-    this.filterOption.frequency = [];
-    this.filterOption.domains = [];
-  }
+  // resetFilterFields(){
+  //   this.filterOption.keyword = "";
+  //   this.filterOption.feedType = [];
+  //   this.filterOption.frequency = [];
+  //   this.filterOption.domains = [];
+  // }
 
   loadFilterData(){
     this.loadDomains();

@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    } else if (Cookies.get('iPlanetDirectoryPro') !== undefined && SHOW_HIDE_RESTRICTED_PAGES === 'false') {
+    } else if (state.url === "fal/workspace" && Cookies.get('iPlanetDirectoryPro') !== undefined && SHOW_HIDE_RESTRICTED_PAGES === 'false') {
       this.router.navigate(['accessrestricted']);
     }
     return true;

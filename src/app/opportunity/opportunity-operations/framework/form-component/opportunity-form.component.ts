@@ -1,11 +1,11 @@
 import {Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, AfterViewInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthGuard } from "../../../api-kit/authguard/authguard.service";
-import { OpportunityFormService } from "./opportunity-form.service";
-import { OpportunityFormViewModel } from "./opportunity-form.model";
-import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { OpportunityAuthGuard } from '../../../components/authgaurd/authguard.service';
+import { OpportunityFormService } from '../service/opportunity-form.service';
+import { OpportunityFormViewModel } from '../data-model/opportunity-form.model';
+import { AlertFooterService } from '../../../../app-components/alert-footer/alert-footer.service';
 import { MenuItem } from 'sam-ui-kit/components/sidenav';
-import { OpportunitySectionNames } from './opportunity-form-constants';
+import { OpportunitySectionNames } from '../data-model/opportunity-form-constants';
 
 @Component({
   moduleId: __filename,
@@ -15,7 +15,12 @@ import { OpportunitySectionNames } from './opportunity-form-constants';
 
 export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  scrollToTop: boolean = true;
+  isAdd: boolean = true;
+  hasErrors: boolean = false;
+  tabsComponent: any;
   @ViewChild('titleModal') titleModal;
+  @ViewChild('tabsOppComponent') tabsOppComponent;
   titleMissingConfig = {
     title: 'No Title Provided',
     description: 'You must provide a title for this draft opportunity in order to proceed.',
@@ -36,11 +41,13 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }, {breadcrumb: 'Opportunities', urlmock: false}];
 
   sections: string[] = [
-    OpportunitySectionNames.NOTICE_TYPE,
+    OpportunitySectionNames.HEADER_INFORMATION,
+    OpportunitySectionNames.DESCRIPTION
   ];
 
   sectionLabels: any = [
-    'Notice Type'
+    'Header Information',
+    'Description'
   ];
 
   sidenavSelection;
@@ -50,24 +57,39 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
       label: this.sectionLabels[0],
       route: "#" + this.sections[0],
       iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[1],
+      route: "#" + this.sections[1],
+      iconClass: this.pristineIconClass
     }]
   };
 
 
   constructor(private service: OpportunityFormService, private route: ActivatedRoute, private router: Router,
-              private authGuard: AuthGuard, private cdr: ChangeDetectorRef, private alertFooterService: AlertFooterService,
+              private authGuard: OpportunityAuthGuard, private cdr: ChangeDetectorRef, private alertFooterService: AlertFooterService,
               private oppService: OpportunityFormService) {
+
     // jump to top of page when changing sections
-    this.routeSubscribe = this.router.events.subscribe(() => {
-      window.scrollTo(0, 0);
+    this.routeSubscribe = this.router.events.subscribe(event => {
+      // hack to avoid jumpiness when changing from /add to /edit
+      if(event instanceof NavigationEnd) {
+        if(this.scrollToTop) {
+          window.scrollTo(0, 0);
+        } else {
+          this.scrollToTop = true;
+        }
+      }
     });
   }
 
   ngOnInit(): void {
+    this.tabsComponent = this.tabsOppComponent;
+
     if (this.route.snapshot.params['id']) {
       this.route.data.subscribe((resolver: {fal: {data}}) => {
         this.oppFormViewModel = new OpportunityFormViewModel(resolver.fal);
         this.oppFormViewModel.opportunityId = this.route.snapshot.params['id'];
+        this.isAdd = false;
       });
     }
     else {
@@ -86,24 +108,13 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    setTimeout(() =>{
       this.determineSection();
     });
   }
 
   determineLogin() {
-    let cookie = OpportunityFormService.getAuthenticationCookie();
-    if (cookie != null && cookie != 'undefined') {
-      if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-        this.router.navigate(['accessrestricted']);
-        return false;
-      }
-    } else if (cookie == null || cookie == 'undefined') {
-      this.router.navigate(['signin']);
-      return false;
-    }
-
-    return true;
+    return this.authGuard.canActivate();
   }
 
   determineSection() {
@@ -129,8 +140,8 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
           }
         }, 1000);
       } else {
-        this.gotoSection(OpportunitySectionNames.NOTICE_TYPE);
-        this.navigateSection();
+        this.gotoSection(OpportunitySectionNames.HEADER_INFORMATION);
+        this.navigateSection(this.currentSection);
         this.sidenavSelection = this.sectionLabels[0];
       }
     });
@@ -140,10 +151,10 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.currentSection = this.sections.indexOf(sectionName);
   }
 
-  navigateSection() {
+  navigateSection(section: number) {
     let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/edit' : '/opportunities/add';
     this.router.navigate([url], {
-      fragment: this.sections[this.currentSection],
+      fragment: this.sections[section],
       queryParams: this.route.snapshot.queryParams
     });
   }
@@ -169,10 +180,58 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  onSaveExitClick() {
+    //let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/review' : '/opportunities/workspace';
+    let url = '/search?keywords=&index=opp&page=1&is_active=true';
+    this.router.navigateByUrl(url);
+  }
+
+  onSaveBackClick() {
+    this.gotoPreviousSection();
+    this.navigateSection(this.currentSection);
+  }
+
+  onSaveContinueClick() {
+    if (!this.isAdd) {
+      this.gotoNextSection();
+      this.navigateSection(this.currentSection);
+    } else {
+      this.scrollToTop = false;
+      this.navigateSection(this.currentSection+1);
+    }
+  }
+
+  onCancelClick() {
+      this.cancel();
+  }
+
+  cancel() {
+    //let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/review' : '/opportunities/workspace';
+    let url = '/search?keywords=&index=opp&page=1&is_active=true';
+    this.router.navigateByUrl(url);
+  }
+
+  gotoNextSection() {
+    if (this.currentSection + 1 < this.sections.length) {
+      ++this.currentSection;
+    }
+  }
+
+  gotoPreviousSection() {
+    if (this.currentSection - 1 >= 0) {
+      --this.currentSection;
+    }
+  }
+
   breadCrumbClick(event) {
     if (event === 'Workspace') {
       this.router.navigate(['/opportunities/workspace']);
     }
+  }
+
+  navHandler(obj) {
+    let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/edit' : '/opportunities/add';
+    this.router.navigate([url], {fragment: obj.route.substring(1)});
   }
 
   onTitleModalClose() {
@@ -184,25 +243,22 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.router.navigateByUrl(url);
   }
 
-  onSaveExitClick() {
-   this.router.navigateByUrl('/search?keywords=&index=opp&page=1&is_active=true');
+  public tabsClicked(tab) {
+    switch (tab.label) {
+      case 'Authenticated':
+        this.onSaveExitClick();
+        break;
+      case 'Public':
+        this.onViewClick();
+        break;
+      default:
+        break;
+    }
   }
 
-  onSaveBackClick() {
-    this.router.navigateByUrl('/search?keywords=&index=opp&page=1&is_active=true');
-  }
-
-  onSaveContinueClick() {
-    this.router.navigateByUrl('/search?keywords=&index=opp&page=1&is_active=true');
-  }
-
-  onCancelClick() {
-      this.cancel();
-  }
-
-  cancel() {
-    //let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId : '/opportunities/workspace';
-    let url = '/search?keywords=&index=opp&page=1&is_active=true';
+  public onViewClick(){
+    let url = '/opportunities/' + this.oppFormViewModel.opportunityId ;
     this.router.navigateByUrl(url);
   }
+
 }

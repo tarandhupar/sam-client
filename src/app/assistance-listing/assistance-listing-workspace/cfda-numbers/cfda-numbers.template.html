@@ -70,7 +70,7 @@
                         [buttonClass]="'usa-button-primary'"
                         (onClick)="onEditClick(row.organizationId)">
             </sam-button>
-            <div>Assignment Type: {{ row.programNumberAuto == true ? 'Automatic' : 'Manual'}}</div>
+            <div>Assignment Type: {{ row.programNumberAuto == false ? 'Manual' : 'Automatic'}}</div>
             <div>Modified Date: {{ row.modifiedDate }}</div>
           </div>
         </div>

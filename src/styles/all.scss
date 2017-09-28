@@ -356,3 +356,18 @@ sam-solo-accordian li {
   background-position: 50%;
   background-repeat: no-repeat;
 }
+
+// a method for creating a two column layout where the left and right column are approximately the same height (see grant-or-edit-access.template)
+.column-wrappable {
+  li {
+    list-style: none;
+    break-inside: avoid-column;
+  }
+  -moz-column-count: 2;
+  -moz-column-gap: 20px;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 20px;
+  column-count: 2;
+  column-gap: 20px;
+  padding-left: 0;
+}

@@ -494,7 +494,7 @@ export class FALFormViewModel {
       description = this._data.financial.description;
     }
 
-    return description;
+    return description || '';
   }
 
   set financialDescription(description) {
@@ -602,7 +602,7 @@ export class FALFormViewModel {
     if (this._data.eligibility && this._data.eligibility.applicant && this._data.eligibility.applicant.description) {
       applicantDesc = this._data.eligibility.applicant.description;
     }
-    return applicantDesc;
+    return applicantDesc || '';
   }
 
   set applicantDesc(applicantDesc) {
@@ -658,7 +658,7 @@ export class FALFormViewModel {
     if (this._data.eligibility && this._data.eligibility.beneficiary && this._data.eligibility.beneficiary.description) {
       benDesc = this._data.eligibility.beneficiary.description;
     }
-    return benDesc;
+    return benDesc || '';
   }
 
   set benDesc(benDesc) {
@@ -670,7 +670,7 @@ export class FALFormViewModel {
     if (this._data.eligibility && this._data.eligibility.limitation && this._data.eligibility.limitation.description) {
       lengthTimeDesc = this._data.eligibility.limitation.description;
     }
-    return lengthTimeDesc;
+    return lengthTimeDesc || '';
   }
 
   set lengthTimeDesc(lengthTimeDesc) {
@@ -712,7 +712,7 @@ export class FALFormViewModel {
     if (this._data.eligibility && this._data.eligibility.assistanceUsage && this._data.eligibility.assistanceUsage.description) {
       assUsageDesc = this._data.eligibility.assistanceUsage.description;
     }
-    return assUsageDesc;
+    return assUsageDesc || '';
   }
 
   set assUsageDesc(assUsageDesc) {

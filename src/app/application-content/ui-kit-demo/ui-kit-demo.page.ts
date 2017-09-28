@@ -312,7 +312,7 @@ export class UIKitDemoPage {
         "description": "Industry Day IV change of conference room.",
         "mimeType": "application/pdf",
         "size": "83 kB",
-        "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/files/862178b04be2db1778a697464f186836?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0",
+        "downloadUrl": "",
         "typeInfo": {
           "name": "PDF document",
           "iconClass": "fa fa-file-pdf-o"
@@ -320,7 +320,7 @@ export class UIKitDemoPage {
       }
     ],
     "accordionState": "collapsed",
-    "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/packages/5510527885db16f1d7ae72ecfa8e6567/download/zip?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
+    "downloadUrl": ""
   }];
 
   // Autocomplete Dropdown No Button

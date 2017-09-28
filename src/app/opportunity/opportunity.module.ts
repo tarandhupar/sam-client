@@ -11,6 +11,10 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { OpportunityFormModule } from './opportunity-operations/opportunity-form.module';
 import { FormsModule } from '@angular/forms';
+import { OppComponentsModule } from './components/index';
+import {OPPWorkspacePage} from "./opportunity-workspace/opportunity-workspace.page";
+import {OpportunityResult} from "./opportunity-workspace/opportunity-result/opportunity-result.component";
+// import {AppTemplatesModule} from "../app-templates/index";
 
 @NgModule({
   imports: [
@@ -20,21 +24,27 @@ import { FormsModule } from '@angular/forms';
     routing,
     SamUIKitModule,
     AppComponentsModule,
-    OpportunityFormModule
+    OpportunityFormModule,
+    OppComponentsModule,
+    OpportunityFormModule,
+    // AppTemplatesModule
   ],
   exports: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
     FixHTMLPipe,
-    FilesizePipe
+    FilesizePipe,
+    OpportunityResult
   ],
   declarations: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
     FixHTMLPipe,
-    FilesizePipe
+    FilesizePipe,
+    OPPWorkspacePage,
+    OpportunityResult
   ],
 })
 export class OpportunityModule { }

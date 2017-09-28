@@ -16,9 +16,9 @@ export class OrganizationConfigurationPipe implements PipeTransform {
         });
         if (agency === undefined){
           processedCfdaNumbersItem1['modifiedDate'] = 'N/A';
-          processedCfdaNumbersItem1['programNumberAuto'] = 'N/A';
-          processedCfdaNumbersItem1['programNumberLow'] = 'N/A';
-          processedCfdaNumbersItem1['programNumberHigh'] = 'N/A';
+          processedCfdaNumbersItem1['programNumberAuto'] = true;
+          processedCfdaNumbersItem1['programNumberLow'] = 0;
+          processedCfdaNumbersItem1['programNumberHigh'] = 999;
         } else {
           processedCfdaNumbersItem1['modifiedDate'] = dateFormat.transform(agency.modifiedDate, 'MMMM DD, YYYY');
           processedCfdaNumbersItem1['programNumberAuto'] = agency.programNumberAuto;

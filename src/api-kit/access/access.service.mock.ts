@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 export let UserAccessMock = {
   checkAccess() {
     return Observable.of({
-      status: 200
+      status: 200,
+      json: function() { return { adminLevel: 0 }; }
     });
   },
 

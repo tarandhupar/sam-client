@@ -20,7 +20,6 @@ export class CfdaNumbersPage implements OnInit {
   alerts = [];
   cookieValue: string;
   processedCfdaNumbers: any;
-  public permissions: any;
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },

@@ -12,6 +12,7 @@ export class AssistanceListingWidgetComponent {
   pendingApprovalCount: any;
   pendingRequestCount: any;
   rejectedCount: any;
+  draftReviewCount: any;
 
   constructor(private api: ProgramService) {}
 
@@ -63,6 +64,9 @@ export class AssistanceListingWidgetComponent {
           break;
         case 'total_change_requests':
           this.pendingRequestCount = data[property]['count'];
+          break;
+        case 'total_draft_review_listing':
+          this.draftReviewCount = data[property]['count'];
           break;
         default:
           break;

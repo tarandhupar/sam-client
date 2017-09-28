@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class LocationService {
@@ -43,8 +42,6 @@ export class LocationService {
 
     return this.oAPIService.call(oApiParam);
   }
-
-
 
   //gets autocomplete countries
   getAutoCompleteCountries(q:string) {

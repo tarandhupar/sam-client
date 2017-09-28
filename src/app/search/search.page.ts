@@ -43,6 +43,7 @@ export class SearchPage implements OnInit {
 
   defaultSortModel: any = {type:'modifiedDate', sort:'desc'};
   keywordSortModel: any = {type:'relevance', sort:'desc'};
+  entitySortModel: any = {type:'title', sort:'asc'};
   sortModel: any = this.defaultSortModel;
   oldSortModel: any = this.defaultSortModel;
   relevanceSort: any = {label:'Relevance', name:'Relevance', value:'relevance'};
@@ -344,6 +345,58 @@ export class SearchPage implements OnInit {
     }
   };
 
+  // Notice Type
+  noticeTypeModel: any = '';
+  noticeType = {
+  "options": [],
+  "config": {
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
+  }
+};
+
+  // Set Aside Type
+  setAsideModel: any = '';
+  setAsideType = {
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+  setAsideAwardsOptions = [
+    {value:'8AN', label:'8(A) SOLE SOURCE'},
+    {value:'HS3', label:'8(A) WITH HUB ZONE PREFERENCE'},
+    {value:'8A', label:'8A COMPETED'},
+    {value:'BI', label:'BUY INDIAN'},
+    {value:'EDWOSB', label:'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS'},
+    {value:'EDWOSBSS', label:'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS SOLE SOURCE'},
+    {value:'ESB', label:'EMERGING SMALL BUSINESS SET ASIDE'},
+    {value:'HMP', label:'HBCU OR MI SET-ASIDE -- PARTIAL'},
+    {value:'HMT', label:'HBCU OR MI SET-ASIDE -- TOTAL'},
+    {value:'HZC', label:'HUBZONE SET-ASIDE'},
+    {value:'HZS', label:'HUBZONE SOLE SOURCE'},
+    {value:'IEE', label:'INDIAN ECONOMIC ENTERPRISE'},
+    {value:'ISBEE', label:'INDIAN SMALL BUSINESS ECONOMIC ENTERPRISE'},
+    {value:'NONE', label:'NO SET ASIDE USED.'},
+    {value:'RSB', label:'RESERVED FOR SMALL BUSINESS'},
+    {value:'SDVOSBS', label:'SDVOSB SOLE SOURCE'},
+    {value:'SDVOSBC', label:'SERVICE DISABLED VETERAN OWNED SMALL BUSINESS SET-ASIDE'},
+    {value:'SBP', label:'SMALL BUSINESS SET ASIDE - PARTIAL'},
+    {value:'SBA', label:'SMALL BUSINESS SET ASIDE - TOTAL'},
+    {value:'VSB', label:'VERY SMALL BUSINESS'},
+    {value:'VSA', label:'VETERAN SET ASIDE'},
+    {value:'VSS', label:'VETERAN SOLE SOURCE'},
+    {value:'WOSB', label:'WOMEN OWNED SMALL BUSINESS'},
+    {value:'WOSBSS', label:'WOMEN OWNED SMALL BUSINESS SOLE SOURCE'}
+  ];
+
+
+
   // Beneficiary Eligibility Object
   benElSearchString: any = '';
   benElType = {
@@ -378,7 +431,7 @@ export class SearchPage implements OnInit {
   //Assistance Type Filter
   assistanceTypeFilterModel: any = '';
   assistanceTypeOptions = {
-    "label": "Assistance Type",
+    "label": "",
     "name": "Assistance Type",
     "placeholder": "Search Assistance Type",
     "selectedLabel": "Selected",
@@ -463,12 +516,16 @@ export class SearchPage implements OnInit {
         this.appElSearchString = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
         this.benElSearchString = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
         this.assistanceTypeFilterModel = data['assistance_type'] && data['assistance_type'] !== null ? data['assistance_type'] : '';
-        this.registrationExclusionCheckboxModel = data['entity_type'] && data['entity_type'] !== null ? data['entity_type'].split(",") : [];
+        this.registrationExclusionCheckboxModel = data['entity_type'] && data['entity_type'] !== null ? decodeURI(data['entity_type']).split(",") : [];
         this.agencyPickerModel = this.setupOrgsFromQS(data['organization_id']);
         this.keywordsModel = this.keywords.length>0 ? this.keywordRebuilder(this.keywords) : [];
         this.sortModel = typeof data['sort'] === "string" ? this.setSortModel(decodeURI(data['sort'])) : this.defaultSortModel;
+        this.noticeTypeModel = data['notice_type'] && data['notice_type'] !== null ? data['notice_type'] : '';
+        this.setAsideModel = data['set_aside'] && data['set_aside'] !== null ? data['set_aside'] : '';
         // persist duns filter data
-        this.grabPersistData(this.dunsListString);
+        if(this.dunsListString && this.dunsListString.length > 0){
+          this.grabPersistData(this.dunsListString);
+        }
         this.isSearchComplete = false;
         this.runSearch();
         this.blankSearch = this.keywordsModel.length === 0;
@@ -536,10 +593,26 @@ export class SearchPage implements OnInit {
       {label:'Title', name:'Title', value:'title'},
       {label:'Date Modified', name:'Date Modified', value:'modifiedDate'}
     ];
+    var blankEntSortOptions = [
+      {label:'Title', name:'Title', value:'title'}
+    ];
+    var queryEntSortOptions = [
+      {label:'Relevance', name:'Relevance', value:'relevance'},
+      {label:'Title', name:'Title', value:'title'}
+    ];
+
     if(!blankSearch){
-      this.sortOptions = querySortOptions;
+      if(this.index === 'ei'){
+        this.sortOptions = queryEntSortOptions;
+      }else{
+        this.sortOptions = querySortOptions;
+      }
     }else{
-      this.sortOptions = blankSortOptions;
+      if(this.index === 'ei'){
+        this.sortOptions = blankEntSortOptions;
+      }else{
+        this.sortOptions = blankSortOptions;
+      }
     }
   }
 
@@ -659,6 +732,14 @@ export class SearchPage implements OnInit {
       this.blankSearch = true;
     }
 
+    if (this.noticeTypeModel && this.noticeTypeModel.length > 0){
+      qsobj['notice_type'] = this.noticeTypeModel;
+    }
+
+    if (this.setAsideModel && this.setAsideModel.length > 0){
+      qsobj['set_aside'] = this.setAsideModel;
+    }
+
     //If changing sort option, reset to default sort order for that option
     if(this.oldSortModel['type'] !== this.sortModel['type']){
       switch(this.sortModel['type']){
@@ -675,21 +756,21 @@ export class SearchPage implements OnInit {
     }
 
     //Set sort for keyword search and blank search based on sort option change or page change
-    if(!this.blankSearch){
-        if(this.sortChange || this.pageUpdate){
-          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
-          this.pageUpdate = false;
-        }else{
-          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.keywordSortModel['type']);
-        }
-    }else{
-        if(this.sortChange || this.pageUpdate){
-          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
-          this.pageUpdate = false;
-        }else{
-          qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.defaultSortModel['type']);
-        }
-    }
+      if(!this.blankSearch) {
+          if(this.sortChange || this.pageUpdate) {
+            qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+            this.pageUpdate = false;
+          } else {
+            qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.keywordSortModel['type']);
+          }
+      } else {
+          if(this.sortChange || this.pageUpdate) {
+            qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+            this.pageUpdate = false;
+          } else {
+            qsobj['sort'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.defaultSortModel['type']);
+          }
+      }
 
     return qsobj;
   }
@@ -710,10 +791,17 @@ export class SearchPage implements OnInit {
         this.determineEnableServicesSelect();
         break;
       case 'opp':
+        filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('procurement_type,naics_code,classification_code,set_aside_type');
+        this.getAwardsDictionaryData(filteredDictionaries);
+        break;
       case 'ei':
       case 'fpds':
         filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('naics_code,classification_code');
         this.getAwardsDictionaryData(filteredDictionaries);
+
+        // set options for set aside filter to hard coded values if index is fpds
+        this.setAsideType.options = new SortArrayOfObjects().transform(this.setAsideAwardsOptions, "label");
+
         break;
       case 'cfda':
         filteredDictionaries = this.dictionaryService.filterDictionariesToRetrieve('applicant_types,beneficiary_types,assistance_type');
@@ -776,6 +864,8 @@ export class SearchPage implements OnInit {
       beneficiary: this.benElSearchString,
       assistance_type: this.assistanceTypeFilterModel,
       entity_type: this.registrationExclusionCheckboxModel,
+      notice_type: this.noticeTypeModel,
+      set_aside: this.setAsideModel,
       sort: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type'])
     }).subscribe(
       data => {
@@ -1172,6 +1262,20 @@ export class SearchPage implements OnInit {
     this.searchResultsRefresh();
   }
 
+  // type of notice model change
+  noticeTypeModelChange(evt){
+    this.noticeTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  // set aside model change
+  setAsideModelChange(evt){
+    this.setAsideModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh() {
     this.pageUpdate = true;
@@ -1235,8 +1339,14 @@ export class SearchPage implements OnInit {
     this.isActive = true;
     this.keywordsModel = [];
     this.setupSortOptions(true);
-    this.oldSortModel = this.defaultSortModel;
-    this.sortModel = this.defaultSortModel;
+    if(this.index === 'ei'){
+      this.oldSortModel = this.entitySortModel;
+      this.sortModel = this.entitySortModel;
+    }else{
+      this.oldSortModel = this.defaultSortModel;
+      this.sortModel = this.defaultSortModel;
+    }
+
 
     // call wd clear filters
     this.wdStateObject = null;
@@ -1282,6 +1392,12 @@ export class SearchPage implements OnInit {
     if(this.index == 'ei'){
       this.registrationExclusionCheckboxModel=["ent","ex"];
     }
+
+    // clear set aside filter
+    this.setAsideModel = '';
+
+    // clear notice type filter
+    this.noticeTypeModel = '';
 
     this.searchResultsRefresh();
 
@@ -1357,7 +1473,7 @@ export class SearchPage implements OnInit {
         return newObj;
       });
       // adding the default selection row to the array
-      this.selectStateConfig.options = reformattedArray1;
+      this.selectStateConfig.options = new SortArrayOfObjects().transform(reformattedArray1, "label");
 
       if (this.wdStateModel !== "" && this.initLoad) {
         this.wdStateObject = reformattedArray1.filter((option) => {
@@ -1377,7 +1493,7 @@ export class SearchPage implements OnInit {
         return newObj;
       });
 
-      this.selectConstructConfig.options = reformattedArray2;
+      this.selectConstructConfig.options = new SortArrayOfObjects().transform(reformattedArray2, "label");
 
       if (this.wdConstructModel !== "" && this.initLoad) {
         this.wdConstructObject = reformattedArray2.filter((option) => {
@@ -1396,7 +1512,7 @@ export class SearchPage implements OnInit {
         return newObj;
       });
 
-      this.wdNonStandardSelectConfig.options = reformattedArray3;
+      this.wdNonStandardSelectConfig.options = new SortArrayOfObjects().transform(reformattedArray3, "label");
 
       if (this.wdNonStandardSelectModel !== "" && this.initLoad) {
         this.wdNonStandardSelectObject = reformattedArray3.filter((option) => {
@@ -1409,6 +1525,8 @@ export class SearchPage implements OnInit {
 
   filterOpportunityArray(data){
     // formatting the array data according to api type to match what UI elements expect
+
+    if(data && data.hasOwnProperty('naics_code')){
       var reformattedArray1 = data['naics_code'].map(function (naicsItem) {
         let newObj = {label: '', value: '', type: 'naics'};
 
@@ -1417,9 +1535,11 @@ export class SearchPage implements OnInit {
         return newObj;
       });
 
-      this.naicsType.options = reformattedArray1;
+      this.naicsType.options = new SortArrayOfObjects().transform(reformattedArray1, "label");
       this.naicsType = Object.assign({}, this.naicsType);
+    }
 
+    if(data && data.hasOwnProperty('classification_code')) {
       var reformattedArray2 = data['classification_code'].map(function (pscItem) {
         let newObj = {label: '', value: '', type: 'psc'};
 
@@ -1428,8 +1548,37 @@ export class SearchPage implements OnInit {
         return newObj;
       });
 
-      this.pscType.options = reformattedArray2;
+      this.pscType.options = new SortArrayOfObjects().transform(reformattedArray2, "label");
       this.pscType = Object.assign({}, this.pscType);
+    }
+
+    // Notice Type Filter Dictionary Data
+    if(data && data.hasOwnProperty('procurement_type')) {
+      var reformattedArray3 = data['procurement_type'].map(function (noticeItem) {
+        let newObj = {label: '', value: ''};
+
+        newObj.label = noticeItem.value;
+        newObj.value = noticeItem.code;
+        return newObj;
+      });
+
+      this.noticeType.options = new SortArrayOfObjects().transform(reformattedArray3, "label");
+      this.noticeType = Object.assign({}, this.noticeType);
+    }
+
+    // Set Aside Type Filter Dictionary Data
+    if(data && data.hasOwnProperty('set_aside_type')) {
+      var reformattedArray3 = data['set_aside_type'].map(function (setAsideItem) {
+        let newObj = {label: '', value: ''};
+
+        newObj.label = setAsideItem.value;
+        newObj.value = setAsideItem.code;
+        return newObj;
+      });
+
+      this.setAsideType.options = new SortArrayOfObjects().transform(reformattedArray3, "label");
+      this.setAsideType = Object.assign({}, this.setAsideType);
+    }
   }
   filterProgramArray(data){
     // formatting the array data according to api type to match what UI elements expect
@@ -1440,7 +1589,7 @@ export class SearchPage implements OnInit {
         newObj.value = item.code;
         return newObj;
       });
-      this.appElType.options = reformattedArray1;
+      this.appElType.options = new SortArrayOfObjects().transform(reformattedArray1, "label");
       this.appElType = Object.assign({}, this.appElType);
 
       var reformattedArray2 = data['beneficiary_types'].map(function (item) {
@@ -1450,7 +1599,7 @@ export class SearchPage implements OnInit {
         newObj.value = item.code;
         return newObj;
       });
-      this.benElType.options = reformattedArray2;
+      this.benElType.options = new SortArrayOfObjects().transform(reformattedArray2, "label");
       this.benElType = Object.assign({}, this.benElType);
 
       let inputArr = [];
@@ -1467,7 +1616,7 @@ export class SearchPage implements OnInit {
 
       });
       reformattedArray4 = inputArr;
-      this.assistanceTypeOptions.options = reformattedArray4;
+      this.assistanceTypeOptions.options = new SortArrayOfObjects().transform(reformattedArray4, "label");
       this.assistanceTypeOptions = Object.assign({}, this.assistanceTypeOptions);
   }
 
@@ -1481,7 +1630,11 @@ export class SearchPage implements OnInit {
       spaceDelimitedString = this.keywordSplitter(value);
       this.sortModel = this.keywordSortModel;
     }else{
-      this.sortModel = this.defaultSortModel;
+      if(this.index === 'ei'){
+        this.sortModel = this.entitySortModel;
+      }else{
+        this.sortModel = this.defaultSortModel;
+      }
     }
 
     // set normal keyword param with space delimited string
@@ -1554,5 +1707,7 @@ export class SearchPage implements OnInit {
         return {type: sortBy, sort: 'asc'};
       }
     }
+
+
 
 }

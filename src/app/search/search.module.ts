@@ -24,6 +24,10 @@ import {SearchMultiSelectFilter} from "./search-multi-select-filter/search-multi
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import {SamEligibilityFilter} from "./eligibility-filter/eligibility-filter.component";
+import {SavedSearchWorkspacePage} from "./saved-search-workspace/saved-search-workspace.page";
+import {SavedSearchResult} from "./saved-search-workspace/saved-search-result/saved-search-result.component";
+import {FilterParamLabel} from "./pipes/filter-label.pipe";
+import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirect/saved-search-redirect.component";
 
 @NgModule({
   imports: [
@@ -51,6 +55,7 @@ import {SamEligibilityFilter} from "./eligibility-filter/eligibility-filter.comp
   ],
   declarations: [
     SearchPage,
+    SavedSearchWorkspacePage,
     SearchLayoutDemoPage,
     AssistanceListingResult,
     OpportunitiesResult,
@@ -63,7 +68,10 @@ import {SamEligibilityFilter} from "./eligibility-filter/eligibility-filter.comp
     SearchMultiSelectFilter,
     SamNaicsPscFilter,
     SamEligibilityFilter,
-    RegionalOfficeListingResult
+    RegionalOfficeListingResult,
+    SavedSearchResult,
+    FilterParamLabel,
+    SavedSearchRedirect
   ],
   providers: [DunsEntityAutoCompleteWrapper],
 })

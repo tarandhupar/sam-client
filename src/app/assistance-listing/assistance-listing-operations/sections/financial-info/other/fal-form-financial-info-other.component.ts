@@ -156,7 +156,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       emitEvent: false
     });
     this.loadAccounts();
-    this.loadTafs()
+    this.loadTafs();
     setTimeout(() => { // horrible hack to trigger angular change detection
       this.updateErrors();
     });

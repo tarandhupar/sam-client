@@ -1,0 +1,51 @@
+<div class="sam-ui grid ">
+  <div class="twelve wide column">
+    <h3 class="sam-ui header">
+      <a *ngIf="data.title" [routerLink]="['/savedsearches', id]">
+        {{data.title}}
+      </a>
+      <ng-container *ngIf="!data.title">
+        Untitled
+      </ng-container>
+    </h3>
+  </div>
+</div>
+
+<div class="sam-ui equal width grid">
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      Domain
+      <div *ngIf="!data.data.index" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{data.data?.index}}</div>
+    </div>
+  </div>
+
+  <div class="column">
+    <ng-container *ngFor="let param of parameters; let i = index;">
+    <div class="sam-ui medium header" *ngIf="i % 2 == 0">
+        {{param.label}}
+        <div *ngIf="!param.value" class="sub header">
+          &#8212;&#8212;
+        </div>
+        <div class="sub header">{{param.value}}</div>
+    </div>
+    </ng-container>
+  </div>
+
+  <div class="column">
+    <ng-container *ngFor="let param of parameters; let i = index;">
+    <div class="sam-ui medium header" *ngIf="i % 2 != 0">
+        {{param.label}}
+        <div *ngIf="!param.value" class="sub header">
+          &#8212;&#8212;
+        </div>
+        <div class="sub header">{{param.value}}</div>
+      </div>
+    </ng-container>
+  </div>
+
+</div>
+

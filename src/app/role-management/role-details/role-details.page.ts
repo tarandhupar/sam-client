@@ -11,7 +11,7 @@ import { Title } from "@angular/platform-browser";
 export class RoleDetailsPage {
   crumbs = [
     { url: '/workspace', breadcrumb: 'Workspace'},
-    { url: '/role-managmement/workspace', breadcrumb: 'Definitions'},
+    { url: '/role-management/workspace', breadcrumb: 'Definitions'},
     { breadcrumb: ''}
   ];
   mode: 'edit'|'new'|'old' = 'new';

@@ -15,7 +15,7 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { ContentManagementServiceMock } from "api-kit/content-management/content-management.mock";
-import { AppTemplatesModule } from "../../../app-templates/index";
+// import { AppTemplatesModule } from "../../../app-templates/index";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 
 let activatedRouteStub = {
@@ -39,7 +39,7 @@ xdescribe('Help content management Page', () => {
         SamAPIKitModule,
         FormsModule,
         RouterTestingModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
         AppComponentsModule,
       ],
       providers: [

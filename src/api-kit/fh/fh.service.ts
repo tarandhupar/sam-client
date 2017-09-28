@@ -15,7 +15,7 @@ export class FHService {
     private fhAPIService: FHWrapperService,
     private _http: Http,
     private  router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) { }
 
   getOrganizations(queryParams = {}) {

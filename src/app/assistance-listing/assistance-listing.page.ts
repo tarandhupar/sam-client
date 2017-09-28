@@ -387,7 +387,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
 
   public getCurrentFY(event) {
-    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
+    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
   }
 
   public containsExecutiveOrder() {

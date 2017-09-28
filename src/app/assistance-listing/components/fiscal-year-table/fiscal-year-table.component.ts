@@ -162,7 +162,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
   private createFormControls() {
     this.fyTableGroup = new FormGroup({
-      textarea: new FormControl(null),
+      textarea: new FormControl(''),
       year: new FormControl(null)
     });
 
@@ -250,7 +250,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     let entry = this.model.entries[index];
     this.addYearOption(entry.year); // add the entry's year back as an option, in case they change to another one
 
-    this.fyTableGroup.get('textarea').setValue(entry.description);
+    this.fyTableGroup.get('textarea').setValue(entry.description || '');
     this.fyTableGroup.get('textarea').markAsDirty({onlySelf: true});
     this.fyTableGroup.get('year').setValue(entry.year);
     this.fyTableGroup.get('year').markAsDirty({onlySelf: true});
@@ -349,7 +349,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       this.removeYearOption(this.model.current.year); // so remove its year from the pool of available options
     }
 
-    this.fyTableGroup.reset({}, {emitEvent: false});
+    this.fyTableGroup.reset({ textarea: '' }, {emitEvent: false});
     this.model.current.year = null;
     this.model.current.description = null;
 
@@ -401,7 +401,14 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     if (this.config.required && this.config.required === true) {
       if (this.model.isApplicable === true) {
-        if (this.model.entries.length === 0) {
+        let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+        // Only take into account the previous, current, and budget fiscal years
+        let applicable = this.model.entries.filter((entry) => {
+          let year: number = entry.year;
+          return (year >= fy - 1) && (year <= fy + 1);
+        });
+
+        if (applicable.length === 0) {
           return error;
         }
       }
@@ -433,7 +440,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     this.currentIndex = this.model.entries.length;
 
     this.checkboxControl.setValue(this.model.isApplicable ? [] : ['na'], { emitEvent: false });
-    this.fyTableGroup.get('textarea').setValue(this.model.current.description, { emitEvent: false });
+    this.fyTableGroup.get('textarea').setValue(this.model.current.description || '', { emitEvent: false });
     this.fyTableGroup.get('year').setValue(this.model.current.year, { emitEvent: false });
   }
 

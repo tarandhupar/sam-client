@@ -158,6 +158,7 @@ export class FALFormContactInfoComponent implements OnInit {
         phone: '',
         fax: '',
         streetAddress: '',
+        streetAddress2: '',
         city: '',
         state: '',
         zip: '',
@@ -410,21 +411,7 @@ export class FALFormContactInfoComponent implements OnInit {
       this.atLeastOneEntryError = false;
   }
 
-  contactsSubform:FormGroup = this.fb.group({
-    poc:[{
-      contactId: 'na',
-      title: '',
-      fullName: '',
-      email: '',
-      phone: '',
-      fax: '',
-      streetAddress: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: {key:"USA",value:'United States'}
-    },SamPOCEntryComponent.pocValidations]
-  });
+  contactsSubform: FormGroup = this.initContacts();
 
   contactsFormArrayChange(data){
     let formArray= <FormArray>this.falContactInfoForm.get('contacts');

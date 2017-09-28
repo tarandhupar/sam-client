@@ -19,13 +19,22 @@
   [sideNavModel]="sidenavModel"
   [sectionIndex]="currentSection"
   [numberOfSections]="sections.length"
+  [hasErrors]="hasErrors"
+  [tabsComponent]="tabsOppComponent"
   (action)="formActionHandler($event)"
+  (sideNavOutput)="navHandler($event)"
   (breadcrumbOut)="breadCrumbClick($event)">
 
   <div form-sections>
-  <opp-form-notice-type
-    *ngIf="isSection('notice-type')"
-    [viewModel]="oppFormViewModel"></opp-form-notice-type>
+    <!-- Tabs -->
+    <tabs-opp #tabsOppComponent
+              [data]="oppFormViewModel['_opportunity']"
+              (tabClick)="tabsClicked($event)">
+    </tabs-opp>
+
+  <opp-form-header-information
+    *ngIf="isSection('header-information')"
+    [viewModel]="oppFormViewModel"></opp-form-header-information>
   </div>
 
 </form-step>

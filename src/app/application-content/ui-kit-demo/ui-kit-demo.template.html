@@ -2,28 +2,29 @@
   <div class="twelve wide column">
       <div class="sam-ui segment">
           <h2 class="sam-ui header">
-            Table-Entry 
+            Table-Entry
             <div class="sub header">&lt; sam-table-entry &gt;</div>
           </h2>
-        <sam-table-entry 
+        <sam-table-entry
           [formArray]="tableFormArray"
           [columnHeaders]="['Col1','Col2','Col3']"
           subRows="true"
           [controlTemplate]="tableFormItemTemplate"
           [subControlTemplate]="tableSubFormItemTemplate">
-          <template #display let-control>
+          <ng-template #display let-control>
             <td class="one wide">{{control.value.col1}}</td>
             <td class="four wide">{{control.value.col2}}</td>
             <td class="four wide">{{control.value.col3}}</td>
-          </template>
+          </ng-template>
 
-          <template #subDisplay let-subControl>
+          <ng-template #subDisplay let-subControl>
             <td class="one wide">{{subControl.value.subcol1}}</td>
             <td class="four wide">{{subControl.value.subcol2}}</td>
             <td class="four wide">{{subControl.value.subcol3}}</td>
-          </template>
+          </ng-template>
 
-          <template #edit let-control>
+
+          <ng-template #edit let-control>
             <div [formGroup]="control">
               <sam-text
                 name="col1"
@@ -41,9 +42,9 @@
                 [control]="control.get('col3')"
                 formControlName="col3"></sam-text>
             </div>
-          </template>
+          </ng-template>
 
-          <template #subEdit let-control>
+          <ng-template #subEdit let-control>
               <div [formGroup]="control">
                 <sam-text
                   name="subcol1"
@@ -61,7 +62,7 @@
                   [control]="control.get('subcol3')"
                   formControlName="subcol3"></sam-text>
               </div>
-            </template>
+            </ng-template>
         </sam-table-entry>
       </div>
   </div>
@@ -73,90 +74,90 @@
   <div class="twelve wide column">
     <div class="sam-ui segment">
       <h2 class="sam-ui header">
-        Buttons 
+        Buttons
         <div class="sub header">&lt; sam-button &gt;</div>
       </h2>
-      
+
       <!-- Actions -->
       <h3 class="sam-ui header">Actions</h3>
-      <sam-button 
-        [buttonId]="'primaryBtn'" 
-        [buttonText]="'Primary'" 
-        [buttonType]="'primary'" 
+      <sam-button
+        [buttonId]="'primaryBtn'"
+        [buttonText]="'Primary'"
+        [buttonType]="'primary'"
         (click)="onDefaultBtnClick()">
       </sam-button>
-      <sam-button 
-        [buttonId]="'secondaryBtn'" 
-        [buttonText]="'Secondary'" 
-        [buttonType]="'secondary'" 
+      <sam-button
+        [buttonId]="'secondaryBtn'"
+        [buttonText]="'Secondary'"
+        [buttonType]="'secondary'"
         (click)="onDefaultBtnClick()">
       </sam-button>
-      <sam-button 
-        [buttonId]="'tertiaryBtn'" 
-        [buttonText]="'Tertiary'" 
-        [buttonType]="'tertiary'" 
+      <sam-button
+        [buttonId]="'tertiaryBtn'"
+        [buttonText]="'Tertiary'"
+        [buttonType]="'tertiary'"
         (click)="onDefaultBtnClick()">
       </sam-button>
-      <sam-button 
-        [buttonId]="'negativeBtn'" 
-        [buttonText]="'Negative'" 
-        [buttonType]="'negative'" 
+      <sam-button
+        [buttonId]="'negativeBtn'"
+        [buttonText]="'Negative'"
+        [buttonType]="'negative'"
         (click)="onDefaultBtnClick()">
       </sam-button>
-      <sam-button 
-        [buttonId]="'submitBtn'" 
-        [buttonText]="'Submit'" 
-        [buttonType]="'submit'" 
+      <sam-button
+        [buttonId]="'submitBtn'"
+        [buttonText]="'Submit'"
+        [buttonType]="'submit'"
         (click)="onDefaultBtnClick()">
       </sam-button>
-      
+
       <!-- State: Disabled -->
       <h3 class="sam-ui header">Disabled</h3>
-      <sam-button 
-        [buttonId]="'primaryDisabledBtn'" 
-        [buttonText]="'Primary'" 
-        [buttonType]="'primary'" 
+      <sam-button
+        [buttonId]="'primaryDisabledBtn'"
+        [buttonText]="'Primary'"
+        [buttonType]="'primary'"
         buttonDisabled=true>
       </sam-button>
-      <sam-button 
-        [buttonId]="'secondaryDisabledBtn'" 
-        [buttonText]="'Secondary'" 
-        [buttonType]="'secondary'" 
+      <sam-button
+        [buttonId]="'secondaryDisabledBtn'"
+        [buttonText]="'Secondary'"
+        [buttonType]="'secondary'"
         buttonDisabled=true >
       </sam-button>
-      <sam-button 
-        [buttonId]="'tertiaryDisabledBtn'" 
-        [buttonText]="'Tertiary'" 
-        [buttonType]="'tertiary'" 
+      <sam-button
+        [buttonId]="'tertiaryDisabledBtn'"
+        [buttonText]="'Tertiary'"
+        [buttonType]="'tertiary'"
         buttonDisabled=true >
       </sam-button>
-      <sam-button 
-        [buttonId]="'negativeDisabledBtn'" 
-        [buttonText]="'Negative'" 
-        [buttonType]="'negative'" 
+      <sam-button
+        [buttonId]="'negativeDisabledBtn'"
+        [buttonText]="'Negative'"
+        [buttonType]="'negative'"
         buttonDisabled=true >
       </sam-button>
-      <sam-button 
-        [buttonId]="'submitDisabledBtn'" 
-        [buttonText]="'Submit'" 
-        [buttonType]="'submit'" 
+      <sam-button
+        [buttonId]="'submitDisabledBtn'"
+        [buttonText]="'Submit'"
+        [buttonType]="'submit'"
         buttonDisabled=true >
       </sam-button>
-      
+
       <!-- Size -->
       <h3 class="sam-ui header">Size</h3>
-      <sam-button 
-        [buttonId]="'smallBtn'" 
-        [buttonText]="'Small'" 
+      <sam-button
+        [buttonId]="'smallBtn'"
+        [buttonText]="'Small'"
         [buttonSize]="'small'">
       </sam-button>
-      <sam-button 
-        [buttonId]="'mediumBtn'" 
+      <sam-button
+        [buttonId]="'mediumBtn'"
         [buttonText]="'Medium'">
       </sam-button>
-      <sam-button 
-        [buttonId]="'largeBtn'" 
-        [buttonText]="'Large'" 
+      <sam-button
+        [buttonId]="'largeBtn'"
+        [buttonText]="'Large'"
         [buttonSize]="'large'">
       </sam-button>
 
@@ -185,26 +186,26 @@
   </div>
   <div class="usa-grid">
     <div class="usa-width-one-whole">
-        <sam-autocomplete-multiselect state class="usa-width-one-half" 
+        <sam-autocomplete-multiselect state class="usa-width-one-half"
                                   label="State" required="true"
                                   [keyValueConfig]="multiselectConfigSelectable">
         </sam-autocomplete-multiselect>
     </div>
-  </div> <br/> 
+  </div> <br/>
   <div class="usa-grid">
     <div class="usa-width-one-half">
       <h2>SAM agency-picker-v2 &lt;sam-agency-picker-v2&gt;</h2>
-      <sam-agency-picker-v2 
-        type="single" 
-        label="Agency Picker (single)" 
-        required="true" 
+      <sam-agency-picker-v2
+        type="single"
+        label="Agency Picker (single)"
+        required="true"
         [(ngModel)]="agv2_selections1"
         hint="Pick a single agency">
       </sam-agency-picker-v2>
-      <sam-agency-picker-v2 
-        type="multiple" 
-        label="Agency Picker (multiple)" 
-        required="true" 
+      <sam-agency-picker-v2
+        type="multiple"
+        label="Agency Picker (multiple)"
+        required="true"
         [(ngModel)]="agv2_selections2"
         hint="Pick multiple agencies">
       </sam-agency-picker-v2>
@@ -214,11 +215,11 @@
       <p>{{ agv2_selections2 | json }}</p>
     </div>
   </div>
-  
+
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM Sort &lt;sam-sort&gt;</h2>
-      <sam-sort [(ngModel)]="sortModel" 
+      <sam-sort [(ngModel)]="sortModel"
       [options]="[{label:'Name',name:'Name',value:'name'},{label:'Fruit',name:'Fruit',value:'fruit'}]">
       </sam-sort>
       <br/>{{ sortModel | json }}
@@ -228,12 +229,12 @@
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>SAM people-picker &lt;sam-autocomplete[peoplepicker-autofill]&gt;</h2>
-      <sam-autocomplete 
-        labelText="People Picker example (single)" hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text" 
+      <sam-autocomplete
+        labelText="People Picker example (single)" hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
         [required]="true"
         peoplepicker-autofill
         [config]="autocompletePeoplePickerConfig"></sam-autocomplete>
-      <sam-autocomplete-multiselect 
+      <sam-autocomplete-multiselect
         hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
         label="People Picker example (multiple)" required="true"
         peoplepicker-autofill
@@ -268,9 +269,9 @@
   <div class="usa-grid">
     <div class="usa-width-half">
       <h2>SAM Editor &lt;sam-editor&gt;</h2>
-      <sam-editor 
+      <sam-editor
         (action)="editorActionHandler($event)"
-        label="SAM Editor Example Label" 
+        label="SAM Editor Example Label"
         hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.">
         <div editor-display-view>
           <p>
@@ -475,7 +476,7 @@
      <sam-autocomplete county [(ngModel)]="locationOutput" [id]="'h1231029380938489'" [labelText]="'County Picker'" [config]="locationDemoConfig"></sam-autocomplete>
     </div>
   </div>
-  
+
 
   <div class="usa-grid">
     <h2>Label Component &lt;sam-label&gt;</h2>
@@ -936,9 +937,9 @@
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Autocomplete Multiselect (Selectable Categories)</h2>
-    <sam-autocomplete-multiselect class="usa-width-one-half" 
+    <sam-autocomplete-multiselect class="usa-width-one-half"
                                   label="Team Members" required="true"
-                                  [keyValueConfig]="multiselectConfigSelectable" 
+                                  [keyValueConfig]="multiselectConfigSelectable"
                                   [options]="multiselectOptions"
                                   [categoryIsSelectable]="true"
                                   [categories]="autocompleteCategoryObjects"
@@ -949,9 +950,9 @@
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Autocomplete Multiselect (Not Selectable Categories)</h2>
-    <sam-autocomplete-multiselect class="usa-width-one-half" 
+    <sam-autocomplete-multiselect class="usa-width-one-half"
                                   label="Team Members" required="true"
-                                  [keyValueConfig]="multiselectConfig" 
+                                  [keyValueConfig]="multiselectConfig"
                                   [options]="multiselectOptions"
                                   [(ngModel)]="modellz2">
       </sam-autocomplete-multiselect>

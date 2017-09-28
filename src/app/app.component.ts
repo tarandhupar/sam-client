@@ -146,7 +146,11 @@ export class App{
       qsobj['sort'] = "-relevance"
     }else{
       //different default sort by date options for blank search
-      qsobj['sort'] = "-modifiedDate";
+      if(this.index === 'ei'){
+        qsobj['sort'] = 'title';
+      }else{
+        qsobj['sort'] = "-modifiedDate";
+      }
     }
 
     if(searchObject.searchField.length>0){

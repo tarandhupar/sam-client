@@ -10,7 +10,7 @@ export class StateServiceImpl implements AutocompleteService {
 
   country = "USA";
 
-  constructor(private locationService: LocationService, private alertFooterService: AlertFooterService) { }
+  constructor(private locationService: LocationService) { }
 
   getAllStatesJSON(q:string, country:string): ReplaySubject<any> {
     const results = new ReplaySubject();
@@ -56,7 +56,7 @@ export class StateServiceImpl implements AutocompleteService {
 }
 
 @Directive({
-  // selector: 'sam-autocomplete[state]', 
+  // selector: 'sam-autocomplete[state]',
   // To Change Syntax to use this directive only for sam-autocomplete and sam-autocomplete-multiselect
   selector: '[state]',
   providers: [

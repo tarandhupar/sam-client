@@ -13,9 +13,13 @@
     position: relative;
   }
 
+  .input-container {
+    position: relative;
+  }
+
   .reset-icon,.reset-icon-active{
     position: absolute;
-    top: 20%;
+    top: 25%;
     right: 10px;
     z-index: 10;
   }

@@ -41,7 +41,7 @@ export class GrantOrEditAccess {
   editingOrg: boolean = false;
   grantOrEdit: 'grant'|'edit' = 'grant';
   errorMessage: string = '';
-  domainsString: string = '';
+  domains: Array<number> = [];
   existingAccess = {};
   submitEnabled: boolean = true;
 
@@ -99,11 +99,29 @@ export class GrantOrEditAccess {
 
   parseInitialRolesAndDomains() {
     let qp = this.route.snapshot.queryParams;
+    console.log(qp);
     let role = +qp['role'];
-    let domainsString = qp['domains'];
+    let domains = qp['domains'];
+
+    if (domains.toUpperCase) {
+      let d = +domains;
+      if (isNaN(d)) {
+        throw new Error('domains is invalid');
+      }
+      domains = [d];
+    } else {
+      domains = domains.map(d => {
+        let x = +d;
+        if (isNaN(x)) {
+          throw new Error('domains is invalid.');
+        }
+        return x;
+      });
+    }
+
     let org = qp['org'];
 
-    if (!role || !domainsString || !qp) {
+    if (!role || !domains || !qp) {
       this.errorMessage = 'Parameters missing from route';
       return;
     }
@@ -111,11 +129,11 @@ export class GrantOrEditAccess {
     this.existingAccess = {
       organizations: [org],
       role: +role,
-      domains: domainsString.split(',').map(d => +d)
+      domains: domains.map(d => +d)
     };
 
     // we update the form value, for domains, once we get the text label from /checkaccess
-    this.domainsString = domainsString;
+    this.domains = domains;
 
     this.form.patchValue({
       role: role,
@@ -144,7 +162,7 @@ export class GrantOrEditAccess {
         this.alertFooter.registerFooterAlert({
           type: 'error',
           title: 'Error',
-          description: 'Grant role not available for logged in user',
+          description: 'Unable to parse network response.',
           timer: 3200,
         });
       }
@@ -160,10 +178,9 @@ export class GrantOrEditAccess {
   }
 
   setFormDomains() {
-    let selectedDomains: string[] = this.domainsString.split(',');
     this.form.patchValue({
       domains: this.domainOptionsByRole[this.form.value.role].filter(d => {
-        return selectedDomains.find(dParam => ''+d.key === dParam);
+        return this.domains.find(dParam => ''+d.key === ''+dParam);
       })
     });
   }

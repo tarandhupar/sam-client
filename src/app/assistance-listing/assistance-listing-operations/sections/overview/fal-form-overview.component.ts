@@ -64,8 +64,7 @@ export class FALFormOverviewComponent implements OnInit {
   //Subject Terms Multiselect
   stAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    serviceOptions: {index: 'D'},
-    clearOnSelection: true, showOnEmptyInput: true
+    serviceOptions: {index: 'D'}
   };
 
   constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private cdr: ChangeDetectorRef) {

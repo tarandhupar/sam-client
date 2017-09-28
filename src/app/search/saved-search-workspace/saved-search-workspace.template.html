@@ -1,0 +1,45 @@
+<page
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Saved Searches">
+
+  <!-- Sidebar section -->
+  <sidebar>
+
+    <!-- Navigation -->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a [routerLink]="['/search']">
+          Search Results
+        </a>
+      </li>
+      <li>
+        <a class="usa-current">
+          Saved Searches
+        </a>
+      </li>
+    </ul>
+
+  </sidebar>
+
+  <!-- No results -->
+  <p *ngIf="data.length==0 && !initLoad">
+    No results found for '<strong>{{ oldKeyword }}</strong>'
+  </p>
+  <!-- Page results -->
+  <results *ngIf="!data.length==0 && !initLoad"
+           [totalElements]="totalCount"
+           [totalPages]="totalPages"
+           [currentPage]="pageNum+1"
+           (pageChange)="pageChange($event-1)">
+
+    <!-- Results -->
+    <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">
+      <saved-search-result [data]="row"></saved-search-result>
+    </div>
+
+
+  </results>
+
+</page>

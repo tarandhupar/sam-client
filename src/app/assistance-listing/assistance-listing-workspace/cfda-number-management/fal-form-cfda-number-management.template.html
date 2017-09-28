@@ -17,12 +17,13 @@
 
       <form [formGroup]="cfdaNumberConfigForm">
         <div class="sam-ui segment">
-          <sam-radio-button [name]="'assignment-radio-buttons'"
+          <sam-radio-button *ngIf="cfdaNumberConfigForm.get('assignment').value != null"
+                            [name]="'assignment-radio-buttons'"
                             [options]="assignmentOptions"
                             [label]="'Assignment Type'"
-                            [formControlName]="'assignemnt'"
+                            [formControlName]="'assignment'"
                             [required] = "true"
-                            [control]="cfdaNumberConfigForm.get('assignemnt')">
+                            [control]="cfdaNumberConfigForm.get('assignment')">
           </sam-radio-button>
           <sam-alert [type]="'error'" [title]="'High Number should be greater than Low Number'" *ngIf="numberAlertShow">
           </sam-alert>

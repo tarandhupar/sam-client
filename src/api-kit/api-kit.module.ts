@@ -37,7 +37,9 @@ import { SamCountryServiceAutoDirective } from "./autoCompleteWrapper/location-a
 import { SamStateServiceAutoDirective, StateServiceImpl } from "./autoCompleteWrapper/location-autocomplete/state-autocomplete/state-autocomplete.service";
 import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./autoCompleteWrapper/location-autocomplete/county-autocomplete/county-autocomplete.service";
 import { CityServiceImpl, SamCityServiceAutoDirective } from "./autoCompleteWrapper/location-autocomplete/city-autocomplete/city-autocomplete.service";
-
+import { UserAccessMock } from "./access/access.service.mock";
+import { WatchlistServiceMock } from "./watchlist/watchlist.service.mock";
+import {SavedSearchService} from "./search/saved-search.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -70,13 +72,15 @@ import { CityServiceImpl, SamCityServiceAutoDirective } from "./autoCompleteWrap
   ],
   providers: [
     SearchService,
+    SavedSearchService,
     //{ provide: SearchService, useClass: SearchServiceMock },
     FHService,
     //{ provide: FHService, useClass: FHServiceMock},
     IAMService,
     SystemAlertsService,
-    WatchlistService,
     //{ provide: SystemAlertsService, useClass: SystemAlertsServiceMock },
+    WatchlistService,
+    //{ provide: WatchlistService, useClass: WatchlistServiceMock },
     EntityService,
     ExclusionService,
     OpportunityService,

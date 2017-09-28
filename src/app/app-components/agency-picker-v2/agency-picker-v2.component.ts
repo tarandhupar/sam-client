@@ -24,6 +24,7 @@ import * as _ from 'lodash';
 export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     @Input() required: boolean;
     @Input() label: string;
+    @Input() name: string = "default";
     @Input() hint: string;
     @Input() orgLimit: number = 7;
     @Input() control: AbstractControl;
@@ -39,6 +40,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     private dropdownLimit: number = 200;
     private _disabled: boolean = false;
 
+    labelName: string;
     selections = null;
     orgRootLevel = 0;
     serviceOptions = {};
@@ -61,6 +63,13 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         if(c['defaultDept'] && this.defaultDept && adminLevel.adminLevel !== 0){
             this.serviceOptions['defaultDept'] = true;
             this.singleACConfig['serviceOptions'] = this.serviceOptions;
+        }
+        if(c['name']){
+            if(this.name){
+                this.labelName = this.name+"picker-ac-textarea";
+            } else {
+                this.labelName = null;
+            }
         }
     }
 

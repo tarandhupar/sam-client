@@ -20,8 +20,9 @@ export const routes: Routes = [
       { path: 'static', component: StaticComponent },
       { path: 'adhoc', component: AdhocComponent },
       { path: 'favorites', component: FavoritesComponent },
-      { path: 'report/:id', component: ReportComponent },
-      { path: 'myreports', component: MyReportsComponent }
+      { path: ':id/view', component: ReportComponent },
+      { path: 'myreports', component: MyReportsComponent },
+      { path: ':id/shared/:params', component: ReportComponent }
     ]
   },
 ];

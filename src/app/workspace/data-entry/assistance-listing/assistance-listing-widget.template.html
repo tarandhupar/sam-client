@@ -13,6 +13,10 @@
         <a *ngIf="rejectedCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'rejected'}">Rejected Assistance Listings</a>
         <span *ngIf="rejectedCount == 0" class="al-text">Rejected Assistance Listings</span>
       </div>
+      <div *ngIf="draftReviewCount!=null && permissions['CREATE_FALS']"><span class="usa-font-lead">{{draftReviewCount == 0 ? '0' : draftReviewCount}}&nbsp;</span>
+        <a *ngIf="draftReviewCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'draft_review'}">Under Agency Coordinator Review</a>
+        <span *ngIf="draftReviewCount == 0" class="al-text">Under Agency Coordinator Review</span>
+      </div>
   </div>
   <div class="usa-width-one-third">
       <a *ngIf="permissions['CREATE_FALS']" class="usa-button usa-button-primary al-button" [routerLink]="['/programs/add']">Create a New Listing</a>

@@ -22,6 +22,8 @@
   [sectionIndex]="currentSection"
   [numberOfSections]="sections.length"
   [statusBannerLeadingText]="leadingErrorMsg"
+  [hasErrors]="hasErrors"
+  [tabsComponent]="tabsComponent"
   statusBannerType="warning"
   (action)="formActionHandler($event)"
   (sideNavOutput)="navHandler($event)"

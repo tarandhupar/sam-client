@@ -58,6 +58,11 @@ export class falCustomValidatorsComponent {
 
   static isProgramNumberUnique(programService, cfdaCode, id, cookie, OrgId): AsyncValidatorFn {
     return (control) => {
+
+      if(control.value == null || control.value == '') {
+        return null;
+      }
+
       let programNum = cfdaCode + '.' + control.value;
       return programService.isProgramNumberUnique(programNum, id, cookie, OrgId).map(res => {
         if (!res['content']['isProgramNumberUnique']) {

@@ -1,41 +1,91 @@
-import { Component } from "@angular/core";
+import { Component, Input, forwardRef, Output, ViewChild, ElementRef } from "@angular/core";
 import { UserService } from "../user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
-import { PropertyCollector } from "../../app-utils/property-collector";
-import { Router } from "@angular/router";
-import {CapitalizePipe} from "../../app-pipes/capitalize.pipe";
+import { Router, ActivatedRoute } from "@angular/router";
 import { IBreadcrumb } from "sam-ui-kit/types";
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 
 type TabName = 'filters'|'users'|'access'|'confirmation';
+
+function labelCompare(a, b) {
+  let aUpper = a.label.toUpperCase();
+  let bUpper = b.label.toUpperCase();
+  if (aUpper < bUpper) {
+    return -1;
+  }
+  if (aUpper > bUpper) {
+    return 1;
+  }
+  return 0;
+}
+
+@Component({
+  selector: "sam-toggle",
+  template: `
+    <input type="checkbox" [(ngModel)]="_checked" [disabled]="disabled" (click)="onSwitchClick()">
+    <label class="sam-toggle" [style.pointer-events]="disabled ? 'none' : 'all'">{{label}}</label>
+  `,
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => SamToggle),
+    multi: true
+  }]
+})
+export class SamToggle implements ControlValueAccessor {
+  @Input() label: string;
+  @Input() disabled: boolean = false;
+  private _checked: boolean = false;
+
+  constructor() { }
+
+  onSwitchClick(): void {
+    this._checked = !this._checked;
+    this.onTouched();
+    this.onChange(this._checked);
+  }
+
+  /* ControlValueAccessor BoilerPlate */
+  private onChange: any = () => { };
+  private onTouched: any = () => { };
+  registerOnChange(fn) { this.onChange = fn; }
+  registerOnTouched(fn) { this.onTouched = fn; }
+  setDisabledState(disabled) { this.disabled = disabled; }
+  writeValue(value:boolean) { this._checked = value; }
+}
 
 @Component({
   templateUrl: './bulk-update.template.html'
 })
 export class BulkUpdateComponent {
+  test: boolean = false;
+
+  sideNavSections: Array<string> = [
+    'Filters', 'Users', 'Access', 'Confirmation'
+  ];
+
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
-  currentTab: TabName= 'filters';
+  currentTab: any = 'filters';
   user: any = {};
   org;
-  domainOptions = [];
-  domain;
+  domainOptionsByRole = {};
+  existingDomains = [];
+  updatedDomains = [];
   roleOptions = [];
   existingRole;
   updatedRole;
-  roles;
+  role;
   errors = {
     domain: '',
     role: '',
     org: '',
   };
-  objects = [];
+  domainTabs = [];
   sortOptions = [
-    { value: 'email-asc', label: 'Email (A-Z)' },
-    { value: 'email-desc', label: 'Email (Z-A)' },
-    { value: 'last-asc', label: 'Last name (A-Z)' },
-    { value: 'last-desc', label: 'Last name (Z-A)' }
+    { value: 'email', label: 'Email' },
+    { value: 'last', label: 'Last name' },
   ];
-  sort = 'email-asc';
+  sort = { type: 'email', sort: 'asc' };
   showDeselect: boolean = true;
   mode: 'update'|'remove'|undefined = 'update';
   modeOptions = [
@@ -49,13 +99,21 @@ export class BulkUpdateComponent {
     { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
     { breadcrumb: 'Bulk Update'}
   ];
+  existingAccess = {};
+  staticContentStyle = {
+    'border-radius': '3px',
+    'background-color': 'white',
+    'border': '1px solid lightgray',
+    'padding': '.5em'
+  };
 
   constructor(
     private userService: UserService,
     private userAccessService: UserAccessService,
     private footerAlerts: AlertFooterService,
     private router: Router,
-    private capitalize: CapitalizePipe,
+    private route: ActivatedRoute,
+    private el: ElementRef,
   ) {
 
   }
@@ -66,20 +124,31 @@ export class BulkUpdateComponent {
   }
 
   getDomains() {
-    this.userAccessService.getDomains().subscribe(
-      domains => {
-        this.domainOptions = domains._embedded.domainList.map(domain => {
-          return { value: domain.id, label: domain.domainName };
-        });
-        this.domain = domains._embedded.domainList[0].id;
-        this.getRoles(true);
+    this.userAccessService.checkAccess(`users/:id/grant-access`).map(r => r.json()).subscribe(
+      (a: any) => {
+        try {
+          this.domainOptionsByRole = {};
+          this.roleOptions = a.grantRoles.map(r => {
+            this.domainOptionsByRole[r.id] = r.supportedDomains.map(d => ({value: d.val, key: ''+d.id}));
+            return { label: r.val, value: r.id };
+          }).sort(labelCompare);
+        } catch(err) {
+          console.error(err);
+          this.footerAlerts.registerFooterAlert({
+            type: 'error',
+            title: 'Error',
+            description: 'Unable to parse roles and domains for user',
+            timer: 3200,
+          });
+        }
       },
-      error => {
+      err => {
+        console.error(err);
         this.footerAlerts.registerFooterAlert({
-          title:"Unable to fetch domain information.",
-          description:"",
-          type:'error',
-          timer:3200
+          type: 'error',
+          title: 'Error',
+          description: 'Unable to fetch grant privileges for logged in user.',
+          timer: 3200,
         });
       }
     );
@@ -89,89 +158,77 @@ export class BulkUpdateComponent {
     return this.updatedRole !== this.existingRole;
   }
 
-  onDomainChange(domain) {
-    this.domain = domain;
-    this.existingRole = null;
-    this.roleOptions = [];
-    this.objects = [];
-    this.getRoles(true);
+  isDomainUpdated() {
+    return !this.arraysEqual(this.existingDomains, this.updatedDomains);
   }
 
-  getRoles(selectFirstRole?: boolean) {
-    let options: any = {domainKey: this.domain};
-    this.userAccessService
-      .getUiRoles(options)
-      .subscribe(
-        perms => {
-          this.roles = perms;
-          let c = new PropertyCollector(perms);
-          let roles = c.collect([[], 'role']);
-          this.roleOptions = roles.map(role => {
-            return { label: role.val, value: role.id };
-          });
-          if (selectFirstRole && this.roles[0] && this.roles[0].role) {
-            this.onExistingRoleChange(this.roles[0].role.id);
-          }
-        },
-        err => {
-          this.roleOptions = [];
-          this.footerAlerts.registerFooterAlert({
-            title:"Error",
-            description:"Unable to retrieve permission data",
-            type:'error',
-            timer:3200
-          });
-        }
-      );
+  // this function assumes there are no duplicate items in either array
+  arraysEqual(a1, a2) {
+    if (a1.length !== a2.length) {
+      return false;
+    }
+    // check if the two arrays are equal
+    let a = a1.slice();
+    let b = a2.slice();
+    a.forEach(ai => {
+      // remove item from b if it is in a
+      b = b.filter(bi => bi.key !== ai.key);
+    });
+    return b.length === 0;
+  }
+
+  onExistingDomainChange(domains) {
+    this.updatedDomains = domains;
+    this.onDomainChange(domains);
+  }
+
+  onUpdatedDomainChange(domains) {
+    this.onDomainChange(domains);
+  }
+
+  currentIndex() {
+    return this.tabs.indexOf(this.currentTab);
+  }
+
+  getExistingDomainOptions() {
+    let role = +this.existingRole;
+    return this.domainOptionsByRole[role] || [];
+  }
+
+  getUpdatedDomainOptions() {
+    let role = +this.updatedRole;
+    return this.domainOptionsByRole[role] || [];
   }
 
   onUpdatedRoleChange(role) {
     this.updatedRole = role;
+    this.updatedDomains = [];
     this.onRoleChange(role);
   }
 
   onExistingRoleChange(role) {
+    this.existingDomains = [];
     this.existingRole = role;
     this.updatedRole = role;
-    this.onRoleChange(role);
   }
 
-  /*
-   * If first only return "first - ";
-   * If last only return "last - ";
-   * If first and last return "first last - ";
-   * If neither return empty string
-   */
+  onUserRowClick(user) {
+    user.isSelected = !user.isSelected;
+  }
+
   formatUserName(user) {
-    let first = user.firstName;
-    let last = user.lastName;
-    let name = '';
-    if (first && last) {
-      name = [first, last].join(' ') + ' - ';
-    } else if (first) {
-      name = first + ' - ';
-    } else if (last) {
-      name = last + ' - ';
+    if (!user) {
+      return '';
     }
-    return name;
+    return [user.firstName, user.lastName].filter(o => o).join(' ');
   }
 
   onRoleChange(role) {
-    let r = this.roles.find(r => {
-      return +r.role.id === +role;
-    });
+    this.resetObjects();
+  }
 
-    if (r) {
-      this.objects = r.functionContent;
-    } else {
-      // the user selected a role that is not in the roles table (it may not have been fetched yet)
-      this.footerAlerts.registerFooterAlert({
-        title:"Error",
-        description:"Unable to find permissions for role",
-        type:'error',
-        timer: 3200
-      });
-    }
+  resetObjects() {
+    this.domainTabs = [];
   }
 
   isCurrentTab(tabName : TabName) {
@@ -187,8 +244,15 @@ export class BulkUpdateComponent {
       this.currentTab = 'users';
       return;
     }
+    if (this.currentTab === 'confirmation' && this.mode === 'update') {
+      this.selectFirstPermissionTab();
+    }
     let i = this.tabIndex();
     this.currentTab = this.tabs[i-1];
+  }
+
+  permissionsForFunction(func) {
+    return func.permissions.filter(p => p.checked).map(p => p.name).join(',');
   }
 
   onNextClick() {
@@ -205,8 +269,12 @@ export class BulkUpdateComponent {
       });
       return;
     }
+    if (this.currentTab === 'users') {
+      this.selectFirstPermissionTab();
+    }
     if (this.currentTab === 'filters') {
       this.doUserSearch();
+      this.updateExistingAccess();
       return;
     }
     if (this.currentTab === 'users' && this.mode === 'remove') {
@@ -217,12 +285,20 @@ export class BulkUpdateComponent {
     this.currentTab = this.tabs[i+1];
   }
 
+  updateExistingAccess() {
+    this.existingAccess = {
+      organizations: [''+this.org.orgKey],
+      role: +this.existingRole,
+      domains: this.existingDomains.map(d => +d.key)
+    };
+  }
+
   validateFilters() {
-    return this.org && this.domain;
+    return this.org && this.existingDomains && this.existingDomains.length;
   }
 
   showFilterErrors() {
-    if (!this.domain) {
+    if (!this.existingDomains || !this.existingDomains.length) {
       this.errors.domain = 'A domain is required';
     }
 
@@ -243,16 +319,8 @@ export class BulkUpdateComponent {
     return selected.map(u => u.email);
   }
 
-  getSelectedObjects() {
-    return this.objects.filter(obj => {
-      return obj.permission && obj.permission.length && this.getSelectedPermissions(obj).length
-    });
-  }
-
   getSelectedPermissions(object) {
-    let permissions = object.permission.filter(perm => perm.isCheckable).map(perm => {
-      return this.capitalize.transform(perm.val);
-    });
+    let permissions = object.permission.filter(perm => perm.isCheckable).map(perm => perm.val).join(', ');
     return permissions.join(', ');
   }
 
@@ -260,48 +328,132 @@ export class BulkUpdateComponent {
     perm.isCheckable = !perm.isCheckable;
   }
 
-  getUnSelectedPermissions() {
-    return this.objects.map(obj => {
-      let perms = obj.permission.filter(p => !p.isCheckable).map(p => p.id);
-      return {
-        function: obj.function.id,
-        permission: perms
+  onDomainChange(domains) {
+    if (!domains || !domains.length) {
+      this.domainTabs = [];
+      return;
+    }
+    let d = domains.map(i => ''+i.key).join(',');
+    let r = ''+this.role;
+
+    this.userAccessService.getDomainDefinition('role', d, r).subscribe(
+      res => {
+        try {
+          this.domainTabs = res.map(
+            domainAndFunctions => {
+              return {
+                id: domainAndFunctions.domain.id,
+                name: domainAndFunctions.domain.val,
+                functions: domainAndFunctions.roleDefinitionMapContent[0].functionContent.filter(f => f).map(
+                  functionAndPermissions => {
+                    return {
+                      id: functionAndPermissions.function.id,
+                      name: functionAndPermissions.function.val,
+                      permissions: functionAndPermissions.permission.filter(p => p).map(
+                        perm => {
+                          return {
+                            id: perm.id,
+                            name: perm.val,
+                            checked: perm.isCheckable || !!perm.isDefault,
+                            disabled: !!perm.isDefault,
+                          };
+                        }
+                      )
+                    }
+                  }
+                )
+              };
+            }
+          )
+        } catch (error) {
+          console.error(error);
+          this.footerAlerts.registerFooterAlert({
+            type: 'error',
+            title: 'Error',
+            description: 'Unable to parse permission data',
+            timer: 3200,
+          });
+        }
+      },
+      err => {
+        console.error(err);
+        this.footerAlerts.registerFooterAlert({
+          type: 'error',
+          title: 'Error',
+          description: 'Unable to fetch permission information for logged in user.',
+          timer: 3200,
+        });
       }
-    });
+    );
+  }
+
+  getDomainData(dom) {
+    if (!dom) {
+      return [];
+    }
+    let ret = dom.map(
+      d => {
+        return {
+          domain: d.id,
+          functionContent: d.functions && d.functions.map(
+            f => {
+              return {
+                "function": f.id,
+                permission: f.permissions && f.permissions.filter(p => !p.checked).map(p => +p.id)
+              }
+            }
+          )
+        }
+      }
+    );
+    return ret;
   }
 
   onDoneClick() {
-    let permissions = this.getUnSelectedPermissions();
     let users = this.getSelectedUserIds();
+    let domains = this.getDomainData(this.domainTabs);
 
-    let req = {
-      organization: ''+this.org.value,
-      domain: +this.domain,
-      existingRole: +this.existingRole,
-      updatedRole: this.isRoleUpdated() ? +this.updatedRole : null,
-      functionContent: permissions,
+    let body: any = {
       users: users,
-      mode: this.mode === 'update' ? 'edit' : 'remove',
-      message: this.comments
+      existingAccess: this.existingAccess,
+      message: this.comments,
     };
 
-    this.userAccessService.postAccess(req).subscribe(
-      () => {
-        this.router.navigate(['role-management/roles-directory']);
-        this.footerAlerts.registerFooterAlert({
-          description:`Succesfully updated access for ${users.length} user${users.length > 1 ? 's' : ''}.`,
-          title: '',
-          type:'success',
-          timer:3200
-        });
+    if (this.mode === 'update') {
+      body.mode = 'EDIT';
+      body.updatedAccess = {
+        organizations: [''+this.org.orgKey],
+        role: +this.updatedRole,
+        domainData: domains,
+      };
+    } else {
+      body.mode = 'DELETE';
+    }
+
+    let method = this.mode === 'update' ? 'putAccess' : 'deleteAccess';
+
+    this.userAccessService[method](body).subscribe(
+      res => {
+        this.router.navigate(["../roles-directory"], { relativeTo: this.route});
       },
-      () => {
-        this.footerAlerts.registerFooterAlert({
-          description:"Something went wrong while trying to grant access.",
-          title:"",
-          type:'error',
-          timer:3200
-        });
+      err => {
+        if (err && err.status === 409) {
+          console.error(err);
+          let e: string = 'The user already has access for this domain at one or more of the selected organization(s)';
+          this.footerAlerts.registerFooterAlert({
+            description: e,
+            type: "error",
+            timer: 3200
+          });
+        } else {
+          console.error(err);
+          this.footerAlerts.registerFooterAlert({
+            description: 'There was an error with a required service',
+            type: "error",
+            timer: 3200
+          });
+        }
+
       }
     );
   }
@@ -310,12 +462,15 @@ export class BulkUpdateComponent {
     this.org = org;
   }
 
-  domainName() {
-    let d = this.domainOptions.find(dom => ''+dom.value === ''+this.domain);
-    if (d && d.label) {
-      return d.label;
+  getExistingDomainNames() {
+    if (!this.existingDomains || !this.existingDomains.length) {
+      return '';
     }
-    return '';
+    return this.existingDomains.map(d => d.value).join(', ');
+  }
+
+  getUpdatedDomainNames() {
+    return this.updatedDomains.map(d => d.value).join(', ');
   }
 
   getRoleName(roleId) {
@@ -334,26 +489,30 @@ export class BulkUpdateComponent {
     return this.getRoleName(this.updatedRole);
   }
 
+  selectFirstPermissionTab() {
+    let that = this;
+    setTimeout(() => {
+      let item = that.el.nativeElement.querySelector('sam-tabs .item');
+      if (item) {
+        item.click();
+      }
+    }, 0);
+  }
+
   doUserSearch() {
     this.areUsersLoading = true;
     this.users = [];
-    let sort = 'email';
-    let order = 'asc';
+    let sort = this.sort.type;
+    let order = this.sort.sort;
 
-    switch (this.sort) {
-      case 'email-asc': sort = 'email'; order = 'asc'; break;
-      case 'email-desc': sort = 'email'; order = 'desc'; break;
-      case 'last-asc': sort = 'name'; order = 'asc'; break;
-      case 'last-desc': sort = 'name'; order = 'desc'; break;
-    }
     let params = {
-      domain: this.domain,
-      roles: this.existingRole,
+      domainKey: this.existingDomains.map(d => +d.key).join(','),
+      roleKey: this.existingRole,
       orgKey: this.org.orgKey,
       sort: sort,
       order: order,
     };
-    this.userAccessService.getUsers(params).subscribe(
+    this.userAccessService.getUsersV1(params).subscribe(
       users => {
         if (!users || !users.length) {
           this.footerAlerts.registerFooterAlert({
@@ -384,6 +543,18 @@ export class BulkUpdateComponent {
         this.areUsersLoading = false;
       }
     );
+  }
+
+  sideNavClass(tabIndex) {
+    let currentIndex = this.currentIndex();
+
+    if (tabIndex < currentIndex) {
+      return 'completed';
+    } else if (tabIndex === currentIndex) {
+      return 'active';
+    } else if (tabIndex > currentIndex) {
+      return 'pending';
+    }
   }
 
   toggleSelectAll() {

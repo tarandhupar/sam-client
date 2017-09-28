@@ -32,7 +32,7 @@ export class SubscriptionsComponent {
     name: 'Frequency',
     disabled: false,
   };
- 
+
  myFeedCbxConfig = {
     options:[
       {value: 'Y', label: '', name: 'Yes'},
@@ -112,19 +112,19 @@ export class SubscriptionsComponent {
     if( this.totalRecords === 0) this.curStart = 0;
   }
 
-  onFrequencyTypeSelect(action, id){
-    console.log('New Value: ' + action.name);
-    console.log('id: ' + id);
-  }
-
-  onMyFeedCheck(val, id){
-    let feed;
-    (val.length == 0) ? feed = 'N': feed = 'Y';
-    console.log('feed: ' + feed);
-  }
+  // onFrequencyTypeSelect(action, id){
+  //   console.log('New Value: ' + action.name);
+  //   console.log('id: ' + id);
+  // }
+  //
+  // onMyFeedCheck(val, id){
+  //   let feed;
+  //   (val.length == 0) ? feed = 'N': feed = 'Y';
+  //   console.log('feed: ' + feed);
+  // }
 
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
-  getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
+  // getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
 
 }

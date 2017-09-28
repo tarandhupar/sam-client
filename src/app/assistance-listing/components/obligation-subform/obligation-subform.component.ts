@@ -231,7 +231,7 @@ export class FALObligationSubFormComponent {
         radioOptionId: budget,
         textboxValue: budgetText ? budgetText : ''
       },
-      description: obligation['description'],
+      description: obligation['description'] || '',
       obligationId: obligation['obligationId']
     });
   }

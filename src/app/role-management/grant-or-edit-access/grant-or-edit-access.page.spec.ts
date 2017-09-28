@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { GrantOrEditAccess } from "./grant-or-edit-access";
 import { AppComponentsModule } from "../../app-components/app-components.module";
-import { AppTemplatesModule } from "../../app-templates/index";
+// import { AppTemplatesModule } from "../../app-templates/index";
 import { UserService } from "../user.service";
 import { UserServiceMock } from "../user.service.mock";
 
@@ -28,7 +28,7 @@ xdescribe('Grant And Edit Access pages', () => {
         ReactiveFormsModule,
         SamUIKitModule,
         AppComponentsModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
         SamAPIKitModule,
       ]
     });

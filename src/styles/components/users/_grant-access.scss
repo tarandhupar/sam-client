@@ -25,18 +25,4 @@
     width: 100%;
     max-width: 100%;
   }
-
-  ul.column-wrappable {
-    li {
-      list-style: none;
-      break-inside: avoid-column;
-    }
-    -moz-column-count: 2;
-    -moz-column-gap: 20px;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 20px;
-    column-count: 2;
-    column-gap: 20px;
-    padding-left: 0;
-  }
 }

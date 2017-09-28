@@ -56,6 +56,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       {value: 'pending', label: 'Pending', name: 'checkbox-pending'},
       {value: 'rejected', label: 'Rejected', name: 'checkbox-rejected'},
       {value: 'draft', label: 'Draft', name: 'checkbox-draft'},
+      {value: 'draft_review', label: 'Draft Review', name: 'checkbox-draft-review'},
       {value: 'archived', label: 'Archived', name: 'checkbox-archived'},
     ],
     name: 'fal-status-filter',
@@ -103,8 +104,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   filterDisabled = true;
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'Workspace', url: '/workspace' },
-    { breadcrumb: 'Assistance Listings'}
+    { breadcrumb: 'My Workspace', url: '/workspace' },
+    { breadcrumb: 'Assistance Workspace'}
   ];
   agencyPickerModel = [];
   previousStringList: string = '';
@@ -361,6 +362,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       if (error && error.status === 401) {
         this.serviceErrorFooterAlertModel.description = 'Insufficient privileges to get user permission.'
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
+        this.router.navigate(['403']);
       } else if (error && (error.status === 502 || error.status === 504)) {
         this.serviceErrorFooterAlertModel.description = errorRes.message;
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
@@ -422,7 +424,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
     for(var property in data){
       var newObj = {};
-      data[property]['count'] = data[property]['count'] === null ? 0 : data[property]['count'];
+      data[property]['count'] = data[property]['count'] == null ? 0 : data[property]['count'];
       var isZero = data[property]['count'] === 0 ? true : false;
 
       switch(data[property]['name']){
@@ -431,6 +433,9 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           break;
         case 'total_draft_listing':
           newObj = {value: 'draft', label: 'Draft (' + data[property]['count'] + ')', name: 'checkbox-draft', disabled: isZero ? true : false};
+          break;
+        case 'total_draft_review_listing':
+          newObj = {value: 'draft_review', label: 'Draft Review (' + data[property]['count'] + ')', name: 'checkbox-draft-review', disabled: isZero ? true : false};
           break;
         case 'total_rejected_listing':
           newObj = {value: 'rejected', label: 'Rejected (' + data[property]['count'] + ')', name: 'checkbox-rejected', disabled: isZero ? true : false};

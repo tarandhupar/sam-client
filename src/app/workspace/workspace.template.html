@@ -1,9 +1,14 @@
-<div class="usa-grid-full workspace-image"></div>
+<div class="usa-grid-full workspace-image" style="background: url(src/assets/img/help-main.png);"></div>
 
-<div class="usa-grid-full p_B-6x workspace relative">
-  <aside class="usa-width-one-fourth m_R-0">
-    <div sam-sticky limit=1200 container="workspace">
-      <ul class="usa-sidenav-list">
+<page 
+  theme="inside"
+  [breadcrumbs]=""
+  section="My Workspace"
+  title="Home">
+  
+  <sidebar>
+    <div sam-sticky limit=1200 container="page-content">
+      <ul class="usa-sidenav-list" style="padding-top: 20px;">
         <li *ngFor="let nav of store.nav; let $index = index;">
           <ng-container *ngIf="!(nav['hidden'] || false)">
             <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
@@ -18,13 +23,12 @@
         </li>
       </ul>
     </div>
-  </aside>
-
-  <div class="usa-width-three-fourths">
-    <h1 class="m_T-3x m_L-3x workspace-title-text">My Workspace</h1>
-
+  </sidebar>
+  
+  
+  <div class="workspace">
     <!--Welcome section for workspace-->
-    <div class="usa-width-one-whole m_L-3x workspace-welcome-section relative" *ngIf="showWelcome">
+    <div class="workspace-welcome-section relative" *ngIf="showWelcome">
       <p class="p_T-1x p_L-1x">
         Welcome to workspace!<br>
         Here are things you can do to completely set up your workspce:<br>
@@ -33,27 +37,40 @@
         3. Set up a Saved Search or Report<br>
         4. Access our Federal Hierarchy Feature<br>
       </p>
-      <span class="workspace-welcome-close-icon" (click)="closeWelcomeSection()"><i class="fa fa-times-circle"></i></span>
+      <span class="workspace-welcome-close-icon" (click)="closeWelcomeSection()">
+        <i class="fa fa-times-circle"></i>
+      </span>
     </div>
-
+    
     <!--Notification Section for workspace-->
-    <h2 id="notification" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Notifications</h2>
-    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-notification-section relative">
+    <h2 id="notification" class="sam-ui header">Notifications</h2>
+    <div class="usa-width-one-whole workspace-notification-section relative">
       <div class="usa-width-one-whole workspace-center-text">
         <span><a>See All Notifications</a></span>
       </div>
     </div>
-
+    
+    <br clear="all"><br>
+    
     <!--Search and Report section for workspace-->
-    <h2 id="preference" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">User Preferences</h2>
-    <workspace-search-report class="usa-width-one-whole"></workspace-search-report>
-
+    <h2 id="preference" class="sam-ui header">User Preferences</h2>
+    <workspace-search-report></workspace-search-report>
+    
+    <br clear="all"><br>
+    
     <!--Data Entry section for workspace-->
-    <h2 id="data-entry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text" *ngIf="isDisplayDataEntry()">Data Entry</h2>
-    <workspace-data-entry class="usa-width-one-whole" [toggleControl]="dataEntryWidgetControl" *ngIf="isDisplayDataEntry()"></workspace-data-entry>
-
+    <h2 id="data-entry" class="sam-ui header" *ngIf="isDisplayDataEntry()">Data Entry</h2>
+    <workspace-data-entry [toggleControl]="dataEntryWidgetControl" *ngIf="isDisplayDataEntry()"></workspace-data-entry>
+    
+    <br clear="all"><br>
+    
     <!--Administration section for workspace-->
-    <h2 id="administration"  class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
-    <workspace-administration class="usa-width-one-whole" [toggleControl]="administrationWidgetControl"></workspace-administration>
+    <h2 id="administration"  class="sam-ui header">Administration</h2>
+    <workspace-administration [toggleControl]="administrationWidgetControl"></workspace-administration>
   </div>
-</div>
+  
+  <br clear="all"><br>
+  
+</page>
+
+

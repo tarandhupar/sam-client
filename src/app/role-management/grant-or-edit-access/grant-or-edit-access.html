@@ -29,7 +29,7 @@
         <div [hidden]="editingOrg" style="margin-top: .5em">
           <label style="display: inline">Organization:&nbsp;</label>
           <span>{{orgName()}}</span>
-          <a *ngIf="isGrant()" class="pull-right" (click)="onClickEditOrg()">Edit</a>
+          <a *ngIf="isGrant()" class="pull-right" (click)="onClickEditOrg()">Edit&nbsp;<i class="fa fa-pencil"></i></a>
         </div>
 
         <!-- Role -->

@@ -15,7 +15,7 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { MsgFeedServiceMock } from "api-kit/msg-feed/msg-feed.mock";
-import { AppTemplatesModule } from "../../app-templates/index";
+// import { AppTemplatesModule } from "../../app-templates/index";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 
 let activatedRouteStub = {
@@ -39,7 +39,7 @@ xdescribe('Message Feeds Page', () => {
         SamAPIKitModule,
         FormsModule,
         RouterTestingModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
         AppComponentsModule,
       ],
       providers: [

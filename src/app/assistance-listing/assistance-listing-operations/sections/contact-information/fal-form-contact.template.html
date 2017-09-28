@@ -6,7 +6,7 @@
 
   <div class="sam-ui segment">
     <h4>Information Contacts</h4>
-    
+
     <sam-checkbox
       [control]="falContactInfoForm.controls['useRegionalOffice']"
       [label]="'Regional or Local Office'"
@@ -27,23 +27,24 @@
   <div class="sam-ui segment">
     <h4 [attr.id]="'fal-contact-list'">Headquaters Office</h4>
     <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
-    
+
     <sam-listbuilder
       #contactLB
       [max]="2"
+      addEntryText="Add Contact"
       [hideDefaultBtns]="true"
       [deleteModalFlag]="true"
       [deleteModalConfig]="{
-        title:'Delete this Contact',
-        type:'error',
-        description:'Are you sure you want to delete this Contact?'
+        title:'Delete Contact',
+        type:'warning',
+        description:'Please confirm that you want to delete contact.'
       }"
       [control]="falContactInfoForm.get('contacts')"
       [formArrayInput]="falContactInfoForm.get('contacts').controls"
       [formGroupTemplate]="contactsSubform"
       (formArrayChange)="contactsFormArrayChange($event)"
       (action)="lbActionHandler($event)">
-      <template #display let-item>
+      <ng-template #display let-item>
         <ng-container *ngIf="item.get('poc').errors">
           <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
         </ng-container>
@@ -53,19 +54,19 @@
           <ng-container *ngIf="item.value.poc.email">Email: {{item.value.poc.email}}<br/></ng-container>
           <ng-container *ngIf="item.value.poc.phone">Phone: {{item.value.poc.phone}}<br/></ng-container>
         </p>
-      </template>
-      <template #edit let-item>
+      </ng-template>
+      <ng-template #edit let-item>
         <form [formGroup]="item">
           <sam-poc-entry #poc
             formControlName="poc"
             [manualList]="true"
             [listBuilder]="contactLB"
             [valueFormat]="'{fullName}, {email}'"
-            [pocOptions]="contactDrpDwnOptions" 
+            [pocOptions]="contactDrpDwnOptions"
             [nameOptions]="contactNameOptions"
             [emailOptions]="contactEmailOptions"></sam-poc-entry>
         </form>
-      </template>
+      </ng-template>
     </sam-listbuilder>
   </div>
 

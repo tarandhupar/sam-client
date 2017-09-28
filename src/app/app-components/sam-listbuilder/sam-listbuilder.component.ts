@@ -16,6 +16,7 @@ export class SamListBuilderComponent {
     @Input() hint:string;
     @Input() required:boolean;
     @Input() max:number = null;
+    @Input() addEntryText = "Add Entry";
     @Input() sortable:boolean = true;
     @Input() sortingFn;
     @Input() deleteModalFlag;

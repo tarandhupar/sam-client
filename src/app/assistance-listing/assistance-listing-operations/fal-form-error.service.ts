@@ -454,8 +454,16 @@ export class FALFormErrorService {
 
     if (this._viewModel.projects && this._viewModel.projects.list && this._viewModel.projects.isApplicable) {
       let projects = this._viewModel.projects;
-      for (let i = 0; i < projects.list.length; i++) {
-        let project = projects.list[i];
+
+      let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+      // Only take into account the previous, current, and budget fiscal years
+      let applicableProjects = projects.list.filter((project) => {
+        let year: number = project.fiscalYear;
+        return (year >= fy - 1) && (year <= fy + 1);
+      });
+
+      for (let i = 0; i < applicableProjects.length; i++) {
+        let project = applicableProjects[i];
         let projectError = {
           id: FALFieldNames.FUNDED_PROJECTS + i,
           errors: {}
@@ -666,10 +674,17 @@ export class FALFormErrorService {
 
     if (this._viewModel.accomplishments && this._viewModel.accomplishments.list && this._viewModel.accomplishments.isApplicable) {
       let accomplishments = this._viewModel.accomplishments;
-      if (accomplishments.list.length > 0) {
 
-        for (let i = 0; i < accomplishments.list.length; i++) {
-          let accomplishment = accomplishments.list[i];
+      let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+      // Only take into account the previous, current, and budget fiscal years
+      let applicableAccomplishments = accomplishments.list.filter((accomplishment) => {
+        let year: number = accomplishment.fiscalYear;
+        return (year >= fy - 1) && (year <= fy + 1);
+      });
+
+      if (applicableAccomplishments.length > 0) {
+        for (let i = 0; i < applicableAccomplishments.length; i++) {
+          let accomplishment = applicableAccomplishments[i];
           let accomplishmentError = {
             id: FALFieldNames.PROGRAM_ACCOMPLISHMENTS + i,
             errors: {}

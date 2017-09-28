@@ -1,4 +1,4 @@
-<div class="usa-width-one-whole m_L-3x m_T-3x workspace-data-entry-section relative">
+<div class="usa-width-one-whole workspace-data-entry-section relative">
   <div class="usa-width-one-whole" *ngIf="toggleControl.opportunities || toggleControl.subAward">
     <div class="usa-width-one-half" *ngIf="toggleControl.opportunities">
       <workspace-widget [isExpand]="configObj[0]['opportunities'].isExpand" [title]="'Opportunities'" (onToggleChange)="toggleHelpDetail('opportunities',$event, 0)">

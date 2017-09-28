@@ -31,7 +31,7 @@ import {RAOFormResolver} from "./regional-assistance-locations/regional-assistan
 import {FALPublishComponent} from "./assistance-listing-operations/workflow/publish/fal-publish.component";
 import {ActionHistoryLabelPipe} from "./pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "./pipes/request-type-label.pipe";
-import { AppTemplatesModule } from "../app-templates/index";
+// import { AppTemplatesModule } from "../app-templates/index";
 import {FormatFederalHierarchyType} from "./pipes/format-federal-hierarchy-type.pipe";
 import {CfdaNumbersPage} from "./assistance-listing-workspace/cfda-numbers/cfda-numbers.page";
 import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda-number-management/fal-form-cfda-number-management.component";
@@ -47,7 +47,7 @@ import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda
     FormsModule,
     FALComponentsModule,
     FALFormModule,
-    AppTemplatesModule
+    // AppTemplatesModule
   ],
   exports: [
     AuthorizationPipe,

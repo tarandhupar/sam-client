@@ -26,7 +26,6 @@ export class PeoplePickerService {
         oApiParam.oParam[key] = obj[key];
       }
     });
-
     return this.oAPIService.call(oApiParam);
   }
 

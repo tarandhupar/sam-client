@@ -102,12 +102,6 @@ export class SearchService {
       oApiParam.oParam['psc'] = obj.psc;
     }
 
-    //showRegionalOffices only when
-    if(obj.showRO) {
-      oApiParam.oParam['q'] = obj.ro_keyword;
-      oApiParam.oParam['index'] = 'ro';
-    }
-
     if(typeof obj.duns !== 'undefined' && obj.duns !== null && obj.duns !== ''){
       oApiParam.oParam['duns'] = obj.duns;
     }
@@ -130,6 +124,21 @@ export class SearchService {
 
     if(typeof obj.sort !== 'undefined' && obj.sort !== null && obj.sort !== ''){
       oApiParam.oParam['sort'] = obj.sort;
+    }
+    //notice_type
+    if(typeof obj.notice_type !== 'undefined' && obj.notice_type !== null && obj.notice_type !== '') {
+      oApiParam.oParam['notice_type'] = obj.notice_type;
+    }
+
+    if(typeof obj.set_aside !== 'undefined' && obj.set_aside !== null && obj.set_aside !== '') {
+      oApiParam.oParam['set_aside'] = obj.set_aside;
+    }
+
+    //showRegionalOffices only when
+    if(obj.showRO) {
+      oApiParam.oParam['q'] = obj.ro_keyword;
+      oApiParam.oParam['index'] = 'ro';
+      oApiParam.oParam['sort'] = '-relevance';
     }
 
     return this.oAPIService.call(oApiParam);

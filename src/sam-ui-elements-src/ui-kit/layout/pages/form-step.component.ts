@@ -1,4 +1,5 @@
-import {Component, Input, Output, EventEmitter, ViewChild} from "@angular/core";
+import {Component, Input, Output, EventEmitter, OnChanges, ChangeDetectorRef} from "@angular/core";
+
 
 @Component ({
   selector: 'form-step',
@@ -73,7 +74,7 @@ import {Component, Input, Output, EventEmitter, ViewChild} from "@angular/core";
     </page>
   `
 })
-export class FormStepComponent {
+export class FormStepComponent implements OnChanges {
     @Input() crumbs;
     @Input() sideNavModel;
     @Input() sideNavSelection;
@@ -85,20 +86,40 @@ export class FormStepComponent {
     @Input() pageTitle: string;
     @Input() statusBannerType:string = "error";
     @Input() statusBannerLeadingText: string;
-    
+    @Input() tabsComponent: any;
+    @Input() hasErrors: any;
     @Output() action = new EventEmitter();
     @Output() sideNavOutput = new EventEmitter();
     @Output() public breadcrumbOut = new EventEmitter();
-    
+
+    constructor(private cdr: ChangeDetectorRef) {
+    }
+
+    ngOnChanges() {
+      this.toggleButtons(this.hasErrors);
+    }
+
     breadcrumbHandler(evt){
       this.breadcrumbOut.emit(evt);
     }
-    
+
     formAction(evtStr){
       this.action.emit({event:evtStr});
     }
 
     navHandler(evt){
       this.sideNavOutput.emit(evt);
+    }
+
+  toggleButtons(hasErrors: boolean) {
+      if (hasErrors === true) {
+        this.tabsComponent.toggleButtonOnAccess = true;
+        this.tabsComponent.toggleButtonOnErrors = true;
+        this.cdr.detectChanges();
+      } else {
+        this.tabsComponent.toggleButtonOnAccess = true;
+        this.tabsComponent.toggleButtonOnErrors = false;
+        this.cdr.detectChanges();
+      }
     }
 }

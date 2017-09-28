@@ -2,7 +2,7 @@
     [title]="deleteModalConfig.title" 
     [type]="deleteModalConfig.type" 
     [description]="deleteModalConfig.description" 
-    [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
+    [submitButtonLabel]="'Ok'" [cancelButtonLabel]="'Cancel'" (onSubmit)="onModalClose()">
 </sam-modal>
 <sam-label-wrapper #wrapper [label]="label" [hint]="hint" [required]="required"></sam-label-wrapper>
 <h4>Entries</h4>
@@ -27,6 +27,7 @@
 
 <sam-button 
   *ngIf="(!max || (max && model.length<max)) && !showEditSubform" 
-  buttonText="Add Entry"
+  buttonType="secondary"
+  [buttonText]="addEntryText"
   (click)="showAdd()">
 </sam-button>

@@ -2,7 +2,8 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamComponentsModule } from '../components';
+import { SamElementsModule } from '../elements';
 
 import { PageService } from './page.service'
 import { PageTemplateComponent } from "./page.component";
@@ -30,7 +31,9 @@ import { WorkspaceTemplateComponent } from "./workspace/workspace-template.compo
  * Only <list-results-message> is needed
  * Good candidate to be a shared component
  */
-import { AppComponentsModule } from '../app-components/app-components.module';
+// import { AppComponentsModule } from '../app-components/app-components.module';
+import { ListResultsMessageComponent } from "./list-results-message"
+import { SamStatusBannerComponent } from "./sam-status-banner"
 import { TitleAndSectionComponent } from "./title-and-section.component";
 import { FormOnlyPageTemplateComponent } from "./form-only-page.component";
 
@@ -50,11 +53,13 @@ import { FormOnlyPageTemplateComponent } from "./form-only-page.component";
     RowDirective,
     ColumnDirective,
     TitleAndSectionComponent,
+    ListResultsMessageComponent,
+    SamStatusBannerComponent
   ],
   imports: [
     CommonModule,
-    SamUIKitModule,
-    AppComponentsModule,
+    SamComponentsModule,
+    SamElementsModule,
     RouterModule
   ],
   exports: [
@@ -72,4 +77,4 @@ import { FormOnlyPageTemplateComponent } from "./form-only-page.component";
     PageService
   ]
 })
-export class AppTemplatesModule { }
+export class SamLayoutModule{ }

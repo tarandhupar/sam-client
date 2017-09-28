@@ -37,9 +37,11 @@ export class CFDANumberManagementComponent implements OnInit{
   };
 
   public assignmentOptions = [
-    { value: 'false', label: 'Automatic', name: 'automaticAssignemt'},
+    { value: 'false', label: 'Automatic', name: 'automaticAssignment'},
     { value: 'true', label: 'Manual', name: 'manualAssignment'}
   ];
+
+  public assignmentModel: any;
 
   constructor(private fb: FormBuilder,
               private location: Location,
@@ -63,21 +65,38 @@ export class CFDANumberManagementComponent implements OnInit{
       this.router.navigate(['accessrestricted']);
     }
 
-    this.fhService.getOrganizationById(this.activatedRoute.snapshot.params['id'], false, false).subscribe(res =>{
-      this.organization = res['_embedded'][0]['org'];
-      this.createCFDANumberConfigForm();
+    this.programService.getPermissions(this.cookieValue, 'CFDA_NUMBER').subscribe(res => {
+      if (res.MANAGE_CFDA_NUMBER == false){
+        this.router.navigate(['accessrestricted']);
+      } else {
+        this.fhService.getOrganizationById(this.activatedRoute.snapshot.params['id'], false, false).subscribe(res =>{
+          this.organization = res['_embedded'][0]['org'];
+          this.programService.getFederalHierarchyConfiguration(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(res => {
+            let programNumberAuto = res.programNumberAuto != null ? res.programNumberAuto : true;
+            let programNumberLow = res.programNumberLow != null ? res.programNumberLow : 0;
+            let programNumberHigh = res.programNumberHigh != null ? res.programNumberHigh : 999;
+            this.createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh);
+          }, err => {
+            this.createCFDANumberConfigForm(true, 0, 999);
+            console.log("Error getting federal hierarchy configuration: ", err);
+          });
+        }, err => {
+          console.log("Error getting organization: ", err);
+        });
+      }
+    }, err => {
+      this.router.navigate(['accessrestricted']);
     });
   }
 
-  createCFDANumberConfigForm(){
+  createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh){
     this.pageReady = true;
     this.cfdaNumberConfigForm = this.fb.group({
-      lowNumber:['', falCustomValidatorsComponent.numberCheck],
-      highNumber: ['', falCustomValidatorsComponent.numberCheck],
-      assignemnt: ''
+      lowNumber:[programNumberLow, falCustomValidatorsComponent.numberCheck],
+      highNumber: [programNumberHigh, falCustomValidatorsComponent.numberCheck],
+      assignment: (!programNumberAuto).toString()
     });
   }
-
   public cancelCFDANumberConfigChange() {
     this.location.back();
   }
@@ -86,7 +105,7 @@ export class CFDANumberManagementComponent implements OnInit{
     let preparedData: CFDANumberConfigChangeModel = {
       startValue: this.cfdaNumberConfigForm.get('lowNumber').value,
       endValue: this.cfdaNumberConfigForm.get('highNumber').value,
-      manual: this.cfdaNumberConfigForm.get('assignemnt').value,
+      manual: this.cfdaNumberConfigForm.get('assignment').value,
       organizationId: this.activatedRoute.snapshot.params['id'],
     };
     return preparedData;

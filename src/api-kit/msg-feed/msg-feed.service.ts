@@ -17,7 +17,7 @@ export class MsgFeedService{
       method: 'GET'
     };
 
-    return this.oAPIService.call(oApiParam);
+    return this.callApi(oApiParam);
   }
 
   getFeeds(typeId, filterObj, sortBy, pageNum, pageSize = 10){

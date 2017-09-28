@@ -12,7 +12,6 @@ export class SubscriptionsService{
     });
   }
 
-
   getSubscriptions(filterObj, sortBy, pageNum, pageSize = 20){
 
      let queryParams: any = {
@@ -44,7 +43,7 @@ export class SubscriptionsService{
           {id: 7, recordId: 'CA2016021', type:'SCA', domainId:'Wage Determination', frequency:'instant', lastModified:'Jun 10, 2016 '},
           {id: 8, recordId: 'O1234', type:'SCA', domainId:'Contract Opportunities', frequency:'weekly', lastModified:'Jun 05, 2016'},
           {id: 9, recordId: 'AS999990', type:'SCA', domainId:'Assistance Listing', frequency:'instant', lastModified:'May 25, 2016'},
-          {id: 10, recordId: 'AS888880', type:'SCA', domainId:'Assistance Listing', frequency:'daily', lastModified:'May 12, 2016', 'myFeed': 'Y'},          
+          {id: 10, recordId: 'AS888880', type:'SCA', domainId:'Assistance Listing', frequency:'daily', lastModified:'May 12, 2016', 'myFeed': 'Y'},
         ],
         totalRecords: 150,
       });

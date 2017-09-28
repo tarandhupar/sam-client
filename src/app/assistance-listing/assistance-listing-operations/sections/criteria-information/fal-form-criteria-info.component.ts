@@ -243,15 +243,15 @@ export class FALFormCriteriaInfoComponent implements OnInit {
 
   appAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
+    placeholder: 'None Selected',
   };
   benAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
+    placeholder: 'None Selected'
   };
   assUsageAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected', clearOnSelection: true, showOnEmptyInput: true
+    placeholder: 'None Selected',
   };
 
   constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService, private cdr: ChangeDetectorRef) {

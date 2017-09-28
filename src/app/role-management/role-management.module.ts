@@ -19,16 +19,18 @@ import { RoleMainContent } from "./role-maincontent/role-maincontent.component.t
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
 import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.ts";
 import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
-import { AppComponentsModule } from "../app-components/app-components.module";
+//import { AppComponentsModule } from "../app-components/app-components.module";
 import { RolesDirectoryPage } from "./roles-directory/roles-directory.page";
-import { AppTemplatesModule } from "../app-templates/index";
-import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
+// import { AppTemplatesModule } from "../app-templates/index";
+import { BulkUpdateComponent, SamToggle } from "./bulk-update/bulk-update.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { RMBackDoorComponent } from "./back-door/back-door.component";
 import { GrantOrEditAccess } from "./grant-or-edit-access/grant-or-edit-access";
 import { UsersModule } from "../users/users.module";
 import { UserService } from "./user.service";
 import { IAMService } from "../../api-kit/iam/iam.service";
+import { UserServiceMock } from "./user.service.mock";
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
@@ -40,7 +42,7 @@ import { IAMService } from "../../api-kit/iam/iam.service";
     SamUIKitModule,
     SamAPIKitModule,
     AppComponentsModule,
-    AppTemplatesModule,
+    //AppTemplatesModule,
     PipesModule,
     UsersModule,
   ],
@@ -57,12 +59,14 @@ import { IAMService } from "../../api-kit/iam/iam.service";
     RolesDirectoryPage,
     BulkUpdateComponent,
     RMBackDoorComponent,
+    SamToggle,
   ],
   providers: [
     DomainsResolve,
     RequestAccessResolve,
     RequestStatusNamesResolve,
     UserService,
+    //{ provide: UserService, useClass: UserServiceMock },
     IAMService,
   ],
 })

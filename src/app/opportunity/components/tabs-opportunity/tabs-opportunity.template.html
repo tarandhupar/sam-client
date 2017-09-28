@@ -1,0 +1,83 @@
+<ng-container>
+  <!-- ============================================== -->
+  <!--                    MODALS                      -->
+  <!-- ============================================== -->
+
+
+  <!-- ==================== Delete ==================== -->
+  <sam-modal
+    #deleteModal
+    [showClose]="true"
+    [closeOnOutsideClick]="true"
+    [closeOnEscape]="true"
+    [type]="'warning'"
+    [title]="modalConfig.title"
+    [description]="modalConfig.description"
+    [submitButtonLabel]="'Ok'"
+    [cancelButtonLabel]="'Cancel'"
+    (onSubmit)="onDeleteModalSubmit()">
+  </sam-modal>
+
+
+  <div class="sam-ui tabular menu">
+
+    <!-- ==================== Review ==================== -->
+    <a *ngIf="canReview()"
+       (click)="tabClicked(tabItems.review)"
+       class="item"
+       [class.active]="currentRouteConfig == tabItems.review.routeConfig">
+      Authenticated
+    </a>
+    <span *ngIf="!canReview()"
+          class="item disabled">
+      Authenticated
+    </span>
+
+    <!-- ==================== Edit ==================== -->
+    <!-- Link -->
+    <a *ngIf="canEdit() && currentRouteConfig != tabItems.edit.routeConfig"
+       (click)="onEditClick(['#header-information']);"
+       class="item">
+      Edit
+    </a>
+    <!-- Active -->
+    <span *ngIf="canEdit() && currentRouteConfig == tabItems.edit.routeConfig"
+          class="item active">
+      Edit
+    </span>
+    <!-- Disabled -->
+    <span *ngIf="!canEdit()"
+          class="item disabled">
+      Edit
+    </span>
+
+    <!-- ==================== Public ==================== -->
+
+    <!-- Currently showing only disabled view. It will be enabled once public view is implemented for modernized FBO. -->
+
+    <!--<a *ngIf="data.id && !data.archived"
+       (click)="tabClicked(tabItems.public)"
+       class="item"
+       [class.active]="currentRouteConfig == tabItems.public.routeConfig">
+      Public
+    </a>
+    <span *ngIf="!data.id || data.id && data.archived"
+          class="item disabled">
+      Public
+    </span>-->
+
+    <span class="item disabled">
+      Public
+    </span>
+
+    <!-- ==================== Delete ==================== -->
+    <a *ngIf="canDelete()"
+       (click)="onDeleteClick()"
+       class="item">
+      <div class="sam-ui negative button">Delete</div>
+    </a>
+
+  </div>
+
+  <div class="sam-ui divider hidden"></div>
+</ng-container>

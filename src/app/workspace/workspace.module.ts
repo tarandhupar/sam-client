@@ -37,10 +37,11 @@ import {
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
-import { AppTemplatesModule } from "../app-templates/index";
+// import { AppTemplatesModule } from "../app-templates/index";
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 import { HelpContentManagementSideNavComponent } from "./content-management/view/sidenav/content-management-sidenav.component";
 import { UserService } from "../role-management/user.service";
+import { UserServiceMock } from "../role-management/user.service.mock";
 
 @NgModule({
   imports: [
@@ -53,7 +54,7 @@ import { UserService } from "../role-management/user.service";
     SamUIKitModule,
     SamAPIKitModule,
     AppComponentsModule,
-    AppTemplatesModule,
+    // AppTemplatesModule,
     PipesModule,
     Ng2PageScrollModule.forRoot(),
   ],
@@ -111,6 +112,7 @@ import { UserService } from "../role-management/user.service";
     FSDGuard,
     SystemGuard,
     UserService,
+    //{ provide: UserService, useClass: UserServiceMock },
   ],
 })
 export class WorkspaceModule { }

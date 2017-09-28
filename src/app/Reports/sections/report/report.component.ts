@@ -54,7 +54,8 @@ export class ReportComponent implements OnInit {
     agencyName: false,
     piid: false,
     state: false,
-    country: false
+    country: false,
+    fiscalYear: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -105,10 +106,16 @@ export class ReportComponent implements OnInit {
   currentReport = [];
   stateXML;
   countryXML;
+  fiscalYearXML;
   localEnv = false;
-  PVMAXRANGE = 1.003;
-  REPORTMAXRANGE = 12.003;
+  PVMAXRANGE = 1.000;
+  REPORTMAXRANGE = 12.000;
   userOrg = [];
+  autocompleteStateConfig = {
+    serviceOptions:'USA', 
+    keyValueConfig: { keyProperty: 'key', valueProperty: 'value' }
+  }
+  fiscalYear = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -169,12 +176,21 @@ export class ReportComponent implements OnInit {
           if (this.currentReport[0].prompts.indexOf('state') >= 0) {
             this.usedPrompts.state = true;
           }
+          if (this.currentReport[0].prompts.indexOf('fiscalYear') >= 0) {
+            this.usedPrompts.fiscalYear = true;
+          }
         },
         err => console.log(err));
   }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
+    // if (this.route.snapshot.url[1].path == 'shared') {
+    //   this.samAccordionValue.collapseAll();
+    //   this.showReport = true;
+    //   let mstrParams = (this.route.snapshot.params['params']);
+    //   this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=4001&src=mstrWeb.4001&currentViewMedia=1&visMode=0'+mstrParams);
+    // }
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
@@ -210,7 +226,7 @@ export class ReportComponent implements OnInit {
     var endComparison = moment(this.dateRangeModel.endDate);
     var duration = moment.duration(endComparison.diff(startComparison));
     if (this.name == "Potential Vendor Anomaly Report") {
-      if (duration.asYears() > this.PVMAXRANGE) {
+      if (duration.years() >= this.PVMAXRANGE) {
         this.maxRange = "months"
         this.dateValidator = true;
 
@@ -227,7 +243,7 @@ export class ReportComponent implements OnInit {
       }
     }
     else {
-      if (duration.asYears() > this.REPORTMAXRANGE) {
+      if (duration.years() >= this.REPORTMAXRANGE) {
         this.maxRange = "years"
         this.dateValidator = true;
       }
@@ -313,6 +329,7 @@ export class ReportComponent implements OnInit {
     this.checkIncludesBases();
     this.checkIncludesAgencyName();
     this.checkIncludesStateCountry();
+    this.checkFiscalYear();
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -412,6 +429,14 @@ export class ReportComponent implements OnInit {
       this.promptAnswersXML.elements[0].elements.push(this.countryXML);
     }
   }
+
+  checkFiscalYear() {
+    if (this.usedPrompts.fiscalYear) {
+      let fiscalYearXML;
+      fiscalYearXML = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"187C72C645E80DDF3CBD83B287015D46",tp:"10"},elements:[{type:"text",text: this.fiscalYear}]}
+      this.promptAnswersXML.elements[0].elements.push(fiscalYearXML);
+    }
+  }
   
   resetParameter(){ 
     this.showReport = false;
@@ -439,5 +464,15 @@ export class ReportComponent implements OnInit {
 
   test() {
   }
+
+  _keyPress(event: any) {
+    const pattern = /[0-9\+\-\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+
+    if (!pattern.test(inputChar)) {
+      // invalid character, prevent input
+      event.preventDefault();
+    }
+  } 
 }
 

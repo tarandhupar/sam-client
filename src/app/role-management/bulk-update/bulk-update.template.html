@@ -1,61 +1,53 @@
-<div class="usa-grid m_T-4x bulk-update-page">
-  <div style="padding-bottom: 1.5rem">
-    <sam-breadcrumbs [crumbs]="breadCrumbs"></sam-breadcrumbs>
-  </div>
-  <aside class="usa-width-one-fourth">
-    <ul class="usa-sidenav-list">
-      <li>
-        <a [ngClass]="isCurrentTab('filters') && 'usa-current'">Filters</a>
-        <a [ngClass]="isCurrentTab('users') && 'usa-current'">Users</a>
-        <a [ngClass]="isCurrentTab('access') && 'usa-current'">Access</a>
-        <a [ngClass]="isCurrentTab('confirmation') && 'usa-current'">Confirmation</a>
-      </li>
-    </ul>
-  </aside>
-  <div class="usa-width-three-fourths" [ngSwitch]="currentTab">
-    <sam-title-subtitle titleText="Role Management" subtitle="Bulk Update"></sam-title-subtitle>
 
+<page class="bulk-update-page" theme='inside' [section]="'WORKSPACE'" [title]="'Bulk Update'" [breadcrumbs]="breadCrumbs">
+  <sidebar style="pointer-events: none">
+    <div class="sam-ui vertical fluid ordered steps">
+      <ng-container *ngFor="let section of sideNavSections; let $index = index">
+        <a class="step" [ngClass]="sideNavClass($index)">
+          <div class="content">
+            <div class="title">{{section}}</div>
+          </div>
+        </a>
+      </ng-container>
+    </div>
+  </sidebar>
+
+  <div [ngSwitch]="currentTab">
     <!-- Filters Tab -->
     <ng-container *ngSwitchCase="'filters'">
-
-      <span>All fields are required.</span>
-      <h3>Filters</h3>
-
+      <span>Use the following filter to identify which users you would like to update.</span>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Org -->
-          <sam-agency-picker-v2
-            [label]="'Organization'"
-            type="single"
-            ngModel
-            (ngModelChange)="onOrganizationChange($event)"
-            [required]="true"
-            [searchMessage]="errors.org"
-            [defaultDept]="true"
-            class="clearfix"
-          ></sam-agency-picker-v2>
+          <div class="m_T-2x">
+            <sam-agency-picker-v2
+              [label]="'Organization'"
+              type="single"
+              ngModel
+              (ngModelChange)="onOrganizationChange($event)"
+              [searchMessage]="errors.org"
+              [defaultDept]="true"
+              class="clearfix"
+            ></sam-agency-picker-v2>
+          </div>
 
-          <!-- Domain -->
-          <sam-select
-            name="domain"
-            label="Domain"
-            [model]="domain"
-            (modelChange)="onDomainChange($event)"
-            [options]="domainOptions"
-            required="true"
-            [errorMessage]="errors.domain">
-          </sam-select>
 
-          <!-- Role -->
-          <sam-select
-            name="role"
-            label="Role"
-            [model]="existingRole"
-            (modelChange)="onExistingRoleChange($event)"
-            [options]="roleOptions"
-            required="true"
-            [errorMessage]="errors.role">
-          </sam-select>
+          <!-- Existing Role -->
+          <div class="m_T-2x">
+            <sam-select
+              name="role"
+              label="Role"
+              [model]="existingRole"
+              (modelChange)="onExistingRoleChange($event)"
+              [options]="roleOptions"
+              [errorMessage]="errors.role">
+            </sam-select>
+          </div>
+
+          <!-- Existing Domain -->
+          <div class="m_T-2x">
+            <sam-autocomplete-multiselect [(ngModel)]="existingDomains" (ngModelChange)="onExistingDomainChange($event)" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getExistingDomainOptions()"></sam-autocomplete-multiselect>
+          </div>
         </div>
       </div>
     </ng-container>
@@ -63,45 +55,42 @@
     <!-- User Select Tab -->
     <ng-container *ngSwitchCase="'users'">
       <h3>Filters</h3>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org && (org.name | capitalize)}}</div>
+      <div [ngStyle]="staticContentStyle">
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Organization</b></div>
+          <div class="usa-width-five-sixths">{{org && (org.name | capitalize)}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Role</b></div>
+          <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Domains</b></div>
+          <div class="usa-width-five-sixths">{{getExistingDomainNames()}}</div>
+        </div>
       </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Domain</b></div>
-        <div class="usa-width-five-sixths">{{domainName()}}</div>
-      </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Role</b></div>
-        <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
-      </div>
+
       <h3>Users</h3>
-      <p>Here is the list of users from your selected filters. When users are unchecked from this list, their access will not be included in this update.</p>
+      <p>The following users meet your filtering criteria. Select or deselect from this list to customize your selection.</p>
       <div class="clearfix">
+        <div class="pull-left">
+          <sam-toggle [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="showDeselect ? 'Deselect All' : 'Select All'"></sam-toggle>
+        </div>
         <div class="pull-right">
-          <label for="sort-by" style="display: inline-block" class="m_T-0">Sort by</label>
-          <select (change)="doUserSearch()" id="sort-by" [(ngModel)]="sort" style="display: inline-block; width: initial">
-            <option
-              *ngFor="let option of sortOptions"
-              [value]="option.value"
-            >{{option.label}}</option>
-          </select>
+          <sam-sort [options]="sortOptions" [(ngModel)]="sort" (ngModelChange)="doUserSearch()"></sam-sort>
         </div>
       </div>
-      <div class="clearfix">
-        <div class="pull-right">
-          <a (click)="toggleSelectAll()">{{showDeselect ? 'Deselect All' : 'Select All'}}</a>
-        </div>
+      <div *ngIf="!areUsersLoading">
+        <table style="margin-top: .5em; max-height: 300px; overflow-y: auto; background-color:white; width: 100%; border: 1px solid black;">
+          <tbody>
+            <tr *ngFor="let user of users" class="bulk-update-user-row" (click)="onUserRowClick(user)">
+              <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected" [label]="formatUserName(user)"></sam-toggle></td>
+              <td>{{user.email}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="m_T-4x" style="max-height: 300px; overflow-y: auto; border: 1px solid grey; padding: 1em">
-        <div class="sam-ui two column wide grid" *ngIf="!areUsersLoading">
-          <div class="column" *ngFor="let user of users">
-            <input [attr.id]='user.email' type="checkbox" [(ngModel)]="user.isSelected">
-            <label [attr.for]='user.email' style="margin-top: .2em">{{formatUserName(user)}}<i>{{user.email}}</i></label>
-          </div>
-        </div>
-        <div class="text-center" *ngIf="areUsersLoading"><sam-spinner></sam-spinner></div>
-      </div>
+      <div class="text-center" *ngIf="areUsersLoading"><sam-spinner></sam-spinner></div>
       <p class="m_T-4x">
         <sam-radio-button [(model)]="mode"
                           [name]="'mode'"
@@ -116,69 +105,63 @@
     <!-- Access Tab -->
     <ng-container *ngSwitchCase="'access'">
       <h3>Filters</h3>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
-      </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Domain</b></div>
-        <div class="usa-width-five-sixths">{{domainName()}}</div>
-      </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Role</b></div>
-        <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
+      <div [ngStyle]="staticContentStyle">
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Organization</b></div>
+          <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Role</b></div>
+          <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Domain</b></div>
+          <div class="usa-width-five-sixths">{{getExistingDomainNames()}}</div>
+        </div>
       </div>
       <h3>Users</h3>
-      <div class="sam-ui two column wide grid">
+      <div [ngStyle]="staticContentStyle">
         <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
-          {{formatUserName(user)}}<i>{{user.email}}</i>
+          {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
         </div>
       </div>
       <h3 class="m_T-4x">Access</h3>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
-          <!-- Role -->
+          <!-- Updated Role -->
           <sam-select
             name="role"
             label="Role"
-            hint="Update the user's current permissions below, or change their role to give them new permissions."
             [model]="updatedRole"
             (modelChange)="onUpdatedRoleChange($event)"
             [options]="roleOptions"
-            required="true"
             [errorMessage]="errors.role">
           </sam-select>
+
+          <!-- Updated Domain -->
+          <sam-autocomplete-multiselect [(ngModel)]="updatedDomains" (ngModelChange)="onUpdatedDomainChange($event)" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getUpdatedDomainOptions()"></sam-autocomplete-multiselect>
         </div>
       </div>
-      <div>
-        <h4 class="text-lighter m_T-4x">Permissions</h4>
-        <div class="p_All-3x" style="background-color: #f1f1f1" *ngIf="objects && objects.length">
-          <div *ngFor="let object of objects">
-            <b class="m_B-0">{{object.function.val}}</b>
-            <div class="sam-ui two column wide grid">
-              <div class="column" *ngFor="let permission of object.permission">
-                <input [disabled]="permission.isDefault"
-                       [attr.id]="permissionId(permission, object)"
-                       type="checkbox" class="permission-input"
-                       [ngModel]="permission.isCheckable"
-                       (click)="onPermissionClick(permission)">
-                <label [attr.for]="permissionId(permission, object)"
-                       class="permission-label m_T-2x" >
-                  {{permission.val}}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div *ngIf="updatedDomains?.length">
+        <label>Permissions</label>
+        <sam-tabs>
+          <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
+            <ul class="column-wrappable">
+              <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
+                <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
+                <div *ngFor="let permission of func.permissions">
+                  <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
+                  <label class="permission-label" >{{permission.name}}</label>
+                </div>
+              </li>
+            </ul>
+          </sam-tab>
+        </sam-tabs>
       </div>
       <h3>Comments</h3>
 
       <!-- Optional Message -->
-      <sam-text-area
-        name="comments"
-        label="Edit these permissions has an effect on the users access at their organization. Provide a reason for the change."
-        [(ngModel)]="comments"
-      ></sam-text-area>
+      <sam-text-area name="comments" [(ngModel)]="comments"></sam-text-area>
 
     </ng-container>
 
@@ -186,37 +169,45 @@
     <ng-container *ngSwitchCase="'confirmation'">
       <p>Confirm the information is correct</p>
       <h3>Filters</h3>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Organization</b></div>
-        <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
+      <div [ngStyle]="staticContentStyle">
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Organization</b></div>
+          <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Domain</b></div>
+          <div class="usa-width-five-sixths">{{getExistingDomainNames()}}</div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth"><b>Role</b></div>
+          <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
+        </div>
       </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Domain</b></div>
-        <div class="usa-width-five-sixths">{{domainName()}}</div>
-      </div>
-      <div class="usa-grid-full">
-        <div class="usa-width-one-sixth"><b>Role</b></div>
-        <div class="usa-width-five-sixths">{{getExistingRoleName()}}</div>
-      </div>
+
       <h3>Users</h3>
-      <div class="sam-ui two column wide grid">
+      <div [ngStyle]="staticContentStyle">
         <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
-          {{formatUserName(user)}} - <i>{{user.email}}</i>
+          {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
         </div>
       </div>
 
       <ng-container *ngIf="mode === 'update'">
-        <h3>Access</h3>
-        <p>Below is a summary of the access you giving these users</p>
         <div class="usa-grid-full" *ngIf="isRoleUpdated()">
           <div class="usa-width-one-fourth"><h4>Updated Role</h4></div>
           <div class="usa-width-three-fourths">{{getUpdatedRoleName()}}</div>
         </div>
+        <div class="usa-grid-full" *ngIf="isDomainUpdated()">
+          <div class="usa-width-one-fourth"><h4>Updated Domains</h4></div>
+          <div class="usa-width-three-fourths">{{getUpdatedDomainNames()}}</div>
+        </div>
         <h4>Permissions</h4>
-        <div style="border: 1px solid grey; padding: .5em">
-          <div class="usa-grid-full" *ngFor="let obj of getSelectedObjects()">
-            <div class="usa-width-one-fourth"><b>{{obj.function.val}}</b></div>
-            <div class="usa-width-three-fourths">{{getSelectedPermissions(obj)}}</div>
+        <div [ngStyle]="staticContentStyle">
+          <div *ngFor="let domain of domainTabs">
+            <h5>{{domain.name}}</h5>
+            <div class="sam-ui divider"></div>
+            <div *ngFor="let function of domain.functions">
+              <b>{{function.name}}</b>&nbsp;-&nbsp;<span>{{permissionsForFunction(function)}}</span>
+            </div>
           </div>
         </div>
       </ng-container>
@@ -225,7 +216,6 @@
       <!-- Show the comment left on the access tab if mode === 'update' -->
       <ng-container *ngIf="this.mode === 'update'">
         <ng-container *ngIf="comments">
-          <p>You wrote:</p>
           <p>{{comments}}</p>
         </ng-container>
         <ng-container *ngIf="!comments">
@@ -238,22 +228,37 @@
         <!-- Optional Message -->
         <sam-text-area
           name="comments"
-          [required]="true"
           label="Removing users from a role significantly impacts their ability to perform their duties. Please be sure you want to remove them from this role, and provide a comment explaining why."
           [(ngModel)]="comments"
         ></sam-text-area>
       </ng-container>
     </ng-container>
+  </div>
 
-    <div class="pull-right clearfix">
-      <button class="usa-button-outline" *ngIf="!isCurrentTab('filters')" (click)="onBackClick()">Back</button>
-      <button class="usa-button-primary" *ngIf="!isCurrentTab('confirmation')" (click)="onNextClick()" [disabled]="areUsersLoading">
+  <div class="sam-ui divider"></div>
+
+  <div grid>
+    <div columns="12" class="right aligned">
+      <sam-button buttonType="tertiary" buttonText="Cancel" routerLink="../roles-directory"></sam-button>
+
+      <sam-button
+        *ngIf="!isCurrentTab('filters')"
+        buttonType="secondary"
+        buttonText="Previous"
+        (click)="onBackClick()">
+      </sam-button>
+
+      <button [style.padding]="shouldShowNextSpinner() ? '.2em 1.5em .2em' : '0.9em 1.5em 0.9em'" class="sam-ui button primary" *ngIf="!isCurrentTab('confirmation')" (click)="onNextClick()" [disabled]="areUsersLoading">
         <span *ngIf="!shouldShowNextSpinner()">Next</span>
         <sam-spinner *ngIf="shouldShowNextSpinner()"></sam-spinner>
       </button>
 
-      <button class="usa-button-primary m_R-0" *ngIf="isCurrentTab('confirmation')" (click)="onDoneClick()">Done</button>
+      <sam-button
+        *ngIf="isCurrentTab('confirmation')"
+        (click)="onDoneClick()"
+        buttonText="Done">
+      </sam-button>
     </div>
-
   </div>
-</div>
+
+</page>

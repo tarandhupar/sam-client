@@ -1,16 +1,16 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { OpportunityFormService } from "../../opportunity-form.service";
-import { OpportunityFormViewModel } from "../../opportunity-form.model";
+import { OpportunityFormService } from "../../framework/service/opportunity-form.service";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form.model";
 import { OpportunityService } from "../../../../../api-kit/opportunity/opportunity.service";
 
 @Component({
   providers: [OpportunityFormService, OpportunityService],
-  selector: 'opp-form-notice-type',
-  templateUrl: 'notice-type.template.html'
+  selector: 'opp-form-header-information',
+  templateUrl: 'header-information.template.html'
 })
 
-export class OppFormNoticeTypeComponent implements OnInit {
+export class OpportunityHeaderInformationComponent implements OnInit {
 
   @Input() viewModel: OpportunityFormViewModel;
   oppNoticeTypeForm: FormGroup;

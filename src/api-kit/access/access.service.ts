@@ -202,7 +202,7 @@ export class UserAccessService {
       apiOptions.oParam.user = userName;
     }
 
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
@@ -465,6 +465,17 @@ export class UserAccessService {
   getUsers(queryParams = {}) {
     let apiOptions: any = {
       name: 'rms2',
+      suffix: '/users/',
+      method: 'GET',
+      oParam: queryParams,
+    };
+
+    return this.callApi(apiOptions);
+  }
+
+  getUsersV1(queryParams = {}) {
+    let apiOptions: any = {
+      name: 'rms',
       suffix: '/users/',
       method: 'GET',
       oParam: queryParams,

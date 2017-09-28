@@ -3,7 +3,6 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
-import { AlertFooterService } from '../../../app-components/alert-footer/alert-footer.service'
 
 @Injectable()
 export class CountryServiceImpl implements AutocompleteService {

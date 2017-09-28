@@ -20,7 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ProgramService } from '../../../../../api-kit/program/program.service';
 import { FALFormOverviewComponent } from '../overview/fal-form-overview.component';
 import { Observable } from 'rxjs';
-import { AppTemplatesModule } from '../../../../app-templates/index';
+// import { AppTemplatesModule } from '../../../../app-templates/index';
 
 let MockFormService = jasmine.createSpyObj('MockFormService', ['getRelatedProgramList', 'getFederalHierarchyConfiguration', 'getCfdaCode', 'getFALPermission', 'getOrganization']);
 MockFormService.getFALPermission.and.returnValue(Observable.of({}));
@@ -57,7 +57,7 @@ xdescribe('FAL Header Info Form', () => {
         RouterTestingModule,
         SamUIKitModule,
         ReactiveFormsModule,
-        AppTemplatesModule,
+        // AppTemplatesModule,
       ]
     }).overrideComponent(FALFormHeaderInfoComponent, {
       set: {
