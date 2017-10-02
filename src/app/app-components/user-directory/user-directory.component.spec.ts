@@ -8,13 +8,11 @@ import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
+import { AppComponentsModule } from '../app-components.module';
 
-import { FHService, PeoplePickerService, WrapperService } from 'api-kit';
-import { FHWrapperService } from '../../../api-kit/fh/fhWrapper.service';
-
-import { AgencyPickerComponent } from '../agency-picker/agency-picker.component';
-import { SamTitleSubtitleComponent } from '../title-subtitle/title-subtitle.component';
 import { SamUserDirectoryComponent } from './user-directory.component';
+
+import { FHService, FHWrapperService, PeoplePickerService, WrapperService } from 'api-kit';
 
 const response = Observable.of({
   _embedded: [{
@@ -57,7 +55,7 @@ const stubs = {
   }
 };
 
-xdescribe('User Directory Component', () => {
+describe('User Directory Component', () => {
   let component: SamUserDirectoryComponent;
   let fixture: ComponentFixture<SamUserDirectoryComponent>;
 
@@ -68,12 +66,7 @@ xdescribe('User Directory Component', () => {
         RouterModule,
         RouterTestingModule.withRoutes([]),
         SamUIKitModule,
-      ],
-
-      declarations: [
-        AgencyPickerComponent,
-        SamTitleSubtitleComponent,
-        SamUserDirectoryComponent,
+        AppComponentsModule,
       ],
 
       providers: [

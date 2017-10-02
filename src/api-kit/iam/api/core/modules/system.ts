@@ -9,32 +9,7 @@ import {
   logger, isDebug
 } from './helpers';
 
-function getMockSystemAccount(index) {
-  const types = ['Gov','Non-Gov'];
-
-  index = index || 1;
-
-  return {
-    _id:               `system-email-${index}@email.com`,
-    email:             `system-email-${index}@email.com`,
-    systemType:        types[Math.random()],
-    systemName:        `System-Account-${index}`,
-    ipAddress:         `System-Account-${index}`,
-
-    comments:          'System comments...',
-    duns:              'Test Duns',
-    businessName:      'John Doe Inc.',
-    businessAddress:   '1600 Pennsylvania Ave NW, Washington DC 20500',
-    department:        100006688,
-    primaryOwnerName:  `Primary Owner Name ${index}`,
-    primaryOwnerEmail: `primary-owner-email-${index}@email.com`,
-
-    pointOfContact: [
-      'chiukk1@gmail.com',
-      'chiu_kevin@bah.com',
-    ]
-  };
-}
+import { getMockSystemAccount } from './mocks';
 
 function transformSAResponse(data) {
   return defaults({

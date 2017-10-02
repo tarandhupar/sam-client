@@ -89,7 +89,7 @@ import {SavedSearchService} from "./search/saved-search.service";
     AutoCompleteWrapper,
     UserDirService,
     UserAccessService,
-    //{ provide: UserAccessService, useValue: UserAccessMock },
+    // { provide: UserAccessService, useValue: UserAccessMock },
     WageDeterminationService,
     LocationService,
     FeedbackService,

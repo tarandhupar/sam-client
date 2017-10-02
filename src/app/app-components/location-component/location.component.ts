@@ -5,8 +5,8 @@ import { AutocompleteConfig } from '../../../sam-ui-elements/src/ui-kit/types';
 
 const defaultLocationObject = {
   city: undefined,
-  county: undefined,
-  state: undefined,
+  county: '',
+  state: '',
   country: undefined,
   zip: ''
 }
@@ -237,7 +237,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
           {},
           state,
           {
-            countryConfig: action.value
+            zipConfig: action.value
           }
         );
       case "CITY_CHANGE":
@@ -264,7 +264,8 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
                 country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
                           { key: action.value.state.country.countrycode,
                             value: action.value.state.country.country } :
-                          state.location.country
+                          state.location.country,
+               
               }
             )
           }
@@ -284,8 +285,8 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
                 state.location,
                 {
                   city: undefined,
-                  county: undefined,
-                  state: state.stateConfig ? action.value : undefined,
+                  county: '',
+                  state: state.stateConfig && action.value ? action.value : undefined,
                   zip: '', // Zip is a text field. To clear, set empty string.
                   country: state.countryConfig && action.value && action.value.country ?
                             { key: action.value.country.countrycode,
@@ -308,13 +309,13 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               state.location,
               {
                 city: undefined,
-                county: action.value,
+                county: state.countyConfig && action.value ? action.value : undefined,
                 state: state.stateConfig && action.value && action.value.state ? 
                         { key: action.value.state.stateCode,
-                          value: action.value.state.state } : // Provide values later
+                          value: action.value.state.stateCode + " - " + action.value.state.state } : // Provide values later
                         state.location.state,
                 zip: '', // Zip is text field. Set to emptry string.
-                country: state.countryConfig && action.value && action.value.state && action.value.country ?
+                country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
                           { key: action.value.state.country.countrycode,
                             value: action.value.state.country.country } : // Provide values later
                           state.location.country
@@ -339,7 +340,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
                 county: undefined,
                 state: undefined,
                 zip: '',
-                country: state.countryConfig ? action.value : undefined
+                country: state.countryConfig && action.value ? action.value : undefined
               }
             )
           }

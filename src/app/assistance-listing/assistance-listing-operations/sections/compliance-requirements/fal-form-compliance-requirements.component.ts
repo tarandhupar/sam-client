@@ -1,13 +1,11 @@
-import {Component, OnInit, Input, ViewChild, EventEmitter, Output} from '@angular/core';
-import { FormGroup, FormBuilder } from "@angular/forms";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { DictionaryService } from "api-kit";
-import { FALFormService } from "../../fal-form.service";
-import { FALFormViewModel } from "../../fal-form.model";
 
-import {
-  FALFormErrorService, FieldError
-} from '../../fal-form-error.service';
-import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
+import { FALFormErrorService, FieldError } from '../../fal-form-error.service';
+import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
+import { FALFormViewModel } from "../../fal-form.model";
+import { FALFormService } from "../../fal-form.service";
 
 @Component({
   providers: [FALFormService],
@@ -25,7 +23,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
   public program: any;
   public complianceRequirementsGroup: FormGroup;
-  private formErrors = new Set();
+
   regulationHint:string = `<p>List the reference to all official published information pertinent to the program in the order indicated below.</p> 
                   <p>If there are no materials of this nature available, enter "None." … A citation to the Code of Federal Regulations (CFR) including the title, part, and sections where appropriate. … The title, number, and price of guidelines, handbooks, or manuals. 
                   Specify where these documents may be obtained if different from the Federal level offices described in the Information Contacts section of the program description. … The title, number and price of additional literature such as reports and brochures that are available. 
@@ -37,6 +35,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
                                 <p>Specify the range of financial or other matching required from nonfederal sources, e.g., State and local governments or other organizations and individuals. Identify the available bonuses or incentives. Identify the amount of the nonfederal share as it increases/decreases from the past fiscal year to the budget fiscal year. If the program has no matching requirements, indicate: "This program has no matching requirements."</p>
                                 <p>Maintenance of Effort (MOE) requirements are provisions intended to ensure that Federal funds are used to supplement, not supplant, existing State and local resources. In most cases, these requirements are intended to prevent State and local governments from reducing their spending in federally funded areas as a condition for receiving Federal grants.</p>
                                 <p>If MOE programs have total allocations of $100 million or over in the current fiscal year, the following statement should be placed in the Formula and Matching Requirements section: "This program has MOE requirements; see funding agency for further details."</p>`;
+
   public policyRequirementsConfig: any = {
     checkbox: {
       name: 'compliance-policy-requirements',
@@ -303,7 +302,9 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
         if (report.isSelected) {
           model.checkbox.push(report.code);
         }
-        model.textarea.push(report.description);
+        if (report.description) {
+          model.textarea.push(report.description);
+        }
       }
     }
 

@@ -7,7 +7,7 @@ import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.
 import { OpportunityFormService } from "./opportunity-form.service";
 import * as Cookies from 'js-cookie';
 
-xdescribe('src/app/opportunity/opportunity-operations/opportunity-form.service.ts', () => {
+describe('src/app/opportunity/opportunity-operations/opportunity-form.service.ts', () => {
   let formService: OpportunityFormService;
   beforeEach(() => {
 
@@ -48,8 +48,7 @@ xdescribe('src/app/opportunity/opportunity-operations/opportunity-form.service.t
     formService = new OpportunityFormService(oppService, dictionaryService);
     let id = '5e859411e7f47a2e6e53d280b323236d';
     formService.saveContractOpportunity(id, {});
-    console.log("spydata", spyData);
-    expect(spyData).toHaveBeenCalledWith(id, {});
+    expect(spyData).toHaveBeenCalledWith(id, {}, Cookies.get('iPlanetDirectoryPro'));
   }));
 
   it('OpportunityFormService.deleteContractOpportunity: should HaveBeenCalledWith opportunityService.deleteContractOpportunity', inject([WrapperService, OpportunityService, OpportunityFormService, DictionaryService], (testService: OpportunityFormService, wrapperService: WrapperService, oppService: OpportunityService, dictionaryService: DictionaryService) => {
@@ -58,8 +57,7 @@ xdescribe('src/app/opportunity/opportunity-operations/opportunity-form.service.t
     formService = new OpportunityFormService(oppService, dictionaryService);
     let id = '5e859411e7f47a2e6e53d280b323236d';
     formService.deleteContractOpportunity(id);
-    console.log("spydata", spyData);
-    expect(spyData).toHaveBeenCalledWith(id);
+    expect(spyData).toHaveBeenCalledWith(id, Cookies.get('iPlanetDirectoryPro'));
   }));
 
 });

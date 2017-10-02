@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service';
 import { Observable } from 'rxjs';
+import { Cookie } from "ng2-cookies";
 
 @Injectable()
 export class SubscriptionsService{
@@ -8,14 +9,23 @@ export class SubscriptionsService{
 
   getDomains(){
     return Observable.of({
-      'Domains':['Assistance Listings', 'Contract Opportunities', 'Contract Awards', 'Entity Information', 'Sub-Awards', 'Wage Determinations']
+      'Domains':['Assistance Listings', 'Contract Opportunities', 'Contract Awards', 'Entity Information', 'Sub-Awards', 'Wage Determination']
     });
+  } 
+
+  addAuthHeader(options) {
+    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
+    if (!iPlanetCookie) {
+      return;
+    }
+
+    options.headers = options.headers || {};
+    options.headers['X-Auth-Token'] = iPlanetCookie;
   }
 
-  getSubscriptions(filterObj, sortBy, pageNum, pageSize = 20){
-
+  getSubscriptions(filterObj, sortBy, pageNum, pageSize = 10){
      let queryParams: any = {
-      offset: (pageNum * pageSize) + 1,
+      offset: (pageNum * pageSize),
       limit: pageSize,
       sortBy: sortBy.type,
       sortType: sortBy.sort
@@ -28,11 +38,26 @@ export class SubscriptionsService{
       queryParams.frequency = filterObj.frequency.join(',');
     }
     if (filterObj.keyword) {
-      queryParams.name = filterObj.keyword;
+      queryParams.record = filterObj.keyword;
+    }
+    if (filterObj.feedType) {
+      queryParams.myFeed = filterObj.feedType.join(',');
     }
 
 
-      return Observable.of({
+
+    let apiOptions: any = {
+      name: 'subscriptions',
+      suffix: '',
+      method: 'GET',
+      oParam: queryParams
+    };
+
+    
+    this.addAuthHeader(apiOptions);
+
+  return this.oAPIService.call(apiOptions);
+     /* return Observable.of({
         recordList:[
           {id: 1, recordId: 'AK2015001-Wage Determination Data...', type:'DBA', domainId:'Wage Determination', frequency:'daily', lastModified:'Jul 01, 2017', 'myFeed': 'N'},
           {id: 2, recordId: 'CA2017021', type:'SCA', domainId:'Wage Determination', frequency:'instant', lastModified:'Jun 10, 2017 '},
@@ -46,6 +71,6 @@ export class SubscriptionsService{
           {id: 10, recordId: 'AS888880', type:'SCA', domainId:'Assistance Listing', frequency:'daily', lastModified:'May 12, 2016', 'myFeed': 'Y'},
         ],
         totalRecords: 150,
-      });
+      }); */
     }
 }

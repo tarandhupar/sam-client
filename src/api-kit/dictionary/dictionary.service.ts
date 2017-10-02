@@ -85,6 +85,22 @@ export class DictionaryService {
     return obj;
   }
 
+  getContractOpportunityDictionary(ids: string) {
+    let apiParam = {
+      name: 'contractOpportunity',
+      suffix: '/dictionaries',
+      oParam: {
+        ids: ids
+      },
+      method: 'GET'
+    };
+
+    let obj = this.oAPIService.call(apiParam).map(data => {
+      return this.processDictionariesData(data, 'contractOpportunity');
+    });
+    return obj;
+  }
+
   getWageDeterminationDictionary(ids: string) {
     let apiParam = {
       name: 'wageDetermination',
@@ -104,5 +120,4 @@ export class DictionaryService {
   filterDictionariesToRetrieve(dictionaries: string){
     return (_.difference(dictionaries.split(","), Object.keys(this.dictionaries))).join();
   }
-
 }

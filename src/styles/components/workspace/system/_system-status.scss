@@ -1,0 +1,60 @@
+.usa-workspace-system-status {
+  .usa-progress-bar {
+    width: 62.5%;
+    margin: 2em auto;
+
+    .progress-header,
+    .progress-body {
+      min-height: 1.53em;
+
+      > span {
+        display: inline-block;
+        width: 32.7%;
+        float: left;
+
+        &.active {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .progress-header {
+      > span {
+        text-align: center;
+      }
+    }
+
+    .progress-body {
+      padding: 2px;
+      border: 1px solid $black;
+      border-radius: 3px;
+
+      div {
+        display: flex;
+        height: 2em;
+        align-items: center;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+
+        > span {
+          flex-basis: (100 / 3) * 1%;
+          height: 100%;
+          margin-left: 2px;
+          margin-right: 2px;
+
+          &:nth-child(1) {
+            background-color: #4AA564;
+          }
+
+          &:nth-child(2) {
+            background-color: #00A6D2;
+          }
+
+          &:nth-child(3) {
+            background-color: #D6D7D9;
+          }
+        }
+      }
+    }
+  }
+}

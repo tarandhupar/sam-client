@@ -62,12 +62,12 @@ export class SearchService {
     }
 
     // iseven filter
-    if(typeof obj.is_even !== 'undefined' && obj.is_even !== null && obj.is_even !== '') {
-      if(obj.is_even === 'true'){
-        oApiParam.oParam['is_even'] = true;
+    if(typeof obj.is_wd_even !== 'undefined' && obj.is_wd_even !== null && obj.is_wd_even !== '') {
+      if(obj.is_wd_even === 'true'){
+        oApiParam.oParam['is_wd_even'] = true;
       }
       else if(obj.is_even === 'false'){
-        oApiParam.oParam['is_even'] = false;
+        oApiParam.oParam['is_wd_even'] = false;
       }
     }
 
@@ -106,12 +106,12 @@ export class SearchService {
       oApiParam.oParam['duns'] = obj.duns;
     }
 
-    if(typeof obj.applicant !== 'undefined' && obj.applicant !== null && obj.applicant !== ''){
-      oApiParam.oParam['applicant'] = obj.applicant;
+    if(typeof obj.applicant_type !== 'undefined' && obj.applicant_type !== null && obj.applicant_type !== ''){
+      oApiParam.oParam['applicant_type'] = obj.applicant_type;
     }
 
-    if(typeof obj.beneficiary !== 'undefined' && obj.beneficiary !== null && obj.beneficiary !== ''){
-      oApiParam.oParam['beneficiary'] = obj.beneficiary;
+    if(typeof obj.beneficiary_type !== 'undefined' && obj.beneficiary_type !== null && obj.beneficiary_type !== ''){
+      oApiParam.oParam['beneficiary_type'] = obj.beneficiary_type;
     }
 
     if(typeof obj.assistance_type !== 'undefined' && obj.assistance_type !== null && obj.assistance_type !== ''){

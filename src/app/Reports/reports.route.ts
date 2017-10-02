@@ -6,7 +6,7 @@ import { ReportComponent } from './sections/report/report.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
-import { MyReportsComponent } from './sections/myreports/myreports.component';
+import { MyReportsComponent } from './sections/overview/myreports/myreports.component';
 
 
 export const routes: Routes = [

@@ -4,11 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule } from 'app-components';
+import { AppComponentsModule } from 'app-components/app-components.module';
 
 import { ResetComponent } from './reset.component';
 
-xdescribe('[IAM] User Profile - Password Reset', () => {
+describe('[IAM] User Profile - Password Reset', () => {
   let component: ResetComponent;
   let fixture: ComponentFixture<ResetComponent>;
 

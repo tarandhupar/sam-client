@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { IAMService } from 'api-kit';
 import { globals } from '../../app/globals.ts';
+import * as Cookies from 'js-cookie';
 
 
 @Component({
@@ -57,7 +58,7 @@ checkSession(cb: () => void) {
     }
     vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
     ('https://microstrategy'+vm.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+vm.mstrServer+'&Project=SAM_IAE&Port=8443&evt=3031&src=mstrWeb.3031' +
-    '&hiddensections=path,dockLeft,footer');
+    '&hiddensections=path,dockLeft,footer&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro'));
       cb();
     });
   }

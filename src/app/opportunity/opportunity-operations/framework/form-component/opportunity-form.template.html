@@ -13,18 +13,19 @@
 <form-step
   [ngClass]="'opportunities-operations'"
   [crumbs]="crumbs"
-  [pageTitle]="oppFormViewModel.title ? oppFormViewModel.title : 'Opportunity'"
-  [sectionTitle]="oppFormViewModel.title ? 'Opportunity' : 'Add'"
+  [pageTitle]="oppFormViewModel.title ? oppFormViewModel.title : 'Contract Opportunity'"
+  [sectionTitle]="oppFormViewModel.title ? 'Contract Opportunity' : 'Add'"
   [sideNavSelection]="sidenavSelection"
   [sideNavModel]="sidenavModel"
   [sectionIndex]="currentSection"
+  [type]="noticeType"
+  [typeLabel]="noticeTypeLabel"
   [numberOfSections]="sections.length"
   [hasErrors]="hasErrors"
   [tabsComponent]="tabsOppComponent"
   (action)="formActionHandler($event)"
   (sideNavOutput)="navHandler($event)"
   (breadcrumbOut)="breadCrumbClick($event)">
-
   <div form-sections>
     <!-- Tabs -->
     <tabs-opp #tabsOppComponent
@@ -35,6 +36,9 @@
   <opp-form-header-information
     *ngIf="isSection('header-information')"
     [viewModel]="oppFormViewModel"></opp-form-header-information>
+    <opp-form-description
+      *ngIf="isSection('description')"
+      [viewModel]="oppFormViewModel"></opp-form-description>
   </div>
 
 </form-step>

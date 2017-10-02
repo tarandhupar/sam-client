@@ -81,7 +81,7 @@ import * as moment from 'moment/moment';
               <strong>Last Published Date</strong><br>
               {{ data.publishDate  }}
             </li>
-            <li class="item">
+            <li class="item opportunity-type">
               <strong>Type</strong><br>
               <ng-container *ngIf="data.type?.code !== 'm'">Original {{data.type?.value}}</ng-container>
               <ng-container *ngIf="data.type?.code === 'm'">

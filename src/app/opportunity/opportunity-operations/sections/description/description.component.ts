@@ -6,14 +6,14 @@ import { OpportunityService } from "../../../../../api-kit/opportunity/opportuni
 
 @Component({
   providers: [OpportunityFormService, OpportunityService],
-  selector: 'opp-form-header-information',
-  templateUrl: 'header-information.template.html'
+  selector: 'opp-form-description',
+  templateUrl: 'description.template.html'
 })
 
-export class OpportunityHeaderInformationComponent implements OnInit {
+export class OpportunityDescriptionComponent implements OnInit {
 
   @Input() viewModel: OpportunityFormViewModel;
-  oppNoticeTypeForm: FormGroup;
+  oppDescForm: FormGroup;
 
   constructor(private fb: FormBuilder, private service: OpportunityFormService, private oppService: OpportunityService, private cdr: ChangeDetectorRef) {
   }
@@ -23,19 +23,26 @@ export class OpportunityHeaderInformationComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
+    this.oppDescForm.valueChanges.subscribe(data => {
+        this.updateViewModel(data)
+      }
+    );
   }
 
   createForm(){
-    this.oppNoticeTypeForm = this.fb.group({
-      title: ''
+    this.oppDescForm = this.fb.group({
+      description: ''
     });
   }
 
   updateForm(){
-    this.oppNoticeTypeForm.patchValue({
-      title: this.viewModel.title
+    this.oppDescForm.patchValue({
+      description: this.viewModel.description
     }, {
       emitEvent: false
     });
+  }
+  updateViewModel(data) {
+    this.viewModel.description = data['description'];
   }
 }

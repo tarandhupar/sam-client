@@ -8,10 +8,11 @@ export type WatchlistType = {
   active?: string,
   id?: number,
   domainId?: string,
-  type: string
+  type?: string
   frequency?: string,
   recordId?: string,
-  uri? :string
+  uri? :string,
+  myFeed? :string
 } 
 
 @Injectable()

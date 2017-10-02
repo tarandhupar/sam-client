@@ -57,6 +57,7 @@ import { RequestDetailsComponent } from './request-details/request-details';
 import { SamLocationComponent } from './location-component';
 import { SamTableEntryComponent } from './sam-table-entry/sam-table-entry.component';
 import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
+import { SamTableSelectComponent } from './sam-table-select/sam-table-select.component';
 
 /**
  * A module for reusable SAM Web Design components
@@ -108,7 +109,8 @@ import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
     SamLocationComponent,
     RequestDetailsComponent,
     SamTableEntryComponent,
-    SamPOCEntryComponent
+    SamPOCEntryComponent,
+    SamTableSelectComponent
   ],
   imports: [
     CommonModule,
@@ -162,7 +164,8 @@ import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
     RequestDetailsComponent,
     SamLocationComponent,
     SamTableEntryComponent,
-    SamPOCEntryComponent
+    SamPOCEntryComponent,
+    SamTableSelectComponent
   ],
   providers: [
     SamFeedbackComponent,

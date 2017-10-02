@@ -124,6 +124,10 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         let errorRes = error.json();
         if (error && error.status === 404) {
           this.router.navigate(['404']);
+        } else if (error && error.status === 401) {
+          this.serviceErrorFooterAlertModel.description = 'Insufficient privileges to get user permission.'
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
+          this.router.navigate(['403']);
         } else if (error && (error.status === 502 || error.status === 504)) {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
@@ -137,6 +141,10 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   pageChange(pagenumber) {
     this.pageNum = pagenumber;
     this.workspaceRefresh();
+  }
+
+  public addContractOpportunityClick(): void {
+    this.router.navigate(['opportunities/add']);
   }
 
   workspaceSearchModel(event) {

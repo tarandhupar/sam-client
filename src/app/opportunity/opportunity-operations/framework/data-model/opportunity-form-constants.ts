@@ -7,4 +7,8 @@ export class OpportunitySectionNames {
   static readonly DESCRIPTION = 'description';
   static readonly PACKAGES = 'packages';
   static readonly CONTACT_INFORMATION = 'contact-information';
+
+  static readonly HEADER = 'header';
+  static readonly GENERAL = 'general';
+  static readonly CONTACT = 'contact';
 }

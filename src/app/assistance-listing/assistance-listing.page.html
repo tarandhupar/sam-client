@@ -806,7 +806,7 @@
       </div>
 
       <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
-      <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> <a [routerLink]="['/search/fal/regionalOffices']" [queryParams]="{ organizationId: federalHierarchy?.orgKey }">See Regional Agency Offices.</a> {{program.data.contacts['local']?.description }}</span>
+      <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> <a [routerLink]="['/search/fal/regionalOffices']" [queryParams]="{ organization_id: federalHierarchy?.orgKey }">See Regional Agency Offices.</a> {{program.data.contacts['local']?.description }}</span>
       <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
 
       <h3 class="sam-ui dividing header">Headquarters Office:</h3>

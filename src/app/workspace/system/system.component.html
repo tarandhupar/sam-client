@@ -1,12 +1,5 @@
-<div class="usa-grid-full usa-workspace">
-  <div class="usa-width-one-whole">
-    <sam-breadcrumbs [crumbs]="breadcrumbs"></sam-breadcrumbs>
-  </div>
-</div>
-
-<div class="usa-grid-full usa-authentication">
-  <aside class="usa-width-one-fourth usa-workspace-system" *ngIf="states.nav">
-    <h1 [innerText]="store.title"></h1>
+<page class="usa-workspace-system" [breadcrumbs]="breadcrumbs" [title]="store.title">
+  <sidebar *ngIf="states.legacy && states.nav">
     <ul class="usa-sidenav-list">
       <li *ngFor="let nav of store.nav; let $index = index;">
         <ng-container *ngIf="!(nav['hidden'] || false)">
@@ -23,8 +16,8 @@
         </ng-container>
       </li>
     </ul>
-  </aside>
-  <section class="usa-workspace-system" [ngClass]="[activeRouteClass, (states.nav ? 'usa-width-three-fourths' : 'usa-width-one-whole')]">
-     <router-outlet></router-outlet>
-  </section>
-</div>
+  </sidebar>
+  <div class="usa-workspace-system" [ngClass]="[activeRouteClass]">
+    <router-outlet></router-outlet>
+  </div>
+</page>

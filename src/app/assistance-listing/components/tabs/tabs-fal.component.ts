@@ -233,9 +233,9 @@ export class TabsFalComponent implements OnInit{
 
   public canEdit() {
     // show edit button if user has update permission, except on published FALs, or if user has revise permission
-    if (this.data._links && this.data._links['program:update'] && this.data.status && this.data.status.code !== 'published') {
+    if (this.data._links && this.data._links['program:update'] && this.data.status && this.data.status.code !== 'published' && this.data.latest == true) {
       return true;
-    } else if (this.data._links && this.data._links['program:revise']) {
+    } else if (this.data._links && this.data._links['program:revise' ] && this.data.latest == true) {
       return true;
     }
     return false;

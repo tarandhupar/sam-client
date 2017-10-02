@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { OppComponentsModule } from './components/index';
 import {OPPWorkspacePage} from "./opportunity-workspace/opportunity-workspace.page";
 import {OpportunityResult} from "./opportunity-workspace/opportunity-result/opportunity-result.component";
-// import {AppTemplatesModule} from "../app-templates/index";
+import {OpportunityReviewComponent} from "./opportunity-operations/workflow/review/opportunity-review.component";
 
 @NgModule({
   imports: [
@@ -26,8 +26,7 @@ import {OpportunityResult} from "./opportunity-workspace/opportunity-result/oppo
     AppComponentsModule,
     OpportunityFormModule,
     OppComponentsModule,
-    OpportunityFormModule,
-    // AppTemplatesModule
+    OpportunityFormModule
   ],
   exports: [
     OpportunityPage,
@@ -44,7 +43,8 @@ import {OpportunityResult} from "./opportunity-workspace/opportunity-result/oppo
     FixHTMLPipe,
     FilesizePipe,
     OPPWorkspacePage,
-    OpportunityResult
+    OpportunityResult,
+    OpportunityReviewComponent
   ],
 })
 export class OpportunityModule { }

@@ -1,0 +1,18 @@
+<h2 class="sam-ui header">
+  Description
+</h2>
+
+<form [formGroup]="oppDescForm">
+
+  <div class="sam-ui segment">
+    <sam-text-area
+      [control]="oppDescForm.controls['description']"
+      [name]="'title-input'"
+      [label]="' '"
+      [required]="true"
+      [attr.id]="'title-opp-create'"
+      formControlName="description">
+    </sam-text-area>
+  </div>
+
+</form>

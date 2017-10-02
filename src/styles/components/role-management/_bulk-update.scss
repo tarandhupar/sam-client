@@ -29,4 +29,12 @@
   .usa-sidenav-list {
     pointer-events: none;
   }
+
+  sam-autocomplete-multiselect .sam-autocomplete-multiselect-input{
+    background-color: $color-white;
+  }
+
+  sam-agency-picker-v2 .sam-ui.menu{
+    margin-top: 0px;
+  }
 }

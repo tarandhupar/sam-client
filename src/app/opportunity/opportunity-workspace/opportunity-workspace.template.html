@@ -61,6 +61,14 @@
     </div>
   </sidebar>
 
+  <!-- Main Content Section -->
+  <sam-button
+    [buttonType]="'default'"
+    [buttonText]="'Add Contract Opportunity' "
+    [buttonClass]="'sam-ui button dark blue'"
+    (onClick)="addContractOpportunityClick()">
+  </sam-button>
+
   <!-- No results -->
   <p *ngIf="data.length==0 && !initLoad">
     No results found for '<strong>{{ oldKeyword }}</strong>'

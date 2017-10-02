@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
 import { ReportService } from './report.service';
-import { MyReportsComponent } from './sections/myreports/myreports.component';
+import { MyReportsComponent } from './sections/overview/myreports/myreports.component';
 
 @NgModule({
   imports: [

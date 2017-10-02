@@ -25,7 +25,7 @@
     </sam-checkbox>
   </div>  
 
-  <div class="m_B-4x" *ngIf="cbxControl.domains">
+  <div class="m_B-4x" *ngIf="domainsCbxConfig.options">
     <sam-checkbox
       [(model)]="filterOption.domains"
       [name]="domainsCbxConfig.name"
@@ -46,5 +46,12 @@
         (modelChange)="subscriptionFilterOptionChange()">
       </sam-checkbox>
   </div>  
+
+  <div class="usa-width-one-whole m_B-4x" style="text-align: center">
+    <a (click)="onClearAllClick()">Clear all</a>
+  </div>
+
+  <!--Side Navigation-->
+  <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
 
 </div>

@@ -30,6 +30,7 @@
 
     <sam-listbuilder
       #contactLB
+      [attr.id]="'contact-information'"
       [max]="2"
       addEntryText="Add Contact"
       [hideDefaultBtns]="true"
@@ -58,6 +59,7 @@
       <ng-template #edit let-item>
         <form [formGroup]="item">
           <sam-poc-entry #poc
+            [attr.id]="'contact-information-entry'"
             formControlName="poc"
             [manualList]="true"
             [listBuilder]="contactLB"

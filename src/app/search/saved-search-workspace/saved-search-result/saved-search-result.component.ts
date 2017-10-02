@@ -2,6 +2,7 @@ import {Component, Input, OnInit, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FilterParamLabel} from "../../pipes/filter-label.pipe";
 import { globals } from '../../.././globals.ts';
+import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -33,6 +34,12 @@ export class SavedSearchResult implements OnInit {
         }
       })
     }
+    // if(this.data.createdOn && this.data.createdOn!=null){
+    //   this.data.createdOn = moment(this.data.createdOn).format("MMM D, Y");
+    // }
+    // if(this.data.lastUsageDate && this.data.lastUsageDate!=null){
+    //   this.data.lastUsageDate = moment(this.data.lastUsageDate).format("MMM D, Y");
+    // }
   }
 
   //To display parameter labels generically

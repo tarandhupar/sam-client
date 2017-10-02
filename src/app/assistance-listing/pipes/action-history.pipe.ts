@@ -20,23 +20,26 @@ export class ActionHistoryPipe implements PipeTransform {
   transform(actionHistoryArray:any) : any {
     this.subject = new ReplaySubject(1);
 
-    /** Setup necessary variables and functions for processing history **/
+    if(actionHistoryArray._embedded != null) {
+      /** Setup necessary variables and functions for processing history **/
 
-    /** Process history into a form usable by history component **/
+      /** Process history into a form usable by history component **/
 
-    //remove send_omb whole item including it's request from the list before processing it
-    actionHistoryArray._embedded.jSONObjectList = _.filter(actionHistoryArray._embedded.jSONObjectList, item => { return (item.action_type != "send_omb") });
+      //remove send_omb whole item including it's request from the list before processing it
+      actionHistoryArray._embedded.jSONObjectList = _.filter(actionHistoryArray._embedded.jSONObjectList, item => { return (item.action_type != "send_omb") });
 
-    let processOrganizationNames = function(historyItem){
-      if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
-        return historyItem.requested_organizationId + "," + historyItem.current_organization_id;
-      }
-    };
+      let processOrganizationNames = function(historyItem){
+        if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
+          return historyItem.requested_organizationId + "," + historyItem.current_organization_id;
+        }
+      };
 
-    let organizationIds = actionHistoryArray._embedded.jSONObjectList.map(processOrganizationNames).filter(function(e){return e}).join();
-    let organizationNamesAPI = this.loadOrganizationNames(organizationIds);
-    this.observable = new Observable();
-    this.processHistoryItems(organizationNamesAPI, actionHistoryArray);
+      let organizationIds = actionHistoryArray._embedded.jSONObjectList.map(processOrganizationNames).filter(function(e){return e}).join();
+      let organizationNamesAPI = this.loadOrganizationNames(organizationIds);
+      this.observable = new Observable();
+      this.processHistoryItems(organizationNamesAPI, actionHistoryArray);
+    }
+
     return this.subject;
   }
 

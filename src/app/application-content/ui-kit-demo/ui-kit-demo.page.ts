@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
   ]
 })
 export class UIKitDemoPage {
+  locationObj = {};
   tableFormArray = this.fb.array([this.fb.group({
     col1:"TestVal1",
     col2:"TestVal2",

@@ -54,7 +54,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   servicesMap = new Map();
   filters = {
     "applicant_type": this.applicantMap,
-    "beneficiary": this.beneficiaryMap,
+    "beneficiary_type": this.beneficiaryMap,
     "assistance_type": this.assistanceMap,
     "naics": this.naicsMap,
     "psc": this.pscMap,
@@ -212,8 +212,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
         let errorRes = error.json();
         if (error && error.status === 404) {
           this.router.navigate(['404']);
-        }
-        if (error && (error.status === 502 || error.status === 504)) {
+        } else if (error && (error.status === 502 || error.status === 504)) {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         }
@@ -233,45 +232,48 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     let uniqueIndexList = Array.from(new Set(indexes));
     let ctx = this;
 
-    uniqueIndexList.forEach(function(i) {
-      let filteredDictionaries;
-      switch(i) {
-        case 'cfda':
-          filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('applicant_types,beneficiary_types,assistance_type');
-          ctx.getProgramsDictionaryData(filteredDictionaries);
-          break;
-        case 'opp':
-          filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('procurement_type,naics_code,classification_code,set_aside_type');
-          ctx.getCommonDictionaryData(filteredDictionaries);
-          break;
-        case 'ei':
-        case 'fpds':
-          filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('naics_code,classification_code');
-          ctx.getCommonDictionaryData(filteredDictionaries);
-          // set options for set aside filter to hard coded values if index is fpds
-          ctx.setAsideAwardsOptions.forEach(function(item) {
-            ctx.setAsideMap.set(item.value, item.label);
-          });
-          ctx.awardOrIDV.forEach(function(item) {
-            ctx.awardOrIDVMap.set(item.value, item.label);
-          });
-          ctx.awardType.forEach(function(item) {
-            ctx.awardTypeMap.set(item.value, item.label);
-          });
-          ctx.contractType.forEach(function(item) {
-            ctx.contractTypeMap.set(item.value, item.label);
-          });
-          break;
-        case 'wd':
-          filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('wdStates,dbraConstructionTypes,scaServices');
-          ctx.getWageDeterminationDictionaryData(filteredDictionaries);
-          ctx.wdType.forEach(function(item) {
-            ctx.wdTypeMap.set(item.value, item.label);
-          });
-          break;
-        default: break;
-      }
-    });
+    if(uniqueIndexList && uniqueIndexList.length > 0) {
+      uniqueIndexList.forEach(function (i) {
+        let filteredDictionaries;
+        switch (i) {
+          case 'cfda':
+            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('applicant_types,beneficiary_types,assistance_type');
+            ctx.getProgramsDictionaryData(filteredDictionaries);
+            break;
+          case 'opp':
+            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('procurement_type,naics_code,classification_code,set_aside_type');
+            ctx.getCommonDictionaryData(filteredDictionaries);
+            break;
+          case 'ei':
+          case 'fpds':
+            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('naics_code,classification_code');
+            ctx.getCommonDictionaryData(filteredDictionaries);
+            // set options for set aside filter to hard coded values if index is fpds
+            ctx.setAsideAwardsOptions.forEach(function (item) {
+              ctx.setAsideMap.set(item.value, item.label);
+            });
+            ctx.awardOrIDV.forEach(function (item) {
+              ctx.awardOrIDVMap.set(item.value, item.label);
+            });
+            ctx.awardType.forEach(function (item) {
+              ctx.awardTypeMap.set(item.value, item.label);
+            });
+            ctx.contractType.forEach(function (item) {
+              ctx.contractTypeMap.set(item.value, item.label);
+            });
+            break;
+          case 'wd':
+            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('wdStates,dbraConstructionTypes,scaServices');
+            ctx.getWageDeterminationDictionaryData(filteredDictionaries);
+            ctx.wdType.forEach(function (item) {
+              ctx.wdTypeMap.set(item.value, item.label);
+            });
+            break;
+          default:
+            break;
+        }
+      });
+    }
 
   }
 
@@ -312,18 +314,28 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       let ctx = this;
       this.dictionaryService.getProgramDictionaryById(id).subscribe(
         data => {
-          data['applicant_types'].forEach(function (item) {
-            ctx.applicantMap.set(item.code, item.value);
-          });
-          data['beneficiary_types'].forEach(function (item) {
-            ctx.beneficiaryMap.set(item.code, item.value);
-          });
-          data['assistance_type'].forEach(function (item) {
-            ctx.assistanceMap.set(item.element_id, item.code + '-' + item.value);
-            for (var element of item.elements) {
-              ctx.assistanceMap.set(element.element_id, item.code + '-' + element.value);
-            }
-          });
+          if(data && data.hasOwnProperty('applicant_types')) {
+            data['applicant_types'].forEach(function (item) {
+              ctx.applicantMap.set(item.code, item.value);
+            });
+          }
+
+          if(data && data.hasOwnProperty('beneficiary_types')) {
+            data['beneficiary_types'].forEach(function (item) {
+              ctx.beneficiaryMap.set(item.code, item.value);
+            });
+          }
+
+          if(data && data.hasOwnProperty('assistance_type')) {
+            data['assistance_type'].forEach(function (item) {
+              ctx.assistanceMap.set(item.element_id, item.code + '-' + item.value);
+              if(item.elements!=null) {
+                for (var element of item.elements) {
+                  ctx.assistanceMap.set(element.element_id, item.code + '-' + element.value);
+                }
+              }
+            });
+          }
           this.addParameterLabels();
         },
         error => {
@@ -379,15 +391,22 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       let ctx = this;
       this.dictionaryService.getWageDeterminationDictionary(id).subscribe(
         data => {
-          data['wdStates'].forEach(function (item) {
-            ctx.statesMap.set(item.elementId, item.value);
-          });
-          data['dbraConstructionTypes'].forEach(function (item) {
-            ctx.constructionMap.set(item.value, item.value);
-          });
-          data['scaServices'].forEach(function (item) {
-            ctx.servicesMap.set(item.elementId, item.value);
-          });
+          if(data && data.hasOwnProperty('wdStates')) {
+            data['wdStates'].forEach(function (item) {
+              ctx.statesMap.set(item.elementId, item.value);
+            });
+          }
+
+          if(data && data.hasOwnProperty('dbraConstructionTypes')) {
+            data['dbraConstructionTypes'].forEach(function (item) {
+              ctx.constructionMap.set(item.value, item.value);
+            });
+          }
+          if(data && data.hasOwnProperty('scaServices')) {
+            data['scaServices'].forEach(function (item) {
+              ctx.servicesMap.set(item.elementId, item.value);
+            });
+          }
           this.addParameterLabels();
         },
         error => {
@@ -414,11 +433,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
   pageChange(pagenumber) {
     this.pageNum = pagenumber;
-    let qsobj = this.setupQS();
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['savedsearches/workspace/'], navigationExtras);
+    this.workspaceRefresh();
   }
 
   workspaceRefresh(){

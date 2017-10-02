@@ -49,7 +49,7 @@ export class OrgDetailPage {
     this.route.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
+        this.setupOrgName(this.orgId);
       });
 
     this._router.events.subscribe(
@@ -86,16 +86,6 @@ export class OrgDetailPage {
 
       });
   }
-
-  checkAccess = (user) => {
-    this.fhService.getAccess(this.orgId).subscribe(
-      (data)=> {this.setupOrgName(this.orgId);},
-      (error)=> {if(error.status === 403) this.redirectToForbidden();}
-    );
-  };
-
-  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
 
   getSectionClass(sectionValue){
     return this.currentSection === sectionValue? "usa-current":"";

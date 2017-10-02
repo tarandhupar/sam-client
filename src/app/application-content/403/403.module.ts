@@ -6,6 +6,7 @@ import { ForbiddenPage } from "./403.page";
 import { IsLoggedInGuard } from "./is-logged-in.guard";
 import { UnauthenticatedPage } from "../401/401.page";
 import { CheckAccessGuard } from "./check-access.guard";
+import { FHAccessGuard } from "./fh-access.guard";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { CheckAccessGuard } from "./check-access.guard";
   providers: [
     IsLoggedInGuard,
     CheckAccessGuard,
+    FHAccessGuard
   ],
 })
 export class ForbiddenModule { }

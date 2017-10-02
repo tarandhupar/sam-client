@@ -36,7 +36,7 @@ export class Watchlist {
     this._raw.domainId = domainId;
   }
 
-  recrodId(): string {
+  recordId(): string {
     return this._raw.recordId;
   }
   setRecordId(recordId: string) {

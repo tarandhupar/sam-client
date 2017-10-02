@@ -116,6 +116,7 @@ export class ReportComponent implements OnInit {
     keyValueConfig: { keyProperty: 'key', valueProperty: 'value' }
   }
   fiscalYear = '';
+  dateRangeLabel = 'Date range correspond to the Date Signed on Procurement Awards';
 
   constructor(
     private route: ActivatedRoute,
@@ -207,6 +208,11 @@ export class ReportComponent implements OnInit {
     //   },
     //   error => console.log(error)
     // );
+
+    // Data range lavel for 'Inherently Governmental Functions Actions and Dollars Report'
+    if (this.id == 'BE206C4B4A24C65846C6A686B576860F') {
+      this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
+    }
   }      
 
   checkSession(cb: () => void) {
@@ -214,8 +220,9 @@ export class ReportComponent implements OnInit {
     this.api.iam.user.get(function (user) {
       vm.states.isSignedIn = true;
       vm.user = user;
-      if (vm.user.departmentId) {
-        vm.userOrg.push(vm.user.departmentId);
+      if (vm.user.departmentID) {
+        vm.userOrg.push(vm.user.departmentID);
+        vm.agencyPicker = vm.userOrg;
       }
       cb();
     });

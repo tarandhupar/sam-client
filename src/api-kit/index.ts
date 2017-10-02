@@ -25,3 +25,4 @@ export { WageDeterminationService } from './wage-determination/wage-determinatio
 export { WrapperService } from './wrapper/wrapper.service';
 export { MsgFeedService } from "./msg-feed/msg-feed.service";
 export { ContentManagementService } from "./content-management/content-management.service";
+export { SavedSearchService } from "./search/saved-search.service";

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { FHService, FHWrapperService, WrapperService } from 'api-kit';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule, AgencyPickerComponent } from 'app-components';
+import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { DetailsComponent } from './details.component';
 
 const response = Observable.of({
@@ -42,7 +42,7 @@ const apiStub = {
   }
 };
 
-xdescribe('[IAM] User Profile - Details', () => {
+describe('[IAM] User Profile - Details', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
 

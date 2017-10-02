@@ -45,12 +45,12 @@ export class WrapperService {
         'fileExtracts':'/fileextractservices/v1/api/listfiles',
         'userPicker':'/picker/v2/users',
         'iam': '/iam/auth/v4',
-		    'watchlist':'/watchlistservice/v1/api/recorddetail',
+		'watchlist':'/watchlistservice/v1/api/recorddetail',
+        'subscriptions':'/watchlistservice/v1/api/subscriptions',
         'myFeeds':'/feeds/v1',
     };
 
-  constructor(private _http: Http,
-              private _errorService: SamErrorService ){}
+  constructor(private _http: Http){}
 
   /**
     * common function to perform an API CALL

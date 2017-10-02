@@ -19,7 +19,7 @@ export default {
   registration: {
     init:     '/registration/api/{email}/registerEmailValidation',
     confirm:  '/registration/api/emailValidation',
-    register: '/registration/api/register'
+    register: '/registration/api/v2/register'
   },
 
   password: {

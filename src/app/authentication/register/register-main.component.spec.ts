@@ -11,7 +11,7 @@ import { cloneDeep, merge } from 'lodash';
 import { FHService, IAMService, WrapperService } from 'api-kit';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule, AgencyPickerComponent } from 'app-components';
+import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { RegisterMainComponent } from './register-main.component';
 
 const response = Observable.of({
@@ -41,7 +41,7 @@ const apiStub = {
   }
 };
 
-xdescribe('[IAM] Sign Up (Main)', () => {
+describe('[IAM] Sign Up (Main)', () => {
   let component: RegisterMainComponent;
   let fixture: ComponentFixture<RegisterMainComponent>;
 

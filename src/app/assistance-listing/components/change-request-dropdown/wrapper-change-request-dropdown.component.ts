@@ -46,7 +46,6 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
 
   //by default hide dropdown
   displayDropdown: boolean = false;
-  
   openDropdown: boolean = false;
 
   constructor() {
@@ -57,6 +56,7 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
     if(value && !_.isNil(value.requestTypeAction) && !_.isNil(value.requestTypeAction.currentValue)){
       this.disableDropDown();
     }
+    this.displayHideDropdown();
   }
 
   ngOnInit() {
@@ -68,20 +68,6 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
       default:
         this.listType = FALChangeRequestListType.ACTION;
         break;
-    }
-
-    //business logic to show the dropdown for published FAL & user's permission (logged in user)
-    if (this.program != null && this.program.archived === false && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
-      //remove `unarchive_request` option from the list
-      this.options.request = _.filter(this.options.request, item => { return (item.value != "unarchive_request") });
-      this.displayDropdown = true;
-    }
-
-    //business logic to show the dropdown archived FAL & user's permission (logged in user)
-    if (this.program != null && this.program.archived === true && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
-      //remove the other options from the list and keep only `unarchive_request`
-      this.options.request = _.filter(this.options.request, { value: 'unarchive_request' });
-      this.displayDropdown = true;
     }
 
     this.disableDropDown();
@@ -107,6 +93,22 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
     //if there a pending request & the list requested is a type of "action" then disabled the dropdown
     if (!_.isNil(this.requestTypeAction) && this.listType === FALChangeRequestListType.ACTION) {
       this.disabled = false;
+    }
+  }
+
+  private displayHideDropdown(){
+    //business logic to show the dropdown for published FAL & user's permission (logged in user)
+    if (this.program != null && this.program.archived === false && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
+      //remove `unarchive_request` option from the list
+      this.options.request = _.filter(this.options.request, item => { return (item.value != "unarchive_request") });
+      this.displayDropdown = true;
+      //business logic to show the dropdown archived FAL & user's permission (logged in user)
+    } else if (this.program != null && this.program.archived === true && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null)  {
+      //remove the other options from the list and keep only `unarchive_request`
+      this.options.request = _.filter(this.options.request, { value: 'unarchive_request' });
+      this.displayDropdown = true;
+    } else {
+      this.displayDropdown = false;
     }
   }
 }

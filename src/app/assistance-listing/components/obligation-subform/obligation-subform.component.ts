@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 import {AutocompleteConfig} from "sam-ui-kit/types";
 import moment = require("moment");
 import * as _ from 'lodash';
-import {UUID} from "angular2-uuid";
+import { v4 as UUID } from 'uuid';
 import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
 import {FALFieldNames, FALSectionNames} from "../../assistance-listing-operations/fal-form.constants";
 import {FALFormViewModel} from "../../assistance-listing-operations/fal-form.model";
@@ -276,7 +276,7 @@ export class FALObligationSubFormComponent {
     let obligationId = this.falObligationSubForm.value.obligations[i].obligationId;
 
     if (obligationId == '' || obligationId == null) {
-      uuid = UUID.UUID().replace(/-/g, "");
+      uuid = UUID().replace(/-/g, "");
     }
     else {
       uuid = obligationId;

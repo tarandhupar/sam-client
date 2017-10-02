@@ -31,23 +31,64 @@ export class OpportunityFormViewModel {
     };
   }
 
-  set opportunityId(opportunityId: string) {
-    this._opportunityId = opportunityId;
-  }
-
+  // General Fields
+  // -------------------------------------------------------
   get opportunityId() {
     return this._opportunityId;
+  }
+
+  set opportunityId(opportunityId: string) {
+    this._opportunityId = opportunityId;
   }
 
   get isNew() {
     return this._opportunityId == null || typeof this._opportunityId === 'undefined';
   }
 
-  get title() {
-    return this._data.title || '';
+  get title(): string {
+    return _.get(this._data, 'title', null);
   }
 
-  set title(title) {
-    this._data.title = title;
+  set title(title: string) {
+    _.set(this._data, 'title', title);
+  }
+
+  // Header Information
+  // -------------------------------------------------------
+  get office(): string {
+    return _.get(this._data, 'organizationId', null);
+  }
+
+  set office(office: string) {
+    _.set(this._data, 'organizationId', office);
+  }
+
+  get opportunityType(): string {
+    return _.get(this._data, 'type', null);
+  }
+
+  set opportunityType(type: string) {
+    _.set(this._data, 'type', type);
+  }
+
+  get procurementId(): string {
+    return _.get(this._data, 'solicitationNumber', null);
+  }
+
+  set procurementId(id: string) {
+    _.set(this._data, 'solicitationNumber', id);
+  }
+
+  // Description
+  // -------------------------------------------------------
+  get description() {
+    let desc = '';
+    if (this._data.description && this._data.description.body) {
+      desc = this._data.description.body;
+    }
+    return desc;
+  }
+  set description(description) {
+    _.set(this._data, 'description.body', description);
   }
 }

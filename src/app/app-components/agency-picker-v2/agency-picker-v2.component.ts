@@ -22,19 +22,52 @@ import * as _ from 'lodash';
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
  */
 export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
+    /**
+     * Sets the required text in the label wrapper
+     */
     @Input() required: boolean;
+    /**
+     * Sets the label wrapper text
+     */
     @Input() label: string;
+    /**
+     * Sets the name/id properties with form elements + labels
+     */
     @Input() name: string = "default";
+    /**
+     * Sets the hint text
+     */
     @Input() hint: string;
-    @Input() orgLimit: number = 7;
+    /**
+     * Sets the form control for checking validations and updating label messages
+     */
     @Input() control: AbstractControl;
+    /**
+     * Sets the autocomplete between the "multiple" or "single" selection types
+     */
     @Input() type: string = "multiple";
-    @Input() orgRoots = [];//100038381 - "100004222","100001616"
+    /**
+     * Sets the organization the picker should lock on (ie. ['100000000'])
+     */
+    @Input() orgRoots = [];
+    /**
+     * Sets the number of levels down the picker should go down to
+     */
     @Input() limit;
+    /**
+     * When logged in, sets the orgRoot to the user's organization
+     */
     @Input() defaultDept:boolean = false;
+    /**
+     * Sets the label wrapper error message manually
+     */
     @Input() searchMessage: '';
+    /**
+     * Flag that controls emitting an event when the formControl passes down a new value to set
+     */
     @Input() editOnFlag: boolean = true;
 
+    orgLimit: number = 7;
     orgLevels: any[] = [];
 
     private dropdownLimit: number = 200;

@@ -18,14 +18,14 @@ const LDAP_MAPPINGS = {
 const ROLE_MAPPINGS = {
   systemAccount: [
     'system-accounts.management',
-    'system-accounts.migration'
+    'system-accounts.migration',
   ],
 
   fsd: [
     'fsd.profile',
     'fsd.kba',
     'fsd.deactivate',
-    'fsd.passreset'
+    'fsd.passreset',
   ],
 };
 

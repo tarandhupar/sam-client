@@ -13,9 +13,9 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "organization_id": return "Organization";
         break;
-      case "beneficiary": return "Beneficiaries";
+      case "beneficiary_type": return "Beneficiaries";
         break;
-      case "applicant": return "Applicant Types";
+      case "applicant_type": return "Applicant Types";
         break;
       case "assistance_type": return "Assistance Type";
         break;
@@ -47,7 +47,7 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "is_standard": return "Standard WD";
         break;
-      case "is_even": return "Even";
+      case "is_wd_even": return "WD Even";
         break;
       case "service": return "Domain";
         break;

@@ -1,12 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { FALFormService } from "../../fal-form.service";
-import { FALFormViewModel } from "../../fal-form.model";
 import { AutocompleteConfig } from "sam-ui-kit/types";
+import { ProgramService } from "../../../../../api-kit/program/program.service";
+import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames } from '../../fal-form.constants';
-import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
-import { ProgramService } from "../../../../../api-kit/program/program.service";
+import { FALFormViewModel } from "../../fal-form.model";
+import { FALFormService } from "../../fal-form.service";
 
 @Component({
   providers: [FALFormService, ProgramService],

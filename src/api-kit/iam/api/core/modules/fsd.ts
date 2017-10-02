@@ -9,6 +9,7 @@ import {
 } from './helpers';
 
 import { User } from '../user';
+import { getMockUser } from './mocks';
 
 function transformUserKBAResponse(data) {
   let kba = [],
@@ -84,6 +85,12 @@ export const fsd = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
+    if(isDebug()) {
+      const user: User = new User(getMockUser());
+      $success(user);
+      return;
+    }
+
     // Verify Session Token
     if(auth) {
       request
@@ -95,17 +102,7 @@ export const fsd = {
           $error(exceptionHandler(response.body));
         });
     } else {
-      if(isDebug()) {
-        const user: User = new User({
-          _id: id,
-          firstName: 'John',
-          lastName: 'Doe'
-        });
-
-        $success(user);
-      } else {
-        $error({ message: 'No user active user session.' });
-      }
+      $error({ message: 'No user active user session.' });
     }
   },
 

@@ -11,7 +11,7 @@ export const routes: Routes = [
     path: 'opportunities/:id/edit',
     component: OpportunityFormComponent,
     resolve: {
-      fal: OpportunityFormResolver
+      opp: OpportunityFormResolver
     }
   }
 ];

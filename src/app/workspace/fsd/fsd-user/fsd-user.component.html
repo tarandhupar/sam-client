@@ -96,7 +96,7 @@
       </div>
 
       <div class="usa-button-controls">
-        <sam-button buttonType="tertiary" buttonText="Send" (onClick)="sendPasswordReset"></sam-button>
+        <sam-button buttonType="tertiary" buttonText="Send" (onClick)="sendPasswordReset()"></sam-button>
         <sam-alert [type]="alerts.password.type"
                    [title]="alerts.password.message"
                    [showClose]="true"

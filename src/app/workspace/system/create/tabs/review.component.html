@@ -1,0 +1,57 @@
+<div *ngIf="form">
+  <sam-fieldset-wrapper label="System Information">
+    <a class="usa-additional_text edit" (click)="edit('system-information')" label-right><span class="fa fa-pencil"></span> Edit</a>
+    <sam-label-wrapper class="inline" label="Unique System ID:">{{ field('systemName') }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Interfacing System Name and Version:">{{ field('systemVersion') }}</sam-label-wrapper>
+    <sam-label-wrapper label="System Description and Function">{{ field('systemDesciption') }}</sam-label-wrapper>
+  </sam-fieldset-wrapper>
+
+  <sam-fieldset-wrapper label="Organization Information">
+    <a class="usa-additional_text edit" (click)="edit('organization')" label-right><span class="fa fa-pencil"></span> Edit</a>
+    <sam-label-wrapper class="inline" label="Organization:"></sam-label-wrapper>
+    <sam-label-wrapper label="System Administrators">
+      <dl>
+        <dd></dd>
+      </dl>
+    </sam-label-wrapper>
+    <sam-label-wrapper label="System Managers">
+      <dl>
+        <dd></dd>
+      </dl>
+    </sam-label-wrapper>
+  </sam-fieldset-wrapper>
+
+  <sam-fieldset-wrapper label="Permissions">
+    <a class="usa-additional_text edit" (click)="edit('permissions')" label-right><span class="fa fa-pencil"></span> Edit</a>
+    <sam-label-wrapper class="inline" label="Contract Opportunities:"></sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Contract Data:"></sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Entity Information:"></sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Overall FIPS 199 Categorization:"></sam-label-wrapper>
+  </sam-fieldset-wrapper>
+
+  <sam-fieldset-wrapper label="Security Information">
+    <a class="usa-additional_text edit" (click)="edit('security')" label-right><span class="fa fa-pencil"></span> Edit</a>
+    <sam-label-wrapper class="inline" label="IP Address:"></sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Type of Connection:"></sam-label-wrapper>
+    <sam-label-wrapper label="Physical Location">{{ field('location') }}</sam-label-wrapper>
+    <sam-label-wrapper label="Security Official">
+      <div [innerText]="field('securityOfficerName')"></div>
+      <div [innerText]="field('securityOfficerEmail')"></div>
+    </sam-label-wrapper>
+  </sam-fieldset-wrapper>
+
+  <sam-fieldset-wrapper label="Authorization">
+    <a class="usa-additional_text edit" (click)="edit('authorization')" label-right><span class="fa fa-pencil"></span> Edit</a>
+    <sam-label-wrapper label="Authorizing Official">
+      <div>
+        <span class="fa" [ngClass]="field('certified') ? 'fa-check-square-o' : 'fa-square-o'"></span>
+        <div>
+          I confirm thot I am the authorizing official for the requested System Account
+          and certify that all the above provided information is current ond correct.
+        </div>
+      </div>
+    </sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Name:">{{ field('official') }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Date:">Jun 3, 2017 10:36 om</sam-label-wrapper>
+  </sam-fieldset-wrapper>
+</div>

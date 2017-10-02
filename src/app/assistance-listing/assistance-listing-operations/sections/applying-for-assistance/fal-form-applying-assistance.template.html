@@ -77,6 +77,7 @@
                  [name]="'preAppCord-checkbox'"
                  [hint]="'Select all that apply'"
                  [options]="preAppCordOptions"
+                  (ngModelChange)="isRequired($event)"
                  [attr.id] = "'fal-appForAssist-pac-checkbox'"
                  formControlName="reports"
     ></sam-checkbox>
@@ -86,7 +87,7 @@
                  [attr.id]="'fal-appForAssist-pac-addInfo'"
                  [control]="falAssistanceForm.get('preApplicationCoordination').get('description')"
                  formControlName="description"
-                 [required]="falAssistanceForm.get('preApplicationCoordination').get('reports').value.indexOf('otherRequired') !== -1"
+                 [requiredFlag]="flag"
                  [class.hide]="falAssistanceForm.value.preApplicationCoordination.reports.length == 0"
     ></sam-text-area>
   </div>
@@ -124,7 +125,7 @@
                    [label]="'Please describe.'"
                    [name]="'selectionCriteria-description'"
                    [attr.id]="'fal-appForAssist-sc-description'"
-                   [required]="falAssistanceForm.value.selectionCriteria.isApplicable[0] == true"
+                   [requiredFlag]="falAssistanceForm.value.selectionCriteria.isApplicable[0] == true"
                    formControlName="description"
                    [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
                    [control]="falAssistanceForm.get('selectionCriteria').get('description')"

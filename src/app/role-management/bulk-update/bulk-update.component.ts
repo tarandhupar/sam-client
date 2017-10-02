@@ -23,7 +23,7 @@ function labelCompare(a, b) {
 @Component({
   selector: "sam-toggle",
   template: `
-    <input type="checkbox" [(ngModel)]="_checked" [disabled]="disabled" (click)="onSwitchClick()">
+    <input type="checkbox" [(ngModel)]="_checked" [disabled]="disabled" (click)="onSwitchClick()" style="max-width: 200px">
     <label class="sam-toggle" [style.pointer-events]="disabled ? 'none' : 'all'">{{label}}</label>
   `,
   providers: [{

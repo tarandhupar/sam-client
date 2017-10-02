@@ -62,37 +62,38 @@ export class OpportunityService {
     return this.oAPIService.call(apiParam);
   }
 
-  saveContractOpportunity(id: String = null, data: any) {
+  saveContractOpportunity(id: String = null, data: any, authToken: string = null) {
     let oApiParam = {
       name: 'contractOpportunity',
-      suffix: (id == null) ? '' : '/' + id,
+      suffix: (id == null) ? '/opportunities' : '/opportunities/' + id,
       oParam: {},
-      headers: {
-        "X-Auth-Token": ''
-      },
+      headers: {},
       body: data,
       method: (id == null || id == '') ? 'POST' : 'PATCH'
     };
 
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
+      oApiParam.headers = {
+        "X-Auth-Token": authToken
+      }
+    }
     return this.oAPIService.call(oApiParam, false);
   }
 
-  deleteContractOpportunity(id: String) {
+  deleteContractOpportunity(id: String, authToken: string = null) {
     let oApiParam = {
       name: 'contractOpportunity',
       suffix: '/' + id,
       oParam: {},
-      headers: {
-        "X-Auth-Token": ''
-      },
+      headers: {},
       method: 'DELETE'
     };
 
-    /*if(typeof cookie !== 'undefined' && cookie !== ''){
+    if(typeof authToken !== 'undefined' && authToken !== '' && authToken != null){
       oApiParam.headers = {
-        "X-Auth-Token": cookie
+        "X-Auth-Token": authToken
       };
-    }*/
+    }
 
     return this.oAPIService.call(oApiParam, false);
   }

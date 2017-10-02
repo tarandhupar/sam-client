@@ -1,0 +1,32 @@
+<div *ngIf="system" grid>
+  <div row>
+    <div columns="2"></div>
+    <div columns="8">
+      <title-and-section section="Workspace" [title]="system.systemName" [badge]="states.status"></title-and-section>
+
+      <div class="usa-progress-bar">
+        <div class="progress-header">
+          <span>Draft</span>
+          <span>Pending Approval</span>
+          <span></span>
+        </div>
+        <div class="progress-body">
+          <div>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <sam-fieldset-wrapper label="Request Status">
+        <sam-label-wrapper class="inline" label="Application ID:">XYZ1234</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Submitted Date:">Jun 6, 10:32 am</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Last Updated Date:">Jun 6, 9:40 am</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Submitted By:">Susan Alexander</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Security Approver:">Not yet approved</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Security Approved Date:">Not yet approved</sam-label-wrapper>
+      </sam-fieldset-wrapper>
+    </div>
+  </div>
+</div>

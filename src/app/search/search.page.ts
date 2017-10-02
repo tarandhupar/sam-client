@@ -9,6 +9,7 @@ import { AlertFooterService } from '../app-components/alert-footer';
 import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
 import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
 import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
+import * as Cookies from 'js-cookie';
 
 @Component({
   moduleId: __filename,
@@ -40,6 +41,8 @@ export class SearchPage implements OnInit {
   isSearchComplete: boolean = false;
   showSpinner: boolean = false;
   agencyPickerModel = [];
+  showSavedSearches: boolean = false;
+  savedSearch: string = "";
 
   defaultSortModel: any = {type:'modifiedDate', sort:'desc'};
   keywordSortModel: any = {type:'relevance', sort:'desc'};
@@ -348,6 +351,7 @@ export class SearchPage implements OnInit {
   // Notice Type
   noticeTypeModel: any = '';
   noticeType = {
+  "name": "Notice Type",
   "options": [],
   "config": {
     keyValueConfig: {
@@ -360,6 +364,7 @@ export class SearchPage implements OnInit {
   // Set Aside Type
   setAsideModel: any = '';
   setAsideType = {
+    "name": "Set Aside Type",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -483,6 +488,13 @@ export class SearchPage implements OnInit {
   }
 
   ngOnInit() {
+    let cookie = Cookies.get('iPlanetDirectoryPro');
+
+    if(cookie != null) {
+      this.showSavedSearches = true;
+    }
+
+
     if (window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0) {
       this.showRegionalOffices = true;
     } else {
@@ -502,7 +514,7 @@ export class SearchPage implements OnInit {
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
         this.wdConstructModel = data['construction_type'] && data['construction_type'] !== null ? data['construction_type'] : '';
         this.wdNonStandardSelectModel = data['service'] && data['service'] !== null ? data['service'] : '';
-        this.wdNonStandardRadModel = data['is_even'] && data['is_even'] !== null ? data['is_even'] : '';
+        this.wdNonStandardRadModel = data['is_wd_even'] && data['is_wd_even'] !== null ? data['is_wd_even'] : '';
         this.wdSubjectToCBAModel = data['cba'] && data['cba'] !== null ? data['cba'] : '';
         this.wdPreviouslyPerformedModel = data['prevP'] && data['prevP'] !== null ? data['prevP'] : '';
         this.isStandard = data['is_standard'] && data['is_standard'] !== null ? data['is_standard'] : '';
@@ -513,8 +525,8 @@ export class SearchPage implements OnInit {
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
-        this.appElSearchString = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
-        this.benElSearchString = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
+        this.appElSearchString = data['applicant_type'] && data['applicant_type'] !== null ? data['applicant_type'] : '';
+        this.benElSearchString = data['beneficiary_type'] && data['beneficiary_type'] !== null ? data['beneficiary_type'] : '';
         this.assistanceTypeFilterModel = data['assistance_type'] && data['assistance_type'] !== null ? data['assistance_type'] : '';
         this.registrationExclusionCheckboxModel = data['entity_type'] && data['entity_type'] !== null ? decodeURI(data['entity_type']).split(",") : [];
         this.agencyPickerModel = this.setupOrgsFromQS(data['organization_id']);
@@ -522,6 +534,8 @@ export class SearchPage implements OnInit {
         this.sortModel = typeof data['sort'] === "string" ? this.setSortModel(decodeURI(data['sort'])) : this.defaultSortModel;
         this.noticeTypeModel = data['notice_type'] && data['notice_type'] !== null ? data['notice_type'] : '';
         this.setAsideModel = data['set_aside'] && data['set_aside'] !== null ? data['set_aside'] : '';
+        //To display saved search title
+        this.savedSearch = data['saved_search'] && data['saved_search'] !== null ? data['saved_search'] : '';
         // persist duns filter data
         if(this.dunsListString && this.dunsListString.length > 0){
           this.grabPersistData(this.dunsListString);
@@ -653,8 +667,6 @@ export class SearchPage implements OnInit {
 
     if (this.organizationId.length > 0) {
       qsobj['organization_id'] = this.organizationId;
-    }else{
-      qsobj['organization_id'] = '';
     }
 
     //wd Non Standard drop down param
@@ -664,7 +676,7 @@ export class SearchPage implements OnInit {
 
     //wd Non Standard radio button param
     if (this.wdNonStandardRadModel.length > 0) {
-      qsobj['is_even'] = this.wdNonStandardRadModel;
+      qsobj['is_wd_even'] = this.wdNonStandardRadModel;
       // this rad button determins isStandard as well
       qsobj["is_standard"] = this.isStandard;
     }
@@ -709,11 +721,11 @@ export class SearchPage implements OnInit {
     }
 
     if (this.benElSearchString.length > 0) {
-      qsobj['beneficiary'] = this.benElSearchString;
+      qsobj['beneficiary_type'] = this.benElSearchString;
     }
 
     if (this.appElSearchString.length > 0) {
-      qsobj['applicant'] = this.appElSearchString;
+      qsobj['applicant_type'] = this.appElSearchString;
     }
 
     if (this.assistanceTypeFilterModel.length > 0) {
@@ -850,7 +862,7 @@ export class SearchPage implements OnInit {
       state: this.wdStateModel,
       county: this.wdCountyModel,
       service: this.wdNonStandardSelectModel,
-      is_even: this.wdNonStandardRadModel,
+      is_wd_even: this.wdNonStandardRadModel,
       is_standard: this.isStandard,
       award_or_idv: this.awardIDVModel,
       award_type: this.awardTypeModel,
@@ -860,8 +872,8 @@ export class SearchPage implements OnInit {
       showRO: this.showRegionalOffices,
       ro_keyword: this.ro_keyword,
       duns: this.dunsListString,
-      applicant: this.appElSearchString,
-      beneficiary: this.benElSearchString,
+      applicant_type: this.appElSearchString,
+      beneficiary_type: this.benElSearchString,
       assistance_type: this.assistanceTypeFilterModel,
       entity_type: this.registrationExclusionCheckboxModel,
       notice_type: this.noticeTypeModel,
@@ -1278,6 +1290,8 @@ export class SearchPage implements OnInit {
 
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh() {
+    //clear saved search title
+    this.savedSearch = '';
     this.pageUpdate = true;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -1335,6 +1349,9 @@ export class SearchPage implements OnInit {
 
   clearAllFilters() {
 
+    //clear saved search title
+    this.savedSearch = "";
+
     // clear/reset all top level filters
     this.isActive = true;
     this.keywordsModel = [];
@@ -1359,10 +1376,8 @@ export class SearchPage implements OnInit {
 
     // call clear for agency picker
     if (this.agencyPickerV2) {
-      //reset agency filter
-      this.agencyPickerV2.reset();
-
-      //clear advanced agency filter
+      this.agencyPickerModel = [];
+      this.organizationId = '';
       this.agencyPickerV2.clearAdvanced();
     }
 
@@ -1557,8 +1572,8 @@ export class SearchPage implements OnInit {
       var reformattedArray3 = data['procurement_type'].map(function (noticeItem) {
         let newObj = {label: '', value: ''};
 
-        newObj.label = noticeItem.value;
-        newObj.value = noticeItem.code;
+        newObj.label = noticeItem.value=="Modification/Amendment/Cancel" ? "Canceled" : noticeItem.value;
+        newObj.value = noticeItem.code=="m" ? "c" : noticeItem.code;
         return newObj;
       });
 

@@ -43,29 +43,17 @@ export class OrgMovePage {
     this.route.parent.params.subscribe(
       params => {
         this.orgKey = params['orgId'];
-        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-      });
-  }
-
-  checkAccess = (user) => {
-    this.fhService.getAccess(this.orgKey).subscribe(
-      (data)=> {
         this.fhService.getOrganizationDetail(this.orgKey).subscribe(
           val => {
             this.fhRoleModel = FHRoleModel.FromResponse(val);
             if(!this.fhRoleModel.canMoveOffice() ) {
-              this.redirectToForbidden();
+              this._router.navigateByUrl('/403')
             } else {
               this.setupOrg(this.orgKey);
             }
           });
-      },
-      (error) => { if(error.status === 403) this.redirectToForbidden();}
-    );
-  };
-
-  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
+      });
+  }
 
   setupOrg(orgId){
     this.fhService.getOrganizationById(this.orgKey,false,true).subscribe(

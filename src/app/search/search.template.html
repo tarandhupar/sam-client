@@ -5,6 +5,27 @@
 
     <div class ="sam-ui hidden divider"></div>
 
+    <!-- Sidebar section -->
+    <sidebar *ngIf="showSavedSearches">
+
+      <!-- Navigation -->
+      <ul class="usa-sidenav-list">
+        <li>
+          <a class="usa-current">
+            Search Results
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/savedsearches/workspace']">
+            Saved Searches
+          </a>
+        </li>
+      </ul>
+
+    </sidebar>
+
+    <!--<div class ="sam-ui hidden divider"></div>-->
+
     <div class="sam-ui segment">
       <!-- Status -->
       <ng-container *ngIf="index !== 'fh' && showRegionalOffices==false">
@@ -72,7 +93,6 @@
       <ng-container *ngIf="index !=='wd' && index !=='ei'">
         <h4 class="sam-ui header">Federal Organizations</h4>
         <sam-agency-picker-v2 #agencyPickerV2
-          name="main"
           [attr.id] = "'federal-organization-filter'"
           [label]="'Search Federal Organizations'"
           [ngModel]="agencyPickerModel"
@@ -92,19 +112,8 @@
                                       [selectOptions]="noticeType.options"
                                       [selectConfig]="noticeType">
           </search-multi-select-filter>
+        <div class="sam-ui divider"></div>
         </ng-container>
-
-      <!--Set Aside Filter-->
-      <ng-container *ngIf="(index === 'opp' || index === 'fpds')  && showRegionalOffices==false">
-        <h4 class="sam-ui header">Set Aside</h4>
-        <search-multi-select-filter [attr.id]= "'set-aside-filter'"
-                                    class="usa-award-filter award-type-dropdown-list"
-                                    [selectValues]="setAsideModel"
-                                    (selectValuesChange)="setAsideModelChange($event)"
-                                    [selectOptions]="setAsideType.options"
-                                    [selectConfig]="setAsideType">
-        </search-multi-select-filter>
-      </ng-container>
 
       <ng-container *ngIf="index === 'wd' && showRegionalOffices==false">
         <h4 class="sam-ui header">Wage Determination Type</h4>
@@ -272,7 +281,7 @@
         <sam-autocomplete-multiselect autofill-entityduns
                                       class="usa-award-filter"
                                       [attr.id]="'entityDuns'"
-                                      [name]="'Test'"
+                                      [name]="'Entity Duns'"
                                       [ngModel]="dunsModelList"
                                       (ngModelChange)="dunsModelChange($event)"
                                       [keyValueConfig]="dunsConfiguration.keyValueConfig">
@@ -339,6 +348,19 @@
         <div class="sam-ui divider"></div>
       </ng-container>
 
+      <!--Set Aside Filter-->
+      <ng-container *ngIf="(index === 'opp' || index === 'fpds')  && showRegionalOffices==false">
+        <h4 class="sam-ui header">Set Aside</h4>
+        <search-multi-select-filter [attr.id]= "'set-aside-filter'"
+                                    class="usa-award-filter award-type-dropdown-list"
+                                    [selectValues]="setAsideModel"
+                                    (selectValuesChange)="setAsideModelChange($event)"
+                                    [selectOptions]="setAsideType.options"
+                                    [selectConfig]="setAsideType">
+        </search-multi-select-filter>
+        <div class="sam-ui divider"></div>
+      </ng-container>
+
       <div class ="sam-ui  hidden divider"></div>
 
       <sam-button
@@ -356,8 +378,9 @@
     <div class="usa-width-one">
       <sam-alert *ngIf="index==='wd' && !dismissWdAlert" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" (dismiss)="dismissWdAlert=true"><div [innerHTML]="wdSearchDescription"></div></sam-alert>
 
-      <h1 *ngIf="!showRegionalOffices" class="m_T-0 p_T-6x">Search Results</h1>
-      <h1 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h1>
+      <h1 *ngIf="showSavedSearches && savedSearch!=''" class="m_T-0 p_T-6x">{{savedSearch}}</h1>
+      <h2 *ngIf="!showRegionalOffices" [ngClass]="(savedSearch!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
+      <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
 
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve

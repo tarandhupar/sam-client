@@ -70,32 +70,6 @@ class IAM {
     });
   }
 
-  login(credentials, $success, $error) {
-    let $api = this,
-        endpoint = utilities.getUrl(config.session),
-        token,
-        data = merge({ service: 'ldapService' }, credentials);
-
-    $success = $success || function() {};
-    $error = $error || function() {};
-
-    request
-      .post(endpoint)
-      .send(data)
-      .then(function(response) {
-        let data = response.body;
-
-        if(data.authnResponse.tokenId !== undefined) {
-          Cookies.set('iPlanetDirectoryPro', (data.authnResponse.tokenId  || null), config.cookies);
-          $success();
-        } else {
-          $error();
-        }
-      }, function() {
-        $error();
-      });
-  }
-
   loginOTP(credentials, $success, $error) {
     let endpoint = utilities.getUrl(config.session),
         token,

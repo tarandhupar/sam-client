@@ -62,8 +62,7 @@ export class OrgDetailProfilePage {
     this.route.parent.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-
+        this.getOrgDetail(this.orgId);
       });
   }
 
@@ -72,16 +71,6 @@ export class OrgDetailProfilePage {
   isEditableField(field):boolean{return ["Description","Shortname","End Date"].indexOf(field) !== -1;}
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
   isRequestAACIcon(pair):boolean{return !this.isDoD() && pair.value === '' && (pair.code === 'Procurement AAC' || pair.code === 'Non-procurement AAC');}
-
-  checkAccess = (user) => {
-    this.fhService.getAccess(this.orgId).subscribe(
-      (data)=> {this.getOrgDetail(this.orgId);},
-      (error)=> {if(error.status === 403) this.redirectToForbidden();}
-    );
-  };
-
-  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
 
   getOrgDetail = (orgId) => {
     this.isDataAvailable = false;
@@ -98,7 +87,7 @@ export class OrgDetailProfilePage {
 
   setupOrgFields(orgDetail){
     this.setCurrentHierarchyType(orgDetail.type);
-    this.setCUrrentHierarchyLevel(orgDetail.level);
+    this.setCurrentHierarchyLevel(orgDetail.level);
     this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
     this.setupOrganizationDetail(orgDetail);
     this.setupOrganizationCodes(orgDetail);
@@ -203,21 +192,21 @@ export class OrgDetailProfilePage {
     this.orgCodes = [];
     switch (org.type) {
       case "OFFICE": case "Office":
-        this.orgCodes.push({code:"Procurement AAC", value:this.getOrgFieldData(org,"procurementAACCode")});
-        this.orgCodes.push({code:"Non-procurement AAC", value:this.getOrgFieldData(org,"nonProcurementAACCode")});
-        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
-        break;
+      this.orgCodes.push({code:"Procurement AAC", value:this.getOrgFieldData(org,"procurementAACCode")});
+      this.orgCodes.push({code:"Non-procurement AAC", value:this.getOrgFieldData(org,"nonProcurementAACCode")});
+      this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
+      break;
       case "AGENCY": case "Sub-Tier": case "Maj Command": case "Sub-Command 1": case "Sub-Command 2": case "Sub-Command 3":
       this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
       this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
       break;
       case "DEPARTMENT": case "Dept/Ind Agency":
-        this.orgCodes.push({code:"TAS-2 Code", value:this.getOrgFieldData(org,"tas2Code")});
-        this.orgCodes.push({code:"TAS-3 Code", value:this.getOrgFieldData(org,"tas3Code")});
-        this.orgCodes.push({code:"A-11 Code", value:this.getOrgFieldData(org,"a11TacCode")});
-        this.orgCodes.push({code:"CFDA Code", value:this.getOrgFieldData(org,"cfdaCode")});
-        this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
-        break;
+      this.orgCodes.push({code:"TAS-2 Code", value:this.getOrgFieldData(org,"tas2Code")});
+      this.orgCodes.push({code:"TAS-3 Code", value:this.getOrgFieldData(org,"tas3Code")});
+      this.orgCodes.push({code:"A-11 Code", value:this.getOrgFieldData(org,"a11TacCode")});
+      this.orgCodes.push({code:"CFDA Code", value:this.getOrgFieldData(org,"cfdaCode")});
+      this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
+      break;
       default:
         break;
     }
@@ -237,7 +226,7 @@ export class OrgDetailProfilePage {
     this.currentHierarchyType = type;
   }
 
-  setCUrrentHierarchyLevel(level){
+  setCurrentHierarchyLevel(level){
     this.currentHierarchyLevel = level;
   }
 

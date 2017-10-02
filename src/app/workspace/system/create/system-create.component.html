@@ -1,0 +1,30 @@
+<page [section]="store.section" [title]="title" [badge]="status">
+  <sidebar>
+    <sam-sidenav type="step"
+                 [model]="store.nav"
+                 [labelLookup]="store.nav.children[states.section].label"
+                 (path)="onNavigate($event)"></sam-sidenav>
+  </sidebar>
+  <div>
+    <div class="header-hint" message [innerText]="message"></div>
+
+    <form>
+      <sam-tabs theme="separate" size="default">
+        <sam-tab tabTitle="Edit" [active]="states.tab == 0">
+          <edit [section]="store.nav.children[states.section].route" [form]="system"></edit>
+        </sam-tab>
+        <sam-tab tabTitle="Review" [active]="states.tab == 1" [disabled]="false">
+          <review class="review" [form]="system" (onEdit)="edit($event)"></review>
+        </sam-tab>
+        <sam-tab tabTitle="Submit" [float]="true"></sam-tab>
+      </sam-tabs>
+    </form>
+
+    <div class="usa-button-controls">
+      <sam-button buttonType="tertiary" buttonSize="small" buttonText="Cancel" (onClick)="cancel()"></sam-button>
+      <sam-button buttonType="secondary" buttonSize="small" buttonText="Previous" (onClick)="Review()" *ngIf="states.section > 0"></sam-button>
+      <sam-button buttonType="secondary" buttonSize="small" buttonText="Review" (onClick)="Review()" *ngIf="states.section < store.nav.children.length - 1"></sam-button>
+      <sam-button buttonType="primary" buttonSize="small" buttonText="Next" (onClick)="next()"></sam-button>
+    </div>
+  </div>
+</page>

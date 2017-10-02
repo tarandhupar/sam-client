@@ -4,11 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule } from 'app-components';
+import { AppComponentsModule } from 'app-components/app-components.module';
 
 import { ForgotMainComponent } from './forgot-main.component';
 
-xdescribe('[IAM] Forgot Password (Main)', () => {
+describe('[IAM] Forgot Password (Main)', () => {
   let component: ForgotMainComponent;
   let fixture: ComponentFixture<ForgotMainComponent>;
 

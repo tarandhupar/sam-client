@@ -1,0 +1,13 @@
+<div grid>
+  <div row>
+    <div columns="10">
+      <div [ngSwitch]="section" *ngIf="form">
+        <system-information *ngSwitchCase="'system-information'" [form]="form"></system-information>
+        <organization *ngSwitchCase="'organization'" [form]="form"></organization>
+        <permissions *ngSwitchCase="'permissions'" [form]="form"></permissions>
+        <security  *ngSwitchCase="'security'" [form]="form"></security>
+        <authorization  *ngSwitchCase="'authorization'" [form]="form"></authorization>
+      </div>
+    </div>
+  </div>
+</div>

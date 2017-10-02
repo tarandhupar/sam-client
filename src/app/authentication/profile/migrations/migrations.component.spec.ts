@@ -4,12 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule } from 'app-components';
+import { AppComponentsModule } from 'app-components/app-components.module';
 import { PipesModule } from 'app-pipes/app-pipes.module';
 
 import { MigrationsComponent } from './migrations.component';
 
-xdescribe('[IAM] User Profile - Migrations', () => {
+describe('[IAM] User Profile - Migrations', () => {
   let component: MigrationsComponent;
   let fixture: ComponentFixture<MigrationsComponent>;
 

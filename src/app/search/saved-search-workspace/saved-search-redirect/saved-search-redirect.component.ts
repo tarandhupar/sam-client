@@ -41,7 +41,7 @@ export class SavedSearchRedirect implements OnInit {
           Cookie: this.authToken
         }).subscribe(data => {
                 this.savedSearches = data._embedded.preferences;
-                if(this.savedSearches && this.savedSearches.length > 0){
+                if(this.savedSearches && this.savedSearches.length > 0 && data && this.key){
                     this.savedSearch = this.savedSearches.find(elem => {
                         return elem.data.key === this.key;
                     });
@@ -109,9 +109,15 @@ export class SavedSearchRedirect implements OnInit {
         }else{
             qsobj['index'] = '';
         }
+        if(this.savedSearch.title) {
+          qsobj['saved_search'] = this.savedSearch.title;
+        }
 
         //key and value are read in reverse for some reason
         _.forOwn(data.parameters, function(value, key){
+            if(key === 'keyword'){
+                key = 'keywords';
+            }
             qsobj[key] = value;
         });
 

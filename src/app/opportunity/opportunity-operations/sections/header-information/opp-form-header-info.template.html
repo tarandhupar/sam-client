@@ -1,0 +1,61 @@
+<h2 class="sam-ui header">
+  Header Information
+</h2>
+
+<form [formGroup]="oppHeaderInfoForm">
+
+  <div class="sam-ui segment" *ngIf="!viewModel.opportunityId">
+    <sam-select
+      [attr.id]="oppTypeConfig.id"
+      [control]="oppHeaderInfoForm.get('opportunityType')"
+      [formControl]="oppHeaderInfoForm.get('opportunityType')"
+      [hint]="oppTypeConfig.hint"
+      [label]="oppTypeConfig.label"
+      [name]="oppTypeConfig.name"
+      [options]="oppTypeConfig.options"
+      [required]="oppTypeConfig.required">
+    </sam-select>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text
+      [attr.id]="titleConfig.id"
+      [control]="oppHeaderInfoForm.get('title')"
+      [formControl]="oppHeaderInfoForm.get('title')"
+      [hint]="titleConfig.hint"
+      [label]="titleConfig.label"
+      [maxlength]="titleConfig.maxLength"
+      [name]="titleConfig.name"
+      [required]="titleConfig.required">
+    </sam-text>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text
+      [attr.id]="idConfig.id"
+      [control]="oppHeaderInfoForm.get('procurementId')"
+      [formControl]="oppHeaderInfoForm.get('procurementId')"
+      [hint]="idConfig.hint"
+      [label]="idConfig.label"
+      [maxlength]="idConfig.maxLength"
+      [name]="idConfig.name"
+      [required]="idConfig.required">
+    </sam-text>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-agency-picker-v2
+      [attr.id]="agencyPickerConfig.id"
+      [control]="oppHeaderInfoForm.get('office')"
+      [formControl]="oppHeaderInfoForm.get('office')"
+      [hint]="agencyPickerConfig.hint"
+      [label]="agencyPickerConfig.label"
+      [limit]="agencyPickerConfig.levelLimit"
+      [orgRoots]="agencyPickerConfig.orgRoots"
+      [required]="agencyPickerConfig.required"
+      [type]="agencyPickerConfig.type">
+    </sam-agency-picker-v2>
+  </div>
+
+
+</form>

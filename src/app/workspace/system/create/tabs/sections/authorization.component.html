@@ -1,0 +1,10 @@
+<sam-fieldset-wrapper [label]="label('ato')" [hint]="hint('ato')">
+  <!-- Upload -->
+</sam-fieldset-wrapper>
+
+<sam-checkbox name="certified"
+              [options]="options.certified"
+              [control]="form.get('certified')"></sam-checkbox>
+
+<sam-label-wrapper label="Name">{{ store.name }}</sam-label-wrapper>
+<sam-label-wrapper label="Date">{{ store.date }}</sam-label-wrapper>

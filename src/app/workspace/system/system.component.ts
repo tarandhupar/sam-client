@@ -25,13 +25,13 @@ export class SystemComponent {
         { text: 'Deactivate Account',       routerLink: '#deactivate-account',       anchor: true, hidden: true },
       ] },
       { text: 'Reset Password', routerLink: ['password'], routerLinkActive: 'usa-current', hidden: true },
-      // { text: 'My Access',      routerLink: false,        routerLinkActive: 'usa-current' },
       // { text: 'Migrations',     routerLink: 'migrations', routerLinkActive: 'usa-current' }
     ],
   };
 
   private breadcrumbs = this.store.breadcrumbs;
   private states = {
+    legacy: true,
     isProfile: false,
     nav: true,
     route: '',
@@ -51,7 +51,11 @@ export class SystemComponent {
 
   ngOnInit() {
     this.store.subscriptions['data'] = this.route.children[0].data.subscribe(data => {
-      this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
+      if(data['breadcrumbs'] === false) {
+        this.breadcrumbs = [];
+      } else {
+        this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
+      }
     });
 
     this.checkRoute();
@@ -64,11 +68,17 @@ export class SystemComponent {
   }
 
   checkRoute() {
-    this.states.nav = this.router.url.match(/workspace\/system([^\/]|$)/) ? false : true;
+    this.states.legacy = this.router.url.match(/workspace\/system\/(new|status)/) ? false : true;
+    this.states.nav = this.router.url.match(/workspace\/system(\/(new|status)|[^\/]|$)/) ? false : true;
     this.states.isProfile = this.router.url.match(/workspace\/system\/profile/) ? true : false;
     this.states.route = this.router.url
       .replace(/#.+/, '')
       .replace(/\?.+/, '');
+
+    if(!this.states.legacy) {
+      this.store.title = '';
+    }
+
     this.setActiveRoute();
   }
 
@@ -90,7 +100,7 @@ export class SystemComponent {
     let className = this.states.route
       .replace(/\//g, '-')
       .replace(/\?.+/g, '')
-      .replace(/(system-profile).+/, '$1');
+      .replace(/(system-profile|system-status).+/, '$1');
 
     this.activeRouteClass = (className.length ? 'usa' : '') + className;
   }

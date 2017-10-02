@@ -136,11 +136,11 @@ export class LocationService {
   }
 
   //gets autocomplete counties
-  getAutoCompleteCounties(q:string, stateCode:string) {
+  getAutoCompleteCounties(q:string, searchby:string, searchvalue:string) {
     var oApiParam = {
       name: 'location',
       suffix: '/counties',
-      oParam: {q:q, stateCode:stateCode},
+      oParam: {q:q, searchby:searchby, searchvalue:searchvalue},
       method: 'GET'
     };
 

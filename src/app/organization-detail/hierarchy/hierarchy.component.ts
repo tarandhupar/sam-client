@@ -46,7 +46,8 @@ export class OrgHierarchyPage {
     this.route.parent.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-        this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
+        this.getHierarchyData(this.status, this.sortField);
+        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
       });
 
     this.flashMsgService.hierarchyStatusUpdate.subscribe( status => {
@@ -56,15 +57,15 @@ export class OrgHierarchyPage {
     });
   }
 
-  checkAccess = (user) => {
-    this.fhService.getAccess(this.orgId).subscribe(
-      (data)=> {this.getHierarchyData(this.status, this.sortField);},
-      (error)=> {if(error.status === 403) this.redirectToForbidden();}
-    );
-  };
+  // checkAccess = (user) => {
+  //   this.fhService.getAccess(this.orgId).subscribe(
+  //     (data)=> {this.getHierarchyData(this.status, this.sortField);},
+  //     (error)=> {if(error.status === 403) this.redirectToForbidden();}
+  //   );
+  // };
 
-  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
+  // redirectToSignin = () => { this._router.navigateByUrl('/signin')};
+  // redirectToForbidden = () => {this._router.navigateByUrl('/403')};
   redirectToNotFound = () => { this._router.navigateByUrl('/404')};
 
   getHierarchyData(status, sort){

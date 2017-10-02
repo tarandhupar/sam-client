@@ -1,12 +1,20 @@
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { SubscriptionsService } from "api-kit/subscriptions/subscriptions.service";
+import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
+import { SidenavHelper } from "../../../app-utils/sidenav-helper";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'subscriptions-sidenav',
-  templateUrl: 'subscriptions-sidenav.template.html'
+  templateUrl: 'subscriptions-sidenav.template.html',
+  providers: [
+    SidenavHelper
+  ]
 })
-export class SubscriptionsSideNavComponent{
+export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
+
+  @Input() domains: any[] = [];
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
@@ -33,8 +41,8 @@ export class SubscriptionsSideNavComponent{
 
   feedTypeCbxConfig = {
     options: [
-      {value: 'Shown in My Feed', label: 'Shown in My Feed', name: 'Shown in My Feed'},
-      {value: 'Not shown in My Feed', label: 'Not shown in My Feed', name: 'Not shown in My Feed'},
+      {value: 'Y', label: 'Shown in My Feed', name: 'Shown in My Feed'},
+      {value: 'N', label: 'Not Shown in My Feed', name: 'Not Shown in My Feed'},
     ],
     name: 'My Feed',
     label: 'My Feed',
@@ -42,26 +50,40 @@ export class SubscriptionsSideNavComponent{
 
   frequencyCbxConfig = {
     options: [
-      {value: 'Immediate', label: 'Immediate', name: 'Immediate'},
-      {value: 'Daily', label: 'Daily', name: 'Daily'},
-      {value: 'Weekly', label: 'Weekly', name: 'Weekly'},
-      {value: 'None', label: 'None', name: 'None'},
+      {value: 'instant', label: 'Immediate', name: 'Immediate'},
+      {value: 'daily', label: 'Daily', name: 'Daily'},
+      {value: 'weekly', label: 'Weekly', name: 'Weekly'},
+      {value: 'none', label: 'None', name: 'None'},
     ],
     name: 'Frequency',
     label: 'Frequency',
   };
 
   domainsCbxConfig = {
-    options: [],
+    options: this.domains,
     name: 'Domains',
     label: 'Domains',
   };
 
-  constructor(private subscriptionsService: SubscriptionsService){}
+  sidenavModel = {
+    "label": "Subscriptions",
+    "children": []
+  };
+
+  constructor(private subscriptionsService: SubscriptionsService, private sidenavService: SidenavService, private sidenavHelper: SidenavHelper){}
 
   ngOnInit(){
     this.setCbxControl();
     this.loadFilterData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('ngOnChanges on sidenav called');
+    if (changes['domains']) {
+        console.log('changes detetect to domains: ' + JSON.stringify(changes['domains']));
+        this.domains = changes['domains'].currentValue;
+        this.loadDomains();
+     }
   }
 
    subscriptionFilterOptionChange(){
@@ -86,9 +108,31 @@ export class SubscriptionsSideNavComponent{
   }
 
   loadDomains(){
-    this.subscriptionsService.getDomains().subscribe(res => {
+    console.log("Domains : " + JSON.stringify(this.domains));
+    Observable.of(this.domains).subscribe(res => {
       this.domainsCbxConfig.options = [];
-      res.Domains.forEach(domain => {this.domainsCbxConfig.options.push({value: domain, label: domain, name: domain});});
+      res.forEach(domain => {this.domainsCbxConfig.options.push({value: domain, label: domain, name: domain});});
+      console.log("Domains Combo: " + JSON.stringify(this.domainsCbxConfig.options));
     });
   }
+
+  selectedItem(item) {
+    //this.selectedPage = this.sidenavService.getData()[0];
+  }
+
+  sidenavPathEvtHandler(data) {
+    this.sidenavHelper.sidenavPathEvtHandler(this, data);
+  }
+
+  onClearAllClick() {
+      this.filterOption = {
+      keyword:"",
+      feedType:[],
+      frequency:[],
+      domains:[],
+    };
+
+    this.filterChange.emit(this.filterOption);
+  }
+
 }

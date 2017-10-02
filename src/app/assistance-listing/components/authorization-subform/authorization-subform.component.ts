@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
-import { UUID } from 'angular2-uuid';
+import { v4 as UUID } from 'uuid';
 import { falCustomValidatorsComponent } from '../../validators/assistance-listing-validators';
 
 @Component({
@@ -105,7 +105,7 @@ export class FALAuthSubFormComponent {
     let authId = this.falAuthSubForm.value.authorizations[index].authorizationId;
 
     if(authId == '' || authId == null){
-      uuid = UUID.UUID().replace(/-/g, "");
+      uuid = UUID().replace(/-/g, "");
     }
     else {
       uuid = authId;

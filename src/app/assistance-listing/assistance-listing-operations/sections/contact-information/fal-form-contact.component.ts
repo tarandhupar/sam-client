@@ -3,7 +3,8 @@ import { FormBuilder, FormArray, FormGroup, FormControl,Validators } from "@angu
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
 import { LocationService } from 'api-kit/location/location.service';
-import { UUID } from "angular2-uuid";
+import { v4 as UUID } from 'uuid';
+
 import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
@@ -335,7 +336,7 @@ export class FALFormContactInfoComponent implements OnInit {
       }
 
       if (generateUUID) {
-        let uuid = UUID.UUID().replace(/-/g, "");
+        let uuid = UUID().replace(/-/g, "");
         contact.poc.contactId = uuid;
       }
 

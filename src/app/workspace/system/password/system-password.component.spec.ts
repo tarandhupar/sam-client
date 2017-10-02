@@ -5,11 +5,11 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule } from 'app-components';
+import { AppComponentsModule } from 'app-components/app-components.module';
 
 import { SystemPasswordComponent } from './system-password.component';
 
-xdescribe('[IAM] System Password Reset', () => {
+describe('[IAM] System Password Reset', () => {
   let component: SystemPasswordComponent,
       fixture: ComponentFixture<SystemPasswordComponent>;
 

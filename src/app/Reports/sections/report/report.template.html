@@ -33,9 +33,9 @@
     <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form #reportForm="ngForm">
-          <div class="display-block">
+          <div class="display-block usa-width-two-thirds">
               <sam-date-range *ngIf="usedPrompts.dateRange" 
-                [label]="'Date range correspond to the Date Signed on Procurement Awards'"
+                [label]="dateRangeLabel"
                 [(ngModel)]='dateRangeModel'
                 #dateRange="ngModel"
                 [control]="dateRange.control" 
@@ -72,7 +72,6 @@
               </sam-text>
               <sam-agency-picker-v2 *ngIf="usedPrompts.fHierarchy" 
                 name="agency-picker"
-                [orgRoots]="userOrg" 
                 [(ngModel)]="agencyPicker">
               </sam-agency-picker-v2>
               <sam-text *ngIf="usedPrompts.orgId" 
@@ -85,14 +84,6 @@
                 [name]="'piid'" 
                 [label]="'PIID'">
               </sam-text>
-              <sam-select *ngIf="usedPrompts.includesBases"
-                class="includesBases"
-                [(ngModel)]="includesBases"
-                name="includesBases" 
-                [options] = "basesOptions"
-                [label] = "'Includes'"
-                (switchStatusChange)="includesBasesStatusChange($event)">
-              </sam-select>
               <sam-select *ngIf="usedPrompts.contractingRegion"
                 name="contractingRegion"
                 [(ngModel)]="contractingRegion"
@@ -107,6 +98,14 @@
                 [maxlength]="4"
                 (keypress)="_keyPress($event)">
               </sam-text>
+              <sam-select *ngIf="usedPrompts.includesBases"
+                class="includesBases"
+                [(ngModel)]="includesBases"
+                name="includesBases" 
+                [options] = "basesOptions"
+                [label] = "'Includes'"
+                (switchStatusChange)="includesBasesStatusChange($event)">
+              </sam-select>
             </div>
           </div>  
 

@@ -9,74 +9,12 @@ import {
 } from './helpers';
 
 import { User } from '../user';
+import { getMockUser } from './mocks';
 
 Cookies.defaults = config.cookies(15);
 
 function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
-}
-
-function getMockUserAccount() {
-  const answer = '        ';
-
-  return merge(User.getCache(), {
-    _id: 'doe.john@gsa.gov',
-    email: 'doe.john@gsa.gov',
-
-    middleName: 'J',
-    firstName: 'John',
-    initials: 'J',
-    lastName: 'Doe',
-    suffix: 'Jr.',
-
-    workPhone: '12401234568',
-
-    departmentID: 100006688,
-    agencyID: 0, // 100141921
-    officeID: 0, // 100170334
-
-    kbaAnswerList: [
-      { questionId: 1, answer: answer },
-      { questionId: 3, answer: answer },
-      { questionId: 5, answer: answer }
-    ],
-
-    emailNotification: false,
-
-    _links: {
-      self: {
-        href: '/comp/iam/auth/v4/session'
-      },
-
-      'system-accounts.management': {
-        href: '/comp/iam/cws/api/system-accounts',
-      },
-
-      'system-accounts.migration': {
-        href: '/comp/iam/import/system-accounts',
-      },
-
-      'fsd.profile': {
-        href: '/comp/iam/auth/v4/fsd/users/doe.john@gsa.gov',
-        templated: true,
-      },
-
-      'fsd.kba': {
-        href: '/comp/iam/kba/fsd/qa/doe.john@gsa.gov',
-        templated: true
-      },
-
-      'fsd.deactivate': {
-        href: '/comp/iam/my-details/api/fsd/doe.john@gsa.gov/deactivate',
-        templated: true
-      },
-
-      'fsd.passreset': {
-        href: '/comp/iam/password/api/fsd/doe.john@gsa.gov/passwordReset',
-        templated: true
-      }
-    }
-  });
 }
 
 /**
@@ -312,7 +250,7 @@ export const user = {
       }
     } else {
       if(isDebug()) {
-        $success(new User(getMockUserAccount()));
+        $success(new User(getMockUser()));
       } else {
         $error({ message: 'Please sign in' });
       }
@@ -344,10 +282,17 @@ export const user = {
       .post(endpoint)
       .send(data)
       .end(function(err, response) {
+        let token;
+
         if(err) {
           $error(exceptionHandler(response.body || {}));
         } else {
-          $success(response.body.user || {});
+          token = response.body.tokenId;
+
+          // Automatically authenticate the user and start a session
+          Cookies.set('iPlanetDirectoryPro', token, config.cookies);
+
+          $success(token || {});
         }
       });
   },
@@ -410,7 +355,7 @@ export const user = {
     if(isDebug()) {
       // Allow other modules that depend on IAMSession for checking user session to use debug mode
       if(!User.getCache()) {
-        User.updateCache(getMockUserAccount());
+        User.updateCache(getMockUser());
       }
 
       return this.states.auth;

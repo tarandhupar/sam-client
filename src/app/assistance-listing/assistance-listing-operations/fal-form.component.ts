@@ -463,7 +463,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.titleModal.closeModal();
     this.globalNavigationFlag = false;
     this.router.navigateByUrl(url);
-
   }
 
   public checkNavigation(target) {
@@ -480,7 +479,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.falFormViewModel.title) {
         let title = 'No Title Provided';
         let description = 'You must provide a title for this draft assistance listing in order to proceed.';
-        let confirmText = 'Close'
+        let confirmText = 'Close';
         this.titleModelConfig(title, description, confirmText, '');
         this.titleModal.openModal();
       } else {

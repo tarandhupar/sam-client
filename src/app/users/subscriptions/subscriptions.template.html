@@ -1,6 +1,6 @@
 <page [breadcrumbs]="crumbs" [section]="'Profile'" [title]="'Manage Subscriptions'">
   <sidebar>
-    <subscriptions-sidenav (filterChange)="onFilterChange($event)"></subscriptions-sidenav>
+    <subscriptions-sidenav [domains] = "userDomains" (filterChange)="onFilterChange($event)"></subscriptions-sidenav>
   </sidebar>
 
   <div class="usa-width-one-whole msg-feed-content">
@@ -16,46 +16,49 @@
     <!--div class="usa-width-one-whole msg-feed-items-div" *ngIf="subscriptions.length > 0" -->
 
   <div class="usa-width-one-whole">
-    <table class="sam-ui striped selectable table small" style="border:none">
+    <table class="sam-ui striped selectable lightest blue table small" style="border:none">
       <thead>
       <tr >
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" >Name</th>
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" >Type</th>
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" >Last Modified</th>
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" >Email <br> Freqency</th>
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" >Show in <br> My Feed</th>
-        <th style="background-color:lightgrey; padding:0em 0.5em" scope="col" ></th>
+        <th style="padding:0em 0.5em" scope="col" >Name</th>
+        <th style="padding:0em 0.5em" scope="col" >Type</th>
+        <th style="padding:0em 0.5em" scope="col" >Last Modified</th>
+        <th style="padding:0em 0.5em" scope="col" >Email <br> Freqency</th>
+        <th style="padding:0em 0.5em" scope="col" >Show in <br> My Feed</th>
+        <th style="padding:0em 0.5em" scope="col" ></th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let row of subscriptions">
-          <td scope="row" style="padding:0em 0.5em">{{row.recordId}}</td>
-          <td scope="row" style="padding:0em 0.5em">{{row.type}}</td>
-          <td scope="row" style="padding:0em 0.5em">{{row.lastModified}}</td>
-          <td scope="row" style="padding:0em 0.5em">
-            <sam-select class="usa-width-one-fourth" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options"
-                        [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled"></sam-select>
-
+          <td scope="row" style="padding:0em 0.5em"> 
+             <a [routerLink]="row.uri" [innerText]="shorten(row.record_id)" [title]="row.record_id"></a>
           </td>
+          <td scope="row" style="padding:0em 0.5em" title={{row.type}}>{{shorten(row.type)}}</td> 
+          <td scope="row" style="padding:0em 0.5em">{{row.modified_date | date : "MMM dd,yyyy"}}</td> 
+          <td scope="row" style="padding:0em 0.5em">
+            <sam-table-select class="usa-width-one-fourth" [styles]="dropdownStyles" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options" 
+                        [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled" (ngModelChange)='onFrequencyTypeSelect($event,row.id)'></sam-table-select>
+           
+          </td> 
           <td scope="row" style="width: 10%; text-align: center; padding:0em 0.5em">
               <sam-checkbox
                 [model]="(row.myFeed === 'Y') ? [row.myFeed] : []"
                 [name]="'MyFeed'"
-                [options]="myFeedCbxConfig.options">
+                [options]="myFeedCbxConfig.options"
+                (modelChange)="onMyFeedCheck($event,row.id)">
               </sam-checkbox>
-          </td>
+          </td> 
           <td scope="row" style="white-space: nowrap; padding:0em 0.5em">
-            <sam-watch-button [domainId] = "row.domainId" [type] = "row.type" [recordId]="row.recordId" [fromPage]="'manage'"></sam-watch-button>
-          </td>
+            <sam-watch-button [data]="{id: row.id, active: row.active, recordId: row.record_id}" [showModal]="true" (subscriptionChanaged)="handleSubscriptionChange($event)"></sam-watch-button>
+          </td> 
       </tr>
       </tbody>
     </table>
   </div>
       <!-- div class="usa-width-one-whole msg-feed-item" *ngFor="let record of recordList">
         <div class="pull-left" style="line-height: 0.5em;">
-
+          
           <div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>
-
+          
           <div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>
 
         </div>

@@ -20,12 +20,10 @@ export class FeedsPage implements OnInit {
   isAL:boolean = false;
   isRequest: boolean = false;
   isPendingRequest:boolean;
-  programId:any;
   currentPage = 0;
   requestType:any;
   keyword:any = '';
   size:any = 4;
-  includeCount:any;
   totalPages: any;
   totalElements: any;
   initLoad = true;
@@ -77,7 +75,7 @@ export class FeedsPage implements OnInit {
   getRequests(){
     this.requests = this.programService.getRequests({
       Cookie: this.cookieValue,
-      programId: this.programId,
+      programId: '',
       pageNum: this.currentPage,
       type: this.requestType,
       keyword : this.keyword,

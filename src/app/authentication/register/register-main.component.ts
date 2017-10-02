@@ -404,20 +404,9 @@ export class RegisterMainComponent {
 
       userData = this.prepareData();
 
-      this.api.iam.user.registration.register(this.token, userData, (data) => {
-        let credentials = {
-          username: userData.email,
-          password: userData.userPassword
-        };
-
-        this.user = merge({}, this.user, data);
+      this.api.iam.user.registration.register(this.token, userData, token => {
         this.states.loading = false;
-
-        // Automatically authenticate the user and start a session
-        this.api.iam.login(credentials, () => {
-          // Success Promise
-          this.router.navigate(['/profile/details']);
-        }, onError);
+        this.router.navigate(['/profile/details']);
       }, onError);
     } else {
       if(this.api.iam.isDebug()) {

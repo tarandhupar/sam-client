@@ -26,7 +26,7 @@ export class FALFormViewModel {
   private getSectionInfo(id: string): SectionInfo {
     let sectionInfo: SectionInfo = null;
 
-    if (this._additionalInfo!.sections && this._additionalInfo!.sections.length > 0) {
+    if (this._additionalInfo && this._additionalInfo.sections && this._additionalInfo.sections.length > 0) {
       for (let section of this._additionalInfo.sections) {
         if (section.id === id) {
           sectionInfo = section;

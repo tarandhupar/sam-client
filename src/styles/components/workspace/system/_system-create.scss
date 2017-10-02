@@ -1,0 +1,66 @@
+.usa-workspace-system-new {
+  .header-hint {
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+  }
+
+  sam-label-wrapper {
+    > div {
+      margin-bottom: 1em;
+    }
+  }
+
+  sam-fieldset-wrapper {
+    fieldset {
+      margin-bottom: 1em;
+
+      legend + .usa-form-hint {
+        margin-bottom: 1em;
+      }
+    }
+  }
+
+  sam-checkbox {
+    fieldset {
+      margin-left: 0.2em;
+    }
+  }
+
+  sam-agency-picker-v2 {
+    .usa-form-hint + div {
+      margin-top: 0em;
+    }
+
+    input[type="text"] {
+      max-width: none;
+    }
+  }
+
+  .review {
+    legend {
+      margin-bottom: 0.5em;
+      font-size: 2rem;
+    }
+
+    .fa {
+      margin-top: 0.3em;
+      float: left;
+    }
+
+    .fa + div {
+      margin-left: 1.2em;
+    }
+
+    .edit {
+      .fa {
+        margin-top: 0.2em;
+        margin-right: 0.3em;
+      }
+    }
+  }
+
+  .usa-button-controls {
+    margin-top: 3em;
+    text-align: right;
+  }
+}

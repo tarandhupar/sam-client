@@ -7,16 +7,19 @@ import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 import { AACRequestGuard } from "./AAC-request/AAC-request.guard.ts";
 import { OrgMovePage } from "./move-org/move-org.component";
 import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
+import { FHAccessGuard } from "../application-content/403/fh-access.guard";
+import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 
 export const routes: Routes = [
   {
     path: 'organization-detail/:orgId',
     component: OrgDetailPage,
+    canActivateChild:[IsLoggedInGuard, FHAccessGuard],
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile',  component: OrgDetailProfilePage },
       { path: 'hierarchy',  component: OrgHierarchyPage },
-      { path: 'move',  component: OrgMovePage }
+      { path: 'move',  component: OrgMovePage  }
     ]
   },
   {

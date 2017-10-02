@@ -1,0 +1,28 @@
+<sam-text name="ip-address"
+          [label]="label('ipAddress')"
+          [hint]="hint('ipAddress')"
+          [errorMessage]="errors('ipAddress')"
+          [control]="form.get('ipAddress')"></sam-text>
+
+<sam-autocomplete [config]="configs.connection"
+                  [labelText]="label('connection')"
+                  [options]="options.connection"
+                  [control]="form.get('connection')"></sam-autocomplete>
+
+<sam-text-area name="location"
+               [label]="label('location')"
+               [hint]="hint('location')"
+               [errorMessage]="errors('location')"
+               [control]="form.get('location')"
+               maxlength="100"></sam-text-area>
+
+<sam-fieldset-wrapper [label]="label('securityOfficer')" [hint]="hint('securityOfficer')">
+  <sam-text name="security-officer-name"
+            label="Name"
+            [errorMessage]="errors('securityOfficerName')"
+            [control]="form.get('securityOfficerName')"></sam-text>
+  <sam-text name="security-officer-email"
+            label="Email"
+            [errorMessage]="errors('securityOfficerEmail')"
+            [control]="form.get('securityOfficerEmail')"></sam-text>
+</sam-fieldset-wrapper>

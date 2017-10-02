@@ -10,6 +10,7 @@ import { routing } from './workspace.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
+import { AppTemplatesModule } from 'app-templates';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceWidgetComponent } from "./workspace-widget/workspace-widget.component";
@@ -21,9 +22,11 @@ import {
   SystemGuard,
   SystemComponent,
   SystemDirectoryComponent,
+  SystemCreateComponents,
   SystemProfileComponent,
   SystemPasswordComponent,
   SystemMigrationsComponent,
+  SystemStatusComponent,
 } from './system';
 
 import {
@@ -37,7 +40,6 @@ import {
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
-// import { AppTemplatesModule } from "../app-templates/index";
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 import { HelpContentManagementSideNavComponent } from "./content-management/view/sidenav/content-management-sidenav.component";
 import { UserService } from "../role-management/user.service";
@@ -54,7 +56,6 @@ import { UserServiceMock } from "../role-management/user.service.mock";
     SamUIKitModule,
     SamAPIKitModule,
     AppComponentsModule,
-    // AppTemplatesModule,
     PipesModule,
     Ng2PageScrollModule.forRoot(),
   ],
@@ -89,9 +90,11 @@ import { UserServiceMock } from "../role-management/user.service.mock";
      */
     SystemComponent,
     SystemDirectoryComponent,
+    SystemCreateComponents,
     SystemProfileComponent,
     SystemPasswordComponent,
     SystemMigrationsComponent,
+    SystemStatusComponent,
 
     /**
      * MyFeed

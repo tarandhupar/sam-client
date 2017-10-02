@@ -21,6 +21,20 @@
       </div>
       <div class="sub header">{{data.data?.index}}</div>
     </div>
+    <div class="sam-ui medium header">
+      Date Saved
+      <div *ngIf="data.createdOn==null" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div *ngIf="data.createdOn!=null" class="sub header">{{data.createdOn}}</div>
+    </div>
+    <div class="sam-ui medium header">
+      Date Last Run
+      <div *ngIf="data.lastUsageDate==null" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div *ngIf="data.lastUsageDate!=null" class="sub header">{{data.lastUsageDate}}</div>
+    </div>
   </div>
 
   <div class="column">

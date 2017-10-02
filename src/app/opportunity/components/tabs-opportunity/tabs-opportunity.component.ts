@@ -81,7 +81,6 @@ export class TabsOpportunityComponent implements OnInit {
   }
 
   public onEditClick(page: string[]) {
-    console.log("page", page, this.data);
     //let url = '/programs/' + id + '/edit'.concat(page.toString());
     //this.router.navigateByUrl(url);
   }
@@ -104,8 +103,8 @@ export class TabsOpportunityComponent implements OnInit {
 
   public onDeleteModalSubmit() {
     this.deleteModal.closeModal();
-    this.oppService.deleteContractopportunity(this.data.id).subscribe(res => {
-      this.router.navigate(['/opportunity/workspace']);
+    this.oppService.deleteContractOpportunity(this.data.id).subscribe(res => {
+      this.router.navigate(['/opp/workspace']);
     }, err => {
       // todo: show error message when failing to delete
       console.log('Error deleting opportunity ', err);

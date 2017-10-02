@@ -31,15 +31,13 @@ export class HelpContentManagementViewComponent {
   sortByModel = {
     'FAQ-repository': {type: 'latest update', sort: 'asc' },
     'data-dictionary': {type: 'alphabetical', sort: 'asc' },
-    'video-library': {type: 'relevance', sort: 'asc' },
+    'video-library': {type: 'alphabetical', sort: 'asc' },
   };
 
   sortOptionsMap = {
     'FAQ-repository': [{label:'Latest Update', name:'Latest Update', value:'latest update'}],
     'data-dictionary': [{label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
-    'video-library': [
-      {label:'Alphabetical', name:'Alphabetical', value:'alphabetical'},
-      {label:'Relevance', name:'Relevance', value:'relevance'}],
+    'video-library': [{label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
   };
 
   //current results num data variables

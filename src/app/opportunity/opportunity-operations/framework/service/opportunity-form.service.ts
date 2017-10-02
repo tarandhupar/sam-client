@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { OpportunityService } from "../../../../../api-kit/opportunity/opportunity.service";
 import * as Cookies from 'js-cookie';
 import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.service";
+import {Observable} from "rxjs";
 
 
 @Injectable()
@@ -9,6 +10,7 @@ import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.
 export class OpportunityFormService {
 
   cookie: any;
+
 
   constructor(private oppService: OpportunityService, private dictionaryService: DictionaryService) {
     this.cookie = Cookies.get('iPlanetDirectoryPro');
@@ -28,10 +30,13 @@ export class OpportunityFormService {
   }
 
   saveContractOpportunity(opportunityId: string, data: {}){
-    return this.oppService.saveContractOpportunity(opportunityId, data);
+    return this.oppService.saveContractOpportunity(opportunityId, data, OpportunityFormService.getAuthenticationCookie());
   }
 
   deleteContractOpportunity(opportunityId: string){
-    return this.oppService.deleteContractOpportunity(opportunityId);
+    return this.oppService.deleteContractOpportunity(opportunityId, OpportunityFormService.getAuthenticationCookie());
+  }
+  getOpportunityDictionary(type){
+    return this.dictionaryService.getContractOpportunityDictionary(type);
   }
 }

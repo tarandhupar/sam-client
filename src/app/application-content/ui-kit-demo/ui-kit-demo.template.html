@@ -177,17 +177,27 @@
   <div class="usa-grid">
     <h2 class="usa-width-one">Location Group</h2>
     <sam-location-component class="usa-width-one"
+     [(location)]="locationObj"
       [cityConfig]="{name: 'city'}"
       [stateConfig]="{name: 'state'}"
       [countryConfig]="{name: 'country'}"
       [countyConfig]="{name: 'county'}"
       [zipConfig]="{name: 'zip'}">
     </sam-location-component><br/>
+    <h4 class="usa-width-one">{{ locationObj | json }}</h4>
   </div>
   <div class="usa-grid">
     <div class="usa-width-one-whole">
         <sam-autocomplete-multiselect state class="usa-width-one-half"
-                                  label="State" required="true"
+                                  label="State Autocomplete Multiselect" required="true"
+                                  [keyValueConfig]="multiselectConfigSelectable">
+        </sam-autocomplete-multiselect>
+    </div>
+  </div> <br/>
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+        <sam-autocomplete-multiselect county class="usa-width-one-half"
+                                  label="County Autocomplete Multiselect" required="true"
                                   [keyValueConfig]="multiselectConfigSelectable">
         </sam-autocomplete-multiselect>
     </div>
@@ -828,7 +838,7 @@
 
   <div class="usa-grid">
     <h2>DateTime &lt;sam-date-time&gt;</h2>
-    <sam-date-time name="example-date" [(value)]="dateTime"></sam-date-time>
+    <sam-date-time name="example-date" [(ngModel)]="dateTime"></sam-date-time>
     <p>{{dateTime | json}}</p>
   </div>
 
@@ -912,7 +922,7 @@
         <h4>Filter 1</h4>
       </sam-collapsible>
       <sam-collapsible [label]="'Test 2'">
-        <sam-date name="example-date" [(value)]='dateModel'></sam-date>
+        <sam-date name="example-date" [(ngModel)]='dateModel'></sam-date>
       </sam-collapsible>
       <sam-collapsible label="'Test 3'">
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate ex aliquam, molestiae tempora. Nihil alias blanditiis excepturi architecto rerum repellendus adipisci ducimus minus, modi porro nostrum repudiandae perferendis placeat et.</p>

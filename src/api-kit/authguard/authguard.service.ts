@@ -5,7 +5,7 @@ import {FALFormViewModel} from "../../app/assistance-listing/assistance-listing-
 import {FALFormErrorService} from "../../app/assistance-listing/assistance-listing-operations/fal-form-error.service";
 import {FALFormService} from "../../app/assistance-listing/assistance-listing-operations/fal-form.service";
 
-
+//This authgaurd service is specific to FAL. Need to move it under Assistance Listing folder.
 @Injectable()
 export class AuthGuard implements CanActivate {
   @Input() viewModel: FALFormViewModel;

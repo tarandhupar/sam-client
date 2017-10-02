@@ -11,7 +11,7 @@ import { merge } from 'lodash';
 import { FHService, FHWrapperService, IAMService, WrapperService } from 'api-kit';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule, AgencyPickerComponent } from 'app-components';
+import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 
 import { SystemProfileComponent } from './system-profile.component';
 
@@ -47,7 +47,7 @@ const apiStub = {
   }
 };
 
-xdescribe('[IAM] System Account Profile', () => {
+describe('[IAM] System Account Profile', () => {
   let component: SystemProfileComponent;
   let fixture: ComponentFixture<SystemProfileComponent>;
   let debugElement: DebugElement;

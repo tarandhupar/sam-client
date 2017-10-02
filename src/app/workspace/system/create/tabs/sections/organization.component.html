@@ -1,0 +1,17 @@
+<sam-agency-picker-v2 type="single"
+                      [label]="label('department')"
+                      [hint]="hint('department')"
+                      [control]="form.get('department')"
+                      [required]="true"></sam-agency-picker-v2>
+
+<sam-autocomplete-multiselect [label]="label('administrators')"
+                              [hint]="hint('administrators')"
+                              [keyValueConfig]="configs.administrators"
+                              [control]="administrators"
+                              peoplepicker-autofill></sam-autocomplete-multiselect>
+
+<sam-autocomplete-multiselect [label]="label('managers')"
+                              [hint]="hint('managers')"
+                              [keyValueConfig]="configs.managers"
+                              [control]="managers"
+                              peoplepicker-autofill></sam-autocomplete-multiselect>

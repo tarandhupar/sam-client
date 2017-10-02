@@ -92,7 +92,7 @@ export class ProcessOpportunityHistoryPipe implements PipeTransform {
     processedHistory = _.sortBy(processedHistory, function(item){ return item.index; });
 
     /** Show alert if current version is not the authoritative version **/
-    let isCurrent = function(historyItem) { return historyItem.id === tempOpportunityApi.opportunityId; };
+    let isCurrent = function(historyItem) { return historyItem.id === (tempOpportunityApi.id!=null? tempOpportunityApi.id: tempOpportunityApi.opportunityId) };
     let isAuthoritative = function(historyItem) { return historyItem.authoritative === '1'; };
 
     let current = _.filter(processedHistory, isCurrent)[0];

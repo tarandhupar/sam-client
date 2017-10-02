@@ -27,7 +27,7 @@ export class StateServiceImpl implements AutocompleteService {
         results.next(list.reduce( (prev, curr) => {
           const newObj = {
             key: curr.stateCode.toString(),
-            value: curr.state.toString()
+            value: curr.stateCode + " - " + curr.state
           };
           const returnObj = Object.assign({}, curr, newObj);
           prev.push(returnObj);

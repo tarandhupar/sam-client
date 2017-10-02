@@ -399,7 +399,10 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       this.authGuard.checkPermissions('review', this.program);
 
       // Adds page title as the last item in breadcrumbs
-      let pageTitleObj = { breadcrumb: this.program.data.title }
+      let pageTitleObj = { breadcrumb: this.program.data.title };
+      if (!this.crumbs[this.crumbs.length-1].hasOwnProperty('urlmock')){
+        this.crumbs.pop();
+      }
       this.crumbs.push(pageTitleObj);
 
     }, err => {
@@ -730,9 +733,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   public canEdit() {
     // show edit button if user has update permission, except on published FALs, or if user has revise permission
-    if (this.program._links && this.program._links['program:update'] && this.program.status && this.program.status.code !== 'published') {
+    if (this.program._links && this.program._links['program:update'] && this.program.status && this.program.status.code !== 'published' && this.program.latest == true) {
       return true;
-    } else if (this.program._links && this.program._links['program:revise']) {
+    } else if (this.program._links && this.program._links['program:revise'] && this.program.latest == true) {
       return true;
     }
 

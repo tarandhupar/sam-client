@@ -17,6 +17,7 @@ export class OpportunityAuthGuard implements CanActivate {
     let asyncCallFinishedFlag = false;
     if(this.hasCookie()) {
       this.service.isOpportunityEnabled().subscribe(data => {
+        //if(data.status == '404' || data.status == '401') {
         if(data.status == '404') {
           this.router.navigate(['accessrestricted']);
           return false;
@@ -38,5 +39,24 @@ export class OpportunityAuthGuard implements CanActivate {
       return false;
     }
     return true;
+  }
+
+  checkPermissions(screen: string, viewModel: any) {
+    switch (screen) {
+      case 'addoredit':
+        let url;
+        if (this.router.url.indexOf('/add') >= 0) {
+          if (!viewModel.title) {
+            url = '/opportunities/add'.concat('#header-information');
+            this.router.navigateByUrl(url);
+          }
+        } else {
+          if (!viewModel.title) {
+            url = '/opportunities/' + viewModel.opportunityId + '/edit'.concat('#header-information');
+            this.router.navigateByUrl(url);
+          }
+        }
+        break;
+    }
   }
 }
