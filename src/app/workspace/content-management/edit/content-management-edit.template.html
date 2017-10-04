@@ -1,0 +1,107 @@
+<page [breadcrumbs]="crumbs">
+  <form-only class="help-content-management-edit relative" [section]="title.toUpperCase()" [title]="pageTitle" *ngIf="dataLoaded">
+
+    <span class="status-tag">{{contentObj.type}}</span>
+
+    <div class="relative m_T-2x">
+      <div class="draft-btn-group">
+        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="contentObj.type === 'Draft'"></sam-button>
+        <sam-button [buttonId]="'question-publish'" buttonText="Publish" (click)="onPublishClick()"></sam-button>
+      </div>
+
+      <sam-tabs (currentSelectedTab)="onSwitchTabs($event)">
+
+        <!--Edit Form / New Form Tab-->
+        <sam-tab [tabTitle]="'Edit'" [active]="!formComplete" #editTab>
+          <div class="section-border" *ngIf="!isCreateMode()">
+            <h4>Reference ID: {{contentObj.referenceId}}</h4>
+          </div>
+
+          <div class="section-border">
+            <h4>Question</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
+            <sam-text [label]="''" [name]="'title'" [hint]="''" [errorMessage]="errors.title" [(ngModel)]="contentObj.title"></sam-text>
+          </div>
+
+          <div class="section-border">
+            <h4>Response</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
+
+            <div>
+              <span class="cms-btn"><i class="fa fa-bold"></i></span>
+              <span class="cms-btn"><i class="fa fa-italic"></i></span>
+              <span class="cms-btn"><i class="fa fa-link"></i></span>
+              <span class="right-border-line m_R-2x m_L-1x"></span>
+
+              <span class="cms-btn"><i class="fa fa-indent"></i></span>
+              <span class="cms-btn"><i class="fa fa-outdent"></i></span>
+              <span class="right-border-line m_R-2x m_L-1x"></span>
+
+              <span class="cms-btn"><i class="fa fa-list"></i></span>
+              <span class="cms-btn"><i class="fa fa-list-ol"></i></span>
+            </div>
+
+            <div class="m_T-2x">
+              <!--<div contenteditable="true" style="width: 100%; border: 1px black solid; height: 200px;" [innerHTML]="responseModel" (input)="post.postTitle = $event.target.innerText"></div>-->
+
+              <sam-text-area [label]="''" [name]="'title'" [hint]="''" [errorMessage]="errors.description" [(ngModel)]="contentObj.description"></sam-text-area>
+            </div>
+          </div>
+
+          <div class="section-border relative" *ngIf="sectionControl[curSection.toLowerCase()].source">
+            <span class="optional-text">Optional</span>
+            <h4 class="m_T-0">Source</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
+            <input type="text" [(ngModel)] = 'contentObj.source'>
+
+          </div>
+
+          <div class="section-border relative">
+            <span class="optional-text">Optional</span>
+            <h4 class="m_T-0">Domains</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
+            <sam-autocomplete-multiselect [(ngModel)]="existingDomains" name="domain" label="" [options]="getExistingDomainOptions()"></sam-autocomplete-multiselect>
+
+          </div>
+
+          <div class="section-border relative">
+            <span class="optional-text">Optional</span>
+            <h4 class="m_T-0">Keywords</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
+            <input type="text" placeholder="separate keywords with comma" [(ngModel)] = 'keywords'>
+
+          </div>
+
+          <div class="pull-right">
+            <sam-button [buttonId]="'question-cancel'" buttonType="tertiary" buttonText="Cancel" (onClick)="cancelForm()"></sam-button>
+            <sam-button [buttonId]="'question-done'" buttonText="Done" (onClick)="submitForm()"></sam-button>
+          </div>
+
+        </sam-tab>
+
+
+        <!--Public View Tab-->
+        <sam-tab [tabTitle]="'Public View'" [active]="formComplete">
+          <div class="relative">
+            <span class="public-view-tag">{{publicViewTag[curSection.toLowerCase()]}}</span>
+            <div class="m_T-1x m_B-1x" *ngIf="contentObj.domain && contentObj.domain.length > 0">
+              <span style="font-weight: bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
+              <span>{{contentObj.domain.join(',')}}</span>
+            </div>
+            <div class="m_T-2x m_B-1x" *ngIf="contentObj.source && contentObj.source !== ''">
+              <span style="font-weight: bold">Source:</span>
+              <span>{{contentObj.source}}</span>
+            </div>
+            <p class="m_T-2x m_B-1x">{{contentObj.description}}</p>
+            <div class="m_T-2x m_B-1x">
+              <span style="font-weight: bold">Latest Update:</span>
+              <span>{{getUpdateDateStr()}}</span>
+            </div>
+          </div>
+        </sam-tab>
+      </sam-tabs>
+    </div>
+
+
+  </form-only>
+</page>

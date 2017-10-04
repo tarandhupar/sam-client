@@ -80,3 +80,76 @@
     margin-top: 0px !important;
   }
 }
+
+.help-content-management-edit{
+  .section-border{
+    border: 1px solid $color-gray-lighter;
+    margin: 10px 0px;
+    padding: 15px;
+  }
+
+  sam-autocomplete-multiselect .sam-autocomplete-multiselect-input{
+    //max-width: 46rem;
+  }
+
+  .cms-btn{
+    text-align: center;
+    display: inline-block;
+    font-size: 130%;
+    width: 33px;
+    height: 28px;
+    border: 1px solid #0071bc;
+    background-color: #DEF2FE;
+  }
+
+  .cms-btn:hover{
+    cursor: pointer;
+    background-color: #C8E8F5;
+  }
+
+  .right-border-line{
+    height: 40px;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-right: 1px black solid;
+  }
+
+  .draft-btn-group{
+    position: absolute;
+    top: 8px;
+    left: 230px;
+  }
+
+  .optional-text{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: $color-gray-medium
+  }
+
+  .public-view-tag, .status-tag{
+    position: absolute;
+    top: -1px;
+    right: 11px;
+    min-width: 80px;
+    padding: 0px 10px;
+    background-color: $color-gray-lightest;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .public-view-tag{
+    right: 0px;
+  }
+
+  .error-border{
+    border: 1px $color-secondary solid;
+  }
+
+  .sam-ui.header{
+    border: 1px solid $color-gray-lighter;
+    padding: 15px;
+  }
+}
+
+
