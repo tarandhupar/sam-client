@@ -111,6 +111,12 @@ export class HelpContentManagementViewComponent {
     if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, sortModel, this.curPage);
   }
 
+  onCreateContentItem(){
+    let navigationExtras: NavigationExtras = {queryParams: {}};
+    navigationExtras.queryParams['mode'] = 'create';
+    this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+  }
+
   /* search message feeds with filter, sortby, page number and order*/
   loadContent(filterObj, sort, page){
     let content;
@@ -168,6 +174,14 @@ export class HelpContentManagementViewComponent {
   onContentItemAction(action, index){
     // 1. Direct to Edit page on action edit
     // 2. Delete current content item on action delete
+    if(action.name === 'Edit'){
+      let navigationExtras: NavigationExtras = {queryParams: {}};
+      navigationExtras.queryParams['mode'] = 'edit';
+      navigationExtras.queryParams['id'] = index;
+      this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+    }
+
+
 
   }
 

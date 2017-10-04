@@ -44,6 +44,7 @@ import { HelpContentManagementViewComponent } from "./content-management/view/co
 import { HelpContentManagementSideNavComponent } from "./content-management/view/sidenav/content-management-sidenav.component";
 import { UserService } from "../role-management/user.service";
 import { UserServiceMock } from "../role-management/user.service.mock";
+import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
 
 @NgModule({
   imports: [
@@ -106,6 +107,7 @@ import { UserServiceMock } from "../role-management/user.service.mock";
      * Help Content Management
      */
     HelpContentManagementViewComponent,
+    HelpContentManagementEditComponent,
     HelpContentManagementSideNavComponent,
   ],
   providers: [

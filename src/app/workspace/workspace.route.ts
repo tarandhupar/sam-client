@@ -11,6 +11,7 @@ import FSDRouter from './fsd/fsd.route';
 import SystemRouter from './system/system.route';
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
+import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
 
 export const routes: Routes = [
   { path: 'workspace',
@@ -41,6 +42,10 @@ export const routes: Routes = [
   {
     path: 'workspace/content-management/:section',
     component: HelpContentManagementViewComponent
+  },
+  {
+    path: 'workspace/content-management/:section/edit',
+    component: HelpContentManagementEditComponent
   },
 ];
 

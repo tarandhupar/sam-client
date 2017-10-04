@@ -6,6 +6,18 @@ import { Observable } from 'rxjs';
 export class ContentManagementService{
   constructor(private oAPIService: WrapperService) { }
 
+  getContentItem(id, type){
+    let res;
+    if(type.toLowerCase() === 'data-dictionary'){
+      res = this.getDataDictionaryContent({},{},0,10);
+    }else if(type.toLowerCase() === 'faq-repository'){
+      res = this.getFAQContent({},{},0,10);
+    }else{
+      res = this.getVideoLibraryContent({},{},0,10);
+    }
+    return res.map(data => {return data['contents'][id]});
+  }
+
   getVideoLibraryContent(filterObj, sort, pageNum, pageSize = 10){
     return Observable.of({
       totalCount: 150,
@@ -52,31 +64,51 @@ export class ContentManagementService{
             type:'Published',
             title:'Applicant Eligibility',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'Assistance Listings', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
+            source:'test source',
           },
           {
             type:'Draft',
             title:'Authorization',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
+            source:'test source',
           },
           {
             type:'Archived',
             title:'Authorized Date',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
+            source:'test source',
           },
           {
             type:'Published',
             title:'Authorized Name',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
+            source:'test source',
           },
           {
             type:'New',
             title:'Applicant Eligibility',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'System Accounts', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
+            source:'test source',
           },
         ]
     });
@@ -91,31 +123,46 @@ export class ContentManagementService{
             type:'Published',
             title:'What types of assistance can I search?',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'Assistance Listings', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings','Contract Opportunities'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
           },
           {
             type:'Draft',
             title:'How do I apply for a grant?',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
           },
           {
             type:'Archived',
             title:'How can I migrate my accounts to the new SAM.gov?',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
           },
           {
             type:'Published',
             title:'How do I update my SAM.gov registration?',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'test domain', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:'Assistance Listings',
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
           },
           {
             type:'New',
             title:'What is single sign on?',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'reference ID', domain:'System Accounts', latestUpdate:'2017-01-01',
+            referenceId: 'reference ID',
+            domain:['Assistance Listings'],
+            latestUpdate:'2017-01-01',
+            keywords: ['keyword', 'sample'],
           },
         ]
     });

@@ -10,7 +10,7 @@
       <div class="pull-left p_T-3x">
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
-      <a class="sam-ui primary small button pull-right m_L-2x question-button">{{createTextMap[curSection]}}</a>
+      <a class="sam-ui primary small button pull-right m_L-2x question-button" (click)="onCreateContentItem()">{{createTextMap[curSection]}}</a>
       <sam-sort class="pull-right" [(ngModel)]="sortByModel[curSection]" [options]="sortOptionsMap[curSection]" (ngModelChange)="onSortModelChange($event)"></sam-sort>
     </div>
 
