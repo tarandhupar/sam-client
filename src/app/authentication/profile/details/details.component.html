@@ -14,9 +14,12 @@
                [showClose]="true"
                [hidden]="!alerts.identity.show"
                (dismiss)="dismiss('identity')"></sam-alert>
-    <sam-editor (action)="handleAction($event,'identity')"
-                label="Identifying Information"
-                #identityEditor>
+
+    <sam-editor label="Identifying Information"
+                [showInputView]="states.edit.identity"
+                (action)="handleAction($event,'identity')"
+                #identityEditor
+                *ngIf="detailsForm">
       <div editor-display-view>
         <div class="usa-form-group">
           <label>Name:</label>
@@ -31,17 +34,46 @@
           <div class="usa-form-control" [innerText]="user.email"></div>
         </div>
         <div class="usa-form-group">
+          <label>Mobile Phone:</label>
+          <div class="usa-form-control" [innerText]="detailsForm.get('personalPhone').value"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Mobile Carrier:</label>
+          <div class="usa-form-control" [innerText]="detailsForm.get('carrier').value"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>OTP Preference:</label>
+          <div class="usa-form-control" [innerText]="detailsForm.get('carrier').value == 'sms' ? 'Text' : 'Email'"></div>
+        </div>
+        <div class="usa-form-group">
           <label>Notifications:</label>
           <div class="usa-form-control" [innerText]="(user.emailNotification ? 'On' : 'Off')"></div>
         </div>
       </div>
       <div editor-input-view>
           <sam-name-entry [model]="user" legend=""></sam-name-entry>
+
+          <sam-phone-entry [label]="store.labels.personalPhone.label"
+                           [hint]="store.labels.personalPhone.hint"
+                           [numbersOnly]="true"
+                           [formControl]="detailsForm.get('personalPhone')"></sam-phone-entry>
+          <sam-autocomplete labelText="Mobile Carrier"
+                            [options]="api.iam.carriers"
+                            [formControl]="detailsForm.get('carrier')"
+                            [errorMessage]="errors('carrier')"></sam-autocomplete>
+
           <ul class="usa-unstyled-list">
             <li>
               <input type="checkbox"
+                     id="otp-preference"
+                     name="otp-preference"
+                     [checked]="user.OTPPreference == 'sms'"
+                     (change)="user.OTPPreference = (user.OTPPreference == 'sms') ? 'email' : 'sms'">
+                <label for="otp-preference">Use mobile phone as my default OTP option</label>
+            </li>
+            <li>
+              <input type="checkbox"
                      id="email-notification"
-                     type="checkbox"
                      name="email-notification"
                      [checked]="user.emailNotification"
                      (change)="user.emailNotification = !user.emailNotification">
@@ -61,8 +93,10 @@
                [hidden]="!alerts.business.show"
                (dismiss)="dismiss('business')"></sam-alert>
     <sam-editor [label]="states.isGov ? 'Organization Information' : 'Business Information'"
+                [showInputView]="states.edit.business"
                 (action)="handleAction($event,'business')"
-                #businessEditor>
+                #businessEditor
+                *ngIf="detailsForm">
       <div editor-display-view>
         <div class="usa-form-group" *ngIf="states.isGov">
           <label>Department:</label>
@@ -106,8 +140,9 @@
   <!--=== Security Questions ===-->
   <!--==========================-->
   <section id="kba" class="kba" *ngIf="user.kbaAnswerList.length">
-    <sam-editor (action)="handleAction($event,'kba')"
-                label="Security Questions"
+    <sam-editor label="Security Questions"
+                [showInputView]="states.edit.kba"
+                (action)="handleAction($event,'kba')"
                 #kbaEditor>
       <div editor-display-view>
         <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">

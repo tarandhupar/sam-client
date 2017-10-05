@@ -66,7 +66,7 @@ export class SearchService {
       if(obj.is_wd_even === 'true'){
         oApiParam.oParam['is_wd_even'] = true;
       }
-      else if(obj.is_even === 'false'){
+      else if(obj.is_wd_even === 'false'){
         oApiParam.oParam['is_wd_even'] = false;
       }
     }

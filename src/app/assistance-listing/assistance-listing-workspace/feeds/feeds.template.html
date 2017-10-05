@@ -75,12 +75,12 @@
         <div class="sam-ui section divider"></div>
            <div class="sam-ui grid">
              <div class="row">
-               <div id="request-name" class="three wide column">
+               <div class="three wide column request-name">
                  <ng-container *ngIf="row?.createdBy">
                    {{ row.createdBy }}
                  </ng-container>
                </div>
-               <div id="request-type" class="six wide column">
+               <div class="six wide column request-type">
                  <div><a *ngIf="row?.requestType?.value" routerLink="/programs/change-request/{{row.id}}/action">
                      {{row.requestType.value | requestTypeLabel}} in {{domainLabel}}
                  </a></div>
@@ -99,7 +99,7 @@
                </div>
              </div>
            </div>
-           <div id="request-commnets" class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x">
+           <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x request-comments">
              <div class="content">
                <div class="header">Comments</div>
                <div class="description" *ngIf="row?.reason">

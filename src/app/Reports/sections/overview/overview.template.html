@@ -16,7 +16,7 @@
         <span *ngIf="states.showSignIn">
         <div class="centered">
           <p>Sign in to access dynamic reports</p><br>
-          <a routerLink="/signin"><button type="button" class="usa-button">Sign In</button></a>
+          <a (click)="directToLogin()"><button type="button" class="usa-button">Sign In</button></a>
         </div>
         <br><br>
         <div class="centered">

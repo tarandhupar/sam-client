@@ -45,8 +45,6 @@ export class GrantOrEditAccess {
   existingAccess = {};
   submitEnabled: boolean = true;
 
-  @ViewChild('deleteModal') deleteModal: SamModalComponent;
-
   constructor(
     fb: FormBuilder,
     private userAccessService: UserAccessService,
@@ -90,16 +88,11 @@ export class GrantOrEditAccess {
   }
 
   orgName() {
-    if (this.isGrant()) {
-      return this.form.get('org').value.name || "";
-    } else {
-      return this.route.snapshot.queryParams['orgName'];
-    }
+    return this.form.get('org').value.name || "";
   }
 
   parseInitialRolesAndDomains() {
     let qp = this.route.snapshot.queryParams;
-    console.log(qp);
     let role = +qp['role'];
     let domains = qp['domains'];
 
@@ -378,32 +371,6 @@ export class GrantOrEditAccess {
           });
         }
 
-      }
-    )
-  }
-
-  onDeleteClick() {
-    this.deleteModal.openModal();
-  }
-
-  onDeleteConfirm() {
-    let body = {
-      existingAccess: this.existingAccess,
-      users: [this.user.email],
-      mode: 'DELETE',
-    };
-
-    this.userAccessService.deleteAccess(body).subscribe(
-      () => {
-        this.router.navigate(["../access"], { relativeTo: this.route});
-      },
-      err => {
-        console.error(err);
-        this.alertFooter.registerFooterAlert({
-          description: 'There was an error with a required service',
-          type: "error",
-          timer: 3200
-        });
       }
     )
   }

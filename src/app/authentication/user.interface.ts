@@ -16,8 +16,9 @@ export interface User {
 
   homePhone?: string;
   workPhone?: string;
-  mobile?: string;
-  phoneExtension?: string;
+  personalPhone?: string;
+  carrier?: string;
+  carrierExtension?: string;
 
   businessName?: string;
 
@@ -47,5 +48,6 @@ export interface User {
   gov?: boolean;
   entity?: boolean;
   systemAccount?: boolean;
+  OTPPreference?: string;
   emailNotification?: boolean | string;
 }

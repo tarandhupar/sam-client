@@ -243,9 +243,9 @@ export class FALAssistanceComponent implements OnInit {
     this.progTitle = this.viewModel.title;
 
     //report
+    let reportArr = [];
     if (this.viewModel.preAppCoordReports && this.viewModel.preAppCoordReports.length > 0) {
       let reports = this.viewModel.preAppCoordReports;
-      let reportArr = [];
       for (let report of reports) {
         reportArr.push(report.reportCode);
       }
@@ -312,7 +312,6 @@ export class FALAssistanceComponent implements OnInit {
     this.updateErrors();
     this.cdr.detectChanges();
   }
-
 
   public formatAssistInfo(assistInfo) {
     let label = '';
@@ -396,6 +395,7 @@ export class FALAssistanceComponent implements OnInit {
     if ((event === 'delete' && this.deadlineModel && this.deadlineModel.length === 0) || event === 'add-cancel' || event === 'editSubmit')
       this.falAssistanceForm.get('deadlines').markAsDirty({onlySelf: true});
   }
+
   isRequired(event) {
     if(event && event.indexOf('otherRequired') !== -1) {
       this.flag = true;

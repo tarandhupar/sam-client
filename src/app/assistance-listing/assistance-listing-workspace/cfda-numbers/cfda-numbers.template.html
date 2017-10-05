@@ -65,9 +65,8 @@
           </div>
           <div class="four wide column">
             <sam-button [buttonType]="buttonType"
-                        [attr.id]="'edit-btn'"
                         [buttonText]="'Edit'"
-                        [buttonClass]="'usa-button-primary'"
+                        [buttonClass]="'usa-button-primary edit-btn'"
                         (onClick)="onEditClick(row.organizationId)">
             </sam-button>
             <div>Assignment Type: {{ row.programNumberAuto == false ? 'Manual' : 'Automatic'}}</div>

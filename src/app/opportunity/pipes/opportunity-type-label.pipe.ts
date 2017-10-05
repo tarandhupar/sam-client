@@ -40,7 +40,7 @@ export class OpportunityTypeLabelPipe implements PipeTransform {
         label = 'Fair Opportunity / Limited Sources Justification';
         break;
       case 'o':
-        label = 'Synopsis';
+        label = 'Solicitation';
         break;
     }
 

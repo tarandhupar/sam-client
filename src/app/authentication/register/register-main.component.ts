@@ -31,14 +31,31 @@ export class RegisterMainComponent {
 
   public userForm: FormGroup;
 
+  private configs = {
+    carrier: {
+      keyValueConfig: {
+        keyProperty: 'key',
+        valueProperty: 'value'
+      }
+    }
+  };
+
   public store = {
     questions: [],
     indexes: {},
-    levels: ['department', 'agency', 'office']
+    levels: ['department', 'agency', 'office'],
+    labels: {
+      personalPhone: {
+        label: 'Mobile Phone',
+        hint: 'When you sign in each time, you will need to receive a one time password. This password will automatically ' +
+              'be sent to your email address. To receive one time passwords as text messages instead, you must provide a ' +
+              'mobile phone number ond carrier.',
+      }
+    }
   };
 
   public states = {
-    isGov: true,
+    isGov: false,
     submitted: false,
     loading: false,
     selected: ['','',''],
@@ -60,14 +77,14 @@ export class RegisterMainComponent {
     firstName: '',
     initials: '',
     lastName: '',
+    suffix: '',
+    personalPhone: '',
+    carrier: '',
 
+    workPhone: '',
     departmentID: '',
     agencyID: '',
     officeID: '',
-
-    workPhone: '',
-
-    suffix: '',
 
     kbaAnswerList: [
       <any>{ questionId: '', answer: '' },
@@ -76,15 +93,12 @@ export class RegisterMainComponent {
     ],
 
     userPassword: '',
-    accountClaimed: true
+    accountClaimed: true,
+    OTPPreference: 'email',
+    emailNotification: false,
   };
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private builder: FormBuilder,
-    private differs: KeyValueDiffers,
-    private api: IAMService) {
+  constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private differs: KeyValueDiffers, private api: IAMService) {
     this.differ = differs.find({} ).create(null);
   }
 
@@ -106,10 +120,11 @@ export class RegisterMainComponent {
         middleName:        [this.user.initials],
         lastName:          [this.user.lastName, Validators.required],
         suffix:            [this.user.suffix],
+        personalPhone:     [this.user.personalPhone],
+        carrier:           [this.user.carrier, this.user.personalPhone ? Validators.required : null],
 
         workPhone:         [this.user.workPhone],
-
-        officeID:          [orgID], // Set default organization
+        officeID:          [orgID],
 
         kbaAnswerList:     this.builder.array([
           this.initKBAGroup(0),
@@ -119,7 +134,16 @@ export class RegisterMainComponent {
 
         userPassword:      ['', Validators.required],
         accountClaimed:    [true],
-        emailNotification: [this.user.emailNotification]
+        OTPPreference:     [this.user.OTPPreference],
+        emailNotification: [this.user.emailNotification],
+      });
+
+      this.userForm.get('personalPhone').valueChanges.subscribe(value => {
+        const control = this.userForm.get('carrier'),
+              validation = value ? [Validators.required] : null;
+
+        control.setValidators(validation);
+        control.updateValueAndValidity();
       });
 
       if(this.states.isGov) {
@@ -147,16 +171,11 @@ export class RegisterMainComponent {
     }
   }
 
-  writeValue(obj: any) {}
-  registerOnChange(fn: any) {}
-  registerOnTouched(fn: any) {}
-  setDisabledState(isDisabled: boolean) {}
-
   initSession(cb) {
     let onInitSuccess,
-      onInitError;
+        onInitError;
 
-    onInitSuccess = ((data) => {
+    onInitSuccess = (data => {
       let userData = merge({}, data.user || {}),
         phone;
 
@@ -186,12 +205,8 @@ export class RegisterMainComponent {
 
       phone = (this.user.workPhone || '').split('x');
 
-      this.user.workPhone = phone[0].replace(/[^0-9]/g, '');
-      this.user.workPhone = (this.user.workPhone.length < 11 ? '1' : '' ) + this.user.workPhone;
-
-      if(phone.length > 1) {
-        this.user.phoneExtension = phone[1];
-      }
+      this.user.workPhone = this.sanitizePhone(phone[0]);
+      this.user.personalPhone = this.sanitizePhone(this.user.personalPhone);
 
       // Set rendering to gov vs non-gov
       this.states.isGov = data.gov || false;
@@ -214,39 +229,29 @@ export class RegisterMainComponent {
   initMockSession(cb) {
     this.states.isGov = true;
 
-    this.user = merge({}, this.user, {
-      _id:           'john.doe@gsa.com',
-      email:         'john.doe@gsa.com',
-      firstName:     'John',
-      lastName:      'Doe',
-      initials:      'J',
-      fullName:      'John J Doe',
-      workPhone:     '12345678901',
-      kbaAnswerList: [
-        { questionId: 1, answer: 'Answer1' },
-        { questionId: 2, answer: 'Answer2' },
-        { questionId: 3, answer: 'Answer3' }
-      ]
+    this.api.iam.user.get(user => {
+      this.user = merge({}, this.user, user, {
+        kbaAnswerList: [
+          { questionId: 1, answer: 'Answer1' },
+          { questionId: 2, answer: 'Answer2' },
+          { questionId: 3, answer: 'Answer3' }
+        ]
+      });
+
+      if(ENV && ENV == 'test') {
+        this.states.isGov = false;
+        delete this.user['departmentID'];
+        delete this.user['agencyID'];
+        delete this.user['officeID'];
+      }
+
+      this.api.iam.kba.questions(kba => {
+        this.store.questions = kba.questions;
+
+        this.processKBAQuestions();
+        cb();
+      });
     });
-
-    this.store.questions = [
-      { 'id': 1,  'question': 'What was the make and model of your first car?' },
-      { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
-      { 'id': 3,  'question': 'What was your high school mascot?' },
-      { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
-      { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
-      { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
-      { 'id': 7,  'question': 'Who was your childhood hero?' },
-      { 'id': 8,  'question': 'What is your favorite vacation spot?' },
-      { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
-      { 'id': 10, 'question': 'What is your dream job?' },
-      { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
-      { 'id': 12, 'question': 'What is the title of your favorite book?' }
-    ];
-
-    this.processKBAQuestions();
-
-    cb();
   }
 
   processKBAQuestions() {
@@ -270,6 +275,12 @@ export class RegisterMainComponent {
       questionId: [this.user.kbaAnswerList[index].questionId, Validators.required],
       answer:     [this.user.kbaAnswerList[index].answer]
     })
+  }
+
+  sanitizePhone(phone: string): string {
+    phone = (phone || '').replace(/[^0-9]/g, '');
+    phone = (phone.length < 11 ? '1' : '' ) + phone;
+    return phone;
   }
 
   setHierarchy(hierarchy: { label: string, value: number }[]) {
@@ -322,6 +333,22 @@ export class RegisterMainComponent {
     this.user.workPhone = phoneNumber;
   }
 
+  errors(controlName: string) {
+    const control = this.userForm.get(controlName);
+    let errors = '';
+
+    switch(controlName) {
+      case 'carrier':
+        if(this.states.submitted && control.hasError('required')) {
+          errors = 'Carrier is required if mobile phone is entered.';
+        }
+
+        break;
+    }
+
+    return errors;
+  }
+
   hideAlert() {
     this.states.alert.show = false;
   }
@@ -334,8 +361,8 @@ export class RegisterMainComponent {
 
   prepareData() {
     let userData = merge({}, this.user, this.userForm.value),
-      propKey,
-      isRemove;
+        propKey,
+        isRemove;
 
     userData.initials = userData.middleName;
     userData.fullName = [userData.firstName, userData.initials, userData.lastName]
@@ -357,7 +384,7 @@ export class RegisterMainComponent {
       }
 
       isRemove = (isArray(userData[propKey]) && !userData[propKey].length) ||
-        ((userData[propKey] || '').length == 0);
+                 ((userData[propKey] || '').length == 0);
 
       if(isRemove && !propKey.match(/(department|agency|office)ID/)) {
         delete userData[propKey];

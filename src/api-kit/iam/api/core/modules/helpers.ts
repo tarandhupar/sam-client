@@ -23,15 +23,19 @@ export function getParam(key) {
   return utils.queryparams[key] || false;
 };
 
-export function exceptionHandler(responseBody) {
+export function exceptionHandler(response) {
   let defaults = {
-    status: 'error',
-    message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
-  };
+        status: 'error',
+        message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
+      },
 
-  responseBody = responseBody || {};
+      body = isObject(response) ? merge({}, response) : {};
 
-  return merge({}, defaults, responseBody);
+  if(response.timeout) {
+    body['message'] = 'The server timed out';
+  }
+
+  return merge({}, defaults, body);
 };
 
 export function isDebug() {

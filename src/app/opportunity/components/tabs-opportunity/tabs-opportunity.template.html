@@ -23,7 +23,7 @@
 
     <!-- ==================== Review ==================== -->
     <a *ngIf="canReview()"
-       (click)="tabClicked(tabItems.review)"
+       (click)="onReviewClick()"
        class="item"
        [class.active]="currentRouteConfig == tabItems.review.routeConfig">
       Authenticated

@@ -1,117 +1,237 @@
-<div class="request-response-page usa-grid">
-  <!--<div class="usa-width-one-fourth">&nbsp;</div>-->
-  <div>
-    <sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>
-  </div>
-  <div class="usa-width-three-fourths">
-    <h1 class="m_T-4x">Respond to Request</h1>
-    <b>All fields are required</b>
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter">Request Details</h2>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-sixth"><b>User</b></div>
-      <div class="usa-width-one-third overflow-ellipsis" [attr.title]="request.requestorName">{{request.requestorName}}&nbsp;</div>
-      <div class="usa-width-one-fourth"><b>Supervisor Name</b></div>
-      <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorName">{{request.supervisorName}}&nbsp;</div>
-    </div>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-sixth"><b>Status</b></div>
-      <div class="usa-width-one-third">{{request.status}}&nbsp;</div>
-      <div class="usa-width-one-fourth"><b>Supervisor Email</b></div>
-      <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorEmail">{{request.supervisorEmail}}&nbsp;</div>
-    </div>
+<form-only class="grant-access"
+           theme="inside"
+           section="Workspace"
+           [title]="pageTitle()">
+
+  <form  [formGroup]="form" (ngSubmit)="onSubmit()">
     <hr>
-
-    <div class="usa-grid-full">
-      <div class="usa-width-one-half">
-        <sam-agency-picker-v2
-          [label]="'Organization'"
-          [ngModel]="initialOrg"
-          (ngModelChange)="onOrganizationsChange($event)"
-          [required]="true"
-          [searchMessage]="errors.org"
-          [type]="'single'"
-          [defaultDept]="true"
-        ></sam-agency-picker-v2>
-
-        <!-- Domain -->
-        <sam-select name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>
-
-        <!-- Role -->
-        <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
+    <h3>Request Details</h3>
+    <div [ngStyle]="{'border-radius': '3px','background-color': 'white','border': '1px solid lightgray','padding': '.5em'}">
+      <div class="usa-grid-full">
+        <div class="usa-width-one-sixth"><b>User</b></div>
+        <div class="usa-width-one-third overflow-ellipsis" [attr.title]="request.requestorName">{{request.requestorName}}&nbsp;</div>
+        <div class="usa-width-one-fourth"><b>Supervisor Name</b></div>
+        <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorName">{{request.supervisorName}}&nbsp;</div>
+      </div>
+      <div class="usa-grid-full">
+        <div class="usa-width-one-sixth"><b>Status</b></div>
+        <div class="usa-width-one-third">{{request.status}}&nbsp;</div>
+        <div class="usa-width-one-fourth"><b>Supervisor Email</b></div>
+        <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorEmail">{{request.supervisorEmail}}&nbsp;</div>
       </div>
     </div>
+    <p style="margin-top: .5em">All fields are required</p>
+    <div class="sam-ui grid">
+      <div class="column eight wide">
+        <!-- Orgs -->
+        <div [hidden]="!editingOrg">
+          <sam-agency-picker-v2
+            formControlName="org"
+            [label]="'Organization'"
+            type="single"
+            [searchMessage]="errors.org"
+            [defaultDept]="!isSuperAdmin"
+            class="clearfix"
+            (ngModelChange)="onOrganizationChange($event)"
+          ></sam-agency-picker-v2>
+        </div>
+        <div [hidden]="editingOrg" style="margin-top: .5em">
+          <label style="display: inline">Organization:&nbsp;</label>
+          <span>{{orgName()}}</span>
+          <a class="pull-right" (click)="onClickEditOrg()">Edit&nbsp;<i class="fa fa-pencil"></i></a>
+        </div>
 
-    <!-- Objects and Permissions -->
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter">Permissions</h2>
-    <div class="text-center" *ngIf="!(objects && objects.length)">Select a role</div>
-    <div class="background-light p_All-3x" *ngIf="objects && objects.length">
-      <div  *ngFor="let object of objects" class="object-item">
-        <h3>{{object.function.val}}</h3>
-        <div class="usa-grid-full" *ngFor="let p of object.permission; let e = even; let i = index">
-          <ng-container *ngIf="e">
-            <!-- ngFor hack to declare a local variable -->
-            <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
-              <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">
-              <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
-            </div>
-            <ng-container *ngIf="object.permission[i+1]">
-              <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
-                <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">
-                <label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>
-              </div>
-            </ng-container>
-          </ng-container>
+        <!-- Role -->
+        <div style="margin-top: .5em">
+          <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
+            <select formControlName="role" (ngModelChange)="onRoleChange($event)">
+              <option *ngFor="let role of roleOptions" [value]="role.value">{{role.label}}</option>
+            </select>
+          </sam-label-wrapper>
+        </div>
+
+        <!-- Domain -->
+        <div style="margin-top: .5em">
+          <!--<sam-autocomplete-multiselect (ngModelChange)="onDomainChange($event)" formControlName="domains" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getDomainOptions()"></sam-autocomplete-multiselect>-->
+          <sam-select formControlName="domain" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="getDomainOptions()" [errorMessage]="errors.domain"></sam-select>
         </div>
       </div>
     </div>
 
-    <!-- Comments -->
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter">Comments</h2>
+    <!-- Permissions -->
+    <div style="margin-bottom: 0; margin-top: 1em">
+      <label>Permissions</label>
+      <ul class="column-wrappable" style="margin-top: .1em">
+        <li *ngFor="let func of functions" style="margin-bottom: 16px;">
+          <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
+          <div *ngFor="let permission of func.permissions">
+            <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
+            <label class="permission-label" >{{permission.name}}</label>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Requestor Comments -->
     <ng-container *ngIf="request.comments && request.comments.length">
-      <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
-        <div class="usa-width-one-fourth overflow-ellipsis">
-          <b [attr.title]="comment.userName">
-            <span *ngIf="comment.userName">{{comment.userName}}</span>
-            <span *ngIf="!comment.userName"><i>User Name Unavailable</i></span>
-          </b>
+    <label>Requestor Comments</label>
+    <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
+      <div class="usa-width-one-fourth overflow-ellipsis">
+        <b [attr.title]="comment.userName">
+        <span *ngIf="comment.userName">{{comment.userName}}</span>
+        <span *ngIf="!comment.userName"><i>User Name Unavailable</i></span>
+        </b>
         </div>
         <div class="usa-width-three-fourths">
           {{comment.text}}
-          <div>
-            <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
-          </div>
+        <div>
+          <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
         </div>
       </div>
-    </ng-container>
-    <ng-container *ngIf="!(request.comments && request.comments.length)">
-      <div class="text-center p_All-4x">
-        <em>No comments</em>
-      </div>
+    </div>
     </ng-container>
 
-    <!-- New Comment -->
-    <div>
-      <sam-text-area
-        hint="Editing this role impacts the user's access at this organizations. Please provide a reason for the change."
-        name="comment"
-        label="Message"
-        [required]="true"
-        [(ngModel)]="comment"
-        [errorMessage]="errors.comment"
-      ></sam-text-area></div>
-
-    <!-- Action Buttons -->
-    <div class="m_T-4x m_B-4x">
-      <div class="pull-right clearfix">
-        <button class="pull-left usa-button usa-button-outline" (click) = "location.back()" type="button">Cancel</button>
-        <button *ngIf="request?._links?.reject_request" class="usa-button usa-button-secondary" (click)="onRejectClick()">Reject</button>
-        <!--<button class="request-action escalate" (click)="onEscalateClick()">Escalate</button>-->
-        <button *ngIf="request?._links?.approve_request" class="usa-button usa-button-primary m_R-0" (click)="onApproveClick()">Done</button>
+    <!-- My Comments -->
+    <label>Comments</label>
+    <div class="sam-ui grid" *ngIf="false">
+      <div row>
+        <div columns="10"><b>{{comment.userName}}</b> - {{comment.text}}</div>
+        <div columns="2">{{comment.date | timeago}}</div>
       </div>
     </div>
-  </div>r
-</div>
-<sam-modal #rejectModal title="Confirm Reject" cancelButtonLabel="Cancel" submitButtonLabel="Reject" (onSubmit)="onRejectConfirm()" [closeOnOutsideClick]="false" type="error">
-  <p>Are you sure you want to reject the access request for this user?</p>
+    <sam-text-area label='' formControlName="comment" name="comment" [errorMessage]="errors.comment"></sam-text-area>
+
+    <sam-alert type="error" title="Error" [description]="errorMessage" *ngIf="errorMessage"></sam-alert>
+
+    <!-- Cancel / Confirm -->
+    <div class="pull-right clearfix m_T-4x m_B-4x">
+      <button routerLink="../access" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
+      <button type="button" class="usa-button usa-button-secondary m_R-0" (click)="onRejectClick()">Reject</button>
+      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">Done</button>
+    </div>
+  </form>
+
+</form-only>
+<sam-modal #rejectModal title="Reject Access" cancelButtonLabel="Cancel" submitButtonLabel="Reject" (onSubmit)="onRejectConfirm()" [closeOnOutsideClick]="false" type="error">
+  <p>Are you sure you want to reject the access for this user?</p>
 </sam-modal>
+
+
+
+<!--<div class="request-response-page usa-grid">-->
+  <!--&lt;!&ndash;<div class="usa-width-one-fourth">&nbsp;</div>&ndash;&gt;-->
+  <!--<div>-->
+    <!--<sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>-->
+  <!--</div>-->
+  <!--<div class="usa-width-three-fourths">-->
+    <!--<h1 class="m_T-4x">Respond to Request</h1>-->
+    <!--<b>All fields are required</b>-->
+    <!--<h2 class="p_All-2x usa-bgcolor-gray-lighter">Request Details</h2>-->
+    <!--<div class="usa-grid-full">-->
+      <!--<div class="usa-width-one-sixth"><b>User</b></div>-->
+      <!--<div class="usa-width-one-third overflow-ellipsis" [attr.title]="request.requestorName">{{request.requestorName}}&nbsp;</div>-->
+      <!--<div class="usa-width-one-fourth"><b>Supervisor Name</b></div>-->
+      <!--<div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorName">{{request.supervisorName}}&nbsp;</div>-->
+    <!--</div>-->
+    <!--<div class="usa-grid-full">-->
+      <!--<div class="usa-width-one-sixth"><b>Status</b></div>-->
+      <!--<div class="usa-width-one-third">{{request.status}}&nbsp;</div>-->
+      <!--<div class="usa-width-one-fourth"><b>Supervisor Email</b></div>-->
+      <!--<div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorEmail">{{request.supervisorEmail}}&nbsp;</div>-->
+    <!--</div>-->
+    <!--<hr>-->
+
+    <!--<div class="usa-grid-full">-->
+      <!--<div class="usa-width-one-half">-->
+        <!--<sam-agency-picker-v2-->
+          <!--[label]="'Organization'"-->
+          <!--[ngModel]="initialOrg"-->
+          <!--(ngModelChange)="onOrganizationsChange($event)"-->
+          <!--[required]="true"-->
+          <!--[searchMessage]="errors.org"-->
+          <!--[type]="'single'"-->
+          <!--[defaultDept]="true"-->
+        <!--&gt;</sam-agency-picker-v2>-->
+
+        <!--&lt;!&ndash; Domain &ndash;&gt;-->
+        <!--<sam-select name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>-->
+
+        <!--&lt;!&ndash; Role &ndash;&gt;-->
+        <!--<sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <!--&lt;!&ndash; Objects and Permissions &ndash;&gt;-->
+    <!--<h2 class="p_All-2x usa-bgcolor-gray-lighter">Permissions</h2>-->
+    <!--<div class="text-center" *ngIf="!(objects && objects.length)">Select a role</div>-->
+    <!--<div class="background-light p_All-3x" *ngIf="objects && objects.length">-->
+      <!--<div  *ngFor="let object of objects" class="object-item">-->
+        <!--<h3>{{object.function.val}}</h3>-->
+        <!--<div class="usa-grid-full" *ngFor="let p of object.permission; let e = even; let i = index">-->
+          <!--<ng-container *ngIf="e">-->
+            <!--&lt;!&ndash; ngFor hack to declare a local variable &ndash;&gt;-->
+            <!--<div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">-->
+              <!--<input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">-->
+              <!--<label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>-->
+            <!--</div>-->
+            <!--<ng-container *ngIf="object.permission[i+1]">-->
+              <!--<div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">-->
+                <!--<input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isCheckable" (click)="onPermissionClick(permission)">-->
+                <!--<label [attr.for]="permissionId(permission, object)" class="permission-label m_T-2x" >{{permission.val}}</label>-->
+              <!--</div>-->
+            <!--</ng-container>-->
+          <!--</ng-container>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <!--&lt;!&ndash; Comments &ndash;&gt;-->
+    <!--<h2 class="p_All-2x usa-bgcolor-gray-lighter">Comments</h2>-->
+    <!--<ng-container *ngIf="request.comments && request.comments.length">-->
+      <!--<div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">-->
+        <!--<div class="usa-width-one-fourth overflow-ellipsis">-->
+          <!--<b [attr.title]="comment.userName">-->
+            <!--<span *ngIf="comment.userName">{{comment.userName}}</span>-->
+            <!--<span *ngIf="!comment.userName"><i>User Name Unavailable</i></span>-->
+          <!--</b>-->
+        <!--</div>-->
+        <!--<div class="usa-width-three-fourths">-->
+          <!--{{comment.text}}-->
+          <!--<div>-->
+            <!--<span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</ng-container>-->
+    <!--<ng-container *ngIf="!(request.comments && request.comments.length)">-->
+      <!--<div class="text-center p_All-4x">-->
+        <!--<em>No comments</em>-->
+      <!--</div>-->
+    <!--</ng-container>-->
+
+    <!--&lt;!&ndash; New Comment &ndash;&gt;-->
+    <!--<div>-->
+      <!--<sam-text-area-->
+        <!--hint="Editing this role impacts the user's access at this organizations. Please provide a reason for the change."-->
+        <!--name="comment"-->
+        <!--label="Message"-->
+        <!--[required]="true"-->
+        <!--[(ngModel)]="comment"-->
+        <!--[errorMessage]="errors.comment"-->
+      <!--&gt;</sam-text-area></div>-->
+
+    <!--&lt;!&ndash; Action Buttons &ndash;&gt;-->
+    <!--<div class="m_T-4x m_B-4x">-->
+      <!--<div class="pull-right clearfix">-->
+        <!--<button class="pull-left usa-button usa-button-outline" (click) = "location.back()" type="button">Cancel</button>-->
+        <!--<button *ngIf="request?._links?.reject_request" class="usa-button usa-button-secondary" (click)="onRejectClick()">Reject</button>-->
+        <!--&lt;!&ndash;<button class="request-action escalate" (click)="onEscalateClick()">Escalate</button>&ndash;&gt;-->
+        <!--<button *ngIf="request?._links?.approve_request" class="usa-button usa-button-primary m_R-0" (click)="onApproveClick()">Done</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>r-->
+<!--</div>-->
+<!--<sam-modal #rejectModal title="Confirm Reject" cancelButtonLabel="Cancel" submitButtonLabel="Reject" (onSubmit)="onRejectConfirm()" [closeOnOutsideClick]="false" type="error">-->
+  <!--<p>Are you sure you want to reject the access request for this user?</p>-->
+<!--</sam-modal>-->
 

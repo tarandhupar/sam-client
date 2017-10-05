@@ -21,6 +21,7 @@
           <!-- Org -->
           <div class="m_T-2x">
             <sam-agency-picker-v2
+              class="bulk-agency"
               [label]="'Organization'"
               type="single"
               ngModel
@@ -46,7 +47,14 @@
 
           <!-- Existing Domain -->
           <div class="m_T-2x">
-            <sam-autocomplete-multiselect [(ngModel)]="existingDomains" (ngModelChange)="onExistingDomainChange($event)" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getExistingDomainOptions()"></sam-autocomplete-multiselect>
+            <sam-autocomplete-multiselect
+              [(ngModel)]="existingDomains"
+              (ngModelChange)="onExistingDomainChange($event)"
+              [errorMessage]="errors.domains"
+              name="domain"
+              label="Domains"
+              [options]="getExistingDomainOptions()"
+            ></sam-autocomplete-multiselect>
           </div>
         </div>
       </div>
@@ -74,14 +82,16 @@
       <p>The following users meet your filtering criteria. Select or deselect from this list to customize your selection.</p>
       <div class="clearfix">
         <div class="pull-left">
-          <sam-toggle [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="showDeselect ? 'Deselect All' : 'Select All'"></sam-toggle>
+          <sam-toggle [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'"></sam-toggle>
+          &nbsp;|&nbsp;
+          <span>{{users.length}} users</span>
         </div>
         <div class="pull-right">
           <sam-sort [options]="sortOptions" [(ngModel)]="sort" (ngModelChange)="doUserSearch()"></sam-sort>
         </div>
       </div>
-      <div *ngIf="!areUsersLoading">
-        <table style="margin-top: .5em; max-height: 300px; overflow-y: auto; background-color:white; width: 100%; border: 1px solid black;">
+      <div *ngIf="!areUsersLoading" style="margin-top: .5em; max-height: 300px; overflow-y: auto; position: relative;">
+        <table style="background-color:white; width: 100%; border: 1px solid black;">
           <tbody>
             <tr *ngFor="let user of users" class="bulk-update-user-row" (click)="onUserRowClick(user)">
               <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected" [label]="formatUserName(user)"></sam-toggle></td>
@@ -135,11 +145,18 @@
             [model]="updatedRole"
             (modelChange)="onUpdatedRoleChange($event)"
             [options]="roleOptions"
-            [errorMessage]="errors.role">
-          </sam-select>
+            [errorMessage]="accessErrors.role"
+          ></sam-select>
 
           <!-- Updated Domain -->
-          <sam-autocomplete-multiselect [(ngModel)]="updatedDomains" (ngModelChange)="onUpdatedDomainChange($event)" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getUpdatedDomainOptions()"></sam-autocomplete-multiselect>
+          <sam-autocomplete-multiselect
+            [(ngModel)]="updatedDomains"
+            (ngModelChange)="onUpdatedDomainChange($event)"
+            [errorMessage]="accessErrors.domains"
+            name="domain"
+            label="Domains"
+            [options]="getUpdatedDomainOptions()"
+          ></sam-autocomplete-multiselect>
         </div>
       </div>
       <div *ngIf="updatedDomains?.length">
@@ -161,7 +178,7 @@
       <h3>Comments</h3>
 
       <!-- Optional Message -->
-      <sam-text-area name="comments" [(ngModel)]="comments"></sam-text-area>
+      <sam-text-area name="comments" [(ngModel)]="comments" [errorMessage]="accessErrors.comments"></sam-text-area>
 
     </ng-container>
 
@@ -239,7 +256,7 @@
 
   <div grid>
     <div columns="12" class="right aligned">
-      <sam-button buttonType="tertiary" buttonText="Cancel" routerLink="../roles-directory"></sam-button>
+      <sam-button buttonType="tertiary" buttonText="Cancel" (click)="location.back()"></sam-button>
 
       <sam-button
         *ngIf="!isCurrentTab('filters')"

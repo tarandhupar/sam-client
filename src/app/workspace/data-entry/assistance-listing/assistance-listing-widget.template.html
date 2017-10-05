@@ -1,30 +1,79 @@
-<div class="assistance-widget">
-  <div class="usa-grid widget-body">
-  <div class="usa-width-two-thirds">
-      <div *ngIf="pendingApprovalCount!=null"><span class="usa-font-lead">{{pendingApprovalCount == 0 ? '0' : pendingApprovalCount}}&nbsp;</span>
-        <a *ngIf="pendingApprovalCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'pending'}">Pending Review Requests</a>
-        <span *ngIf="pendingApprovalCount === 0">Pending Review Requests</span>
-      </div>
-      <div *ngIf="pendingRequestCount!=null"><span class="usa-font-lead">{{pendingRequestCount == 0 ? '0' : pendingRequestCount}}&nbsp;</span>
-        <a *ngIf="pendingRequestCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: '', requestType: 'archive_request,unarchive_request,title_request,agency_request,program_number_request'}">Pending Change Requests</a>
-        <span *ngIf="pendingRequestCount === 0">Pending Change Requests</span>
-      </div>
-      <div *ngIf="rejectedCount!=null"><span class="usa-font-lead">{{rejectedCount == 0 ? '0' : rejectedCount}}&nbsp;</span>
-        <a *ngIf="rejectedCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'rejected'}">Rejected Assistance Listings</a>
-        <span *ngIf="rejectedCount == 0" class="al-text">Rejected Assistance Listings</span>
-      </div>
-      <div *ngIf="draftReviewCount!=null && permissions['CREATE_FALS']"><span class="usa-font-lead">{{draftReviewCount == 0 ? '0' : draftReviewCount}}&nbsp;</span>
-        <a *ngIf="draftReviewCount !== 0" class="al-text" [routerLink]="['/fal/workspace']" [queryParams]="{status: 'draft_review'}">Under Agency Coordinator Review</a>
-        <span *ngIf="draftReviewCount == 0" class="al-text">Under Agency Coordinator Review</span>
-      </div>
+<div grid class="equal width relaxed">
+  <div class="column">
+    <div class="sam-ui divided selection list">
+      <ng-container *ngIf="pendingApprovalCount!=null">
+        <a class="item" *ngIf="pendingApprovalCount !== 0" 
+          [routerLink]="['/fal/workspace']" 
+          [queryParams]="{status: 'pending'}">
+          <div class="sam-ui blue horizontal mini label">{{ pendingApprovalCount }}</div>
+          Pending Review Requests
+        </a>
+        <div class="item" *ngIf="pendingApprovalCount === 0">
+          <div class="sam-ui horizontal mini label">0</div>
+          Pending Review Requests
+        </div>
+      </ng-container>
+      
+      <ng-container *ngIf="pendingRequestCount!=null">
+        <a class="item" *ngIf="pendingRequestCount !== 0" 
+          [routerLink]="['/fal/workspace']" 
+          [queryParams]="{status: '', requestType: 'archive_request,unarchive_request,title_request,agency_request,program_number_request'}">
+          <div class="sam-ui blue horizontal mini label">{{ pendingRequestCount }}</div>
+          Pending Change Requests  
+        </a>
+        <div class="item" *ngIf="pendingRequestCount === 0">
+          <div class="sam-ui horizontal mini label">0</div>
+          Pending Change Requests
+        </div>
+      </ng-container>
+      
+      <ng-container *ngIf="rejectedCount!=null">
+        <a class="item" *ngIf="rejectedCount !== 0" 
+          [routerLink]="['/fal/workspace']" 
+          [queryParams]="{status: 'rejected'}">
+          <div class="sam-ui blue horizontal mini label">{{ rejectedCount }}</div>
+          Rejected Assistance Listings
+        </a>
+        <div class="item" *ngIf="rejectedCount == 0">
+          <div class="sam-ui horizontal mini label">0</div>
+          Rejected Assistance Listings
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="draftReviewCount!=null">
+        <a class="item" *ngIf="draftReviewCount !== 0" 
+          [routerLink]="['/fal/workspace']" 
+          [queryParams]="{status: 'draft_review'}">
+          <div class="sam-ui blue horizontal mini label">{{ draftReviewCount }}</div>
+          Under Agency Coordinator Review
+        </a>
+        <div class="item" *ngIf="draftReviewCount == 0">
+          <div class="sam-ui horizontal mini label">0</div>
+          Under Agency Coordinator Review
+        </div>
+      </ng-container>
+    </div>
   </div>
-  <div class="usa-width-one-third">
-      <a *ngIf="permissions['CREATE_FALS']" class="usa-button usa-button-primary al-button" [routerLink]="['/programs/add']">Create a New Listing</a>
-      <a *ngIf="permissions['CREATE_RAO']" class="usa-button usa-button-primary al-button" [routerLink]="['/fal/myRegionalOffices']">Manage Assistance Locations</a>
-    <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" class="usa-button usa-button-primary al-button" [routerLink]="['/fal/workspace/cfda-numbers']">Manage CFDA Numbers</a>
+  <div class="column">    
+    <div class="sam-ui divided selection relaxed list">
+      <a *ngIf="permissions['CREATE_FALS']" 
+        class="item" 
+        [routerLink]="['/programs/add']">
+        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+        Create a New Listing
+      </a>
+      <a *ngIf="permissions['CREATE_RAO']" 
+        class="item" 
+        [routerLink]="['/fal/myRegionalOffices']">
+        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+        Manage Assistance Locations
+      </a>
+      <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" 
+        class="item" 
+        [routerLink]="['/fal/workspace/cfda-numbers']">
+        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+        Manage CFDA Numbers
+      </a>
+    </div>
   </div>
-  </div>
-  <a class="widget-footer text-right" [routerLink]="['/fal/workspace']">
-    Assistance Listings Workspace <span class="fa fa-chevron-circle-right"></span>
-  </a>
 </div>

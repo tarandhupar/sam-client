@@ -1,5 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import {BaseRequestOptions, Http} from '@angular/http';
+import {MockBackend} from '@angular/http/testing';
 import { Observable } from 'rxjs';
 
 import { SearchPage } from './search.page';
@@ -25,6 +28,12 @@ import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/e
 import { SamEligibilityFilter } from "./eligibility-filter/eligibility-filter.component";
 import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
 import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
+import {ActivatedRoute} from "@angular/router";
+//other library
+import * as Cookies from 'js-cookie';
+import {SavedSearchService} from "../../api-kit/search/saved-search.service";
+import {SearchModule} from "./search.module";
+
 let fixture;
 
 let searchServiceStub = {
@@ -78,19 +87,96 @@ let searchServiceStub = {
         }]
       }
     });
+  },
+  loadParams: ()=> {
   }
 };
 
-let fhServiceStub = {};
+let savedSearchServiceStub = {
+  getAllSavedSearches: ()=> {
+   return Observable.of({
+     _links: {
+       self: {
+         href: "https://gsaiae-dev02.reisys.com/preferences/v1/search?page=0&size=0&sort=-relevance"
+       }
+     },
+     page: {
+       size:0,
+       totalElements: 0,
+       totalPages: 0,
+       number: 0
+    }
+  });
+  },
+  createSavedSearch: ()=> {
+  return Observable.of("abcd");
+  }
+};
+
+let fhServiceStub = {
+  getDepartments: ()=> {
+    return Observable.of({
+      "_embedded": [
+        {
+          "org": {
+            "orgKey": 1,
+            "categoryDesc": "DEPARTMENT",
+            "categoryId": "CAT-1",
+            "createdBy": "MIGRATOR",
+            "createdDate": 1064880000000,
+            "description": "POSTAL SERVICE",
+            "fpdsOrgId": "1",
+            "cgac": "0",
+            "fullParentPath": "10",
+            "fullParentPathName": "POSTAL_SERVICE",
+            "isSourceFpds": true,
+            "lastModifiedBy": "FPDSADMIN",
+            "lastModifiedDate": 1152144000000,
+            "name": "POSTAL SERVICE",
+            "orgCode": "ORG-1",
+            "type": "DEPARTMENT",
+            "level": 1,
+            "code": "1",
+            "orgAddresses": [],
+            "hierarchy": [],
+            "l1Name": "POSTAL SERVICE",
+            "l1OrgKey": 10
+          },
+          "_link": {
+            "self": {
+              "href": "http://csp-api.sam.gov/minc/federalorganizations/v1/organizations/100040731"
+            }
+          }
+        }
+      ]
+    });
+  }
+};
 
 describe('src/app/search/search.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      schemas: [ NO_ERRORS_SCHEMA ],
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
         EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
         SearchMultiSelectFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
         SamEligibilityFilter],
-      providers: [AlertFooterService, DunsEntityAutoCompleteWrapper, SearchDictionariesService, DictionaryService ],
+      providers: [
+        AlertFooterService,
+        SavedSearchService,
+        DunsEntityAutoCompleteWrapper,
+        SearchDictionariesService,
+        DictionaryService,
+        BaseRequestOptions,
+        MockBackend,
+        {
+          provide: Http,
+          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
+            return new Http(backend, defaultOptions);
+          },
+          deps: [MockBackend, BaseRequestOptions],
+        }
+      ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,
@@ -105,7 +191,9 @@ describe('src/app/search/search.spec.ts', () => {
        set: {
          providers: [
            {provide: SearchService, useValue: searchServiceStub},
-           {provide: FHService, useValue: fhServiceStub}
+           {provide: SavedSearchService, useValue: savedSearchServiceStub},
+           {provide: FHService, useValue: fhServiceStub},
+           {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': '1', 'index': 'cfda', 'keywords': 'education', 'assistance_type': '0001001'}])}
          ]
       }
     }).compileComponents();
@@ -164,7 +252,7 @@ describe('src/app/search/search.spec.ts', () => {
 
     fixture.whenStable().then(() => {
       fixture.detectChanges();
-      expect(fixture.componentInstance.agencyPicker).toBeDefined();
+      expect(fixture.componentInstance.agencyPickerV2).toBeDefined();
     });
   });
 
@@ -204,6 +292,40 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.data.page.size).toBe(10);
       expect(fixture.componentInstance.data.page.totalElements).toBe(123);
+      expect(fixture.componentInstance.showSavedSearches).toBe(false);
+    });
+  });
+
+  it('SearchPage: should show error message when trying to save without giving a name', () => {
+    fixture.componentInstance.index = "cfda";
+    fixture.componentInstance.keywords = "education";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+    Cookies.set('iPlanetDirectoryPro', 'anything');
+    fixture.componentInstance.saveSearch(null);
+
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.handleAction()).toHaveBeenCalled();
+      expect(fixture.componentInstance.modal1.open()).toHaveBeenCalled();
+      expect(fixture.componentInstance.textConfig.errorMessage).toBe("Please provide a name");
+      expect(fixture.componentInstance.modal1.closeModal()).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.searchName).toBe('');
+    });
+  });
+
+  it('SearchPage: should save a search', () => {
+    fixture.componentInstance.index = "cfda";
+    fixture.componentInstance.keywords = "education";
+    fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+    fixture.savedSearchName = "Test save search";
+    Cookies.set('iPlanetDirectoryPro', 'anything');
+    fixture.detectChanges();
+    fixture.componentInstance.saveSearch(null);
+
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.modal1.closeModal()).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.showSavedSearches).toBe(true);
+      expect(fixture.componentInstance.searchName).toBe("Test save search");
     });
   });
 

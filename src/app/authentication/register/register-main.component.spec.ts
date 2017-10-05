@@ -1,45 +1,20 @@
-import { DebugElement } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+  import { DebugElement } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
-import { cloneDeep, merge } from 'lodash';
-
-import { FHService, IAMService, WrapperService } from 'api-kit';
+import { cloneDeep, keys, merge, pick } from 'lodash';
 
 import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { RegisterMainComponent } from './register-main.component';
 
-const response = Observable.of({
-  _embedded: [{
-    org: {
-      type:           'DEPARTMENT',
-      fullParentPath: '',
-      elementId:      1000000,
-      l1Name:         'Dummy'
-    }
-  }]
-});
-
-const fhStub = {
-  getDepartments() {
-    return response;
-  },
-
-  getOrganizationById(id: string, includeChildrenLevels: boolean) {
-    return response;
-  }
-};
-
-const apiStub = {
-  call(oApiParam) {
-    return {};
-  }
-};
+import { FHService, IAMService } from 'api-kit';
+import { FHServiceMock } from 'api-kit/fh/fh.service.mock';
+import { getMockUser } from 'api-kit/iam/api/core/modules/mocks';
 
 describe('[IAM] Sign Up (Main)', () => {
   let component: RegisterMainComponent;
@@ -60,25 +35,14 @@ describe('[IAM] Sign Up (Main)', () => {
       ],
 
       providers: [
-        BaseRequestOptions,
-        MockBackend,
-        {
-          provide: Http,
-          useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions]
-        },
-        { provide: WrapperService, useValue: apiStub },
-        { provide: FHService, useValue: fhStub }
+        { provide: FHService, useValue: FHServiceMock }
       ]
     });
 
     TestBed.overrideComponent(AgencyPickerComponent, {
       set: {
         providers: [
-          { provide: FHService, useValue: fhStub },
-          { provide: WrapperService, useValue: apiStub }
+          { provide: FHService, useValue: FHServiceMock },
         ]
       }
     });
@@ -97,29 +61,25 @@ describe('[IAM] Sign Up (Main)', () => {
 
     checkbox.click();
     fixture.detectChanges();
+
     expect(component.user.emailNotification).toBe(true);
 
     checkbox.click();
     fixture.detectChanges();
+
     expect(component.user.emailNotification).toBe(false);
   });
 
-  it('verify form input bindings', async(() => {
+  it('verify form input bindings', () => {
     let form,
         api = TestBed.get(IAMService),
         de = fixture.debugElement,
         kba = de.query(By.css('.kba')).nativeElement,
-        mock = {
-          title:             null,
-          suffix:            '',
-          officeID:          '',
-          userPassword:      '',
-          accountClaimed:    true,
-          emailNotification: null,
-        },
+        dom,
 
         questions,
-        answers;
+        answers,
+        props;
 
     // Load KBA Security Questions
     api.iam.kba.questions(data => {
@@ -129,16 +89,17 @@ describe('[IAM] Sign Up (Main)', () => {
     });
 
     fixture.detectChanges();
-
     fixture.whenStable().then(() => {
       questions = kba.querySelectorAll('select');
       answers = kba.querySelectorAll('input');
 
-      mock = merge(mock, {
+      dom = {
         firstName: de.query(By.css('#first-name')).nativeElement.value,
         middleName: de.query(By.css('#middle-name')).nativeElement.value,
         lastName: de.query(By.css('#last-name')).nativeElement.value,
-        workPhone: de.query(By.css('#phone-number')).nativeElement.value.toString().replace(/[^0-9]/g, ''),
+        personalPhone: de.query(By.css('.name sam-phone-entry input')).nativeElement.value.toString().replace(/[^0-9]/g, ''),
+        carrier: de.query(By.css('.sam-autocomplete input')).nativeElement.value,
+        workPhone: de.query(By.css('.phone sam-phone-entry input')).nativeElement.value.toString().replace(/[^0-9]/g, ''),
         kbaAnswerList: [
           {
             questionId: parseInt(questions[0].value),
@@ -153,19 +114,20 @@ describe('[IAM] Sign Up (Main)', () => {
             answer: answers[2].value,
           },
         ]
-      });
+      };
 
-      expect(component.userForm.value).toEqual(mock);
+      props = keys(dom);
+      form = pick(component.userForm.value, props);
+
+      expect(form).toEqual(dom);
     });
-  }));
+  });
 
   it('verify population of error messages', () => {
     let error,
         message;
 
-    component.states.alert.type = 'error';
-    component.states.alert.message = 'Test Error Message';
-    component.states.alert.show = true;
+    component.showAlert('error', 'Test Error Message');
 
     fixture.detectChanges();
 
@@ -178,4 +140,25 @@ describe('[IAM] Sign Up (Main)', () => {
     expect(error).toBeDefined();
     expect(message.innerHTML).toBe(component.states.alert.message);
   });
+
+  it('verify dynamic validator when mobile phone has input', fakeAsync(() => {
+    let phoneInput,
+        controls = {
+          personalPhone: component.userForm.get('personalPhone'),
+          carrier: component.userForm.get('carrier'),
+        };
+
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      controls.personalPhone.setValue('12345678901');
+      tick();
+
+      expect(controls.carrier.invalid).toBeTruthy();
+
+      controls.personalPhone.setValue('');
+      tick();
+
+      expect(controls.carrier.invalid).toBeFalsy();
+    });
+  }));
 });

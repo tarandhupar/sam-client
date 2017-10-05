@@ -1,6 +1,6 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { Http } from '@angular/http';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { IAMService } from 'api-kit';
 import { globals } from '../../app/globals';
@@ -117,6 +117,16 @@ export class ReportComponent implements OnInit {
   }
   fiscalYear = '';
   dateRangeLabel = 'Date range correspond to the Date Signed on Procurement Awards';
+  queryParams = {
+    server:'',
+    project: '',
+    port: '',
+    evt: '',
+    currentViewMedia: '',
+    iPlanetDirectoryPro: '',
+    promptsAnswerXML: ''
+  };
+  promptsAccordian = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -186,12 +196,24 @@ export class ReportComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
-    // if (this.route.snapshot.url[1].path == 'shared') {
-    //   this.samAccordionValue.collapseAll();
-    //   this.showReport = true;
-    //   let mstrParams = (this.route.snapshot.params['params']);
-    //   this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=4001&src=mstrWeb.4001&currentViewMedia=1&visMode=0'+mstrParams);
-    // }
+    if (this.route.snapshot.url[1].path == 'shared') {
+      this.promptsAccordian = -1;
+      this.showReport = true;
+      let mstrParams = this.route.queryParams.subscribe(
+        params => {
+          this.queryParams.server = params['Server'];
+          this.queryParams.project = params['Project'];
+          this.queryParams.port = params['Port'];
+          this.queryParams.evt = params['evt'];
+          this.queryParams.currentViewMedia = params['currentViewMedia'];
+          this.queryParams.iPlanetDirectoryPro = params['iPlanetDirectoryPro'];
+          this.queryParams.promptsAnswerXML = params['promptsAnswerXML'];
+          
+        }
+      )
+      this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=4001&src=mstrWeb.4001&currentViewMedia=1&visMode=0'+mstrParams);
+      // need to change mstrParams to individual
+    }
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
@@ -214,6 +236,12 @@ export class ReportComponent implements OnInit {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
     }
   }      
+
+  // ngAfterViewInit() {
+  //   if (this.route.snapshot.url[1].path == 'shared') {
+  //     this.samAccordionValue.collapseAll();
+  //   }
+  // }
 
   checkSession(cb: () => void) {
     let vm = this;
@@ -303,12 +331,13 @@ export class ReportComponent implements OnInit {
 
   hitUrl(evt, docId) {
     let vm = this;
+    // &uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER
     if (this.name == "Small Business Goaling Report") {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
     } else if (this.name == "Contract Detail Report") {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
     } else {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
     }
   }
 
@@ -398,22 +427,30 @@ export class ReportComponent implements OnInit {
 
   checkIncludesStateCountry() {
     if (this.usedPrompts.state || this.usedPrompts.country) {
-      let encodedStateVendor = encodeURIComponent(this.location.state.key);
-      let encodedStatePoP = encodeURIComponent(this.location.state.value);
-      let encodedCountryPoP = encodeURIComponent(this.location.country.value);
-      let encodedCountryVendor = encodeURIComponent(this.location.country.key);
+      let encodedStateVendor;
+      let encodedStatePoP;
+      let encodedCountryPoP;
+      let encodedCountryVendor;
       let stateParameter = [];
       let countryParameter = [];
       let stateXMLid = '';
       let countryXMLid = '';
+      if (this.location.state) {
+        encodedStateVendor = encodeURIComponent(this.location.state.key);
+        encodedStatePoP = encodeURIComponent(this.location.state.value);
+      }
+      if (this.location.country) {
+        encodedCountryPoP = encodeURIComponent(this.location.country.value);
+        encodedCountryVendor = encodeURIComponent(this.location.country.key);
+      }
       // State code for geographical report by vendor location report
       if (this.id == 'B1BA646F4E0BD167A588FBBC4E9E06A8') {
         stateXMLid = 'C333A9D1438B941088B6898EEE811323';
         countryXMLid = '88E6E25643D1743D6DA8D395CE631FC2';
-        if (this.location.state.value.length > 0) {
+        if (this.location.state.value && this.location.state.value.length > 0) {
           stateParameter = [{type:"element",name:"at",attributes:{did:"EF87927B4C28EC072AD84389B81DEF63",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"EF87927B4C28EC072AD84389B81DEF63:"+encodedStateVendor.toUpperCase(),art:"1"}}];
         }
-        if (this.location.country.value.length > 0) {
+        if (this.location.country.value && this.location.country.value.length > 0) {
           countryParameter = [{type:"element",name:"at",attributes:{did:"2569E1F241BCE3414441DB81421A7B58",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"2569E1F241BCE3414441DB81421A7B58:"+encodedCountryVendor.toUpperCase(),art:"1"}}];
         }
       }
@@ -421,10 +458,10 @@ export class ReportComponent implements OnInit {
       if (this.id == 'DD333E194817ECA449A3AAA12511955F') { 
         stateXMLid = '79D5D8C241405AC36A4AAEB36CB4B62E';
         countryXMLid = 'D6D759164DCAC8BC56AAF88E3910C79A';
-        if (this.location.state.value && this.location.state.value.length > 0) {
+        if (this.location.state && this.location.state.value.length > 0) {
           stateParameter = [{type:"element",name:"at",attributes:{did:"E807038644FD59F5F131D8824F801A57",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"E807038644FD59F5F131D8824F801A57:"+encodedStateVendor.toUpperCase(),art:"1"}}];
         }
-        if (this.location.country.value && this.location.country.value.length > 0) {
+        if (this.location.country && this.location.country.value.length > 0) {
           countryParameter = [{type:"element",name:"at",attributes:{did:"07A44AB54A1A22DAA7D21C89B148CF15",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"07A44AB54A1A22DAA7D21C89B148CF15:"+encodedCountryPoP.toUpperCase(),art:"1"}}];
         }
       }

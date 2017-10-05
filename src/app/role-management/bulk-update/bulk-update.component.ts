@@ -1,10 +1,11 @@
-import { Component, Input, forwardRef, Output, ViewChild, ElementRef } from "@angular/core";
+import { Component, Input, forwardRef, ElementRef } from "@angular/core";
 import { UserService } from "../user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { IBreadcrumb } from "sam-ui-kit/types";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { Location } from "@angular/common";
 
 type TabName = 'filters'|'users'|'access'|'confirmation';
 
@@ -61,7 +62,7 @@ export class BulkUpdateComponent {
   test: boolean = false;
 
   sideNavSections: Array<string> = [
-    'Filters', 'Users', 'Access', 'Confirmation'
+    'Define Users', 'Validate Users', 'Update Users', 'Confirm'
   ];
 
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
@@ -76,16 +77,21 @@ export class BulkUpdateComponent {
   updatedRole;
   role;
   errors = {
-    domain: '',
+    domains: '',
     role: '',
     org: '',
+  };
+  accessErrors = {
+    domains: '',
+    role: '',
+    comments: '',
   };
   domainTabs = [];
   sortOptions = [
     { value: 'email', label: 'Email' },
     { value: 'last', label: 'Last name' },
   ];
-  sort = { type: 'email', sort: 'asc' };
+  sort = { type: 'last', sort: 'asc' };
   showDeselect: boolean = true;
   mode: 'update'|'remove'|undefined = 'update';
   modeOptions = [
@@ -114,6 +120,7 @@ export class BulkUpdateComponent {
     private router: Router,
     private route: ActivatedRoute,
     private el: ElementRef,
+    private location: Location
   ) {
 
   }
@@ -255,8 +262,25 @@ export class BulkUpdateComponent {
     return func.permissions.filter(p => p.checked).map(p => p.name).join(',');
   }
 
+  clearFilterErrors() {
+    this.errors = {
+      domains: '',
+      role: '',
+      org: '',
+    };
+  }
+
+  clearAccessErrors() {
+    this.accessErrors = {
+      domains: '',
+      role: '',
+      comments: '',
+    }
+  }
+
   onNextClick() {
     if (this.currentTab === 'filters' && !this.validateFilters()) {
+      this.clearFilterErrors();
       this.showFilterErrors();
       return;
     }
@@ -281,6 +305,11 @@ export class BulkUpdateComponent {
       this.currentTab = 'confirmation';
       return;
     }
+    if (this.currentTab === 'access' && !this.validateAccess()) {
+      this.clearAccessErrors();
+      this.showAccessErrors();
+      return;
+    }
     let i = this.tabIndex();
     this.currentTab = this.tabs[i+1];
   }
@@ -294,16 +323,36 @@ export class BulkUpdateComponent {
   }
 
   validateFilters() {
-    return this.org && this.existingDomains && this.existingDomains.length;
+    return this.org && this.org.value && this.existingDomains && this.existingDomains.length && this.existingRole;
+  }
+
+  validateAccess() {
+    return this.updatedDomains && this.updatedDomains.length && this.updatedRole && this.comments;
   }
 
   showFilterErrors() {
     if (!this.existingDomains || !this.existingDomains.length) {
-      this.errors.domain = 'A domain is required';
+      this.errors.domains = 'A domain is required';
     }
 
-    if (!this.org) {
+    if (!this.org || !this.org.value) {
       this.errors.org = 'An organization is required';
+    }
+
+    if (!this.existingRole) {
+      this.errors.role = 'A role is required';
+    }
+  }
+
+  showAccessErrors() {
+    if (!this.updatedDomains || !this.updatedDomains.length) {
+      this.accessErrors.domains = 'A domain is required';
+    }
+    if (!this.updatedRole) {
+      this.accessErrors.role = 'A role is required';
+    }
+    if (!this.comments) {
+      this.accessErrors.comments = 'A comment is required';
     }
   }
 
@@ -434,6 +483,10 @@ export class BulkUpdateComponent {
 
     this.userAccessService[method](body).subscribe(
       res => {
+        this.footerAlerts.registerFooterAlert({
+          type: 'success',
+          description: `${users.length} users updated.`
+        });
         this.router.navigate(["../roles-directory"], { relativeTo: this.route});
       },
       err => {

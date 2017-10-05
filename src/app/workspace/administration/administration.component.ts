@@ -6,6 +6,7 @@ import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service
 import { AdminService } from 'application-content/403/admin.service';
 import { Cookie } from "ng2-cookies";
 import { UserService } from "../../role-management/user.service";
+import { UserAccessService } from "../../../api-kit/access/access.service";
 
 @Component({
   selector: 'workspace-administration',
@@ -13,9 +14,13 @@ import { UserService } from "../../role-management/user.service";
 })
 export class AdministrationComponent {
   private shortcuts = {
-    profile: {
+    reset: {
       text: 'Reset Your Password',
       routerLink: ['/profile/password']
+    },
+    profile: {
+      text: 'Go to My Profile',
+      routerLink: ['/profile']
     }
   };
 
@@ -37,6 +42,7 @@ export class AdministrationComponent {
       system: false,
     }
   };
+  public widgetResult: any;
 
   @Input() toggleControl = {
     aacRequest: true,
@@ -46,19 +52,40 @@ export class AdministrationComponent {
     rm: false,
     system: false,
   };
+  
+  callback = () => {
+    console.log("Help!");
+  }
+  
+  actions: Array<any> = [
+    { name: 'help', label: 'Help', icon: 'fa fa-question-circle', callback: this.callback}
+  ];
 
   constructor(private _router:Router,
               private route:ActivatedRoute,
               private api:IAMService,
               private alertService: SystemAlertsService,
               private userService: UserService,
+              private userAccessService: UserAccessService,
   ) {}
 
   ngOnInit() {
     this.initSession();
     this.getAlertStatistic('Active', this.setActiveAlertsNum);
     this.getAlertStatistic('Draft', this.setDraftAlertsNum);
-    this.toggleControl.rm = this.userService.isLoggedIn();
+    if (this.userService.isLoggedIn()) {
+      this.userAccessService.getWidget().subscribe(
+        res => {
+          if (!res) {
+            return;
+          }
+          this.toggleControl.rm = true;
+          this.widgetResult = res;
+        },
+        err => {
+          // don't show the widget on errors, or 401 or 405
+        });
+    }
   }
 
   resetHelpDetails() {

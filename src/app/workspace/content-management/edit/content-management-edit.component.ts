@@ -6,6 +6,7 @@ import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { SamTabComponent } from "sam-ui-kit/components/tabs/tabs.component";
+import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 
 @Component({
   templateUrl: './content-management-edit.template.html',
@@ -13,6 +14,7 @@ import { SamTabComponent } from "sam-ui-kit/components/tabs/tabs.component";
 export class HelpContentManagementEditComponent {
 
   @ViewChild('editTab') editTab:SamTabComponent;
+  @ViewChild('publicViewTab') publicViewTab:SamTabComponent;
 
   private crumbs: Array<IBreadcrumb> = [
     { url: '/workspace', breadcrumb: 'Workspace' },
@@ -27,6 +29,7 @@ export class HelpContentManagementEditComponent {
   validSections = ['data-dictionary', 'FAQ-repository'];
 
   existingDomains = [];
+  domainOptions = [];
   errors = {
     title:'',
     description:''
@@ -47,18 +50,31 @@ export class HelpContentManagementEditComponent {
     'faq-repository': 'FAQ',
   };
 
+  sectionText = {
+    'data-dictionary':['Data Field', 'Definition'],
+    'faq-repository':['Question', 'Response'],
+  };
+
   dataLoaded:boolean = false;
   mode:string = '';
   formComplete:boolean = false;
   hasUnsavedChanges:boolean = true;
 
+  multiselectConfig = {
+    keyProperty: 'key',
+    valueProperty: 'value',
+    categoryProperty: 'category',
+  };
+
   constructor(private _router:Router,
               private route: ActivatedRoute,
               private capitalPipe: CapitalizePipe,
-              private contentManagementService: ContentManagementService
+              private contentManagementService: ContentManagementService,
+              private msgFeedService: MsgFeedService
   ){}
 
   ngOnInit(){
+    this.getExistingDomainOptions();
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
@@ -117,6 +133,11 @@ export class HelpContentManagementEditComponent {
       this.responseText = this.contentObj['description'];
       this.keywords = this.contentObj['keywords'].join(',');
       this.pageTitle = this.contentObj['title'];
+      let temp = [];
+      data['domain'].forEach(e => {
+        temp.push({key:e,value:e});
+      });
+      this.contentObj['domain'] = temp;
       this.dataLoaded= true;
     });
   }
@@ -126,31 +147,54 @@ export class HelpContentManagementEditComponent {
     // Route back to search page
     if(this.validateForm()){
       this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+    }else{
+      this.formComplete = false;
     }
   }
 
   onSwitchTabs(tab){
     if(tab.title === 'Public View'){
-      if(this.validateForm()){
-        this.contentObj['keywords'] = this.keywords.split(',');
-        this.pageTitle = this.contentObj['title'];
-        this.formComplete = true;
-      } else{
-        tab.active = false;
-        this.formComplete = false;
-        this.editTab.active = true;
-      }
+
+      this.contentObj['keywords'] = this.keywords.split(',');
+      this.pageTitle = this.contentObj['title'];
+      this.formComplete = true;
+
+      // if(this.validateForm()){
+      //   this.contentObj['keywords'] = this.keywords.split(',');
+      //   this.pageTitle = this.contentObj['title'];
+      //   this.formComplete = true;
+      // } else{
+      //   tab.active = false;
+      //   this.formComplete = false;
+      //   this.editTab.active = true;
+      // }
     }else{
       this.formComplete = false;
     }
   }
 
   getExistingDomainOptions(){
-    return [{value:'test', label:'test', name:'test'}];
+    this.contentManagementService.getDomains().subscribe(data =>{
+      if(data['domainTypes']){
+        this.domainOptions = [];
+        data['domainTypes'].forEach(domain => {
+          this.domainOptions.push({value: domain.domainName, key: domain.domainName});
+        });
+        this.domainOptions.push({value: 'Other Domain', key: 'Other Domain'});
+      }
+    });
   }
 
   getUpdateDateStr(){
     return moment().utc().format('MMM DD, YYYY');
+  }
+
+  getDomainListStr(){
+    let domainList = [];
+    this.contentObj['domain'].forEach(e => {
+      domainList.push(e['key']);
+    });
+    return domainList.join(', ');
   }
 
   cancelForm(){
@@ -163,7 +207,6 @@ export class HelpContentManagementEditComponent {
       this.contentObj['keywords'] = this.keywords.split(',');
       this.pageTitle = this.contentObj['title'];
       this.formComplete = true;
-      this.hasUnsavedChanges = false;
     }
 
   }

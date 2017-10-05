@@ -4,7 +4,7 @@ import { SystemAlertsService, AlertType } from "./system-alerts.service";
 import { TestBed, fakeAsync, inject } from "@angular/core/testing";
 import { WrapperService } from "../wrapper/wrapper.service";
 
-xdescribe('SystemAlertsService', () => {
+describe('SystemAlertsService', () => {
   let basicAlert: AlertType = {
     alertId: 1,
     content: {

@@ -37,6 +37,8 @@ export class User {
   public lastName = '';
   public suffix = '';
   public workPhone = '';
+  public personalPhone = '';
+  public OTPPreference = 'email';
   public _links = {};
 
   public status = 'Active';

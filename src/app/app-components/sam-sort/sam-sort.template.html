@@ -1,22 +1,22 @@
 <div>
-  <sam-select 
-    label="Sort By " 
-    [ngModel]="selection" 
-    [disabled]="disabled" 
-    (ngModelChange)="selectionHandler($event)" 
-    name="sort-select" 
+  <sam-select
+    label="Sort By "
+    [ngModel]="selection"
+    [disabled]="disabled"
+    (ngModelChange)="selectionHandler($event)"
+    name="sort-select"
     [options]="options">
   </sam-select>
-  
-  <a class="sam-ui primary small button" (click)="toggleSort()">
-      <i 
-        *ngIf="sort=='asc'" 
-        class="fa fa-sort-amount-asc" 
+
+  <a class="sam-ui primary small button" aria-label="Sort Button" (click)="toggleSort()">
+      <i
+        *ngIf="sort=='asc'"
+        class="fa fa-sort-amount-asc"
         aria-hidden="true">
       </i>
-      <i 
+      <i
         *ngIf="sort=='desc'"
-        class="fa fa-sort-amount-desc" 
+        class="fa fa-sort-amount-desc"
         aria-hidden="true">
       </i>
   </a>

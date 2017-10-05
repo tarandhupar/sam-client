@@ -18,7 +18,7 @@ export class SavedSearchService {
             body: data,
             method: 'POST'
         };
-        return this.oAPIService.call(oApiParam);
+        return this.oAPIService.call(oApiParam, false);
     }
 
     getAllSavedSearches(obj){

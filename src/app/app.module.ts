@@ -38,6 +38,7 @@ import { SearchDictionariesService } from "../api-kit/search/search-dictionaries
 import { SamTitleService } from 'api-kit/title-service/title.service';
 import { SamErrorService } from 'api-kit/error-service';
 import { AlertFooterService } from './app-components/alert-footer/alert-footer.service';
+import { LoginService } from './app-components/login/login.service';
 
 
 // Application wide providers
@@ -48,7 +49,8 @@ const APP_PROVIDERS = [
   SearchDictionariesService,
   SamTitleService,
   SamErrorService,
-  AlertFooterService
+  AlertFooterService,
+  LoginService
 ];
 
 /**

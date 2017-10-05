@@ -1,8 +1,7 @@
 <div class="sam-ui small subtle menu">
   <a *ngIf="requestTypeValue && requestId"
       [routerLink]="['/programs/change-request/', requestId, 'action']"
-      class="active inverted blue item"
-      id="pending-request-button">
+      class="active inverted blue item pending-request-button">
     {{ requestTypeValue | requestLabel }}
     &nbsp;
     <i aria-hidden="true" class="fa fa-arrow-circle-right"></i>

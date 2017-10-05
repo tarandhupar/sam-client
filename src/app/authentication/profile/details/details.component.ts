@@ -30,8 +30,24 @@ export class DetailsComponent {
     iam: null
   };
 
+  private configs = {
+    carrier: {
+      keyValueConfig: {
+        keyProperty: 'key',
+        valueProperty: 'value'
+      }
+    }
+  };
+
   private store = {
     title: 'Personal Details',
+    labels: {
+      personalPhone: {
+        label: 'Mobile Phone',
+        hint: 'To receive one time passwords as text messages, you must provide a mobile phone number ond carrier.',
+      }
+    },
+
     levels: ['department', 'agency', 'office'],
     questions: [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
@@ -57,6 +73,11 @@ export class DetailsComponent {
     selected: ['','',''],
     loading: false,
     submitted: false,
+    edit: {
+      identity: false,
+      business: false,
+      kba: false,
+    }
   };
 
   public user:User = {
@@ -74,9 +95,12 @@ export class DetailsComponent {
     officeID: '',
 
     workPhone: '',
+    personalPhone: '',
+    carrier: '',
 
     kbaAnswerList: [],
 
+    OTPPreference: 'email',
     emailNotification: false,
     accountClaimed: true
   };
@@ -87,18 +111,21 @@ export class DetailsComponent {
       initials: this.user.initials,
       lastName: this.user.lastName,
       suffix: this.user.suffix,
-      emailNotification: this.user.emailNotification
+      personalPhone: this.user.personalPhone,
+      carrier: this.user.carrier,
+      OTPPreference: this.user.OTPPreference,
+      emailNotification: this.user.emailNotification,
     },
 
     organization: {
       departmentID: this.user.departmentID,
       agencyID: this.user.agencyID,
       officeID: this.user.officeID,
-      workPhone: this.user.workPhone
+      workPhone: this.user.workPhone,
     },
 
     kba: {
-      kbaAnswerList: this.user.kbaAnswerList
+      kbaAnswerList: this.user.kbaAnswerList,
     }
   };
 
@@ -186,6 +213,9 @@ export class DetailsComponent {
         initials: this.user.initials,
         lastName: this.user.lastName,
         suffix: this.user.suffix,
+        personalPhone: this.user.personalPhone,
+        carrier: this.user.carrier,
+        OTPPreference: this.user.OTPPreference,
         emailNotification: this.user.emailNotification
       },
 
@@ -246,6 +276,8 @@ export class DetailsComponent {
       middleName:    [this.user.initials],
       lastName:      [this.user.lastName, Validators.required],
       suffix:        [this.user.suffix],
+      personalPhone: [this.user.personalPhone],
+      carrier:       [this.user.carrier, this.user.personalPhone ? Validators.required : null],
 
       workPhone:     [this.user.workPhone],
       officeID:      [orgID],
@@ -258,7 +290,16 @@ export class DetailsComponent {
         ] : []
       ),
 
+      OTPPreference:     [this.user.OTPPreference],
       emailNotification: [this.user.emailNotification]
+    });
+
+    this.detailsForm.get('personalPhone').valueChanges.subscribe(value => {
+        const control = this.detailsForm.get('carrier'),
+              validation = value ? [Validators.required] : null;
+
+        control.setValidators(validation);
+        control.updateValueAndValidity();
     });
 
     this.states.isGov = orgID.length ? true : false;
@@ -417,6 +458,22 @@ export class DetailsComponent {
     return repeater;
   }
 
+  errors(controlName: string) {
+    const control = this.detailsForm.get(controlName);
+    let errors = '';
+
+    switch(controlName) {
+      case 'carrier':
+        if(this.states.submitted && control.hasError('required')) {
+          errors = 'Carrier is required if mobile phone is entered.';
+        }
+
+        break;
+    }
+
+    return errors;
+  }
+
   get phone():string {
     let phone = this.user.workPhone
       .replace(/[^0-9]/g, '')
@@ -572,7 +629,7 @@ export class DetailsComponent {
   alert(key: string, type?: string, message?: string) {
     this.alerts[key].type = type || 'success';
     this.alerts[key].message = message || '';
-    this.alerts[key].alert.show = true;
+    this.alerts[key].show = true;
   }
 
   /**
@@ -677,7 +734,7 @@ export class DetailsComponent {
   save(groupKey) {
     let controls = this.detailsForm.controls,
         mappings = {
-          'identity': 'firstName|initials|lastName|suffix|emailNotification',
+          'identity': 'firstName|initials|lastName|suffix|personalPhone|carrier|OTPPreference|emailNotification',
           'business': 'departmentID|agencyID|officeID|workPhone',
           'kba': 'kbaAnswerList'
         },
@@ -687,7 +744,6 @@ export class DetailsComponent {
 
     this.states.submitted = true;
 
-
     if(this.agencyPicker){
       this.agencyPicker.setOrganizationFromBrowse();
     }
@@ -696,6 +752,7 @@ export class DetailsComponent {
       this.states.loading = true;
 
       this.saveGroup(keys, () => {
+        this.states.edit[groupKey] = false;
         this.syncCache();
 
         // this.states.editable[groupKey] = false;
@@ -703,9 +760,12 @@ export class DetailsComponent {
         // Trick Header to Update State
         this.router.navigate(['/profile']);
       }, (error) => {
+        this.states.edit[groupKey] = true;
         this.states.loading = false;
-        this.alert('error', error.message);
+        this.alert(groupKey, error.message, 'error');
       });
+    } else {
+      this.states.edit[groupKey] = true;
     }
   }
 };

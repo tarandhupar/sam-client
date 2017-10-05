@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { globals } from '../../globals.ts';
 
 import { IAMService } from 'api-kit';
-
+import { LoginService } from '../login/login.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface HeaderLink {
@@ -117,7 +117,7 @@ export class SamHeaderLinksComponent {
     {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
   ];
 
-  constructor(private route: ActivatedRoute, private _router:Router, private api: IAMService) {
+  constructor(private route: ActivatedRoute, private _router:Router, private api: IAMService, private loginService: LoginService) {
     this._router.events.subscribe((event: any) => {
       if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
@@ -141,6 +141,8 @@ export class SamHeaderLinksComponent {
 
   ngOnInit() {
     this.checkSession();
+    this.loginService.loginEvent$.subscribe(() => {this.onLinkClick("login")})
+
   }
 
   checkSession() {

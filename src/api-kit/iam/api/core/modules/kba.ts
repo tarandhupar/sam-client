@@ -43,7 +43,7 @@ export const kba = {
 
           $success($kba);
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'Please sign in' });
@@ -85,7 +85,7 @@ export const kba = {
           if(!err) {
             $success(response.body);
           } else {
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           }
         });
     } else {

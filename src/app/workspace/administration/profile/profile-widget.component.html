@@ -1,50 +1,75 @@
-<div>
-  <div class="widget-body">
-    <ng-container *ngIf="user">
-      <div class="usa-width-one-whole">
-        <div [ngClass]="states.public ? 'usa-width-one-whole' : 'usa-width-one-third'">
-          <div class="widget-section usa-avatar fa fa-user">
-            <h1 [innerText]="user.fullName"></h1>
-            <div [innerText]="user.email"></div>
-          </div>
-          <div class="widget-section">
-            <h2 [innerText]="store.primary" *ngIf="!states.public"></h2>
-            <div class="widget-shortcuts" *ngIf="states.public">
-              <a [routerLink]="['/profile']" [queryParams]="{ edit: 'business' }" href="#business" pageScroll>Associate myself to an organization</a>
-              <a [routerLink]="['/profile']" [queryParams]="{ edit: 'kba' }" href="#kba" pageScroll>Update Security Questions</a>
-            </div>
-            <div [innerText]="store.secondary" *ngIf="states.federal"></div>
-            <!-- Roles -->
-            <div *ngIf="states.entity">
-              <sam-checkbox name="entity-roles" [options]="store.roles" (modelChange)="onChangeRole($event)"></sam-checkbox>
-            </div>
-          </div>
-        </div>
-        <div class="usa-width-two-thirds" *ngIf="!states.public">
-          <div class="usa-width-one-third widget-section">
-            <h1>My Access</h1>
-            <a class="usa-button shortcut" [routerLink]="['/profile/request-access']">Request Access</a>
-            <a class="usa-button shortcut" [routerLink]="['/profile/migrations']">Migrate Accounts</a>
-
-            <a class="widget-footer" [routerLink]="['/profile/access']">
-              Go to My Access <span class="fa fa-chevron-circle-right"></span>
-            </a>
-          </div>
-          <div class="usa-width-two-thirds widget-section">
-            <h1>My Profile</h1>
-            <a class="usa-button shortcut" [routerLink]="['/profile/password']">Reset Your Password</a>
-            <a class="usa-button shortcut" href="#kba" [routerLink]="['/profile']" [queryParams]="{ edit: 'kba' }" pageScroll>Update Security Questions</a>
-            <a class="usa-button shortcut" [routerLink]="['/profile/subscriptions']">Manage Subscriptions</a>
-
-            <a class="widget-footer" [routerLink]="['/profile']">
-              Go to My Profile <span class="fa fa-chevron-circle-right"></span>
-            </a>
-          </div>
+<ng-container *ngIf="user">
+  
+  <div grid class="equal width relaxed">
+  
+    <ng-container *ngIf="states.public">
+      <div class="column">
+        <h4 class="sam-ui header">My Profile</h4>
+        <div class="sam-ui vertical basic labeled icon fluid buttons">
+          <a class="sam-ui button" 
+            [routerLink]="['/profile']" 
+            [queryParams]="{ edit: 'business' }" href="#business" pageScroll>
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Associate myself to an organization
+          </a>
+          <a class="sam-ui button" 
+            [routerLink]="['/profile']" 
+            [queryParams]="{ edit: 'kba' }" href="#kba" pageScroll>
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Update Security Questions
+          </a>
         </div>
       </div>
     </ng-container>
+    
+    <ng-container *ngIf="!states.public">
+      <div class="column">
+        <h4 class="sam-ui header">My Access</h4>
+        <div class="sam-ui divided selection relaxed list">
+          <a class="item" [routerLink]="['/profile/request-access']">
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Request Access
+          </a>
+          <a class="item" [routerLink]="['/profile/migrations']">
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Migrate Accounts
+          </a>
+          <a class="item" [routerLink]="['/profile/access']">
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Go to My Access
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <h4 class="sam-ui header">My Profile</h4>
+        <div class="sam-ui divided selection relaxed list">
+          <a class="item"  [routerLink]="['/profile/password']">
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Reset Your Password
+          </a>
+          <a class="item"  href="#kba" [routerLink]="['/profile']" [queryParams]="{ edit: 'kba' }" pageScroll>
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Update Security Questions
+          </a>
+          <a class="item"  [routerLink]="['/profile/subscriptions']">
+            <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+            Manage Subscriptions
+          </a>
+        </div>
+      </div>
+    </ng-container>
+    
+    <ng-container *ngIf="states.entity">
+      <div class="column">
+        <h4 class="sam-ui header">Role</h4>
+        <sam-checkbox 
+          name="entity-roles" 
+          [options]="store.roles" 
+          (modelChange)="onChangeRole($event)">
+        </sam-checkbox>
+      </div>
+    </ng-container>
+  
   </div>
-  <a class="widget-footer text-right" [routerLink]="['/profile']" *ngIf="states.public">
-    Go to My Profile <span class="fa fa-chevron-circle-right"></span>
-  </a>
-</div>
+    
+</ng-container>

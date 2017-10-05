@@ -8,44 +8,12 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { merge } from 'lodash';
 
-import { FHService, FHWrapperService, IAMService, WrapperService } from 'api-kit';
-
 import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
-
 import { SystemProfileComponent } from './system-profile.component';
 
-const response = Observable.of({
-  _embedded: [{
-    org: {
-      orgKey:             100533024,
-      type:               'DEPARTMENT',
-      name:               'HUMAN NUTRITION INFORMATION SERVICE',
-      hierarchy:          [],
-      level:               2,
-      fullParentPath:     '100006809.100533024',
-      fullParentPathName: 'AGRICULTURE_DEPARTMENT_OF.HUMAN_NUTRITION_INFORMATION_SERVICE',
-      l1Name:             'AGRICULTURE DEPARTMENT OF',
-      l2Name:             'HUMAN NUTRITION INFORMATION SERVICE',
-    }
-  }]
-});
-
-const fhStub = {
-  getDepartments() {
-    return response;
-  },
-
-  getOrganizationById(id: string, includeChildrenLevels: boolean) {
-    return response;
-  }
-};
-
-const apiStub = {
-  call(oApiParam) {
-    return response;
-  }
-};
+import { FHService, IAMService } from 'api-kit';
+import { FHServiceMock } from 'api-kit/fh/fh.service.mock';
 
 describe('[IAM] System Account Profile', () => {
   let component: SystemProfileComponent;
@@ -67,26 +35,14 @@ describe('[IAM] System Account Profile', () => {
       ],
 
       providers: [
-        BaseRequestOptions,
-        MockBackend,
-        {
-          provide: Http,
-          useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions]
-        },
-        { provide: WrapperService, useValue: apiStub },
-        { provide: FHService, useValue: fhStub },
-        FHWrapperService
+        { provide: FHService, useValue: FHServiceMock },
       ]
     });
 
     TestBed.overrideComponent(AgencyPickerComponent, {
       set: {
         providers: [
-          { provide: WrapperService, useValue: apiStub },
-          { provide: FHService, useValue: fhStub },
+          { provide: FHService, useValue: FHServiceMock },
         ]
       }
     });
@@ -95,6 +51,7 @@ describe('[IAM] System Account Profile', () => {
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
+    component.ngOnInit();
     fixture.detectChanges();
   });
 

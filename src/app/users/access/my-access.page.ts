@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
 import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
@@ -8,6 +7,8 @@ import { AgencyPickerComponent } from "../../app-components/agency-picker/agency
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
+import { SamModalComponent } from "sam-ui-kit/components";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
 @Component({
   templateUrl: 'my-access.template.html',
@@ -47,13 +48,15 @@ export class MyAccessPage implements OnInit {
   private crumbs = [];
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
+  @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
   constructor(
-    private userService: UserAccessService,
+    private userAccessService: UserAccessService,
     private capitalize: CapitalizePipe,
     private userCookieService: UserService,
     private route: ActivatedRoute,
     private router: Router,
+    private alertFooter: AlertFooterService,
   )
   {
 
@@ -67,7 +70,7 @@ export class MyAccessPage implements OnInit {
   }
 
   getPendingRequests() {
-    this.userService.getOpenRequests(this.userName).subscribe(reqs => {
+    this.userAccessService.getOpenRequests(this.userName).subscribe(reqs => {
       this.requests = reqs.userAccessRequestList;
     });
   }
@@ -88,7 +91,7 @@ export class MyAccessPage implements OnInit {
       queryParams.roleKey = this.selectedRoleIds.join(',');
     }
 
-    this.userService.getAllUserRoles(this.userName, queryParams).subscribe(
+    this.userAccessService.getAllUserRoles(this.userName, queryParams).subscribe(
       res => {
         try {
           this.result = 'success';
@@ -244,7 +247,47 @@ export class MyAccessPage implements OnInit {
     } catch(err) {
       console.error(err);
     }
+  }
+
+  existingAccessToDelete: any;
+  indexToDelete: number;
+
+  onDeleteClick($event, org, role, domains, index) {
+    $event.stopPropagation();
+
+    this.indexToDelete = index;
+
+    this.existingAccessToDelete = {
+      organizations: [org],
+      role: +role,
+      domains: domains.map(d => +d.id)
+    };
 
 
+    this.deleteModal.openModal();
+  }
+
+  onDeleteConfirm() {
+    this.deleteModal.closeModal();
+    let body = {
+      existingAccess: this.existingAccessToDelete,
+      users: [this.userName],
+      mode: 'DELETE',
+    };
+
+    this.userAccessService.deleteAccess(body).subscribe(
+      () => {
+        //this.router.navigate(["../access"], { relativeTo: this.route});
+        this.access.splice(this.indexToDelete, 1);
+      },
+      err => {
+        console.error(err);
+        this.alertFooter.registerFooterAlert({
+          description: 'There was an error with a required service',
+          type: "error",
+          timer: 3200
+        });
+      }
+    )
   }
 }

@@ -186,6 +186,10 @@ export class SystemProfileComponent {
         requests;
 
     initFormGroup = (() => {
+      if(ENV && ENV == 'test') {
+        this.states.gov = false;
+      }
+
       this.detailsForm = this.builder.group({
         _id:               [this.system._id, [Validators.required]],
         email:             [this.system.email, [Validators.required, $Validators.email]],

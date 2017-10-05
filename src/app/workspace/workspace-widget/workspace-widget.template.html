@@ -1,18 +1,26 @@
-<div class="usa-width-one-whole workspace-widget">
-  <div class="usa-width-one-whole workspace-widget-body-section">
-    <h4 class="m_L-1x m_T-1x workspace-widget-title workspace-widget-text">
-      {{ title }}
-      <a class="shortcut usa-button usa-button-primary"
-         [routerLink]="shortcut.routerLink"
-         [innerText]="shortcut.text"
-         (click)="onShortcutClick"
-         *ngIf="shortcut"></a>
-    </h4>
-    <ng-content></ng-content>
+<div class="sam-ui clearing segment">
+  
+  <div grid>
+    <div columns="8" class="middle aligned">
+      <h3 class="sam-ui header">{{ title }}</h3>
+    </div>
+    <div columns="4" class="right aligned">
+      <sam-actions-dropdown [disabled]="!actions" [actions]="actions"></sam-actions-dropdown>
+    </div>
   </div>
 
-  <div class="usa-width-one-whole workspace-widget-bot-section relative" (click)="onToggleBtnClick()" [attr.id]="botSectionId">
-    <h4 class="m_L-1x m_T-1x m_B-1x workspace-widget-title workspace-widget-text">Help</h4>
-    <span class="workspace-widget-bot-icon workspace-widget-text"><i class="fa" [ngClass]="{'fa-plus':!isExpand,'fa-minus':isExpand}"></i></span>
+  <ng-content></ng-content>
+  
+  <div grid class="right aligned horizontally padded">
+    <div class="column">
+      <div *ngIf="shortcut" class="sam-ui divider"></div>
+      <a *ngIf="shortcut"
+        [routerLink]="shortcut.routerLink"
+        (click)="onShortcutClick">
+        {{shortcut.text}} &nbsp;
+        <i aria-hidden="true" class="fa fa-chevron-right fa-sm"></i>
+      </a>
+    </div>
   </div>
+  
 </div>

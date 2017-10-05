@@ -8,46 +8,10 @@ import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SamUIKitModule } from 'sam-ui-kit';
-import { FHService, FHWrapperService, WrapperService } from 'api-kit';
-
 import { FSDUserComponent } from './fsd-user.component';
 
-const response = Observable.of({
-  _embedded: [{
-    org: {
-      type:           'DEPARTMENT',
-      hierarchy:      [100006688],
-      level:          'D',
-      fullParentPath: '',
-      elementId:      1000000,
-      l1Name:         'Dummy'
-    }
-  }]
-});
-
-const stubs = {
-  ActivatedRoute: {
-    params: Observable.of({
-      id: 'john.doe@gsa.com'
-    })
-  },
-
-  FHService: {
-    getDepartments() {
-      return response;
-    },
-
-    getOrganizationById(id: string, includeChildrenLevels: boolean) {
-      return response;
-    }
-  },
-
-  WrapperService: {
-    call(oApiParam) {
-      return {};
-    }
-  }
-};
+import { FHService } from 'api-kit';
+import { FHServiceMock } from 'api-kit/fh/fh.service.mock';
 
 describe('[IAM] FSD User Profile', () => {
   let component: FSDUserComponent;
@@ -68,19 +32,7 @@ describe('[IAM] FSD User Profile', () => {
       ],
 
       providers: [
-        { provide: ActivatedRoute, useValue: stubs.ActivatedRoute },
-        BaseRequestOptions,
-        MockBackend,
-        {
-          provide: Http,
-          useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions]
-        },
-        { provide: WrapperService, useValue: stubs.WrapperService },
-        { provide: FHService, useValue: stubs.FHService },
-        FHWrapperService,
+        { provide: FHService, useValue: FHServiceMock },
       ]
     });
 

@@ -5,7 +5,26 @@
     <form *ngIf="userForm" [formGroup]="userForm" class="usa-form" autocomplete="off" novalidate>
       <fieldset class="name">
         <sam-name-entry [model]="user" legend="Your Name" #nameEntry></sam-name-entry>
+
+        <sam-phone-entry formControlName="personalPhone"
+                         [label]="store.labels.personalPhone.label"
+                         [hint]="store.labels.personalPhone.hint"
+                         [numbersOnly]="true"></sam-phone-entry>
+        <sam-autocomplete formControlName="carrier"
+                          labelText="Mobile Carrier"
+                          [options]="api.iam.carriers"
+                          [errorMessage]="errors('carrier')"></sam-autocomplete>
+
         <ul class="usa-unstyled-list">
+          <li>
+            <input type="checkbox"
+                   id="otp-preference"
+                   type="checkbox"
+                   name="otp-preference"
+                   [checked]="user.OTPPreference == 'sms'"
+                   (change)="user.OTPPreference = (user.OTPPreference == 'sms') ? 'email' : 'sms'">
+            <label for="otp-preference">Use mobile phone as my default OTP option</label>
+          </li>
           <li>
             <input type="checkbox"
                    id="email-notification"
@@ -23,7 +42,8 @@
       </fieldset>
       <fieldset class="office" *ngIf="states.isGov">
         <legend>Office</legend>
-        <sam-agency-picker [advancedMode]="true"
+        <sam-agency-picker *ngIf="states.isGov"
+                           [advancedMode]="true"
                            [multimode]="false"
                            [orgRoot]="user.departmentID"
                            [orgId]="userForm.controls.officeID.value"

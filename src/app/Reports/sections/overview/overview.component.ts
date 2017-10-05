@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import * as Cookie from 'js-cookie';
 import { Report } from '../../report';
 import * as base64 from 'base-64';
+import { LoginService } from '../../../../app/app-components/login/login.service';
 
 export const REPORTS_PER_PAGE: number = 10;
 
@@ -56,7 +57,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   mstrServer;
 
   constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
-                private api: IAMService, private http: Http ) {}
+                private api: IAMService, private http: Http, private loginService: LoginService ) {}
 
   ngAfterViewInit() {
   }
@@ -179,5 +180,9 @@ export class OverviewComponent implements OnInit, AfterViewInit {
       
       cb();
     });
+  }
+  
+  directToLogin() {
+    this.loginService.triggerLogin();
   }
 }

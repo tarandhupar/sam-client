@@ -20,6 +20,7 @@ import { SamFooterComponent } from './footer/footer.component';
 import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { SamLoginComponent } from './login/login.component';
+import { LoginService } from './login/login.service';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";

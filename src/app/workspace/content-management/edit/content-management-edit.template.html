@@ -18,13 +18,13 @@
           </div>
 
           <div class="section-border">
-            <h4>Question</h4>
+            <h4>{{sectionText[curSection.toLowerCase()][0]}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
             <sam-text [label]="''" [name]="'title'" [hint]="''" [errorMessage]="errors.title" [(ngModel)]="contentObj.title"></sam-text>
           </div>
 
           <div class="section-border">
-            <h4>Response</h4>
+            <h4>{{sectionText[curSection.toLowerCase()][1]}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
 
             <div>
@@ -60,7 +60,7 @@
             <span class="optional-text">Optional</span>
             <h4 class="m_T-0">Domains</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
-            <sam-autocomplete-multiselect [(ngModel)]="existingDomains" name="domain" label="" [options]="getExistingDomainOptions()"></sam-autocomplete-multiselect>
+            <sam-autocomplete-multiselect [(ngModel)]="contentObj.domain" name="domain" label="" [options]="domainOptions" [keyValueConfig]="multiselectConfig"></sam-autocomplete-multiselect>
 
           </div>
 
@@ -81,18 +81,24 @@
 
 
         <!--Public View Tab-->
-        <sam-tab [tabTitle]="'Public View'" [active]="formComplete">
+        <sam-tab [tabTitle]="'Public View'" [active]="formComplete" #publicViewTab>
           <div class="relative">
             <span class="public-view-tag">{{publicViewTag[curSection.toLowerCase()]}}</span>
-            <div class="m_T-1x m_B-1x" *ngIf="contentObj.domain && contentObj.domain.length > 0">
+            <div class="m_T-1x m_B-1x">
               <span style="font-weight: bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
-              <span>{{contentObj.domain.join(',')}}</span>
+              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else domainNA">{{getDomainListStr()}}</span>
+              <ng-template #domainNA>Not Entered</ng-template>
             </div>
-            <div class="m_T-2x m_B-1x" *ngIf="contentObj.source && contentObj.source !== ''">
+            <div class="m_T-2x m_B-1x" *ngIf="sectionControl[curSection.toLowerCase()].source">
               <span style="font-weight: bold">Source:</span>
-              <span>{{contentObj.source}}</span>
+              <span *ngIf="contentObj.source && contentObj.source !== ''; else sourceNA">{{contentObj.source}}</span>
+              <ng-template #sourceNA>Not Entered</ng-template>
             </div>
-            <p class="m_T-2x m_B-1x">{{contentObj.description}}</p>
+            <div class="m_T-2x m_B-1x">
+              <span style="font-weight: bold; display: inline-block;">Description:</span>
+              <span style="display:inline-block;" *ngIf="contentObj.description && contentObj.description !== ''; else descriptionNA">{{contentObj.description}}</span>
+              <ng-template #descriptionNA>Not Entered</ng-template>
+            </div>
             <div class="m_T-2x m_B-1x">
               <span style="font-weight: bold">Latest Update:</span>
               <span>{{getUpdateDateStr()}}</span>

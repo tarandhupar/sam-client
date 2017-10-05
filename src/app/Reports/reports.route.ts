@@ -22,7 +22,7 @@ export const routes: Routes = [
       { path: 'favorites', component: FavoritesComponent },
       { path: ':id/view', component: ReportComponent },
       { path: 'myreports', component: MyReportsComponent },
-      { path: ':id/shared/:params', component: ReportComponent }
+      { path: ':id/shared', component: ReportComponent }
     ]
   },
 ];

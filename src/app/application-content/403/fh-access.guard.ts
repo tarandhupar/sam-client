@@ -33,11 +33,13 @@ export class FHAccessGuard implements CanActivateChild, CanActivate {
     return this.accessService.getAccess(orgId, true)
       .map(
         res => {
+          console.log("correct");
           return true;
         }
       )
       .catch(
         error => {
+          console.log(error);
           let status = error.status;
           if (status === 401) {
             this.router.navigate(['/signin'], {queryParams: {redirect: this.router.url}});

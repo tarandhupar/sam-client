@@ -421,9 +421,25 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     let ctx = this;
     ctx.data.forEach(function(data) {
       if(data.data.parameters) {
-        for (var key in data.data.parameters) {
-          if (ctx.filters.hasOwnProperty(key) && ctx.filters[key].get(data.data.parameters[key])!=undefined) {
-            data.data.parameters[key] = ctx.filters[key].get(data.data.parameters[key].toString());
+        let params = data.data.parameters;
+        for (var key in params) {
+          if (ctx.filters.hasOwnProperty(key)) {
+            let items;
+            if(params[key].indexOf(",")>-1) {
+              items = params[key].split(",");
+            } else {
+              items = params[key].split(" ");
+            }
+            let array = [];
+            for(var i=0; i<items.length; i++) {
+              if(ctx.filters[key].get(items[i])!=undefined) {
+                array.push(ctx.filters[key].get(items[i].toString()));
+              } else {
+                array.push(items[i].toString());
+              }
+            }
+            data.data.parameters[key] = array.join();
+            //data.data.parameters[key] = ctx.filters[key].get(data.data.parameters[key].toString());
           }
         }
       }

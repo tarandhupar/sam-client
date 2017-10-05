@@ -130,14 +130,14 @@ export class UserAccessService {
     return this.callApi(apiOptions, false);
   }
 
-  postAccess(body: any) {
+  postAccess(body: any, queryParams = {}) {
     let suffix = '/access';
     let apiOptions: any = {
       name: 'rms',
       suffix: suffix,
       method: 'POST',
       body: body,
-      oParam: {}
+      oParam: queryParams,
     };
 
     return this.callApi(apiOptions, false);
@@ -163,7 +163,7 @@ export class UserAccessService {
       method: 'DELETE',
       body: body,
       oParam: {},
-    }
+    };
     return this.callApi(apiOptions, false);
   }
 

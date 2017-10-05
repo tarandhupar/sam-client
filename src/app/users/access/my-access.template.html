@@ -70,13 +70,16 @@
           <th></th>
         </thead>
         <tbody>
-          <tr *ngFor="let roleOrg of access" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && 'clickable'">
+          <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && 'clickable'">
             <td>{{orgName(roleOrg.organization)}}</td>
             <td>{{roleOrg.role.val}}</td>
             <td>
               <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
             </td>
-            <td><i *ngIf="!isMyAccess" class="fa fa-pencil"></i></td>
+            <td>
+              <i *ngIf="!isMyAccess" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
+              <i *ngIf="!isMyAccess" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -104,3 +107,7 @@
   </ng-container>
 
 </page>
+
+<sam-modal #deleteModal title="Delete Access" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+  <p>Are you sure you want to delete the access for this user?</p>
+</sam-modal>

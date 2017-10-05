@@ -81,8 +81,15 @@ export class TabsOpportunityComponent implements OnInit {
   }
 
   public onEditClick(page: string[]) {
-    //let url = '/programs/' + id + '/edit'.concat(page.toString());
-    //this.router.navigateByUrl(url);
+    let id = this.data.id;
+    let url = '/opportunities/' + id + '/edit'.concat(page.toString());
+    this.router.navigateByUrl(url);
+  }
+
+  public onReviewClick(){
+    let id = this.data.id;
+    let url = '/opportunities/' + id + '/review';
+    this.router.navigateByUrl(url);
   }
 
   /*
@@ -120,10 +127,9 @@ export class TabsOpportunityComponent implements OnInit {
   public canEdit() {
     // show edit button if user has update permission, except on published FALs, or if user has revise permission
     //TODO Implement permission check
-    if (this.data.status && this.data.status.code !== 'published') {
+    if (this.data.status && this.data.status.code == 'draft') {
       return true;
     }
-
     return false;
   }
 

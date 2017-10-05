@@ -1,8 +1,7 @@
 <a *ngIf="displayDropdown"
   sam-click-outside
   (clickOutside)="openDropdown = false"
-  class="sam-ui item"
-  id="fal-change-request"
+  class="sam-ui item fal-change-request"
   (click)="!disabled ? openDropdown = !openDropdown : openDropdown"
   [ngClass]="{'disabled': disabled}"
   style="font-weight: 600;" >

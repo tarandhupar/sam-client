@@ -173,7 +173,7 @@ const account = {
       if(isDebug()) {
         $success(mock);
       } else {
-        $error(exceptionHandler({}));
+        $error(exceptionHandler({ message: 'Please sign in' }));
       }
     }
   },
@@ -210,7 +210,7 @@ const account = {
         .send(data)
         .end(function(error, response) {
           if(error) {
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           } else {
             $success(response.body || {});
           }
@@ -246,13 +246,13 @@ const account = {
         .send(data)
         .end(function(error, response) {
           if(error) {
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           } else {
             $success(response.body || {});
           }
         });
     } else {
-      $error(exceptionHandler({}));
+      $error(exceptionHandler({ message: 'Please sign in' }));
     }
   },
 
@@ -272,9 +272,10 @@ const account = {
         .set(auth)
         .send(data)
         .end(function(error, response) {
-          const message = response ? exceptionHandler(response.body) : error.rawResponse;
+          const message = response ? exceptionHandler(response) : error.rawResponse;
+
           if(error) {
-            $error(message);
+            $error(exceptionHandler(response));
           } else {
             $success(message);
           }
@@ -297,7 +298,7 @@ const account = {
         .set(auth)
         .end(function(error, response) {
           if(error) {
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           } else {
             $success(response);
           }

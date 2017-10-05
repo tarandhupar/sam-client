@@ -10,7 +10,7 @@ import { OpportunityFormService } from "../../framework/service/opportunity-form
 
 export class OpportunityHeaderInfoComponent implements OnInit {
   @Input() public viewModel: OpportunityFormViewModel;
-  private oppHeaderInfoForm: FormGroup;
+  public oppHeaderInfoForm: FormGroup;
 
   public readonly agencyPickerConfig = {
     id: 'opp-office',

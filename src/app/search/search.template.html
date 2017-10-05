@@ -378,9 +378,21 @@
     <div class="usa-width-one">
       <sam-alert *ngIf="index==='wd' && !dismissWdAlert" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" (dismiss)="dismissWdAlert=true"><div [innerHTML]="wdSearchDescription"></div></sam-alert>
 
-      <h1 *ngIf="showSavedSearches && savedSearch!=''" class="m_T-0 p_T-6x">{{savedSearch}}</h1>
-      <h2 *ngIf="!showRegionalOffices" [ngClass]="(savedSearch!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
-      <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
+      <div class="sam-ui equal width grid">
+        <div class="column middle aligned">
+          <h1 *ngIf="showSavedSearches && searchName!=''" class="m_T-0 p_T-6x">{{searchName}}</h1>
+          <h2 *ngIf="!showRegionalOffices" [ngClass]="(savedSearch!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
+          <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
+        </div>
+
+        <div *ngIf="showSavedSearches" class="column right aligned">
+          <sam-actions-dropdown [disabled]="false"
+                                [actions]="actions"
+                                (emitAction)="handleAction($event)">
+          </sam-actions-dropdown>
+        </div>
+      </div>
+
 
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
@@ -452,3 +464,20 @@
   </div>
 
 </div>
+
+<sam-modal #modal1
+           [type]="'info'"
+           [title]="'Save Search'"
+           [cancelButtonLabel]="'Cancel'"
+           [submitButtonLabel]="'Save'"
+           (onClose)="onModalClose($event)"
+           (onSubmit)="saveSearch($event)">
+  <sam-text
+    [(ngModel)]="savedSearchName"
+    [name]="textConfig.name"
+    [label]="textConfig.label"
+    [errorMessage]="textConfig.errorMessage"
+    [disabled]="textConfig.disabled"
+    [required]="true">
+  </sam-text>
+</sam-modal>

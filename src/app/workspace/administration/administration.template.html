@@ -1,53 +1,33 @@
-<div class="usa-width-one-whole workspace-administration-section relative" [ngClass]="states.public ? 'grid-public' : 'grid-federal'">
-  <div class="profile-widget m_T-3x" [ngClass]="states.public ? 'usa-width-one-half' : 'usa-width-one-whole'">
-    <workspace-widget [isExpand]="states.expanded.profile" title="Profile" [shortcut]="states.public ? shortcuts.profile : false" (onToggleChange)="toggleHelpDetail('profile')">
-      <profile-widget [user]="user" *ngIf="user"></profile-widget>
-    </workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.profile">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
-    </div>
-  </div>
-
-  <div class="system-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.system">
-    <workspace-widget [isExpand]="states.expanded.system" title="System Accounts" (onToggleChange)="toggleHelpDetail('system')">
+<div grid>
+  
+  <div columns="6" *ngIf="toggleControl.system">
+    <workspace-widget title="System Accounts">
       <system-widget></system-widget>
     </workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.system">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
   </div>
 
-  <div class="fsd-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.fsd">
-    <workspace-widget [isExpand]="states.expanded.fsd" title="Federal Service Desk" (onToggleChange)="toggleHelpDetail('fsd')">
+  <div columns="6" *ngIf="toggleControl.fsd">
+    <workspace-widget title="Federal Service Desk">
       <fsd-widget></fsd-widget>
     </workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.fsd">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
+  </div>
+  
+  <div columns="6" *ngIf="toggleControl.aacRequest">
+    <workspace-widget title="AAC Request">
+    </workspace-widget>
   </div>
 
-  <div class="aac-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.aacRequest">
-    <workspace-widget [isExpand]="states.expanded.aacRequest" title="AAC Request" (onToggleChange)="toggleHelpDetail('aacRequest')"></workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.aacRequest">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
-  </div>
-
-  <div class="fh-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.fh">
-    <workspace-widget [isExpand]="states.expanded.fh" title="Federal Hierarchy" (onToggleChange)="toggleHelpDetail('fh')">
+  <div columns="6" *ngIf="toggleControl.fh">
+    <workspace-widget title="Federal Hierarchy"
+      [shortcut]="{ text: 'Go to Federal Hierarchy', routerLink: ['/federal-hierarchy'] }">
       <fh-widget></fh-widget>
     </workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.fh">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
-    </div>
   </div>
-
-  <div class="rm-widget usa-width-one-half m_T-3x" *ngIf="toggleControl.rm">
-    <workspace-widget [isExpand]="states.expanded.rm" title="Role Management" (onToggleChange)="toggleHelpDetail('rm')">
-      <rm-widget></rm-widget>
+  
+  <div columns="6" *ngIf="toggleControl.rm">
+    <workspace-widget title="Role Management">
+      <rm-widget [widgetResult]="widgetResult"></rm-widget>
     </workspace-widget>
-    <div class="workspace-help-detail" *ngIf="states.expanded.rm">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
   </div>
+  
 </div>

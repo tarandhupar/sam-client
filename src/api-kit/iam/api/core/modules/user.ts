@@ -17,6 +17,10 @@ function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
 }
 
+function getCarrierDomain(carrier: string) {
+  return config.carriers[carrier || ''];
+}
+
 /**
  * [Component][IAM][User] CAC Submodule
  */
@@ -271,6 +275,10 @@ export const user = {
 
     data.user.emailNotification = yesOrNo(data.user.emailNotification);
 
+    if(data.user.carrier) {
+      data.user.carrierExtension = getCarrierDomain(data.user.carrier);
+    }
+
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
@@ -306,6 +314,10 @@ export const user = {
     $error = ($error || function(error) {});
 
     data.emailNotification = yesOrNo(data.emailNotification);
+
+    if(data.carrier) {
+      data.carrierExtension = getCarrierDomain(data.carrier);
+    }
 
     if(logger(merge(User.getCache() || {}, userData))) {
       User.updateCache(data);

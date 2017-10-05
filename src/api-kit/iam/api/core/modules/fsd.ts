@@ -43,7 +43,7 @@ const reset = {
         .then((response) => {
           $success(response.body);
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'Please sign in' });
@@ -99,7 +99,7 @@ export const fsd = {
         .then((response) => {
           $success(response.body);
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'No user active user session.' });
@@ -120,7 +120,7 @@ export const fsd = {
         .then((response) => {
           $success(response.body);
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'Please sign in' });
@@ -142,7 +142,7 @@ export const fsd = {
           const kba = response.body || {};
           $success(transformUserKBAResponse(kba));
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       if(isDebug()) {
@@ -178,7 +178,7 @@ export const fsd = {
         .then((response) => {
           $success(response.body);
         }, (response) => {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'Please sign in' });

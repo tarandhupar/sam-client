@@ -75,7 +75,7 @@
                   <div class="header" [ngSwitch]='organization.type'>
                     <ng-container *ngSwitchCase="'DEPARTMENT'">Department/Ind. Agency</ng-container>
                     <ng-container *ngSwitchCase="'AGENCY'">Sub-tier</ng-container>
-                    <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
+                    <ng-container *ngSwitchCase="'OFFICE'">Contracting Office</ng-container>
                   </div>
                   <div class="description">
                     <ng-container *ngIf="organization.l2Name">
@@ -110,7 +110,7 @@
     <div [class.hide]="selectedPage !== 0">
 
       <!-- Award Details -->
-      <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
+      <!--<section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
 
         <h2 class="sam-ui header">
           Award Details
@@ -157,7 +157,7 @@
           </li>
         </ul>
         <div class="sam-ui hidden section divider"></div>
-      </section>
+      </section> -->
 
       <!-- General Information -->
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
@@ -321,7 +321,7 @@
             <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
             <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
           </h3>
-          <div [innerHTML]="opportunity.description?.body | fixhtml"></div>
+          <div [innerHTML]="opportunity.data?.description?.body | fixhtml"></div>
           <div class="sam-ui hidden section divider"></div>
         </div>
       </section>
@@ -377,7 +377,7 @@
               <h3 class="sam-ui dividing header">
                 Primary Point of Contact
               </h3>
-              <ul class="usa-unstyled-list">
+              <ul class="usa-unstyled-list"  *ngIf="opportunity.data?.pointOfContact != null && opportunity.data?.pointOfContact.length > 0">
                 <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
                     *ngIf="opportunity.data?.pointOfContact[0]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
                   <strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong>
@@ -410,7 +410,7 @@
               <h3 class="sam-ui dividing header">
                 Secondary Point of Contact
               </h3>
-              <ul class="usa-unstyled-list">
+              <ul class="usa-unstyled-list" *ngIf="opportunity.data?.pointOfContact != null && opportunity.data?.pointOfContact.length > 1">
                 <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
                     *ngIf="opportunity.data?.pointOfContact[1]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
                   <strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong>

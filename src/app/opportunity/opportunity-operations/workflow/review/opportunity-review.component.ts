@@ -127,6 +127,10 @@ export class OpportunityReviewComponent implements OnInit {
     { label: "Dollar Amount", value: "dollarAmount" },
     { label: "Company (Awardee) Name", value: "awardeeName" },
   ];
+  sidenavModel = {
+    "label": "Contract Opportunities",
+    "children": []
+  };
   attachmentError:boolean;
   private pageNum = 0;
   private totalPages: number;
@@ -214,10 +218,10 @@ export class OpportunityReviewComponent implements OnInit {
       }
     });
 
-    route.queryParams.subscribe(data => {
+   /* route.queryParams.subscribe(data => {
       this.qParams = data;
       this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-    });
+    });*/
   }
 
   ngOnInit() {
@@ -292,6 +296,7 @@ export class OpportunityReviewComponent implements OnInit {
     this.updateSidenavIcons(this.sectionLabels[4]);
     this.updateSidenavIcons(this.sectionLabels[5]);
     this.updateSidenavIcons(this.sectionLabels[6]);
+    this.sidenavModel.children = [];
   }
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>|ReplaySubject<any>){
@@ -801,7 +806,7 @@ export class OpportunityReviewComponent implements OnInit {
     if (this.opportunity.data.type === 'k' || (this.opportunity.data.type === 'm' && this.originalOpportunity.data.type === 'k')){
       return "Solicitation Number";
     } else {
-      return "Notice Number";
+      return "Procurement ID";
     }
   }
 
@@ -854,7 +859,7 @@ export class OpportunityReviewComponent implements OnInit {
       this.router.navigateByUrl('/workspace');
     }
     if(event === 'Contract Opportunity Workspace') {
-      this.router.navigateByUrl('/opportunity/workspace');
+      this.router.navigateByUrl('/opp/workspace');
     }
   }
 

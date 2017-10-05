@@ -20,14 +20,16 @@
   </ul>
 
   <div class="usa-width-one-whole m_B-4x">
-    <legend>Search {{getSearchText()}}</legend>
-    <input placeholder="Find {{getSearchText()}}" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+    <!--<legend>Search {{getSearchText()}}</legend>-->
+    <label for="search-keyword" style="font-weight: bold">Search {{getSearchText()}}</label>
+    <input id="search-keyword" placeholder="Find {{getSearchText()}}" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
   </div>
 
   <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
     <sam-autocomplete-multiselect
       hint=""
       label="Search Requester"
+      name="search-requester"
       peoplepicker-autofill
       [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
       [(ngModel)]="filterOption.requester">
@@ -38,6 +40,7 @@
     <sam-autocomplete-multiselect
       hint=""
       label="Search Approver"
+      name="search-approver"
       peoplepicker-autofill
       [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
       [(ngModel)]="filterOption.approver">

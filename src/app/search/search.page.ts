@@ -10,12 +10,37 @@ import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
 import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
 import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
 import * as Cookies from 'js-cookie';
+import {SavedSearchService} from "../../api-kit/search/saved-search.service";
+
+// Animation
+import { trigger, state, style, animate, transition } from '@angular/core';
 
 @Component({
   moduleId: __filename,
   selector: 'search',
   providers: [CapitalizePipe],
-  templateUrl: 'search.template.html'
+  templateUrl: 'search.template.html',
+  animations: [
+    trigger('dropdown', [
+      state('in', style({
+        opacity: 1,
+        transform: 'translateY(0) scale(1)'
+      })),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-10%) scale(.8)'
+        }),
+        animate('100ms ease-in')
+      ]),
+      transition('* => void', [
+        animate('100ms ease-out', style({
+          opacity: 0,
+          transform: 'translateY(-10%) scale(.8)'
+        }))
+      ])
+    ])
+  ]
 })
 
 export class SearchPage implements OnInit {
@@ -42,7 +67,7 @@ export class SearchPage implements OnInit {
   showSpinner: boolean = false;
   agencyPickerModel = [];
   showSavedSearches: boolean = false;
-  savedSearch: string = "";
+  searchName: string = "";
 
   defaultSortModel: any = {type:'modifiedDate', sort:'desc'};
   keywordSortModel: any = {type:'relevance', sort:'desc'};
@@ -478,9 +503,41 @@ export class SearchPage implements OnInit {
     dropdownLimit: 10
   };
 
+  cookieValue: string;
+
+  @ViewChild("modal1") modal1;
+  savedSearchName: string = '';
+  textConfig = {
+    label: "Search Name",
+    errorMessage: '',
+    name: 'saved search',
+    disabled: false,
+  };
+  actionsCallback = () => {
+    console.log("I succeeded");
+  };
+  actions: Array<any> = [
+    { name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback }
+  ];
+  // save search alert obj
+  successFooterAlertModel = {
+    title: "Success",
+    description: "",
+    type: "success",
+    timer: 3000
+  };
+  // save error alert obj
+  errorFooterAlertModel = {
+    title: "Error",
+    description: "",
+    type: "error",
+    timer: 3000
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
+              private savedSearchService: SavedSearchService,
               private wageDeterminationService: WageDeterminationService,
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
@@ -491,7 +548,16 @@ export class SearchPage implements OnInit {
     let cookie = Cookies.get('iPlanetDirectoryPro');
 
     if(cookie != null) {
-      this.showSavedSearches = true;
+      this.cookieValue = cookie;
+      this.savedSearchService.getAllSavedSearches({Cookie: cookie, size: 0}).subscribe(res => {
+        this.showSavedSearches = true;
+      }, error => {
+        if(error && error.status === 404) {
+          console.log("Error", error);
+        } else {
+          this.showSavedSearches = true;
+        }
+      })
     }
 
 
@@ -535,7 +601,7 @@ export class SearchPage implements OnInit {
         this.noticeTypeModel = data['notice_type'] && data['notice_type'] !== null ? data['notice_type'] : '';
         this.setAsideModel = data['set_aside'] && data['set_aside'] !== null ? data['set_aside'] : '';
         //To display saved search title
-        this.savedSearch = data['saved_search'] && data['saved_search'] !== null ? data['saved_search'] : '';
+        this.searchName = data['saved_search'] && data['saved_search'] !== null ? data['saved_search'] : '';
         // persist duns filter data
         if(this.dunsListString && this.dunsListString.length > 0){
           this.grabPersistData(this.dunsListString);
@@ -591,9 +657,21 @@ export class SearchPage implements OnInit {
     // we only want to change page number when the organization list has changed
     if (this.previousStringList !== this.organizationId) {
       this.pageNum = 0;
+      this.searchName = '';
     }
 
-    this.searchResultsRefresh();
+    this.pageUpdate = true;
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    if (this.showRegionalOffices) {
+      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+    } else {
+      this.router.navigate(['/search'], navigationExtras);
+    }
+    //reset sort change checker
+    this.sortChange = false;
 
   }
 
@@ -632,6 +710,10 @@ export class SearchPage implements OnInit {
 
   setupQS(newsearch) {
     var qsobj = {};
+    if(this.searchName != '') {
+      qsobj['saved_search'] = this.searchName;
+    }
+
     if (this.index.length > 0) {
       qsobj['index'] = this.index;
     } else {
@@ -1291,7 +1373,7 @@ export class SearchPage implements OnInit {
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh() {
     //clear saved search title
-    this.savedSearch = '';
+    this.searchName = '';
     this.pageUpdate = true;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -1350,7 +1432,7 @@ export class SearchPage implements OnInit {
   clearAllFilters() {
 
     //clear saved search title
-    this.savedSearch = "";
+    this.searchName = "";
 
     // clear/reset all top level filters
     this.isActive = true;
@@ -1707,7 +1789,7 @@ export class SearchPage implements OnInit {
   }
 
     // sortBy model change
-    sortModelChange(event){
+    sortModelChange(event) {
       this.sortChange = true;
       this.oldSortModel = this.sortModel;
       this.sortModel = event;
@@ -1722,6 +1804,45 @@ export class SearchPage implements OnInit {
         return {type: sortBy, sort: 'asc'};
       }
     }
+
+  handleAction(event) {
+    if(event.name === 'save') {
+      this.modal1.openModal();
+    }
+  }
+
+  onModalClose(event){
+  }
+
+  saveSearch(event) {
+    if(this.savedSearchName != '') {
+      let data = {
+        'index': this.index.split(" "),
+        'key': this.savedSearchName.toLowerCase().replace(/ /g, "_"),
+        'parameters': this.setupQS(false)
+      };
+      delete data.parameters['index'];
+      var createSavedSearch = {
+        'title': this.savedSearchName,
+        'data': data
+      };
+      this.savedSearchService.createSavedSearch(this.cookieValue, createSavedSearch).subscribe(res => {
+        this.modal1.closeModal();
+        this.successFooterAlertModel.description = 'Search saved.';
+        this.searchName = this.savedSearchName;
+        this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
+      }, error => {
+        let errorRes = error.json();
+        if(error && error.status === 400) {
+          this.errorFooterAlertModel.description = errorRes.message;
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.errorFooterAlertModel)));
+        }
+      })
+    } else {
+      this.textConfig.errorMessage = 'Please provide a name';
+    }
+
+  }
 
 
 

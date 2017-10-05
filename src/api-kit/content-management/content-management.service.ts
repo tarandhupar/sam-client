@@ -6,6 +6,18 @@ import { Observable } from 'rxjs';
 export class ContentManagementService{
   constructor(private oAPIService: WrapperService) { }
 
+  getDomains(){
+    return Observable.of({
+      'domainTypes':[
+        {domainName: 'Assistance Listings'},
+        {domainName: 'Contract Opportunities'},
+        {domainName: 'Entity Information'},
+        {domainName: 'Sub-Awards'},
+        {domainName: 'Wage Determinationss'}
+        ]
+    });
+  }
+
   getContentItem(id, type){
     let res;
     if(type.toLowerCase() === 'data-dictionary'){

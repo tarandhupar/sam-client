@@ -1,3 +1,5 @@
+import * as carriers from './carriers.json';
+
 const getExpiration = ((minutes: number) => {
   return new Date(new Date().getTime() + minutes * 60 * 1000);
 });
@@ -12,6 +14,7 @@ export default {
 
   session:   '/auth/v3/session',
   timeout:   '/auth/v4/session/getTimeLeft',
+  carriers:  carriers,
 
   user:      '/auth/v4/session/user',
   mergeWith: '/users/v3/mergeWith/{email}',

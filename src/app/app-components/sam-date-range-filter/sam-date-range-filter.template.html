@@ -1,5 +1,5 @@
 <sam-fieldset-wrapper #wrapper [label]="label">
-    <sam-radio-button [name]="radioName" [options]="dateRadioOptions" [ngModel]="radioSelection" (ngModelChange)="radioChange($event)"></sam-radio-button>
+    <sam-radio-button [name]="radioName" aria-label="Radio Button" [options]="dateRadioOptions" [ngModel]="radioSelection" (ngModelChange)="radioChange($event)"></sam-radio-button>
     <ng-container *ngIf="radioSelection=='date'">
         <sam-date [ngModel]="model.date" (ngModelChange)="dateChange($event)" name="date"></sam-date>
     </ng-container>

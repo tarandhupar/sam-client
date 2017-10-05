@@ -1,60 +1,30 @@
-<div class="usa-width-one-whole workspace-data-entry-section relative">
-  <div class="usa-width-one-whole" *ngIf="toggleControl.opportunities || toggleControl.subAward">
-    <div class="usa-width-one-half" *ngIf="toggleControl.opportunities">
-      <workspace-widget [isExpand]="configObj[0]['opportunities'].isExpand" [title]="'Opportunities'" (onToggleChange)="toggleHelpDetail('opportunities',$event, 0)">
-      </workspace-widget>
-    </div>
-    <div class="usa-width-one-half" *ngIf="toggleControl.subAward">
-      <workspace-widget [isExpand]="configObj[0]['subAward'].isExpand" [title]="'Sub-Award'" (onToggleChange)="toggleHelpDetail('subAward',$event, 0)"></workspace-widget>
-
-    </div>
-
+<div grid>
+  
+  <div columns="12" *ngIf="toggleControl.assistanceListings">
+    <workspace-widget 
+      [title]="'Assistance Listings'" 
+      [actions]="actions"
+      [shortcut]="{ text: 'Assistance Listings Workspace', routerLink: ['/fal/workspace'] }">
+      <assistance-listing-widget></assistance-listing-widget>
+    </workspace-widget>
   </div>
-  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(0)">
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[0] === 'opportunities'">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
-    </div>
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[0] === 'subAward'">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
+  
+  <div columns="6" *ngIf="toggleControl.opportunities">
+    <workspace-widget [title]="'Opportunities'"></workspace-widget>
   </div>
-  <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.entity || toggleControl.exclusions">
-    <div class="usa-width-one-half" *ngIf="toggleControl.entity">
-      <workspace-widget [isExpand]="configObj[1]['entity'].isExpand" [title]="'Entity'" (onToggleChange)="toggleHelpDetail('entity',$event, 1)"></workspace-widget>
-
-    </div>
-    <div class="usa-width-one-half" *ngIf="toggleControl.exclusions">
-      <workspace-widget [isExpand]="configObj[1]['exclusions'].isExpand" [title]="'Exclusions'" (onToggleChange)="toggleHelpDetail('exclusions',$event, 1)"></workspace-widget>
-
-    </div>
+  <div columns="6" *ngIf="toggleControl.subAward">
+    <workspace-widget [title]="'Sub-Award'"></workspace-widget>
   </div>
-  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(1)">
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[1] === 'entity'">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
-    </div>
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[1] === 'exclusions'">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
+  
+  <div columns="6" *ngIf="toggleControl.entity">
+    <workspace-widget [title]="'Entity'"></workspace-widget>
   </div>
-  <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.assistanceListings || toggleControl.award">
-    <div class="usa-width-one-half" *ngIf="toggleControl.assistanceListings">
-      <workspace-widget [isExpand]="configObj[2]['assistanceListings'].isExpand" [title]="'Assistance Listings'" (onToggleChange)="toggleHelpDetail('assistanceListings',$event, 2)">
-        <assistance-listing-widget></assistance-listing-widget>
-      </workspace-widget>
-    </div>
-    <div class="usa-width-one-half" *ngIf="toggleControl.award">
-      <workspace-widget [isExpand]="configObj[2]['award'].isExpand" [title]="'Award'" (onToggleChange)="toggleHelpDetail('award',$event, 2)"></workspace-widget>
-
-    </div>
-
-
+  <div columns="6" *ngIf="toggleControl.exclusions">
+    <workspace-widget [title]="'Exclusions'"></workspace-widget>
   </div>
-  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(2)">
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'assistanceListings'">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
-    </div>
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'award'">
-      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
-    </div>
+  
+  <div columns="6" *ngIf="toggleControl.award">
+    <workspace-widget [title]="'Award'"></workspace-widget>
   </div>
+  
 </div>

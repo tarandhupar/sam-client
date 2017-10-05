@@ -14,7 +14,9 @@ export function getMockUser() {
     lastName: 'Doe',
     suffix: 'Jr.',
 
+    personalPhone: '12401234568',
     workPhone: '12401234568',
+    carrier: 'AT&T',
 
     departmentID: 100006688,
     agencyID: 100141921,

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewContainerRef, Input } from "@angular/core";
 import { UserAccessService } from "api-kit/access/access.service";
 import {Router, Route, ActivatedRoute} from "@angular/router";
 import { RMSUserServiceImpl } from "../../../users/request-access/username-autocomplete.component";
@@ -17,8 +17,6 @@ export class RMWidgetComponent implements OnInit {
       valueProperty: 'value'
     }
   };
-
-  loadingState: 'loading'|'success'|'error' = 'loading';
   pendingCount: number = 0;
   escalatedCount: number = 0;
 
@@ -26,6 +24,8 @@ export class RMWidgetComponent implements OnInit {
   shouldShowEscalated: boolean = false;
   shouldShowRoleDefinitions: boolean = false;
   shouldShowRoleDirectory: boolean = false;
+
+  @Input() widgetResult: any;
 
   @ViewChild('autoComplete') autoComplete: SamAutocompleteComponent;
 
@@ -69,36 +69,30 @@ export class RMWidgetComponent implements OnInit {
         }
       );
 
-    this.accessService.getWidget().subscribe(
-      res => {
-        this.loadingState = 'success';
-        if (res._links && res._links.domaindefinition) {
-          this.shouldShowRoleDefinitions = true;
-        }
+      let res = this.widgetResult;
+      if (res._links && res._links.domaindefinition) {
+        this.shouldShowRoleDefinitions = true;
+      }
 
-        if (res._links && res._links.userdirectory) {
-          this.shouldShowRoleDirectory = true;
-        }
+      if (res._links && res._links.userdirectory) {
+        this.shouldShowRoleDirectory = true;
+      }
 
-        if (!res || !res.requests || ! res.requests.length) {
+      if (!res || !res.requests || ! res.requests.length) {
+        return;
+      }
+
+      res.requests.forEach(countInfo => {
+        if (!countInfo.type || !countInfo.type.toLowerCase()) {
           return;
         }
-
-        res.requests.forEach(countInfo => {
-          if (!countInfo.type || !countInfo.type.toLowerCase()) {
-            return;
-          }
-          if (countInfo.type.toLowerCase() === 'pending') {
-            this.shouldShowPending = true;
-            this.pendingCount = countInfo.count;
-          } else if(countInfo.type.toLowerCase() === 'escalated') {
-            this.shouldShowEscalated = true;
-            this.escalatedCount = countInfo.count;
-          }
-        });
-      },
-      err => {
-        this.loadingState = 'error';
+        if (countInfo.type.toLowerCase() === 'pending') {
+          this.shouldShowPending = true;
+          this.pendingCount = countInfo.count;
+        } else if (countInfo.type.toLowerCase() === 'escalated') {
+          this.shouldShowEscalated = true;
+          this.escalatedCount = countInfo.count;
+        }
       }
     );
   }

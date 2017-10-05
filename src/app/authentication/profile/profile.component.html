@@ -3,7 +3,7 @@
     <h1 [innerText]="store.title"></h1>
     <ul class="usa-sidenav-list">
       <li *ngFor="let nav of store.nav; let $index = index;">
-        <a *ngIf="nav.routerLink.length" [routerLink]="nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text" preserveQueryParams></a>
+        <a *ngIf="nav.routerLink.length" [routerLink]="nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text" queryParamsHandling="merge"></a>
         <a *ngIf="!nav.routerLink.length" [routerLinkActive]="nav.routerLinkActive" [innerText]="nav.text"></a>
       </li>
     </ul>

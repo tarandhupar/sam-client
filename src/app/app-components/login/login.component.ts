@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { merge } from 'lodash';
+import { get, merge } from 'lodash';
 
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from 'app/authentication/shared/validators';
@@ -23,11 +23,10 @@ export class SamLoginComponent {
       params: {
         queryParams: {}
       }
-    }
+    },
   };
 
-  states = {
-    stage: 1,
+  public states = {
     submitted: false,
     loading: false,
     password: {
@@ -35,35 +34,43 @@ export class SamLoginComponent {
     }
   };
 
-  validation = {
-    fields: [
-      'global',
-      'username',
-      'password'
+  private options = {
+    radio: [
+      { label: 'Email', name: 'delivery-email', value: 'email' },
+      { label: 'Text',  name: 'delivery-name', value: 'sms' },
     ],
 
+    checkbox: [
+      { label: 'Use this as my default choice', name: 'delivery-default', value: true },
+    ]
+  }
+
+  public validation = {
     messages: {
       'username': {
-        'required': 'Please enter your email',
-        'email': 'Enter a valid email address'
+        required: 'Please enter your email',
+        email: 'Enter a valid email address',
       },
 
       'password': {
-        'required': 'Please enter your password'
+        required: 'Please enter your password',
+      },
+
+      'otppreference': {
+        required: 'Please select an OTP delivery method',
+      },
+
+      'otp': {
+        required: 'Enter your one-time access code',
       }
     }
   };
 
-  errors = {
-    global: [],
-    username: [],
-    password: []
-  };
+  public stage = '1';
+  public errors = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private builder: FormBuilder, private api: IAMService) {
-    if(!this.api.iam.user.isSignedIn()) {
-    	this.router.navigate([this.store.redirect.route], this.store.redirect.params);
-    }
+
   }
 
   ngOnInit() {
@@ -77,141 +84,129 @@ export class SamLoginComponent {
       this.store.redirect.route = params['redirect'];
 
       delete this.store.redirect.params.queryParams['redirect'];
+    } else if(this.router.url.match(/\/(signin)?/)) {
+      this.store.redirect.route = '/workspace';
+    } else {
+      // Component reload workaround
+      this.store.redirect.route = '/signin';
+      this.store.redirect.params.queryParams['redirect'] = this.router.url;
+    }
+
+    if(this.api.iam.user.isSignedIn() && ENV !== 'test') {
+    	this.router.navigate([this.store.redirect.route], this.store.redirect.params);
     }
 
     this.form = this.builder.group({
-      'stage1': this.builder.group({
+      '1': this.builder.group({
         username: ['', [Validators.required, $Validators.email]],
         password: ['', [Validators.required]]
       }),
 
-      'stage2': this.builder.group({
+      '2': this.builder.group({
+        otppreference: ['', Validators.required],
+      }),
+
+      '3': this.builder.group({
         otp: ['', [Validators.required]]
       })
     });
-
-    this.form.valueChanges.subscribe(data => this.validate());
   }
 
   getRoute(): string {
     return this.router.url.replace(/\?.+/g, '');
   }
 
-  isStage(stage: number) {
-    return (this.states.stage == stage);
+  isStage(stage: string|number) {
+    return (this.stage == stage);
   }
 
-  isErrors() {
-    let field;
+  hasError(controlName: string = null) {
+    let control = controlName ? this.form.get(this.stage).get(controlName) : null,
+        isError = control ? control.errors : this.errors.length;
 
-    if(this.errors.global.length) {
-      return true;
-    }
-
-    return false;
+    return isError && this.states.submitted;
   }
 
-  resetErrors() {
-    let field;
+  getError(controlName: string = null): string {
+    let control = controlName ? this.form.get(this.stage).get(controlName) : null,
+        errors = control ? [] : this.errors,
+        key,
+        error;
 
-    for(field in this.errors) {
-      this.errors[field] = [];
+    if(control && control.errors && this.states.submitted) {
+      for(key in control.errors) {
+        error = get(this.validation.messages, [controlName, key]);
+
+        if(error) {
+          errors.push(error);
+          break;
+        }
+      }
     }
+
+    return errors[0] || '';
   }
 
   togglePassword() {
     this.states.password.type = (this.states.password.type == 'password') ? 'text' : 'password';
   }
 
-  switchStage(stage) {
-    this.states.stage = stage;
+  reset() {
+    this.resetState();
 
-    switch(this.states.stage) {
-      case 1:
-        this.form.controls['stage2'].reset();
-        break;
-    }
+    this.form.get('2').reset();
+    this.form.get('3').reset();
 
-    this.resetErrors();
+    this.errors = [];
+
+    this.api.iam.resetLogin();
   }
 
-  validate() {
-    let field,
-      message,
-      control,
-      key;
-
-    if(!this.form.controls['stage1']) {
-      return;
-    }
-
-    for(field in this.errors) {
-      this.errors[field] = [];
-      control = this.form.controls['stage1']['controls'][field];
-
-      if(control !== undefined) {
-        if(this.states.submitted || (control && control.dirty && control.invalid)) {
-          for(key in control.errors) {
-            this.errors[field].push(this.validation.messages[field][key]);
-          }
-        }
-      }
-    }
+  setStage(stage: string|number = 1) {
+    this.stage = stage.toString();
   }
 
-  login(cb:() => void) {
-    let form = this.form.controls[this.isStage(1) ? 'stage1' : 'stage2'],
-        credentials;
+  resetState() {
+    this.states.loading = false;
+    this.states.submitted = false;
+  }
+
+  login() {
+    let form = this.form.get(this.stage),
+        payload = {};
+
+    this.states.submitted = true;
+    this.errors = [];
+
 
     if(form.valid) {
-      if(this.states.stage == 1) {
-        this.api.iam.resetLogin();
-      }
+      this.states.loading = true;
 
-      this.api.iam.loginOTP(form.value, (user) => {
-        this.states.submitted = false;
+      this.api.iam.login(form.value, data => {
+        this.setStage(this.api.iam.stage);
+        this.resetState();
 
-        switch(this.states.stage) {
-          case 1:
-            this.states.stage = 2;
-            break;
-
-          case 2:
-            if(this.standalone && !this.store.redirect.override) {
-                switch(this.router.url) {
-                case '/':
-                  this.store.redirect.route = '/workspace';
-                  break;
-
-                default:
-                  this.store.redirect.route = this.getRoute();
-                  this.store.redirect.params.queryParams['refresh'] = true;
-              }
-            }
-
-            this.router.navigate([this.store.redirect.route], this.store.redirect.params);
+        switch(this.stage) {
+          case '2':
+            this.options.radio[1].label = `Text (XXX) XXX - ${data.otpphonenumber || ''}`;
+            form = this.form.get(this.stage);
+            form.get('otppreference').setValue(data.otppreference || '');
+            form.get('otppreference').updateValueAndValidity();
 
             break;
         }
 
-        cb();
-      }, (error) => {
-        this.errors.global.push(error.message);
-        cb();
+        if(data.tokenId) {
+          this.router.navigate([this.store.redirect.route], this.store.redirect.params);
+        }
+      }, error => {
+        this.reset();
+        this.setStage(this.api.iam.stage);
+
+        this.errors.push(error.message);
+        this.states.loading = false;
+        this.states.submitted = true;
       });
-    } else {
-      this.states.loading = false;
     }
-  }
-
-  submit($event) {
-    this.states.submitted = true;
-    this.states.loading = true;
-
-    this.validate();
-
-    this.login(() => {
-      this.states.loading = false;
-    });
   }
 };

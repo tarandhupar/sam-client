@@ -7,7 +7,7 @@ export class FilterParamLabel implements PipeTransform {
     switch(param) {
       case "index": return "Domain";
       break;
-      case "keyword": return "Keyword(s)";
+      case "keywords": return "Keyword(s)";
         break;
       case "is_active": return "Active Only?";
         break;
@@ -53,6 +53,10 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "construction_type": return "Construction Type";
         break;
+      case "sort": return "Sort By";
+      break;
+      case "page": return "Page";
+      break;
       default: return null;
     }
 

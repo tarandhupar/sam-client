@@ -15,7 +15,7 @@ export class WorkspaceWidgetComponent {
   @Input() title: string = "";
   @Input() shortcut: Shortcut;
   @Input() isExpand: boolean = false;
-
+  @Input() actions: Array<any>;
   @Output() onToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   botSectionId: string = "";
 

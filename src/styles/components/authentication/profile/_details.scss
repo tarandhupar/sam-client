@@ -7,6 +7,16 @@
     }
   }
 
+  sam-label-wrapper {
+    > div {
+      margin-top: 1em;
+    }
+
+    label {
+      font-weight: bold;
+    }
+  }
+
   section {
     margin-bottom: 4rem;
 
@@ -15,8 +25,8 @@
       display: none;
       margin-left: 1em;
 
-      .label-wrapper:nth-child(1) {
-        label {
+      sam-label-wrapper:nth-child(1) {
+        > div {
           margin-top: 0em;
         }
       }
@@ -42,7 +52,7 @@
 
     label {
       display: inline-block;
-      min-width: 110px;
+      min-width: 180px;
       margin-top: 0em;
       font-weight: 700;
       float: left;
@@ -56,12 +66,6 @@
       label {
         width: 48%;
       }
-    }
-  }
-
-  .business {
-    label {
-      min-width: 180px;
     }
   }
 
@@ -107,17 +111,15 @@
     }
   }
 
+  sam-autocomplete + .usa-unstyled-list {
+    margin-top: 1em;
+  }
+
   .usa-button-controls {
     sam-alert {
       top: 50%;
       left: 100px;
       transform: translateY(-50%);
-    }
-  }
-
-  sam-label-wrapper{
-    label{
-      font-weight:bold;
     }
   }
 }
