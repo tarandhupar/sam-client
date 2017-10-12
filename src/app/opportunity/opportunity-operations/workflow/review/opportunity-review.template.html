@@ -53,7 +53,7 @@
 
     <!-- Intro Content -->
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
-      <a name="#/opportunities/{{opportunity.id}}/review#header"></a>
+      <a name="#/opp/{{opportunity.id}}/review#header"></a>
       <div class="sam-ui hidden divider"></div>
 
       <div class="sam-ui padded raised segment">
@@ -161,7 +161,7 @@
 
       <!-- General Information -->
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
-        <a name="#/opportunities/{{opportunity.id}}/review#general"></a>
+        <a name="#/opp/{{opportunity.id}}/review#general"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">
           General Information
@@ -239,7 +239,7 @@
 
       <!-- Classification -->
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-        <a name="#/opportunities/{{opportunity.id}}/review#classification"></a>
+        <a name="#/opp/{{opportunity.id}}/review#classification"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Classification</h2>
         <div class="sam-ui segment">
@@ -313,7 +313,7 @@
 
       <!-- Synopsis -->
       <section [attr.id]="generateID(opportunityFields.Description)" *ngIf="shouldBeDisplayed(opportunityFields.Description)">
-        <a name="#/opportunities/{{opportunity.id}}/review#description"></a>
+        <a name="#/opp/{{opportunity.id}}/review#description"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Description</h2>
         <div class="sam-ui segment">
@@ -329,7 +329,7 @@
 
       <!-- Packages -->
       <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && ready">
-        <a name="#/opportunities/{{opportunity.id}}/review#packages"></a>
+        <a name="#/opp/{{opportunity.id}}/review#packages"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Packages</h2>
         <div class="sam-ui segment">
@@ -343,7 +343,7 @@
 
       <!-- Contact Information -->
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
-        <a name="#/opportunities/{{opportunity.id}}/review#contact"></a>
+        <a name="#/opp/{{opportunity.id}}/review#contact"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Contact Information</h2>
         <div class="sam-ui segment">
@@ -446,7 +446,7 @@
 
       <!-- History -->
       <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History)">
-        <a name="#/opportunities/{{opportunity.id}}/review#history"></a>
+        <a name="#/opp/{{opportunity.id}}/review#history"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">History</h2>
         <div class="sam-ui segment">

@@ -1,0 +1,98 @@
+<h2 class="sam-ui header">
+  Contact Information
+</h2>
+
+<form *ngIf="oppContactInfoForm" [formGroup]="oppContactInfoForm">
+
+  <div *ngIf="primaryPOC" [attr.id]="pocConfig.primary.id" class="sam-ui segment">
+    <sam-label-wrapper
+      [hint]="pocConfig.primary.hint"
+      [label]="pocConfig.primary.label"
+      [required]="pocConfig.primary.required">
+    </sam-label-wrapper>
+
+    <sam-listbuilder-card
+      (action)="onContactAction(pocConfig.primary.type, $event.type)"
+      [disable]="pocConfig.listbuilder.disableActions"
+      [hidden]="pocStateEquals(pocConfig.primary.type, 'start')"
+      [hideDefaultBtns]="pocConfig.listbuilder.hideDefaultButtons"
+      [showEditSubform]="pocStateEquals(pocConfig.primary.type, 'add') || pocStateEquals(pocConfig.primary.type, 'edit')"
+      [sortable]="pocConfig.listbuilder.sortable">
+
+      <ng-container display>
+        <ng-container *ngIf="primaryPOC.errors">
+          <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
+        </ng-container>
+
+        <p *ngIf="primaryPOC.value as primary">
+          <ng-container *ngIf="primary.title">{{ primary.title }} </ng-container>{{ primary.fullName }}<br/>
+          <ng-container *ngIf="primary.streetAddress">{{ primary.streetAddress }}<br/></ng-container>
+          <ng-container *ngIf="primary.email">Email: {{ primary.email }}<br/></ng-container>
+          <ng-container *ngIf="primary.phone">Phone: {{ primary.phone }}<br/></ng-container>
+        </p>
+      </ng-container>
+
+      <ng-container edit>
+        <sam-poc-entry
+          (action)="onContactAction(pocConfig.primary.type, $event.type)"
+          [formControl]="primaryPOC"
+          [manualList]="pocConfig.pocEntry.manualList"
+          [showAddress]="pocConfig.pocEntry.showAddress">
+        </sam-poc-entry>
+      </ng-container>
+    </sam-listbuilder-card>
+
+    <sam-button
+      *ngIf="pocStateEquals(pocConfig.primary.type, 'start')"
+      [buttonText]="pocConfig.primary.addButtonText"
+      [buttonType]="pocConfig.addButtonType"
+      (click)="onContactAction(pocConfig.primary.type, 'add')">
+    </sam-button>
+  </div>
+
+  <div *ngIf="secondaryPOC" [attr.id]="pocConfig.secondary.id" class="sam-ui segment">
+    <sam-label-wrapper
+      [hint]="pocConfig.secondary.hint"
+      [label]="pocConfig.secondary.label"
+      [required]="pocConfig.secondary.required">
+    </sam-label-wrapper>
+
+    <sam-listbuilder-card
+      (action)="onContactAction(pocConfig.secondary.type, $event.type)"
+      [disable]="pocConfig.listbuilder.disableActions"
+      [hidden]="pocStateEquals(pocConfig.secondary.type, 'start')"
+      [hideDefaultBtns]="pocConfig.listbuilder.hideDefaultButtons"
+      [showEditSubform]="pocStateEquals(pocConfig.secondary.type, 'add') || pocStateEquals(pocConfig.secondary.type, 'edit')"
+      [sortable]="pocConfig.listbuilder.sortable">
+
+      <ng-container display>
+        <ng-container *ngIf="secondaryPOC.errors">
+          <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
+        </ng-container>
+
+        <p *ngIf="secondaryPOC.value as secondary">
+          <ng-container *ngIf="secondary.title">{{ secondary.title }} </ng-container>{{ secondary.fullName }}<br/>
+          <ng-container *ngIf="secondary.streetAddress">{{ secondary.streetAddress }}<br/></ng-container>
+          <ng-container *ngIf="secondary.email">Email: {{ secondary.email }}<br/></ng-container>
+          <ng-container *ngIf="secondary.phone">Phone: {{ secondary.phone }}<br/></ng-container>
+        </p>
+      </ng-container>
+
+      <ng-container edit>
+        <sam-poc-entry
+          (action)="onContactAction(pocConfig.secondary.type, $event.type)"
+          [formControl]="secondaryPOC"
+          [manualList]="pocConfig.pocEntry.manualList"
+          [showAddress]="pocConfig.pocEntry.showAddress">
+        </sam-poc-entry>
+      </ng-container>
+    </sam-listbuilder-card>
+
+    <sam-button
+      *ngIf="pocStateEquals(pocConfig.secondary.type, 'start')"
+      [buttonText]="pocConfig.secondary.addButtonText"
+      [buttonType]="pocConfig.addButtonType"
+      (click)="onContactAction(pocConfig.secondary.type, 'add')">
+    </sam-button>
+  </div>
+</form>

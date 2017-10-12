@@ -2,7 +2,6 @@ import {Component, Input, OnInit, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FilterParamLabel} from "../../pipes/filter-label.pipe";
 import { globals } from '../../.././globals.ts';
-import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -11,6 +10,8 @@ import * as moment from 'moment/moment';
 })
 export class SavedSearchResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams: any={};
+  domain: string;
   parameters: Array =[];
   id: string;
 
@@ -30,16 +31,16 @@ export class SavedSearchResult implements OnInit {
     if(this.data.data && this.data.data.index) {
       globals.searchFilterConfig.forEach(function(index) {
         if(index['value'] == ctx.data.data.index.toString()) {
-          ctx.data.data.index = index['label'];
+          ctx.domain = index['label'];
         }
       })
     }
-    // if(this.data.createdOn && this.data.createdOn!=null){
-    //   this.data.createdOn = moment(this.data.createdOn).format("MMM D, Y");
-    // }
-    // if(this.data.lastUsageDate && this.data.lastUsageDate!=null){
-    //   this.data.lastUsageDate = moment(this.data.lastUsageDate).format("MMM D, Y");
-    // }
+    if(this.data.createdOn && this.data.createdOn!=null){
+      this.data.createdOn = this.data.createdOn.substring(0, 10);
+    }
+    if(this.data.lastUsageDate && this.data.lastUsageDate!=null){
+      this.data.lastUsageDate = this.data.lastUsageDate.substring(0, 10);
+    }
   }
 
   //To display parameter labels generically

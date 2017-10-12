@@ -17,7 +17,7 @@ var searchServiceStub = {
     return Observable.of({
       alternativeNames: null,
       cgac: "abcd1234",
-      name: "ML Test Dept",
+      title: "ML Test Dept",
       description: "",
       _id: "12345",
       type: "DEPARTMENT",
@@ -55,7 +55,7 @@ describe('src/app/organization/featured-result/featured-result.spec.ts', () => {
       titleEl  = fixture.debugElement.query(By.css('.federal-hierarchy-title')); // find title element
       comp.data = {
         shortName: "ST",
-        name: "SAMPLE TITLE",
+        title: "SAMPLE TITLE",
         isActive:true,
         description: "abcd",
         parentOrganizationHierarchy: {
@@ -67,6 +67,6 @@ describe('src/app/organization/featured-result/featured-result.spec.ts', () => {
   }));
 
   it('FHFeaturedResultComponent: should display a title', () => {
-    expect(fixture.componentInstance.data.name).toContain("SAMPLE TITLE");
+    expect(fixture.componentInstance.data.title).toContain("SAMPLE TITLE");
   });
 });

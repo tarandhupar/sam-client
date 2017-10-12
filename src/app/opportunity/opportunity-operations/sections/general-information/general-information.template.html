@@ -1,0 +1,56 @@
+<h2 class="sam-ui header">
+  General Information
+</h2>
+
+<form [formGroup]="generalInfoForm">
+  <div class="sam-ui segment">
+    <sam-radio-button
+      [attr.id]="archiveTypeConfig.id"
+      [control]="generalInfoForm.get('archiveType')"
+      [formControl]="generalInfoForm.get('archiveType')"
+      [hint]="archiveTypeConfig.hint"
+      [label]="archiveTypeConfig.label"
+      [name]="archiveTypeConfig.name"
+      [options]="archiveTypeConfig.options"
+      [required]="archiveTypeConfig.required">
+    </sam-radio-button>
+  </div>
+
+  <div class="sam-ui segment" *ngIf="generalInfoForm.get('archiveType').value == 'manual'">
+   <sam-date-time
+      [attr.id]="archiveDateConfig.id"
+      [control]="generalInfoForm.get('archiveDate')"
+      [formControl]="generalInfoForm.get('archiveDate')"
+      [label]="archiveDateConfig.label"
+      [name]="archiveDateConfig.name"
+      [useFormService]="false">
+    </sam-date-time>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-radio-button
+      [attr.id]="vendorsCDIvlConfig.id"
+      [control]="generalInfoForm.get('vendorsCDIvl')"
+      [formControl]="generalInfoForm.get('vendorsCDIvl')"
+      [hint]="vendorsCDIvlConfig.hint"
+      [label]="vendorsCDIvlConfig.label"
+      [name]="vendorsCDIvlConfig.name"
+      [options]="vendorsCDIvlConfig.options"
+      [required]="vendorsCDIvlConfig.required">
+    </sam-radio-button>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-radio-button
+      [attr.id]="vendorsVIvlConfig.id"
+      [control]="generalInfoForm.get('vendorsViewIvl')"
+      [formControl]="generalInfoForm.get('vendorsViewIvl')"
+      [hint]="vendorsVIvlConfig.hint"
+      [label]="vendorsVIvlConfig.label"
+      [name]="vendorsVIvlConfig.name"
+      [options]="vendorsVIvlConfig.options"
+      [required]="vendorsVIvlConfig.required">
+    </sam-radio-button>
+  </div>
+
+</form>

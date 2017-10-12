@@ -44,7 +44,7 @@
   </div>
 
   <div class="sam-ui segment">
-    <sam-agency-picker-v2
+    <sam-agency-picker-v2 *ngIf="agencyPickerConfig.orgRoots.length > 0"
       [attr.id]="agencyPickerConfig.id"
       [control]="oppHeaderInfoForm.get('office')"
       [formControl]="oppHeaderInfoForm.get('office')"
@@ -53,9 +53,9 @@
       [limit]="agencyPickerConfig.levelLimit"
       [orgRoots]="agencyPickerConfig.orgRoots"
       [required]="agencyPickerConfig.required"
+      formControlName="office"
       [type]="agencyPickerConfig.type">
     </sam-agency-picker-v2>
   </div>
-
 
 </form>

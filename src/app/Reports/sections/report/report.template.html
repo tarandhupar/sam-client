@@ -48,6 +48,16 @@
           <div class="display-block">
             
             <div class="usa-width-one-half">
+              <!-- <sam-naics-psc-filter [attr.id]= "'naics-psc-filter'"
+                              [pscValues]="pscTypeModel"
+                              (pscValuesChange)="pscTypeSelected($event)"
+                              [pscOptions]="pscType.options"
+                              [pscConfig]="pscType"
+                              [naicsValues]="naicsTypeModel"
+                              (naicsValuesChange)="naicsTypeSelected($event)"
+                              [naicsOptions]="naicsType.options"
+                              [naicsConfig]="naicsType">
+              </sam-naics-psc-filter> -->
               <sam-autocomplete state
                 *ngIf="usedPrompts.state"
                 [(ngModel)]="location.state"
@@ -72,7 +82,8 @@
               </sam-text>
               <sam-agency-picker-v2 *ngIf="usedPrompts.fHierarchy" 
                 name="agency-picker"
-                [(ngModel)]="agencyPicker">
+                [(ngModel)]="agencyPicker"
+                [hasFpds] = "hasFpds">
               </sam-agency-picker-v2>
               <sam-text *ngIf="usedPrompts.orgId" 
                 [(ngModel)]="orgCode"

@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { OpportunityService } from './opportunity.service';
 
-xdescribe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
+describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [

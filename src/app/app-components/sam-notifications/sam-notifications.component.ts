@@ -41,6 +41,5 @@ export class SamNotificationsComponent {
 
     showMoreHandler(){
         this.action.emit({});
-        this.router.navigate(['/alerts']);
     }
 }

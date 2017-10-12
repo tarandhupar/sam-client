@@ -12,7 +12,8 @@ export type WatchlistType = {
   frequency?: string,
   recordId?: string,
   uri? :string,
-  myFeed? :string
+  myFeed? :string,
+  title? :string
 } 
 
 @Injectable()

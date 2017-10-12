@@ -66,6 +66,10 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
      * Flag that controls emitting an event when the formControl passes down a new value to set
      */
     @Input() editOnFlag: boolean = true;
+    /**
+     * Flag that filters results that have FPDS codes
+     */
+    @Input() hasFpds: boolean = false;
 
     orgLimit: number = 7;
     orgLevels: any[] = [];
@@ -122,7 +126,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     }
 
     _orgRootTest(org:any,start:boolean,single:boolean){
-        this.serviceCall(org, false).subscribe(res => {
+        this.serviceCall(org, false, this.hasFpds).subscribe(res => {
             res._embedded = res._embedded.sort(this._nameOrgSort);
             let formattedData = this.formatHierarchy(res._embedded);
             formattedData[0].hierarchy = [];
@@ -155,7 +159,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 this._orgRootTest(org,start,single);
             }
         } else {
-            this.serviceCall("", true).subscribe(res => {
+            this.serviceCall("", true, this.hasFpds).subscribe(res => {
                 res._embedded = res._embedded.sort(this._nameOrgSort);
                 let formattedData = this.formatHierarchy(res._embedded);
                 this.orgLevels[0].options.length = 1;
@@ -202,8 +206,12 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     }
 
     updateAdvanced(lvl,selection){
+        let useFpds = this.hasFpds;
         if(selection){
-            this.serviceCall(selection, true).subscribe(oData => {
+            if (lvl >= 1) {
+                useFpds = false;
+            }
+            this.serviceCall(selection, true, useFpds).subscribe(oData => {
                 //filter and sort if too many results
                 oData = oData._embedded[0].org;
                 oData["hierarchy"] = oData["hierarchy"]
@@ -303,11 +311,11 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         this.onChange(this.selections);
     }
 
-    serviceCall(orgId, hierarchy: boolean) {
+    serviceCall(orgId, hierarchy: boolean, hasFpds: boolean) {
         if(orgId != "") {
-            return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false, false, 'all', 300);
+            return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false, false, 'all', 300, undefined, undefined, hasFpds);
         } else {
-            return this.oFHService.getDepartments();
+            return this.oFHService.getDepartments(hasFpds);
         }
     }
 

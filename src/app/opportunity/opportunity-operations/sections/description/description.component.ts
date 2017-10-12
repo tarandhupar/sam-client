@@ -1,8 +1,9 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { OpportunityFormService } from "../../framework/service/opportunity-form.service";
-import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form.model";
+import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import { OpportunityService } from "../../../../../api-kit/opportunity/opportunity.service";
+import { v4 as UUID } from 'uuid';
 
 @Component({
   providers: [OpportunityFormService, OpportunityService],
@@ -31,18 +32,31 @@ export class OpportunityDescriptionComponent implements OnInit {
 
   createForm(){
     this.oppDescForm = this.fb.group({
-      description: ''
+      description: null
     });
   }
 
   updateForm(){
+    let description = null;
+    if(this.viewModel.description && this.viewModel.description.length > 0) {
+      for (let item of this.viewModel.description) {
+        description = item.body;
+      }
+    }
     this.oppDescForm.patchValue({
-      description: this.viewModel.description
+      description: description
     }, {
       emitEvent: false
     });
   }
+
   updateViewModel(data) {
-    this.viewModel.description = data['description'];
+    let desc = [];
+    if(data['description'])  {
+      desc.push({
+        "body": data['description']
+      })
+    }
+    this.viewModel.description = desc.length > 0 ? desc : null;
   }
 }

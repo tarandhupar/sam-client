@@ -305,7 +305,7 @@ export class ProgramPage implements OnInit, OnDestroy {
           "index": value.index,
           "date": value.fiscalYear,
           "title": pipe.transform(value.actionType),
-          "description": value.changeDescription
+          "description": "<em>"+value.changeDescription+"</em>"
         }
       });
       this.history = _.sortBy(this.history, ['index']);

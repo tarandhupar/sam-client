@@ -47,7 +47,7 @@ export class OrgMovePage {
           val => {
             this.fhRoleModel = FHRoleModel.FromResponse(val);
             if(!this.fhRoleModel.canMoveOffice() ) {
-              this._router.navigateByUrl('/403')
+              this._router.navigateByUrl('/403');
             } else {
               this.setupOrg(this.orgKey);
             }
@@ -65,7 +65,7 @@ export class OrgMovePage {
         };
         this.level = res._embedded[0].org.level;
         this.orgType = res._embedded[0].org.type;
-        if(!this.isMoveOffice()) this.redirectToForbidden();
+        if(!this.isMoveOffice()) this._router.navigateByUrl('/403');
         this.dataLoaded = true;
       });
   }

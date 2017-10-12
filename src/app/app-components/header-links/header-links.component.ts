@@ -78,6 +78,9 @@ interface HeaderLink {
 export class SamHeaderLinksComponent {
   @Output() onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
 
+  private requestLimit:number = 5;
+  private notificationLimit:number = 5;
+
   private startCheckOutsideClick: boolean = false;
   private user = null;
   private states = {
@@ -111,9 +114,20 @@ export class SamHeaderLinksComponent {
   public startNotificationOutsideClick = false;
   public showNotifications: boolean = false;
   public notifications = [
+    {link:"/search",datetime:"2017-07-18 10:11:42",username:"Alert title",text:"This is a new alert"},
+    {link:"/help",datetime:"2017-07-16 10:11:42",username:"Alert title",text:"This is a new alert"},
+    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Alert title",text:"New Alert description testing"},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Alert title",text:"New Alert description testing"},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Alert title",text:"New Alert description testing"},
+  ];
+
+  public startRequestOutsideClick = false;
+  public showRequests: boolean = false;
+  public requests = [
     {link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",text:"Made a Title change request in assistance listings"},
     {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",text:"Made an Archive change request in assistance listings"},
     {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",text:"Requests your assistance listing change approval"},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
     {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
   ];
 
@@ -239,6 +253,10 @@ export class SamHeaderLinksComponent {
 
   notificationStartClick() {
     this.showNotifications = !this.showNotifications;
+    if(this.showNotifications) {
+      this.showDropdown = false;
+      Object.keys(this.links).forEach(key => this.links[key] = false);
+    }
     setTimeout(() => {
       this.startNotificationOutsideClick = this.showNotifications;
     });
@@ -248,6 +266,24 @@ export class SamHeaderLinksComponent {
     if(this.startNotificationOutsideClick) {
       this.showNotifications = false;
       this.startNotificationOutsideClick = false;
+    }
+  }
+
+  requestStartClick() {
+    this.showRequests = !this.showRequests;
+    if(this.showRequests) {
+      this.showDropdown = false;
+      Object.keys(this.links).forEach(key => this.links[key] = false);
+    }
+    setTimeout(() => {
+      this.startRequestOutsideClick = this.showRequests;
+    });
+  }
+
+  onRequestOutsideClick() {
+    if(this.startRequestOutsideClick) {
+      this.showRequests = false;
+      this.startRequestOutsideClick = false;
     }
   }
 }

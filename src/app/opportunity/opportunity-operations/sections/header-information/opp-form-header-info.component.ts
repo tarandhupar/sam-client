@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
-import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form.model";
-import { OpportunityFormService } from "../../framework/service/opportunity-form.service";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import {UserAccessService} from "../../../../../api-kit/access/access.service";
+import {UserService} from "../../../../role-management/user.service";
 
 @Component({
   selector: 'opp-form-header-information',
@@ -11,6 +14,7 @@ import { OpportunityFormService } from "../../framework/service/opportunity-form
 export class OpportunityHeaderInfoComponent implements OnInit {
   @Input() public viewModel: OpportunityFormViewModel;
   public oppHeaderInfoForm: FormGroup;
+  public oppHeaderInfoViewModel: any;
 
   public readonly agencyPickerConfig = {
     id: 'opp-office',
@@ -52,7 +56,10 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
-              private oppFormService: OpportunityFormService) {
+    private userAccessService: UserAccessService,
+    private userService: UserService,
+    private router: Router,
+    private oppFormService: OpportunityFormService) {
     Object.freeze(this.agencyPickerConfig);
     Object.freeze(this.oppTypeConfig);
     Object.freeze(this.idConfig);
@@ -60,14 +67,40 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.oppHeaderInfoViewModel = this.viewModel.oppHeaderInfoViewModel;
     this.createForm();
     this.loadTypeOptions();
 
     if (!this.viewModel.isNew) {
       this.updateForm();
+    } else if (this.viewModel.isNew) {
+      //init FH dropdown
+      this.initFHDropdown();
     }
 
     this.subscribeToChanges();
+  }
+
+  private initFHDropdown() {
+    try {
+      let user: any = this.userService.getUser();
+      if (user != null && user.email != null) {
+        this.userAccessService.getAllUserRoles(this.userService.getUser().email).subscribe(api => {
+          if (api != null && api.access != null && Array.isArray(api.access) && api.access.length> 0 && api.access[0].organization != null && api.access[0].organization.id != null){
+//            this.agencyPickerConfig.orgRoots = [api.access[0].organization.id];
+            this.agencyPickerConfig.orgRoots.push(api.access[0].organization.id);
+          } else { //failed to get user associated organization. Redirect to signin
+            this.router.navigate(['signin']);
+          }
+        }, error => { //failed to get user associated organization. Redirect to signin
+          this.router.navigate(['signin']);
+        });
+      } else { //failed to get user associated organization. Redirect to signin
+        this.router.navigate(['signin']);
+      }
+    } catch (exception) { //failed to get user associated organization. Redirect to signin
+      this.router.navigate(['signin']);
+    }
   }
 
   private createForm(): void {
@@ -81,13 +114,20 @@ export class OpportunityHeaderInfoComponent implements OnInit {
 
   private updateForm(): void {
     this.oppHeaderInfoForm.patchValue({
-      opportunityType: this.viewModel.opportunityType,
+      opportunityType: this.oppHeaderInfoViewModel.opportunityType,
       title: this.viewModel.title,
-      procurementId: this.viewModel.procurementId,
-      office: this.viewModel.office,
+      procurementId: this.oppHeaderInfoViewModel.procurementId,
+      office: this.oppHeaderInfoViewModel.office,
     }, {
-      emitEvent: false,
-    });
+        emitEvent: false,
+      });
+
+    //update FH Picker with opportunity's org
+    if(this.oppHeaderInfoViewModel.office != null) {
+      this.agencyPickerConfig.orgRoots.push(this.oppHeaderInfoViewModel.office);
+    } else {
+      this.initFHDropdown();
+    }
   }
 
   private loadTypeOptions() {
@@ -115,7 +155,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     this.linkControlTo(this.oppHeaderInfoForm.get('title'), this.saveTitle);
   }
 
-  private linkControlTo(control: AbstractControl, callback: (field: any) => void): void {
+  private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
     let boundCallback = callback.bind(this);
     control.valueChanges.subscribe(value => {
       boundCallback(value);
@@ -125,18 +165,18 @@ export class OpportunityHeaderInfoComponent implements OnInit {
 
   private saveOffice(office) {
     if(typeof office === 'object' && office !== null) {
-      this.viewModel.office = office.orgKey;
+      this.oppHeaderInfoViewModel.office = office.orgKey;
     } else {
-      this.viewModel.office = office;
+      this.oppHeaderInfoViewModel.office = office;
     }
   }
 
   private saveOpportunityType(type) {
-    this.viewModel.opportunityType = type;
+    this.oppHeaderInfoViewModel.opportunityType = type;
   }
 
   private saveProcurementId(id) {
-    this.viewModel.procurementId = id;
+    this.oppHeaderInfoViewModel.procurementId = id;
   }
 
   private saveTitle(title) {

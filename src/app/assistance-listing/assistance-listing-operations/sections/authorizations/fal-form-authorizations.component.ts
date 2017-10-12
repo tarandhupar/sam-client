@@ -323,7 +323,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
     }//end of if
   }
 
-  public beforeSaveAction() {
+  public beforeNavigationAction() {
     this.authSubForm.onSubFormCancelClick(this.authSubForm.authIndex);
   }
 }

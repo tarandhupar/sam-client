@@ -3,13 +3,14 @@ import {Watchlist} from './watchlist.model';
 import { WatchlistService } from "../../../api-kit/watchlist/watchlist.service";
 import { Router } from "@angular/router";
 import { WatchlistType } from "../../../api-kit/watchlist/watchlist.service";
+import { ToggleService } from "../../../api-kit/toggle/toggle.service";
 
 /**
  * The <sam-watch-button> component generates a button to Watch/Unwatch
  */
 @Component({
   selector: 'sam-watch-button',
-  template: `<button style="border:none; background-color:Transparent; color:#0071bc" [disabled]="disabled" (click)="confirmUnsubscribe()" type="button" onMouseOver="this.style.background-color='Transparent'">
+  template: `<button *ngIf="enableSubscription" style="border:none; background-color:Transparent; color:#0071bc" [disabled]="disabled" (click)="confirmUnsubscribe()" type="button" onMouseOver="this.style.background-color='Transparent'">
    <span *ngIf="!subscribed">
     <span class="fa-stack crossed-out" aria-hidden="true" title="Subscribe">
       <i class="fa fa-newspaper-o fa-stack-1x"></i>
@@ -48,7 +49,7 @@ export class SamWatchComponent implements OnInit{
   @Output() subscriptionChanaged: EventEmitter<Watchlist> = new EventEmitter<Watchlist>();
 
   subscribed:boolean = false;
-  
+  enableSubscription:boolean = false;
   //@Output() onClick: EventEmitter<any> = new EventEmitter();
 
   private btnClassMap: any = {
@@ -71,10 +72,15 @@ export class SamWatchComponent implements OnInit{
     return classMap.join(' ');
   }
 
-  constructor(private watchlistService: WatchlistService, private router:Router) {
+  constructor(private watchlistService: WatchlistService, private router:Router,private toggleService: ToggleService) {
   } 
 
   ngOnInit() {
+    this.toggleService.getToggleStatus('enablesubscription','/wl').subscribe(resWatch => {
+          console.log("Feature toggle status for enablesubscription >>>>>"+resWatch);
+          this.enableSubscription = resWatch;
+          console.log("Feature toggle status for enablesubscription >>>>>"+this.enableSubscription);
+     }) ;
     if(!this.data) {
       this.watchlist = new Watchlist();
     } else {
@@ -125,6 +131,9 @@ export class SamWatchComponent implements OnInit{
    // console.log("new active flag: " + this.watchlist.active() );
     if(!this.watchlist.id()) {      
       this.watchlist.setUri(this.router.url);
+      if(!this.watchlist.title()) {
+        this.watchlist.setTitle(this.watchlist.recordId());
+      }
       this.watchlistService.createWatchlist(this.watchlist.raw()).subscribe(resWatch => {
       this.watchlist = Watchlist.FromResponse(resWatch);
       this.subscribed = !this.subscribed;

@@ -24,7 +24,7 @@
               class="bulk-agency"
               [label]="'Organization'"
               type="single"
-              ngModel
+              [ngModel]="org.orgKey"
               (ngModelChange)="onOrganizationChange($event)"
               [searchMessage]="errors.org"
               [defaultDept]="true"
@@ -84,7 +84,7 @@
         <div class="pull-left">
           <sam-toggle [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'"></sam-toggle>
           &nbsp;|&nbsp;
-          <span>{{users.length}} users</span>
+          <span>{{getSelectedUsers().length}} users</span>
         </div>
         <div class="pull-right">
           <sam-sort [options]="sortOptions" [(ngModel)]="sort" (ngModelChange)="doUserSearch()"></sam-sort>
@@ -131,8 +131,10 @@
       </div>
       <h3>Users</h3>
       <div [ngStyle]="staticContentStyle">
-        <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
-          {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
+        <div style="max-height: 300px; overflow-y: auto; position: relative;">
+          <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
+            {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
+          </div>
         </div>
       </div>
       <h3 class="m_T-4x">Access</h3>
@@ -203,8 +205,10 @@
 
       <h3>Users</h3>
       <div [ngStyle]="staticContentStyle">
-        <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
-          {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
+        <div style="max-height: 300px; overflow-y: auto; position: relative;">
+          <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
+            {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
+          </div>
         </div>
       </div>
 
@@ -218,13 +222,11 @@
           <div class="usa-width-three-fourths">{{getUpdatedDomainNames()}}</div>
         </div>
         <h4>Permissions</h4>
-        <div [ngStyle]="staticContentStyle">
-          <div *ngFor="let domain of domainTabs">
-            <h5>{{domain.name}}</h5>
-            <div class="sam-ui divider"></div>
-            <div *ngFor="let function of domain.functions">
-              <b>{{function.name}}</b>&nbsp;-&nbsp;<span>{{permissionsForFunction(function)}}</span>
-            </div>
+        <div [ngStyle]="staticContentStyle" *ngFor="let domain of domainTabs; let i = index" [style.margin-top]="index !== 0 && '.5em'">
+          <h5>{{domain.name}}</h5>
+          <div class="sam-ui divider"></div>
+          <div *ngFor="let function of domain.functions">
+            <b>{{function.name}}</b>&nbsp;-&nbsp;<span>{{permissionsForFunction(function)}}</span>
           </div>
         </div>
       </ng-container>

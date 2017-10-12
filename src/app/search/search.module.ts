@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
-import { SearchLayoutDemoPage }   from './search-layout-demo/search-layout-demo.page';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import {RegionalOfficeListingResult} from '../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component'
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
@@ -28,6 +27,7 @@ import {SavedSearchWorkspacePage} from "./saved-search-workspace/saved-search-wo
 import {SavedSearchResult} from "./saved-search-workspace/saved-search-result/saved-search-result.component";
 import {FilterParamLabel} from "./pipes/filter-label.pipe";
 import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirect/saved-search-redirect.component";
+import {FilterParamValue} from "./pipes/filter-value.pipe";
 
 @NgModule({
   imports: [
@@ -56,7 +56,6 @@ import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirec
   declarations: [
     SearchPage,
     SavedSearchWorkspacePage,
-    SearchLayoutDemoPage,
     AssistanceListingResult,
     OpportunitiesResult,
     FederalHierarchyResult,
@@ -71,6 +70,7 @@ import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirec
     RegionalOfficeListingResult,
     SavedSearchResult,
     FilterParamLabel,
+    FilterParamValue,
     SavedSearchRedirect
   ],
   providers: [DunsEntityAutoCompleteWrapper],

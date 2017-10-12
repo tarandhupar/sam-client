@@ -5,11 +5,11 @@
       <button *ngIf="isNextLayerCreatable() && selectConfig.options.length > 1" class="usa-button-big pull-right relative">
         Create &nbsp; <i class="fa fa-angle-down"></i>
         <sam-select class="org-type-select"
-                   [name]="selectConfig.name"
-                   [options]="selectConfig.options"
-                   [label]="selectConfig.label"
-                   [disabled]="selectConfig.disabled"
-                   (modelChange)='onSelect($event)'>
+                    [name]="selectConfig.name"
+                    [options]="selectConfig.options"
+                    [label]="selectConfig.label"
+                    [disabled]="selectConfig.disabled"
+                    (modelChange)='onSelect($event)'>
         </sam-select>
       </button>
       <button class="usa-button-big pull-right relative" *ngIf="isNextLayerCreatable() && selectConfig.options.length === 1" (click)="onSelect(selectConfig.options[0].value)">
@@ -19,7 +19,7 @@
     <!-- Detail Section-->
     <div class="usa-width-one-whole m_T-4x">
       <h3>{{currentHierarchyType}} Detail
-        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && !isFPDSSource && fhRoleModel.hasPermissionType('PUT',adminTypeMap[currentHierarchyType])"><i class="fa fa-pencil"></i></button>
+        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && fhRoleModel.hasPermissionType('PUT',adminTypeMap[currentHierarchyType])"><i class="fa fa-pencil"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0 " (click)="onCancelEditPageClick()" *ngIf="isEdit"> <i class="fa fa-times"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onSaveEditPageClick()" *ngIf="isEdit"> <i class="fa fa-save"></i></button>
       </h3>
@@ -28,8 +28,8 @@
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.description}}:</h4></span>
           <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="(!isEdit || !isEditableField(pair.description)) && pair.description !== 'Description'">{{pair.value}}</span>
           <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isEdit  && pair.description === 'Description'">
-            <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}<span *ngIf="pair.value.length >= 500 && showFullDes">&nbsp;&nbsp;<a class="org-detail-expand-link" (click)="hideFullDescription()">read less</a></span></span>
-            <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-detail-expand-link" (click)="showFullDescription()">read more</a></span>
+            <span *ngIf="pair.value.length < 500 || showFullDes; else shortDescription">{{pair.value}}<span *ngIf="pair.value.length >= 500 && showFullDes">&nbsp;&nbsp;<a class="org-detail-expand-link" (click)="hideFullDescription()">read less</a></span></span>
+            <ng-template #shortDescription>{{pair.value.substr(0,500)}}...<a class="org-detail-expand-link" (click)="showFullDescription()">read more</a></ng-template>
           </span>
           <textarea class="usa-width-two-thirds m_T-2x" rows="4" *ngIf="isEdit && pair.description === 'Description'" [(ngModel)]="editedDescription">{{editedDescription}}</textarea>
           <input class="usa-width-two-thirds org-edit-input" *ngIf="isEdit && pair.description === 'Shortname'" [(ngModel)]="editedShortname">
@@ -38,23 +38,33 @@
 
         </p>
       </div>
-      <h3>{{currentHierarchyType}} Codes</h3>
-      <div class="usa-width-one-whole m_B-4x">
-        <p class="m_L-3x m_B-1x" *ngFor="let pair of orgCodes">
-          <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.code}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isRequestAACIcon(pair)">&nbsp;{{pair.value}}</span>
-          <span class="usa-width-two-thirds p_B-1x" *ngIf="isRequestAACIcon(pair)">
-             <a class="usa-button-primary" (click)="onAACRequestClick(pair)">Request AAC</a>
-          </span>
-        </p>
-      </div>
-      <h3 *ngIf="orgAddresses.length > 0">{{currentHierarchyType}} Address</h3>
-      <div class="usa-width-one-whole" *ngIf="orgAddresses.length > 0">
-        <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
-          <span class="usa-width-one-third m_R-0"><h4>{{address.addressType}}:</h4></span>
-          <span class="usa-width-two-thirds">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}<br>{{address.value.zip}}</span>
-        </p>
-      </div>
+
+      <!--Codes for the org-->
+      <ng-container>
+        <div class="usa-width-one-whole">
+          <h3>{{currentHierarchyType}} Codes</h3>
+          <div class="usa-width-one-whole m_L-3x m_T-2x m_B-2x" *ngFor="let pair of orgCodes">
+            <span class="usa-width-one-third m_R-0"><h4>{{pair.code}}:</h4></span>
+            <span class="usa-width-two-thirds" *ngIf="!isRequestAACIcon(pair); else aacBtn"><span>&nbsp;{{pair.value}}</span></span>
+            <ng-template #aacBtn>
+              <a class="usa-button-primary m_T-0 m_B-0 p_T-1x p_B-1x" (click)="onAACRequestClick(pair)">Request</a>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <!--Addresses for the org-->
+      <ng-container *ngIf="orgAddresses.length > 0">
+        <div class="usa-width-one-whole">
+          <h3 class="m_T-4x">{{currentHierarchyType}} Address</h3>
+          <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
+            <span class="usa-width-one-third m_R-0"><h4>{{address.addressType}}:</h4></span>
+            <span class="usa-width-two-thirds">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}<br>{{address.value.zip}}</span>
+          </p>
+        </div>
+      </ng-container>
+
     </div>
   </div>
 

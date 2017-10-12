@@ -22,7 +22,7 @@ export class RolesDirectoryPage {
   actions: Array<SamActionInterface> = [
     { label: 'Bulk Update', name: 'bulk-update', callback: () => {} }
   ];
-  viewAndGrantAction: any = [{ label: 'Grant Access', name: 'grant_access', callback: () => {} }, { label: 'View Access', name: 'view_access', callback: () => {} }];
+  viewAndGrantAction: any = [{ label: 'Assign Role', name: 'grant_access', callback: () => {} }, { label: 'View Access', name: 'view_access', callback: () => {} }];
   viewOnlyAction: any = [{ label: 'View Access', name: 'view_access', callback: () => {} }];
 
   users: any = null;
@@ -304,7 +304,6 @@ export class RolesDirectoryPage {
 
   initializeAutoComplete() {
     this.request = this.userAutoComplete.keyEvents
-      .debounceTime(200)
       .switchMap(
         input => {
           return this.userAccessService.getUserAutoComplete(input)

@@ -52,7 +52,7 @@
             [control]="pocEntryGroup.get('email')"
             formControlName="email"
         ></sam-autocomplete>
-        <sam-phone-entry 
+        <sam-phone-entry
             [required]="true"
             label="Business Phone"
             name="phone-input"
@@ -61,7 +61,7 @@
             [useDefaultValidations]="false"
             [control]="pocEntryGroup.get('phone')"
             formControlName="phone"></sam-phone-entry>
-        <sam-phone-entry 
+        <sam-phone-entry
             label="Fax"
             name="fax"
             phoneNumberTemplate="1+(___)___-____"
@@ -70,75 +70,77 @@
             [control]="pocEntryGroup.get('fax')"
             formControlName="fax"
         ></sam-phone-entry >
-        <sam-text-area
-            label="Street Address 1"
-            name="street"
-            required="true"
-            [control]="pocEntryGroup.get('streetAddress')"
-            formControlName="streetAddress"
-        ></sam-text-area>
-        <sam-text-area
-            label="Street Address 2"
-            name="street2"
-            [control]="pocEntryGroup.get('streetAddress2')"
-            formControlName="streetAddress2"
-        ></sam-text-area>
-        <sam-text
-            city
-            label="City"
-            name="city"
-            required="true"
-            [control]="pocEntryGroup.get('city')"
-            formControlName="city"
-        ></sam-text>
-        <!--sam-text
-            label="State"
-            name="state"
-            required="true"
-            [control]="pocEntryGroup.get('state')"
-            formControlName="state"
-        ></sam-text-->
-        <sam-autocomplete
-            state
-            labelText="State"
-            [config]="locationConfig"
-            name="state"
-            required="true"
-            [control]="pocEntryGroup.get('state')"
-            formControlName="state"
-        ></sam-autocomplete>
-        <sam-number
-            label="Zip Code"
-            name="zip"
-            required="true"
-            [control]="pocEntryGroup.get('zip')"
-            formControlName="zip"
-        ></sam-number>
-        <!--sam-text
-            label="Country"
-            name="country"
-            required="true"
-            [control]="pocEntryGroup.get('country')"
-            formControlName="country"
-        ></sam-text-->
-        <sam-autocomplete
-            country
-            labelText="Country"
-            [config]="locationConfig"
-            name="country"
-            required="true"
-            [control]="pocEntryGroup.get('country')"
-            formControlName="country"
-        ></sam-autocomplete>
+        <ng-container *ngIf="showAddress">
+            <sam-text-area
+                label="Street Address 1"
+                name="street"
+                required="true"
+                [control]="pocEntryGroup.get('streetAddress')"
+                formControlName="streetAddress"
+            ></sam-text-area>
+            <sam-text-area
+                label="Street Address 2"
+                name="street2"
+                [control]="pocEntryGroup.get('streetAddress2')"
+                formControlName="streetAddress2"
+            ></sam-text-area>
+            <sam-text
+                city
+                label="City"
+                name="city"
+                required="true"
+                [control]="pocEntryGroup.get('city')"
+                formControlName="city"
+            ></sam-text>
+            <!--sam-text
+                label="State"
+                name="state"
+                required="true"
+                [control]="pocEntryGroup.get('state')"
+                formControlName="state"
+            ></sam-text-->
+            <sam-autocomplete
+                state
+                labelText="State"
+                [config]="locationConfig"
+                name="state"
+                required="true"
+                [control]="pocEntryGroup.get('state')"
+                formControlName="state"
+            ></sam-autocomplete>
+            <sam-number
+                label="Zip Code"
+                name="zip"
+                required="true"
+                [control]="pocEntryGroup.get('zip')"
+                formControlName="zip"
+            ></sam-number>
+            <!--sam-text
+                label="Country"
+                name="country"
+                required="true"
+                [control]="pocEntryGroup.get('country')"
+                formControlName="country"
+            ></sam-text-->
+            <sam-autocomplete
+                country
+                labelText="Country"
+                [config]="locationConfig"
+                name="country"
+                required="true"
+                [control]="pocEntryGroup.get('country')"
+                formControlName="country"
+            ></sam-autocomplete>
+        </ng-container>
         <div class="button-row">
-            <sam-button 
-                [buttonText]="'Cancel'" 
-                [buttonType]="'tertiary'" 
+            <sam-button
+                [buttonText]="'Cancel'"
+                [buttonType]="'tertiary'"
                 (onClick)="formCancel()">
             </sam-button>
-            <sam-button 
-                [buttonText]="'Done'" 
-                [buttonType]="'secondary'" 
+            <sam-button
+                [buttonText]="'Done'"
+                [buttonType]="'secondary'"
                 (onClick)="formSubmit()">
             </sam-button>
         </div>

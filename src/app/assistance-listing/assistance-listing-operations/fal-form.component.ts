@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FALFormService } from './fal-form.service';
-import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import {ActivatedRoute, NavigationCancel, NavigationEnd, NavigationStart, Router, ResolveStart} from '@angular/router';
 import { FALFormViewModel } from './fal-form.model';
 import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
 import { FALSectionNames } from './fal-form.constants';
@@ -11,6 +11,7 @@ import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-o
 import { AlertFooterService } from '../../app-components/alert-footer/alert-footer.service';
 import { ProgramService } from '../../../api-kit/program/program.service';
 import { IBreadcrumb } from 'sam-ui-kit/types';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   moduleId: __filename,
@@ -42,7 +43,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   currentSection: number;
   leadingErrorMsg: string;
   globalLinksUrl: string;
-  globalNavigationFlag: boolean = false;
+  formNavigationFlag: boolean = false;
   modelBtnsNavigationFlag: boolean = false;
   crumbs: Array<IBreadcrumb> = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
     breadcrumb: 'My Workspace',
@@ -74,6 +75,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   private pristineIconClass = 'pending';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
+  private subscriptions: Array<Subscription> = [];
 
 
   sectionLabels: any = [
@@ -143,18 +145,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           window.scrollTo(0, 0);
         } else {
           this.scrollToTop = true;
-        }
-      }
-      if (event.url === "/" || event.url === "/reports/overview" || event.url === "/workspace" || event.url === "/help/overview"
-        || event.url === "/federal-hierarchy" || event.url === "/data-services" || event.url === "/profile") {
-        comp.globalLinksUrl = event.url;
-        if (comp.globalNavigationFlag) {
-          if (event instanceof NavigationCancel) {
-          }
-        } else {
-          if (event instanceof NavigationStart) {
-            comp.formsDirtyCheck('links');
-          }
         }
       }
     });
@@ -252,9 +242,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.gotoSection(section);
         this.sidenavSelection = this.sectionLabels[this.currentSection];
         setTimeout(() => { // schedule scroll after angular change detection runs
-          let field = document.getElementById(fragment.replace(new RegExp('^' + section + '-'), ''));
-          if (field) {
-            field.scrollIntoView();
+          if (fragment != section) {
+            let field = document.getElementById(fragment.replace(new RegExp('^' + section + '-'), ''));
+            if (field) {
+              field.scrollIntoView();
+            }
+          } else {
+            console.error('Warning: Field id is same as section name');
           }
         }, 1000);
       } else {
@@ -328,24 +322,26 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSaveExitClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('SaveExit');
   }
 
   onSaveBackClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('SaveBack');
   }
 
   onSaveContinueClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('SaveContinue');
   }
 
-  private beforeSaveAction() {
+  private beforeNavigationAction() {
     for (let section of this.form._results) {
-      if (section.beforeSaveAction) {
-        section.beforeSaveAction();
+      if (section.beforeNavigationAction) {
+        section.beforeNavigationAction();
       }
     }
-    this.falFormViewModel.setSectionStatus(this.sections[this.currentSection], 'updated');
   }
 
   private afterSaveAction(api) {
@@ -414,6 +410,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   navHandler(obj) {
+    this.formNavigationFlag = true;
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
     this.formsDirtyCheck('SideNav', obj);
   }
 
@@ -421,7 +421,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.errorDisplayComponent.formatErrors(errors);
     this.hasErrors = FALFormErrorService.hasErrors(this.errorService.errors);
     this.updateSidenavModel();
-    this.cdr.detectChanges();
   }
 
   updateLeadingMsg(msg) {
@@ -432,12 +431,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   breadCrumbClick(event) {
     let actionType = event;
     if (actionType === 'My Workspace') {
-      this.globalNavigationFlag = true;
+      this.formNavigationFlag = true;
       this.formsDirtyCheck('Workspace');
       this.globalLinksUrl = '/workspace';
 
     }
     if (actionType === 'Assistance Workspace') {
+      this.formNavigationFlag = true;
       this.formsDirtyCheck('falWorkspace');
       this.globalLinksUrl = 'fal/workspace';
     }
@@ -446,7 +446,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onTitleModalNo() {
     if (!this.modelBtnsNavigationFlag) {
-      this.globalNavigationFlag = true;
+      this.formNavigationFlag = true;
       this.router.navigateByUrl(this.globalLinksUrl);
     }
     this.modelBtnsNavigationFlag = false;
@@ -461,7 +461,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
     this.globalLinksUrl = url;
     this.titleModal.closeModal();
-    this.globalNavigationFlag = false;
+    this.formNavigationFlag = false;
     this.router.navigateByUrl(url);
   }
 
@@ -556,6 +556,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     } else {
+      this.beforeNavigationAction();
       this.navigationOnAction(actionType, navObj);
     }
   }
@@ -568,19 +569,20 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.titleMissingConfig.cancelText = cancelText;
   }
 
-  saveForm(navObj, actionType) {
-    this.beforeSaveAction();
-    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
+  saveForm(navObj , actionType) {
+    this.subscriptions.push(this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
       .subscribe(api => {
-        this.afterSaveAction(api);
-        let section = this.sectionLabels[this.currentSection];
-        this.successFooterAlertModel.description = section + ' saved successfully.';
-        this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
-        this.navigationOnAction(actionType, navObj);
-      },
-      error => {
-        console.error('error saving assistance listing to api', error);
-      });
+          this.falFormViewModel.setSectionStatus(this.sections[this.currentSection], 'updated');
+          this.afterSaveAction(api);
+          let section = this.sectionLabels[this.currentSection];
+          this.successFooterAlertModel.description = section + ' saved successfully.';
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
+          this.beforeNavigationAction();
+          this.navigationOnAction(actionType, navObj);
+        },
+        error => {
+          console.error('error saving assistance listing to api', error);
+        }));
   }
 
   navigationOnAction(actionType, navObj) {
@@ -634,18 +636,20 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
                      {breadcrumb: 'Assistance Workspace', urlmock: true},
                      {breadcrumb: this.falFormViewModel.title, urlmock: false}];
     }
-    this.cdr.detectChanges();
   }
 
   onViewClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('PublicView')
   }
 
   onSubmitClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('Submit');
   }
 
   onNotifyClick() {
+    this.formNavigationFlag = true;
     this.formsDirtyCheck('Notify');
   }
 
@@ -685,6 +689,20 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.crumbs.push({breadcrumb: 'New Assistance Listing', urlmock: false});
     }
-    this.cdr.detectChanges();
+  }
+  canDeactivate() {
+    let comp = this;
+    comp.routeSubscribe = this.router.events.subscribe(event => {
+      comp.globalLinksUrl = event['url'];
+      if (comp.formNavigationFlag) {
+        if (event instanceof NavigationCancel) {
+        }
+      } else {
+        if (event instanceof ResolveStart) {
+          comp.formsDirtyCheck('links');
+        }
+      }
+    });
+    return true;
   }
 }

@@ -358,7 +358,7 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
         AppComponentsModule,
         OppComponentsModule,
         RouterTestingModule.withRoutes([
-          { path: 'opportunities/:id/review', component: OpportunityReviewComponent }
+          { path: 'opp/:id/review', component: OpportunityReviewComponent }
         ]),
         SamUIKitModule
       ],

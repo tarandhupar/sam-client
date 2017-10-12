@@ -53,7 +53,7 @@ let MockSavedSearchService = {
     },
     updateSavedSearch: (authToken: string, id: string, data: any) => {
         return Observable.of({
-            
+
         });
     }
 }
@@ -61,14 +61,14 @@ let MockSavedSearchService = {
 class MockRouter {
     navigate(url: string) { return url; }
 }
-                                    
+
 class MockActivatedRoute extends ActivatedRoute {
     constructor() {
         super();
         this.params = Observable.of({id: "test_saved_search"});
     }
 }
-    
+
 describe('src/app/search/saved-search-workspace/saved-search-redirect/saved-search-redirect.spec.ts', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -84,7 +84,7 @@ describe('src/app/search/saved-search-workspace/saved-search-redirect/saved-sear
            ]
         }
       }).compileComponents();
-  
+
       fixture = TestBed.createComponent(SavedSearchRedirect);
       Cookies.set('iPlanetDirectoryPro', 'AGENCY SUBMITTER');
     });
@@ -104,16 +104,9 @@ it('SavedSearchRedirect: should increment number of usages', () => {
     });
 });
 
-it('SavedSearchRedirect: should update last usage date', () => {
-    fixture.componentInstance.ngOnInit();
-    fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.savedSearch.lastUsageDate).toBe(new Date().getTime());
-    });
-});
-
 // it('SavedSearchRedirect: should redirect to search page with correct parameters',
 //     inject([Router], (router: Router) => { // ...
-          
+
 //           const spy = spyOn(router, 'navigate');
 //           fixture.componentInstance.ngOnInit();
 //           fixture.componentInstance.searchRedirect();

@@ -57,24 +57,13 @@ export class OrgHierarchyPage {
     });
   }
 
-  // checkAccess = (user) => {
-  //   this.fhService.getAccess(this.orgId).subscribe(
-  //     (data)=> {this.getHierarchyData(this.status, this.sortField);},
-  //     (error)=> {if(error.status === 403) this.redirectToForbidden();}
-  //   );
-  // };
-
-  // redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  // redirectToForbidden = () => {this._router.navigateByUrl('/403')};
-  redirectToNotFound = () => { this._router.navigateByUrl('/404')};
-
   getHierarchyData(status, sort){
     let statusStr = 'all';
     if(status.length === 1) statusStr = status[0];
 
     this.fhService.getOrganizationById(this.orgId, true, true, statusStr, this.recordsPerPage, this.curPage+1, this.sortField).subscribe( data => {
-      if(data._embedded[0].org.type.toLowerCase() === 'office'){
-        this.redirectToNotFound();
+      if(data._embedded[0].org.type.toLowerCase() === 'office' && this._router.url === '/organization-detail/'+ this.orgId +'/hierarchy'){
+        this._router.navigateByUrl('/404');
       }
       this.orgList = data._embedded[0].org.hierarchy;
       this.totalRecords = data._embedded[0].count;

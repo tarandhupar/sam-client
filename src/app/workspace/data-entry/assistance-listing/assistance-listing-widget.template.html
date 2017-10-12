@@ -1,5 +1,8 @@
 <div grid class="equal width relaxed">
-  <div class="column">
+  <div class="column" *ngIf=" pendingApprovalCount!=null || 
+                              pendingRequestCount!=null ||
+                              rejectedCount!=null ||
+                              draftReviewCount!=null ">
     <div class="sam-ui divided selection list">
       <ng-container *ngIf="pendingApprovalCount!=null">
         <a class="item" *ngIf="pendingApprovalCount !== 0" 
@@ -8,10 +11,10 @@
           <div class="sam-ui blue horizontal mini label">{{ pendingApprovalCount }}</div>
           Pending Review Requests
         </a>
-        <div class="item" *ngIf="pendingApprovalCount === 0">
+        <a class="item disabled" *ngIf="pendingApprovalCount === 0">
           <div class="sam-ui horizontal mini label">0</div>
           Pending Review Requests
-        </div>
+        </a>
       </ng-container>
       
       <ng-container *ngIf="pendingRequestCount!=null">
@@ -21,10 +24,10 @@
           <div class="sam-ui blue horizontal mini label">{{ pendingRequestCount }}</div>
           Pending Change Requests  
         </a>
-        <div class="item" *ngIf="pendingRequestCount === 0">
+        <a class="item disabled" *ngIf="pendingRequestCount === 0">
           <div class="sam-ui horizontal mini label">0</div>
           Pending Change Requests
-        </div>
+        </a>
       </ng-container>
       
       <ng-container *ngIf="rejectedCount!=null">
@@ -34,10 +37,10 @@
           <div class="sam-ui blue horizontal mini label">{{ rejectedCount }}</div>
           Rejected Assistance Listings
         </a>
-        <div class="item" *ngIf="rejectedCount == 0">
+        <a class="item disabled" *ngIf="rejectedCount == 0">
           <div class="sam-ui horizontal mini label">0</div>
           Rejected Assistance Listings
-        </div>
+        </a>
       </ng-container>
 
       <ng-container *ngIf="draftReviewCount!=null">
@@ -47,10 +50,10 @@
           <div class="sam-ui blue horizontal mini label">{{ draftReviewCount }}</div>
           Under Agency Coordinator Review
         </a>
-        <div class="item" *ngIf="draftReviewCount == 0">
+        <a class="item disabled" *ngIf="draftReviewCount == 0">
           <div class="sam-ui horizontal mini label">0</div>
           Under Agency Coordinator Review
-        </div>
+        </a>
       </ng-container>
     </div>
   </div>

@@ -8,6 +8,7 @@ import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service"
 import {FilterParamLabel} from "../pipes/filter-label.pipe";
 import {FHService} from "../../../api-kit/fh/fh.service";
 import * as _ from 'lodash';
+import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
 
 @Component({
   moduleId: __filename,
@@ -48,8 +49,10 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   awardOrIDVMap = new Map();
   awardTypeMap = new Map();
   contractTypeMap = new Map();
+  dunsMap = new Map();
   wdTypeMap = new Map();
   statesMap = new Map();
+  countiesMap = new Map();
   constructionMap = new Map();
   servicesMap = new Map();
   filters = {
@@ -63,8 +66,10 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     "award_or_idv": this.awardOrIDVMap,
     "award_type": this.awardTypeMap,
     "contract_type": this.contractTypeMap,
+    "duns": this.dunsMap,
     "wdType": this.wdTypeMap,
     "state": this.statesMap,
+    "county": this.countiesMap,
     "construction_type": this.constructionMap,
     "service": this.servicesMap,
     "organization_id": this.orgMap
@@ -156,7 +161,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'}
   ];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private savedSearchService: SavedSearchService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private savedSearchService: SavedSearchService, private searchDictionariesService: SearchDictionariesService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
@@ -206,12 +211,17 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
         this.initLoad = false;
         this.createOrgNameMap();
         this.getLabelsFromDictionaries();
+        //setup query params to be passed to saved-search-result component
+        this.qParams = this.setupQS();
       },
       error => {
         console.error('Error!!', error);
         let errorRes = error.json();
         if (error && error.status === 404) {
           this.router.navigate(['404']);
+        } else if (error && error.status === 400) {
+          this.serviceErrorFooterAlertModel.description = errorRes.message;
+          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         } else if (error && (error.status === 502 || error.status === 504)) {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
@@ -234,20 +244,16 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
     if(uniqueIndexList && uniqueIndexList.length > 0) {
       uniqueIndexList.forEach(function (i) {
-        let filteredDictionaries;
         switch (i) {
           case 'cfda':
-            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('applicant_types,beneficiary_types,assistance_type');
-            ctx.getProgramsDictionaryData(filteredDictionaries);
+            ctx.getProgramsDictionaryData('applicant_types,beneficiary_types,assistance_type');
             break;
           case 'opp':
-            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('procurement_type,naics_code,classification_code,set_aside_type');
-            ctx.getCommonDictionaryData(filteredDictionaries);
+            ctx.getCommonDictionaryData('procurement_type,naics_code,classification_code,set_aside_type');
             break;
           case 'ei':
           case 'fpds':
-            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('naics_code,classification_code');
-            ctx.getCommonDictionaryData(filteredDictionaries);
+            ctx.getCommonDictionaryData('naics_code,classification_code');
             // set options for set aside filter to hard coded values if index is fpds
             ctx.setAsideAwardsOptions.forEach(function (item) {
               ctx.setAsideMap.set(item.value, item.label);
@@ -263,8 +269,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
             });
             break;
           case 'wd':
-            filteredDictionaries = ctx.dictionaryService.filterDictionariesToRetrieve('wdStates,dbraConstructionTypes,scaServices');
-            ctx.getWageDeterminationDictionaryData(filteredDictionaries);
+            ctx.getWageDeterminationDictionaryData('wdStates,wdCounties,dbraConstructionTypes,scaServices');
             ctx.wdType.forEach(function (item) {
               ctx.wdTypeMap.set(item.value, item.label);
             });
@@ -290,7 +295,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     }));
     let uniqueIdList = Array.from(idArray).join();
     let ctx = this;
-    if(uniqueIdList && uniqueIdList.length > 0){
+    if(uniqueIdList && uniqueIdList.length > 0) {
       this.fhService.getOrganizationsByIds(uniqueIdList)
         .subscribe(
           data => {
@@ -308,9 +313,6 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   }
 
   getProgramsDictionaryData(id) {
-    if (id === '') {
-      return null;
-    } else {
       let ctx = this;
       this.dictionaryService.getProgramDictionaryById(id).subscribe(
         data => {
@@ -342,13 +344,9 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           console.error("Error!!", error);
         }
       );
-    }
   }
 
   getCommonDictionaryData(id) {
-    if (id === '') {
-      return null;
-    } else {
       let ctx = this;
       this.dictionaryService.getOpportunityDictionary(id).subscribe(
         data => {
@@ -381,13 +379,33 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           console.error("Error!!", error);
         }
       );
+
+    let idArray = new Set(this.data.map(data => {
+      if(data.data.parameters && data.data.parameters.duns) {
+        let id = data.data.parameters.duns;
+
+        if (typeof id !== 'string') {
+          return id.toString();
+        }
+        return id;
+      }
+    }));
+    let uniqueIdList = Array.from(idArray).join();
+    if(uniqueIdList && uniqueIdList.length > 0) {
+      this.searchDictionariesService.dunsPersistGrabber(uniqueIdList)
+        .subscribe(duns => {
+              duns.forEach(function (item) {
+              ctx.dunsMap.set(item.value, item.label);
+            });
+          },
+          error => {
+            console.error("Error!!", error);
+          }
+        );
     }
   }
 
   getWageDeterminationDictionaryData(id) {
-    if (id === ''){
-      return null;
-    }else{
       let ctx = this;
       this.dictionaryService.getWageDeterminationDictionary(id).subscribe(
         data => {
@@ -396,7 +414,11 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
               ctx.statesMap.set(item.elementId, item.value);
             });
           }
-
+          if(data && data.hasOwnProperty('wdCounties')) {
+            data['wdCounties'].forEach(function (item) {
+              ctx.countiesMap.set(item.elementId, item.value);
+            });
+          }
           if(data && data.hasOwnProperty('dbraConstructionTypes')) {
             data['dbraConstructionTypes'].forEach(function (item) {
               ctx.constructionMap.set(item.value, item.value);
@@ -413,7 +435,6 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           console.error("Error!!", error);
         }
       );
-    }
   }
 
   //Add label names to data from dictionaries
@@ -424,11 +445,11 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
         let params = data.data.parameters;
         for (var key in params) {
           if (ctx.filters.hasOwnProperty(key)) {
-            let items;
+            let items = [];
             if(params[key].indexOf(",")>-1) {
               items = params[key].split(",");
             } else {
-              items = params[key].split(" ");
+              items.push(params[key]);
             }
             let array = [];
             for(var i=0; i<items.length; i++) {
@@ -439,7 +460,6 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
               }
             }
             data.data.parameters[key] = array.join();
-            //data.data.parameters[key] = ctx.filters[key].get(data.data.parameters[key].toString());
           }
         }
       }

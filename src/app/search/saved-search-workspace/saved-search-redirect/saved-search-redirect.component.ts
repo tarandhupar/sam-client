@@ -18,7 +18,7 @@ export class SavedSearchRedirect implements OnInit {
     savedSearch : any = {};
     key : string = '';
     index : any = [];
-    params : any = {};
+    pageNum = 0;
     showRegionalOffices: boolean = false;
 
     serviceErrorFooterAlertModel = {
@@ -37,8 +37,12 @@ export class SavedSearchRedirect implements OnInit {
                 this.key = value.id;
             }
         );
+        this.activatedRoute.queryParams.subscribe(data => {
+          this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+        });
         this.service.getAllSavedSearches({
-          Cookie: this.authToken
+          Cookie: this.authToken,
+          pageNum: this.pageNum
         }).subscribe(data => {
                 this.savedSearches = data._embedded.preferences;
                 if(this.savedSearches && this.savedSearches.length > 0 && data && this.key){
@@ -115,9 +119,6 @@ export class SavedSearchRedirect implements OnInit {
 
         //key and value are read in reverse for some reason
         _.forOwn(data.parameters, function(value, key){
-            if(key === 'keyword'){
-                key = 'keywords';
-            }
             qsobj[key] = value;
         });
 

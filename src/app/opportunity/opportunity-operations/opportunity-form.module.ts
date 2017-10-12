@@ -4,14 +4,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SamUIKitModule } from 'sam-ui-kit/index';
 import { AppComponentsModule } from '../../app-components/app-components.module';
 import { PipesModule } from '../../app-pipes/app-pipes.module';
-import { OppComponentsModule } from '../components/index'
+import { OppComponentsModule } from '../components/index';
 import { OpportunityFormComponent } from './framework/form-component/opportunity-form.component';
-import { OpportunityFormService } from './framework/service/opportunity-form.service';
+import { OpportunityFormService } from './framework/service/opportunity-form/opportunity-form.service';
+import { OpportunitySideNavService } from './framework/service/sidenav/opportunity-form-sidenav.service';
 import { OpportunityFormResolver } from './opportunity-form-resolver.service';
 import { OpportunityFormRoutes } from './opportunity-form.route';
-import { OpportunityDescriptionComponent } from "./sections/description/description.component";
-import { OpportunityHeaderInformationComponent } from './sections/header-information/header-information.component';
 import { OpportunityHeaderInfoComponent } from './sections/header-information/opp-form-header-info.component';
+import { OpportunityGeneralInfoComponent } from './sections/general-information/general-information.component';
+import { OpportunityDescriptionComponent } from "./sections/description/description.component";
+import { OpportunityContactInfoComponent } from './sections/contact-information/opp-form-contact-info.component';
+import {OpportunityClassificationComponent} from "./sections/classification/opp-form-classification.component";
 
 @NgModule({
   imports: [
@@ -26,11 +29,15 @@ import { OpportunityHeaderInfoComponent } from './sections/header-information/op
   declarations: [
     OpportunityFormComponent,
     OpportunityHeaderInfoComponent,
-    OpportunityDescriptionComponent
+    OpportunityGeneralInfoComponent,
+    OpportunityDescriptionComponent,
+    OpportunityClassificationComponent,
+    OpportunityContactInfoComponent,
   ],
   providers: [
     OpportunityFormService,
-    OpportunityFormResolver
+    OpportunityFormResolver,
+    OpportunitySideNavService
   ],
   exports: [
 

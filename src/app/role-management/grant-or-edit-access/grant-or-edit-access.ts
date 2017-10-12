@@ -6,6 +6,8 @@ import { AlertFooterService } from "../../app-components/alert-footer/alert-foot
 import { UserService } from "../user.service";
 import * as moment from 'moment';
 import { SamModalComponent } from "sam-ui-kit/components/modal/modal.component";
+import { Title } from "@angular/platform-browser";
+import { SamTitleService } from "../../../api-kit/title-service/title.service";
 
 function arrayIsRequired(c: FormControl) {
   if (!c.value || !c.value.length) {
@@ -52,6 +54,7 @@ export class GrantOrEditAccess {
     private router: Router,
     private alertFooter: AlertFooterService,
     private userService: UserService,
+    private samTitle: SamTitleService,
   ) {
     let defaultOrg = userService.getUser().departmentID;
 
@@ -80,6 +83,8 @@ export class GrantOrEditAccess {
       lastName: '',
     };
     this.grantOrEdit = this.route.snapshot.data['grantOrEdit'];
+
+    this.samTitle.setTitleString(this.isEdit() ? 'Edit Access' : 'Assign Role');
     this.getPermittedRoleAndDomains();
 
     if (this.isEdit()) {
@@ -274,7 +279,7 @@ export class GrantOrEditAccess {
   }
 
   pageTitle() {
-    return this.isGrant() ? 'Grant Access' : 'Edit Access';
+    return this.isGrant() ? 'Assign Role' : 'Edit Access';
   }
 
   isGrant() {

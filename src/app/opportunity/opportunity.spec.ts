@@ -422,7 +422,7 @@ xdescribe('src/app/opportunity/opportunity.spec.ts', () => {
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
     expect(comp.originalOpportunity).toBeDefined();
     expect(comp.processedHistory).toBeDefined();
-    expect(comp.dictionary).toBeDefined();
+//    expect(comp.dictionary).toBeDefined();
     expect(comp.packages).toBeDefined();
     expect(comp.packagesWarning).toBeDefined();
     expect(comp.attachments).toBeDefined();

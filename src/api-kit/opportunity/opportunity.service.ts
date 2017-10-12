@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class OpportunityService {
 
-  constructor(private oAPIService: WrapperService) { }
+  constructor(private oAPIService: WrapperService) {}
 
   getOpportunityById(id: string, authToken: string = null) {
     let apiParam = {
@@ -24,24 +24,6 @@ export class OpportunityService {
     }
 
     return this.oAPIService.call(apiParam);
-  }
-
-  isOpportunityEnabled(cookie: string){
-    let apiParam = {
-      name: 'contractOpportunity',
-      suffix: '/opportunities/permissions?permissions=test',
-      oParam: {},
-      headers: {},
-      method: 'GET'
-    };
-
-    if(typeof cookie !== 'undefined' && cookie !== ''){
-      apiParam.headers = {
-        "X-Auth-Token": cookie
-      };
-    }
-
-    return this.oAPIService.call(apiParam, false);
   }
 
   getContractOpportunityById(id: string, authToken: string = null) {
@@ -83,13 +65,13 @@ export class OpportunityService {
   deleteContractOpportunity(id: String, authToken: string = null) {
     let oApiParam = {
       name: 'contractOpportunity',
-      suffix: '/' + id,
+      suffix: '/opportunities/' + id,
       oParam: {},
       headers: {},
       method: 'DELETE'
     };
 
-    if(typeof authToken !== 'undefined' && authToken !== '' && authToken != null){
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
       oApiParam.headers = {
         "X-Auth-Token": authToken
       };
@@ -181,13 +163,23 @@ export class OpportunityService {
     return this.oAPIService.call(apiParam);
   }
 
-  runOpportunity(obj) {
+  runOpportunity(obj): Observable<any> {
     let oApiParam = {
       name: 'contractOpportunity',
       suffix: '/opportunities',
       oParam: {
         keyword: obj.keyword,
         page: (obj.pageNum == undefined) ? '' : obj.pageNum,
+        status: (obj.status == undefined) ? '' : obj.status,
+        noticeType: (obj.noticeType == undefined) ? '' : obj.noticeType,
+        postedFrom: (obj.dateFilter && obj.dateTab && obj.dateTab === 'posted') ? obj.dateFilter.startDate : '',
+        postedTo: (obj.dateFilter && obj.dateTab && obj.dateTab === 'posted') ? obj.dateFilter.endDate : '',
+        responseFrom: (obj.dateFilter && obj.dateTab && obj.dateTab === 'response') ? obj.dateFilter.startDate : '',
+        responseTo: (obj.dateFilter && obj.dateTab && obj.dateTab === 'response') ? obj.dateFilter.endDate : '',
+        archivedFrom: (obj.dateFilter && obj.dateTab && obj.dateTab === 'archive') ? obj.dateFilter.startDate : '',
+        archivedTo: (obj.dateFilter && obj.dateTab && obj.dateTab === 'archive') ? obj.dateFilter.endDate : '',
+        sortBy: (obj.sortBy == undefined) ? '' : obj.sortBy,
+        facets: (obj.facets == undefined) ? '' : obj.facets
       },
       headers: {
         "X-Auth-Token": obj.Cookie
@@ -198,22 +190,19 @@ export class OpportunityService {
     return this.oAPIService.call(oApiParam);
   }
 
-  getPermissions(cookie: string, permissions: any, orgId: string = null) {
+  getPermissions(cookie: string): Observable<any> {
     let oApiParam = {
       name: 'contractOpportunity',
-      suffix: '/opportunities/permissions',
+      suffix: '/opportunities',
       oParam: {
-        permissions: permissions
+        size: 0,
+        includeCount: false
       },
       headers: {
         "X-Auth-Token": cookie
       },
       method: 'GET'
     };
-
-    if(orgId != null) {
-      oApiParam.oParam['organizationId'] = orgId;
-    }
 
     return this.oAPIService.call(oApiParam);
   }

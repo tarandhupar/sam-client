@@ -3,7 +3,7 @@
     <li *ngFor="let option of options; let i = index">
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <input [attr.id]="option.name" type="radio" (change)="onRadioOptionChange(option.value)" [attr.name]="name"
+          <input [attr.id]="option.name" aria-label="Radio Button" type="radio" (change)="onRadioOptionChange(option.value)" [attr.name]="name"
                  [checked]="model.radioOptionId == option.value" [checked]="model.radioOptionId == option.value" [value]="option.value">
           <label [attr.for]="option.name">{{option.label}}</label>
         </div>

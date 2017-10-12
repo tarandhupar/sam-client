@@ -60,7 +60,7 @@
       ></sam-sort>
       <div result-actions style="display: inline-block">
         <a *ngIf="canRequest" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['../request-access']" class="sam-ui primary small button" >Request Access</a>
-        <a *ngIf="canGrant" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['../grant-access']" class="sam-ui primary small button" >Grant Access</a>
+        <a *ngIf="canGrant" style="font-size: 1.74rem; margin-right: 0" [routerLink]="[getAssignRoleLink()]" class="sam-ui primary small button" >Assign Role</a>
       </div>
       <table *ngIf="access?.length" style="width: 100%; margin-top: 1rem; border: 1px solid black;">
         <thead style="border-bottom: 1px solid black;">
@@ -77,8 +77,8 @@
               <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
             </td>
             <td>
-              <i *ngIf="!isMyAccess" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
-              <i *ngIf="!isMyAccess" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
+              <i *ngIf="!isMyAccess && roleOrg?._links?.edit_access" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
+              <i *ngIf="!isMyAccess && roleOrg?._links?.delete_access" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
             </td>
           </tr>
         </tbody>
@@ -94,7 +94,7 @@
       <div class="user-access">
         <div class="p_T-6x text-center" style="min-height: 300px;">
           <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>
-          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../grant-access']" >Grant Access</a></span>
+          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../grant-access']" >Assign Role</a></span>
         </div>
       </div>
     </ng-container>

@@ -1,13 +1,14 @@
-<div class="usa-grid-full p_B-6x organization-detail relative">
-  <aside class="usa-width-one-fourth p_T-6x m_R-0" *ngIf="dataLoaded">
+<div class="usa-grid-full p_B-6x organization-detail relative" *ngIf="dataLoaded">
+  <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+  <aside class="usa-width-one-fourth p_T-6x m_R-0">
 
     <div sam-sticky limit=1200 container="organization-detail">
-      <div class="usa-width-one-whole p_T-2x p_B-2x">
-        <span *ngIf="hierarchyPath.length === 0">&nbsp;</span>
-        <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
-          <a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="i !== hierarchyPath.length - 1"> > </span>
-        </span>
-      </div>
+      <!--<div class="usa-width-one-whole p_T-2x p_B-2x">-->
+        <!--<span *ngIf="hierarchyPath.length === 0">&nbsp;</span>-->
+        <!--<span *ngFor="let hierarchyName of hierarchyPath; let i = index">-->
+          <!--<a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="i !== hierarchyPath.length - 1"> > </span>-->
+        <!--</span>-->
+      <!--</div>-->
       <div class="usa-width-one-whole m_B-2x org-logo-container relative">
         <img *ngIf="dataLoaded" class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
 
@@ -20,9 +21,9 @@
         <li class="m_B-3x"><h3>{{orgName}}</h3></li>
         <li><a [ngClass]="getSectionClass('profile')" [routerLink]="['/organization-detail',orgId,'profile']" (click)="selectCurrentSection('profile')">Profile</a></li>
         <li *ngIf="orgType.toLowerCase() !== 'office'"><a [ngClass]="getSectionClass('hierarchy')" [routerLink]="['/organization-detail',orgId,'hierarchy']" (click)="selectCurrentSection('hierarchy')">Hierarchy</a></li>
-        <li><a [ngClass]="getSectionClass('access')" (click)="selectCurrentSection('access')">Access</a></li>
+        <!--<li><a [ngClass]="getSectionClass('access')" (click)="selectCurrentSection('access')">Access</a></li>-->
         <li *ngIf="isMoveOffice()"><a [ngClass]="getSectionClass('move')" [routerLink]="['/organization-detail',orgId,'move']" (click)="selectCurrentSection('move')">Move Office</a></li>
-        <li><a [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')">Administration</a></li>
+        <!--<li><a [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')">Administration</a></li>-->
       </ul>
       <sam-collapsible [label]="'Status'" [startOpened]="true" *ngIf="currentSection === 'hierarchy'">
         <sam-checkbox

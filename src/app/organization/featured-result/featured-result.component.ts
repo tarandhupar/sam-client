@@ -31,7 +31,7 @@ import {SearchService} from "../../../api-kit/search/search.service";
               <div class="ten wide column">  
                 <h3 class="sam-ui sub header">
                   <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">
-                    {{ data.name }}
+                    {{ data.title }}
                   </a>
                 </h3>
                 <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">

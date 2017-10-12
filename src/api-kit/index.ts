@@ -26,3 +26,4 @@ export { WrapperService } from './wrapper/wrapper.service';
 export { MsgFeedService } from "./msg-feed/msg-feed.service";
 export { ContentManagementService } from "./content-management/content-management.service";
 export { SavedSearchService } from "./search/saved-search.service";
+export { ToggleService } from "./toggle/toggle.service";

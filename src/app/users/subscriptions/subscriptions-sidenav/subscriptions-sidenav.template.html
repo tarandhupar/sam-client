@@ -10,7 +10,7 @@
     &nbsp;
 
   <div class="usa-width-one-whole m_B-4x">
-    <legend>Search Subscripitons</legend>
+    <legend>Search Subscriptions</legend>
     <input placeholder="Find name or type of the record" (keyup.enter)="subscriptionFilterOptionChange()" [(ngModel)]="filterOption.keyword">
   </div>
 
@@ -36,7 +36,7 @@
     </sam-checkbox>
   </div>  
 
-  <div class="m_B-4x" *ngIf="cbxControl.feedType">
+  <!--div class="m_B-4x" *ngIf="cbxControl.feedType">
       <sam-checkbox
         [(model)]="filterOption.feedType"
         [name]="feedTypeCbxConfig.name"
@@ -45,7 +45,7 @@
         [hasSelectAll]="feedTypeCbxConfig.hasSelectAll"
         (modelChange)="subscriptionFilterOptionChange()">
       </sam-checkbox>
-  </div>  
+  </div-->  
 
   <div class="usa-width-one-whole m_B-4x" style="text-align: center">
     <a (click)="onClearAllClick()">Clear all</a>

@@ -13,11 +13,17 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 })
 export class SubscriptionsComponent {
 
+  @ViewChild('bulkUpdateModal') bulkUpdateModal;
+  modalConfig = {title:'Confirm Action', description:''};
+
+  fieldName = 'active';
+  fieldValue = 'N';
+
   private crumbs: Array<IBreadcrumb> = [
     { url: '/profile', breadcrumb: 'Profile' },
     { breadcrumb: 'Manage Subscriptions' }
   ];
-
+ 
   recordsPerPage = 10;
   dropdownStyles = {border:'0px', outline:'0px', "background-color": 'transparent', "min-width": '120px'};
 
@@ -45,11 +51,16 @@ export class SubscriptionsComponent {
     disabled: false,
   };
 
-  actions: Array<SamActionInterface> = [
-    { label: 'Immediate', name: 'instant', callback: () => {} },
-    { label: 'Daily', name: 'daily', callback: () => {} },
-    { label: 'Weekly', name: 'weekly', callback: () => {} },
-    { label: 'None', name: 'none', callback: () => {} },
+  actions: Array<any> = [
+    { label: "Email Frequency",
+      options: [{ label: 'Immediate', name: 'instant'},
+      { label: 'Daily', name: 'daily'},
+      { label: 'Weekly', name: 'weekly'},
+      { label: 'None', name: 'none'}]
+    },
+    { label: "Unsubscribe",
+      name: "unsubscribe"
+    },
   ];
 
   orderByIndex = 0;
@@ -69,9 +80,15 @@ export class SubscriptionsComponent {
     feedType:[],
     frequency:[],
     domains:[],
+    ids:[]
   };
   subscriptions = [];
   userDomains = [];
+
+  selectedAll = false;
+  allMatchingSelected = false;
+  selectOptions = [
+  ];
 
   successFooterAlertModel = {
     title: "Success",
@@ -108,17 +125,30 @@ export class SubscriptionsComponent {
   /* update subscriptions based on page num changes*/
   onPageNumChange(pageNum){
     this.curPage = pageNum;
-    this.loadSubscriptions(this.filterObj, this.sortByModel,  this.curPage);
+    this.loadSubscriptions(this.filterObj, this.sortByModel,  this.curPage, true) ;
   }
 
 
   /* search subscriptions with filter, sortby, page number and order*/
-  loadSubscriptions(filterObj, sortBy, page){
+  loadSubscriptions(filterObj, sortBy, page, fromPageChange = false){
     this.subscriptionsService.getSubscriptions(filterObj, sortBy, page, this.recordsPerPage).subscribe(data => {
+      this.filterObj.ids = [];
+      this.selectedAll = false;
+      if(!fromPageChange) {
+        this.allMatchingSelected = false;
+      }
       if(data) {
+        this.selectOptions = [];
         data['recordList'].forEach((d) => {
            d.modified_date = new Date(d.modified_date);
            d.active = 'Y';
+           if(!d.title) {
+             d.title = d.record_id;
+           }
+           let obj:any = {};
+           obj.selected = false;
+           obj.id = d.id;
+           this.selectOptions.push(obj);
          });
         this.subscriptions = data['recordList'];
         this.totalRecords = data['totalRecords'];
@@ -126,6 +156,17 @@ export class SubscriptionsComponent {
         this.userDomains = resDomains; //(resDomains) ? resDomains.split(",") : [];
         this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
         this.updateRecordsText();
+
+        if(this.allMatchingSelected) {
+          this.selectedAll = true;
+          this.selectOptions.forEach(e => {
+                                  e.selected = this.selectedAll;
+                                  if(this.selectedAll) {
+                                    this.filterObj.ids.push(e.id); 
+                                  }
+                                } );
+        }
+     
         if(this.curPage + 1 > this.totalRecords) {
           this.curPage =  this.totalPages - 1;
           this.loadSubscriptions(filterObj, sortBy, this.curPage);
@@ -223,5 +264,73 @@ export class SubscriptionsComponent {
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
   getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
+
+  selectAll() {
+    this.allMatchingSelected = false;
+    this.selectOptions.forEach(e => {
+                                  e.selected = this.selectedAll;
+                                  if(this.selectedAll) {
+                                    this.filterObj.ids.push(e.id); 
+                                  }
+                               } );
+  }
+
+  selectAllMatching() {
+    this.allMatchingSelected = true;
+   // this.filterObj.ids = [];
+  }
+
+  checkIfAllSelected(option) {
+    this.allMatchingSelected = false;
+    if(option.selected) {
+      this.filterObj.ids.push(option.id);
+    } else {
+      this.filterObj.ids = this.filterObj.ids.filter(e => e !== option.id);
+    }
+    this.selectedAll = this.selectOptions.every(e => e.selected == true);
+    //Display matching filter messsage
+  }
+
+  confirmAction(action) {
+      if(action !== 'unsubscribe') {
+        this.fieldName = 'frequency';
+        this.fieldValue = action;
+      } else {
+        this.fieldName = 'active';
+        this.fieldValue = 'N';
+      } 
+      if(this.allMatchingSelected || (!this.allMatchingSelected && this.filterObj.ids.length > 0)) {
+        let recordsToUpdate = 0;
+        if(this.allMatchingSelected) {
+          recordsToUpdate = this.totalRecords;
+        } else {
+          recordsToUpdate = this.filterObj.ids.length;
+        }
+        this.bulkUpdateModal.openModal();
+        if(this.fieldName == 'frequency') {
+          this.modalConfig.description = 'Are you sure you wish to change email frequency to ' + this.fieldValue + '? This will updated ' + recordsToUpdate + ' records.';
+        } else {
+          this.modalConfig.description = 'Are you sure you wish to unsubscribe? This will updated ' + recordsToUpdate + ' records.';
+        }
+      }
+  }
+
+  onBulkUpdateModalSubmit() {
+    this.bulkUpdateModal.closeModal();
+    this.subscriptionsService.updateSubscriptions(this.filterObj, this.allMatchingSelected, this.fieldName, this.fieldValue).subscribe(res => {
+      let recordsUpdated = res.recordsUpdated;
+      console.log("Successfully updated " + recordsUpdated);
+      if(this.fieldName === 'active') {
+        this.registerFooteralert(true, recordsUpdated + " records unsubscribed." );
+      } else {
+        this.registerFooteralert(true, recordsUpdated + " records updated." );
+      }
+      this.loadSubscriptions(this.filterObj, this.sortByModel,  0);    
+    },
+    e => {
+      this.registerFooteralert(false , "Error updating records"); 
+      console.log("Error updating records " + e); 
+      } ); 
+  }
 
 }

@@ -46,7 +46,6 @@ export class RMWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.request = this.autoComplete.keyEvents
-      .debounceTime(300)
       .switchMap(
         input => {
           return this.accessService.getUserAutoComplete(input)

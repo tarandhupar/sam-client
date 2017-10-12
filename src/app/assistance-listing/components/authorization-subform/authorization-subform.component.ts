@@ -179,4 +179,16 @@ export class FALAuthSubFormComponent {
     }
     return obj;
   }
+
+  getCheckBoxConfig(i) {
+    for(let option of this.checkboxConfig.options) {
+      if(option.name.indexOf('_') == -1) {
+        option.name = option.name + '_' + i;
+      }
+      else {
+        option.name = option.name.substring(0, option.name.indexOf('_')) + '_' + i;
+      }
+    }
+    return this.checkboxConfig.options;
+  }
 }

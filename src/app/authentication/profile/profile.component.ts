@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-
 import { IAMService } from 'api-kit';
+import { ToggleService } from "api-kit/toggle/toggle.service";
 
 @Component({
   templateUrl: './profile.component.html',
@@ -28,9 +28,19 @@ export class ProfileComponent {
 
   activeRouteClass = '';
 
-  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService,private toggleService: ToggleService) {}
 
   ngOnInit() {
+     this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
+          console.log("profile page enablemanagesubscription >>>>>"+isEnabled);
+          if(!isEnabled){
+            for(var i=this.store.nav.length-1; i>=0; i--) {
+               if( this.store.nav[i].text == "Manage Subscriptions") {
+                  this.store.nav.splice(i,1); break;
+               }
+             }
+         }  
+     }) ;
     this.states.fsd = this.api.iam.user.isFSD();
     this.checkRoute();
 

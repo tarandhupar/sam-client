@@ -24,10 +24,11 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 
 //other library
 import * as Cookies from 'js-cookie';
+import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
 
 let component: SavedSearchWorkspacePage;
 let fixture: ComponentFixture<SavedSearchWorkspacePage>;
-
+/*
 let mockSavedSearchService = {
   getAllSavedSearches: (obj: any) => {
     return Observable.of({
@@ -47,7 +48,7 @@ let mockSavedSearchService = {
               "key": "test_saved_search",
               "parameters": {
                 "is_active": true,
-                "beneficiary": "10",
+                "beneficiary_type": "10",
                 "assistance_type": "0001001",
                 "organization_id": "1"
               }
@@ -72,12 +73,30 @@ let mockSavedSearchService = {
                 "organization_id": "1"
               }
             }
+          },
+          {
+            "preferenceId": "85e220d4-a48e-480f-8fe1-db3cd0bf4625",
+            "userId": "cfda.test.use.rsrloca@gmail.com",
+            "type": "saved_search",
+            "title": "Test Saved Search 2",
+            "createdOn": null,
+            "modifiedOn": "2017/09/27T17:43:16+0000",
+            "lastUsageDate": "2017/09/27T17:43:16+0000",
+            "numberOfUsages": 1,
+            "data": {
+              "index": ["ei"],
+              "key": "test_saved_search_2",
+              "parameters": {
+                "is_active": true,
+                "duns": "1234duns"
+              }
+            }
           }
         ]
       },
       "page": {
         "size": 10,
-        "totalElements": 2,
+        "totalElements": 3,
         "totalPages": 1,
         "number": 0
       }
@@ -106,9 +125,6 @@ let MockFHService = {
 };
 
 let MockDictionaryService = {
-  filterDictionariesToRetrieve: (id) => {
-    return "anything";
-  },
   getOpportunityDictionary: (ids: string) => {
     return Observable.of({
       "procurement_type": [
@@ -151,6 +167,14 @@ let MockDictionaryService = {
   }
 };
 
+let MockSearchDictionaryService = {
+  dunsPersistGrabber: (ids: string) => {
+    return Observable.of([
+        {label: "DUNS NAME", value: "1234duns"}
+      ]);
+  }
+};
+
 describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -159,6 +183,7 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
       providers: [
         DictionaryService,
         SavedSearchService,
+        SearchDictionariesService,
         BaseRequestOptions,
         MockBackend,
         {
@@ -189,7 +214,8 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
         providers: [
           {provide: SavedSearchService, useValue: mockSavedSearchService},
           {provide: FHService, useValue: MockFHService},
-          {provide: DictionaryService, useValue: MockDictionaryService}
+          {provide: DictionaryService, useValue: MockDictionaryService},
+          {provide: SearchDictionariesService, useValue: MockSearchDictionaryService}
         ]
       }
     })
@@ -203,12 +229,14 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
   it('Initialize Saved Searches Workspace component', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(component.totalCount).toBe(2);
+      expect(component.totalCount).toBe(3);
       expect(component.totalPages).toBe(1);
       expect(component.data[0].data.parameters['assistance_type']).toBe("A-Formula Grants");
       expect(component.data[1].data.parameters['notice_type']).toBe("Presolicitation");
       expect(component.data[0].data.parameters['organization_id']).toBe("FISH AND WILDLIFE SERVICE");
+      expect(component.data[2].data.parameters['duns']).tobe("DUNS NAME");
     });
   });
 
 });
+*/

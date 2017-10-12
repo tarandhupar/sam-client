@@ -12,8 +12,8 @@
 
 <table [class.hide]="displayAuthInfo.length == 0" class="sam-ui table celled">
   <thead>
-  <th>Authorization(s)/Amendments</th>
-  <th colspan="2">Actions</th>
+  <th scope="col" id="authorization-table">Authorization(s)/Amendments</th>
+  <th colspan="2" scope="col" id="actions">Actions</th>
   </thead>
   <tbody>
   <ng-container *ngFor="let auth of displayAuthInfo; let i=index">
@@ -49,6 +49,7 @@
         </ng-container>
       </td>
     </tr>
+
     <ng-container *ngFor="let amend of auth.children; let j=index">
       <tr>
         <td class="amend-table-col">
@@ -74,6 +75,7 @@
         <td></td>
       </tr>
     </ng-container>
+
   </ng-container>
   </tbody>
 </table>

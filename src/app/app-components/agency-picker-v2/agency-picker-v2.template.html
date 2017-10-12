@@ -11,6 +11,8 @@
         <sam-autocomplete
             *ngIf="type=='single'"
             agencypicker-autofill
+            [name]="name+'picker'"
+            [id]="name+'picker'"
             [ngModel]="selections"
             (ngModelChange)="addSelection($event)"
             [config]="singleACConfig">

@@ -19,7 +19,7 @@ export class ProcessWageDeterminationHistory implements PipeTransform {
       processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
       processedHistoryItem['index'] = historyItem.revisionNumber;
       processedHistoryItem['authoritative'] = historyItem.active;
-      processedHistoryItem['qParams'] = qParams;
+      processedHistoryItem['queryParams'] = qParams;
       processedHistoryItem['ariaLabel'] = "Current WDOL";
       return processedHistoryItem;
     };

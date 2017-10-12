@@ -20,7 +20,7 @@ describe('ExclusionsResultComponent', () => {
       titleEl  = fixture.debugElement.query(By.css('.exclusion-title')); // find title element
       labelEl = fixture.debugElement.query(By.css('.sam-ui.label'));
       comp.data = {
-        name: "SAMPLE NAME",
+        title: "SAMPLE NAME",
         cageCode: "1234",
         terminationDate: null,
         isActive: true,

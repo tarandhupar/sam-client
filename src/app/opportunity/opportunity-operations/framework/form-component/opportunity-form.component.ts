@@ -1,11 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { AlertFooterService } from '../../../../app-components/alert-footer/alert-footer.service';
 import { OpportunityAuthGuard } from '../../../components/authgaurd/authguard.service';
 import { OpportunitySectionNames } from '../data-model/opportunity-form-constants';
-import { OpportunityFormViewModel } from '../data-model/opportunity-form.model';
-import { OpportunityFormService } from '../service/opportunity-form.service';
+import { OpportunityFormViewModel } from '../data-model/opportunity-form/opportunity-form.model';
+import { OpportunityFormService } from '../service/opportunity-form/opportunity-form.service';
+import { OpportunitySideNavService } from '../service/sidenav/opportunity-form-sidenav.service';
 
 @Component({
   moduleId: __filename,
@@ -17,10 +17,12 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   @ViewChild('titleModal') titleModal;
   @ViewChild('tabsOppComponent') tabsOppComponent;
+  hasPermission: boolean = false;
   scrollToTop: boolean = true;
   isAdd: boolean = true;
   hasErrors: boolean = false;
   tabsComponent: any;
+  notice: any;
   noticeType: string;
   noticeTypeLabel: string;
   noticeTypeOptions = [];
@@ -29,7 +31,9 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   currentFragment: string;
 
   private routeSubscribe;
-  private pristineIconClass = '';
+  sidenavSelection;
+  sidenavModel;
+  sectionLength;
 
   titleMissingConfig = {
     title: 'No Title Provided',
@@ -49,34 +53,9 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     urlmock: true
   }, {breadcrumb: 'Opportunities', urlmock: false}];
 
-  sections: string[] = [
-    OpportunitySectionNames.HEADER_INFORMATION,
-    OpportunitySectionNames.DESCRIPTION
-  ];
-
-  sectionLabels: any = [
-    'Header Information',
-    'Description'
-  ];
-
-  sidenavSelection;
-  sidenavModel: MenuItem = {
-    label: "abc",
-    children: [{
-      label: this.sectionLabels[0],
-      route: "#" + this.sections[0],
-      iconClass: this.pristineIconClass
-    }, {
-      label: this.sectionLabels[1],
-      route: "#" + this.sections[1],
-      iconClass: this.pristineIconClass
-    }]
-  };
-
-
   constructor(private service: OpportunityFormService, private route: ActivatedRoute, private router: Router,
               private authGuard: OpportunityAuthGuard, private cdr: ChangeDetectorRef,
-              private alertFooterService: AlertFooterService) {
+              private alertFooterService: AlertFooterService, private sidenavService: OpportunitySideNavService) {
 
     // jump to top of page when changing sections
     this.routeSubscribe = this.router.events.subscribe(event => {
@@ -92,25 +71,26 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
+    this.sidenavModel = this.sidenavService.getSideNavModel();
+    this.sectionLength = this.sidenavService.getSections().length;
     this.tabsComponent = this.tabsOppComponent;
 
-    if (this.route.snapshot.params['id']) {
+    if (this.route.snapshot.params['id']) { //edit page
       this.route.data.subscribe((resolver: {opp: {data}}) => {
+        this.notice = resolver.opp;
         this.oppFormViewModel = new OpportunityFormViewModel(resolver.opp);
         this.oppFormViewModel.opportunityId = this.route.snapshot.params['id'];
         this.isAdd = false;
+        this.hasPermission = this.authGuard.checkPermissions('addoredit', this.notice);
+        this.determineSection();
       });
-    }
-    else {
+    } else { // add page settings
       this.oppFormViewModel = new OpportunityFormViewModel(null);
+      this.hasPermission = this.authGuard.checkPermissions('addoredit', null);
+      this.determineSection();
     }
-    this.authGuard.checkPermissions('addoredit', this.oppFormViewModel);
+
     this.getNoticeType();
-    let flag = this.determineLogin();
-    if (!flag) {
-      return;
-    }
-    this.determineSection();
   }
 
   ngOnDestroy() {
@@ -120,7 +100,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   getNoticeType() {
     if (this.oppFormViewModel.opportunityId) {
       this.noticeTypeLabel = 'Contract Opportunity Type';
-      if (this.oppFormViewModel.opportunityType) {
+      if (this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType) {
         this.service.getOpportunityDictionary('procurement_type')
           .subscribe(api => {
               let data = api;
@@ -129,7 +109,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
                   this.noticeTypeOptions.push({key: paData.elementId, value: paData.value});
                 }
               }
-              let item = this.noticeTypeOptions.find(item => item.key === this.oppFormViewModel.opportunityType);
+              let item = this.noticeTypeOptions.find(item => item.key === this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType);
               this.noticeType = item.value;
             },
             error => {
@@ -140,61 +120,57 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-
-    setTimeout(() =>{
+    setTimeout(() => {
       this.determineSection();
-    });
-
-  }
-
-  determineLogin() {
-    return this.authGuard.canActivate();
+    }, 200);
   }
 
   determineSection() {
-    this.route.fragment.subscribe((fragment: string) => {
-      this.currentFragment = fragment;
-      let section = '';
+    if (this.hasPermission) {
+      this.route.fragment.subscribe((fragment: string) => {
+        this.currentFragment = fragment;
+        let section = '';
 
-      if (fragment) {
-        for (let s of this.sections) {
-          if (fragment.indexOf(s) != -1) {
-            section = s;
+        if (fragment) {
+          for (let s of this.sidenavService.getSections()) {
+            if (fragment.indexOf(s) != -1) {
+              section = s;
+            }
           }
         }
-      }
 
-      if (section) {
-        this.gotoSection(section);
-        this.sidenavSelection = this.sectionLabels[this.currentSection];
-        setTimeout(() => { // schedule scroll after angular change detection runs
-          let field = document.getElementById(fragment.replace(new RegExp('^' + section + '-'), ''));
-          if (field) {
-            field.scrollIntoView();
-          }
-        }, 1000);
-      } else {
-        this.gotoSection(OpportunitySectionNames.HEADER_INFORMATION);
-        this.navigateSection(this.currentSection);
-        this.sidenavSelection = this.sectionLabels[0];
-      }
-    });
+        if (section) {
+          this.gotoSection(section);
+          this.sidenavSelection = this.sidenavService.getSectionLabel(this.currentSection);
+          setTimeout(() => { // schedule scroll after angular change detection runs
+            let field = document.getElementById(fragment.replace(new RegExp('^' + section + '-'), ''));
+            if (field) {
+              field.scrollIntoView();
+            }
+          }, 1000);
+        } else {
+          this.gotoSection(OpportunitySectionNames.HEADER_INFORMATION);
+          this.navigateSection(this.currentSection);
+          this.sidenavSelection = this.sidenavService.getSectionLabel(0);
+        }
+      });
+    }
   }
 
   gotoSection(sectionName) {
-    this.currentSection = this.sections.indexOf(sectionName);
+    this.currentSection = this.sidenavService.getSectionIndex(sectionName);
   }
 
   navigateSection(section: number) {
-    let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/edit' : '/opportunities/add';
+    let url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/edit' : '/opp/add';
     this.router.navigate([url], {
-      fragment: this.sections[section],
+      fragment: this.sidenavService.getFragment(section),
       queryParams: this.route.snapshot.queryParams
     });
   }
 
   isSection(sectionName: string) {
-    return this.currentSection == this.sections.indexOf(sectionName);
+    return this.currentSection == this.sidenavService.getSectionIndex(sectionName);
   }
 
   formActionHandler(obj) {
@@ -215,7 +191,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onSaveExitClick() {
-    //let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
+    //let url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
     this.saveForm('SaveExit');
   }
 
@@ -236,12 +212,12 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   cancel() {
-    let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
+    let url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
     this.router.navigateByUrl(url);
   }
 
   gotoNextSection() {
-    if (this.currentSection + 1 < this.sections.length) {
+    if (this.currentSection + 1 < this.sectionLength) {
       ++this.currentSection;
     }
   }
@@ -265,9 +241,9 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   onTitleModalClose() {
     this.sidenavSelection = "";
     this.cdr.detectChanges();
-    this.sidenavSelection = this.sectionLabels[0];
+    this.sidenavSelection = this.sidenavService.getSectionLabel(0);
     this.cdr.detectChanges();
-    let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/edit'.concat('#' + this.sections[0]) : '/opportunities/add'.concat('#' + this.sections[0]);
+    let url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/edit'.concat('#' + this.sidenavService.getFragment(0)) : '/opp/add'.concat('#' + this.sidenavService.getFragment(0));
     this.router.navigateByUrl(url);
   }
 
@@ -296,7 +272,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.service.saveContractOpportunity(this.oppFormViewModel.opportunityId, this.oppFormViewModel.dataAndAdditionalInfo)
       .subscribe(api => {
           this.afterSaveAction(api);
-          let section = this.sectionLabels[this.currentSection];
+          let section = this.sidenavService.getSectionLabel(this.currentSection);
           this.successFooterAlertModel.description = section + ' saved successfully.';
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
           this.navigationOnAction(actionType, navObj);
@@ -310,11 +286,11 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   navigationOnAction(actionType, navObj) {
     let url;
     if (actionType === 'SaveExit') {
-      url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
+      url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/review' : '/opp/workspace';
       this.router.navigateByUrl(url);
     }
       if (actionType === 'SideNav') {
-     let url = this.oppFormViewModel.opportunityId ? '/opportunities/' + this.oppFormViewModel.opportunityId + '/edit' : '/opportunities/add';
+     let url = this.oppFormViewModel.opportunityId ? '/opp/' + this.oppFormViewModel.opportunityId + '/edit' : '/opp/add';
      this.router.navigate([url], {fragment: navObj.route.substring(1)});
      }
     if (actionType === 'SaveBack') {

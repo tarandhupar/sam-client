@@ -64,10 +64,15 @@ export class FALAssistanceComponent implements OnInit {
 
   public appProcOptions = [{
     label: 'Funding contract opportunities notices for this listing will be posted on Grants.gov',
+    name: 'app-proc',
     value: true
   }];
 
-  public selectionCriteriaOptions = [{label: 'There are criteria for selection proposals.', value: true}];
+  public selectionCriteriaOptions = [{
+    label: 'There are criteria for selection proposals.',
+    name: 'selection-criteria',
+    value: true
+  }];
 
   deadlinesList: FormArray = new FormArray([]);
   deadlineSubform: FormGroup = this.fb.group({
@@ -98,7 +103,7 @@ export class FALAssistanceComponent implements OnInit {
     this.service.getAssistanceDict().subscribe(data => {
         if (data['deadline_flag'] && data['deadline_flag'].length > 0) {
           for (let flag of data['deadline_flag']) {
-            this.deadlinesFlagOptions.push({label: flag.value, value: flag.code});
+            this.deadlinesFlagOptions.push({label: flag.value, value: flag.code, name: flag.code});
           }
         }
         if (data['date_range'] && data['date_range'].length > 0) {

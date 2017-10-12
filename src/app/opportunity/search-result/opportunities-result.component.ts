@@ -69,15 +69,15 @@ import * as moment from 'moment/moment';
               <br>
               {{ data.solicitationNumber }}
             </li>
-            <li *ngIf="data.responseDate" class="item">
+            <li *ngIf="data.responseDate" class="item current-response-date">
               <strong>Current Response Date</strong><br>
               {{ data.responseDate  }}
             </li>
-            <li *ngIf="data.modifiedDate" class="item">
+            <li *ngIf="data.modifiedDate" class="item last-modified-date">
               <strong>Last Modified Date</strong><br>
               {{ data.modifiedDate  }} <a *ngIf="data.modifications?.count > 0" [routerLink]="['/opportunities', data._id]" [queryParams]="qParams" fragment="{{oppHistoryFragment}}">({{ data.modifications?.count}})</a>
             </li>
-            <li *ngIf="data.publishDate" class="item">
+            <li *ngIf="data.publishDate" class="item last-published-date">
               <strong>Last Published Date</strong><br>
               {{ data.publishDate  }}
             </li>
@@ -90,7 +90,7 @@ import * as moment from 'moment/moment';
                 {{data.originalType?.value}}
               </ng-container>
             </li>
-            <li *ngIf="data.solicitation?.setAside" class="item">
+            <li *ngIf="data.solicitation?.setAside" class="item set-aside">
               <strong>Primary Set Aside</strong><br>
               <span>{{data.solicitation?.setAside?.value}}</span><br>
             </li>

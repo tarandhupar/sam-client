@@ -40,6 +40,7 @@ import { CityServiceImpl, SamCityServiceAutoDirective } from "./autoCompleteWrap
 import { UserAccessMock } from "./access/access.service.mock";
 import { WatchlistServiceMock } from "./watchlist/watchlist.service.mock";
 import {SavedSearchService} from "./search/saved-search.service";
+import {ToggleService} from "./toggle/toggle.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -107,7 +108,8 @@ import {SavedSearchService} from "./search/saved-search.service";
     ContentManagementService,
     StateServiceImpl,
     CountyServiceImpl,
-    CityServiceImpl
+    CityServiceImpl,
+    ToggleService,
   ]
 })
 export class SamAPIKitModule { }

@@ -24,6 +24,7 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import { MyAccessPage } from "./access/my-access.page";
 import { SubscriptionsComponent } from "./subscriptions/subscriptions.component";
 import { SubscriptionsSideNavComponent } from "./subscriptions/subscriptions-sidenav/subscriptions-sidenav.component";
+import { SubscriptionActionsComponent } from "./subscriptions/subscription-actions/subscription-actions.component";
 import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant-or-edit-access";
 
 @NgModule({
@@ -52,6 +53,7 @@ import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant
     RequestResponsePage,
     SubscriptionsComponent,
     SubscriptionsSideNavComponent,
+    SubscriptionActionsComponent,
     GrantOrEditAccess,
     MyAccessPage,
   ],

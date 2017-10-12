@@ -50,7 +50,7 @@
       <!--keyword filter-->
       <ng-container *ngIf="showRegionalOffices==false">
         <h4 class="sam-ui header">Keywords</h4>
-        <sam-autocomplete-multiselect
+        <sam-chips
           class="usa-award-filter"
           [attr.id]="'keywordSearch'"
           [name]="'keywordSearchName'"
@@ -58,7 +58,7 @@
           (ngModelChange)="keywordsModelChange($event)"
           [keyValueConfig]="keywordsConfiguration.keyValueConfig"
           [allowAny]="keywordsConfiguration.allowAny">
-        </sam-autocomplete-multiselect>
+        </sam-chips>
         <div class="sam-ui divider"></div>
       </ng-container>
 
@@ -381,7 +381,7 @@
       <div class="sam-ui equal width grid">
         <div class="column middle aligned">
           <h1 *ngIf="showSavedSearches && searchName!=''" class="m_T-0 p_T-6x">{{searchName}}</h1>
-          <h2 *ngIf="!showRegionalOffices" [ngClass]="(savedSearch!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
+          <h2 *ngIf="!showRegionalOffices" [ngClass]="(searchName!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
           <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
         </div>
 

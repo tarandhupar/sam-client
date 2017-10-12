@@ -11,14 +11,16 @@ import { AlertFooterService } from '../../../../app-components/alert-footer/aler
 import { OpportunityAuthGuard } from '../../../components/authgaurd/authguard.service';
 import { Observable } from 'rxjs/Rx';
 import { OpportunityFormComponent } from './opportunity-form.component';
-import { OpportunityFormService } from '../service/opportunity-form.service';
-import { OpportunityFormViewModel } from '../data-model/opportunity-form.model';
+import { OpportunityFormService } from '../service/opportunity-form/opportunity-form.service';
+import { OpportunitySideNavService } from '../service/sidenav/opportunity-form-sidenav.service';
+import { OpportunityFormViewModel } from '../data-model/opportunity-form/opportunity-form.model';
 import { OpportunityHeaderInfoComponent } from '../../sections/header-information/opp-form-header-info.component';
 import { OpportunitySectionNames } from '../data-model/opportunity-form-constants';
 
 //let MockFormService = jasmine.createSpyObj('MockFormService', []);
 let MockAuthGaurd = jasmine.createSpyObj('MockAuthGaurd', ['canActivate', 'checkPermissions']);
 MockAuthGaurd.canActivate.and.returnValue(true);
+MockAuthGaurd.checkPermissions.and.returnValue(true);
 
 let MockActivatedRoute = {
   snapshot: {
@@ -50,8 +52,8 @@ describe('Opportunity Form Component', () => {
   };
   MockActivatedRoute.snapshot.params.id.and.returnValue('123');
   MockActivatedRoute.data.subscribe.and.returnValue(Observable.of(_opp));
-  MockActivatedRoute.snapshot.url.path.and.returnValue(Observable.of('opportunities/123/edit'));
-  MockActivatedRoute.snapshot._routeConfig.path.and.returnValue(Observable.of('opportunities/123/edit'));
+  MockActivatedRoute.snapshot.url.path.and.returnValue(Observable.of('opp/123/edit'));
+  MockActivatedRoute.snapshot._routeConfig.path.and.returnValue(Observable.of('opp/123/edit'));
   MockActivatedRoute.fragment.subscribe.and.returnValue(Observable.of(null));
 
   beforeEach(async(() => {
@@ -64,6 +66,7 @@ describe('Opportunity Form Component', () => {
       ],
       providers: [
         OpportunityFormService,
+        OpportunitySideNavService,
         DictionaryService,
         AlertFooterService,
         { provide: ActivatedRoute, useValue: MockActivatedRoute },
@@ -88,10 +91,6 @@ describe('Opportunity Form Component', () => {
 
   it('Opportunity form component should exist', () => {
     expect(comp).toBeDefined();
-  });
-
-  it('determineLogin should return true', () => {
-    expect(comp.determineLogin()).toBe(true);
   });
 
   it('gotoSection should return header-information', () => {

@@ -18,7 +18,7 @@ describe('EntitiesResultComponent', () => {
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.entity-title')); // find title element
       comp.data = {
-        name: "SAMPLE NAME",
+        title: "SAMPLE NAME",
         isActive:true,
         registrationExpirationDate: +new Date(2016, 2, 2),
         address: {

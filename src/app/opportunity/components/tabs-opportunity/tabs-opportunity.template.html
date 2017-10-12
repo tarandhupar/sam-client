@@ -5,7 +5,7 @@
 
 
   <!-- ==================== Delete ==================== -->
-  <sam-modal
+  <sam-modal *ngIf="canDelete()"
     #deleteModal
     [showClose]="true"
     [closeOnOutsideClick]="true"
@@ -71,12 +71,11 @@
     </span>
 
     <!-- ==================== Delete ==================== -->
-    <!--<a *ngIf="canDelete()"
+    <a *ngIf="canDelete()"
        (click)="onDeleteClick()"
        class="item">
       <div class="sam-ui negative button">Delete</div>
-    </a>-->
-
+    </a>
   </div>
 
   <div class="sam-ui divider hidden"></div>

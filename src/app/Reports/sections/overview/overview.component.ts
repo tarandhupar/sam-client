@@ -113,7 +113,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
+    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1 || API_UMBRELLA_URL.indexOf("alpha") != -1)) {
       this.mstrEnv = 'stg';
       this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
     } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {

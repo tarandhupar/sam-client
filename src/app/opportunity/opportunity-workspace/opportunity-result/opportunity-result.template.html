@@ -43,16 +43,25 @@
   <div class="column">
     <div class="sam-ui medium header">
       Posted Date
-      <div class="sub header">{{data.publishedDate}}</div>
+        <div *ngIf="!data.postedDate" class="sub header">
+          &#8212;&#8212;
+        </div>
+      <div class="sub header">{{data.postedDate}}</div>
     </div>
 
-    <div class="sam-ui medium header" *ngIf="data.publishedDate">
+    <div class="sam-ui medium header">
       Response Date
+        <div *ngIf="!data.data?.solicitation?.deadlines?.response" class="sub header">
+          &#8212;&#8212;
+        </div>
       <div class="sub header">{{data.data?.solicitation?.deadlines?.response}}</div>
     </div>
 
-    <div class="sam-ui medium header" *ngIf="data.data?.archive?.date">
+    <div class="sam-ui medium header" >
       Archive Date
+        <div *ngIf="!data.data?.archive?.date" class="sub header">
+          &#8212;&#8212;
+        </div>
       <div class="sub header">{{data.data?.archive?.date}}</div>
     </div>
 

@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
   	    <div class="eight wide column">
           <h3 class="federal-hierarchy-title">
             <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">
-              {{ data.name }}
+              {{ data.title }}
             </a>
           </h3>
           <p *ngIf="data.description?.length>150" >

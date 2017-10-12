@@ -30,7 +30,7 @@ export class AssistanceListingWidgetComponent {
   }
 
   getProgramCountByStatus() {
-    this.api.runProgram({Cookie: this.cookieValue, size: 0}).subscribe(res => {
+    this.api.runProgram({Cookie: this.cookieValue, size: 1}).subscribe(res => {
       if(res._embedded && res._embedded.facets) {
         for(var facet of res._embedded.facets) {
           switch(facet['name']) {

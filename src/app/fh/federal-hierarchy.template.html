@@ -41,8 +41,8 @@
             <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{typeMap[deptOrg.type]}}</span>
             <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{deptOrg.code}}</span>
             <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
-              <span *ngIf="isOrgActive(deptOrg)">Active</span>
-              <span *ngIf="!isOrgActive(deptOrg)">Inactive</span>
+              <span *ngIf="isOrgActive(deptOrg);else statusInactive">Active</span>
+              <ng-template #statusInactive>Inactive</ng-template>
             </span>
             <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(deptOrg)}}</span>
           </div>
@@ -59,37 +59,37 @@
           <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'status'" (modelChange)="onDefaultOrgStatusChange(orgStatusModel)"></sam-multiselect-dropdown>
         </div>
 
-        <div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">
+        <!--<div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">-->
+        <div class="usa-width-one-fourth pull-right m_R-2x">
           <div class="usa-width-five-sixths p_T-4x">
             <span class="pull-right">My Organization</span>
           </div>
-          <div class="usa-width-one-sixth">
-            <input type="checkbox" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
-            <label class="p_T-4x m_0">&nbsp;</label>
+          <div class="usa-width-one-sixth p_T-4x">
+            <input type="checkbox" id="my-org-cbx" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
+            <label class="p_T-4x m_0 relative" for="my-org-cbx">&nbsp;<span style="position: absolute;right: 10000px">my organization</span></label>
           </div>
-
         </div>
       </div>
-        <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
-          <div class="usa-width-one-whole">
-            <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
-          </div>
-          <div class="usa-width-three-fourths">
-            <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
-            <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem.org)}}</span>
-          </div>
-          <div class="usa-width-one-fourth">
+      <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
+        <div class="usa-width-one-whole">
+          <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
+        </div>
+        <div class="usa-width-three-fourths">
+          <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+          <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem.org)}}</span>
+        </div>
+        <div class="usa-width-one-fourth">
           <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
-            <span *ngIf="isOrgActive(orgItem.org)">Active</span>
-            <span *ngIf="!isOrgActive(orgItem.org)">Inactive</span>
+            <span *ngIf="isOrgActive(orgItem.org); else orgInactive">Active</span>
+            <ng-template #orgInactive>Inactive</ng-template>
           </span>
-            <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
-          </div>
+          <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
         </div>
       </div>
+    </div>
 
     <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgs.length > 0">
-        <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+      <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
     </div>
   </div>
 </div>

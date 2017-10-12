@@ -281,7 +281,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   private markAndUpdateFieldStat(fieldName) {
-    this.cdr.detectChanges();
     this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
 

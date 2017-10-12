@@ -24,7 +24,7 @@ describe('src/app/organization/search-result/federal-hierarchy-result.spec.ts', 
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.federal-hierarchy-title')); // find title element
       comp.data = {
-        name: "SAMPLE TITLE",
+        title: "SAMPLE TITLE",
         isActive:true,
         description: "abcd",
         parentOrganizationHierarchy: {

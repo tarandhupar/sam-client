@@ -47,7 +47,7 @@ export class FHService {
   }
 
   //gets organization with heirarchy data
-  getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false, status: string = 'all', pageSize: number = 10, pageNum: number = 1, orderBy: string = "asc") {
+  getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false, status: string = 'all', pageSize: number = 10, pageNum: number = 1, orderBy: string = "asc", hasFPDS: boolean = false) {
     var oApiParam = {
         name: '',
         suffix: '',
@@ -82,6 +82,9 @@ export class FHService {
       oApiParam.oParam['order'] = orderBy;
     }
 
+    if (hasFPDS) {
+      oApiParam.oParam['has-fpds'] = 'true';
+    }
     return this.oAPIService.call(oApiParam);
   }
 
@@ -144,12 +147,17 @@ export class FHService {
     });
   }
 
-  getDepartments() {
+  getDepartments(hasFPDS: boolean = false) {
     let oApiParam = {
       name: 'federalHierarchy',
       suffix: '/departments/',
-      method: 'GET'
+      method: 'GET',
+      oParam: {}
     };
+
+    if (hasFPDS) {
+      oApiParam.oParam['has-fpds'] = 'true';
+    }
     return this.oAPIService.call(oApiParam);
   }
 
@@ -313,6 +321,20 @@ export class FHService {
       oParam: {
         type: type,
         days: day
+      }
+    };
+
+    return this.callApi(apiOptions,true);
+  }
+
+  requestAAC(orgId, isProcure:boolean){
+    let apiOptions: any = {
+      name: 'fhDetail',
+      suffix: '/aac',
+      method: 'POST',
+      oParam: {
+        nonproc: !isProcure,
+        orgKey: orgId
       }
     };
 

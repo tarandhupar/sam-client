@@ -36,7 +36,7 @@
 
     <!-- Results -->
     <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">
-      <saved-search-result [data]="row"></saved-search-result>
+      <saved-search-result [data]="row" [qParams]="qParams"></saved-search-result>
     </div>
 
 

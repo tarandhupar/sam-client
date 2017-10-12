@@ -28,7 +28,7 @@
   <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
     <sam-autocomplete-multiselect
       hint=""
-      label="Search Requester"
+      label="Search Requestor"
       name="search-requester"
       peoplepicker-autofill
       [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
@@ -55,19 +55,19 @@
   <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0">
     <div class="usa-width-three-fourths">
       <sam-checkbox
-        [(model)]="filterOption.requestType"
+        [(ngModel)]="filterOption.requestType"
         [name]="requestTypeCbxConfig.name"
         [options]="requestTypeCbxConfig.options"
         [label]="requestTypeCbxConfig.label"
         [hasSelectAll]="requestTypeCbxConfig.hasSelectAll"
-        (modelChange)="msgFilterOptionChange()">
+        (ngModelChange)="msgFilterOptionChange()">
       </sam-checkbox>
     </div>
     <div class="usa-width-one-fourth m_T-5x p_T-2x" *ngIf="!isCurrentPath('requests/sent')">
       <ul class="usa-unstyled-list">
         <li class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options">
           <label class="m_T-0 request-count pull-right m_R-2x" *ngIf="hasActiveItem(option)">{{option.count}}</label>
-          <label class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">&nbsp;</label>
+          <label class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">0</label>
         </li>
       </ul>
     </div>
@@ -75,45 +75,45 @@
 
   <div class="m_B-4x" *ngIf="statusCbxConfig.options.length > 0">
     <sam-checkbox
-      [(model)]="filterOption.status"
+      [(ngModel)]="filterOption.status"
       [name]="statusCbxConfig.name"
       [options]="statusCbxConfig.options"
       [label]="statusCbxConfig.label"
       [hasSelectAll]="statusCbxConfig.hasSelectAll"
-      (modelChange)="msgFilterOptionChange()">
+      (ngModelChange)="msgFilterOptionChange()">
     </sam-checkbox>
   </div>
 
   <div class="m_B-4x" *ngIf="alertTypeCbxConfig.options.length > 0">
     <sam-checkbox
-      [(model)]="filterOption.alertType"
+      [(ngModel)]="filterOption.alertType"
       [name]="alertTypeCbxConfig.name"
       [options]="alertTypeCbxConfig.options"
       [label]="alertTypeCbxConfig.label"
       [hasSelectAll]="alertTypeCbxConfig.hasSelectAll"
-      (modelChange)="msgFilterOptionChange()">
+      (ngModelChange)="msgFilterOptionChange()">
     </sam-checkbox>
   </div>
 
   <div class="m_B-4x" *ngIf="alertStatusCbxConfig.options.length > 0">
     <sam-checkbox
-      [(model)]="filterOption.alertStatus"
+      [(ngModel)]="filterOption.alertStatus"
       [name]="alertStatusCbxConfig.name"
       [options]="alertStatusCbxConfig.options"
       [label]="alertStatusCbxConfig.label"
       [hasSelectAll]="alertStatusCbxConfig.hasSelectAll"
-      (modelChange)="msgFilterOptionChange()">
+      (ngModelChange)="msgFilterOptionChange()">
     </sam-checkbox>
   </div>
 
   <div class="m_B-4x" *ngIf="domainsCbxConfig.options.length > 0">
     <sam-checkbox
-      [(model)]="filterOption.domains"
+      [(ngModel)]="filterOption.domains"
       [name]="domainsCbxConfig.name"
       [options]="domainsCbxConfig.options"
       [label]="domainsCbxConfig.label"
       [hasSelectAll]="domainsCbxConfig.hasSelectAll"
-      (modelChange)="msgFilterOptionChange()">
+      (ngModelChange)="msgFilterOptionChange()">
     </sam-checkbox>
   </div>
 

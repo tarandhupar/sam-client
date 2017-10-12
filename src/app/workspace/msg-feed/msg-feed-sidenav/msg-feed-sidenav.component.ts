@@ -5,6 +5,7 @@ import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service
 import { IAMService } from "api-kit/iam/iam.service";
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'msg-feed-sidenav',
@@ -77,11 +78,22 @@ export class MsgFeedSideNavComponent{
   constructor(private msgFeedService: MsgFeedService,
               private systemAlertService: SystemAlertsService,
               private _router:Router,
+              private route: ActivatedRoute,
               private iamService: IAMService,
               private capitalPipe: CapitalizePipe,){}
 
   ngOnInit(){
     this.signInCheck();
+    this.route.queryParams.subscribe((params: any) => {
+      if (params.statIds) {
+        let par = params.statIds.split(',');
+        this.filterOption.status = par.map(p => +p);
+      }
+      if (params.reqIds) {
+        let par = params.reqIds.split(',');
+        this.filterOption.requestType = par.map(p => +p);
+      }
+    });
   }
 
   ngOnChanges(){

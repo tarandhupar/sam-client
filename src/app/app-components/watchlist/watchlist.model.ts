@@ -8,7 +8,8 @@ export class Watchlist {
     recordId: '',
     active: 'Y',
     frequency: 'instant',
-    uri: 'path'
+    uri: 'path',
+    title: ''
   };
 
   constructor() {  }
@@ -62,6 +63,13 @@ export class Watchlist {
   }
   setUri(uri: string) {
     this._raw.uri = uri;
+  }
+
+  title(): string {
+    return this._raw.title;
+  }
+  setTitle(title: string) {
+    this._raw.title = title;
   }
 
  

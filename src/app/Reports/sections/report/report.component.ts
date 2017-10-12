@@ -55,7 +55,8 @@ export class ReportComponent implements OnInit {
     piid: false,
     state: false,
     country: false,
-    fiscalYear: false
+    fiscalYear: false,
+    psc: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -127,6 +128,8 @@ export class ReportComponent implements OnInit {
     promptsAnswerXML: ''
   };
   promptsAccordian = 0;
+  psc;
+  hasFpds = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -139,7 +142,7 @@ export class ReportComponent implements OnInit {
         });
       });
     });
-    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1)) {
+    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1 || API_UMBRELLA_URL.indexOf("alpha") != -1)) {
       this.mstrEnv = 'stg';
       this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
     } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
@@ -196,24 +199,6 @@ export class ReportComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
-    if (this.route.snapshot.url[1].path == 'shared') {
-      this.promptsAccordian = -1;
-      this.showReport = true;
-      let mstrParams = this.route.queryParams.subscribe(
-        params => {
-          this.queryParams.server = params['Server'];
-          this.queryParams.project = params['Project'];
-          this.queryParams.port = params['Port'];
-          this.queryParams.evt = params['evt'];
-          this.queryParams.currentViewMedia = params['currentViewMedia'];
-          this.queryParams.iPlanetDirectoryPro = params['iPlanetDirectoryPro'];
-          this.queryParams.promptsAnswerXML = params['promptsAnswerXML'];
-          
-        }
-      )
-      this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server=MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV&Project=SAM_IAE&Port=8443&evt=4001&src=mstrWeb.4001&currentViewMedia=1&visMode=0'+mstrParams);
-      // need to change mstrParams to individual
-    }
     this.route.queryParams.subscribe(
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
@@ -250,6 +235,9 @@ export class ReportComponent implements OnInit {
       vm.user = user;
       if (vm.user.departmentID) {
         vm.userOrg.push(vm.user.departmentID);
+        if (vm.user.agencyID) {
+          vm.userOrg.push(vm.user.agencyID);
+        }
         vm.agencyPicker = vm.userOrg;
       }
       cb();
@@ -400,7 +388,7 @@ export class ReportComponent implements OnInit {
   }
 
   checkIncludesBases() {
-    let basesBool;
+    let basesBool = {};
     if (this.usedPrompts.includesBases) {
       if (this.includesBases === "basesOnly") {
         basesBool = {type:"element",name:"fct",attributes:{qsr:"0",fcn:"0",cc:"1",sto:"1",pfc:"0",pcc:"1"},elements:[{type:"element",name:"f",attributes:{did:"3503C54C4A888FC05808BBBA626176BB",tp:"1"}}]}
@@ -443,14 +431,14 @@ export class ReportComponent implements OnInit {
         encodedCountryPoP = encodeURIComponent(this.location.country.value);
         encodedCountryVendor = encodeURIComponent(this.location.country.key);
       }
-      // State code for geographical report by vendor location report
+      // State code for geographical report by vendor location
       if (this.id == 'B1BA646F4E0BD167A588FBBC4E9E06A8') {
         stateXMLid = 'C333A9D1438B941088B6898EEE811323';
         countryXMLid = '88E6E25643D1743D6DA8D395CE631FC2';
-        if (this.location.state.value && this.location.state.value.length > 0) {
+        if (this.location.state && this.location.state.value.length > 0) {
           stateParameter = [{type:"element",name:"at",attributes:{did:"EF87927B4C28EC072AD84389B81DEF63",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"EF87927B4C28EC072AD84389B81DEF63:"+encodedStateVendor.toUpperCase(),art:"1"}}];
         }
-        if (this.location.country.value && this.location.country.value.length > 0) {
+        if (this.location.country && this.location.country.value.length > 0) {
           countryParameter = [{type:"element",name:"at",attributes:{did:"2569E1F241BCE3414441DB81421A7B58",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"2569E1F241BCE3414441DB81421A7B58:"+encodedCountryVendor.toUpperCase(),art:"1"}}];
         }
       }
@@ -476,7 +464,7 @@ export class ReportComponent implements OnInit {
 
   checkFiscalYear() {
     if (this.usedPrompts.fiscalYear) {
-      let fiscalYearXML;
+      let fiscalYearXML = {};
       fiscalYearXML = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"187C72C645E80DDF3CBD83B287015D46",tp:"10"},elements:[{type:"text",text: this.fiscalYear}]}
       this.promptAnswersXML.elements[0].elements.push(fiscalYearXML);
     }
@@ -493,9 +481,13 @@ export class ReportComponent implements OnInit {
     this.location.state = '';
     // Doesn't have dateRange
     if (this.name != 'Contract Detail Report') {
-      this.dateRange.control.reset();
+      this.dateRange.control.reset({
+        "startDate": "",
+        "endDate": ""
+      });
     }
     this.dateValidator = false;
+    
   }
 
   updateCountryField(val) {

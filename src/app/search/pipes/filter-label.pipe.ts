@@ -49,15 +49,23 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "is_wd_even": return "WD Even";
         break;
-      case "service": return "Domain";
+      case "prevP": return "Previously Performed?";
+        break;
+      case "cba": return "Subject to CBA?";
+        break;
+      case "service": return "Service";
         break;
       case "construction_type": return "Construction Type";
         break;
       case "sort": return "Sort By";
-      break;
+        break;
       case "page": return "Page";
-      break;
-      default: return null;
+        break;
+      case "true": return "Yes";
+        break;
+      case "false": return "No";
+        break;
+      default: return param;
     }
 
   }

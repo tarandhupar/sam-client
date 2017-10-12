@@ -73,4 +73,39 @@ export class SubscriptionsService{
         totalRecords: 150,
       }); */
     }
+
+  updateSubscriptions(filterObj, allMatchingSelected, fieldName, fieldValue){
+    let filters: any = {};
+      if(!allMatchingSelected) {
+        filters.ids = filterObj.ids;
+      } else {
+        if (filterObj.domains && filterObj.domains) {
+          filters.domain = filterObj.domains.join(',');
+        }
+        if (filterObj.frequency && filterObj.frequency) {
+          filters.frequency = filterObj.frequency.join(',');
+        }
+        if (filterObj.keyword) {
+          filters.record = filterObj.keyword;
+        }
+      }
+
+      let request: any = {
+        field: fieldName,
+        value: fieldValue,
+        filters: filters
+      };
+
+      let apiOptions: any = {
+        name: 'subscriptions',
+        suffix: '',
+        method: 'PUT',
+        body: request
+      };
+
+      
+      this.addAuthHeader(apiOptions);
+
+      return this.oAPIService.call(apiOptions);
+    }
 }

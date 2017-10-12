@@ -25,7 +25,7 @@ export class SamListBuilderCardComponent {
     actionHandler(action){
         let data;
         if(action=="edit"){
-            if(this.data.value){
+            if(this.data && this.data.value){
                 this.cachedData = this.data.value;
             } else {
                 this.cachedData = null;

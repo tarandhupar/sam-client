@@ -4,6 +4,7 @@ import { SubscriptionsService } from "api-kit/subscriptions/subscriptions.servic
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import { SidenavHelper } from "../../../app-utils/sidenav-helper";
 import { Observable } from 'rxjs';
+import { ToggleService } from "api-kit/toggle/toggle.service";
 
 @Component({
   selector: 'subscriptions-sidenav',
@@ -21,7 +22,7 @@ export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
   navLinks = [
     { text: 'Personal Details', routerLink: ['/profile/details'] },
     { text: 'Reset Password',   routerLink: ['/profile/password'] },
-    { text: 'My Roles',  routerLink: ['/profile/role-details'] },
+    { text: 'My Roles',  routerLink: ['/profile/access'] },
     { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },
     { text: 'Manage Subscriptions', active: true },
   ];
@@ -70,9 +71,19 @@ export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
     "children": []
   };
 
-  constructor(private subscriptionsService: SubscriptionsService, private sidenavService: SidenavService, private sidenavHelper: SidenavHelper){}
+  constructor(private subscriptionsService: SubscriptionsService, private sidenavService: SidenavService, private sidenavHelper: SidenavHelper,private toggleService: ToggleService){}
 
   ngOnInit(){
+    this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
+          console.log("subscriptions-sidenav page enablemanagesubscription >>>>>"+isEnabled);
+          if(!isEnabled){
+             for(var i=this.navLinks.length-1; i>=0; i--) {
+               if( this.navLinks[i].text == "Manage Subscriptions") {
+                  this.navLinks.splice(i,1); break;
+               }
+             }
+         }  
+     }) ;
     this.setCbxControl();
     this.loadFilterData();
   }

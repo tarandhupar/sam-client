@@ -399,7 +399,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       }
     };
 
-    if (this.config.required && this.config.required === true) {
+    if (this.config && this.config.required === true) {
       if (this.model.isApplicable === true) {
         let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
         // Only take into account the previous, current, and budget fiscal years

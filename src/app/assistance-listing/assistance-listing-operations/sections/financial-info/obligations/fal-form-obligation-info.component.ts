@@ -239,7 +239,10 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     this.caluclateTotal(this.obligationsInfo);
   }
   public getCurrentFY() {
-    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
+    let date = null;
+    let d = new Date();
+    date = d.getFullYear();
+    return date;
   }
 
   saveObligations(obligations: Array<any>) {
@@ -386,7 +389,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     }//end of if
   }
 
-  public beforeSaveAction() {
+  public beforeNavigationAction() {
     this.obligationSubForm.onObligationCancelClick(this.obligationSubForm.obligationIndex);
   }
 }

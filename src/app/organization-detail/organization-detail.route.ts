@@ -26,20 +26,20 @@ export const routes: Routes = [
     path: 'create-organization',
     component: OrgCreatePage,
   },
-  {
-    path: 'aac-request/procurement/:orgId',
-    component: AACRequestPage,
-    canActivate: [AACRequestGuard]
-  },
-  {
-    path: 'aac-request/non-procurement/:orgId',
-    component: AACRequestPage,
-    canActivate: [AACRequestGuard]
-  },
-  {
-    path: 'aac-confirm/:requestId',
-    component: AACConfirmPage,
-  }
+  // {
+  //   path: 'aac-request/procurement/:orgId',
+  //   component: AACRequestPage,
+  //   canActivate: [AACRequestGuard]
+  // },
+  // {
+  //   path: 'aac-request/non-procurement/:orgId',
+  //   component: AACRequestPage,
+  //   canActivate: [AACRequestGuard]
+  // },
+  // {
+  //   path: 'aac-confirm/:requestId',
+  //   component: AACConfirmPage,
+  // }
 ];
 
 export const routing = RouterModule.forChild(routes);

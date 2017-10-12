@@ -125,11 +125,31 @@ export class ActionHistoryPipe implements PipeTransform {
       } else if (historyItem.action_type == 'publish'){
         processedHistoryItem1['url'] = '/programs/' + historyItem.program_id + "/review";
       }
+      let desc1 = [];
+      if(processedHistoryItem1['titleNumberAgency']){
+        desc1.push("<span class='history-titleNumberAgency'>"+processedHistoryItem1['titleNumberAgency']+"</span>")
+      }
+      if(processedHistoryItem1['submitter']){
+        desc1.push("<span class='history-submitter'>"+processedHistoryItem1['submitter']+"</span>")
+      }
+      if(processedHistoryItem1['comment']){
+        desc1.push("<q>"+processedHistoryItem1['comment']+"</q>")
+      }
+      processedHistoryItem1['description'] = desc1.join("<br/>");
       let processedHistoryItem2 = {};
       processedHistoryItem2['date'] = dateFormat.transform(historyItem.request_date, 'MMMM DD, YYYY h:mm a');
       processedHistoryItem2['title'] = requestHistoryLabelPipe.transform(historyItem.request_type);
       processedHistoryItem2['comment'] = historyItem.request_reason;
       processedHistoryItem2['submitter'] = historyItem.request_submitter;
+      let desc2 = [];
+      if(processedHistoryItem2['submitter']){
+        desc2.push("<span class='history-submitter'>"+processedHistoryItem2['submitter']+"</span>")
+      }
+      if(processedHistoryItem2['comment']){
+        desc2.push("<em class='history-comment'><q>"+processedHistoryItem2['comment']+"</q></em>")
+      }
+      processedHistoryItem2['description'] = desc2.join("<br/>");
+        
       let processedHistoryArray = [processedHistoryItem1, processedHistoryItem2];
       return processedHistoryArray;
     };
@@ -138,7 +158,14 @@ export class ActionHistoryPipe implements PipeTransform {
       let objectToReturn;
       let arrayToReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
       for (let i in arrayToReturn){
-        if (((arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') && arrayToReturn[i]['date'] == null && arrayToReturn[i]['description'] == null && arrayToReturn[i]['submitter'] == null) || arrayToReturn[i]['title'] == 'send_omb'){
+        if (
+            (
+              (arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') && 
+              arrayToReturn[i]['date'] == null && 
+              (arrayToReturn[i]['description'] == null || arrayToReturn[i]['description'] == '') &&
+              arrayToReturn[i]['submitter'] == null
+            ) || 
+            arrayToReturn[i]['title'] == 'send_omb'){
           arrayToReturn.splice(i,1);
         }
       }

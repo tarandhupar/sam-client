@@ -11,9 +11,9 @@ import * as moment from 'moment/moment';
   	    <div class="eight wide column">
           <h3 class="exclusion-title">
             <a *ngIf="data.isActive==true" [routerLink]="['/exclusions', uniqueIdentifier]" [queryParams]="qParams">
-              {{ data.name }}
+              {{ data.title }}
             </a>
-            <span *ngIf="data.isActive==false">{{ data.name }}</span>
+            <span *ngIf="data.isActive==false">{{ data.title }}</span>
           </h3>
           <ul class="sam-ui small list">
             <li *ngIf="data.dunsNumber && data.dunsNumber!==null">

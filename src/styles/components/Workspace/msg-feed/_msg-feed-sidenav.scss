@@ -53,6 +53,8 @@
   .request-count-empty{
     border: none;
     background-color: $color-white;
+    position: absolute;
+    right: 10000px;
   }
 
   label{

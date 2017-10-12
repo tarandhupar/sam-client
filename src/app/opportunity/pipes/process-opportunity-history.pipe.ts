@@ -83,7 +83,7 @@ export class ProcessOpportunityHistoryPipe implements PipeTransform {
       processedHistoryItem['index'] = historyItem.index;
       processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
       processedHistoryItem['authoritative'] = historyItem.authoritative;
-      processedHistoryItem['qParams'] = qParams;
+      processedHistoryItem['queryParams'] = qParams;
       processedHistoryItem['ariaLabel'] = "Current Contract Opportunity";
       return processedHistoryItem;
     };

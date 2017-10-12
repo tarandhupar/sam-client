@@ -5,7 +5,7 @@ import * as moment from 'moment/moment';
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
 import { IAMService } from "api-kit";
-import IAM from "../../../api-kit/iam/api/core/iam";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
 @Component ({
   templateUrl: 'profile.template.html',
@@ -55,6 +55,7 @@ export class OrgDetailProfilePage {
               private route: ActivatedRoute,
               private _router: Router,
               private iamService: IAMService,
+              private alertFooter: AlertFooterService,
               public flashMsgService:FlashMsgService){
   }
 
@@ -70,7 +71,13 @@ export class OrgDetailProfilePage {
   isNextLayerCreatable():boolean{return this.currentHierarchyType !== "Office";}
   isEditableField(field):boolean{return ["Description","Shortname","End Date"].indexOf(field) !== -1;}
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
-  isRequestAACIcon(pair):boolean{return !this.isDoD() && pair.value === '' && (pair.code === 'Procurement AAC' || pair.code === 'Non-procurement AAC');}
+
+  isRequestAACIcon(pair):boolean{
+    if(this.fhRoleModel.hasPermissionType('PUT',this.adminTypeMap[this.currentHierarchyType])){
+      return !this.isDoD() && pair.value === '' && (pair.code === 'Procurement AAC' || pair.code === 'Non-procurement AAC');
+    }
+    return false;
+  }
 
   getOrgDetail = (orgId) => {
     this.isDataAvailable = false;
@@ -128,11 +135,29 @@ export class OrgDetailProfilePage {
   }
 
   onAACRequestClick(pair){
-    if(pair.desc === 'Procurement AAC'){
-      this._router.navigateByUrl("aac-request/procurement/"+this.orgId);
-    }else{
-      this._router.navigateByUrl("aac-request/non-procurement/"+this.orgId);
-    }
+    // Make API call to request for procurement or non-procurement AAC
+    let isProcureAAC = pair['code'] === 'Procurement AAC';
+    this.fhService.requestAAC(this.orgId, isProcureAAC).subscribe(
+      data => {
+        this.setupOrganizationCodes(data);
+        let message = "Non-procurement AAC has been requested";
+        if(pair['code'] === 'Procurement AAC') message = "Procurement AAC request has been completed";
+        this.alertFooter.registerFooterAlert({
+          title: "Success",
+          description: message,
+          type: 'success',
+          timer: 3200
+        });
+      },
+      error => {
+        this.alertFooter.registerFooterAlert({
+          title: "",
+          description: pair['code']+" request failed",
+          type: 'error',
+          timer: 3200
+        });
+      }
+    );
   }
 
   setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
@@ -234,6 +259,10 @@ export class OrgDetailProfilePage {
     let res = "";
     if(!!data[fieldName]){
       res = data[fieldName];
+    }
+
+    if(res == "" && data['nonProcAACRequestedDate'] && fieldName === 'nonProcurementAACCode'){
+      res = "AAC has been requested";
     }
     return res;
   }

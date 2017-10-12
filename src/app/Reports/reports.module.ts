@@ -20,6 +20,7 @@ import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
 import { ReportService } from './report.service';
 import { MyReportsComponent } from './sections/overview/myreports/myreports.component';
+import { SharedComponent } from './sections/shared/shared.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { MyReportsComponent } from './sections/overview/myreports/myreports.comp
     FavoritesComponent,
     StaticComponent,
     ReportsPipe,
-    MyReportsComponent
+    MyReportsComponent,
+    SharedComponent
   ],
   providers: [IAMService, ReportsService, ReportService],
 })

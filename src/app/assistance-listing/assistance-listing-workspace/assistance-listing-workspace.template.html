@@ -64,7 +64,7 @@
       <!--Keywords Filter-->
       <div>
         <h4 class="sam-ui header">Keywords</h4>
-        <sam-autocomplete-multiselect
+        <sam-chips
           class="usa-award-filter"
           [attr.id]="'keywordSearch'"
           [name]="'keywordSearchName'"
@@ -72,7 +72,7 @@
           (ngModelChange)="keywordsModelChange($event)"
           [keyValueConfig]="keywordsConfiguration.keyValueConfig"
           [allowAny]="keywordsConfiguration.allowAny">
-        </sam-autocomplete-multiselect>
+        </sam-chips>
       </div>
 
       <!-- Status Filter -->

@@ -20,7 +20,7 @@
   [sectionIndex]="currentSection"
   [type]="noticeType"
   [typeLabel]="noticeTypeLabel"
-  [numberOfSections]="sections.length"
+  [numberOfSections]="sectionLength"
   [hasErrors]="hasErrors"
   [tabsComponent]="tabsOppComponent"
   (action)="formActionHandler($event)"
@@ -33,12 +33,22 @@
               (tabClick)="tabsClicked($event)">
     </tabs-opp>
 
-  <opp-form-header-information
-    *ngIf="isSection('header-information')"
-    [viewModel]="oppFormViewModel"></opp-form-header-information>
+    <opp-form-header-information
+      *ngIf="isSection('header-information')"
+      [viewModel]="oppFormViewModel"></opp-form-header-information>
+
+    <opp-form-general-information
+      *ngIf="isSection('general-information')"
+      [viewModel]="oppFormViewModel"></opp-form-general-information>
+
+    <opp-form-classification *ngIf="isSection('classification')" [viewModel]="oppFormViewModel"></opp-form-classification>
     <opp-form-description
       *ngIf="isSection('description')"
       [viewModel]="oppFormViewModel"></opp-form-description>
+
+    <opp-form-contact-info
+      *ngIf="isSection('contact-information')"
+      [viewModel]="oppFormViewModel"></opp-form-contact-info>
   </div>
 
 </form-step>

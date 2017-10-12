@@ -2,6 +2,7 @@ import {AbstractControl, FormControl, AsyncValidatorFn, ValidatorFn, Validators}
 import * as _ from 'lodash';
 import { ValidationErrors } from "../../app-utils/types";
 import * as moment from 'moment/moment';
+import { Observable } from 'rxjs';
 
 export class falCustomValidatorsComponent {
 
@@ -60,7 +61,7 @@ export class falCustomValidatorsComponent {
     return (control) => {
 
       if(control.value == null || control.value == '') {
-        return null;
+        return Observable.empty<Response>();
       }
 
       let programNum = cfdaCode + '.' + control.value;

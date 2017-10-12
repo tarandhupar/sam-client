@@ -1,7 +1,7 @@
 <div class="sam-ui grid ">
   <div class="twelve wide column">
-    <h3 class="sam-ui header">
-      <a *ngIf="data.title" [routerLink]="['/savedsearches', id]">
+    <h3 class="sam-ui header saved-search-title">
+      <a *ngIf="data.title" [routerLink]="['/savedsearches', id]" [queryParams]="qParams">
         {{data.title}}
       </a>
       <ng-container *ngIf="!data.title">
@@ -19,21 +19,21 @@
       <div *ngIf="!data.data.index" class="sub header">
         &#8212;&#8212;
       </div>
-      <div class="sub header">{{data.data?.index}}</div>
+      <div class="sub header">{{domain}}</div>
     </div>
     <div class="sam-ui medium header">
       Date Saved
       <div *ngIf="data.createdOn==null" class="sub header">
         &#8212;&#8212;
       </div>
-      <div *ngIf="data.createdOn!=null" class="sub header">{{data.createdOn}}</div>
+      <div *ngIf="data.createdOn!=null" class="sub header">{{data.createdOn | date}}</div>
     </div>
     <div class="sam-ui medium header">
       Date Last Run
       <div *ngIf="data.lastUsageDate==null" class="sub header">
         &#8212;&#8212;
       </div>
-      <div *ngIf="data.lastUsageDate!=null" class="sub header">{{data.lastUsageDate}}</div>
+      <div *ngIf="data.lastUsageDate!=null" class="sub header">{{data.lastUsageDate | date}}</div>
     </div>
   </div>
 
@@ -44,7 +44,7 @@
         <div *ngIf="!param.value" class="sub header">
           &#8212;&#8212;
         </div>
-        <div class="sub header">{{param.value}}</div>
+        <div class="sub header">{{param.value | filterValue}}</div>
     </div>
     </ng-container>
   </div>
@@ -56,7 +56,7 @@
         <div *ngIf="!param.value" class="sub header">
           &#8212;&#8212;
         </div>
-        <div class="sub header">{{param.value}}</div>
+        <div class="sub header">{{param.value | filterValue}}</div>
       </div>
     </ng-container>
   </div>

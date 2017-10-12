@@ -1,5 +1,5 @@
 import * as Cookies from 'js-cookie';
-import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
+import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, canDeactivate} from "@angular/router";
 import {Injectable, Input} from '@angular/core';
 import {FALFormViewModel} from "../../app/assistance-listing/assistance-listing-operations/fal-form.model";
 import {FALFormErrorService} from "../../app/assistance-listing/assistance-listing-operations/fal-form-error.service";
@@ -21,6 +21,9 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['accessrestricted']);
     }
     return true;
+  }
+  canDeactivate(component: CanComponentDeactivate) {
+    return component.canDeactivate ? component.canDeactivate() : true;
   }
 
   checkPermissions(screen: string, program: any) {

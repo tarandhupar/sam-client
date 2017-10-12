@@ -7,6 +7,7 @@ import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
 import { MyReportsComponent } from './sections/overview/myreports/myreports.component';
+import { SharedComponent } from './sections/shared/shared.component';
 
 
 export const routes: Routes = [
@@ -22,7 +23,7 @@ export const routes: Routes = [
       { path: 'favorites', component: FavoritesComponent },
       { path: ':id/view', component: ReportComponent },
       { path: 'myreports', component: MyReportsComponent },
-      { path: ':id/shared', component: ReportComponent }
+      { path: 'shared/mstrWeb', component: SharedComponent }
     ]
   },
 ];

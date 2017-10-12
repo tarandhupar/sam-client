@@ -16,8 +16,13 @@ import {FHService} from "../../../api-kit/fh/fh.service";
 })
 
 export class OPPWorkspacePage implements OnInit, OnDestroy {
-
   @ViewChild('autocomplete') autocomplete: any;
+  @ViewChild('postedDateRangeFilter') postedDateRangeFilter: any;
+  private RESPONSE = 'response';
+  private POSTED = 'posted';
+  private ARCHIVE = 'archive';
+  private START_DAY = '00:00:00';
+  private END_DAY = '23:59:59';
 
   keyword: string = '';
   organizationId: string = '';
@@ -60,6 +65,68 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     { breadcrumb: 'Contract Opportunities'}
   ];
 
+  defaultStatus: any = ['published'];
+  statusCheckboxModel: any = this.defaultStatus;
+  statusCheckboxConfig = {
+    options: [
+      {value: 'archived', label: 'Archived', name: 'checkbox-archived'},
+      {value: 'draft', label: 'Drafts', name: 'checkbox-draft'},
+      {value: 'published', label: 'Active', name: 'checkbox-active'}
+    ],
+    name: 'opp-status-filter',
+    label: '',
+    hasSelectAll: 'true'
+  };
+  filterDisabled: boolean = true;
+
+  noticeTypeCheckboxModel: any = [];
+  noticeTypeCheckboxConfig = {
+    options: [
+      {value: 'p', label: 'Presolicitation', name: 'checkbox-presolicitation'},
+      {value: 'a', label: 'Award Notice', name: 'checkbox-award-notice'},
+      {value: 'm', label: 'Modification/Amendment/Cancel', name: 'checkbox-notification-amendment'},
+      {value: 'r', label: 'Sources Sought', name: 'checkbox-sources-sought'},
+      {value: 's', label: 'Special Notice', name: 'checkbox-special-notice'},
+      {value: 'f', label: 'Foreign Government Standard', name: 'checkbox-foreign-govt'},
+      {value: 'g', label: 'Sale of Surplus Property', name: 'checkbox-sale-surplus'},
+      {value: 'k', label: 'Combined Synopsis/Solicitation', name: 'checkbox-synopsis'},
+      {value: 'j', label: 'Justification and Approval (J&A)', name: 'checkbox-justification-approval'},
+      {value: 'i', label: 'Intent to Bundle Requirements (DoD-Funded)', name: 'checkbox-bundle-req'},
+      {value: 'l', label: 'Fair Opportunity / Limited Sources Justification', name: 'checkbox-fair-opportunity'},
+    ],
+    name: 'opp-notice-type-filter',
+    label: '',
+    hasSelectAll: 'true'
+  };
+
+  defaultSort: any = {type:'postedDate', sort:'desc'};
+  sortModel: any = this.defaultSort;
+  oldSortModel: any = this.defaultSort;
+  sortOptions = [
+    {label:'Posted Date', name:'Posted Date', value:'postedDate'},
+    {label:'Response Date', name:'Response Date', value:'responseDate'},
+    {label:'Archive Date', name:'Archive Date', value:'archiveDate'},
+    {label:'Title', name:'Title', value:'title'}
+  ];
+
+  postedDateFilterModel: any = {};
+  responseDateFilterModel: any = {};
+  archiveDateFilterModel: any = {};
+  internalDateModel: any = {};
+  currDateTab = this.POSTED;
+  dateRadio = 'date';
+  dateFilterConfig = {
+    options: [
+      {name:'Date',label:'Date',value:'date'},
+      {name:'Date Range',label:'Date Range',value:'dateRange'}
+    ],
+    radSelection: 'date',
+  };
+
+  oppFacets: any = ['status','type'];
+
+  
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private opportunityService: OpportunityService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
   }
 
@@ -69,6 +136,16 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
       data => {
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
         this.keywordsModel = data['keywords'] ? this.keywordRebuilder(data['keywords']) : [];
+        this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
+        this.noticeTypeCheckboxModel = typeof data['noticeType'] === "string" ? decodeURI(data['noticeType']).split(",") : [];
+        this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
+        this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
+        this.postedDateFilterModel = data['dateTab'] && data['dateTab'] === this.POSTED ? this.formatDateModel(data) : {};
+        this.responseDateFilterModel = data['dateTab'] && data['dateTab'] === this.RESPONSE ? this.formatDateModel(data) : {};
+        this.archiveDateFilterModel = data['dateTab'] && data['dateTab'] === this.ARCHIVE ? this.formatDateModel(data) : {};
+        this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
+        this.dateFilterConfig.radSelection = this.dateRadio;
+        this.currDateTab = data['dateTab'] ? decodeURI(data['dateTab']) : this.POSTED;
         this.runOpportunity();
       });
   }
@@ -92,15 +169,171 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
       qsobj['page'] = 1;
     }
 
+    //Date Filter query params
+    if(this.currDateTab){
+      qsobj['dateTab'] = this.currDateTab;
+    }
+    if(this.dateFilterConfig){
+      qsobj['radSelection'] = this.dateRadio;
+    }
+    if(this.internalDateModel){
+      qsobj['dateFrom'] = this.internalDateModel.startDate;
+      qsobj['dateTo'] = this.internalDateModel.endDate;
+    }
+    //Status and Notice Type query params
+    if(this.statusCheckboxModel){
+      qsobj['status'] = this.statusCheckboxModel.toString();
+    }
+    else {
+      qsobj['status'] = '';
+    }
+    if(this.noticeTypeCheckboxModel){
+      qsobj['noticeType'] = this.noticeTypeCheckboxModel.toString();
+    }else{
+      qsobj['noticeType'] = '';
+    }
+
+    //If changing sort option, reset to default sort order for that option
+    if(this.sortModel && this.oldSortModel['type'] !== this.sortModel['type']){
+      switch(this.sortModel['type']){
+          case 'postedDate':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'responseDate':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'archiveDate':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'title':
+            this.sortModel['sort'] = 'asc';
+            break;
+      }
+    }
+
+    if(this.sortModel){
+      qsobj['sortBy'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+    }
+    else {
+      qsobj['sortBy'] = '';
+    }
+
+    if(this.oppFacets){
+      qsobj['facets'] = this.oppFacets.toString();
+    }else{
+      qsobj['facets'] = '';
+    }
+
     return qsobj;
   }
 
+   // initiates a search with date filter
+  filterByDate(){
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+    
+    
+  // FUNCTIONS FOR TABS ON DATE FILTER
+  selectTab(type){
+    this.currDateTab = type;
+
+    // run validation checks for filter button
+    if(this.currDateTab === this.POSTED){
+      this.dateModelChange(this.postedDateFilterModel);
+    } else if(this.currDateTab === this.RESPONSE){
+      this.dateModelChange(this.responseDateFilterModel);
+    } else if(this.currDateTab === this.ARCHIVE){
+      this.dateModelChange(this.archiveDateFilterModel);
+    }
+  }
+
+  isCurrentTab(type){
+    return this.currDateTab === type;
+  }
+
+  getColorClass(type):string{
+    if(this.currDateTab === type){
+      return 'active';
+    }
+    return '';
+  }
+
+  formatDateWrapper(tab, appendTime: boolean){
+    switch(tab){
+      case this.POSTED:
+        if(this.postedDateFilterModel.date){
+          return this.formatDate(this.postedDateFilterModel, appendTime);
+        }
+        if(this.postedDateFilterModel.dateRange){
+          return this.formatDateRange(this.postedDateFilterModel, appendTime);
+        }
+        break;
+      case this.RESPONSE:
+        if(this.responseDateFilterModel.date){
+          return this.formatDate(this.responseDateFilterModel, appendTime);
+        }
+        if(this.responseDateFilterModel.dateRange){
+          return this.formatDateRange(this.responseDateFilterModel, appendTime);
+        }
+        break;
+      case this.ARCHIVE:
+        if(this.archiveDateFilterModel.date){
+          return this.formatDate(this.archiveDateFilterModel, appendTime);
+        }
+        if(this.archiveDateFilterModel.dateRange){
+          return this.formatDateRange(this.archiveDateFilterModel, appendTime);
+        }
+        break;
+    }
+  }
+  formatDate(model, appendTime){
+    if(appendTime){
+      return {
+        'startDate': model.date + ' ' + this.START_DAY,
+        'endDate': model.date + ' ' + this.END_DAY
+      }
+    }
+    return {
+      'startDate': model.date,
+      'endDate': model.date
+    }
+  }
+  formatDateRange(model, appendTime){
+    if(appendTime){
+      return {
+        'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
+        'endDate': model.dateRange.endDate + ' ' + this.END_DAY
+      }
+    }
+    return {
+      'startDate': model.dateRange.startDate,
+      'endDate': model.dateRange.endDate
+    }
+  }
+
+  formatDateModel(data){
+    if(data.radSelection === 'date'){
+      return data.dateFrom ? {'date': data.dateFrom} : {'date': ''}
+    }else if(data.radSelection === 'dateRange'){
+      return data.dateFrom && data.dateTo ? {'dateRange': {'startDate' : data.dateFrom, 'endDate': data.dateTo}} : {'dateRange': {'startDate' : '', 'endDate': ''}}
+    }
+  }
+
   runOpportunity() {
+    var appendTime = this.currDateTab === this.RESPONSE;
+    var dateObj = this.formatDateWrapper(this.currDateTab, appendTime);
 
     // make api call
     this.runOppSub = this.opportunityService.runOpportunity({
       keyword: this.keywordSplitter(this.keywordsModel),
       pageNum: this.pageNum,
+      status: this.statusCheckboxModel.toString(),
+      noticeType: this.noticeTypeCheckboxModel.toString(),
+      sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
+      dateTab: this.currDateTab,
+      dateFilter: dateObj,
+      facets: this.oppFacets.toString(),
       Cookie: this.cookieValue,
     }).subscribe(
       data => {
@@ -118,6 +351,19 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         this.oldKeyword = this.keyword;
         this.initLoad = false;
         this.showOpp = true;
+
+        if(data._embedded && data._embedded.facets) {
+          for(var facet of data._embedded.facets) {
+            switch(facet['name']) {
+              case 'status':
+                this.statusCheckboxConfig.options = this.buildStatusFilterOptions(facet['buckets']);
+                    break;
+              case 'type':
+                this.noticeTypeCheckboxConfig.options = this.buildStatusFilterOptions(facet['buckets']);
+                    break;
+            }
+          }
+        }
       },
       error => {
         console.error('Error!!', error);
@@ -138,13 +384,21 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.qParams['keyword'] = this.keyword;
   }
 
+  setSortModel(sortBy) {
+    if(sortBy.substring(0, 1) == '-') {
+      return {type: sortBy.substring(1), sort: 'desc'};
+    } else {
+      return {type: sortBy, sort: 'asc'};
+    }
+  }
+
   pageChange(pagenumber) {
     this.pageNum = pagenumber;
     this.workspaceRefresh();
   }
 
   public addContractOpportunityClick(): void {
-    this.router.navigate(['opportunities/add']);
+    this.router.navigate(['opp/add']);
   }
 
   workspaceSearchModel(event) {
@@ -166,7 +420,6 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   }
 
   keywordRebuilder(keywordStringOrArray){
-
     // if passed value is string
     if(typeof(keywordStringOrArray) === "string"){
       // use split to convert string to array
@@ -283,6 +536,148 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     });
   }
 
+  // builds the options for status filter with counts included from api call -- returns to runProgram()
+  buildStatusFilterOptions(data){
+    var returnOptions = [];
+
+    for(var property in data){
+      var newObj = {};
+      data[property]['count'] = data[property]['count'] == null ? 0 : data[property]['count'];
+      var isZero = data[property]['count'] === 0 ? true : false;
+      switch(data[property]['name']){
+        case 'total_active':
+          newObj = {value: 'published', label: 'Active (' + data[property]['count'] + ')', name: 'checkbox-active', disabled: isZero ? true : false};
+          break;
+        case 'total_draft':
+          newObj = {value: 'draft', label: 'Drafts (' + data[property]['count'] + ')', name: 'checkbox-draft', disabled: isZero ? true : false};
+          break;
+        case 'total_archived':
+          newObj = {value: 'archived', label: 'Archived (' + data[property]['count'] + ')', name: 'checkbox-archived', disabled: isZero ? true : false};
+          break;
+        case 'total_presolicitation':
+          newObj = {value: 'p', label: 'Presolicitation (' + data[property]['count'] + ')', name: 'checkbox-presolicitation', disabled: isZero ? true : false};          
+          break;
+        case 'total_award_notice':
+          newObj = {value: 'a', label: 'Award Notice (' + data[property]['count'] + ')', name: 'checkbox-award-notice', disabled: isZero ? true : false};
+          break;
+        case 'total_notification_amendment':
+          newObj = {value: 'm', label: 'Modification/Amendment/Cancel (' + data[property]['count'] + ')', name: 'checkbox-notification-amendment', disabled: isZero ? true : false};
+          break;
+        case 'total_sources_sought':
+          newObj = {value: 'r', label: 'Sources Sought (' + data[property]['count'] + ')', name: 'checkbox-sources-sought', disabled: isZero ? true : false};
+          break;
+        case 'total_special_notice':
+          newObj = {value: 's', label: 'Special Notice (' + data[property]['count'] + ')', name: 'checkbox-special-notice', disabled: isZero ? true : false};
+          break;
+        case 'total_foreign_government':
+          newObj = {value: 'f', label: 'Foreign Government Standard (' + data[property]['count'] + ')', name: 'checkbox-foreign-govt', disabled: isZero ? true : false};
+          break;
+        case 'total_sale_surplus':
+          newObj = {value: 'g', label: 'Sale of Surplus Property (' + data[property]['count'] + ')', name: 'checkbox-sale-surplus', disabled: isZero ? true : false};
+          break;
+        case 'total_combined_synopsis':
+          newObj = {value: 'k', label: 'Combined Synopsis/Solicitation (' + data[property]['count'] + ')', name: 'checkbox-synopsis', disabled: isZero ? true : false};
+          break;
+        case 'total_justification_approval':
+          newObj = {value: 'j', label: 'Justification and Approval (J&A) (' + data[property]['count'] + ')', name: 'checkbox-justification-approval', disabled: isZero ? true : false};
+          break;
+        case 'total_intent_bundle':
+          newObj = {value: 'i', label: 'Intent to Bundle Requirements (DoD-Funded) (' + data[property]['count'] + ')', name: 'checkbox-bundle-req', disabled: isZero ? true : false};
+          break;
+        case 'total_fair_opportunity':
+          newObj = {value: 'l', label: 'Fair Opportunity / Limited Sources Justification (' + data[property]['count'] + ')', name: 'checkbox-fair-opportunity', disabled: isZero ? true : false};
+          break;
+        default:
+          newObj = null;
+          break;
+      }
+
+      // add new object to our returnOptions
+      if(newObj){
+        returnOptions.push(newObj);
+      }
+    }
+    return returnOptions;
+  }
+
+  // status filter model change
+  statusModelChange(event){
+    if(this.statusCheckboxModel[0] === ''){
+      this.statusCheckboxModel.splice(0, 1);
+    }
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+
+  // status filter model change
+  noticeTypeModelChange(event){
+    if(this.noticeTypeCheckboxModel[0] === ''){
+      this.noticeTypeCheckboxModel.splice(0, 1);
+    }
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+
+  sortModelChange(event){
+    this.pageNum = 0;
+    this.oldSortModel = this.sortModel;
+    this.sortModel = event;
+    this.workspaceRefresh();
+  }
+
+  dateModelChange(event){
+    this.filterDisabled = true;
+    if(event['date']){
+      if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
+        this.internalDateModel['startDate'] = event['date'];
+        this.internalDateModel['endDate'] = event['date'];
+        this.dateRadio = 'date';
+        this.filterDisabled = false;
+      }
+    } else if(event['dateRange']){
+        // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
+        if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
+          if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
+            this.internalDateModel['startDate'] = event['dateRange']['startDate'];
+            this.internalDateModel['endDate'] = event['dateRange']['endDate'];
+            this.dateRadio = 'dateRange';
+            this.filterDisabled = false;
+          }
+        }
+    }
+  }
+
+  clearDateFilter(){
+    this.postedDateFilterModel = {};
+    this.responseDateFilterModel = {};
+    this.archiveDateFilterModel = {};
+    this.internalDateModel = {};
+    this.pageNum = 0;
+
+    this.workspaceRefresh();
+  }
+
+  clearAllFilters(){
+    //clear status && notice type
+    this.statusCheckboxModel = this.defaultStatus;
+    this.noticeTypeCheckboxModel = [];
+
+    //clear keyword
+    this.keywordsModel = [];
+
+    //clear date filter
+    this.postedDateFilterModel = {};
+    this.responseDateFilterModel = {};
+    this.archiveDateFilterModel = {};
+    this.internalDateModel = {};
+    this.pageNum = 0;
+
+    //reset sort
+    this.oldSortModel = this.defaultSort;
+    this.sortModel = this.defaultSort;
+    
+    this.workspaceRefresh();
+  }
 
   workspaceRefresh(){
     let qsobj = this.setupQS();

@@ -1,30 +1,39 @@
-<div>
-  <div class="usa-grid-full m_H-3x">
-    <div class="usa-width-one-half clearfix" *ngIf="shouldShowPending || shouldShowEscalated">
-      <strong class="m_B-0">Role Requests</strong>
-      <div>
-        <a *ngIf='shouldShowPending' routerLink="/role-management/requests" [queryParams]="{status: 1}">{{pendingCount === 0 ? '0' : pendingCount}} Pending</a>
-        <br>
-        <a *ngIf='shouldShowEscalated' routerLink="/role-management/requests" [queryParams]="{status: 2}">{{escalatedCount === 0 ? '0' : escalatedCount}} Escalated</a>
-      </div>
+<sam-autocomplete
+  #autoComplete
+  [ngModelOptions]="{standalone: true}"
+  [allowAny]="false"
+  [(ngModel)]="dummySearchValue"
+  [labelText]="'Find User'"
+  [config]="userConfig"
+  (enterEvent)="onPersonChange($event)"
+  [httpRequest]="request">
+</sam-autocomplete>
+
+<div class="sam-ui divided selection relaxed list">
+  <a *ngIf='shouldShowPending' 
+    routerLink="/workspace/myfeed/requests" 
+    [queryParams]="{statIds: 1, reqIds: 1}"
+    class="item">
+    <div class="sam-ui horizontal mini label" 
+      [class.blue]="pendingCount !== 0">
+      {{pendingCount === 0 ? '0' : pendingCount}} 
     </div>
-    <div class="usa-width-one-half clearfix">
-      <sam-autocomplete
-        #autoComplete
-        [ngModelOptions]="{standalone: true}"
-        [allowAny]="false"
-        [(ngModel)]="dummySearchValue"
-        [labelText]="'Find User'"
-        [config]="userConfig"
-        (enterEvent)="onPersonChange($event)"
-        [httpRequest]="request"
-      ></sam-autocomplete>
-      <br>
-      <button routerLink='/role-management/bulk-update' class="usa-button usa-button-primary m_R-0" style="width: 100%">Bulk Update</button>
-    </div>
-  </div>
-  <div class="rm-nav m_H-3x clearfix" *ngIf="shouldShowRoleDefinitions || shouldShowRoleDirectory">
-    <a *ngIf="shouldShowRoleDefinitions" [routerLink]="'/role-management/workspace'" class="pull-left">Role Definitions<i class="text-light-blue fa fa-chevron-circle-right m_L-2x"></i></a>
-    <a *ngIf="shouldShowRoleDirectory" [routerLink]="'/role-management/roles-directory'" class="pull-right">Go to Roles Directory<i class="text-light-blue fa fa-chevron-circle-right m_L-2x"></i></a>
-  </div>
+    Pending Role Requests
+  </a>
+  <a class="item" routerLink='/role-management/bulk-update'>
+    <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+    Bulk Update
+  </a>
+  <a *ngIf="shouldShowRoleDefinitions" 
+    class="item" 
+    [routerLink]="'/role-management/workspace'">
+    <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+    Role Definitions
+  </a>
+  <a *ngIf="shouldShowRoleDirectory" 
+    class="item" 
+    [routerLink]="'/role-management/roles-directory'">
+    <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+    Go to Roles Directory
+  </a>
 </div>

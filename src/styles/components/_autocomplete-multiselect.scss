@@ -2,8 +2,8 @@
     width: 100%;
     clear: both;
     position: relative;
-    
-    .clear-all-container {  
+
+    .clear-all-container {
       text-align: right;
     }
 
@@ -49,7 +49,7 @@
       }
     }
 
-    li.category-item:hover, li.category-item.selected, 
+    li.category-item:hover, li.category-item.selected,
     li.category-name.selectable:hover, li.category-name.selectable.selected {
      background-color: #0071bc;
      color: white;
@@ -58,7 +58,7 @@
       color: #cccccc;
      }
     }
-    
+
     li.category-item.marked{
       color: #AAA;
     }
@@ -68,7 +68,7 @@
       padding: 0.7rem 0.7em;
     }
 
-    label { 
+    label {
       .required {
         float: right;
         font-style: italic;
@@ -76,6 +76,7 @@
     }
 
     .sam-autocomplete-multiselect-input {
+      background-color: white;
       width: 100%;
       padding: 0.7rem 0.7rem;
       border: 1px solid black;
@@ -102,10 +103,14 @@
           right: 8px;
         }
       }
-      
+
       &.active{
         border:1px solid #96c8da;
         border-bottom:1px solid #fff;
+      }
+      &.chips.active{
+        border:1px solid #96c8da;
+        border-bottom:1px solid #96c8da;
       }
 
       textarea {
@@ -117,7 +122,8 @@
         resize: none;
         border: 0;
         outline: none;
-        box-shadow: none;  
+        box-shadow: none;
+        overflow: hidden;
       }
     }
   }
@@ -128,8 +134,8 @@
     max-width: 43rem;
     padding: 0;
   }
-  
-  
+
+
   sam-agency-picker-v2 ul.multiselect-parent-list{
     top: 44px !important;
   }

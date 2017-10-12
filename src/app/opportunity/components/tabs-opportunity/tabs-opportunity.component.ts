@@ -1,10 +1,7 @@
 import {Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OpportunityService } from "../../../../api-kit/opportunity/opportunity.service";
-import { OpportunityFormService } from "../../opportunity-operations/framework/service/opportunity-form.service";
-import { OpportunityFormViewModel } from "../../opportunity-operations/framework/data-model/opportunity-form.model";
-import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
-import * as Cookies from 'js-cookie';
+import {ActivatedRoute, Router} from '@angular/router';
+import {OpportunityService} from "../../../../api-kit/opportunity/opportunity.service";
+import {OpportunityFormService} from "../../opportunity-operations/framework/service/opportunity-form/opportunity-form.service";
 
 @Component({
   selector: 'tabs-opp',
@@ -37,40 +34,19 @@ export class TabsOpportunityComponent implements OnInit {
 
   cookieValue: string;
 
-  buttonText: any[] = [];
-  toggleButtonOnAccess: boolean = false;
-  toggleButtonOnErrors: boolean = false;
-
-  notifySuccessFooterAlertModel = {
-    title: "Success",
-    description: "Successfully sent notification.",
-    type: "success",
-    timer: 3000
-  };
-
-  notifyErrorFooterAlertModel = {
-    title: "Error",
-    description: "Error sending notification.",
-    type: "error",
-    timer: 3000
-  };
-
   private tabItems: any = {
-    review: { label: "Authenticated", routeConfig: "opportunities/:id/review"},
-    edit: { label: "Edit", routeConfig: "opportunities/:id/edit"},
-    public: { label: "Public", routeConfig: "opportunities/:id"},
+    review: {label: "Authenticated", routeConfig: "opp/:id/review"},
+    edit: {label: "Edit", routeConfig: "opp/:id/edit"},
+    public: {label: "Public", routeConfig: "opportunities/:id"},
   };
 
   constructor(
-    private alertFooterService: AlertFooterService,
-    private service: OpportunityFormService,
-    private oppService: OpportunityService,
+    private oppService: OpportunityFormService,
     private route: ActivatedRoute,
-    private router: Router,
-    private cdr: ChangeDetectorRef) {
+    private router: Router) {
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.currentRouteConfig = this.route.snapshot['_routeConfig'].path;
   }
 
@@ -82,13 +58,13 @@ export class TabsOpportunityComponent implements OnInit {
 
   public onEditClick(page: string[]) {
     let id = this.data.id;
-    let url = '/opportunities/' + id + '/edit'.concat(page.toString());
+    let url = '/opp/' + id + '/edit'.concat(page.toString());
     this.router.navigateByUrl(url);
   }
 
-  public onReviewClick(){
+  public onReviewClick() {
     let id = this.data.id;
-    let url = '/opportunities/' + id + '/review';
+    let url = '/opp/' + id + '/review';
     this.router.navigateByUrl(url);
   }
 
@@ -100,7 +76,7 @@ export class TabsOpportunityComponent implements OnInit {
 
   public onDeleteClick() {
     this.deleteModal.openModal();
-    let title = this.data.title;
+    let title = this.data.data.title;
     if (title !== undefined && title !== '') {
       this.modalConfig.description = 'Please confirm that you want to delete "' + title + '".';
     } else {
@@ -126,25 +102,25 @@ export class TabsOpportunityComponent implements OnInit {
 
   public canEdit() {
     // show edit button if user has update permission, except on published FALs, or if user has revise permission
-    //TODO Implement permission check
-    if (this.data.status && this.data.status.code == 'draft') {
+    if (this.data != null && this.data._links != null && this.data._links['opportunity:edit'] != null && this.data.status && this.data.status.code == 'draft') {
       return true;
     }
     return false;
   }
 
   public canReview() {
-    //TODO Implement permission check
     // show edit button if user is logged in and has access.
-    if (this.data.id) {
+    if (this.data != null && this.data._links != null && this.data._links['opportunity:access'] != null && this.data.status && this.data.status.code == 'draft') {
       return true;
     }
     return false;
   }
 
   public canDelete() {
-    //TODO Implement permission check
-    return this.data.status && this.data.status.code === 'draft';
+    if (this.data != null && this.data._links != null && this.data._links['opportunity:delete'] != null && this.data.status && this.data.status.code == 'draft') {
+      return true;
+    }
+    return false;
   }
 
   /*
@@ -152,10 +128,10 @@ export class TabsOpportunityComponent implements OnInit {
    *  Emmit events
    * ========================================
    */
-  tabClicked(tab){
+  tabClicked(tab) {
     if ((this.currentRouteConfig != tab.routeConfig) && this.data.id) {
       this.tabClick.emit({
-        label:tab.label,
+        label: tab.label,
         routeConfig: tab.routeConfig
       });
     }

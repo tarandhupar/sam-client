@@ -5,7 +5,7 @@ import {SideNavComponent} from "../../../../assistance-listing/assistance-listin
 import {AppComponentsModule} from "../../../../app-components/app-components.module";
 import {SamUIKitModule} from "sam-ui-kit/index";
 import {OpportunityFormModule} from "../../opportunity-form.module";
-import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form.model";
+import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import {OpportunityDescriptionComponent} from "./description.component";
 import {Observable} from "rxjs";
 import {OpportunityService} from "../../../../../api-kit/opportunity/opportunity.service";

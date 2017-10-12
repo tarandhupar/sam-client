@@ -25,13 +25,13 @@
   </div>
 
   <div class="sam-ui segment">
-    <h4 [attr.id]="'fal-contact-list'">Headquaters Office</h4>
-    <sam-label-wrapper [attr.id]="'headquarters-office'" [hint]="headquartersOfficeHint"></sam-label-wrapper>
+    <h4 [attr.id]="'fal-contact-list'">Headquarters Office</h4>
 
     <sam-listbuilder
       #contactLB
-      [attr.id]="'contact-information'"
+      [attr.id]="'contact-information-list'"
       [max]="2"
+      [hint]="headquartersOfficeHint"
       addEntryText="Add Contact"
       [hideDefaultBtns]="true"
       [deleteModalFlag]="true"

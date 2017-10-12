@@ -159,4 +159,20 @@ describe('OPPWorkspacePage', () => {
     expect(component.data[0]['officeName']).toBe("FISH AND WILDLIFE SERVICE");
   });
 
+  it('Initializes the status checkbox options', () => {
+    expect(component.statusCheckboxConfig.options.length).toBe(3);
+  });
+
+  it('Initializes the notice type checkbox options', () => {
+    expect(component.noticeTypeCheckboxConfig.options.length).toBe(11);
+  });
+
+  it('Initializes the default sort', () =>{
+    expect(component.defaultSort.type).toBe('postedDate');
+  });
+
+  it('Initializes the default date tab', () =>{
+    expect(component.currDateTab).toBe('posted');
+  });
+
 });

@@ -40,6 +40,7 @@ export class WrapperService {
         "rms2": "/rms/v2",
         "relatedPrograms": "/fac/v1/programs/relatedprograms",
         "aac": "/aac/v1",
+        "aac2": "/v2/aac",
         "searchDictionaries": "/sgs/v1/dictionaries",
         'preferences': '/preferences',
         'fileExtracts':'/fileextractservices/v1/api/listfiles',
@@ -48,6 +49,7 @@ export class WrapperService {
 		'watchlist':'/watchlistservice/v1/api/recorddetail',
         'subscriptions':'/watchlistservice/v1/api/subscriptions',
         'myFeeds':'/feeds/v1',
+        'gettoggeServices':'/feature/v1/',
     };
 
   constructor(private _http: Http){}
@@ -94,7 +96,7 @@ export class WrapperService {
         "method": RequestMethod.Get,
         "headers": oHeader,
         "body": oApiParam.body,
-        "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+        "url": baseUrl + ((!oApiParam.prefix) ? '' : oApiParam.prefix ) + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
     };
 
     switch (method.toUpperCase()){

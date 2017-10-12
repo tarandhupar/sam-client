@@ -1,16 +1,34 @@
-<div class="fh-widget relative">
-  <input class="pull-right fh-widget-search-bar" placeholder="Find an Organization" (keyup.enter)="searchFH()" [(ngModel)]="searchText" *ngIf="widgetPermission === 'all'">
-  <h4 class="usa-width-one-whole m_L-1x m_T-0" *ngIf="widgetPermission === 'all'">Organization Updates</h4>
-  <div class="usa-width-one-whole p_T-2x p_L-4x" *ngIf="widgetPermission === 'all'">
-    <div class="usa-width-one-third p_L-5x">
-      <div class="usa-width-one-whole text-center"><span class="fh-widget-num">{{createdTotal}}</span></div>
-      <div class="usa-width-one-whole text-center p_T-2x"><span class="fh-widget-tag">Created</span></div>
+<ng-container *ngIf="widgetPermission === 'all'">
+  <h4 class="sam-ui header">
+    Find an Organization
+  </h4>
+  <input placeholder="Find an Organization" 
+    (keyup.enter)="searchFH()" 
+    [(ngModel)]="searchText" >
+
+  <h4 class="sam-ui header">
+    Organization Updates
+  </h4>
+  <div grid class="equal width relaxed">
+    <div class="column">
+      <div class="sam-ui divided selection list">
+        <a class="item">
+          <div class="sam-ui horizontal mini label" 
+            [class.blue]="createdTotal !== 0">
+            {{ createdTotal }}
+          </div>
+          Created
+        </a>
+        <a class="item">
+          <div class="sam-ui horizontal mini label" 
+            [class.blue]="expiredTotal !== 0">
+            {{ expiredTotal }}
+          </div>
+          Expired
+        </a>
+      </div>
     </div>
-    <div class="usa-width-one-third p_R-5x">
-      <div class="usa-width-one-whole text-center"><span class="fh-widget-num">{{expiredTotal}}</span></div>
-      <div class="usa-width-one-whole text-center p_T-2x"><span class="fh-widget-tag">Expired</span></div>
-    </div>
-    <div class="usa-width-one-third">
+    <div class="column">
       <sam-radio-button
         [(model)]="fhRadioModel"
         (modelChange)="getFHCounts()"
@@ -22,11 +40,13 @@
       </sam-radio-button>
     </div>
   </div>
+</ng-container>
 
-  <div class="usa-grid m_T-3x" *ngIf="widgetPermission === 'partial'">
-    <input class="usa-width-one-whole" placeholder="Find an Organization" (keyup.enter)="searchFH()" [(ngModel)]="searchText" >
-  </div>
-
-</div>
-
-
+<ng-container *ngIf="widgetPermission === 'partial'">
+  <h4 class="sam-ui header">
+    Find an Organization
+  </h4>
+  <input placeholder="Find an Organization" 
+    (keyup.enter)="searchFH()" 
+    [(ngModel)]="searchText">
+</ng-container>

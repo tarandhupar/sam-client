@@ -68,7 +68,7 @@ export class BulkUpdateComponent {
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
   currentTab: any = 'filters';
   user: any = {};
-  org;
+  org = {};
   domainOptionsByRole = {};
   existingDomains = [];
   updatedDomains = [];
@@ -323,7 +323,7 @@ export class BulkUpdateComponent {
   }
 
   validateFilters() {
-    return this.org && this.org.value && this.existingDomains && this.existingDomains.length && this.existingRole;
+    return this.org && this.org.orgKey && this.existingDomains && this.existingDomains.length && this.existingRole;
   }
 
   validateAccess() {
@@ -335,7 +335,7 @@ export class BulkUpdateComponent {
       this.errors.domains = 'A domain is required';
     }
 
-    if (!this.org || !this.org.value) {
+    if (!this.org || !this.org.orgKey) {
       this.errors.org = 'An organization is required';
     }
 
@@ -512,7 +512,11 @@ export class BulkUpdateComponent {
   }
 
   onOrganizationChange(org) {
-    this.org = org;
+    if (!org) {
+      this.org = {};
+    } else {
+      this.org = org;
+    }
   }
 
   getExistingDomainNames() {

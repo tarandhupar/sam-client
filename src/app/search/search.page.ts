@@ -514,7 +514,6 @@ export class SearchPage implements OnInit {
     disabled: false,
   };
   actionsCallback = () => {
-    console.log("I succeeded");
   };
   actions: Array<any> = [
     { name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback }
@@ -524,13 +523,6 @@ export class SearchPage implements OnInit {
     title: "Success",
     description: "",
     type: "success",
-    timer: 3000
-  };
-  // save error alert obj
-  errorFooterAlertModel = {
-    title: "Error",
-    description: "",
-    type: "error",
     timer: 3000
   };
 
@@ -552,8 +544,8 @@ export class SearchPage implements OnInit {
       this.savedSearchService.getAllSavedSearches({Cookie: cookie, size: 0}).subscribe(res => {
         this.showSavedSearches = true;
       }, error => {
-        if(error && error.status === 404) {
-          console.log("Error", error);
+        if(error && (error.status === 404 || error.status === 400)) {
+          console.error("Error", error);
         } else {
           this.showSavedSearches = true;
         }
@@ -605,6 +597,8 @@ export class SearchPage implements OnInit {
         // persist duns filter data
         if(this.dunsListString && this.dunsListString.length > 0){
           this.grabPersistData(this.dunsListString);
+        } else {
+          this.dunsModelList = [];
         }
         this.isSearchComplete = false;
         this.runSearch();
@@ -1812,30 +1806,39 @@ export class SearchPage implements OnInit {
   }
 
   onModalClose(event){
+    this.savedSearchName = '';
+    this.textConfig.errorMessage = '';
   }
 
   saveSearch(event) {
     if(this.savedSearchName != '') {
+      this.sortChange = true; //this is required to construct selected sort by
       let data = {
         'index': this.index.split(" "),
         'key': this.savedSearchName.toLowerCase().replace(/ /g, "_"),
         'parameters': this.setupQS(false)
       };
       delete data.parameters['index'];
+      delete data.parameters['saved_search'];
       var createSavedSearch = {
         'title': this.savedSearchName,
         'data': data
       };
       this.savedSearchService.createSavedSearch(this.cookieValue, createSavedSearch).subscribe(res => {
-        this.modal1.closeModal();
-        this.successFooterAlertModel.description = 'Search saved.';
+        this.sortChange = false;
         this.searchName = this.savedSearchName;
+        this.successFooterAlertModel.description = 'Search saved.';
+        this.modal1.closeModal();
+        var qsobj = this.setupQS(false);
+        let navigationExtras: NavigationExtras = {
+          queryParams: qsobj
+        };
+        this.router.navigate(['/search'], navigationExtras);
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
       }, error => {
         let errorRes = error.json();
         if(error && error.status === 400) {
-          this.errorFooterAlertModel.description = errorRes.message;
-          this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.errorFooterAlertModel)));
+          this.textConfig.errorMessage = errorRes.message;
         }
       })
     } else {

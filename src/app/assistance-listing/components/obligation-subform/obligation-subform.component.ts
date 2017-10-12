@@ -112,7 +112,7 @@ export class FALObligationSubFormComponent {
   textareaModel = '';
   textareaConfig = {
     label: "Additional Information",
-    name: 'Additional Information',
+    name: 'Additional-Information',
   };
 
   autocompleteConfig: any = {

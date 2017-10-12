@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 const mappings = {
+  "/": "Home",
   "/forgot": "Forgot Password",
   "/help": "Help",
   "/help/overview": "Help",
@@ -10,6 +11,10 @@ const mappings = {
   "/profile/details": "Personal Details",
   "/profile/password": "Reset Password",
   "/profile/migrations": "Migrations",
+  "/profile/access": "Roles",
+  "/role-management/bulk-update": "Bulk Update",
+  "/role-management/roles-directory": "Roles Directory",
+  "/role-management/requests": "Requests",
   "/signin": "Sign In",
   "/search": "Search",
   "/signup": "Sign Up",
@@ -30,9 +35,14 @@ const buildTitle =  function buildTitle(defaultString: string, appendedString: s
 
 @Injectable()
 export class SamTitleService {
-  private _titleTemplate: string = 'beta.SAM.gov';
+  public _titleTemplate: string = 'beta.SAM.gov';
 
   constructor(private ngTitleService: Title) {}
+
+  setTitleString(postFix) {
+    const t = this._titleTemplate + ' | ' + postFix;
+    this.ngTitleService.setTitle(t);
+  }
 
   setTitle(route: string): void {
     // Get rid of route params, not necessary for setting title

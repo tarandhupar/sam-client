@@ -39,7 +39,7 @@ export class RMBackDoorComponent {
   }
 
   onSetCookiesClick() {
-    Cookie.set('superToken', this.role, 30);
+    Cookie.set('superToken', this.role, 30, '/');
   }
 
   onClearCookiesClick() {

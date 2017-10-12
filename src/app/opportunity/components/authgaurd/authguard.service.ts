@@ -1,62 +1,76 @@
-import { Router, CanActivate } from '@angular/router';
-import { Injectable, Input } from '@angular/core';
-import { OpportunityFormViewModel } from '../../opportunity-operations/framework/data-model/opportunity-form.model';
-import { OpportunityFormService } from '../../opportunity-operations/framework/service/opportunity-form.service';
-
+import {Router, CanActivate} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Injectable, Input} from '@angular/core';
+import {OpportunityFormViewModel} from '../../opportunity-operations/framework/data-model/opportunity-form/opportunity-form.model';
+import {OpportunityFormService} from '../../opportunity-operations/framework/service/opportunity-form/opportunity-form.service';
 
 @Injectable()
 export class OpportunityAuthGuard implements CanActivate {
   @Input() viewModel: OpportunityFormViewModel;
-  location: any;
+  _oppLinks: any; //store getPermissions() permissions
 
-  constructor(private router: Router, private service: OpportunityFormService) {
+  constructor(private router: Router, private opportunityFormService: OpportunityFormService) {
   }
 
   canActivate() {
-
-    let asyncCallFinishedFlag = false;
-    if(this.hasCookie()) {
-      this.service.isOpportunityEnabled().subscribe(data => {
-        //if(data.status == '404' || data.status == '401') {
-        if(data.status == '404') {
-          this.router.navigate(['accessrestricted']);
-          return false;
+    if (this.hasCookie()) {
+      return this.opportunityFormService.getPermissions().map((res: any) => {
+        //Feature Toggle case and managing other cases depending on user permission
+        if (res._links != null) {
+          this._oppLinks = res;
+          return true;
         }
-        asyncCallFinishedFlag = true;
+
+        this.router.navigate(['accessrestricted']);
+        return false;
+      }).catch(() => {
+        this.router.navigate(['accessrestricted']);
+        return Observable.of(false);
       });
-    }
-    else {
+    } else {
       this.router.navigate(['signin']);
       return false;
     }
-
-    if(asyncCallFinishedFlag)
-      return true;
   }
 
   hasCookie() {
-    if(OpportunityFormService.getAuthenticationCookie() == undefined) {
+    if (this.opportunityFormService.authCookie == undefined) {
       return false;
     }
     return true;
   }
 
-  checkPermissions(screen: string, viewModel: any) {
+  checkPermissions(screen: string, opportunity: any): boolean {
+    this.viewModel = new OpportunityFormViewModel(opportunity);
+    let isRestricted: boolean = true;
+    let restrictedUrl: string = 'accessrestricted';
+
     switch (screen) {
       case 'addoredit':
         let url;
+        //add case
         if (this.router.url.indexOf('/add') >= 0) {
-          if (!viewModel.title) {
-            url = '/opportunities/add'.concat('#header-information');
+          if (this._oppLinks != null && this._oppLinks._links != null && this._oppLinks._links['opportunity:create'] != null && !this.viewModel.title) {
+            isRestricted = false;
+            url = '/opp/add'.concat('#header-information');
             this.router.navigateByUrl(url);
           }
-        } else {
-          if (!viewModel.title) {
-            url = '/opportunities/' + viewModel.opportunityId + '/edit'.concat('#header-information');
-            this.router.navigateByUrl(url);
+        } else { //edit
+          if (opportunity._links != null && opportunity._links['opportunity:edit'] != null && this.viewModel.title != null) {
+            if (this.viewModel.status.code == 'draft') {
+              isRestricted = false;
+            } else { //any other status different than draft -> kick user out
+              restrictedUrl = '/opp/workspace';
+            }
           }
         }
         break;
     }
+
+    if (isRestricted) {
+      this.router.navigate([restrictedUrl]);
+    }
+
+    return !isRestricted;
   }
 }

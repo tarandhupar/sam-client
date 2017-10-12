@@ -28,7 +28,7 @@ export class SavedSearchService {
             oParam: {
               page: (obj.pageNum == undefined) ? '' : obj.pageNum,
               size: (obj.size == undefined) ? '' : obj.size,
-              sort: (obj.sort == undefined) ? '' : obj.sort
+              sortBy: (obj.sort == undefined) ? '' : obj.sort
             },
             headers: {
                 "X-Auth-Token": obj.Cookie

@@ -83,12 +83,6 @@ export const routes: Routes = [{
       data: {pageName:'access/roles'}
     },
     {
-      path: 'requests',
-      component: RoleMgmtWorkspace,
-      canActivate: [CheckAccessGuard],
-      data: {pageName:'access/requests'}
-    },
-    {
       path: 'roles-directory',
       component: RolesDirectoryPage,
       canActivate: [CheckAccessGuard],

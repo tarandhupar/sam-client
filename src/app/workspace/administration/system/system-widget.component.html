@@ -1,17 +1,13 @@
-<div>
-  <div class="widget-body">
-    <span class="system-accounts">
-      <ul class="list-accounts">
-        <li *ngFor="let account of accounts; let $index = index;">
-          <a [routerLink]="['system/profile', account._id]" [innerText]="account.systemName" preserveQueryParams></a>
-        </li>
-      </ul>
-    </span>
-    <span class="system-controls text-center">
-      <a class="usa-button usa-button-primary" [routerLink]="['system/profile']" preserveQueryParams>Create</a>
-    </span>
-  </div>
-  <a class="widget-footer text-right" [routerLink]="['system']" preserveQueryParams *ngIf="accounts.length">
-    Go to Directory <span class="fa fa-chevron-circle-right"></span>
-  </a>
+<div class="sam-ui divided selection list">
+  <ng-container *ngFor="let account of accounts; let $index = index;">
+    <a [routerLink]="['system/profile', account._id]" 
+      class="item"
+      [innerText]="account.systemName" preserveQueryParams>
+    </a>
+  </ng-container>
 </div>
+
+<a class="sam-ui secondary button" 
+  [routerLink]="['system/profile']" preserveQueryParams>
+  Create
+</a>

@@ -30,16 +30,14 @@ export class FHAccessGuard implements CanActivateChild, CanActivate {
   canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
 
     let orgId = route.parent.params['orgId'];
-    return this.accessService.getAccess(orgId, true)
+    return this.accessService.getAccess(orgId, false)
       .map(
         res => {
-          console.log("correct");
           return true;
         }
       )
       .catch(
         error => {
-          console.log(error);
           let status = error.status;
           if (status === 401) {
             this.router.navigate(['/signin'], {queryParams: {redirect: this.router.url}});

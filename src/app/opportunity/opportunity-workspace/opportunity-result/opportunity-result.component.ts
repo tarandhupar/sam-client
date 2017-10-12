@@ -18,8 +18,8 @@ export class OpportunityResult implements OnInit {
     if(this.data.id) {
       this.data.id = this.data.id.trim();
     }
-    if (this.data.publishedDate !== null) {
-      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y h:mm a");
+    if (this.data.postedDate !== null) {
+      this.data.postedDate = moment(this.data.postedDate).format("MMM D, Y h:mm a");
     }
     if (this.data.data.archive && this.data.data.archive !== null && this.data.data.archive.date !== null) {
       this.data.data.archive.date = moment(this.data.data.archive.date).format("MMM D, Y h:mm a");

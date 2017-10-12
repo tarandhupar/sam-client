@@ -11,10 +11,10 @@ import * as moment from 'moment/moment';
   	    <div class="eight wide column">
           <h3 class="entity-title">
             <a *ngIf="data.isActive==true" [routerLink]="['/entity', data.dunsNumber]" [queryParams]="qParams">
-              {{ data.name }}
+              {{ data.title }}
             </a>
             <span *ngIf="data.isActive==false">
-              {{ data.name }}
+              {{ data.title }}
             </span>
           </h3>
           <ul class="sam-ui small list">

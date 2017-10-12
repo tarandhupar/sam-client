@@ -56,7 +56,83 @@
         </sam-autocomplete-multiselect>
       </div>
 
+      <!-- Status Filter -->
+      <h4 class="sam-ui header">Status</h4>
+      <sam-checkbox
+        [(model)]="statusCheckboxModel"
+        (modelChange)="statusModelChange($event)"
+        [name]="statusCheckboxConfig.name"
+        [options]="statusCheckboxConfig.options"
+        [label]="statusCheckboxConfig.label"
+        [hint]="statusCheckboxConfig.hint"
+        [errorMessage]="statusCheckboxConfig.errorMessage"
+        [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
+      </sam-checkbox>
+
+      <!-- Notice Type Filter -->
+      <h4 class="sam-ui header">Notice Type</h4>
+      <sam-checkbox
+        [(model)]="noticeTypeCheckboxModel"
+        (modelChange)="noticeTypeModelChange($event)"
+        [name]="noticeTypeCheckboxConfig.name"
+        [options]="noticeTypeCheckboxConfig.options"
+        [label]="noticeTypeCheckboxConfig.label"
+        [hint]="noticeTypeCheckboxConfig.hint"
+        [errorMessage]="noticeTypeCheckboxConfig.errorMessage"
+        [hasSelectAll]="noticeTypeCheckboxConfig.hasSelectAll">
+      </sam-checkbox>
+
+            <!--Date Filter-->
+            <h4 class="sam-ui header">Date</h4>
+            <div class="sam-ui secondary pointing menu">
+              <a (click)="selectTab('posted')" class="item" [ngClass]="getColorClass('posted')">
+                Posted
+              </a>
+              <a (click)="selectTab('response')" class="item" [ngClass]="getColorClass('response')">
+                Response
+              </a>
+              <a (click)="selectTab('archive')" class="item" [ngClass]="getColorClass('archive')">
+                Archive
+              </a>
+            </div>
+            <sam-date-range-filter *ngIf="isCurrentTab('posted')"
+                                   #postedDateRangeFilter="ngModel"
+                                   [control]="postedDateRangeFilter.control"
+                                   [(ngModel)]="postedDateFilterModel"
+                                   (ngModelChange)="dateModelChange($event)"
+                                   [radioSelection]="dateFilterConfig.radSelection"
+                                   [dateRadioOptions]="dateFilterConfig.options"
+                                   [class]="'falDateFilter'">
+            </sam-date-range-filter>
+            <sam-date-range-filter *ngIf="isCurrentTab('response')"
+                                   #responseDateRangeFilter="ngModel"
+                                   [control]="responseDateRangeFilter.control"
+                                   [(ngModel)]="responseDateFilterModel"
+                                   (ngModelChange)="dateModelChange($event)"
+                                   [radioSelection]="dateFilterConfig.radSelection"
+                                   [dateRadioOptions]="dateFilterConfig.options"
+                                   [class]="'falDateFilter'">
+            </sam-date-range-filter>
+            <sam-date-range-filter *ngIf="isCurrentTab('archive')"
+                                   #archiveDateRangeFilter="ngModel"
+                                   [control]="archiveDateRangeFilter.control"
+                                   [(ngModel)]="archiveDateFilterModel"
+                                   (ngModelChange)="dateModelChange($event)"
+                                   [radioSelection]="dateFilterConfig.radSelection"
+                                   [dateRadioOptions]="dateFilterConfig.options"
+                                   [class]="'falDateFilter'">
+            </sam-date-range-filter>
+      
+            <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
+            <!--filter button-->
+            <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
+                        [buttonText]="'Filter'"></sam-button>
+
       <br>
+
+      <div>
+          <sam-button (onClick)='clearAllFilters()' [buttonText]="'Clear All'"></sam-button>
+      </div>
 
     </div>
   </sidebar>
@@ -79,6 +155,12 @@
            [totalPages]="totalPages"
            [currentPage]="pageNum+1"
            (pageChange)="pageChange($event-1)">
+
+
+          <sam-sort [ngModel]="sortModel"
+                    [options]="sortOptions"
+                    (ngModelChange)="sortModelChange($event)">
+          </sam-sort>
 
     <!-- Results -->
     <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">

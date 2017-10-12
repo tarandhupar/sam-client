@@ -5,11 +5,14 @@ import { IAMService } from "api-kit";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 import { Location } from '@angular/common';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 
 @Component ({
   templateUrl: 'organization-detail.template.html'
 })
 export class OrgDetailPage {
+
+  private crumbs: Array<IBreadcrumb> = [];
 
   orgName: string = "";
   orgId: string = "";
@@ -78,6 +81,7 @@ export class OrgDetailPage {
         this.orgHierarchyTypes = res._embedded[0].orgTypes;
         this.level = res._embedded[0].org.level;
         this.setupHierarchyPathMap(res._embedded[0].org.fullParentPath, res._embedded[0].org.fullParentPathName);
+        this.setupCrumbs(res._embedded[0].org.fullParentPath, res._embedded[0].org.fullParentPathName);
 
         this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
         this.setDeptLogo();
@@ -126,6 +130,21 @@ export class OrgDetailPage {
       this.hierarchyPathMap[this.hierarchyPath[index]] = elem;
     });
 
+  }
+
+  setupCrumbs(fullParentPath:string, fullParentPathName:string){
+    this.crumbs = [];
+    let parentOrgNames = fullParentPathName.split('.').map( e => {
+      return this.capitalize.transform(e.split('_').join(' '));
+    });
+    let parentOrgIds = fullParentPath.split('.');
+    parentOrgIds.forEach((e, i) => {
+      if(e != this.orgId){
+        this.crumbs.push({ url: '/organization-detail/'+e, breadcrumb: parentOrgNames[i]} );
+      }else{
+        this.crumbs.push({ breadcrumb: parentOrgNames[i]} );
+      }
+    });
   }
 
   onChangeOrgDetail(hierarchyName){

@@ -404,7 +404,7 @@ export class FALFormContactInfoComponent implements OnInit {
     this.showErrors.emit(this.errorService.applicableErrors);
   }
 
-  public beforeSaveAction() {
+  public beforeNavigationAction() {
     this.onSubFormCancelClick(this.contactIndex);
     if(this.sectionStatus === 'updated')
       this.atLeastOneEntryError = true;

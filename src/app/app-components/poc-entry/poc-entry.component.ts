@@ -1,8 +1,15 @@
-import { Component, ChangeDetectorRef, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef } from '@angular/core';
-import { LabelWrapper } from '../../wrappers/label-wrapper';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, AbstractControl, FormBuilder, FormGroup, FormControl, Validators, ValidatorFn } from "@angular/forms";
-import {SamFormService} from '../../form-service';
+import { ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import * as _ from "lodash";
+import { SamFormService } from '../../form-service';
+import { LabelWrapper } from '../../wrappers/label-wrapper';
 
 /**
  * The <samPhoneInput> component is a Phone entry portion of a form
@@ -31,7 +38,9 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     @Input() limit = -1;
     @Input() listBuilder;
     @Input() label;
-    
+    @Input() showAddress: boolean = true;
+    @Output() action = new EventEmitter();
+
     acSelection;
     disabledFlag: boolean;
     cachedData;
@@ -52,24 +61,31 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     };
 
     pocEntryGroup:FormGroup;
-    
+
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef){ }
 
     ngOnInit(){
-        this.pocEntryGroup = this.fb.group({
-            contactId: ["new"],
-            title: [""],
-            fullName: ["",Validators.required],
-            email: ["",[SamPOCEntryComponent.checkEmailPatternVal(this.acConfig),Validators.required]],
-            phone: ["",[SamPOCEntryComponent.checkPhonePattern,Validators.required]],
-            fax: ["",[SamPOCEntryComponent.checkFaxPattern]],
+        let controlsConfig = {
+          contactId: ["new"],
+          title: [""],
+          fullName: ["",Validators.required],
+          email: ["",[SamPOCEntryComponent.checkEmailPatternVal(this.acConfig),Validators.required]],
+          phone: ["",[SamPOCEntryComponent.checkPhonePattern,Validators.required]],
+          fax: ["",[SamPOCEntryComponent.checkFaxPattern]],
+        };
+
+        if (this.showAddress) {
+          Object.assign(controlsConfig, {
             streetAddress: ["",Validators.required],
             streetAddress2: [""],
             city: ["",Validators.required],
             state: ["",Validators.required],
             zip: ["",Validators.required],
-            country: ["",Validators.required]
-        });
+            country: ["",Validators.required],
+          });
+        }
+
+        this.pocEntryGroup = this.fb.group(controlsConfig);
     }
 
     formCancel(){
@@ -78,6 +94,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
             let lb = this.listBuilder;
             lb.cards._results[lb.editIndex].cancelEdit();
         }
+        this.action.emit({ type: 'cancel', data: this.pocEntryGroup.value });
     }
     formSubmit(){
         for(var i in this.pocEntryGroup.value){
@@ -96,11 +113,12 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
                 }
             }
             this.onChange(entry);
+            this.action.emit({ type: 'submit', data: entry });
             if(this.listBuilder){
                 let lb = this.listBuilder;
                 lb.cards._results[lb.editIndex].actionHandler('editSubmit');
             }
-        
+
         //}
     }
 
@@ -108,7 +126,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     //control value accessor methods
     onChange: any = () => { };
     onTouched: any = () => { };
-    
+
     registerOnChange(fn) {
         this.onChange = fn;
     }
@@ -154,23 +172,23 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
             let pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
             if(control.value && typeof control.value == "string" && !pattern.test(control.value)){
                 flag = {"emailError": {message: "Please enter a valid Internet email address. Format: username@host.domain."}};
-            } else if(control.value 
-                && typeof control.value == "object" 
-                && acConfig 
-                && acConfig['valueProperty'] 
-                && control.value[acConfig['valueProperty']] 
+            } else if(control.value
+                && typeof control.value == "object"
+                && acConfig
+                && acConfig['valueProperty']
+                && control.value[acConfig['valueProperty']]
                 && !pattern.test(control.value[acConfig['valueProperty']]))
                 flag = {"emailError": {message: "Please enter a valid Internet email address. Format: username@host.domain."}};
             return flag;
         }
     }
-    
+
     public static checkPhonePattern(control){
         if(control.value && control.value.length !== 10) {
             return {"phoneError": {message: 'Phone must have 10 digits'}};
         }
     }
-    
+
     public static checkFaxPattern(control){
         if(control.value && control.value.length !== 10) {
             return {"faxError": {message: 'Fax must have 10 digits'}};

@@ -9,6 +9,9 @@ import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
 import { SamModalComponent } from "sam-ui-kit/components";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { Title } from "@angular/platform-browser";
+import { SamTitleService } from "../../../api-kit/title-service/title.service";
+import { ToggleService } from "api-kit/toggle/toggle.service";
 
 @Component({
   templateUrl: 'my-access.template.html',
@@ -57,12 +60,24 @@ export class MyAccessPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertFooter: AlertFooterService,
+    private samTitle: SamTitleService,
+    private toggleService: ToggleService
   )
   {
 
   }
 
   ngOnInit( ) {
+    this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
+          console.log("Feature toggle status for enablemanagesubscription >>>>>"+isEnabled);
+          if(!isEnabled){
+             for(var i=this.navLinks.length-1; i>=0; i--) {
+               if( this.navLinks[i].text == "Manage Subscriptions") {
+                  this.navLinks.splice(i,1); break;
+               }
+             }
+         }  
+     }) ;
     this.isMyAccess = !!this.route.snapshot.data['isMyAccess'];
     let cookieUser = this.userCookieService.getUser() && this.userCookieService.getUser().uid;
     this.userName = this.route.snapshot.params['id'] || cookieUser;
@@ -104,6 +119,10 @@ export class MyAccessPage implements OnInit {
 
           if (!this.isMyAccess) {
             this.getUserDisplayName(res);
+
+            if (!this.isMyAccess) {
+              this.samTitle.setTitleString(this.fullName);
+            }
           }
 
           if (!res) {
@@ -142,7 +161,7 @@ export class MyAccessPage implements OnInit {
     if (res._links && res._links.request_access) {
       this.canRequest = true;
     }
-    if (res._links && res._links.grant_access && !this.isMyAccess) {
+    if (res._links && res._links.grant_access) {
       this.canGrant = true;
     }
   }
@@ -289,5 +308,13 @@ export class MyAccessPage implements OnInit {
         });
       }
     )
+  }
+
+  getAssignRoleLink() {
+    if (this.isMyAccess) {
+      return `/users/${this.userName}/grant-access`;
+    } else {
+      return '../grant-access';
+    }
   }
 }

@@ -1,1 +1,0 @@
-export { SearchLayoutComponent } from './search-layout.component';
