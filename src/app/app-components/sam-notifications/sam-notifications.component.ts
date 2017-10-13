@@ -7,8 +7,22 @@ import { NotificationItem } from "../interfaces";
     <ul class="notifications-list">
         <li *ngFor="let item of _notifications">
             <a (click)="linkHandler(item.link)">
-                <span class="name-block">{{ item.username }}</span>
-                <span class="text-block"><span class="text">{{item.text}}</span><br/>{{ item.datetime | dateTimeDisplay }}</span>
+                <div class="name-block text-center">
+                    <ng-container [ngSwitch]="item.type">
+                        <span *ngSwitchCase="'request'">{{ item.username }}</span>
+                        <span *ngSwitchCase="'alert'" class="usa-alert" [ngClass]="item.icon"></span>
+                        <span *ngSwitchCase="'subscription'" class="title">{{ item.title }}</span>
+                    </ng-container>
+                </div>
+                
+                <span class="text-block">
+                   <ng-container [ngSwitch]="item.type">
+                      <span *ngSwitchCase="'request'" class="text">{{ item.text }}</span>
+                      <span *ngSwitchCase="'alert'"><span class="title">{{ item.title}}</span><br/><span class="text">{{ item.text }}</span></span>
+                      <span *ngSwitchCase="'subscription'" class="text">{{ item.text }}</span>
+                    </ng-container>
+                   <br/>{{ item.datetime | dateTimeDisplay }}
+                </span>
             </a>
         </li>
         <li class="show-more">

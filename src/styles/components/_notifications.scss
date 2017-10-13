@@ -35,11 +35,21 @@ sam-notifications{
     }
     .text-block{
       display:block;
-      margin-left:10px;    
+      margin-left:10px;
       span.text{
         color:#000;
         font-weight:normal;
       }
+    }
+    .usa-alert{
+      width: auto;
+      background-position: 0 0;
+      margin-top: 10px;
+      padding-right: 2em;
+    }
+    .title{
+      color: $color-black;
+      font-weight: bold;
     }
   }
 }
