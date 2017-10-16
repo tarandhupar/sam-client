@@ -342,14 +342,18 @@ export class FHService {
   }
 
   addAuthHeader(options) {
-    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
+    let superToken = Cookie.get('superToken');
+    let iPlanetCookie = Cookie.get('iPlanetDirectoryPro');
 
-    if (!iPlanetCookie) {
-      return;
+    if (iPlanetCookie) {
+      Cookie.delete('superToken');
     }
 
+    if (!iPlanetCookie && !superToken) {
+      return;
+    }
     options.headers = options.headers || {};
-    options.headers['X-Auth-Token'] = iPlanetCookie;
+    options.headers['X-Auth-Token'] = iPlanetCookie ||  '***'+superToken;
   }
 
   callApi(oApiParam: any, convertToJSON: boolean = true) {

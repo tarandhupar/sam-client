@@ -26,7 +26,11 @@ export class RMBackDoorComponent {
     'department.role.admin@gsa.gov',
     'al.admin@gsa.gov',
     'opp.admin@gsa.gov',
-    'regular.user@gsa.gov',
+    'fh.super.admin@gsa.gov',
+    'fh.department.admin@gsa.gov',
+    'fh.agency.admin@gsa.gov',
+    'fh.office.admin@gsa.gov',
+    'fh.regular.user@gsa.gov',
   ];
   public role;
 
