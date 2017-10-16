@@ -2,12 +2,13 @@
   *ngIf="pageReady"
   theme="inside"
   [attr.id]="'page-title'"
-  [breadcrumbs]=""
+  [breadcrumbs]="crumbs"
   section="Workspace"
   [title]="pageTitle">
 
   <div class="sam-ui grid">
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
+      <div class="sam-ui hidden divider"></div>
       <div id="page-data" class="sam-ui segment" *ngIf="program">
         <div class="sam-ui medium header">
           Title

@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep, indexOf, isNumber, merge } from 'lodash';
 import { FHService, IAMService } from 'api-kit';
 
-import { User } from 'app/authentication/user.interface';
-import { KBA } from 'authentication/kba.interface';
+import { KBA, User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './fsd-user.component.html',

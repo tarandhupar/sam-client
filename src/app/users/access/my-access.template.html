@@ -70,7 +70,7 @@
           <th></th>
         </thead>
         <tbody>
-          <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && 'clickable'">
+          <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && roleOrg?._links?.edit_access && 'clickable'">
             <td>{{orgName(roleOrg.organization)}}</td>
             <td>{{roleOrg.role.val}}</td>
             <td>
@@ -94,7 +94,7 @@
       <div class="user-access">
         <div class="p_T-6x text-center" style="min-height: 300px;">
           <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>
-          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../grant-access']" >Assign Role</a></span>
+          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../assign-roles']" >Assign Role</a></span>
         </div>
       </div>
     </ng-container>

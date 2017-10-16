@@ -17,6 +17,7 @@
 
   <div columns="6" *ngIf="toggleControl.fh">
     <workspace-widget title="Federal Hierarchy"
+      [actions]="actions"
       [shortcut]="{ text: 'Go to Federal Hierarchy', routerLink: ['/federal-hierarchy'] }">
       <fh-widget></fh-widget>
     </workspace-widget>

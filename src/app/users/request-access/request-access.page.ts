@@ -133,7 +133,7 @@ export class RequestAccessPage {
       domainIds: val.domains.map(d => +d.key),
       requestorMessage: val.comment,
       roleId: val.role,
-      organization : { id:val.org.value, val:val.org.name}
+      organization : { id:val.org.orgKey, val:val.org.name}
     };
 
     this.userAccessService.requestAccess(body).subscribe(

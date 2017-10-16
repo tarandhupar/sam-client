@@ -5,10 +5,10 @@ const getExpiration = ((minutes: number) => {
 });
 
 export default {
-  cookies(minutes) {
+  cookies(minutes: number = 15) {
     return {
       path: '/',
-      expires: getExpiration(minutes)
+      expires: getExpiration(minutes),
     };
   },
 
@@ -59,6 +59,17 @@ export default {
       init:   '/password/api/fsd/{id}/passwordReset',
       verify: '/password/api/reset/passwordResetVerifyEmail',
     },
+  },
+
+  cws: {
+    application: {
+      get:     '/cws/v1/applications/{id}',
+      create:  '/cws/v1/applications/submit',
+      update:  '/cws/v1/applications/{id}',
+      delete:  '/cws/v1/applications/{id}',
+      approve:  '/cws/v1/applications/approve',
+      reject:  '/cws/v1/applications/reject',
+    }
   },
 
   system: {

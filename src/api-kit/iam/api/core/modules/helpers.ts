@@ -10,7 +10,7 @@ const config = merge({}, $config.endpoints.iam),
         baseUri: `${API_UMBRELLA_URL}/iam`
       });
 
-Cookies.defaults = config.cookies;
+Cookies.defaults = config.cookies();
 
 export { config };
 export { utils as utilities };

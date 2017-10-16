@@ -122,6 +122,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         ];
         if(this.limit){
             this.orgLevels.length = this.limit;
+            this.orgLimit = this.orgLevels.length;
         }
     }
 
@@ -206,12 +207,8 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
     }
 
     updateAdvanced(lvl,selection){
-        let useFpds = this.hasFpds;
         if(selection){
-            if (lvl >= 1) {
-                useFpds = false;
-            }
-            this.serviceCall(selection, true, useFpds).subscribe(oData => {
+            this.serviceCall(selection, true, this.hasFpds).subscribe(oData => {
                 //filter and sort if too many results
                 oData = oData._embedded[0].org;
                 oData["hierarchy"] = oData["hierarchy"]

@@ -296,7 +296,7 @@ export class RolesDirectoryPage {
   onUserAction(action, user) {
     const userName = user.user.email;
     if (action.name === 'grant_access') {
-      this.router.navigate(['/role-management', 'users', userName, 'grant-access']);
+      this.router.navigate(['/role-management', 'users', userName, 'assign-roles']);
     } else {
       this.router.navigate(['/role-management', 'users', userName, 'access']);
     }

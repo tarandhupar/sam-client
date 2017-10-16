@@ -46,6 +46,8 @@ import { UserService } from "../role-management/user.service";
 import { UserServiceMock } from "../role-management/user.service.mock";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
 
+import { FileValueAccessorDirective } from 'app-directives';
+
 @NgModule({
   imports: [
     routing,
@@ -109,6 +111,11 @@ import { HelpContentManagementEditComponent } from "./content-management/edit/co
     HelpContentManagementViewComponent,
     HelpContentManagementEditComponent,
     HelpContentManagementSideNavComponent,
+
+    /**
+     * Directives
+     */
+    FileValueAccessorDirective,
   ],
   providers: [
     /**

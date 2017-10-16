@@ -8,26 +8,25 @@ import { Section } from './section';
   templateUrl: './system-information.component.html',
 })
 export class SystemInformationComponent extends Section {
-  @Input() form: FormGroup;
+  @Input('group') form: FormGroup;
 
   constructor() {
     super();
     this.labels = {
-      systemName: {
+      systemAccountName: {
         label: 'System Account Name',
         hint: 'Provide a unique name for your new system account.',
       },
 
-      systemVersion: {
+      interfacingSystemVersion: {
         label: 'Interfacing System Name and Version',
         hint: 'Provide the name and version of the system that will be connecting to SAM.gov.',
       },
 
-      systemDescription: {
+      systemDescriptionAndFunction: {
         label: 'System Description ond Function',
         hint: '<strong>Example</strong>: <em>The IRS stated in a current MOU that their system tracks all incoming commitment requests and captures the information necessary to make awards</em>',
       }
     }
   }
-  // @Input() section: section;
 }

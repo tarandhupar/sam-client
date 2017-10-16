@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 export class OpportunitySectionNames {
   static readonly HEADER_INFORMATION = 'header-information';
+  static readonly AWARD_DETAILS = 'award';
   static readonly GENERAL_INFORMATION = 'general-information';
   static readonly CLASSIFICATION = 'classification';
   static readonly DESCRIPTION = 'description';

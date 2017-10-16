@@ -39,7 +39,7 @@ export const routes: Routes = [{
           data: { grantOrEdit: 'edit', pageName: 'users/:id/edit-access' },
         },
         {
-          path: ':id/grant-access',
+          path: ':id/assign-roles',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
           data: { grantOrEdit: 'grant', pageName: 'users/:id/grant-access' },
@@ -81,6 +81,12 @@ export const routes: Routes = [{
       component: RoleDetailsPage,
       canActivate: [CheckAccessGuard],
       data: {pageName:'access/roles'}
+    },
+    {
+      path: 'requests',
+      component: RoleMgmtWorkspace,
+      canActivate: [CheckAccessGuard],
+      data: {pageName:'access/requests'}
     },
     {
       path: 'roles-directory',

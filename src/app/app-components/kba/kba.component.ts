@@ -76,13 +76,15 @@ export class SamKBAComponent {
       value: this.answerKey
     };
 
-    this.$questions = this.questions.map(function(question, intQuestion) {
-      return {
-        label: question[keys.label] || ('Question' + intQuestion + 1),
-        value: question[keys.value] || intQuestion,
-        disabled: question.disabled || false
-      };
-    });
+    this.$questions = [{ label: '', value: '', disabled: true }].concat(
+      this.questions.map((question, intQuestion) => {
+        return {
+          label: question[keys.label] || ('Question' + intQuestion + 1),
+          value: question[keys.value] || intQuestion,
+          disabled: question.disabled || false
+        };
+      })
+    );
   }
 
   setUnsubmitted() {

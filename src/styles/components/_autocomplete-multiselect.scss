@@ -1,15 +1,18 @@
   .sam-autocomplete-multiselect {
-    width: 100%;
+    max-width: 46rem;
     clear: both;
     position: relative;
 
     .clear-all-container {
       text-align: right;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      z-index: 100;
     }
 
     button.usa-button-link {
       text-decoration: none;
-      color: #0071bc;
       z-index: 1;
     }
 
@@ -78,12 +81,13 @@
     .sam-autocomplete-multiselect-input {
       background-color: white;
       width: 100%;
-      padding: 0.7rem 0.7rem;
+      padding: 0.7rem 36px 0.7rem 0.7rem;
       border: 1px solid black;
       vertical-align: middle;
       transition: all 0.4s ease;
       display: flex;
       flex-flow: row wrap;
+      position: relative;
 
       .sam-ui.label{
         position: relative;

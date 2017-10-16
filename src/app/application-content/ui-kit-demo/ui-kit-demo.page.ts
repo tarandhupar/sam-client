@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Directive } from '@angular/core';
 import { AlertFooterService } from '../../app-components/alert-footer';
 
 import { FormControl,FormBuilder,FormGroup } from '@angular/forms';
@@ -11,6 +11,51 @@ import { LocationService } from 'api-kit/location/location.service';
 import { CommentsDemoService, CommentsService } from './comments-demo.service';
 
 import { Observable } from 'rxjs';
+
+export class ACTestService implements AutocompleteService {
+  private values = [
+    'Colin',
+    'Carlos',
+    'Diego',
+    'Christy',
+    'Lorrin',
+    'Maureen',
+    'Josh',
+    'Brian',
+    'Justin',
+    'Nathan',
+    'Christine',
+    'Kevin',
+    'Pam',
+    'Tim',
+    'Minh'
+  ];
+
+  private offset: number = 1;
+  private limit: number = 0;
+
+  private start: number = 0;
+  private end: number = 2;
+
+  setFetchMethod(_: any) {}
+
+  fetch(val: string, pageEnd: boolean, serviceOptions: any) {
+    if (pageEnd) {
+      this.start = this.end;
+      this.end = this.end + 2;
+      if (this.end > this.values.length) return Observable.of([]);
+    };
+    return Observable.of(this.values.slice(this.start, this.end));
+  }
+}
+
+@Directive({
+  selector: 'sam-autocomplete-refactor[test]',
+  providers: [
+    { provide: AutocompleteService, useClass: ACTestService }
+  ]
+})
+export class TestACDirective {}
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
@@ -770,11 +815,6 @@ export class UIKitDemoPage {
     this.locationSearchStateJSON = {};
   }
 
-
-
-
-
-
   getAllCountiesJSON(statQueryStr){
     this.locationService.getAllCounties(statQueryStr).subscribe(
       res => {
@@ -815,4 +855,15 @@ export class UIKitDemoPage {
   clearSearchCountyJSON(){
     this.locationSearchCountyJSON = {};
   }
+
+  /**
+   * Sam Autocomplete Refactor
+   */
+  accb(input: string): Observable<any[]> {
+    return Observable.of(['Colin', 'Carlos', 'Diego']);
+  }
+
+  private howdy;
+  private howdydo;
+  private howdydody;
 }

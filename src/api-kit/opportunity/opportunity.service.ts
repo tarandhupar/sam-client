@@ -91,6 +91,24 @@ export class OpportunityService {
     return this.oAPIService.call(apiParam);
   }
 
+  getContractOpportunityHistoryById(id: string, authToken: string = null) {
+    let apiParam = {
+      name: 'contractOpportunity',
+      suffix: '/opportunities/' + id + '/history',
+      oParam: {},
+      headers: {},
+      method: 'GET'
+    };
+
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
+      apiParam.headers = {
+        "X-Auth-Token": authToken
+      }
+    }
+
+    return this.oAPIService.call(apiParam);
+  }
+
   getOpportunityLocationById(id: string) {
     let apiParam = {
       name: 'opportunity',
@@ -135,6 +153,27 @@ export class OpportunityService {
     return this.oAPIService.call(apiParam);
   }
 
+  getContractOpportunityPackages(noticeIds: string, authToken: string = null) {
+    let apiParam = {
+      name: 'contractOpportunity',
+      suffix: '/opportunities/attachments',
+      oParam: {
+        'noticeIds': noticeIds
+      },
+      headers: {},
+      method: 'GET'
+    };
+
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
+      apiParam.headers = {
+        "X-Auth-Token": authToken
+      }
+    }
+
+    return this.oAPIService.call(apiParam);
+  }
+
+
   getPackagesCount(noticeIds: string) {
     let apiParam = {
       name: 'opportunity',
@@ -144,6 +183,26 @@ export class OpportunityService {
       },
       method: 'GET'
     };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getContractOpportunityPackagesCount(noticeIds: string, authToken: string = null) {
+    let apiParam = {
+      name: 'contractOpportunity',
+      suffix: '/opportunities/packages/count',
+      oParam: {
+        'noticeIds': noticeIds
+      },
+      headers: {},
+      method: 'GET'
+    };
+
+    if (typeof authToken !== 'undefined' && authToken !== '' && authToken != null) {
+      apiParam.headers = {
+        "X-Auth-Token": authToken
+      }
+    }
 
     return this.oAPIService.call(apiParam);
   }

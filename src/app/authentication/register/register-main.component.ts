@@ -10,9 +10,7 @@ import { SamKBAComponent, SamPasswordComponent } from '../../app-components';
 import { AgencyPickerComponent } from '../../app-components/agency-picker/agency-picker.component'
 
 import { IAMService } from 'api-kit';
-
-import { User } from '../user.interface';
-import { KBA } from '../kba.interface';
+import { KBA, User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './register-main.component.html',
@@ -87,9 +85,9 @@ export class RegisterMainComponent {
     officeID: '',
 
     kbaAnswerList: [
-      <any>{ questionId: '', answer: '' },
-      <any>{ questionId: '', answer: '' },
-      <any>{ questionId: '', answer: '' }
+      <KBA>{ questionId: '', answer: '' },
+      <KBA>{ questionId: '', answer: '' },
+      <KBA>{ questionId: '', answer: '' }
     ],
 
     userPassword: '',
@@ -177,7 +175,7 @@ export class RegisterMainComponent {
 
     onInitSuccess = (data => {
       let userData = merge({}, data.user || {}),
-        phone;
+          phone;
 
       userData._id = userData.id || userData._id || '';
       userData.firstName = userData.firstname || userData.firstName || '';
@@ -191,7 +189,7 @@ export class RegisterMainComponent {
 
       // Transform KBA questions data response
       if(isArray(data.kbaQuestionList)) {
-        const kbaAnswer = <KBA>{ questionId: 0, answer: '' };
+        const kbaAnswer = <KBA>{ questionId: '', answer: '' };
         let intTarget;
 
         this.store.questions = data.kbaQuestionList;
@@ -206,7 +204,7 @@ export class RegisterMainComponent {
       phone = (this.user.workPhone || '').split('x');
 
       this.user.workPhone = this.sanitizePhone(phone[0]);
-      this.user.personalPhone = this.sanitizePhone(this.user.personalPhone);
+      this.user.personalPhone = this.sanitizePhone(this.user.personalPhone, false);
 
       // Set rendering to gov vs non-gov
       this.states.isGov = data.gov || false;
@@ -230,6 +228,8 @@ export class RegisterMainComponent {
     this.states.isGov = true;
 
     this.api.iam.user.get(user => {
+      user.personalPhone = (user.personalPhone || '').replace(/[^0-9]/g, '');
+
       this.user = merge({}, this.user, user, {
         kbaAnswerList: [
           { questionId: 1, answer: 'Answer1' },
@@ -277,10 +277,18 @@ export class RegisterMainComponent {
     })
   }
 
-  sanitizePhone(phone: string): string {
-    phone = (phone || '').replace(/[^0-9]/g, '');
-    phone = (phone.length < 11 ? '1' : '' ) + phone;
-    return phone;
+  sanitizePhone(phone: string = null, country: boolean = true): string {
+    if(phone) {
+      phone = phone.replace(/[^0-9]/g, '');
+    }
+
+    if(country && phone.length < 11) {
+      phone = `1${phone}`;
+    } else if(!country && phone.length > 10) {
+      phone = phone.substring(1, phone.length - 1);
+    }
+
+    return (phone || '');
   }
 
   setHierarchy(hierarchy: { label: string, value: number }[]) {

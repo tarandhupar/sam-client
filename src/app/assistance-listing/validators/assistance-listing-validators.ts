@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { ValidationErrors } from "../../app-utils/types";
 import * as moment from 'moment/moment';
 import { Observable } from 'rxjs';
+import { Response } from '@angular/http';
 
 export class falCustomValidatorsComponent {
 
@@ -230,6 +231,7 @@ export class falCustomValidatorsComponent {
   }
 
   static dateRangeRequired(c:AbstractControl){
+
     if(c.dirty && (!c.value || !c.value.startDate)){
       return {
         dateRangeError: {
@@ -244,6 +246,7 @@ export class falCustomValidatorsComponent {
     if(c.value && c.value.startDate && c.value.endDate){
       let startDateM = moment(c.value.startDate);
       let endDateM = moment(c.value.endDate);
+
       if(startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0){
         return {
           dateRangeError: {
@@ -255,37 +258,37 @@ export class falCustomValidatorsComponent {
       if((!startDateM.isValid() || c.value.startDate == "Invalid date") && (!endDateM.isValid() || c.value.endDate == "Invalid date")) {
         return {
           dateRangeError: {
-            message: "Invalid start and end date."
+            message: "Invalid from and to date."
           }
         }
       }
     }
 
-    //console.log("c",c);
     if (c.value && c.value.startDate){
       let startDateM = moment(c.value.startDate);
       if(!startDateM.isValid() || c.value.startDate == "Invalid date"){
         return {
           dateRangeError: {
-            message: "Invalid start date"
+            message: "Invalid from date"
           }
         }
       }
     }
-    else if(!c.value || !c.value.startDate){
+    else if(!c.value || !c.value.startDate) {
       if (c.value && c.value.endDate){
         let endDateM = moment(c.value.endDate);
         if(!endDateM.isValid() || c.value.endDate == "Invalid date"){
           return {
             dateRangeError: {
-              message: "Start date is required and Invalid end date"
+              message: "From date is required and Invalid to date"
             }
           }
         }
       }
+
       return {
         dateRangeError: {
-          message: "Start date is required"
+          message: "From date is required"
         }
       };
     }
@@ -295,7 +298,7 @@ export class falCustomValidatorsComponent {
       if(!endDateM.isValid() || c.value.endDate == "Invalid date"){
         return {
           dateRangeError: {
-            message: "Invalid end date"
+            message: "Invalid to date"
           }
         }
       }

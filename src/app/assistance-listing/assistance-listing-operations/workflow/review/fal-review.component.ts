@@ -190,7 +190,12 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       route: "#history"
     }]
   };
-
+  currentFY: number;
+  prevFY: number;
+  nextFY: number;
+  obligations = [];
+  fiscalYears = [];
+  
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
               private route: ActivatedRoute,
@@ -225,8 +230,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         this.cookieValue = cookie;
       }
     }
-
-
+    this.getFiscalYears();
     let programAPISource = this.loadProgram();
     this.loadDictionaries();
     this.loadLatestRevision();
@@ -245,7 +249,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
 
   }
-
+  
   private makeSidenav() {
     this.route.fragment.subscribe((fragment: string) => {
       for (let item of this.sidenavModel.children) {
@@ -330,7 +334,11 @@ export class FALReviewComponent implements OnInit, OnDestroy {
           this.items.push(item);
         }
       }
-
+  
+      if (this.program && this.program.data && this.program.data.financial && this.program.data.financial.obligations && this.program.data.financial.obligations.length > 0) {
+        this.obligations = this.populateObligations(this.program.data.financial.obligations);
+      }
+      
       // Run validations
       this.viewModel = new FALFormViewModel(this.program);
       this.errorService.viewModel = this.viewModel;
@@ -625,22 +633,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     apiSource.subscribe(api => {
       if (api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
-
-        for(let item of  api.data.financial.obligations) {
-          if(!this.totalsByYear['totalpFY']) {
-            this.totalsByYear['totalpFY'] = 0;
-          }
-          if(!this.totalsByYear['totalcFY']) {
-            this.totalsByYear['totalcFY'] = 0;
-          }
-          if(!this.totalsByYear['totalbFY']) {
-            this.totalsByYear['totalbFY'] = 0;
-          }
-
-          this.totalsByYear['totalpFY'] = this.totalsByYear['totalpFY'] + item.values[0].actual;
-          this.totalsByYear['totalcFY'] = this.totalsByYear['totalcFY'] + item.values[1].estimate;
-          this.totalsByYear['totalbFY'] = this.totalsByYear['totalbFY'] + item.values[2].estimate;
-        }
       }
 
       if (api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
@@ -783,11 +775,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       console.log('Error deleting program ', err);
     });
   }
-
-  public getCurrentFY(event) {
-    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
-  }
-
   // different alerts are shown depending on the FAL's status
   private setAlerts() {
     let draftAlert = {
@@ -953,6 +940,9 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     this.statusBannerLeadingText = msg;
   }
   checkForErrors(){
+    if(!this.errorService.viewModel) {
+      return false;
+    }
     return FALFormErrorService.hasErrors(this.errorService.applicableErrors);
   }
 
@@ -1067,5 +1057,130 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     if(event === 'Assistance Workspace') {
       this.router.navigateByUrl('/fal/workspace');
     }
+  }
+  private getFiscalYears() {
+    this.prevFY = this.getCurrentFY() - 1;
+    this.currentFY = this.getCurrentFY();
+    this.nextFY = this.getCurrentFY() + 1;
+    this.fiscalYears = [this.prevFY , this.currentFY , this.nextFY];
+  }
+  
+  private getCurrentFY() {
+    let date = null;
+    let d = new Date();
+    date = d.getFullYear();
+    return date;
+  }
+  
+  private populateObligations(obligations : any[]) {
+    let obligationArray = [];
+    if (obligations && obligations.length > 0) {
+      for (let obligation of obligations) {
+        obligationArray.push(this.buildJSON(obligation))
+      }
+    }
+    return obligationArray;
+  }
+  
+  private buildJSON(obligation: any) {
+    let obligationData = {};
+    let values = [];
+    values = this.buildValues(obligation);
+    obligationData['values'] = values;
+    obligationData['assistanceType'] = obligation['assistanceType'] ? obligation['assistanceType'] : null;
+    return obligationData;
+  }
+  private buildValues(obligation: any) {
+    let values = [];
+    let yearsObj = [];
+    let missingYears = [];
+    let prevFYActualorEstimate = 0;
+    let currentFYEstimate = 0;
+    let nextFYEstimate = 0;
+    
+    if (!this.totalsByYear['totalpFY']) {
+      this.totalsByYear['totalpFY'] = 0;
+    }
+    if (!this.totalsByYear['totalcFY']) {
+      this.totalsByYear['totalcFY'] = 0;
+    }
+    if (!this.totalsByYear['totalbFY']) {
+      this.totalsByYear['totalbFY'] = 0;
+    }
+    if (obligation['values'] && obligation['values'].length > 0) {
+      let obj = {};
+      for (let value of obligation['values']) {
+        if (value['year'] === this.prevFY) {
+          obj = {};
+          obj['year'] = this.prevFY;
+          if ((value['actual'] && value['estimate']) || value['actual']) {
+            obj['actual'] = value['actual'];
+            prevFYActualorEstimate = value['actual'];
+          } else if (value['estimate']) {
+            obj['estimate'] = value['estimate'];
+            prevFYActualorEstimate = value['estimate'];
+          } else if (value['flag'] === 'nsi') {
+            obj['flag'] = value['flag'];
+          } else if (value['flag'] === 'ena') {
+            obj['flag'] = value['flag']
+          }
+          yearsObj.push(value['year']);
+          values.push(obj);
+        } else if (value['year'] === this.currentFY) {
+          obj = {};
+          obj['year'] = this.currentFY;
+          if (value['estimate']) {
+            obj['estimate'] = value['estimate'];
+            currentFYEstimate = value['estimate'];
+          } else if (value['flag'] === 'nsi') {
+            obj['flag'] = value['flag']
+          } else if (value['flag'] === 'ena') {
+            obj['flag'] = value['flag']
+          }
+          yearsObj.push(value['year']);
+          values.push(obj);
+        } else if (value['year'] === this.nextFY) {
+          obj = {};
+          obj['year'] = this.nextFY;
+          if (value['estimate']) {
+            obj['estimate'] = value['estimate'];
+            nextFYEstimate = value['estimate'];
+          } else if (value['flag'] === 'nsi') {
+            obj['flag'] = value['flag']
+          } else if (value['flag'] === 'ena') {
+            obj['flag'] = value['flag']
+          }
+          yearsObj.push(value['year']);
+          values.push(obj);
+        }
+      }
+      missingYears = this.missingFiscalYear(this.fiscalYears, yearsObj);
+      if(missingYears && missingYears.length > 0) {
+        for(let msYear of missingYears) {
+          obj={};
+          obj['year'] = msYear;
+          obj['estimate'] = null
+          values.push(obj);
+        }
+      }
+      this.totalsByYear['totalpFY'] = this.totalsByYear['totalpFY'] + prevFYActualorEstimate;
+      this.totalsByYear['totalcFY'] = this.totalsByYear['totalcFY'] + currentFYEstimate;
+      this.totalsByYear['totalbFY'] = this.totalsByYear['totalbFY'] + nextFYEstimate;
+      values = this.sortObligations(values , this.fiscalYears);
+    }
+    return values;
+  }
+  
+  private missingFiscalYear(fisacalYears, yearsObj) {
+    let missing = fisacalYears.filter(item => yearsObj.indexOf(item) < 0);
+    return missing;
+  }
+  
+  sortObligations(arr , order) {
+    let sortedObligation = [];
+    sortedObligation = arr.sort(function (a , b) {
+      return order.indexOf(a.year) > order.indexOf(b.year);
+    });
+    return sortedObligation;
   }
 }

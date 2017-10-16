@@ -1,17 +1,17 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { FALFormService } from './fal-form.service';
-import {ActivatedRoute, NavigationCancel, NavigationEnd, NavigationStart, Router, ResolveStart} from '@angular/router';
-import { FALFormViewModel } from './fal-form.model';
-import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
-import { FALSectionNames } from './fal-form.constants';
-import { FALFormErrorService } from './fal-form-error.service';
-import { AuthGuard } from '../../../api-kit/authguard/authguard.service';
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
-import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
-import { AlertFooterService } from '../../app-components/alert-footer/alert-footer.service';
-import { ProgramService } from '../../../api-kit/program/program.service';
-import { IBreadcrumb } from 'sam-ui-kit/types';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, ResolveStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { MenuItem } from 'sam-ui-kit/components/sidenav';
+import { IBreadcrumb } from 'sam-ui-kit/types';
+import { AuthGuard } from '../../../api-kit/authguard/authguard.service';
+import { ProgramService } from '../../../api-kit/program/program.service';
+import { AlertFooterService } from '../../app-components/alert-footer/alert-footer.service';
+import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
+import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
+import { FALFormErrorService } from './fal-form-error.service';
+import { FALSectionNames } from './fal-form.constants';
+import { FALFormViewModel } from './fal-form.model';
+import { FALFormService } from './fal-form.service';
 
 @Component({
   moduleId: __filename,
@@ -71,7 +71,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   @ViewChildren('form') form;
   title: string;
-  private routeSubscribe;
+  private routeSubscriptions: Subscription = new Subscription();
   private pristineIconClass = 'pending';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
@@ -138,20 +138,22 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
               private programService: ProgramService) {
     // jump to top of page when changing sections
     let comp = this;
-    this.routeSubscribe = this.router.events.subscribe(event => {
-      // hack to avoid jumpiness when changing from /add to /edit
-      if(event instanceof NavigationEnd) {
-        if(this.scrollToTop) {
-          window.scrollTo(0, 0);
-        } else {
-          this.scrollToTop = true;
+    this.routeSubscriptions.add(
+      this.router.events.subscribe(event => {
+        // hack to avoid jumpiness when changing from /add to /edit
+        if (event instanceof NavigationEnd) {
+          if (this.scrollToTop) {
+            window.scrollTo(0, 0);
+          } else {
+            this.scrollToTop = true;
+          }
         }
-      }
-    });
+      })
+    );
   }
 
   ngOnDestroy() {
-    this.routeSubscribe.unsubscribe();
+    this.routeSubscriptions.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -247,8 +249,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
             if (field) {
               field.scrollIntoView();
             }
-          } else {
-            console.error('Warning: Field id is same as section name');
           }
         }, 1000);
       } else {
@@ -420,6 +420,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public showErrors(errors) {
     this.errorDisplayComponent.formatErrors(errors);
     this.hasErrors = FALFormErrorService.hasErrors(this.errorService.errors);
+    this.cdr.detectChanges();
     this.updateSidenavModel();
   }
 
@@ -570,9 +571,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveForm(navObj , actionType) {
+    this.falFormViewModel.setSectionStatus(this.sections[this.currentSection], 'updated');
     this.subscriptions.push(this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.dataAndAdditionalInfo)
       .subscribe(api => {
-          this.falFormViewModel.setSectionStatus(this.sections[this.currentSection], 'updated');
           this.afterSaveAction(api);
           let section = this.sectionLabels[this.currentSection];
           this.successFooterAlertModel.description = section + ' saved successfully.';
@@ -692,17 +693,19 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   canDeactivate() {
     let comp = this;
-    comp.routeSubscribe = this.router.events.subscribe(event => {
-      comp.globalLinksUrl = event['url'];
-      if (comp.formNavigationFlag) {
-        if (event instanceof NavigationCancel) {
+    comp.routeSubscriptions.add(
+      this.router.events.subscribe(event => {
+        comp.globalLinksUrl = event['url'];
+        if (comp.formNavigationFlag) {
+          if (event instanceof NavigationCancel) {
+          }
+        } else {
+          if (event instanceof ResolveStart) {
+            comp.formsDirtyCheck('links');
+          }
         }
-      } else {
-        if (event instanceof ResolveStart) {
-          comp.formsDirtyCheck('links');
-        }
-      }
-    });
+      })
+    );
     return true;
   }
 }

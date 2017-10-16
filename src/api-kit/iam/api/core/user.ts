@@ -4,7 +4,7 @@ import { config, isDebug } from './modules/helpers';
 import * as Cookies from 'js-cookie';
 import * as moment from 'moment';
 
-Cookies.defaults = config.cookies(15);
+Cookies.defaults = config.cookies();
 
 const LDAP_MAPPINGS = {
   // Reverse Mappings
@@ -27,6 +27,10 @@ const ROLE_MAPPINGS = {
     'fsd.deactivate',
     'fsd.passreset',
   ],
+
+  reviewer: [
+    //TODO
+  ],
 };
 
 export class User {
@@ -46,6 +50,7 @@ export class User {
 
   public systemAccount = false;
   public fsd = false;
+  public reviewer = false;
 
   constructor(params) {
     params = params || {};
@@ -62,7 +67,10 @@ export class User {
 
           for(role in ROLE_MAPPINGS) {
             roles = ROLE_MAPPINGS[role];
-            this[role] = this.contains(this._links, roles);
+
+            if(roles.length) {
+              this[role] = this.contains(this._links, roles);
+            }
           }
         });
 
@@ -183,6 +191,6 @@ export class User {
 
   static updateCache(data: { [key: string]: number|boolean|string }) {
     data = merge(Cookies.getJSON('IAMSession') || {}, data || {});
-    Cookies.set('IAMSession', data, config.cookies(15));
+    Cookies.set('IAMSession', data, config.cookies());
   }
 }

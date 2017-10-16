@@ -11,7 +11,7 @@ import { FHService, IAMService, PeoplePickerService } from 'api-kit';
 import { User } from 'api-kit/iam/api/core/user';
 
 import { Validators as $Validators } from 'app/authentication/shared/validators';
-import { System, POC } from '../system.interface';
+import { System, POC } from 'api-kit/iam/intefaces';
 
 @Component({
   templateUrl: './system-profile.component.html',

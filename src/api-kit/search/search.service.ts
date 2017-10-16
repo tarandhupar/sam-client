@@ -134,10 +134,46 @@ export class SearchService {
       oApiParam.oParam['set_aside'] = obj.set_aside;
     }
 
+    if(typeof obj['publish_date'] !== undefined && obj['publish_date'] !== null && obj['publish_date'] !== ''){
+      oApiParam.oParam['publish_date'] = obj['publish_date'];
+    }
+
+    if(typeof obj['publish_date.from'] !== undefined && obj['publish_date.from'] !== null && obj['publish_date.from'] !== ''){
+      oApiParam.oParam['publish_date.from'] = obj['publish_date.from'];
+    }
+
+    if(typeof obj['publish_date.to'] !== undefined && obj['publish_date.to'] !== null && obj['publish_date.to'] !== ''){
+      oApiParam.oParam['publish_date.to'] = obj['publish_date.to'];
+    }
+
+    if(typeof obj['modified_date'] !== undefined && obj['modified_date'] !== null && obj['modified_date'] !== ''){
+      oApiParam.oParam['modified_date'] = obj['modified_date'];
+    }
+
+    if(typeof obj['modified_date.from'] !== undefined && obj['modified_date.from'] !== null && obj['modified_date.from'] !== ''){
+      oApiParam.oParam['modified_date.from'] = obj['modified_date.from'];
+    }
+
+    if(typeof obj['modified_date.to'] !== undefined && obj['modified_date.to'] !== null && obj['modified_date.to'] !== ''){
+      oApiParam.oParam['modified_date.to'] = obj['modified_date.to'];
+    }
+
+    if(typeof obj['response_date'] !== undefined && obj['response_date'] !== null && obj['response_date'] !== ''){
+      oApiParam.oParam['response_date'] = obj['response_date'];
+    }
+
+    if(typeof obj['response_date.from'] !== undefined && obj['response_date.from'] !== null && obj['response_date.from'] !== ''){
+      oApiParam.oParam['response_date.from'] = obj['response_date.from'];
+    }
+
+    if(typeof obj['response_date.to'] !== undefined && obj['response_date.to'] !== null && obj['response_date.to'] !== ''){
+      oApiParam.oParam['response_date.to'] = obj['response_date.to'];
+    }
+
     //showRegionalOffices only when
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;
-      oApiParam.oParam['index'] = 'ro';
+      oApiParam.oParam['index'] = 'ro'; 
       oApiParam.oParam['sort'] = '-relevance';
     }
 

@@ -20,7 +20,7 @@
           <div [ngClass]="{ 'usa-input-error': hasError('username') }">
             <label for="signin-username">Email</label>
             <span class="usa-input-error-message" *ngIf="hasError('username')" role="alert">{{ getError('username') }}</span>
-            <input type="text" id="signin-username" autocomplete="off" formControlName="username" readonly="readonly" onfocus="this.removeAttribute('readonly');"/>
+            <input type="text" id="signin-username" autocomplete="off" formControlName="username" readonly="readonly" onfocus="this.removeAttribute('readonly');" #input />
           </div>
 
           <div [ngClass]="{ 'usa-input-error': hasError('password') }">
@@ -79,7 +79,7 @@
     <div class="usa-width-one-whole">
       <form class="usa-form form-otp" autocomplete="off" [formGroup]="form" (ngSubmit)="login()">
         <legend class="usa-title">One Time Password</legend>
-        <p>We take security seriously. We have sent you a one-time access code by email.</p>
+        <p>We take security seriously. We have sent you a one-time access code by {{ preference }}.</p>
         <fieldset>
           <div formGroupName="3" [ngClass]="{ 'usa-input-error': hasError('otp') }">
             <label for="signin-otp">Enter your one-time access code</label>

@@ -482,19 +482,19 @@
               <tr>
                 <th scope="col">Obligations</th>
                 <th scope="col">
-                  FY {{ program.data.financial.obligations[0]['values'][0]['year'] }}
+                  FY {{ prevFY }}
                 </th>
                 <th scope="col">
-                  FY {{ program.data.financial.obligations[0]['values'][1]['year'] }} (est.)
+                  FY {{ currentFY }} (est.)
                 </th>
                 <th scope="col">
-                  FY {{ program.data.financial.obligations[0]['values'][2]['year'] }} (est.)
+                  FY {{ nextFY }} (est.)
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="obligations">
               <ng-container
-                *ngFor="let item of program.data?.financial?.obligations; let i=index">
+                *ngFor="let item of obligations; let i=index">
                 <tr>
                   <td>
                     <inline-error-message
@@ -507,8 +507,8 @@
                     </ng-container>
                   </td>
                   <td>
-                    <ng-container *ngIf="item.values[0]?.actual">
-                      ${{ item.values[0]?.actual }}
+                    <ng-container *ngIf="item.values[0]?.actual || item.values[0]?.estimate">
+                      ${{ ((item.values[0]?.actual && item.values[0]?.estimate) || item.values[0]?.actual) ? item.values[0]?.actual : item.values[0]?.estimate }}
                     </ng-container>
                     <ng-container *ngIf="item.values[0]?.flag == 'nsi'">
                       Not Separately Identifiable

@@ -1,7 +1,14 @@
 import { merge } from 'lodash';
+import * as moment from 'moment';
 import { User } from '../user';
 
-export function getMockUser() {
+import {
+  CWSApplication,
+  System,
+  User as IUser,
+} from '../../../interfaces'
+
+export function getMockUser(): IUser {
   const answer = '        ';
 
   return merge(User.getCache(), {
@@ -14,7 +21,7 @@ export function getMockUser() {
     lastName: 'Doe',
     suffix: 'Jr.',
 
-    personalPhone: '12401234568',
+    personalPhone: '2401234568',
     workPhone: '12401234568',
     carrier: 'AT&T',
 
@@ -66,7 +73,47 @@ export function getMockUser() {
   });
 };
 
-export function getMockSystemAccount(index) {
+export function getMockCWSApplication(index: number|string = 1): CWSApplication {
+  const types = ['Gov','Non-Gov'];
+  const today = moment().toISOString();
+
+  return {
+    uid: index,
+    systemAccountName: `System Account Mock #${index}`,
+    interfacingSystemName: '1,1,0,0,0',
+    interfacingSystemVersion: '1.0',
+    systemDescriptionAndFunction: 'Mock system account',
+    departmentOrgId: '100006688',
+    agencyOrgId: '',
+    officeOrgId: '',
+    systemAdmins: [],
+    systemManagers: [],
+    contractOpportunities: 'read,read-sensitive',
+    contractData: 'dod-data',
+    entityInformation: 'read-public,read-sensitive',
+    FIPS199Categorization: 'medium',
+    ipAddress: '',
+    typeOfConnection: 'SFTP',
+    physicalLocation: '',
+    securityOfficialName: '',
+    securityOfficialEmail: '',
+    uploadAto: '',
+    authorizationConfirmation: true,
+    authorizingOfficialName: '',
+    authorizationDate: '',
+    submittedDate: today,
+    lastUpdate: today,
+    submittedBy: '',
+    securityApprover: '',
+    securityApproved_Date: '',
+    dateOfRejection: '',
+    rejectedBy: '',
+    rejectionReason: '',
+    applicationStatus: 'Pending Approval',
+  };
+}
+
+export function getMockSystemAccount(index): System {
   const types = ['Gov','Non-Gov'];
 
   index = index || 1;

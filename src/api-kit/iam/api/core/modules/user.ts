@@ -11,7 +11,7 @@ import {
 import { User } from '../user';
 import { getMockUser } from './mocks';
 
-Cookies.defaults = config.cookies(15);
+Cookies.defaults = config.cookies();
 
 function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
@@ -275,9 +275,12 @@ export const user = {
 
     data.user.emailNotification = yesOrNo(data.user.emailNotification);
 
-    if(data.user.carrier) {
+    if(data.user.carrier)
       data.user.carrierExtension = getCarrierDomain(data.user.carrier);
-    }
+    if(data.user.workPhone)
+      data.user.workPhone = data.user.workPhone.replace(/[^0-9]/g, '');
+    if(data.user.personalPhone)
+      data.user.personalPhone = data.user.personalPhone.replace(/[^0-9]/g, '');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -298,7 +301,7 @@ export const user = {
           token = response.body.tokenId;
 
           // Automatically authenticate the user and start a session
-          Cookies.set('iPlanetDirectoryPro', token, config.cookies);
+          Cookies.set('iPlanetDirectoryPro', token, config.cookies());
 
           $success(token || {});
         }
@@ -315,9 +318,13 @@ export const user = {
 
     data.emailNotification = yesOrNo(data.emailNotification);
 
-    if(data.carrier) {
+    if(data.carrier)
       data.carrierExtension = getCarrierDomain(data.carrier);
-    }
+    if(data.workPhone)
+      data.workPhone = data.workPhone.replace(/[^0-9]/g, '');
+    if(data.personalPhone)
+      data.personalPhone = data.personalPhone.replace(/[^0-9]/g, '');
+
 
     if(logger(merge(User.getCache() || {}, userData))) {
       User.updateCache(data);

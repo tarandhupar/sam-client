@@ -1,0 +1,31 @@
+<page
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Role Requests">
+
+  <!-- Sidebar -->
+  <sidebar>
+    <rolemgmt-sidenav #sideNav
+      (statusSelected) = "StatusValue($event)"
+      (domainSelected) = "DomainValue($event)"
+      (autoCompleteSelected) = "AutoCompleteValue($event)">
+    </rolemgmt-sidenav>
+  </sidebar>
+
+  <!-- Page Content -->
+  <rolemgmt-content
+    (sortOrder) = "SortValue($event)"
+    (pageNumber) = "PageValue($event)"
+    (clickEscalatedRequestsCountEvent)="onClickEscalated()"
+    (clickPendingRequestsCountEvent)="onClickPending()"
+    [requestDetails] = "Details"
+    [count] = "totalRequest"
+    [currCount] = "currCount"
+    [totalPages] = "pages"
+    [currPage] = "page"
+    [pendingCount]="pendingCount"
+    [escalatedCount]="escalatedCount">
+  </rolemgmt-content>
+
+</page>

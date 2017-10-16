@@ -8,48 +8,34 @@ import { Section } from './section';
   templateUrl: 'permissions.component.html',
 })
 export class PermissionsComponent extends Section {
-  @Input() form: FormGroup;
-
-  private configs = {
-    'fjps': {
-      keyValueConfig: {
-        keyProperty: 'value',
-        valueProperty: 'label'
-      }
-    }
-  };
+  @Input('group') form: FormGroup;
 
   private options = {
     'contract-opportunities': [
-      { label: 'Read',           name: 'co-read',           value: 'co-read' },
-      { label: 'Read Sensitive', name: 'co-read-sensitive', value: 'co-read-sensitive' },
-      { label: 'Write',          name: 'co-write',          value: 'co-write' },
+      { label: 'Read',           name: 'co-read',           value: 'read' },
+      { label: 'Read Sensitive', name: 'co-read-sensitive', value: 'read-sensitive' },
+      { label: 'Write',          name: 'co-write',          value: 'write' },
     ],
 
     'contract-data': [
-      { label: 'Read',     name: 'cd-read',     value: 'cd-read' },
-      { label: 'Write',    name: 'cd-write',    value: 'cd-write' },
-      { label: 'DoD Data', name: 'cd-dod-data', value: 'cd-dod-data' },
+      { label: 'Read',     name: 'cd-read',     value: 'read' },
+      { label: 'Write',    name: 'cd-write',    value: 'write' },
+      { label: 'DoD Data', name: 'cd-dod-data', value: 'dod-data' },
     ],
 
     'entity-information': [
-      { label: 'Read Public',    name: 'ei-read-public',    value: 'ei-read-public' },
-      { label: 'Read FOUO',      name: 'ei-read-fouo',      value: 'ei-read-fouo' },
-      { label: 'Read Sensitive', name: 'ei-read-sensitive', value: 'ei-read-sensitive' },
+      { label: 'Read Public',    name: 'ei-read-public',    value: 'read-public' },
+      { label: 'Read FOUO',      name: 'ei-read-fouo',      value: 'read-fouo' },
+      { label: 'Read Sensitive', name: 'ei-read-sensitive', value: 'read-sensitive' },
     ],
 
-    'fjps': [
-      { label: 'Low',    value: 'low' },
-      { label: 'Medium', value: 'medium' },
-      { label: 'High',   value: 'high' },
-    ]
+    'FIPS199Categorization': ['Low','Medium','High']
   };
 
-  private keys = ['contract-opportunities', 'contract-data', 'entity-information'];
-  private permissions = {
-    'contract-opportunities': [],
-    'contract-data': [],
-    'entity-information': [],
+  private keys = {
+    'contract-opportunities': 'contractOpportunities',
+    'contract-data': 'contractData',
+    'entity-information': 'entityInformation',
   };
 
   constructor() {
@@ -60,8 +46,8 @@ export class PermissionsComponent extends Section {
         hint: 'What permissions do you need?',
       },
 
-      fjps: {
-        label: 'Overall FJPS 1QQ Categorization',
+      FIPS199Categorization: {
+        label: 'Overall FIPS 199 Categorization',
         hint: '',
       }
     };
@@ -73,9 +59,5 @@ export class PermissionsComponent extends Section {
     return list
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-  }
-
-  updatePermissions(selected) {
-    console.log(selected);
   }
 }

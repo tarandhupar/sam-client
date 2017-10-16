@@ -1,4 +1,5 @@
 import { Component, Input, HostListener, Output, EventEmitter, ElementRef } from '@angular/core';
+import  { Router, NavigationExtras  } from "@angular/router";
 
 @Component({
   selector: 'workspace-data-entry',
@@ -10,11 +11,12 @@ export class DataEntryComponent {
   
   actions: Array<any> = [
     { 
-      name: 'help', 
       label: 'Help', 
       icon: 'fa fa-question-circle', 
-      callback: () => { console.log("Help!"); } 
+      callback: () => { this.router.navigate(['/help/award'], { fragment: 'assistanceListings'});}
     }
   ];
+  
+  constructor(private router: Router) {}
 
 }

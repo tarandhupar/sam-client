@@ -114,21 +114,21 @@ export class SamHeaderLinksComponent {
   public startNotificationOutsideClick = false;
   public showNotifications: boolean = false;
   public notifications = [
-    {link:"/search",datetime:"2017-07-18 10:11:42",username:"Alert title",text:"This is a new alert"},
-    {link:"/help",datetime:"2017-07-16 10:11:42",username:"Alert title",text:"This is a new alert"},
-    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Alert title",text:"New Alert description testing"},
-    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Alert title",text:"New Alert description testing"},
-    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Alert title",text:"New Alert description testing"},
+    {link:"/system-alert",datetime:"2017-07-18 10:11:42",username:"",icon:"usa-alert-error",title:'Error Alert Title',text:"This is a new alert",type:'alert'},
+    {link:"/system-alert",datetime:"2017-07-16 10:11:42",username:"",icon:"usa-alert-info",title:'Information Alert Title',text:"This is a new alert",type:'alert'},
+    {link:"/system-alert",datetime:"2017-07-15 10:11:42",username:"",icon:"usa-alert-warning",title:'Warning Alert Title',text:"This is a new alert",type:'alert'},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"",icon:"",title:'Subscription Title',text:"This is a new subscription",type:'subscription'},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"",icon:"",title:'Subscription Title',text:"This is a new subscription",type:'subscription'},
   ];
 
   public startRequestOutsideClick = false;
   public showRequests: boolean = false;
   public requests = [
-    {link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",text:"Made a Title change request in assistance listings"},
-    {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",text:"Made an Archive change request in assistance listings"},
-    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",text:"Requests your assistance listing change approval"},
-    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
-    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",text:"Submitted a report"},
+    {link:"/search",datetime:"2017-07-18 10:11:42",username:"Diego Ruiz",icon:"",title:'',text:"Made a Title change request in assistance listings",type:'request'},
+    {link:"/help",datetime:"2017-07-16 10:11:42",username:"John Doe",icon:"",title:'',text:"Made an Archive change request in assistance listings",type:'request'},
+    {link:"/signin",datetime:"2017-07-15 10:11:42",username:"Sharon Lee",icon:"",title:'',text:"Requests your assistance listing change approval",type:'request'},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",icon:"",title:'',text:"Submitted a report",type:'request'},
+    {link:"/reports/overview",datetime:"2016-07-17 10:11:42",username:"Bob Joe",icon:"",title:'',text:"Submitted a report",type:'request'},
   ];
 
   constructor(private route: ActivatedRoute, private _router:Router, private api: IAMService, private loginService: LoginService) {

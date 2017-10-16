@@ -84,7 +84,6 @@ export class OpportunityReviewComponent implements OnInit {
 
   packagesWarning : any = false;
   originalOpportunity: any;
-  opportunityLocation: any;
   opportunity: any;
   processedHistory: any;
   procurementType: any;
@@ -95,13 +94,10 @@ export class OpportunityReviewComponent implements OnInit {
   attachments: any = [];
   packages: any = [];
   alerts: any = [];
-  relatedOpportunities:any;
-  relatedOpportunitiesMetadata:any;
   public logoUrl: string;
   public logoInfo: any;
   opportunityAPI: any;
   previousOpportunityVersion: any;
-  previousOpportunityLocation: any;
   differences: any;
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -159,6 +155,7 @@ export class OpportunityReviewComponent implements OnInit {
 
   sectionLabels: any = [
     'Header Information',
+    'Award Details',
     'General Information',
     'Classification',
     'Description',
@@ -174,28 +171,64 @@ export class OpportunityReviewComponent implements OnInit {
       label: this.sectionLabels[0],
       route: "#" + OpportunitySectionNames.HEADER,
       iconClass: this.pristineIconClass
-    }, {
-      label: this.sectionLabels[1],
+    },{
+      label: this.sectionLabels[2],
       route: "#" + OpportunitySectionNames.GENERAL,
       iconClass: this.pristineIconClass
     }, {
-      label: this.sectionLabels[2],
+      label: this.sectionLabels[3],
       route: "#" + OpportunitySectionNames.CLASSIFICATION,
       iconClass: this.pristineIconClass
     }, {
-      label: this.sectionLabels[3],
+      label: this.sectionLabels[4],
       route: "#" + OpportunitySectionNames.DESCRIPTION,
       iconClass: this.pristineIconClass
     },  {
-      label: this.sectionLabels[4],
+      label: this.sectionLabels[5],
       route: "#" + OpportunitySectionNames.PACKAGES,
       iconClass: this.pristineIconClass
     },  {
-      label: this.sectionLabels[5],
+      label: this.sectionLabels[6],
       route: "#" + OpportunitySectionNames.CONTACT,
       iconClass: this.pristineIconClass
     }, {
+      label: this.sectionLabels[7],
+      route: "#history"
+    }]
+  };
+
+  sideNavModelAwards: MenuItem = {
+    label: "Contract Opportunities",
+    children:[{
+      label: this.sectionLabels[0],
+      route: "#" + OpportunitySectionNames.HEADER,
+      iconClass: this.pristineIconClass
+    },{
+      label: this.sectionLabels[1],
+      route: "#" + OpportunitySectionNames.AWARD_DETAILS,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[2],
+      route: "#" + OpportunitySectionNames.GENERAL,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[3],
+      route: "#" + OpportunitySectionNames.CLASSIFICATION,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[4],
+      route: "#" + OpportunitySectionNames.DESCRIPTION,
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[5],
+      route: "#" + OpportunitySectionNames.PACKAGES,
+      iconClass: this.pristineIconClass
+    },  {
       label: this.sectionLabels[6],
+      route: "#" + OpportunitySectionNames.CONTACT,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[7],
       route: "#history"
     }]
   };
@@ -239,8 +272,6 @@ export class OpportunityReviewComponent implements OnInit {
     this.opportunityAPI = opportunityAPI;
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
-    this.loadOpportunityLocation(opportunityAPI);
-    let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
     let packagesOpportunities = this.loadPackages(historyAPI);
@@ -258,7 +289,7 @@ export class OpportunityReviewComponent implements OnInit {
     // Assumes DOM its ready when opportunites, packages and related opportutnies API calls are done
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
-    let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities, totalAttachmentsCount, ivls).delay(2000);
+    let DOMReady$ = Observable.zip(opportunityAPI, packagesOpportunities, totalAttachmentsCount, ivls).delay(2000);
     this.sidenavHelper.DOMComplete(this, DOMReady$);
   }
 
@@ -290,12 +321,15 @@ export class OpportunityReviewComponent implements OnInit {
 
   private setupSideNavMenus(){
     this.updateSidenavIcons(this.sectionLabels[0]);
-    this.updateSidenavIcons(this.sectionLabels[1]);
+    if(this.shouldBeDisplayed(this.opportunityFields.Award)) {
+      this.updateSidenavIcons(this.sectionLabels[1]);
+    }
     this.updateSidenavIcons(this.sectionLabels[2]);
     this.updateSidenavIcons(this.sectionLabels[3]);
     this.updateSidenavIcons(this.sectionLabels[4]);
     this.updateSidenavIcons(this.sectionLabels[5]);
     this.updateSidenavIcons(this.sectionLabels[6]);
+    this.updateSidenavIcons(this.sectionLabels[7]);
     this.sidenavModel.children = [];
   }
 
@@ -322,9 +356,9 @@ export class OpportunityReviewComponent implements OnInit {
     let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
 
     let parentOpportunityStream = opportunityAPI.switchMap(api => {
-      if (api.parentOpportunityId != null) { // if this opportunity has a parent
+      if (api.parent.opportunityId != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
-        return this.opportunityService.getContractOpportunityById(api.parentOpportunityId, this.authToken);
+        return this.opportunityService.getContractOpportunityById(api.parent.opportunityId, this.authToken);
       } else {
         return Observable.of(null); // if there is no parent, just return a single null
       }
@@ -340,43 +374,6 @@ export class OpportunityReviewComponent implements OnInit {
     return parentOpportunitySubject;
   }
 
-  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>|ReplaySubject<any>){
-    let relatedOpportunitiesSubject = new ReplaySubject(1);
-    let relatedOpportunitiesStream = opportunityAPI.switchMap(opportunity => {
-      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
-      this.max = (this.pageNum + 1) * this.showPerPage;
-      return this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.id, "a", this.pageNum, this.awardSort);
-    });
-    relatedOpportunitiesStream.subscribe(relatedOpportunitiesSubject);
-    relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
-      if (!_.isEmpty(data)) {
-        this.relatedOpportunities = data['relatedOpportunities'][0];
-        this.relatedOpportunitiesMetadata = {
-          'count': data['count'],
-          'recipientCount': data['recipientCount'],
-          'totalAwardAmt': data['totalAwardAmt'],
-          'unparsableCount': data['unparsableCount']
-        };
-        this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
-
-        let awardSideNavContent = {
-          "label": "Award Notices",
-          "route": this.pageRoute,
-          "children": [
-            {
-              "label": "Award Summary",
-              "field": this.opportunityFields.AwardSummary,
-            },
-          ]
-        };
-        this.sidenavHelper.updateSideNav(this, true, awardSideNavContent);
-
-      }
-    }, err => {
-      console.log('Error loading related opportunities: ', err);
-    });
-    return relatedOpportunitiesSubject;
-  }
 
   private getIVLs(opportunityAPI : Observable<any>) {
     let ivlSubject = new ReplaySubject(1);
@@ -447,10 +444,6 @@ export class OpportunityReviewComponent implements OnInit {
     this.getIVLs(this.opportunityAPI);
   }
 
-  private reloadRelatedOpportunities() {
-    this.pageNum = 0;
-    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
-  }
 
   private loadOrganization(opportunityAPI: Observable<any>|ReplaySubject<any>) {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
@@ -483,16 +476,6 @@ export class OpportunityReviewComponent implements OnInit {
     return organizationSubject;
   }
 
-  private loadOpportunityLocation(opportunityApiStream: Observable<any>|ReplaySubject<any>) {
-    opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
-        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
-          this.opportunityLocation = data;
-        });
-      }
-    });
-  }
-
   private getTotalAttachmentsCount(opportunity: Observable<any>|ReplaySubject<any>, historyAPI: Observable<any>|ReplaySubject<any>, packagesOpportunities: Observable<any>|ReplaySubject<any>){
     let attachmentCountSubject = new ReplaySubject(1);
     let historyNoticeIds: string;
@@ -514,7 +497,7 @@ export class OpportunityReviewComponent implements OnInit {
           } else if (res.procurement_type == current.procurement_type) {
             historyNoticeIds += res.notice_id + ',';
             this.historyByProcurementType.push(res);
-          } else if (current.parent_notice == null && res.procurement_type == 'm') {
+          } else if (current.parent_notice == null && res.procurement_type== 'm') {
             historyNoticeIds += res.notice_id + ',';
             this.historyByProcurementType.push(res);
           }
@@ -523,7 +506,7 @@ export class OpportunityReviewComponent implements OnInit {
       this.historyByProcurementType = _.sortBy(this.historyByProcurementType, 'index');
 
       historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
-      return this.opportunityService.getPackagesCount(historyNoticeIds);
+      return this.opportunityService.getContractOpportunityPackagesCount(historyNoticeIds);
     });
 
     attachmentCountSubject.subscribe(data => {
@@ -549,32 +532,33 @@ export class OpportunityReviewComponent implements OnInit {
     let packagesStream = historyAPI.switchMap(api =>{
       historyNoticeIds = '';
       let parentOpportunity = '';
-      let current = _.filter(api.content.history, historyItem => {
-        return historyItem.notice_id == this.opportunity.id;
-      })[0];
-
-      if(current.procurement_type == 'a')
-        historyNoticeIds = current.notice_id + ',';
-      else {
-        api.content.history.forEach((res: any) => {
-          if (res.index <= current.index) {
-            if (res.parent_notice == null && current.procurement_type == 'm')
-              historyNoticeIds += res.notice_id + ',';
-            else if (res.procurement_type == current.procurement_type)
-              historyNoticeIds += res.notice_id + ',';
-            else if (current.parent_notice == null && res.procurement_type == 'm')
-              historyNoticeIds += res.notice_id + ',';
-          }
-        });
-      }
-
-      historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
-      return this.opportunityService.getPackages(historyNoticeIds).retryWhen(
-        errors => {
-          this.attachmentError = true;
-          return this.route.params;
+      if(api.content.history.length > 0) {
+        let current = _.filter(api.content.history, historyItem => {
+          return historyItem.notice_id == this.opportunity.id;
+        })[0];
+        if (current.procurement_type == 'a')
+          historyNoticeIds = current.notice_id + ',';
+        else {
+          api.content.history.forEach((res: any) => {
+            if (res.index <= current.index) {
+              if (res.parent_notice == null && current.procurement_type == 'm')
+                historyNoticeIds += res.notice_id + ',';
+              else if (res.procurement_type == current.procurement_type)
+                historyNoticeIds += res.notice_id + ',';
+              else if (current.parent_notice == null && res.procurement_type == 'm')
+                historyNoticeIds += res.notice_id + ',';
+            }
+          });
         }
-      );
+
+        historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
+        return this.opportunityService.getContractOpportunityPackages(historyNoticeIds).retryWhen(
+          errors => {
+            this.attachmentError = true;
+            return this.route.params;
+          }
+        );
+      }
     });
     packagesStream.subscribe(packagesSubject);
     packagesSubject.subscribe((data: any) =>{
@@ -582,12 +566,13 @@ export class OpportunityReviewComponent implements OnInit {
       let filesizePipe = new FilesizePipe();
       let dateformatPipe = new DateFormatPipe();
       let archiveVal = this.opportunity.archived;
+
       data.packages.forEach(attachmentsPackage => {
         attachmentsPackage.resources = [];
         attachmentsPackage.accordionState = "collapsed";
         attachmentsPackage.downloadUrl = this.getDownloadPackageURL(attachmentsPackage.packageId, archiveVal);
         attachmentsPackage.postedDate = dateformatPipe.transform(attachmentsPackage.postedDate,'MMM DD, YYYY');
-        if(attachmentsPackage.access == "Public"){
+        if(attachmentsPackage.access == "public" || attachmentsPackage.access == "Public"){
           attachmentsPackage.attachments.forEach((resource: any) => {
             data.resources.forEach((res: any) => {
               if(resource.resourceId == res.resourceId){
@@ -623,7 +608,7 @@ export class OpportunityReviewComponent implements OnInit {
     if (filteredDictionaries===''){
       this.dictionariesUpdated = true;
     } else {
-      this.dictionaryService.getOpportunityDictionary(filteredDictionaries).subscribe(data => {
+      this.dictionaryService.getContractOpportunityDictionary(filteredDictionaries).subscribe(data => {
         // do something with the dictionary api
         this.dictionariesUpdated = true;
       }, err => {
@@ -648,7 +633,7 @@ export class OpportunityReviewComponent implements OnInit {
       }
       /** Load history API **/
       tempOpportunityApi = opportunityAPI;
-      return this.opportunityService.getOpportunityHistoryById(opportunityAPI.id);
+      return this.opportunityService.getContractOpportunityHistoryById(opportunityAPI.id);
     });
     historyStream.subscribe(historySubject);
     historySubject.subscribe(historyAPI => {
@@ -679,10 +664,14 @@ export class OpportunityReviewComponent implements OnInit {
         console.log('Error: No opportunity type');
         return;
       }
+
       let type = opportunity.data.type === 'm' ? parent.data.type : opportunity.data.type;
       let setDisplayFields = new SetDisplayFields();
       this.displayField = setDisplayFields.transform(type, parent);
       this.ready = true;
+      if(this.shouldBeDisplayed(this.opportunityFields.Award)){
+        this.sideNavModel = this.sideNavModelAwards;
+      }
       this.setupSideNavMenus();
     });
   }
@@ -732,7 +721,6 @@ export class OpportunityReviewComponent implements OnInit {
       fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.id],navigationExtras);
-    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
     document.getElementById('awards-list').focus();
   }
 
@@ -770,7 +758,7 @@ export class OpportunityReviewComponent implements OnInit {
   }
 
   public getBaseURL() {
-    return API_UMBRELLA_URL + '/opps/v1';
+    return API_UMBRELLA_URL + '/opps/v2';
   }
 
   public getAPIUmbrellaKey() {
@@ -803,7 +791,7 @@ export class OpportunityReviewComponent implements OnInit {
   }
 
   private numberLabel(){
-    if (this.opportunity.data.type === 'k' || (this.opportunity.data.type === 'm' && this.originalOpportunity.data.type === 'k')){
+    if (this.opportunity.data.type === 'k' || (this.opportunity.data.type === 'm' && (this.originalOpportunity !=null && this.originalOpportunity.data.type === 'k'))){
       return "Solicitation Number";
     } else {
       return "Procurement ID";
@@ -866,6 +854,7 @@ export class OpportunityReviewComponent implements OnInit {
   private updateSidenavIcons(sectionLabel: string) {
     let filter = new FilterMultiArrayObjectPipe();
     let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
+
     section['iconClass'] = (this.opportunity.status.code === 'draft' || this.opportunity.status.code === 'draft_review' || this.opportunity.status.code === 'rejected') ? this.pristineIconClass : null;
   }
 

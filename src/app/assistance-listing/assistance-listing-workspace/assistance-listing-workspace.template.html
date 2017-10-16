@@ -85,7 +85,8 @@
         [label]="statusCheckboxConfig.label"
         [hint]="statusCheckboxConfig.hint"
         [errorMessage]="statusCheckboxConfig.errorMessage"
-        [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
+        [hasSelectAll]="statusCheckboxConfig.hasSelectAll"
+        [disabled]="disabled">
       </sam-checkbox>
 
       <!-- Change Request Filter -->
@@ -98,7 +99,8 @@
         [label]="requestTypeCheckboxConfig.label"
         [hint]="requestTypeCheckboxConfig.hint"
         [errorMessage]="requestTypeCheckboxConfig.errorMessage"
-        [hasSelectAll]="requestTypeCheckboxConfig.hasSelectAll">
+        [hasSelectAll]="requestTypeCheckboxConfig.hasSelectAll"
+        [disabled]="disabled">
       </sam-checkbox>
 
       <!--Date Filter-->
@@ -143,8 +145,7 @@
         [attr.id] = "'fal-agency-picker-filter'"
         [ngModel]="agencyPickerModel"
         [orgRoots]="orgRoots"
-        (ngModelChange)="onOrganizationChange($event)"
-        [limit] = '2'>
+        (ngModelChange)="onOrganizationChange($event)">
       </sam-agency-picker-v2>
 
       <br>
@@ -164,12 +165,16 @@
               (onClick)="addAssistanceListingClick()">
   </sam-button>
 
+  <div *ngIf="showSpinner" id="search-spinner">
+    <sam-spinner></sam-spinner>
+  </div>
+
   <!-- No results -->
   <p *ngIf="data.length==0 && !initLoad">
-    No results found for '<strong>{{ oldKeyword }}</strong>'
+    No results found for '<strong>{{ keywordSplitter(keywordsModel) }}</strong>'
   </p>
   <!-- Page results -->
-  <results *ngIf="!data.length==0 && !initLoad"
+  <results *ngIf="!data.length==0 && !initLoad && !showSpinner"
            [totalElements]="totalCount"
            [totalPages]="totalPages"
            [currentPage]="pageNum+1"

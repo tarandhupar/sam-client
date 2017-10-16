@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { get, merge } from 'lodash';
@@ -12,6 +12,7 @@ import { Validators as $Validators } from 'app/authentication/shared/validators'
   providers: [IAMService]
 })
 export class SamLoginComponent {
+  @ViewChildren('input') input;
   @Input() standalone: boolean = false;
 
   public form: FormGroup;
@@ -69,9 +70,7 @@ export class SamLoginComponent {
   public stage = '1';
   public errors = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private builder: FormBuilder, private api: IAMService) {
-
-  }
+  constructor(private route: ActivatedRoute, private router: Router, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
     let params = this.route.snapshot.queryParams,
@@ -84,7 +83,7 @@ export class SamLoginComponent {
       this.store.redirect.route = params['redirect'];
 
       delete this.store.redirect.params.queryParams['redirect'];
-    } else if(this.router.url.match(/\/(signin)?/)) {
+    } else if(this.router.url.match(/\/(signin)?/) && !this.router.url.match(/\/workspace/)) {
       this.store.redirect.route = '/workspace';
     } else {
       // Component reload workaround
@@ -110,6 +109,14 @@ export class SamLoginComponent {
         otp: ['', [Validators.required]]
       })
     });
+  }
+
+  ngAfterViewInit() {
+    this.input.first.nativeElement.focus();
+  }
+
+  get preference(): string {
+    return (this.form.get('2').get('otppreference').value == 'sms') ? 'text' : 'email';
   }
 
   getRoute(): string {
@@ -160,10 +167,11 @@ export class SamLoginComponent {
     this.errors = [];
 
     this.api.iam.resetLogin();
+    this.updateStage();
   }
 
-  setStage(stage: string|number = 1) {
-    this.stage = stage.toString();
+  updateStage() {
+    this.stage = this.api.iam.stage.toString();
   }
 
   resetState() {
@@ -183,7 +191,7 @@ export class SamLoginComponent {
       this.states.loading = true;
 
       this.api.iam.login(form.value, data => {
-        this.setStage(this.api.iam.stage);
+        this.updateStage();
         this.resetState();
 
         switch(this.stage) {
@@ -201,7 +209,7 @@ export class SamLoginComponent {
         }
       }, error => {
         this.reset();
-        this.setStage(this.api.iam.stage);
+        this.updateStage();
 
         this.errors.push(error.message);
         this.states.loading = false;

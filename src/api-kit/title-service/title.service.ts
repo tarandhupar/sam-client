@@ -22,6 +22,7 @@ const mappings = {
   "/workspace/users": "FSD Users Directory",
   "/workspace/user": "FSD User Profile",
   "/workspace/system": "System Accounts Directory",
+  "/workspace/system/new": "New System Account",
   "/workspace/system/profile": "System Account Profile",
   "/workspace/system/password": "System Account Password Reset",
   "/workspace/system/migrations": "System Account Migration",

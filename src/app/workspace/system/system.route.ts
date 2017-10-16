@@ -19,6 +19,12 @@ export default [
       { breadcrumb: 'New System Account' },
     ]
   } },
+  { path: 'new/:id', component: SystemCreateComponent, data: {
+    breadcrumbs: [
+      { breadcrumb: 'System Accounts', url: '/workspace/system' },
+      { breadcrumb: 'New System Account' },
+    ]
+  } },
   { path: 'profile', component: SystemProfileComponent, data: {
     breadcrumbs: [
       { breadcrumb: 'System Accounts', url: '/workspace/system' },

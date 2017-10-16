@@ -14,8 +14,12 @@ export const routes: Routes = [
   {
     path: '',
     component: ReportsPage,
-    children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+    children: []
+  }
+];
+
+if (ENABLE_REPORTING_AREA === 'true' || ENV === 'development') {
+  routes[0].children.unshift({ path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
       { path: 'scheduled', component: ScheduledComponent },
       { path: 'static', component: StaticComponent },
@@ -23,9 +27,7 @@ export const routes: Routes = [
       { path: 'favorites', component: FavoritesComponent },
       { path: ':id/view', component: ReportComponent },
       { path: 'myreports', component: MyReportsComponent },
-      { path: 'shared/mstrWeb', component: SharedComponent }
-    ]
-  },
-];
+      { path: 'shared/mstrWeb', component: SharedComponent })
+}
 
 export const routing = RouterModule.forChild(routes);

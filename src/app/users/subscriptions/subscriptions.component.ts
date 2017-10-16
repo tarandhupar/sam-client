@@ -266,6 +266,7 @@ export class SubscriptionsComponent {
   getAlertFeedClass(feed){return "usa-alert-" + feed.alertType.toLowerCase();}
 
   selectAll() {
+    this.filterObj.ids = [];
     this.allMatchingSelected = false;
     this.selectOptions.forEach(e => {
                                   e.selected = this.selectedAll;
@@ -273,6 +274,7 @@ export class SubscriptionsComponent {
                                     this.filterObj.ids.push(e.id); 
                                   }
                                } );
+    console.log("selectedAll value is : " + this.selectedAll);
   }
 
   selectAllMatching() {
@@ -306,18 +308,26 @@ export class SubscriptionsComponent {
         } else {
           recordsToUpdate = this.filterObj.ids.length;
         }
-        this.bulkUpdateModal.openModal();
+
         if(this.fieldName == 'frequency') {
-          this.modalConfig.description = 'Are you sure you wish to change email frequency to ' + this.fieldValue + '? This will updated ' + recordsToUpdate + ' records.';
+         // this.modalConfig.description = 'Are you sure you wish to change email frequency to ' + this.fieldValue + '? This will update ' + recordsToUpdate + ' records.';
+         this.performBulkUpdate();
+         return;
         } else {
-          this.modalConfig.description = 'Are you sure you wish to unsubscribe? This will updated ' + recordsToUpdate + ' records.';
+          this.modalConfig.description = 'Are you sure you wish to unsubscribe? This will update ' + recordsToUpdate + ' records.';
         }
+        this.bulkUpdateModal.openModal();
       }
   }
 
   onBulkUpdateModalSubmit() {
     this.bulkUpdateModal.closeModal();
-    this.subscriptionsService.updateSubscriptions(this.filterObj, this.allMatchingSelected, this.fieldName, this.fieldValue).subscribe(res => {
+    this.performBulkUpdate();
+
+  }
+  
+  performBulkUpdate() {
+      this.subscriptionsService.updateSubscriptions(this.filterObj, this.allMatchingSelected, this.fieldName, this.fieldValue).subscribe(res => {
       let recordsUpdated = res.recordsUpdated;
       console.log("Successfully updated " + recordsUpdated);
       if(this.fieldName === 'active') {
@@ -332,5 +342,4 @@ export class SubscriptionsComponent {
       console.log("Error updating records " + e); 
       } ); 
   }
-
 }

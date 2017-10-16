@@ -459,7 +459,7 @@ export class FALFormErrorService {
       // Only take into account the previous, current, and budget fiscal years
       let applicableProjects = projects.list.filter((project) => {
         let year: number = project.fiscalYear;
-        return (year >= fy - 1) && (year <= fy + 1);
+        return (year >= fy - 1) && (year <= fy + 1) || year == null;
       });
 
       for (let i = 0; i < applicableProjects.length; i++) {
@@ -679,7 +679,7 @@ export class FALFormErrorService {
       // Only take into account the previous, current, and budget fiscal years
       let applicableAccomplishments = accomplishments.list.filter((accomplishment) => {
         let year: number = accomplishment.fiscalYear;
-        return (year >= fy - 1) && (year <= fy + 1);
+        return (year >= fy - 1) && (year <= fy + 1) || year == null;
       });
 
       if (applicableAccomplishments.length > 0) {
@@ -1024,7 +1024,7 @@ export class FALFormErrorService {
   public validateDeadlineList():(FieldErrorList | null) {
     let errors: FieldError[] = [];
 
-    if (this._viewModel.deadlineList.length > 0){
+    if (this._viewModel.deadlineList.length > 0 && this._viewModel.deadlineFlag == 'yes') {
       let deadlineList = this._viewModel.deadlineList;
       for (let i = 0; i < deadlineList.length; i++) {
         let deadlineItem = deadlineList[i];
@@ -1037,14 +1037,14 @@ export class FALFormErrorService {
 
         if (!deadlineItem.start) {
           deadlineError.errors['startDateError'] = {
-            message: 'Deadlines: Row ' + (i + 1) + ' Start Date is required'
+            message: 'Deadlines: Row ' + (i + 1) + ' From Date is required'
           };
         }
         else {
           startDateM = moment(deadlineItem.start);
           if(!startDateM.isValid() || deadlineItem.start == "Invalid date") {
             deadlineError.errors['startDateError'] = {
-              message: 'Deadlines: Row ' + (i + 1) + ' Invalid start date'
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid from date'
             };
           }
         }
@@ -1053,7 +1053,7 @@ export class FALFormErrorService {
           endDateM = moment(deadlineItem.end);
           if(!endDateM.isValid() || deadlineItem.end == "Invalid date") {
             deadlineError.errors['endDateError'] = {
-              message: 'Deadlines: Row ' + (i + 1) + ' Invalid end date'
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid to date'
             };
           }
 

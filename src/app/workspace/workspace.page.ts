@@ -44,7 +44,11 @@ export class WorkspacePage  {
   };
   
   actions: Array<any> = [
-    { name: 'help', label: 'Help', icon: 'fa fa-question-circle', callback: () => { console.log("Help!");}}
+    { 
+      label: 'Help', 
+      icon: 'fa fa-question-circle', 
+      callback: () => { this.router.navigate(['/help/accounts']);}
+    }
   ];
   
   constructor(private router: Router, 

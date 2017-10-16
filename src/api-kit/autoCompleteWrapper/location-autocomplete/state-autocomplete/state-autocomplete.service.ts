@@ -64,7 +64,7 @@ export class StateServiceImpl implements AutocompleteService {
   ]
 })
 export class SamStateServiceAutoDirective implements OnChanges {
-  @Input() country: any;
+  @Input() countryVal: any;
   private autocompleteService: any;
 
   constructor(autocompleteService: AutocompleteService) {
@@ -77,8 +77,8 @@ export class SamStateServiceAutoDirective implements OnChanges {
   ngOnChanges() {
     // When country input on directive changes,
     // update service with new value
-    if (this.country) {
-      this.autocompleteService.setCountry(this.country.key);
+    if (this.countryVal) {
+      this.autocompleteService.setCountry(this.countryVal.key);
     } else {
       // If no country is set, default to USA
       this.autocompleteService.setCountry('USA');

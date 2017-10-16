@@ -55,9 +55,13 @@
         <ul class="column-wrappable">
           <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
             <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
-            <div *ngFor="let permission of func.permissions">
-              <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
-              <label class="permission-label" >{{permission.name}}</label>
+            <!--<div *ngFor="let permission of func.permissions">-->
+              <!--<input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">-->
+              <!--<label class="permission-label" >{{permission.name}}</label>-->
+            <!--</div>-->
+            <div *ngFor="let permission of func.permissions" class="checkbox-group">
+              <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+              <label>{{permission.name}}</label>
             </div>
           </li>
         </ul>

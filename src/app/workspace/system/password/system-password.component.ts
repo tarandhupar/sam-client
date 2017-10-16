@@ -7,9 +7,9 @@ import { merge } from 'lodash';
 import { SamPasswordComponent } from '../../../app-components';
 
 import { IAMService } from 'api-kit';
-import { Validators as $Validators } from '../../shared/validators';
+import { System } from 'api-kit/iam/interfaces';
 
-import { System } from '../system.interface';
+import { Validators as $Validators } from '../../shared/validators';
 
 @Component({
   templateUrl: './system-password.component.html',

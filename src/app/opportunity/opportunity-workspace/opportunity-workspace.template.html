@@ -122,13 +122,13 @@
                                    [dateRadioOptions]="dateFilterConfig.options"
                                    [class]="'falDateFilter'">
             </sam-date-range-filter>
-      
+
             <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
             <!--filter button-->
             <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
                         [buttonText]="'Filter'"></sam-button>
 
-      <br>
+      <br><br>
 
       <div>
           <sam-button (onClick)='clearAllFilters()' [buttonText]="'Clear All'"></sam-button>
@@ -145,12 +145,16 @@
     (onClick)="addContractOpportunityClick()">
   </sam-button>
 
+  <div *ngIf="showSpinner" id="search-spinner">
+    <sam-spinner></sam-spinner>
+  </div>
+
   <!-- No results -->
   <p *ngIf="data.length==0 && !initLoad">
     No results found for '<strong>{{ oldKeyword }}</strong>'
   </p>
   <!-- Page results -->
-  <results *ngIf="!data.length==0 && !initLoad"
+  <results *ngIf="!data.length==0 && !initLoad && !showSpinner"
            [totalElements]="totalCount"
            [totalPages]="totalPages"
            [currentPage]="pageNum+1"

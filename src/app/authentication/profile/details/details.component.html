@@ -35,7 +35,7 @@
         </div>
         <div class="usa-form-group">
           <label>Mobile Phone:</label>
-          <div class="usa-form-control" [innerText]="detailsForm.get('personalPhone').value"></div>
+          <div class="usa-form-control" [innerText]="personalPhone"></div>
         </div>
         <div class="usa-form-group">
           <label>Mobile Carrier:</label>
@@ -43,7 +43,7 @@
         </div>
         <div class="usa-form-group">
           <label>OTP Preference:</label>
-          <div class="usa-form-control" [innerText]="detailsForm.get('carrier').value == 'sms' ? 'Text' : 'Email'"></div>
+          <div class="usa-form-control" [innerText]="user.OTPPreference == 'sms' ? 'Text' : 'Email'"></div>
         </div>
         <div class="usa-form-group">
           <label>Notifications:</label>
@@ -56,7 +56,8 @@
           <sam-phone-entry [label]="store.labels.personalPhone.label"
                            [hint]="store.labels.personalPhone.hint"
                            [numbersOnly]="true"
-                           [formControl]="detailsForm.get('personalPhone')"></sam-phone-entry>
+                           [formControl]="detailsForm.get('personalPhone')"
+                           phoneNumberTemplate="(___)___-____"></sam-phone-entry>
           <sam-autocomplete labelText="Mobile Carrier"
                             [options]="api.iam.carriers"
                             [formControl]="detailsForm.get('carrier')"

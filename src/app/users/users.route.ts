@@ -24,7 +24,7 @@ export const routes: Routes = [
     path: 'profile/subscriptions',
     component: SubscriptionsComponent,
     data: { pageName: 'profile/subscriptions' },
-    canActivate: [ IsLoggedInGuard, CheckAccessGuard ]
+    canActivate: [ IsLoggedInGuard ]
   },
 ];
 

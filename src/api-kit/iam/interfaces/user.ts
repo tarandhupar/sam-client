@@ -1,4 +1,4 @@
-import { KBA } from './kba.interface';
+import { KBA } from './kba';
 
 export interface User {
   _id: string;
@@ -37,9 +37,9 @@ export interface User {
   address2Zip?: string;
 
   // Hierarchy
-  departmentID?: number | string;
-  agencyID?: number | string;
-  officeID?: number | string;
+  departmentID?: number|string;
+  agencyID?: number|string;
+  officeID?: number|string;
 
   kbaAnswerList?: KBA[];
 
@@ -48,6 +48,7 @@ export interface User {
   gov?: boolean;
   entity?: boolean;
   systemAccount?: boolean;
+  reviewer?: boolean;
   OTPPreference?: string;
-  emailNotification?: boolean | string;
+  emailNotification?: boolean|string;
 }

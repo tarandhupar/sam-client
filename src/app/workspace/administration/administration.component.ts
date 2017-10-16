@@ -58,7 +58,11 @@ export class AdministrationComponent {
   }
   
   actions: Array<any> = [
-    { name: 'help', label: 'Help', icon: 'fa fa-question-circle', callback: this.callback}
+    { 
+      label: 'Help', 
+      icon: 'fa fa-question-circle', 
+      callback: () => { this._router.navigate(['/help/award'], { fragment: 'federalHierarchy'});}
+    }
   ];
 
   constructor(private _router:Router,

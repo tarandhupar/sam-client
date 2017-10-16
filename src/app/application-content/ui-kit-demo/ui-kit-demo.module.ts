@@ -6,7 +6,7 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { routing } from './ui-kit-demo.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
-import { UIKitDemoPage } from './ui-kit-demo.page';
+import { UIKitDemoPage, TestACDirective } from './ui-kit-demo.page';
 import { SimpleFormDemoPage } from './simple-form-demo.page';
 import { AppComponentsModule } from '../../app-components/app-components.module';
 import { AlertsModule } from '../../alerts/alerts.module';
@@ -26,12 +26,14 @@ import { CountyServiceDirective } from './county-demo';
     AppComponentsModule,
   ],
   exports: [
-    CountyServiceDirective
+    CountyServiceDirective,
+    TestACDirective
   ],
   declarations: [
     UIKitDemoPage,
     SimpleFormDemoPage,
-    CountyServiceDirective
+    CountyServiceDirective,
+    TestACDirective
   ],
   providers: [],
 })

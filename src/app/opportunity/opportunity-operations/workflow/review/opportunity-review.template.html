@@ -110,12 +110,12 @@
     <div [class.hide]="selectedPage !== 0">
 
       <!-- Award Details -->
-      <!--<section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
-
+      <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
+        <a name="#/opportunities/{{opportunity.id}}/review#award"></a>
         <h2 class="sam-ui header">
           Award Details
           </h2>
-
+        <div class="sam-ui segment">
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
             <strong>Contract Award Date: </strong>
@@ -156,8 +156,9 @@
             <span>{{opportunity.data?.award?.lineItemNumber}}</span>
           </li>
         </ul>
+        </div>
         <div class="sam-ui hidden section divider"></div>
-      </section> -->
+      </section>
 
       <!-- General Information -->
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
@@ -275,11 +276,13 @@
               </li>
               <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
                 <strong>NAICS Code(s): </strong>
-                <ng-container *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionariesUpdated === true">
+                <ng-container *ngIf="opportunity.data?.naics && opportunity.data?.naics[0] != null && dictionariesUpdated === true">
                   <ul>
-                    <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
-                      <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
-                    </li>
+                    <ng-container *ngFor = "let naics of opportunity.data?.naics">
+                      <li *ngFor = "let element of naics.code | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
+                        <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+                      </li>
+                    </ng-container>
                   </ul>
                 </ng-container>
               </li>
@@ -321,7 +324,7 @@
             <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
             <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
           </h3>
-          <div [innerHTML]="opportunity.data?.description?.body | fixhtml"></div>
+          <div [innerHTML]="opportunity.description[0]?.body | fixhtml"></div>
           <div class="sam-ui hidden section divider"></div>
         </div>
       </section>
@@ -347,31 +350,6 @@
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Contact Information</h2>
         <div class="sam-ui segment">
-
-          <div class="usa-grid-full">
-            <div class="usa-width-one-whole" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
-              <h3 class="sam-ui dividing header">
-                Contracting Office Address:
-              </h3>
-              <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeStreet)">
-                {{opportunityLocation?.street}}
-              </span>
-              <span [attr.id]="generateID(opportunityFields.OfficeCity, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeCity)">
-                {{opportunityLocation?.city}}
-              </span>
-              <span [attr.id]="generateID(opportunityFields.OfficeState, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeState)">
-                {{opportunityLocation?.state}}
-              </span>
-              <span [attr.id]="generateID(opportunityFields.OfficeCountry, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeCountry)">
-                {{opportunityLocation?.country}}
-              </span>
-              <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeZip)">
-                {{opportunityLocation?.zip}}
-              </span>
-            </div>
-          </div>
-          <div class="sam-ui hidden divider"></div>
-
           <div class="usa-grid-full">
             <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
               <h3 class="sam-ui dividing header">
@@ -457,170 +435,6 @@
     </div>
 
 
-    <div *ngIf="selectedPage > 0 && (selectedPageLabel == 'Award Notices' || selectedPageLabel == 'Award Summary')">
-
-      <section  [attr.id]="generateID(opportunityFields.AwardSummary)"
-                *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)">
-
-        <div class="sam-ui hidden divider"></div>
-
-        <h2 class="sam-ui header" id="opportunity-award-summary">
-          Awards Summary
-        </h2>
-
-        <!-- Awards Metadata -->
-
-        <ng-container *ngIf="relatedOpportunitiesMetadata">
-
-          <div class="sam-ui three column divided center aligned vertically padded grid">
-            <div class="row">
-              <div class="column">
-                <div class="sam-ui statistic">
-                  <div class="value">
-                    {{ relatedOpportunitiesMetadata.count }}
-                  </div>
-                  <div class="label">
-                    Total Number of Awards
-                  </div>
-                </div>
-              </div>
-              <div class="column">
-                <div class="sam-ui statistic">
-                  <div class="value">
-                    {{ relatedOpportunitiesMetadata.totalAwardAmt
-                    | currency:'USD':true:'1.2-2'}}
-                  </div>
-                  <div class="label">
-                    Total Amount Awarded<br>
-                    <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0">
-                      (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other
-                      variable amounts)
-                    </em>
-                  </div>
-                </div>
-              </div>
-              <div class="column">
-                <div class="sam-ui statistic">
-                  <div class="value">
-                    {{ relatedOpportunitiesMetadata.recipientCount }}
-                  </div>
-                  <div class="label">
-                    Total Number of Recipients
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sam-ui section divider"></div>
-
-          <h2 class="sam-ui header">
-            Award Notices
-          </h2>
-
-          <div class="sam-ui vertically middle aligned padded grid">
-            <div class="nine wide column">
-              <p>
-                Showing results
-                <strong>
-                  {{min +1}}
-                  <span class="usa-sr-only">through</span> -
-                  {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
-                </strong>
-                of
-                <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-              </p>
-            </div>
-            <div class="three wide column">
-              <sam-select class="sort-select"
-                          [(model)]="awardSort"
-                          [options]="awardSortOptions"
-                          [name]='awardSort'
-                          [label]="'Sort by'"
-                          (modelChange)="reloadRelatedOpportunities()">
-              </sam-select>
-            </div>
-          </div>
-
-        </ng-container>
-
-        <div class="sam-ui grid" id="awards-list" tabindex="-1">
-          <ng-container *ngFor="let element of relatedOpportunities">
-
-            <div class="twelve wide column">
-              <div class="sam-ui hidden divider"></div>
-              <div tabindex="0">
-                <h3 class="sam-ui header">
-                  {{element.data?.award?.awardee?.name}}
-                </h3>
-                <div class="sam-ui equal width divided segment grid">
-                  <div class="row">
-                    <div class="column">
-                      <h4 class="sam-ui dividing header">
-                        Contractor Awarded
-                      </h4>
-                      <div class="">
-                        <div class="sam-ui medium header">
-                          UEI
-                          <div class="sub header">
-                            {{element.data?.award?.awardee?.duns}}
-                          </div>
-                        </div>
-                        <div class="sam-ui medium header">
-                          Address
-                          <div class="sub header">
-                            {{element.data?.award?.awardee?.location?.streetAddress}}
-                            {{element.data?.award?.awardee?.location?.city}}
-                            {{element.data?.award?.awardee?.location?.state}}
-                            {{element.data?.award?.awardee?.location?.zip}}
-                            {{element.data?.award?.awardee?.location?.country}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column">
-                      <h4 class="sam-ui dividing header">
-                        Contract Award
-                      </h4>
-                      <div class="">
-                        <div class="sam-ui medium header">
-                          Dollar Amount
-                          <div class="sub header">
-                            {{element.data?.award?.amount}}
-                          </div>
-                        </div>
-                        <div class="sam-ui medium header">
-                          Number
-                          <div class="sub header">
-                            {{element.data?.award?.number}}
-                          </div>
-                        </div>
-                        <div class="sam-ui medium header">
-                          Date
-                          <div class="sub header">
-                            {{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-          </ng-container>
-        </div>
-
-      </section>
-
-      <sam-pagination *ngIf="totalPages"
-                      (pageChange)="pageChange($event-1)"
-                      [currentPage]="pageNum+1"
-                      [totalPages]="totalPages">
-      </sam-pagination>
-
-    </div>
 
     <div *ngIf="selectedPage > 0 && selectedPageLabel == 'Interested Vendors List'">
 

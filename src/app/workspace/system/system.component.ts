@@ -100,7 +100,7 @@ export class SystemComponent {
     let className = this.states.route
       .replace(/\//g, '-')
       .replace(/\?.+/g, '')
-      .replace(/(system-profile|system-status).+/, '$1');
+      .replace(/(system-(profile|status|new)).+/, '$1');
 
     this.activeRouteClass = (className.length ? 'usa' : '') + className;
   }

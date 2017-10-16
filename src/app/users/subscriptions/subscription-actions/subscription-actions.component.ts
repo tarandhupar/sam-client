@@ -41,7 +41,7 @@ export class SubscriptionActionsComponent {
   chooseAction() {
     //this.toggleActions();
     this.emitAction.emit(this.selectedAction);
-    this.selectedAction="";
+    setTimeout(() => this.selectedAction="", 0);
     return;
   }
 }

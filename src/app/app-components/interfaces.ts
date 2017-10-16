@@ -18,6 +18,9 @@ export interface SearchOption {
 }
 
 export interface NotificationItem{
+  type: string,
+  title: string,
+  icon: string,
   link: string,
   datetime: string,
   username: string,

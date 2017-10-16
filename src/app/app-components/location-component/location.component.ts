@@ -4,10 +4,10 @@ import { AutocompleteConfig } from '../../../sam-ui-elements/src/ui-kit/types';
 
 
 const defaultLocationObject = {
-  city: undefined,
+  city: '',
   county: '',
   state: '',
-  country: undefined,
+  country: '',
   zip: ''
 }
 
@@ -52,7 +52,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
   
   private store;
   private subscription;
-
+ 
   constructor() {}
 
   ngOnChanges() {
@@ -190,8 +190,10 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
     );
   }
 
+
   reducer(state: any, action: any) {
-    switch (action.type) {
+   
+   switch (action.type) {
       case "LOCATION_CHANGE":
         return Object.assign(
           {},
@@ -254,12 +256,13 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               {},
               state.location,
               {
-                city: state.cityConfig ? action.value : undefined,
-                county: undefined,
+                city: state.cityConfig && action.value ? action.value : undefined,
+                county: state.cityConfig && action.value ?  state.location.county : undefined,
                 state: state.stateConfig && action.value && action.value.state ? 
-                        { key: action.value.state.stateCode, 
-                          value:  action.value.state.state } :
+                        { key: action.value.state.stateCode,
+                          value: action.value.state.stateCode + " - " + action.value.state.state } : 
                         state.location.state,
+                        
                 zip: undefined,
                 country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
                           { key: action.value.state.country.countrycode,
@@ -270,6 +273,34 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
             )
           }
         );
+       case "COUNTY_CHANGE":
+          // When county changes,
+          // clear city and zip as these are many-to-many relationships.
+          // Then populate state and country since they are parent properties
+        return Object.assign(
+          {},
+          state,
+          {
+            location: Object.assign(
+              {},
+              state.location,
+              {
+                city: state.countyConfig && action.value ? state.location.city :undefined,
+                county: state.countyConfig && action.value ? action.value : undefined,
+                state: state.stateConfig && action.value && action.value.state ? 
+                        { key: action.value.state.stateCode,
+                          value: action.value.state.stateCode + " - " + action.value.state.state } : 
+                        state.location.state,
+                zip: '', // Zip is text field. Set to emptry string.
+                country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
+                          { key: action.value.state.country.countrycode,
+                            value: action.value.state.country.country } : // Provide values later
+                          state.location.country
+
+              }
+            )
+          }
+      );
       case "STATE_CHANGE":
         /**
          * When state changes,
@@ -296,34 +327,6 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               )
             }
           );
-      case "COUNTY_CHANGE":
-          // When county changes,
-          // clear city and zip as these are many-to-many relationships.
-          // Then populate state and country since they are parent properties
-        return Object.assign(
-          {},
-          state,
-          {
-            location: Object.assign(
-              {},
-              state.location,
-              {
-                city: undefined,
-                county: state.countyConfig && action.value ? action.value : undefined,
-                state: state.stateConfig && action.value && action.value.state ? 
-                        { key: action.value.state.stateCode,
-                          value: action.value.state.stateCode + " - " + action.value.state.state } : // Provide values later
-                        state.location.state,
-                zip: '', // Zip is text field. Set to emptry string.
-                country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
-                          { key: action.value.state.country.countrycode,
-                            value: action.value.state.country.country } : // Provide values later
-                          state.location.country
-
-              }
-            )
-          }
-        );
       case "COUNTRY_CHANGE":
         /**
          * When country changes, clear all other fields.
@@ -422,6 +425,7 @@ export interface LocationGroupAutocompleteConfig {
   control?: any;
   required?: boolean;
   disabled?: boolean;
+  allowAny?: boolean;
 }
 
 export interface LocationGroupTextConfig {

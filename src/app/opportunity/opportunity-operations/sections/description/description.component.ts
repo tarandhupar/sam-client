@@ -42,7 +42,10 @@ export class OpportunityDescriptionComponent implements OnInit {
       for (let item of this.viewModel.description) {
         description = item.body;
       }
+    } else {
+      description = '';
     }
+    
     this.oppDescForm.patchValue({
       description: description
     }, {

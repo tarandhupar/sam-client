@@ -128,6 +128,12 @@ export class AlertsPage {
     this.alertsService.getAlertTypes().subscribe(res => {
       this.types.options = [];
       res.forEach(type => {this.types.options.push({value: type, label: type, name: type.toLowerCase()});});
+    }, err => {
+      this.types.options = [
+        {value: 'Error', label: 'Error', name: 'error'},
+        {value: 'Informational', label: 'Informational', name: 'informational'},
+        {value: 'Warning', label: 'Warning', name: 'warning'},
+      ]
     });
   }
 

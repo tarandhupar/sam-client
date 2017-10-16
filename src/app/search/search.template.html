@@ -24,9 +24,8 @@
 
     </sidebar>
 
-    <!--<div class ="sam-ui hidden divider"></div>-->
+    
 
-    <div class="sam-ui segment">
       <!-- Status -->
       <ng-container *ngIf="index !== 'fh' && showRegionalOffices==false">
         <h4 class="sam-ui header">Status</h4>
@@ -61,6 +60,43 @@
         </sam-chips>
         <div class="sam-ui divider"></div>
       </ng-container>
+
+      <div class="sam-ui segment">
+        <ng-container *ngIf="index === 'cfda' && showRegionalOffices==false">
+          <sam-tab-date-range-filter 
+            [tabConfig] = "cfdaDateRangeConfig"
+            [tabIndex] = "dateFilterIndex"
+            [(ngModel)]= "cfdaDateFilterModel"
+            (filterEvt)="filterHandler($event)"
+            (filterClearEvt)="filterClearHandler($event)">
+          </sam-tab-date-range-filter>
+  
+          <div class="sam-ui divider"></div>
+        </ng-container>
+  
+        <ng-container *ngIf="index === 'opp' && showRegionalOffices==false">
+          <sam-tab-date-range-filter 
+            [tabConfig] = "fboDateRangeConfig"
+            [tabIndex] = "dateFilterIndex"
+            [(ngModel)]= "fboDateFilterModel"
+            (filterEvt)="filterHandler($event)"
+            (filterClearEvt)="filterClearHandler($event)">
+          </sam-tab-date-range-filter>
+  
+          <div class="sam-ui divider"></div>
+        </ng-container>
+  
+        <ng-container *ngIf="index === 'wd' && showRegionalOffices==false">
+          <sam-tab-date-range-filter 
+            [tabConfig] = "wdDateRangeConfig"
+            [tabIndex] = "dateFilterIndex"
+            [(ngModel)]= "wdDateFilterModel"
+            (filterEvt)="filterHandler($event)"
+            (filterClearEvt)="filterClearHandler($event)">
+          </sam-tab-date-range-filter>
+  
+          <div class="sam-ui divider"></div>
+        </ng-container>
 
       <!-- Entity Type -->
       <ng-container *ngIf="index === 'ei' && showRegionalOffices==false">

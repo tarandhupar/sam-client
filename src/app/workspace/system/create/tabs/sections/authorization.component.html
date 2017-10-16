@@ -1,10 +1,28 @@
-<sam-fieldset-wrapper [label]="label('ato')" [hint]="hint('ato')">
-  <!-- Upload -->
-</sam-fieldset-wrapper>
+<div [formGroup]="form">
+  <sam-fieldset-wrapper [label]="label('uploadAto')" [hint]="hint('uploadAto')">
+    <div class="upload-wrapper">
+      <div class="button-upload">
+        <sam-button buttonType="secondary" buttonText="Upload ATO" (click)="upload($event)"></sam-button>
+        <input type="file" name="upload-ato" formControlName="uploadAto" />
+      </div>
+      <div class="sam-ui mini label" *ngIf="filename">
+        <div class="label">
+          Uploaded ATO
+          <div [innerText]="filename"></div>
+        </div>
+        <span class="icon close fa fa-times" (click)="form.get('uploadAto').reset('')"></span>
+      </div>
+    </div>
+  </sam-fieldset-wrapper>
 
-<sam-checkbox name="certified"
-              [options]="options.certified"
-              [control]="form.get('certified')"></sam-checkbox>
+  <sam-checkbox [options]="options.authorizationConfirmation"
+                name="authorization-confirmation"
+                formControlName="authorizationConfirmation"></sam-checkbox>
 
-<sam-label-wrapper label="Name">{{ store.name }}</sam-label-wrapper>
-<sam-label-wrapper label="Date">{{ store.date }}</sam-label-wrapper>
+  <sam-label-wrapper label="Name">
+    <div [innerText]="name"></div>
+  </sam-label-wrapper>
+  <sam-label-wrapper label="Date">
+    <div [innerText]="date"></div>
+  </sam-label-wrapper>
+</div>

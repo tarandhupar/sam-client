@@ -405,7 +405,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
         // Only take into account the previous, current, and budget fiscal years
         let applicable = this.model.entries.filter((entry) => {
           let year: number = entry.year;
-          return (year >= fy - 1) && (year <= fy + 1);
+          return (year >= fy - 1) && (year <= fy + 1) || year == null;
         });
 
         if (applicable.length === 0) {

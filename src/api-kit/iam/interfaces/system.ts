@@ -1,9 +1,4 @@
-export interface POC {
-  email: string,
-  firstName: string,
-  lastName: string,
-  phone?: string
-}
+import { POC } from './poc';
 
 export interface System {
   _id: string,

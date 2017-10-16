@@ -9,7 +9,8 @@
         <sam-phone-entry formControlName="personalPhone"
                          [label]="store.labels.personalPhone.label"
                          [hint]="store.labels.personalPhone.hint"
-                         [numbersOnly]="true"></sam-phone-entry>
+                         [numbersOnly]="true"
+                         phoneNumberTemplate="(___)___-____"></sam-phone-entry>
         <sam-autocomplete formControlName="carrier"
                           labelText="Mobile Carrier"
                           [options]="api.iam.carriers"

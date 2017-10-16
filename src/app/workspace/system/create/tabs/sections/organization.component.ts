@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { Section } from './section';
 
@@ -22,30 +22,31 @@ const getConfig = function(type: string) {
   templateUrl: './organization.component.html',
 })
 export class OrganizationComponent extends Section {
-  @Input() form: FormGroup;
+  @Input('group') form: FormGroup;
 
   private configs = {
-    administrators: getConfig('administrators'),
-    managers: getConfig('managers'),
+    systemAdmins: getConfig('systemAdmins'),
+    systemManagers: getConfig('systemManagers'),
   }
 
-  private administrators: FormArray;
-  private managers: FormArray;
+  private subscriptions = {};
+  private organization = new FormControl('');
+  private selected = [];
 
   constructor(private builder: FormBuilder) {
     super();
     this.labels = {
-      department: {
+      organization: {
         label: 'Organization',
         hint: 'Select the federal department, independent agency; sub-tier, or office responsible for managing this account',
       },
 
-      administrators: {
+      systemAdmins: {
         label: 'System Administrators',
         hint: 'Identify one or two owners of this system account.',
       },
 
-      managers: {
+      systemManagers: {
         label: 'System Managers',
         hint: 'Identify at least 1 and not more than 3 managers for this system account.',
       }
@@ -53,11 +54,26 @@ export class OrganizationComponent extends Section {
   }
 
   ngOnInit() {
-    this.initPOC();
+    this.organization.valueChanges.subscribe(organization => {
+      const orgKeys = (organization.fullParentPath || '').split('.');
+
+      if(orgKeys[0])
+        this.form.get('departmentOrgId').setValue(orgKeys[0]);
+      if(orgKeys[1])
+        this.form.get('agencyOrgId').setValue(orgKeys[1]);
+      if(orgKeys[2])
+        this.form.get('officeOrgId').setValue(orgKeys[2]);
+
+      this.updateSelected();
+    });
+
+    this.updateSelected();
   }
 
-  initPOC() {
-    this.administrators = this.builder.array([]);
-    this.managers = this.builder.array([]);
+  updateSelected() {
+    let form = this.form.value,
+        organization = form.officeOrgId || form.agencyOrgId || form.departmentOrgId;
+
+    this.selected = organization ? [organization] : [];
   }
 }

@@ -2,8 +2,10 @@
 <!-- City -->
 <ng-container *ngIf="_cityConfig">
   <sam-autocomplete [ngModel]="city"
+                    city [stateVal] = "state"
+                    city [countyVal] = "county"
+                    city [countryVal] = "country"
                     (ngModelChange)="store.dispatch({ type:'CITY_CHANGE', value: $event })"
-                    city
                     [name]="cityConfig.name"
                     [id]="cityConfig.id"
                     [labelText]="cityConfig.labelText"
@@ -13,27 +15,13 @@
                     [required]="cityConfig.required"
                     [disabled]="cityConfig.disabled">
   </sam-autocomplete>
-</ng-container>
-<!-- State -->
-<ng-container *ngIf="_stateConfig">
-  <sam-autocomplete [ngModel]="state"
-                    state [country]="country"
-                    (ngModelChange)="store.dispatch({ type: 'STATE_CHANGE', value: $event })"
-                    [name]="stateConfig.name"
-                    [id]="stateConfig.id"
-                    [labelText]="stateConfig.labelText"
-                    [hint]="stateConfig.hint"
-                    [config]="stateConfig.config"
-                    [control]="stateConfig.control"
-                    [required]="stateConfig.required"
-                    [disabled]="stateConfig.disabled">
-  </sam-autocomplete>  
-  <!--<div>{{location.state | json}}</div>-->
+  <!--<div>{{location.city | json}}</div>-->
 </ng-container>
 <!-- County -->
 <ng-container *ngIf="_countyConfig">
   <sam-autocomplete [ngModel]="county"
-                    county [state] = "state"
+                    county [stateVal] = "state"
+                    county [cityVal] = "city"
                     (ngModelChange)="store.dispatch({ type: 'COUNTY_CHANGE', value: $event })"
                     [name]="countyConfig.name"
                     [id]="countyConfig.id"
@@ -46,10 +34,27 @@
   </sam-autocomplete>
   <!--<div>{{location.county | json}}</div>-->
 </ng-container>
+<!-- State -->
+<ng-container *ngIf="_stateConfig">
+  <sam-autocomplete [ngModel]="state"
+                    state [countryVal]="country"
+                    (ngModelChange)="store.dispatch({ type: 'STATE_CHANGE', value: $event })"
+                    [name]="stateConfig.name"
+                    [id]="stateConfig.id"
+                    [labelText]="stateConfig.labelText"
+                    [hint]="stateConfig.hint"
+                    [config]="stateConfig.config"
+                    [control]="stateConfig.control"
+                    [required]="stateConfig.required"
+                    [disabled]="stateConfig.disabled"
+                    [allowAny]="'true'">
+  </sam-autocomplete>  
+  <!--<div>{{location.state | json}}</div>-->
+</ng-container>
 <!-- Country -->
 <ng-container *ngIf="_countryConfig">
   <sam-autocomplete [ngModel]="country"
-                    country
+                    country [historic] = "'ALL'"
                     (ngModelChange)="store.dispatch({ type: 'COUNTRY_CHANGE', value: $event })"
                     [name]="countryConfig.name"
                     [id]="countryConfig.id"
@@ -59,6 +64,8 @@
                     [control]="countryConfig.control"
                     [required]="countryConfig.required"
                     [disabled]="countryConfig.disabled">
+                    
+                   
   </sam-autocomplete>  
   <!--<div>{{location.country | json}}</div>-->
 </ng-container>

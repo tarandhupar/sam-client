@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
-import { Validators as $Validators } from '../../shared/validators';
+import { User } from 'api-kit/iam/interfaces';
 
-import { User } from '../user.interface';
+import { Validators as $Validators } from '../../shared/validators';
 import * as data from './legacy-systems.json';
 
 @Component({

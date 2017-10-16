@@ -16,7 +16,12 @@ import { DomainsResolve } from "./domains.resolve";
 import { RequestAccessResolve } from "./request-access.resolve";
 import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 import { RoleMainContent } from "./role-maincontent/role-maincontent.component.ts";
+import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
+import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.ts";
+import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
+//import { AppComponentsModule } from "../app-components/app-components.module";
 import { RolesDirectoryPage } from "./roles-directory/roles-directory.page";
+// import { AppTemplatesModule } from "../app-templates/index";
 import { BulkUpdateComponent, SamToggle } from "./bulk-update/bulk-update.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { RMBackDoorComponent } from "./back-door/back-door.component";
@@ -48,6 +53,9 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     RoleSideNav,
     PermissionSelectorComponent,
     RoleMainContent,
+    RoleMgmtWorkspace,
+    RoleMgmtSidenav,
+    RoleMgmtContent,
     RolesDirectoryPage,
     BulkUpdateComponent,
     RMBackDoorComponent,

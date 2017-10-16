@@ -8,13 +8,15 @@ import { AlertFooterService } from 'app/app-components/alert-footer/alert-footer
 @Injectable()
 export class CountyServiceImpl implements AutocompleteService {
 
-  private state = 'AL';
+  private state;
+
+  private city;
 
   constructor(private locationService: LocationService) { }
 
-  getAllCountiesJSON(q:string , statecode: string): ReplaySubject<any> {
+  getAllCountiesJSON(q?:string , searchby?: string, statecode?: string, city?: string): ReplaySubject<any> {
     const results = new ReplaySubject();
-    this.locationService.getAutoCompleteCounties(q,'statecode', statecode)
+    this.locationService.getAutoCompleteCounties(q,searchby, statecode, city )
 	 .catch(res => {
         return Observable.of([]);
       })
@@ -43,15 +45,39 @@ export class CountyServiceImpl implements AutocompleteService {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    let statecode = searchOptions && searchOptions.statecode ?
+    
+   let stateCode ;
+   let city;
+   
+  
+    if(this.city){
+
+         city = searchOptions && searchOptions.city ?
+                    searchOptions.city : this.city;
+         stateCode = searchOptions && searchOptions.state.statecode ?
+                    searchOptions.state.statecode : this.state;
+          return this.getAllCountiesJSON('','statecode','statecode',city.city).map(o => o);
+        
+     }
+
+     else if (this.state){
+        stateCode = searchOptions && searchOptions.statecode ?
                     searchOptions.statecode : this.state;
-                    console.log(this.state);
-                    console.log(statecode);
-    return this.getAllCountiesJSON(val,statecode).map(o => o);
+        return this.getAllCountiesJSON(val,'statecode',stateCode).map(o => o);
+    }
+
+     else {
+         return this.getAllCountiesJSON(val).map(o => o);
+     }    
+    
   }
 
    setState(state: any) {
     this.state = state;
+  }
+
+   setCity(city: any) {
+    this.city = city;
   }
 }
 
@@ -62,7 +88,9 @@ export class CountyServiceImpl implements AutocompleteService {
   ]
 })
 export class SamCountyServiceAutoDirective implements OnChanges{
-  @Input() state: any;
+  @Input() stateVal: any;
+
+  @Input() cityVal: any;
 
   private autocompleteService: any;
 
@@ -76,8 +104,23 @@ export class SamCountyServiceAutoDirective implements OnChanges{
   ngOnChanges() {
     // When state input on directive changes,
     // update service with new value
-    if (this.state) {
-      this.autocompleteService.setState(this.state.key);
+    if (this.stateVal) {
+      this.autocompleteService.setState(this.stateVal.key);
+    }
+
+    else{
+      this.autocompleteService.setState('');
+    }
+
+   
+    if (this.cityVal ){
+         
+
+      this.autocompleteService.setCity(this.cityVal)
+    }
+
+    else {
+      this.autocompleteService.setCity('')
     }
     // } else {
     //   // If no country is set, default to USA

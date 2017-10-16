@@ -1,18 +1,18 @@
-<sam-text name="system-name"
-          [label]="label('systemName')"
-          [hint]="hint('systemName')"
-          [errorMessage]="errors('systemName')"
-          [control]="form.get('systemName')"></sam-text>
-
-<sam-text name="system-version"
-          [label]="label('systemVersion')"
-          [hint]="hint('systemVersion')"
-          [errorMessage]="errors('systemVersion')"
-          [control]="form.get('systemVersion')"></sam-text>
-
-<sam-text-area name="system-description"
-               [label]="label('systemDescription')"
-               [hint]="hint('systemDescription')"
-               [errorMessage]="errors('systemDescription')"
-               [control]="form.get('systemDescription')"
-               maxlength="1000"></sam-text-area>
+<div [formGroup]="form">
+  <sam-text [label]="label('systemAccountName')"
+            [hint]="hint('systemAccountName')"
+            [errorMessage]="errors('systemAccountName')"
+            name="system-account-name"
+            formControlName="systemAccountName"></sam-text>
+  <sam-text [label]="label('interfacingSystemVersion')"
+            [hint]="hint('interfacingSystemVersion')"
+            [errorMessage]="errors('interfacingSystemVersion')"
+            name="interfacing-system-version"
+            formControlName="interfacingSystemVersion"></sam-text>
+  <sam-text-area [label]="label('systemDescriptionAndFunction')"
+                 [hint]="hint('systemDescriptionAndFunction')"
+                 [errorMessage]="errors('systemDescriptionAndFunction')"
+                 name="system-description-and-function"
+                 formControlName="systemDescriptionAndFunction"
+                 maxlength="1000"></sam-text-area>
+</div>

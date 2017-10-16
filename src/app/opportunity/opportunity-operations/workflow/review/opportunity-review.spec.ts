@@ -338,7 +338,7 @@ let MockFHService = {
     return Observable.of("");
   }
 };
-describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity-review.spec.ts', () => {
+xdescribe('src/app/opportunity/opportunity-operations/workflow/review/opportunity-review.spec.ts', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -402,7 +402,7 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
     }, null]);
   };
 
-  it('OpportunityReviewPage: Should init & load data', () => {
+  xit('OpportunityReviewPage: Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();

@@ -17,6 +17,7 @@ export class SetDisplayFields implements PipeTransform {
       // These types are a superset of j, using case fallthrough
       case 'p': // Presolicitation
       case 'k': // Combined Synopsis/Solicitation
+      case 'o': // Solicitation
       case 'r': // Sources Sought
       case 's': // Special Notice
         displayField[OpportunityFields.Award] = false;
@@ -58,6 +59,7 @@ export class SetDisplayFields implements PipeTransform {
         displayField[OpportunityFields.ModificationNumber] = false;
         displayField[OpportunityFields.POP] = false;
         break;
+
 
       default:
         console.log('Error: Unknown opportunity type ');

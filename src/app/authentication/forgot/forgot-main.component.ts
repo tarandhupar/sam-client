@@ -5,10 +5,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { SamKBAComponent } from '../../app-components';
 
 import { IAMService } from 'api-kit';
+import { KBA } from 'api-kit/iam/interfaces';
 
 import { Validators as $Validators } from '../shared/validators';
-
-import { KBA } from '../kba.interface';
 
 @Component({
   templateUrl: './forgot-main.component.html',

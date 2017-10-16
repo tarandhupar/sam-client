@@ -368,7 +368,6 @@ export class FALAssistanceComponent implements OnInit {
     this.updateControlError(this.falAssistanceForm.get('renewal').get('interval'), this.errorService.validateRenewalInterval().errors);
     this.updateControlError(this.falAssistanceForm.get('appeal').get('interval'), this.errorService.validateAppealInterval().errors);
 
-
     this.showErrors.emit(this.errorService.applicableErrors);
   }
 

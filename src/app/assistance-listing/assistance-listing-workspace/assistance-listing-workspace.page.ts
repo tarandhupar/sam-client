@@ -28,7 +28,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   private START_DAY = '00:00:00';
   private END_DAY = '23:59:59';
 
-
+  showSpinner: boolean = false;
   keyword: string = '';
   index: string = '';
   organizationId: string = '';
@@ -128,7 +128,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     title: "Error",
     description: "",
     type: "error"
-  }
+  };
+  disabled:boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService, private falFormService: FALFormService, private alertFooterService: AlertFooterService) {
   }
@@ -215,6 +216,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   runProgram() {
+    this.showSpinner = true;
     // determines what model to pull data from and formats the dates to meet api requirements
     var dateResult = this.formatDates(this.postedDateFilterModel, this.modifiedDateFilterModel, true);
 
@@ -260,6 +262,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             }
           }
         }
+        this.disabled = false;
       },
       error => {
         console.error('Error!!', error);
@@ -268,6 +271,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         }
+        this.disabled = false;
+      },
+      () => {
+        //hide spinner when call is complete
+        this.showSpinner = false;
       }
     );
     // construct qParams to pass parameters to object view pages
@@ -326,6 +334,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     }
 
     // refresh results
+    this.disabled = true;
     this.pageNum = 0;
     this.workspaceRefresh();
   }
@@ -367,6 +376,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         this.serviceErrorFooterAlertModel.description = errorRes.message;
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
       }
+      this.disabled = false;
     });
 
     return apiSubject;
@@ -410,12 +420,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   // status filter model change
   statusModelChanged(){
-    this.refreshSearch();
+    this.disabled = true;
+    this.pageNum = 0;
+    this.workspaceRefresh();
   }
 
   // change request filter model change
   requestTypeModelChanged(){
-    this.refreshSearch();
+    this.disabled = true;
+    this.pageNum = 0;
+    this.workspaceRefresh();
   }
 
   // builds the options for status filter with counts included from api call -- returns to runProgram()
@@ -517,6 +531,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.postedFrom = "";
     this.postedTo = "";
 
+    this.disabled = true;
+    this.pageNum = 0;
     this.workspaceRefresh();
   }
 
@@ -547,7 +563,9 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.postedFrom = returnObj.postedFrom;
     this.postedTo = returnObj.postedTo;
 
-    this.refreshSearch();
+    this.disabled = true;
+    this.pageNum = 0;
+    this.workspaceRefresh();
   }
 
 
@@ -694,7 +712,9 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   // sortBy model change
   sortModelChange(){
-    this.refreshSearch();
+    this.disabled = true;
+    this.pageNum = 0;
+    this.workspaceRefresh();
   }
 
   setSortModel(sortBy) {
@@ -724,16 +744,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       }
     }
 
-    refreshSearch() {
-      let qsobj = this.setupQS();
-      // overwrite the page number to be 1. When filters are changed we do not want to retain page number
-      qsobj['page'] = 1;
-      let navigationExtras: NavigationExtras = {
-        queryParams: qsobj
-      };
-      this.router.navigate(['/fal/workspace/'], navigationExtras);
-    }
-
     //agency picker change handler
     onOrganizationChange(selectedOrgs:any){
       let organizationStringList = '';
@@ -752,8 +762,14 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
       // storing current organization string list
       this.organizationId = organizationStringList;
+      
+      // we only want to change page number when the organization list has changed
+      if (this.previousStringList !== this.organizationId) {
+        this.pageNum = 0;
+        this.disabled = true;
+        this.workspaceRefresh();
+      }
 
-      this.refreshSearch();
     }
 
   getOrganizationLevels() {

@@ -80,8 +80,6 @@ export class ReportComponent implements OnInit {
   userRoleObject;
   userRole;
   testToken;
-  mstrEnv;
-  mstrServer;
   promptAnswersXMLSBG;
   departmentIdSBG: any = '';
   agencyIdSBG: any = '';
@@ -142,21 +140,8 @@ export class ReportComponent implements OnInit {
         });
       });
     });
-    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1 || API_UMBRELLA_URL.indexOf("alpha") != -1)) {
-      this.mstrEnv = 'stg';
-      this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
-      this.mstrEnv = 'test';
-      this.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/comp") != -1) {
-      this.mstrEnv = 'dev';
-      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
-      this.mstrEnv = 'dev';
-      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
-      this.localEnv = true;
-    }
-    http.get('src/assets/report-configs/'+this.mstrEnv+'-reports.json')
+
+    http.get('src/assets/report-configs/'+REPORT_MICRO_STRATEGY_ENV+'-reports.json')
       .map(res => res.json())
       .subscribe(data => {
           this.data = data
@@ -203,30 +188,15 @@ export class ReportComponent implements OnInit {
       data => {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
       });
-    // this.reportsService.getUserRole(Cookies.get('iPlanetDirectoryPro')).subscribe(
-    //   data => {
-    //     this.roleData = data;
-    //     let encodedToken = this.roleData.token.split(".");
-    //     this.userRoleObject = JSON.parse(base64.decode(encodedToken[1]));
-    //     this.userRole = this.userRoleObject.domainMapContent[0].roleMapContent[0].role.val;
-    //     if(this.userRole) {
-    //       this.userOrg.push(this.userRoleObject.domainMapContent["0"].roleMapContent["0"].organizationMapContent["0"].organizations["0"]);
-    //     }
-    //   },
-    //   error => console.log(error)
-    // );
 
     // Data range lavel for 'Inherently Governmental Functions Actions and Dollars Report'
     if (this.id == 'BE206C4B4A24C65846C6A686B576860F') {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
     }
+    if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
+       this.localEnv = true;
+    }
   }      
-
-  // ngAfterViewInit() {
-  //   if (this.route.snapshot.url[1].path == 'shared') {
-  //     this.samAccordionValue.collapseAll();
-  //   }
-  // }
 
   checkSession(cb: () => void) {
     let vm = this;
@@ -321,11 +291,11 @@ export class ReportComponent implements OnInit {
     let vm = this;
     // &uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER
     if (this.name == "Small Business Goaling Report") {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
     } else if (this.name == "Contract Detail Report") {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
     } else {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategy'+this.mstrEnv+'.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?Server='+this.mstrServer+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
     }
   }
 

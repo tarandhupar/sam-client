@@ -11,7 +11,7 @@ import {
 
 import { Auth } from '../..//interfaces';
 
-Cookies.defaults = config.cookies;
+Cookies.defaults = config.cookies();
 
 function clearSession() {
   Cookies.remove('iPlanetDirectoryPro');
@@ -161,7 +161,7 @@ class IAM {
 
           case 3:
             if(data.tokenId) {
-              Cookies.set('iPlanetDirectoryPro', data.tokenId, config.cookies);
+              Cookies.set('iPlanetDirectoryPro', data.tokenId, config.cookies());
 
               // Verifying Cookie Set
               if(data.tokenId === Cookies.get('iPlanetDirectoryPro')) {
@@ -214,13 +214,17 @@ class IAM {
     $success = $success || function() {};
     $error = $error || function() {};
 
-    request
-      .delete(endpoint)
-      .set(auth)
-      .end((error, response) => {
-        clearSession();
-        error ? $error() : $success();
-      });
+    if(auth) {
+      request
+        .delete(endpoint)
+        .set(auth)
+        .end((error, response) => {
+          clearSession();
+          error ? $error() : $success();
+        });
+    } else {
+      $success();
+    }
   }
 
   isLocal() {

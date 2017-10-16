@@ -76,7 +76,7 @@ export class MyAccessPage implements OnInit {
                   this.navLinks.splice(i,1); break;
                }
              }
-         }  
+         }
      }) ;
     this.isMyAccess = !!this.route.snapshot.data['isMyAccess'];
     let cookieUser = this.userCookieService.getUser() && this.userCookieService.getUser().uid;
@@ -312,9 +312,9 @@ export class MyAccessPage implements OnInit {
 
   getAssignRoleLink() {
     if (this.isMyAccess) {
-      return `/users/${this.userName}/grant-access`;
+      return `/role-management/users/${this.userName}/assign-roles`;
     } else {
-      return '../grant-access';
+      return '../assign-roles';
     }
   }
 }

@@ -57,7 +57,8 @@
     <h3 class="sam-ui header">Shortcuts</h3>
     <div class="sam-ui equal width column stackable grid">
       <div class="column center aligned">
-        <a class="sam-ui medium" style="position: relative;">
+        <a [routerLink]="['/workspace/myfeed/requests']"
+          class="sam-ui medium" style="position: relative;">
           <!-- <div class="floating sam-ui circular red label">
             0
           </div>   -->
@@ -67,14 +68,16 @@
         </a>
       </div>
       <div class="column center aligned">
-        <a class="sam-ui medium">
+        <a [routerLink]="['/workspace/myfeed/notifications']"
+          class="sam-ui medium">
           <i class="fa fa-bell-o fa-4x"></i>
           <br>
           Notifications
         </a>
       </div>
       <div class="column center aligned">
-        <a class="sam-ui medium">
+        <a [routerLink]="['/savedsearches/workspace']"
+          class="sam-ui medium">
           <span class="fa-stack fa-2x">
             <i class="fa fa-cloud fa-stack-2x"></i>
             <i class="fa fa-search fa-stack-1x fa-inverse"></i>

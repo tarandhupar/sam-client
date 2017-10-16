@@ -8,22 +8,10 @@ import { Section } from './section';
   templateUrl: './security.component.html',
 })
 export class SecurityComponent extends Section {
-  @Input() form: FormGroup;
-
-  private configs = {
-    connection: {
-      keyValueConfig: {
-        keyProperty: 'value',
-        valueProperty: 'label'
-      }
-    }
-  };
+  @Input('group') form: FormGroup;
 
   private options = {
-    connection: [
-      { label: 'Web Services', value: 'web' },
-      { label: 'SFTP',         value: 'sftp' },
-    ]
+    typeOfConnection: ['Web Services','SFTP']
   };
 
   constructor() {
@@ -34,12 +22,12 @@ export class SecurityComponent extends Section {
         hint: 'Provide the dedicated static IP address used by your system. All system to system requests must come from this IP address.',
       },
 
-      connection: {
+      typeOfConnection: {
         label: 'Type of Connection',
         hint: '',
       },
 
-      location: {
+      physicalLocation: {
         label: 'Physical Location',
         hint: '<strong>Example</strong>: <em>The CWS currently resides in Ashburn, VA at XYZ Data Center</em>',
       },

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { FHService, IAMService } from 'api-kit';
 
-import { User } from '../../../authentication/user.interface';
+import { User } from 'api-kit/iam/interfaces';
 import { OptionsType } from 'sam-ui-kit/types'
 
 @Component({

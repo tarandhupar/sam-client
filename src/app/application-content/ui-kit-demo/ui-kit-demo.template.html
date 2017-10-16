@@ -186,6 +186,14 @@
     </sam-location-component><br/>
     <h4 class="usa-width-one">{{ locationObj | json }}</h4>
   </div>
+   <div class="usa-grid">
+    <div class="usa-width-one-whole">
+        <sam-autocomplete-multiselect country class="usa-width-one-half"
+                                  label="Country Autocomplete Multiselect" required="true"
+                                  [keyValueConfig]="multiselectConfigSelectable">
+        </sam-autocomplete-multiselect>
+    </div>
+  </div> <br/>
   <div class="usa-grid">
     <div class="usa-width-one-whole">
         <sam-autocomplete-multiselect state class="usa-width-one-half"
@@ -198,6 +206,14 @@
     <div class="usa-width-one-whole">
         <sam-autocomplete-multiselect county class="usa-width-one-half"
                                   label="County Autocomplete Multiselect" required="true"
+                                  [keyValueConfig]="multiselectConfigSelectable">
+        </sam-autocomplete-multiselect>
+    </div>
+  </div> <br/>
+ <div class="usa-grid">
+    <div class="usa-width-one-whole">
+        <sam-autocomplete-multiselect city class="usa-width-one-half"
+                                  label="City Autocomplete Multiselect" required="true"
                                   [keyValueConfig]="multiselectConfigSelectable">
         </sam-autocomplete-multiselect>
     </div>
@@ -1010,6 +1026,76 @@
     <p class="usa-width-one">
       {{bob}}
     </p>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Autocomplete Refactor</h2>
+    <div class="usa-width-one">
+      <sam-autocomplete-refactor
+        [(ngModel)]="howdydo"
+        [options]="[
+          {
+            key: 'ca',
+            value: 'Colin',
+            category: 'People'
+          },
+          {
+            key: 'cv',
+            value: 'Carlos',
+            category: 'People'
+          },
+          {
+            key: 'dr',
+            value: 'Diego',
+            category: 'People'
+          }
+        ]"
+        [config]="{
+          keyValueConfig: {
+            keyProperty: 'key',
+            valueProperty: 'value',
+            categoryProperty: 'category'
+          }
+        }"
+        [categories]="[
+          { key: 'People', value: 'People' }
+        ]"
+        [isCategorySelectable]="true"
+        [label]="'KV Options with Selectable Categories'"
+        [name]="'kvoptions'"
+        [id]="'kvoptions'">
+      </sam-autocomplete-refactor>
+      {{ howdydo | json }}
+    </div>
+    <br />
+    <div class="usa-width-one">
+      <sam-autocomplete-refactor
+        [(ngModel)]="howdy"
+        class="usa-width-one"
+        [options]="[
+          'Colin',
+          'Carlos',
+          'Diego'
+        ]"
+        allowAny="true"
+        [label]="'String Options'"
+        [name]="'stringoptions'"
+        [id]="'stringoptions'">
+      </sam-autocomplete-refactor>
+      {{ howdy | json }}
+    </div>
+    <br />
+    <div class="usa-width-one">
+      <sam-autocomplete-refactor
+        test
+        [(ngModel)]="howdydody"
+        class="usa-width-one"
+        [label]="'Service with Pagination'"
+        [name]="'service-pagination'"
+        [id]="'service-pagination'">
+      </sam-autocomplete-refactor>
+      {{ howdydody | json }}
+    </div>
   </div>
 <br>
 </div>

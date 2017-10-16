@@ -274,7 +274,7 @@ export class FALFormViewModel {
 
   //Applying for Assistance section fields
   get deadlineFlag() {
-    let flag = false;
+    let flag = null;
 
     if (this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.flag) {
       flag = this._data.assistance.deadlines.flag;

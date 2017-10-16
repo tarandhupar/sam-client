@@ -1,4 +1,4 @@
-.isSelected {
+.isSelected, .highlight {
   background-color: #0071bc;
   color: white;
 }
@@ -17,12 +17,20 @@
     position: relative;
   }
 
+  .icon-container {
+    position: absolute;
+    top: 25%;
+    right: 10px;
+    z-index: 10;
+  }
+
   .reset-icon,.reset-icon-active{
     position: absolute;
     top: 25%;
     right: 10px;
     z-index: 10;
   }
+
   .reset-icon {
     color: #d9d9d9;
   }
@@ -41,6 +49,7 @@
     input {
       padding-right: 1.6em;
       margin: 0;
+      padding-right: 45px;
     }
   }
 
@@ -50,7 +59,7 @@
     top: 12px;
   }
 
-  #sam-autocomplete-results, #sam-autocomplete-results-kv,.sam-autocomplete-no-results {
+  #sam-autocomplete-results, #sam-autocomplete-results-kv,.sam-autocomplete-no-results, .results-list {
     position: absolute;
     box-shadow: 0 2px 3px 0 rgba(34,36,38,.15);
     border:1px solid #96c8da;

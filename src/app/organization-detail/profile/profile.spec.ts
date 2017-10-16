@@ -15,6 +15,7 @@ import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHServiceMock } from "../../../api-kit/fh/fh.service.mock";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
 class RouterStub {
   navigate(url: string) { return url; }
@@ -43,6 +44,7 @@ describe('Organization Detail Profile Page', () => {
       imports:[ SamUIKitModule, SamAPIKitModule, RouterTestingModule, FormsModule],
       providers: [
         FlashMsgService,
+        AlertFooterService,
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
         { provide: FHService ,useClass:FHServiceMock}

@@ -27,7 +27,7 @@ export class SharedComponent {
                     }).join('&');
                 }
             )
-            this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?'+this.sharedParams);
+            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+this.sharedParams);
             // need to change mstrParams to individual
         }
     }

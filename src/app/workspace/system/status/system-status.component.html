@@ -1,32 +1,44 @@
-<div *ngIf="system" grid>
+<div *ngIf="application" grid>
   <div row>
     <div columns="2"></div>
     <div columns="8">
-      <title-and-section section="Workspace" [title]="system.systemName" [badge]="states.status"></title-and-section>
+      <title-and-section section="Workspace" [title]="application.systemAccountName" [badge]="application.applicationStatus"></title-and-section>
 
       <div class="usa-progress-bar">
-        <div class="progress-header">
-          <span>Draft</span>
-          <span>Pending Approval</span>
-          <span></span>
+        <div class="progress-header" [ngClass]="'step-'+status">
+          <span *ngIf="status >= 1">Draft</span>
+          <span *ngIf="status >= 2">Pending Approval</span>
+          <span *ngIf="status >= 3" [innerText]="application.applicationStatus"></span>
         </div>
         <div class="progress-body">
-          <div>
-            <span></span>
-            <span></span>
+          <div [ngClass]="'step-'+status">
+            <span>
+              <span class="fa fa-check-circle" *ngIf="status > 1"></span>
+            </span>
+            <span>
+              <span class="fa fa-check-circle" *ngIf="status > 2"></span>
+            </span>
             <span></span>
           </div>
         </div>
       </div>
 
       <sam-fieldset-wrapper label="Request Status">
-        <sam-label-wrapper class="inline" label="Application ID:">XYZ1234</sam-label-wrapper>
-        <sam-label-wrapper class="inline" label="Submitted Date:">Jun 6, 10:32 am</sam-label-wrapper>
-        <sam-label-wrapper class="inline" label="Last Updated Date:">Jun 6, 9:40 am</sam-label-wrapper>
-        <sam-label-wrapper class="inline" label="Submitted By:">Susan Alexander</sam-label-wrapper>
-        <sam-label-wrapper class="inline" label="Security Approver:">Not yet approved</sam-label-wrapper>
-        <sam-label-wrapper class="inline" label="Security Approved Date:">Not yet approved</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Application ID:">{{ field('uid') }}</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Submitted Date:">{{ field('submittedDate') }}</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Last Updated Date:">{{ field('lastUpdate') }}</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Submitted By:">{{ field('submittedBy') }}</sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Security Approver:">
+          <span [innerHTML]="field('securityApprover')"></span>
+        </sam-label-wrapper>
+        <sam-label-wrapper class="inline" label="Security Approved Date:">
+          <span [innerHTML]="field('securityApproved_Date')"></span>
+        </sam-label-wrapper>
       </sam-fieldset-wrapper>
+
+      <div class="text-right">
+        <a [routerLink]="['/workspace/system']">Cancel</a>
+      </div>
     </div>
   </div>
 </div>

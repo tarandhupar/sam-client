@@ -28,7 +28,7 @@ import { ToggleService } from "../../../api-kit/toggle/toggle.service";
             [type]="'warning'"
             [title]="modalConfig.title"
             [description]="modalConfig.description"
-            [submitButtonLabel]="'Ok'"
+            [submitButtonLabel]="'Unsubscribe'"
             [cancelButtonLabel]="'Cancel'"
             (onSubmit)="onUnsubscribeModalSubmit()">
   </sam-modal>
@@ -114,12 +114,13 @@ export class SamWatchComponent implements OnInit{
 
   confirmUnsubscribe(){
     if(this.showModal && this.watchlist.id()) {
-      this.unsubscribeModal.openModal();
-      if(this.watchlist.recordId() !== '') {
-        this.modalConfig.description = 'Are you sure you wish to unsubscribe from: "' + this.watchlist.recordId() + '"?"';
+      if(this.watchlist.title() !== '') {
+        this.modalConfig.description = 'Are you sure you wish to unsubscribe from: ' + this.watchlist.title() + '?';
       } else {
         this.modalConfig.description = 'Are you sure you wish to unsubscribe from this record?';
       }
+      this.unsubscribeModal.openModal();
+
     }
     else {
       this.performSubscriptionChange();

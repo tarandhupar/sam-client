@@ -24,6 +24,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   private START_DAY = '00:00:00';
   private END_DAY = '23:59:59';
 
+  showSpinner: boolean = false;
   keyword: string = '';
   organizationId: string = '';
   pageNum = 0;
@@ -82,17 +83,18 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   noticeTypeCheckboxModel: any = [];
   noticeTypeCheckboxConfig = {
     options: [
-      {value: 'p', label: 'Presolicitation', name: 'checkbox-presolicitation'},
       {value: 'a', label: 'Award Notice', name: 'checkbox-award-notice'},
+      {value: 'k', label: 'Combined Synopsis/Solicitation', name: 'checkbox-synopsis'},
+      {value: 'l', label: 'Fair Opportunity / Limited Sources Justification', name: 'checkbox-fair-opportunity'},
+      {value: 'f', label: 'Foreign Government Standard', name: 'checkbox-foreign-govt'},
+      {value: 'i', label: 'Intent to Bundle Requirements (DoD-Funded)', name: 'checkbox-bundle-req'},
+      {value: 'j', label: 'Justification and Approval (J&A)', name: 'checkbox-justification-approval'},
       {value: 'm', label: 'Modification/Amendment/Cancel', name: 'checkbox-notification-amendment'},
+      {value: 'p', label: 'Presolicitation', name: 'checkbox-presolicitation'},
+      {value: 'g', label: 'Sale of Surplus Property', name: 'checkbox-sale-surplus'},
+      {value: 'o', label: 'Solicitation', name: 'checkbox-solicitation'},
       {value: 'r', label: 'Sources Sought', name: 'checkbox-sources-sought'},
       {value: 's', label: 'Special Notice', name: 'checkbox-special-notice'},
-      {value: 'f', label: 'Foreign Government Standard', name: 'checkbox-foreign-govt'},
-      {value: 'g', label: 'Sale of Surplus Property', name: 'checkbox-sale-surplus'},
-      {value: 'k', label: 'Combined Synopsis/Solicitation', name: 'checkbox-synopsis'},
-      {value: 'j', label: 'Justification and Approval (J&A)', name: 'checkbox-justification-approval'},
-      {value: 'i', label: 'Intent to Bundle Requirements (DoD-Funded)', name: 'checkbox-bundle-req'},
-      {value: 'l', label: 'Fair Opportunity / Limited Sources Justification', name: 'checkbox-fair-opportunity'},
     ],
     name: 'opp-notice-type-filter',
     label: '',
@@ -125,7 +127,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
   oppFacets: any = ['status','type'];
 
-  
+
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private opportunityService: OpportunityService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
   }
@@ -232,8 +234,8 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.pageNum = 0;
     this.workspaceRefresh();
   }
-    
-    
+
+
   // FUNCTIONS FOR TABS ON DATE FILTER
   selectTab(type){
     this.currDateTab = type;
@@ -321,6 +323,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   }
 
   runOpportunity() {
+    this.showSpinner = true;
     var appendTime = this.currDateTab === this.RESPONSE;
     var dateObj = this.formatDateWrapper(this.currDateTab, appendTime);
 
@@ -378,6 +381,10 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         }
+      },
+      () => {
+        //hide spinner when call is complete
+        this.showSpinner = false;
       }
     );
     // construct qParams to pass parameters to object view pages
@@ -555,7 +562,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
           newObj = {value: 'archived', label: 'Archived (' + data[property]['count'] + ')', name: 'checkbox-archived', disabled: isZero ? true : false};
           break;
         case 'total_presolicitation':
-          newObj = {value: 'p', label: 'Presolicitation (' + data[property]['count'] + ')', name: 'checkbox-presolicitation', disabled: isZero ? true : false};          
+          newObj = {value: 'p', label: 'Presolicitation (' + data[property]['count'] + ')', name: 'checkbox-presolicitation', disabled: isZero ? true : false};
           break;
         case 'total_award_notice':
           newObj = {value: 'a', label: 'Award Notice (' + data[property]['count'] + ')', name: 'checkbox-award-notice', disabled: isZero ? true : false};
@@ -586,6 +593,9 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
           break;
         case 'total_fair_opportunity':
           newObj = {value: 'l', label: 'Fair Opportunity / Limited Sources Justification (' + data[property]['count'] + ')', name: 'checkbox-fair-opportunity', disabled: isZero ? true : false};
+          break;
+        case 'total_solicitation':
+          newObj = {value: 'o', label: 'Solicitation (' + data[property]['count'] + ')', name: 'checkbox-Solicitation', disabled: isZero ? true : false};
           break;
         default:
           newObj = null;
@@ -675,7 +685,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     //reset sort
     this.oldSortModel = this.defaultSort;
     this.sortModel = this.defaultSort;
-    
+
     this.workspaceRefresh();
   }
 

@@ -10,28 +10,29 @@
 </sam-autocomplete>
 
 <div class="sam-ui divided selection relaxed list">
-  <a *ngIf='shouldShowPending' 
-    routerLink="/workspace/myfeed/requests" 
+  <a *ngIf='shouldShowPending'
+    routerLink="/workspace/myfeed/requests"
     [queryParams]="{statIds: 1, reqIds: 1}"
     class="item">
-    <div class="sam-ui horizontal mini label" 
+    <div class="sam-ui horizontal mini label"
       [class.blue]="pendingCount !== 0">
-      {{pendingCount === 0 ? '0' : pendingCount}} 
+      {{pendingCount === 0 ? '0' : pendingCount}}
     </div>
     Pending Role Requests
   </a>
+  <a class="item" [routerLink]="'/role-management/requests'" [queryParams]="{status: 1}">Legacy Requests Page</a>
   <a class="item" routerLink='/role-management/bulk-update'>
     <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
     Bulk Update
   </a>
-  <a *ngIf="shouldShowRoleDefinitions" 
-    class="item" 
+  <a *ngIf="shouldShowRoleDefinitions"
+    class="item"
     [routerLink]="'/role-management/workspace'">
     <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
     Role Definitions
   </a>
-  <a *ngIf="shouldShowRoleDirectory" 
-    class="item" 
+  <a *ngIf="shouldShowRoleDirectory"
+    class="item"
     [routerLink]="'/role-management/roles-directory'">
     <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
     Go to Roles Directory

@@ -32,7 +32,7 @@ export class LocationService {
   }
 
   //search city by city name and filter by country code and state code
-  searchCity( q:string, countrycode:string, statecode:string, searchStr:string){
+  searchCity( q?:string, countrycode?:string, statecode?:string, searchStr?:string){
     var oApiParam = {
       name: 'location',
       suffix: '/cities',
@@ -44,11 +44,11 @@ export class LocationService {
   }
 
   //gets autocomplete countries
-  getAutoCompleteCountries(q:string) {
+  getAutoCompleteCountries(q:string, active:string) {
     var oApiParam = {
       name: 'location',
       suffix: '/countries',
-      oParam: {q:q},
+      oParam: {q:q, active:active},
       method: 'GET'
     };
 
@@ -79,22 +79,25 @@ export class LocationService {
     return this.oAPIService.call(oApiParam);
   }
 
-  //gets autocomplete cities, using stateId
-  getAutoCompleteCities(citySubstring:string, stateId, countryCode) {
+  //gets autocomplete cities
+  getAutoCompleteCities(q?:string, searchby?:string, searchvalue?:string, countryCode?:string, county?:string) {
     var oApiParam = {
       name: 'location',
       suffix: '/cities',
       oParam: {
         cc: countryCode,
-        q: citySubstring
+        q: q,
+        searchby: searchby,
+        searchvalue: searchvalue,
+        county: county
       },
       method: 'GET'
     };
 
-    if (typeof stateId === 'string') {
-      oApiParam.oParam['searchby'] = "statecode";
-      oApiParam.oParam['searchvalue'] = stateId;
-    }
+    // if (typeof stateId === 'string') {
+    //   oApiParam.oParam['searchby'] = "statecode";
+    //   oApiParam.oParam['searchvalue'] = stateId;
+    // }
 
     return this.oAPIService.call(oApiParam);
   }
@@ -136,11 +139,11 @@ export class LocationService {
   }
 
   //gets autocomplete counties
-  getAutoCompleteCounties(q:string, searchby:string, searchvalue:string) {
+  getAutoCompleteCounties(q?:string, searchby?:string, searchvalue?:string, city?:string ) {
     var oApiParam = {
       name: 'location',
       suffix: '/counties',
-      oParam: {q:q, searchby:searchby, searchvalue:searchvalue},
+      oParam: {q:q, searchby:searchby, searchvalue:searchvalue, city },
       method: 'GET'
     };
 

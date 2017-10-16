@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { cloneDeep, indexOf, isNumber, merge } from 'lodash';
-import { FHService, IAMService } from 'api-kit';
 
-import { User } from '../../user.interface';
-import { KBA } from '../../kba.interface';
+import { FHService, IAMService } from 'api-kit';
+import { KBA, User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './details.component.html',
@@ -306,9 +305,10 @@ export class DetailsComponent {
   }
 
   loadUser(cb) {
-    this.api.iam.checkSession((user) => {
-      user.workPhone = user.workPhone.replace(/[^0-9]/g, '');
+    this.api.iam.checkSession(user => {
+      user.workPhone = this.sanitizePhone(user.workPhone);
       user.workPhone = (user.workPhone.length < 11 ? '1' : '' ) + user.workPhone;
+      user.personalphone = this.sanitizePhone(user.personalPhone, false);
 
       this.user = merge({
         middleName: user.initials,
@@ -407,8 +407,8 @@ export class DetailsComponent {
 
     fn((userData) => {
       this.user = merge({}, this.user, userData);
-      this.user.workPhone = this.user.workPhone.replace(/[^0-9]/g, '');
-      this.user.workPhone = (this.user.workPhone.length < 11 ? '1' : '' ) + this.user.workPhone;
+      this.user.workPhone = this.sanitizePhone(this.user.workPhone, true);
+      this.user.personalPhone = this.sanitizePhone(this.user.personalPhone, false);
       cb();
     });
   }
@@ -475,17 +475,27 @@ export class DetailsComponent {
   }
 
   get phone():string {
-    let phone = this.user.workPhone
-      .replace(/[^0-9]/g, '')
-      .replace(/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/g, '$1+($2) $3-$4');
+    return this.sanitizePhone(this.user.workPhone)
+      .replace(/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/g, '$1+($2)$3-$4');;
+  }
 
-    switch(phone.length) {
-      case 14:
-        phone = `1+${phone}`;
-        break;
+  get personalPhone(): string {
+    return this.sanitizePhone(this.detailsForm.get('personalPhone').value, false)
+      .replace(/([0-9]{3})([0-9]{3})([0-9]{4})/g, '($1)$2-$3');
+  }
+
+  sanitizePhone(phone: string = null, country: boolean = true): string {
+    if(phone) {
+      phone = phone.replace(/[^0-9]/g, '');
     }
 
-    return phone;
+    if(country && phone.length < 11) {
+      phone = `1${phone}`;
+    } else if(!country && phone.length > 10) {
+      phone = phone.substring(1, phone.length - 1);
+    }
+
+    return (phone || '');
   }
 
   updatePhoneNumber(phoneNumber) {

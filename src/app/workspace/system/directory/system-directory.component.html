@@ -3,7 +3,7 @@
     <h2>
       System Accounts Directory
       <div class="usa-button-controls">
-        <a class="usa-button usa-button-primary" [routerLink]="['profile']">Create</a>
+        <a class="usa-button usa-button-primary" [routerLink]="['new']" queryParamsHandling="merge">New Account</a>
       </div>
     </h2>
 
@@ -12,7 +12,9 @@
         <tr *ngFor="let account of store.records; let $index = index;">
           <td valign="top">
             <h2>System Account</h2>
-            <h1><a [innerText]="account.systemName" [routerLink]="['profile', account._id]"></a></h1>
+            <h1>
+              <a [innerText]="account.systemName" [routerLink]="[account.new ? 'new' : 'profile', account._id]" queryParamsHandling="merge"></a>
+            </h1>
             <div>
               <span class="title">IP Address</span>
               <span [innerText]="account.ipAddress"></span>

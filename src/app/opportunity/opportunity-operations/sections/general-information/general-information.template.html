@@ -16,7 +16,7 @@
     </sam-radio-button>
   </div>
 
-  <div class="sam-ui segment" *ngIf="generalInfoForm.get('archiveType').value == 'manual'">
+  <div class="sam-ui segment" *ngIf="(generalInfoForm.get('archiveType').value == 'manual' || generalInfoForm.get('archiveType').value == 'autocustom') && generalInfoForm.get('archiveType').value !== ''">
    <sam-date-time
       [attr.id]="archiveDateConfig.id"
       [control]="generalInfoForm.get('archiveDate')"

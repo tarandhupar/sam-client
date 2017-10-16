@@ -53,8 +53,6 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   roleData;
   userRoleObject;
   userRole;
-  mstrEnv;
-  mstrServer;
 
   constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
                 private api: IAMService, private http: Http, private loginService: LoginService ) {}
@@ -113,20 +111,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (API_UMBRELLA_URL && (API_UMBRELLA_URL.indexOf("/prod") != -1 || API_UMBRELLA_URL.indexOf("/prodlike") != -1 || API_UMBRELLA_URL.indexOf("alpha") != -1)) {
-      this.mstrEnv = 'stg';
-      this.mstrServer = 'MICROSTRATEGY-4_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/minc") != -1) {
-      this.mstrEnv = 'test';
-      this.mstrServer = 'MICROSTRATEGY-2_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("/comp") != -1) {
-      this.mstrEnv = 'dev';
-      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
-    } else if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
-      this.mstrEnv = 'dev';
-      this.mstrServer = 'MICROSTRATEGY-3_BI.PROD-LDE.BSP.GSA.GOV';
-    }
-    this.http.get('src/assets/report-configs/'+this.mstrEnv+'-reports.json')
+    this.http.get('src/assets/report-configs/'+REPORT_MICRO_STRATEGY_ENV+'-reports.json')
         .map(res => res.json())
         .subscribe(data => {
             this.data = data;
@@ -139,15 +124,6 @@ export class OverviewComponent implements OnInit, AfterViewInit {
             });
           },
           err => console.log(err));
-    // this.reportsService.getUserRole(Cookie.get('iPlanetDirectoryPro')).subscribe(
-    //     data => {
-    //       this.roleData = data;
-    //       let encodedToken = this.roleData.token.split(".");
-    //       this.userRoleObject = JSON.parse(base64.decode(encodedToken[1]));
-    //       this.userRole = this.userRoleObject.domainMapContent[0].roleMapContent[0].role.val;
-    //     },
-    //     error => console.log(error)
-    //   );  
   }
 
   checkSession( cb: () => void ) {

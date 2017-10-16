@@ -2,7 +2,7 @@
   <div class="twelve wide column">
     <h3 class="sam-ui header">
       <a *ngIf="data.data.title"
-         [routerLink]="['/opportunities', data.id]">
+         [routerLink]="['/opp', data.id, 'review']">
         {{data.data.title}}
       </a>
       <ng-container *ngIf="!data.data.title">

@@ -39,34 +39,51 @@ export class SystemDirectoryComponent {
   }
 
   ngOnInit() {
-    let requests = [];
+    let requests = [],
+        resolve = (() => {
+          this.api.iam.system.account.get(accounts => {
+            requests = accounts.map((account, intAccount) => {
+              accounts[intAccount].subtier = '';
 
-    this.api.iam.system.account.get(accounts => {
-      requests = accounts.map((account, intAccount) => {
-        this.accounts[intAccount] = merge({
-          subtier: ''
-        }, account);
+              return account.department ?
+                this.api.fh.getOrganizationById(account.department) :
+                Observable.of(account.businessName || '');
+            });
 
-        return account.department ?
-          this.api.fh.getOrganizationById(account.department) :
-          Observable.of(account.businessName || '');
+            Observable
+              .forkJoin(requests)
+              .subscribe(results => {
+                results.forEach((item, intItem) => {
+                  let organization = isObject(item) ?
+                    (item['_embedded'][0]['org']['l2Name'] || item['_embedded'][0]['org']['l1Name']) :
+                    item;
+
+                  accounts[intItem].subtier = organization;
+                });
+
+                Array.prototype.push.apply(this.accounts, accounts);
+                this.setupPaging();
+              }, () => {
+                this.setupPaging();
+              });
+          });
+        });
+
+    this.api.iam.cws.application.getAll(applications => {
+      this.accounts = applications.map(application => {
+        return {
+          _id: application.uid,
+          systemName: application.systemAccountName,
+          ipAddress: application.applicationStatus,
+          subtier: application.applicationStatus,
+          primaryOwnerName: application.applicationStatus,
+          primaryOwnerEmail: '',
+          new: true
+        };
       });
 
-      Observable
-        .forkJoin(requests)
-        .subscribe(results => {
-          results.forEach((item, intItem) => {
-            let organization = isObject(item) ?
-              (item['_embedded'][0]['org']['l2Name'] || item['_embedded'][0]['org']['l1Name']) :
-              item;
-
-            accounts[intItem].subtier = organization;
-          });
-
-          this.accounts = accounts;
-          this.setupPaging();
-        });
-    });
+      resolve();
+    }, resolve);
   }
 
   setupPaging() {

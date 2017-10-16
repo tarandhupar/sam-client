@@ -47,6 +47,7 @@ import { SamTableEntryComponent } from './sam-table-entry/sam-table-entry.compon
 import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
 import { SamTableSelectComponent } from './sam-table-select/sam-table-select.component';
 import { SamChipsComponent } from './sam-chips/sam-chips.component';
+import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-date-range.component';
 /**
  * A module for reusable SAM Web Design components
  */
@@ -87,6 +88,7 @@ import { SamChipsComponent } from './sam-chips/sam-chips.component';
     SamPOCEntryComponent,
     SamTableSelectComponent,
     SamChipsComponent,
+    SamTabDateRangeFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -130,7 +132,8 @@ import { SamChipsComponent } from './sam-chips/sam-chips.component';
     SamTableEntryComponent,
     SamPOCEntryComponent,
     SamTableSelectComponent,
-    SamChipsComponent
+    SamChipsComponent,
+    SamTabDateRangeFilterComponent,
   ],
   providers: [
     SamFeedbackComponent,

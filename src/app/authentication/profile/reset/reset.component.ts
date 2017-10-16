@@ -6,7 +6,7 @@ import { SamPasswordComponent } from '../../../app-components';
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../../shared/validators';
 
-import { User } from '../../user.interface';
+import { User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './reset.component.html',

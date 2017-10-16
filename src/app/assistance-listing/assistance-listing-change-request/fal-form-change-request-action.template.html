@@ -1,14 +1,14 @@
 <page
   *ngIf="pageReady"
   theme="inside"
-  [breadcrumbs]=""
+  [breadcrumbs]="crumbs"
   section="Workspace"
   [attr.id]="'page-title'"
   [title]="pageTitle">
 
   <div class="sam-ui grid">
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
-
+      <div class="sam-ui hidden divider"></div>
       <div class="sam-ui segment" *ngIf="programRequest">
         <div id="page-label" class="sam-ui top right attached mini dark blue label">
           <ng-container *ngIf="programRequest && isRequestStatus('pending')">

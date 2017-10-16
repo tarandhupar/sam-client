@@ -163,6 +163,13 @@ export class SamDateRangeFilterComponent implements ControlValueAccessor {
     writeValue(value) {
       if(value){
         this.model = value;
+      }else{
+        this.model = {
+            date:null,
+            dateRange:null,
+            timeSpan:"",
+            timezone:""
+        };
       }
     }
 }

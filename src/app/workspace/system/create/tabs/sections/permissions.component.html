@@ -1,13 +1,13 @@
-<sam-fieldset-wrapper [label]="label('permissions')" [hint]="hint('permissions')">
-  <sam-checkbox *ngFor="let key of keys"
-                [name]="key"
-                [label]="titleize(key)"
-                [options]="options[key]"
-                [model]="permissions[key]"
-                (modelChange)="updatePermissions($event)"></sam-checkbox>
-</sam-fieldset-wrapper>
+<div [formGroup]="form">
+  <sam-fieldset-wrapper [label]="label('permissions')" [hint]="hint('permissions')">
+    <sam-checkbox *ngFor="let item of keys | keys"
+                  [name]="item.key"
+                  [label]="titleize(item.key)"
+                  [options]="options[item.key]"
+                  [formControlName]="item.value"></sam-checkbox>
+  </sam-fieldset-wrapper>
 
-<sam-autocomplete [config]="configs.fjps"
-                  [labelText]="label('fjps')"
-                  [options]="options.fjps"
-                  [control]="form.get('fjps')"></sam-autocomplete>
+  <sam-autocomplete [labelText]="label('FIPS199Categorization')"
+                    [options]="options.FIPS199Categorization"
+                    formControlName="FIPS199Categorization"></sam-autocomplete>
+</div>
