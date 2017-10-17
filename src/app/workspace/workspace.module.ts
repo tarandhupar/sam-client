@@ -47,6 +47,7 @@ import { UserServiceMock } from "../role-management/user.service.mock";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
 
 import { FileValueAccessorDirective } from 'app-directives';
+import { DragDropDirective } from "./content-management/edit/drag-drop.directive";
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import { FileValueAccessorDirective } from 'app-directives';
      * Directives
      */
     FileValueAccessorDirective,
+    DragDropDirective,
   ],
   providers: [
     /**

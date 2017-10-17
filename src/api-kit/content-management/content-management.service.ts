@@ -39,28 +39,36 @@ export class ContentManagementService{
             type:'Published',
             title:'Welcome to SAM.gov',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'Vid-SAM-002110', domains:'Contract Awards, Entity Information', keywords: '#keyword #sample',
+            referenceId: 'Vid-SAM-002110',
+            domain:['Contract Awards', 'Entity Information'],
+            keywords: ['keyword', 'sample'],
             video: {time:'4:50', link:'test-link'}
           },
           {
             type:'Draft',
             title:'New Users of Assistance Listings',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'Vid-SAM-002110', domains:'Assistance Listings', keywords: '#keyword #sample',
+            referenceId: 'Vid-SAM-002110',
+            domain:['Assistance Listings'],
+            keywords: ['keyword', 'sample'],
             video: {time:'12:50', link:'test-link'}
           },
           {
             type:'Archived',
             title:'Doing Business with the Federal Government',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'Vid-SAM-002110', domains:'Entity Information, Contract Data, Wage Determinations', keywords: '#keyword #sample',
+            referenceId: 'Vid-SAM-002110',
+            domain:['Entity Information', 'Contract Data', 'Wage Determinations'],
+            keywords: ['keyword', 'sample'],
             video: {time:'40:03', link:'test-link'}
           },
           {
             type:'Published',
             title:'How SAM.gov can help you',
             description: 'So journey greatly. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but. Questions am sincerity zealously concluded consisted or no gentleman it.',
-            referenceId: 'Vid-SAM-002110', domains:'Contract Awards, Entity Information', keywords: '#keyword #sample',
+            referenceId: 'Vid-SAM-002110',
+            domain:['Contract Awards', 'Entity Information'],
+            keywords: ['keyword', 'sample'],
             video: {time:'1:02:00', link:'test-link'}
           },
         ]

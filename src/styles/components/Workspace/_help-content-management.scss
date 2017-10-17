@@ -150,6 +150,25 @@
     border: 1px solid $color-gray-lighter;
     padding: 15px;
   }
+
+  .file-input-div, .file-input-error-div{
+    display: inline-block;
+    width: 46rem;
+    padding: 15px;
+  }
+
+  .file-input-error-div{
+    border: 2px $color-secondary solid;
+  }
+
+  .file-input-div{
+    border: 1px $color-black solid;
+  }
+
+  .drag-cursor{
+    cursor:copy;
+  }
+
 }
 
 
