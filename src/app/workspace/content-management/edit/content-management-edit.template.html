@@ -18,13 +18,13 @@
           </div>
 
           <div class="section-border">
-            <h4>{{sectionText[curSection.toLowerCase()][0]}}</h4>
+            <h4>{{pageConfig[curSection.toLowerCase()].sectionText[0]}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
             <sam-text [label]="''" [name]="'title'" [hint]="''" [errorMessage]="errors.title" [(ngModel)]="contentObj.title"></sam-text>
           </div>
 
           <div class="section-border">
-            <h4>{{sectionText[curSection.toLowerCase()][1]}}</h4>
+            <h4>{{pageConfig[curSection.toLowerCase()].sectionText[1]}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
 
             <div>
@@ -48,7 +48,24 @@
             </div>
           </div>
 
-          <div class="section-border relative" *ngIf="sectionControl[curSection.toLowerCase()].source">
+          <div class="section-border relative" *ngIf="pageConfig[curSection.toLowerCase()].sectionControl.video">
+            <h4 class="m_T-0">Select Video</h4>
+            <sam-label-wrapper #inputFileWrapper [label]="''" [name]="'input-file'">
+              <div class="text-center" [ngClass]="sourceVideoDivClass" sam-drag-drop (filesChangeEmiter)="onFilesChange($event)">
+                <span *ngIf="contentObj.sourceVideoFile === ''; else fileName"><i class="fa fa-cloud-upload"></i> &nbsp;Drag and drop files here, or <a (click)="file.click()">browse</a></span>
+                <ng-template #fileName>
+                  <div class="sam-ui mini label">
+                    <div class="label">
+                      <span class="selected-category">{{ contentObj.sourceVideoFile }} &nbsp;<i class="icon close fa fa-times" (click)="onDeselectFile()"></i></span>
+                    </div>
+                  </div>
+                </ng-template>
+                <input type="file" accept="video/*" #file name="file" ngModel class="hide"  (change)="onFilesChange($event.target.files[0])">
+              </div>
+            </sam-label-wrapper>
+          </div>
+
+          <div class="section-border relative" *ngIf="pageConfig[curSection.toLowerCase()].sectionControl.source">
             <span class="optional-text">Optional</span>
             <h4 class="m_T-0">Source</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
@@ -82,14 +99,16 @@
 
         <!--Public View Tab-->
         <sam-tab [tabTitle]="'Public View'" [active]="formComplete" #publicViewTab>
-          <div class="relative">
-            <span class="public-view-tag">{{publicViewTag[curSection.toLowerCase()]}}</span>
+
+          <!--Public view tab for data definition and FAQ repository-->
+          <div class="relative" *ngIf="curSection !== 'video-library'; else videoLibraryView">
+            <span class="public-view-tag">{{pageConfig[curSection.toLowerCase()].publicViewTag}}</span>
             <div class="m_T-1x m_B-1x">
               <span style="font-weight: bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
               <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else domainNA">{{getDomainListStr()}}</span>
               <ng-template #domainNA>Not Entered</ng-template>
             </div>
-            <div class="m_T-2x m_B-1x" *ngIf="sectionControl[curSection.toLowerCase()].source">
+            <div class="m_T-2x m_B-1x" *ngIf="pageConfig[curSection.toLowerCase()].sectionControl.source">
               <span style="font-weight: bold">Source:</span>
               <span *ngIf="contentObj.source && contentObj.source !== ''; else sourceNA">{{contentObj.source}}</span>
               <ng-template #sourceNA>Not Entered</ng-template>
@@ -104,6 +123,27 @@
               <span>{{getUpdateDateStr()}}</span>
             </div>
           </div>
+
+          <!--Public view tab for all video library -->
+          <ng-template #videoLibraryView>
+            <div class="m_T-2x m_B-1x">
+              <video controls style="width: 100%" #video></video>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">{{contentObj.title}}</span><br/>
+              <span *ngIf="contentObj.description && contentObj.description !== ''; else videoDescriptionNA">{{contentObj.description}}</span>
+              <ng-template #videoDescriptionNA>Description Not Entered</ng-template>
+            </div>
+            <div class="m_T-1x m_B-1x">
+              <span class="bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
+              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else videoDomainNA">{{getDomainListStr()}}</span>
+              <ng-template #videoDomainNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">Publish Update:</span>
+              <span>{{getUpdateDateStr()}}</span>
+            </div>
+          </ng-template>
         </sam-tab>
       </sam-tabs>
     </div>

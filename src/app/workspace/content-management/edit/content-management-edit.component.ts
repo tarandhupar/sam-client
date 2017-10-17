@@ -6,6 +6,7 @@ import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { SamTabComponent } from "sam-ui-kit/components/tabs/tabs.component";
+import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 
 @Component({
@@ -15,18 +16,19 @@ export class HelpContentManagementEditComponent {
 
   @ViewChild('editTab') editTab:SamTabComponent;
   @ViewChild('publicViewTab') publicViewTab:SamTabComponent;
+  @ViewChild('inputFileWrapper') inputFileWrapper:LabelWrapper;
 
   private crumbs: Array<IBreadcrumb> = [
     { url: '/workspace', breadcrumb: 'Workspace' },
     { url: '', breadcrumb: '' },
-    { breadcrumb: 'Edit Question' }
+    { breadcrumb: '' }
   ];
 
   title = "";
   pageTitle = "";
   curSection = "";
 
-  validSections = ['data-dictionary', 'FAQ-repository'];
+  validSections = ['data-dictionary', 'FAQ-repository', 'video-library'];
 
   existingDomains = [];
   domainOptions = [];
@@ -37,28 +39,40 @@ export class HelpContentManagementEditComponent {
 
   responseText = '';
   keywords = '';
-
+  isValidatePerformed = false;
   contentObj = {};
+  inputFile:File;
 
-  sectionControl = {
-    'data-dictionary':{source: true},
-    'faq-repository':{source: false},
-  };
 
-  publicViewTag = {
-    'data-dictionary': 'Data Definition',
-    'faq-repository': 'FAQ',
-  };
+  pageConfig = {
+    'data-dictionary': {
+      publicViewTag: 'Data Definition',
+      sectionControl: {source: true, video: false},
+      sectionText: ['Data Field', 'Definition'],
+      breadCrumbText: 'Edit Definition',
+    },
+    'faq-repository': {
+      publicViewTag: 'FAQ',
+      sectionControl: {source: false, video: false},
+      sectionText: ['Question', 'Response'],
+      breadCrumbText: 'Edit Question',
 
-  sectionText = {
-    'data-dictionary':['Data Field', 'Definition'],
-    'faq-repository':['Question', 'Response'],
+    },
+    'video-library': {
+      publicViewTag: 'Video',
+      sectionControl: {source: false, video: true},
+      sectionText: ['Title', 'Description'],
+      breadCrumbText: 'Edit Video',
+
+    },
   };
 
   dataLoaded:boolean = false;
   mode:string = '';
   formComplete:boolean = false;
   hasUnsavedChanges:boolean = true;
+
+  sourceVideoDivClass = 'file-input-div';
 
   multiselectConfig = {
     keyProperty: 'key',
@@ -83,6 +97,7 @@ export class HelpContentManagementEditComponent {
           this.title = this.getSectionTitle(this.curSection);
           this.crumbs[1]['url'] = '/workspace/content-management/'+this.curSection;
           this.crumbs[1]['breadcrumb'] = this.title;
+          this.crumbs[2]['breadcrumb'] = this.pageConfig[this.curSection.toLowerCase()]['breadCrumbText'];
 
           let queryParams = this.route.snapshot.queryParams;
           this.mode = queryParams['mode'];
@@ -116,6 +131,7 @@ export class HelpContentManagementEditComponent {
     this.contentObj = {
       title:'',
       description:'',
+      sourceVideoFile:'',
       domain:[],
       keywords:'',
       type:'New',
@@ -138,8 +154,24 @@ export class HelpContentManagementEditComponent {
         temp.push({key:e,value:e});
       });
       this.contentObj['domain'] = temp;
+      if(this.curSection === 'video-library')this.contentObj['sourceVideoFile'] = '';
       this.dataLoaded= true;
     });
+  }
+
+  onFilesChange(file : File){
+
+    // load video URL
+    this.contentObj['sourceVideoFile']  = file.name;
+    let fileURL = URL.createObjectURL(file);
+    document.querySelector('video').src = fileURL;
+    document.querySelector('video').autoplay = false;
+    document.querySelector('video').pause();
+  }
+
+  onDeselectFile(){
+    this.contentObj['sourceVideoFile']  = '';
+    document.querySelector('video').src = '';
   }
 
   onPublishClick(){
@@ -171,6 +203,7 @@ export class HelpContentManagementEditComponent {
     }else{
       this.formComplete = false;
     }
+    document.querySelector('video').pause();
   }
 
   getExistingDomainOptions(){
@@ -212,14 +245,23 @@ export class HelpContentManagementEditComponent {
   }
 
   validateForm(): boolean{
+    this.isValidatePerformed = true;
+    let sourceVideoValid = this.isSourceVideoValid();
     this.errors['title'] = this.contentObj['title'] === ""?'Title cannot be empty':'';
     this.errors['description'] = this.contentObj['description'] === ""?'Description cannot be empty':'';
+    this.inputFileWrapper.errorMessage = !sourceVideoValid?'Source video cannot be empty':'';
+    this.sourceVideoDivClass = sourceVideoValid?'file-input-div':'file-input-error-div';
     if(this.contentObj['title'] === "" || this.contentObj['description'] === "") return false;
-    return true;
+
+    return sourceVideoValid;
   }
 
   isCreateMode(){
     return this.mode === 'create';
+  }
+
+  isSourceVideoValid(): boolean{
+    return this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '';
   }
 
 }
