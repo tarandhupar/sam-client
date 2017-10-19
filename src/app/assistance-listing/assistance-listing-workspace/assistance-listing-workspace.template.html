@@ -145,7 +145,8 @@
         [attr.id] = "'fal-agency-picker-filter'"
         [ngModel]="agencyPickerModel"
         [orgRoots]="orgRoots"
-        (ngModelChange)="onOrganizationChange($event)">
+        (ngModelChange)="onOrganizationChange($event)"
+        [editOnFlag]="false">
       </sam-agency-picker-v2>
 
       <br>

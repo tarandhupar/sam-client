@@ -118,6 +118,7 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
      */
     FileValueAccessorDirective,
     DragDropDirective,
+
   ],
   providers: [
     /**

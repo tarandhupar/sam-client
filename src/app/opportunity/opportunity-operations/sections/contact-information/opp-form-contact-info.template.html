@@ -14,9 +14,9 @@
     <sam-listbuilder-card
       (action)="onContactAction(pocConfig.primary.type, $event.type)"
       [disable]="pocConfig.listbuilder.disableActions"
-      [hidden]="pocStateEquals(pocConfig.primary.type, 'start')"
+      [hidden]="pocStateEquals(pocConfig.primary.type, states.START)"
       [hideDefaultBtns]="pocConfig.listbuilder.hideDefaultButtons"
-      [showEditSubform]="pocStateEquals(pocConfig.primary.type, 'add') || pocStateEquals(pocConfig.primary.type, 'edit')"
+      [showEditSubform]="pocStateEquals(pocConfig.primary.type, states.ADD) || pocStateEquals(pocConfig.primary.type, states.EDIT)"
       [sortable]="pocConfig.listbuilder.sortable">
 
       <ng-container display>
@@ -43,10 +43,10 @@
     </sam-listbuilder-card>
 
     <sam-button
-      *ngIf="pocStateEquals(pocConfig.primary.type, 'start')"
+      *ngIf="pocStateEquals(pocConfig.primary.type, states.START)"
       [buttonText]="pocConfig.primary.addButtonText"
       [buttonType]="pocConfig.addButtonType"
-      (click)="onContactAction(pocConfig.primary.type, 'add')">
+      (click)="onContactAction(pocConfig.primary.type, states.ADD)">
     </sam-button>
   </div>
 
@@ -60,9 +60,9 @@
     <sam-listbuilder-card
       (action)="onContactAction(pocConfig.secondary.type, $event.type)"
       [disable]="pocConfig.listbuilder.disableActions"
-      [hidden]="pocStateEquals(pocConfig.secondary.type, 'start')"
+      [hidden]="pocStateEquals(pocConfig.secondary.type, states.START)"
       [hideDefaultBtns]="pocConfig.listbuilder.hideDefaultButtons"
-      [showEditSubform]="pocStateEquals(pocConfig.secondary.type, 'add') || pocStateEquals(pocConfig.secondary.type, 'edit')"
+      [showEditSubform]="pocStateEquals(pocConfig.secondary.type, states.ADD) || pocStateEquals(pocConfig.secondary.type, states.EDIT)"
       [sortable]="pocConfig.listbuilder.sortable">
 
       <ng-container display>
@@ -89,10 +89,10 @@
     </sam-listbuilder-card>
 
     <sam-button
-      *ngIf="pocStateEquals(pocConfig.secondary.type, 'start')"
+      *ngIf="pocStateEquals(pocConfig.secondary.type, states.START)"
       [buttonText]="pocConfig.secondary.addButtonText"
       [buttonType]="pocConfig.addButtonType"
-      (click)="onContactAction(pocConfig.secondary.type, 'add')">
+      (click)="onContactAction(pocConfig.secondary.type, states.ADD)">
     </sam-button>
   </div>
 </form>

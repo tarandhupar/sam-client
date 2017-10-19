@@ -30,7 +30,7 @@ export class RMBackDoorComponent {
     'fh.department.admin@gsa.gov',
     'fh.agency.admin@gsa.gov',
     'fh.office.admin@gsa.gov',
-    'fh.regular.user@gsa.gov',
+    'fh.user@gsa.gov',
   ];
   public role;
 
@@ -43,10 +43,15 @@ export class RMBackDoorComponent {
   }
 
   onSetCookiesClick() {
+    if(this.role.startsWith('fh')){
+      Cookie.set('superFHToken', this.role, 30, '/');
+      return;
+    }
     Cookie.set('superToken', this.role, 30, '/');
   }
 
   onClearCookiesClick() {
     Cookie.delete('superToken');
+    Cookie.delete('superFHToken');
   }
 }

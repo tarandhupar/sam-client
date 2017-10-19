@@ -17,9 +17,17 @@ export class OpportunityContactInfoComponent implements OnInit {
   public primaryPOC: FormControl;
   public secondaryPOC: FormControl;
 
+  // possible states of poc forms
+  public states = {
+    START: 'start',
+    ADD: 'add',
+    EDIT: 'edit',
+    DISPLAY: 'display',
+  };
+
   // keeps track of current form state
-  public primaryPOCState: string = 'start';
-  public secondaryPOCState: string = 'start';
+  public primaryPOCState: string = this.states.START;
+  public secondaryPOCState: string = this.states.START;
 
   public readonly pocConfig = {
     // common configuration for all poc
@@ -88,7 +96,7 @@ export class OpportunityContactInfoComponent implements OnInit {
 
     this.createForm();
     if (!this.viewModel.isNew) {
-      this.updateForm();
+      this.loadForm();
     }
 
     this.oppContactInfoForm.valueChanges.subscribe(value => {
@@ -106,7 +114,7 @@ export class OpportunityContactInfoComponent implements OnInit {
     });
   }
 
-  private updateForm(): void {
+  private loadForm(): void {
     this.oppContactInfoForm.setValue({
       primaryPOC: this.loadPOC(this.pocConfig.primary.type),
       secondaryPOC: this.loadPOC(this.pocConfig.secondary.type),
@@ -188,26 +196,26 @@ export class OpportunityContactInfoComponent implements OnInit {
     switch (action) {
       case 'add':
         control.setValue(_.cloneDeep(this.pocFormTemplate), {emitEvent: false});
-        state.set('add');
+        state.set(this.states.ADD);
         break;
 
       case 'edit':
         control.setValue(control.value);
-        state.set('edit');
+        state.set(this.states.EDIT);
         break;
 
       case 'load':
       case 'submit':
-        state.set('display');
+        state.set(this.states.DISPLAY);
         break;
 
       case 'cancel':
-        state.set(state.get() === 'add' ? 'start' : 'display');
+        state.set(state.get() === 'add' ? this.states.START : this.states.DISPLAY);
         break;
 
       case 'delete':
         control.reset(null);
-        state.set('start');
+        state.set(this.states.START);
         break;
 
       default:
@@ -245,5 +253,8 @@ export class OpportunityContactInfoComponent implements OnInit {
     if (name === this.pocConfig.secondary.type) {
       return this.oppContactInfoViewModel.secondaryPOC;
     }
+
+    console.error('Unknown point of contact name: ', name);
+    return null;
   }
 }

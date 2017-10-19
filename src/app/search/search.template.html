@@ -133,6 +133,7 @@
           [label]="'Search Federal Organizations'"
           [ngModel]="agencyPickerModel"
           (ngModelChange)="onOrganizationChange($event)"
+          [editOnFlag]="false"
           [limit] = '2'>
         </sam-agency-picker-v2>
         <div class="sam-ui divider"></div>
@@ -349,6 +350,7 @@
           [label]="'Search Federal Organizations'"
           [ngModel]="agencyPickerModel"
           (ngModelChange)="onOrganizationChange($event)"
+          [editOnFlag]="false"
           [limit] = '2'>
         </sam-agency-picker-v2>
         <span>Note: Only Exclusions are associated</span>
