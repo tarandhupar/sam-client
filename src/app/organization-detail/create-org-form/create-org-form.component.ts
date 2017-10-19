@@ -96,7 +96,7 @@ export class OrgCreateForm {
 
 
     if(this.orgFormConfig.mode === 'create'){
-      this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
+      this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:true});
 
       this.orgType = this.orgFormConfig.orgType.toLowerCase();
       this.orgParentId = this.orgFormConfig.parentId;
@@ -123,7 +123,7 @@ export class OrgCreateForm {
                   city:e.city,
                   street1:e.streetAddress,
                   street2:e.streetAddress2?e.streetAddress2:'',
-                  postalCode:e.zipcode
+                  zip:e.zipcode
                 },
                 showAddIcon:false
               });
@@ -131,7 +131,7 @@ export class OrgCreateForm {
         });
         if(this.orgAddresses.length < 3) this.orgAddresses[this.orgAddresses.length - 1].showAddIcon = true;
       }else{
-        this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
+        this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:true});
       }
 
     }

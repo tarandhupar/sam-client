@@ -1,16 +1,23 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import * as moment from 'moment/moment';
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
 import { IAMService } from "api-kit";
+import IAM from "../../../api-kit/iam/api/core/iam";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
+import { Observable } from 'rxjs';
 
 @Component ({
   templateUrl: 'profile.template.html',
 })
 export class OrgDetailProfilePage {
+
+  @ViewChildren(OrgAddrFormComponent) addrForms:QueryList<OrgAddrFormComponent>;
+
+
   orgId:string = "100000121";
 
   orgObj = {};
@@ -115,19 +122,45 @@ export class OrgDetailProfilePage {
   }
 
   onSaveEditPageClick(){
-    this.isEdit = false;
-    let endDateStr = moment(this.orgObj['endDate']).format('Y-M-D');
-    if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname || endDateStr !== this.editedEndDate){
-      this.orgObj['summary'] = this.editedDescription;
-      this.orgObj['shortName'] = this.editedShortname;
-      this.orgObj['endDate'] = this.editedEndDate;
-      this.fhService.updateOrganization(this.orgObj).subscribe(
-        val => {
-          this.getOrgDetail(this.orgId);
-          this.showEditOrgFlashAlert = true;
-          setTimeout(()=>{this.showEditOrgFlashAlert = false;}, 3000);
-        });
-    }
+    let validateRes = [];
+    this.addrForms.forEach( e => {validateRes.push(e.validateForm())});
+    Observable.forkJoin(validateRes).subscribe( results => {
+      let isAddrValid = true;
+      results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
+      if(isAddrValid){
+        this.isEdit = false;
+        let endDateStr = moment(this.orgObj['endDate']).format('Y-M-D');
+        let updatedAddresses = this.getUpdatedOrgAddresses();
+        if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname ||
+          endDateStr !== this.editedEndDate || JSON.stringify(updatedAddresses) !== JSON.stringify(this.orgObj['orgAddresses'])){
+          let updatedOrgObj = JSON.parse(JSON.stringify(this.orgObj));
+          updatedOrgObj['summary'] = this.editedDescription;
+          updatedOrgObj['shortName'] = this.editedShortname;
+          updatedOrgObj['endDate'] = this.editedEndDate;
+          updatedOrgObj['orgAddresses'] = updatedAddresses;
+          // this.orgObj['address'] = this.orgAddresses;
+          this.fhService.updateOrganization(updatedOrgObj).subscribe(
+            val => {
+              this.getOrgDetail(this.orgId);
+              this.alertFooter.registerFooterAlert({
+                title: "Success",
+                description: "Your edits have been saved",
+                type: 'success',
+                timer: 3200
+              });
+            },
+            error=> {
+              this.alertFooter.registerFooterAlert({
+                title: "Error",
+                description: "Failed to update your edits",
+                type: 'error',
+                timer: 3200
+              });
+            });
+        }
+      }
+    }, error => {});
+
   }
 
   onEditPageClick(){
@@ -158,6 +191,31 @@ export class OrgDetailProfilePage {
         });
       }
     );
+  }
+
+  onAddAddressForm(){
+    if(this.orgAddresses.length === 2){
+      let lastAddrType = "";
+      if(this.orgAddresses[1].addrModel.addrType !== "") {
+        lastAddrType = this.orgAddresses[1].addrModel.addrType === "Shipping Address"? "Billing Address" : "Shipping Address";
+      }
+      this.orgAddresses.push({addrModel:{addrType:lastAddrType,country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:false});
+
+    }else if(this.orgAddresses.length < 2){
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:false});
+    }
+    this.orgAddresses.forEach( e => { e.showAddIcon = false;});
+  }
+
+  onEnableAddAddressIcon(val){
+    if(val){this.orgAddresses.forEach(e => {e.showAddIcon = true});}
+  }
+
+  onDeleteAddressForm(orgAddrModel){
+    this.orgAddresses = this.orgAddresses.filter( e => {
+      return orgAddrModel.addrType !== e.addrModel.addrType;
+    });
+    this.orgAddresses.forEach( e => {e.showAddIcon = true;});
   }
 
   setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
@@ -242,7 +300,9 @@ export class OrgDetailProfilePage {
     let addresses = org.orgAddresses.length > 0? org.orgAddresses:[];
     addresses.forEach(e => {
       if(e.type){
-        this.orgAddresses.push({addressType:this.addrTypeMaping[e.type], value:{street:e.streetAddress, city:e.city, state:e.state, zip:e.zipcode}});
+        // this.orgAddresses.push({addressType:this.addrTypeMaping[e.type], value:{street:e.streetAddress, city:e.city, state:e.state, zip:e.zipcode}});
+        this.orgAddresses.push({addrModel:{addrType:this.addrTypeMaping[e.type],country:e.countryCode,state:e.state,city:e.city,street1:e.streetAddress,street2:e.streetAddress2?e.streetAddress2:'',zip:e.zipcode},showAddIcon:addresses.length < 3});
+
       }
     });
   }
@@ -290,6 +350,44 @@ export class OrgDetailProfilePage {
 
     this.selectConfig.options = subLayers;
     return subLayers;
+  }
+
+  getUpdatedOrgAddresses(){
+    let updateAddresses = [];
+    this.orgAddresses.forEach( e => {
+      let isUpdated = false;
+      let addrType = "";
+      Object.keys(this.addrTypeMaping).forEach(key => {if(this.addrTypeMaping[key] === e.addrModel.addrType) addrType = key;});
+
+      // Update existing address if the address type is matching
+      this.orgObj['orgAddresses'].forEach( addr => {
+        if(addr.type === addrType){
+          let updatedAddr = JSON.parse(JSON.stringify(addr));
+          isUpdated = true;
+          updatedAddr["city"] = e.addrModel.city;
+          updatedAddr["countryCode"] = e.addrModel.country;
+          updatedAddr["state"] = e.addrModel.state;
+          updatedAddr["streetAddress"] =  e.addrModel.street1;
+          updatedAddr["streetAddress2"] =  e.addrModel.street2;
+          updatedAddr["zipcode"] = e.addrModel.zip;
+          updateAddresses.push(updatedAddr);
+        }
+      });
+
+      // Push a new address to the org address if there is no existing type of address in org
+      if(!isUpdated){
+        updateAddresses.push({
+          "type": addrType,
+          "city": e.addrModel.city,
+          "countryCode": e.addrModel.country,
+          "state": e.addrModel.state,
+          "streetAddress":  e.addrModel.street1,
+          "streetAddress2":  e.addrModel.street2,
+          "zipcode": e.addrModel.zip,
+        });
+      }
+    });
+    return updateAddresses;
   }
 
   onSelect(val){
