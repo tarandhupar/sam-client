@@ -16,8 +16,8 @@
 </ng-container>
 
 
-<sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
+<sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'" buttonType="tertiary"></sam-button>
 <!--filter button-->
-<sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
+<sam-button buttonType="secondary" [buttonDisabled]="(filterDisabled? true : false)"
+            (onClick)='filterByDate()'
             [buttonText]="'Filter'"></sam-button>
-

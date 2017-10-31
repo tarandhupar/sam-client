@@ -247,7 +247,7 @@ export class falCustomValidatorsComponent {
       let startDateM = moment(c.value.startDate);
       let endDateM = moment(c.value.endDate);
 
-      if(startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0){
+      if(startDateM.get('year') >= 1000 && endDateM.get('year') >= 1000 && endDateM.diff(startDateM) < 0){
         return {
           dateRangeError: {
             message: "Invalid date range"
@@ -258,29 +258,50 @@ export class falCustomValidatorsComponent {
       if((!startDateM.isValid() || c.value.startDate == "Invalid date") && (!endDateM.isValid() || c.value.endDate == "Invalid date")) {
         return {
           dateRangeError: {
-            message: "Invalid from and to date."
+            message: "Invalid From and To date."
+          }
+        }
+      }
+      else if(startDateM.get('year') < 1000 && endDateM.get('year') < 1000) {
+        return {
+          dateRangeError: {
+            message: "Please enter 4 digit year in From and To date"
           }
         }
       }
     }
 
-    if (c.value && c.value.startDate){
+    if (c.value && c.value.startDate) {
       let startDateM = moment(c.value.startDate);
-      if(!startDateM.isValid() || c.value.startDate == "Invalid date"){
+      if(!startDateM.isValid() || c.value.startDate == "Invalid date") {
         return {
           dateRangeError: {
-            message: "Invalid from date"
+            message: "Invalid From date"
+          }
+        }
+      }
+      else if(startDateM.get('year') < 1000) {
+        return {
+          dateRangeError: {
+            message: "Please enter 4 digit year in From date"
           }
         }
       }
     }
     else if(!c.value || !c.value.startDate) {
-      if (c.value && c.value.endDate){
+      if (c.value && c.value.endDate) {
         let endDateM = moment(c.value.endDate);
-        if(!endDateM.isValid() || c.value.endDate == "Invalid date"){
+        if(!endDateM.isValid() || c.value.endDate == "Invalid date") {
           return {
             dateRangeError: {
-              message: "From date is required and Invalid to date"
+              message: "From date is required and Invalid To date"
+            }
+          }
+        }
+        else if (endDateM.get('year') < 1000) {
+          return {
+            dateRangeError: {
+              message: "From date is required and please enter 4 digit year in To date"
             }
           }
         }
@@ -295,10 +316,17 @@ export class falCustomValidatorsComponent {
 
     if (c.value && c.value.endDate){
       let endDateM = moment(c.value.endDate);
-      if(!endDateM.isValid() || c.value.endDate == "Invalid date"){
+      if(!endDateM.isValid() || c.value.endDate == "Invalid date") {
         return {
           dateRangeError: {
-            message: "Invalid to date"
+            message: "Invalid To date"
+          }
+        }
+      }
+      else if (endDateM.get('year') < 1000) {
+        return {
+          dateRangeError: {
+            message: "Please enter 4 digit year in To date"
           }
         }
       }

@@ -21,6 +21,7 @@ function labelCompare(a, b) {
   return 0;
 }
 
+
 @Component({
   selector: "sam-toggle",
   template: `
@@ -60,7 +61,6 @@ export class SamToggle implements ControlValueAccessor {
 })
 export class BulkUpdateComponent {
   test: boolean = false;
-
   sideNavSections: Array<string> = [
     'Define Users', 'Validate Users', 'Update Users', 'Confirm'
   ];
@@ -68,14 +68,13 @@ export class BulkUpdateComponent {
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
   currentTab: any = 'filters';
   user: any = {};
-  org = {};
+  orgs = [];
   domainOptionsByRole = {};
   existingDomains = [];
   updatedDomains = [];
   roleOptions = [];
   existingRole;
   updatedRole;
-  role;
   errors = {
     domains: '',
     role: '',
@@ -84,6 +83,9 @@ export class BulkUpdateComponent {
   accessErrors = {
     domains: '',
     role: '',
+    comments: '',
+  };
+  confirmationErrors: any = {
     comments: '',
   };
   domainTabs = [];
@@ -186,11 +188,11 @@ export class BulkUpdateComponent {
 
   onExistingDomainChange(domains) {
     this.updatedDomains = domains;
-    this.onDomainChange(domains);
+    this.onDomainChange(domains, this.existingRole);
   }
 
   onUpdatedDomainChange(domains) {
-    this.onDomainChange(domains);
+    this.onDomainChange(domains, this.updatedRole);
   }
 
   currentIndex() {
@@ -219,10 +221,6 @@ export class BulkUpdateComponent {
     this.updatedRole = role;
   }
 
-  onUserRowClick(user) {
-    user.isSelected = !user.isSelected;
-  }
-
   formatUserName(user) {
     if (!user) {
       return '';
@@ -248,6 +246,7 @@ export class BulkUpdateComponent {
 
   onBackClick() {
     if (this.currentTab === 'confirmation' && this.mode === 'remove') {
+      // jump backwards two tabs
       this.currentTab = 'users';
       return;
     }
@@ -255,6 +254,12 @@ export class BulkUpdateComponent {
       this.selectFirstPermissionTab();
     }
     let i = this.tabIndex();
+    if (i === 1) {
+      // we need to reinitialize the org picker with ['key1', 'key2', ...].
+      // It is set to [{orgKey: '123'}, {'orgKey: '345'}] before this mapping
+      this.orgs = this.orgs.map(o => ''+o.orgKey);
+    }
+
     this.currentTab = this.tabs[i-1];
   }
 
@@ -302,6 +307,7 @@ export class BulkUpdateComponent {
       return;
     }
     if (this.currentTab === 'users' && this.mode === 'remove') {
+      // skip to the last tab
       this.currentTab = 'confirmation';
       return;
     }
@@ -316,14 +322,14 @@ export class BulkUpdateComponent {
 
   updateExistingAccess() {
     this.existingAccess = {
-      organizations: [''+this.org.orgKey],
+      organizations: this.orgs.map(o => ''+o.orgKey),
       role: +this.existingRole,
       domains: this.existingDomains.map(d => +d.key)
     };
   }
 
   validateFilters() {
-    return this.org && this.org.orgKey && this.existingDomains && this.existingDomains.length && this.existingRole;
+    return this.orgs && this.orgs.length && this.existingDomains && this.existingDomains.length && this.existingRole;
   }
 
   validateAccess() {
@@ -335,7 +341,7 @@ export class BulkUpdateComponent {
       this.errors.domains = 'A domain is required';
     }
 
-    if (!this.org || !this.org.orgKey) {
+    if (!this.orgs || !this.orgs.length) {
       this.errors.org = 'An organization is required';
     }
 
@@ -377,13 +383,13 @@ export class BulkUpdateComponent {
     perm.isCheckable = !perm.isCheckable;
   }
 
-  onDomainChange(domains) {
+  onDomainChange(domains, role) {
     if (!domains || !domains.length) {
       this.domainTabs = [];
       return;
     }
     let d = domains.map(i => ''+i.key).join(',');
-    let r = ''+this.role;
+    let r = ''+role;
 
     this.userAccessService.getDomainDefinition('role', d, r).subscribe(
       res => {
@@ -458,7 +464,22 @@ export class BulkUpdateComponent {
     return ret;
   }
 
+  validateDelete() {
+    return this.comments;
+  }
+
+  showConfirmationErrors() {
+    if (!this.comments) {
+      this.confirmationErrors.comments = 'A comment is required';
+    }
+  }
+
   onDoneClick() {
+    if (this.mode === 'remove' && !this.validateDelete()) {
+      this.showConfirmationErrors();
+      return;
+    }
+
     let users = this.getSelectedUserIds();
     let domains = this.getDomainData(this.domainTabs);
 
@@ -471,7 +492,7 @@ export class BulkUpdateComponent {
     if (this.mode === 'update') {
       body.mode = 'EDIT';
       body.updatedAccess = {
-        organizations: [''+this.org.orgKey],
+        organizations: this.orgs.map(o => ''+o.orgKey),
         role: +this.updatedRole,
         domainData: domains,
       };
@@ -485,7 +506,8 @@ export class BulkUpdateComponent {
       res => {
         this.footerAlerts.registerFooterAlert({
           type: 'success',
-          description: `${users.length} users updated.`
+          description: `${users.length} users updated.`,
+          timer: 3200,
         });
         this.router.navigate(["../roles-directory"], { relativeTo: this.route});
       },
@@ -512,11 +534,11 @@ export class BulkUpdateComponent {
   }
 
   onOrganizationChange(org) {
-    if (!org) {
-      this.org = {};
-    } else {
-      this.org = org;
-    }
+  
+  }
+
+  getOrganizationNames() {
+    return this.orgs.map(o => o.name).join(', ');
   }
 
   getExistingDomainNames() {
@@ -565,12 +587,13 @@ export class BulkUpdateComponent {
     let params = {
       domainKey: this.existingDomains.map(d => +d.key).join(','),
       roleKey: this.existingRole,
-      orgKey: this.org.orgKey,
+      orgKey: this.orgs.map(o => ''+o.orgKey).join(','),
       sort: sort,
       order: order,
     };
     this.userAccessService.getUsersV1(params).subscribe(
       users => {
+        this.areUsersLoading = false;
         if (!users || !users.length) {
           this.footerAlerts.registerFooterAlert({
             description:"No users found for selected criteria.",
@@ -595,10 +618,8 @@ export class BulkUpdateComponent {
           type:'error',
           timer:3200
         });
-      },
-      () => {
         this.areUsersLoading = false;
-      }
+      });
     );
   }
 
@@ -617,6 +638,31 @@ export class BulkUpdateComponent {
   toggleSelectAll() {
     this.showDeselect = !this.showDeselect;
     this.users.forEach(u => u.isSelected = this.showDeselect);
+  }
+
+  onUserRowClick(user) {
+    user.isSelected = !user.isSelected;
+    this.updateSelectAll();
+  }
+
+  updateSelectAll() {
+    let every: boolean = true;
+    let none: boolean = true;
+
+    this.users.forEach(u => {
+      if (u.isSelected) {
+        none = false;
+      }
+      if (!u.isSelected) {
+        every = false;
+      }
+    });
+    if (none) {
+      this.showDeselect = false;
+    }
+    if (every) {
+      this.showDeselect = true;
+    }
   }
 
   permissionId(permission, object) {

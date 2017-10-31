@@ -21,7 +21,7 @@ export class RAOFormService {
   }
 
   getRAO(officeId: string) {
-    return this.programService.getRAOById(officeId);
+    return this.programService.getRAOById(officeId, RAOFormService.getAuthenticationCookie());
   }
 
   getOrganization(id) {
@@ -36,8 +36,8 @@ export class RAOFormService {
     return this.programService.deleteRAO(id, RAOFormService.getAuthenticationCookie());
   }
 
-  getSubmitPermission() {
-    return this.programService.getPermissions(RAOFormService.getAuthenticationCookie(),'SUBMIT_FALS');
+  getPermissions(): Observable<any> {
+    return this.programService.getPermissions(RAOFormService.getAuthenticationCookie(), 'ORG_LEVELS, ORG_ID');
   }
 
   // call to dictionary service for any drop-down options we need

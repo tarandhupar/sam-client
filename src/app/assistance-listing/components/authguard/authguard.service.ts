@@ -1,41 +1,66 @@
 import * as Cookies from 'js-cookie';
-import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, canDeactivate} from "@angular/router";
+import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanDeactivate} from "@angular/router";
 import {Injectable, Input} from '@angular/core';
-import {FALFormViewModel} from "../../app/assistance-listing/assistance-listing-operations/fal-form.model";
-import {FALFormErrorService} from "../../app/assistance-listing/assistance-listing-operations/fal-form-error.service";
-import {FALFormService} from "../../app/assistance-listing/assistance-listing-operations/fal-form.service";
+import {Observable} from "rxjs";
+import {FALFormViewModel} from "../../assistance-listing-operations/fal-form.model";
+import {FALFormErrorService} from "../../assistance-listing-operations/fal-form-error.service";
+import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
 
-//This authgaurd service is specific to FAL. Need to move it under Assistance Listing folder.
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class FALAuthGuard implements CanActivate, CanDeactivate<CanComponentDeactivate> {
   @Input() viewModel: FALFormViewModel;
   location: any;
-
+  _falLinks: any;
+  restrictedUrl = ['/403'];
+  pageNotFoundUrl = ['/404'];
+  unauthorizedUrl = ['/401'];
   constructor(private router: Router, private errorService: FALFormErrorService, private service: FALFormService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (Cookies.get('iPlanetDirectoryPro') === undefined) {
-      this.router.navigate(['signin']);
-    } else if (state.url === "fal/workspace" && Cookies.get('iPlanetDirectoryPro') !== undefined && SHOW_HIDE_RESTRICTED_PAGES === 'false') {
-      this.router.navigate(['accessrestricted']);
+    if (this.hasCookie()) {
+      return this.service.getFALPermission().map((res: any) => {
+        //Feature Toggle case and managing other cases depending on user permission
+        if (res._links != null) {
+          this._falLinks = res;
+          return true;
+        }
+        this.router.navigate(this.restrictedUrl);
+        return false;
+      }).catch( err  => {
+        if (err && err.status === 401) {
+          this.router.navigate(this.restrictedUrl);
+        }  if (err && err.status === 404) {
+          this.router.navigate(this.pageNotFoundUrl);
+        }
+        return Observable.of(false);
+      });
+    } else {
+      this.router.navigate(this.unauthorizedUrl);
+      return false;
     }
-    return true;
   }
   canDeactivate(component: CanComponentDeactivate) {
     return component.canDeactivate ? component.canDeactivate() : true;
   }
-
+  hasCookie() {
+    if (Cookies.get('iPlanetDirectoryPro') === undefined) {
+      return false;
+    }
+    return true;
+  }
   checkPermissions(screen: string, program: any) {
     this.viewModel = new FALFormViewModel(program);
-
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined && SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+    let isRestricted: boolean = false;
       let pathArray = this.router.url.split("/");
       let id = pathArray[2];
       switch (screen) {
         case 'submit':
           if (program && program._links && !program._links['program:submit']) {
-            this.router.navigate(['accessrestricted']);
+            isRestricted = true;
           }
 
           // re-validate all data
@@ -53,26 +78,26 @@ export class AuthGuard implements CanActivate {
           break;
         case 'reject':
           if (program && program._links && !program._links['program:request:reject']) {
-            this.router.navigate(['accessrestricted']);
+            isRestricted = true;
           }
           break;
         case 'publish':
           if (program && program._links && !program._links['program:request:approve']) {
-            this.router.navigate(['accessrestricted']);
+            isRestricted = true;
           }
           break;
         case 'addoredit':
           let url;
           if (this.router.url.indexOf('/add') >= 0) {
-            if (program && !program['CREATE_FALS']) {
-              this.router.navigate(['accessrestricted']);
+            if (this._falLinks && this._falLinks._links && !this._falLinks._links['program:create']) {
+              isRestricted = true;
             } else if (!this.viewModel.title) {
               url = '/programs/add'.concat('#header-information');
               this.router.navigateByUrl(url);
             }
           } else {
             if (program && program._links && !program._links['program:update']) {
-              this.router.navigate(['accessrestricted']);
+              isRestricted = true;
             } else if (!this.viewModel.title) {
               url = '/programs/' + this.viewModel.programId + '/edit'.concat('#header-information');
               this.router.navigateByUrl(url);
@@ -80,17 +105,31 @@ export class AuthGuard implements CanActivate {
           }
           break;
         case 'addoreditrao':
-          if (program && !program['CREATE_RAO']) {
-            this.router.navigate(['accessrestricted']);
+          if (this._falLinks && this._falLinks._links && !this._falLinks._links['program:regional:offices:create']) {
+            isRestricted = true;
           }
           break;
         case 'review':
           if (program && program._links && !program._links['program:access']) {
-            this.router.navigate(['accessrestricted']);
+            isRestricted = true;
+          }
+          break;
+        case 'feeds':
+          if (this._falLinks && !this._falLinks._links) {
+            isRestricted = true;
+          }
+          break;
+        case 'regAssLoc':
+          if (this._falLinks && this._falLinks._links && !this._falLinks._links['program:regional:offices:create']) {
+            isRestricted = true;
           }
           break;
       }
+    if (isRestricted) {
+      this.router.navigate(this.restrictedUrl);
     }
+  
+    return !isRestricted;
   }
 
   redirectionUrl(id: string, screen: string) {

@@ -6,7 +6,7 @@ import {ProgramService} from "../../../api-kit/program/program.service";
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
 import {FHWrapperService} from "../../../api-kit/fh/fhWrapper.service";
-import {Router} from "@angular/router";
+import {Router , ActivatedRoute} from "@angular/router";
 import {FALFormService} from "./fal-form.service";
 import * as Cookies from 'js-cookie';
 import {RouterTestingModule} from "@angular/router/testing";
@@ -771,8 +771,8 @@ describe('src/app/assistance-listing/assistance-listing-operations/fal-form.serv
   }));
   it('FALFormService.getOrganization: should HaveBeenCalledWith to FHService.getOrganizationById', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService],
     (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService,
-     dictionaryService: DictionaryService, fHService: FHService, fhAPIService: FHWrapperService, _http: Http, router: Router) => {
-      fHService = new FHService(wrapperService, fhAPIService, _http, router);
+     dictionaryService: DictionaryService, fHService: FHService, fhAPIService: FHWrapperService, _http: Http, router: Router, activatedRoute: ActivatedRoute,) => {
+      fHService = new FHService(wrapperService, fhAPIService, _http, router, activatedRoute);
       let spyData = spyOn(fHService, 'getOrganizationById');
       formService = new FALFormService(programService, dictionaryService, fHService);
       formService.getOrganization(100004222);
@@ -815,13 +815,13 @@ describe('src/app/assistance-listing/assistance-listing-operations/fal-form.serv
     formService.sendNotification('3ee89dcaa18143698b27f46b05a330f9');
     expect(spyData).toHaveBeenCalledWith('3ee89dcaa18143698b27f46b05a330f9', Cookies.get('iPlanetDirectoryPro'));
   }));
-  it('FALFormService.getFALPermission: should HaveBeenCalledWith to programService.getPermissions', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {
+/*  it('FALFormService.getFALPermission: should HaveBeenCalledWith to programService.getPermissions', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {
     programService = new ProgramService(wrapperService);
     let spyData = spyOn(programService, 'getPermissions');
     formService = new FALFormService(programService, dictionaryService, fHService);
-    formService.getFALPermission('CREATE_FALS');
-    expect(spyData).toHaveBeenCalledWith(Cookies.get('iPlanetDirectoryPro'), 'CREATE_FALS');
-  }));
+    formService.getFALPermission();
+    expect(spyData).toHaveBeenCalledWith(Cookies.get('iPlanetDirectoryPro'));
+  }));*/
   it('FALFormService.getFALPermission: should HaveBeenCalledWith to programService.getPermissions', inject([WrapperService, ProgramService, FALFormService, DictionaryService, FHService], (testService: FALFormService, wrapperService: WrapperService, programService: ProgramService, dictionaryService: DictionaryService, fHService: FHService) => {
     programService = new ProgramService(wrapperService);
     let spyData = spyOn(programService, 'getPermissions');

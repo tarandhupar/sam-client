@@ -1,14 +1,15 @@
 import { Component, Input, Output, OnInit, OnChanges, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AutocompleteConfig } from '../../../sam-ui-elements/src/ui-kit/types';
-
+import { LocationService } from 'api-kit/location/location.service';
+import {Observable} from "rxjs";
 
 const defaultLocationObject = {
   city: '',
   county: '',
   state: '',
   country: '',
-  zip: ''
+  zip: undefined
 }
 
 const defaultConfig = {
@@ -53,7 +54,15 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
   private store;
   private subscription;
 
-  constructor() {}
+  private  error = {
+    city:'',
+    state:'',
+    country:'',
+    county:'',
+    zip:'',
+  };
+
+  constructor(private locationService:LocationService) {}
 
   ngOnChanges() {
     if (this.store) {
@@ -95,6 +104,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
       this._countryConfig = state.countryConfig;
       this._zipConfig = state.zipConfig;
     });
+    
   }
 
   ngOnDestroy() {
@@ -118,7 +128,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   get zip() {
-    return this.location.zip;
+    return this.location.zip || '';
   }
 
   get cityConfig() {
@@ -257,13 +267,13 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               state.location,
               {
                 city: state.cityConfig && action.value ? action.value : undefined,
-                county: state.cityConfig && action.value ?  state.location.county : undefined,
+                county: state.cityConfig && action.value ?  state.location.county : state.zipConfig && state.location.zip ? state.location.county : undefined,
                 state: state.stateConfig && action.value && action.value.state ?
                         { key: action.value.state.stateCode,
                           value: action.value.state.stateCode + " - " + action.value.state.state } :
                         state.location.state,
 
-                zip: undefined,
+                zip: state.zipConfig ? state.location.zip : '',
                 country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
                           { key: action.value.state.country.countrycode,
                             value: action.value.state.country.country } :
@@ -285,13 +295,13 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               {},
               state.location,
               {
-                city: state.countyConfig && action.value ? state.location.city :undefined,
+                city: state.countyConfig && action.value ? state.location.city : state.zipConfig && state.location.zip ? state.location.city : undefined,
                 county: state.countyConfig && action.value ? action.value : undefined,
                 state: state.stateConfig && action.value && action.value.state ?
                         { key: action.value.state.stateCode,
                           value: action.value.state.stateCode + " - " + action.value.state.state } :
                         state.location.state,
-                zip: '', // Zip is text field. Set to emptry string.
+                zip: state.zipConfig ? state.location.zip : '',
                 country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
                           { key: action.value.state.country.countrycode,
                             value: action.value.state.country.country } : // Provide values later
@@ -315,7 +325,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
                 {},
                 state.location,
                 {
-                  city: undefined,
+                  city: '',
                   county: '',
                   state: state.stateConfig && action.value ? action.value : undefined,
                   zip: '', // Zip is a text field. To clear, set empty string.
@@ -349,7 +359,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
           }
         );
       case "ZIP_CHANGE":
-        return Object.assign(
+       return Object.assign(
           {},
           state,
           {
@@ -357,16 +367,16 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
               {},
               state.location,
               {
-                city: undefined,
-                county: undefined,
+                city: state.cityConfig && action.value ? state.location.city :undefined,
+                county: state.countyConfig && action.value ? state.location.county :undefined,
                 state: state.stateConfig && action.value && action.value.state ?
-                        { key: action.value.state.stateCode,
-                          value: action.value.state.state } :
+                        { key: action.value.stateCode,
+                          value: action.value.state } :
                         state.location.state,
-                zip: state.zipConfig ? action.value : '',
-                country: state.countryConfig && action.value && action.value.state && action.value.state.country ?
-                          { key: action.value.state.country.countrycode,
-                            value: action.value.state.country.country } :
+                zip: state.zipConfig && action.value ? action.value.zipCode : '',
+                country: state.countryConfig && action.value && action.value.country && action.value.countryCode ?
+                          { key: action.value.countrycode,
+                            value: action.value.country } :
                           state.location.country
               }
             )
@@ -377,6 +387,90 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  locationValidation(val){
+   this.formatError(val);
+     if(this.zip ){
+       return this.locationService.validateZipWIthLocation(this.zip , this.state!== undefined ? this.state : undefined, 
+                     this.city !== undefined ? this.city : undefined,
+                     this.county!== undefined ? this.county : undefined);
+     }
+     return Observable.of({description:"INVALID"});
+   }
+
+  formatError(val){
+    this.error.city = this.city?'':'City field cannot be empty';
+    this.error.state = this.state?'':'State field cannot be empty';
+    this.error.country = this.country?'':'Country field cannot be empty';
+    this.error.zip = this.zip?'':'Zip field cannot be empty';
+    //  if(this.zip)
+    //    this.locationService.validateZipWIthLocation(val , this.state!== undefined ? this.state : undefined, 
+    //                  this.city !== undefined ? this.city : undefined,
+    //                  this.county!== undefined ? this.county : undefined).subscribe(
+    //      data => {
+    //        this.error.zip = data.description === 'VALID'?'':'Invalid zip code';
+    //      }
+    //  );
+
+ }
+
+  locationValidationZip(res){
+     this.error.zip = 'Invalid zip code';
+     return this.store.dispatch({ type: 'ZIP_CHANGE', value: res });
+  }
+
+  onZipChange(val){
+   if (val !== '' && val !== undefined){
+     this.locationService.validateZipWIthLocation(val , this.state!== undefined ? this.state : undefined, 
+                      this.city !== undefined ? this.city : undefined,
+                      this.county!== undefined ? this.county : undefined)
+      .catch(res => {
+        return Observable.of([]);
+      })
+      .subscribe(
+        (data) => {
+          const res = data;
+          if (res.description == 'VALID'){
+            this.populateZipConfigData(val);
+          }
+
+          else {
+            return this.locationValidationZip(res);
+          }
+         },
+        (error) => {
+           return error;
+        }
+      );
+   }
+
+   else {
+      this.error.zip = '';
+       return this.store.dispatch({ type: 'ZIP_CHANGE', value: val });
+   }
+  
+  }
+
+  populateZipConfigData(val){
+    // if(this.state && this.country) return;
+     this.locationService
+                      .getCityAndCountyDetailsByZip(val , this.state!== undefined ? this.state.stateCode : undefined,
+                      this.city !== undefined ? this.city.cityCode : undefined,
+                      this.county!== undefined ? this.county.countyCode : undefined)
+                      .catch(res => {
+                           return Observable.of([]);
+                      })
+                      .subscribe(
+                          (data) => {
+                            this.error.zip = '';
+                            this.store.dispatch({ type: 'ZIP_CHANGE', value: data });
+
+                        },
+                        (error) => {
+                           return error;
+                     }
+                    );
+  }
+
   createStore(reducer, initialState) {
     let state = initialState ? initialState : {};
     let listeners = [];
@@ -385,7 +479,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
 
     const dispatch = (action) => {
       state = reducer(state, action);
-      listeners.forEach(listener => listener());
+      listeners.forEach(listener => listener();
     };
 
     const subscribe = (listener) => {

@@ -34,7 +34,7 @@ export class FALFormContactInfoComponent implements OnInit {
   mode: string;
   contactDrpDwnInfo = [];
   sectionStatus: string = '';
-  contactDrpDwnOptions = [{value: "New Contact", key: 'new'}];
+  contactDrpDwnOptions = [];//[{value: "New Contact", key: 'new'}];
   contactNameOptions = [];
   contactEmailOptions = [];
 
@@ -77,23 +77,45 @@ export class FALFormContactInfoComponent implements OnInit {
     this.service.getContactsList().subscribe(api => {
       for (let contact of api._embedded.contacts) {
 
-        this.contactDrpDwnOptions.push({
-          value: contact.fullName + ", " + contact.email,
-          key: contact.contactId
-        });
-        if(contact.email){
+        let contactMirror = Object.assign({},contact);
+        if(contact.fullName){
           this.contactNameOptions.push({
             key: contact.fullName,
             value: contact.fullName
           });
+          contactMirror.fullName = {
+            key: contact.fullName,
+            value: contact.fullName
+          }; 
         }
         if(contact.email){
           this.contactEmailOptions.push({
             key: contact.email,
             value: contact.email
           });
+          contactMirror.email = {
+            key: contact.email,
+            value: contact.email
+          };
         }
-        this.contactDrpDwnOptions = this.contactDrpDwnOptions.slice();
+        if(contactMirror.phone){
+          contactMirror.phone = contactMirror.phone.replace(/\D/g,'');
+        }
+        if(contactMirror.fax){
+          contactMirror.fax = contactMirror.fax.replace(/\D/g,'');
+        }
+
+        contactMirror.state = {
+          key: contact.state,
+          value: contact.state
+        };
+
+        contactMirror.country = {
+          key: contact.country,
+          value: contact.country
+        };
+        this.contactDrpDwnOptions.push(contactMirror);
+        //this.contactDrpDwnOptions = this.contactDrpDwnOptions.slice();
         this.contactDrpDwnInfo[contact.contactId] = contact;
       }
 

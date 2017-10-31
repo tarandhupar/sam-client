@@ -1,11 +1,10 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import * as Cookies from 'js-cookie';
-import { IBreadcrumb } from "sam-ui-kit/types";
-import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import {IBreadcrumb} from "sam-ui-kit/types";
+import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 import {SavedSearchService} from "../../../api-kit/search/saved-search.service";
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
-import {FilterParamLabel} from "../pipes/filter-label.pipe";
 import {FHService} from "../../../api-kit/fh/fh.service";
 import * as _ from 'lodash';
 import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
@@ -17,21 +16,19 @@ import {SearchDictionariesService} from "../../../api-kit/search/search-dictiona
 })
 
 export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
-
   totalCount: any = 0;
   totalPages: any = 0;
   pageNum = 0;
   data = [];
   initLoad = true;
-  oldKeyword: string = "";
   qParams: any = {};
   size: any = {};
   cookieValue: string;
   runSearchSub: any;
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'My Workspace', url: '/workspace' },
-    { breadcrumb: 'Saved Search Workspace'}
+    {breadcrumb: 'Home', url: '/',},
+    {breadcrumb: 'My Workspace', url: '/workspace'},
+    {breadcrumb: 'Saved Search Workspace'}
   ];
   serviceErrorFooterAlertModel = {
     title: "Error",
@@ -55,7 +52,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   countiesMap = new Map();
   constructionMap = new Map();
   servicesMap = new Map();
-  filters = {
+  dictionaries = {
     "applicant_type": this.applicantMap,
     "beneficiary_type": this.beneficiaryMap,
     "assistance_type": this.assistanceMap,
@@ -74,36 +71,39 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     "service": this.servicesMap,
     "organization_id": this.orgMap
   };
+
   setAsideAwardsOptions = [
-    {value:'8AN', label:'8(A) SOLE SOURCE'},
-    {value:'HS3', label:'8(A) WITH HUB ZONE PREFERENCE'},
-    {value:'8A', label:'8A COMPETED'},
-    {value:'BI', label:'BUY INDIAN'},
-    {value:'EDWOSB', label:'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS'},
-    {value:'EDWOSBSS', label:'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS SOLE SOURCE'},
-    {value:'ESB', label:'EMERGING SMALL BUSINESS SET ASIDE'},
-    {value:'HMP', label:'HBCU OR MI SET-ASIDE -- PARTIAL'},
-    {value:'HMT', label:'HBCU OR MI SET-ASIDE -- TOTAL'},
-    {value:'HZC', label:'HUBZONE SET-ASIDE'},
-    {value:'HZS', label:'HUBZONE SOLE SOURCE'},
-    {value:'IEE', label:'INDIAN ECONOMIC ENTERPRISE'},
-    {value:'ISBEE', label:'INDIAN SMALL BUSINESS ECONOMIC ENTERPRISE'},
-    {value:'NONE', label:'NO SET ASIDE USED.'},
-    {value:'RSB', label:'RESERVED FOR SMALL BUSINESS'},
-    {value:'SDVOSBS', label:'SDVOSB SOLE SOURCE'},
-    {value:'SDVOSBC', label:'SERVICE DISABLED VETERAN OWNED SMALL BUSINESS SET-ASIDE'},
-    {value:'SBP', label:'SMALL BUSINESS SET ASIDE - PARTIAL'},
-    {value:'SBA', label:'SMALL BUSINESS SET ASIDE - TOTAL'},
-    {value:'VSB', label:'VERY SMALL BUSINESS'},
-    {value:'VSA', label:'VETERAN SET ASIDE'},
-    {value:'VSS', label:'VETERAN SOLE SOURCE'},
-    {value:'WOSB', label:'WOMEN OWNED SMALL BUSINESS'},
-    {value:'WOSBSS', label:'WOMEN OWNED SMALL BUSINESS SOLE SOURCE'}
+    {value: '8AN', label: '8(A) SOLE SOURCE'},
+    {value: 'HS3', label: '8(A) WITH HUB ZONE PREFERENCE'},
+    {value: '8A', label: '8A COMPETED'},
+    {value: 'BI', label: 'BUY INDIAN'},
+    {value: 'EDWOSB', label: 'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS'},
+    {value: 'EDWOSBSS', label: 'ECONOMICALLY DISADVANTAGED WOMEN OWNED SMALL BUSINESS SOLE SOURCE'},
+    {value: 'ESB', label: 'EMERGING SMALL BUSINESS SET ASIDE'},
+    {value: 'HMP', label: 'HBCU OR MI SET-ASIDE -- PARTIAL'},
+    {value: 'HMT', label: 'HBCU OR MI SET-ASIDE -- TOTAL'},
+    {value: 'HZC', label: 'HUBZONE SET-ASIDE'},
+    {value: 'HZS', label: 'HUBZONE SOLE SOURCE'},
+    {value: 'IEE', label: 'INDIAN ECONOMIC ENTERPRISE'},
+    {value: 'ISBEE', label: 'INDIAN SMALL BUSINESS ECONOMIC ENTERPRISE'},
+    {value: 'NONE', label: 'NO SET ASIDE USED.'},
+    {value: 'RSB', label: 'RESERVED FOR SMALL BUSINESS'},
+    {value: 'SDVOSBS', label: 'SDVOSB SOLE SOURCE'},
+    {value: 'SDVOSBC', label: 'SERVICE DISABLED VETERAN OWNED SMALL BUSINESS SET-ASIDE'},
+    {value: 'SBP', label: 'SMALL BUSINESS SET ASIDE - PARTIAL'},
+    {value: 'SBA', label: 'SMALL BUSINESS SET ASIDE - TOTAL'},
+    {value: 'VSB', label: 'VERY SMALL BUSINESS'},
+    {value: 'VSA', label: 'VETERAN SET ASIDE'},
+    {value: 'VSS', label: 'VETERAN SOLE SOURCE'},
+    {value: 'WOSB', label: 'WOMEN OWNED SMALL BUSINESS'},
+    {value: 'WOSBSS', label: 'WOMEN OWNED SMALL BUSINESS SOLE SOURCE'}
   ];
+
   awardOrIDV = [
     {value: 'AWARD', label: 'Contract', name: 'Contract'},
     {value: 'IDV', label: 'Interagency Contract Delivery (ICD)', name: 'ICD'}
   ];
+
   awardType = [
     {label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA'},
     {label: 'BPA CALL', value: 'A_AWARD', name: 'BPA CALL'},
@@ -122,6 +122,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     {label: 'PURCHASE ORDER', value: 'B_AWARD', name: 'PURCHASE ORDER'},
     {label: 'TRAINING GRANT', value: 'T_AWARD', name: 'TRAINING GRANT'}
   ];
+
   contractType = [
     {label: 'COST NO FEE', value: 'S', name: 'COST NO FEE'},
     {label: 'COST PLUS AWARD FEE', value: 'R', name: 'COST PLUS AWARD FEE'},
@@ -135,33 +136,117 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     {label: 'FIXED PRICE REDETERMINATION', value: 'A', name: 'FIXED PRICE REDETERMINATION'},
     {
       label: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT',
-        value: 'K',
+      value: 'K',
       name: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT'
     },
     {label: 'LABOR HOURS', value: 'Z', name: 'LABOR HOURS'},
     {
       label: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)',
-        value: '1',
+      value: '1',
       name: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)'
     },
     {label: 'TIME AND MATERIALS', value: 'Y', name: 'TIME AND MATERIALS'},
     {
       label: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)',
-        value: '3',
+      value: '3',
       name: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)'
     },
     {
       label: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)',
-        value: '2',
+      value: '2',
       name: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)'
     }
   ];
+
   wdType = [
     {value: 'sca', label: 'Service Contract Act (SCA)', name: 'radio-sca'},
     {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'}
   ];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private savedSearchService: SavedSearchService, private searchDictionariesService: SearchDictionariesService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
+  @ViewChild('autocomplete') autocomplete: any;
+
+  keyword: string;
+
+  oldKeyword: string;
+
+  keywordsModel: any = [];
+
+  keywordsConfiguration = {
+    placeholder: "Keyword Search",
+    selectedLabel: "Keywords",
+    allowAny: true,
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
+
+  workspaceSearchConfig: any = {
+    placeholder: "Search Workspace"
+  };
+
+  defaultDomains: string[] = ['cfda', 'opp', 'fpds', 'ei', 'fh', 'wd'];
+
+  domainCheckboxModel: string[] = this.defaultDomains;
+
+  domainCheckboxConfig = {
+    options: [
+      {value: 'cfda', label: 'Assistance Listing', name: 'checkbox-cfda'},
+      {value: 'opp', label: 'Contract Opportunities', name: 'checkbox-opp'},
+      {value: 'fpds', label: 'Contract Data', name: 'checkbox-fpds'},
+      {value: 'ei', label: 'Entity Information', name: 'checkbox-ei'},
+      {value: 'fh', label: 'Federal Hierarchy', name: 'checkbox-draft'},
+      {value: 'wd', label: 'Wage Determination', name: 'checkbox-wd'}
+    ],
+    name: 'saved-search-domain-filter',
+    label: '',
+    hasSelectAll: 'true'
+  };
+
+  dateFilterIndex = 0;
+
+  dateFilterModel: any[];
+
+  dateRangeConfig = [
+    {
+      title: 'Date Saved',
+      dateFilterConfig: {
+        options: [
+          {name: 'saved_date', label: 'Date', value: 'date'},
+          {name: 'saved_date_range', label: 'Date Range', value: 'dateRange'}
+        ],
+        radSelection: 'date'
+      }
+    },
+    {
+      title: 'Date Last Ran',
+      dateFilterConfig: {
+        options: [
+          {name: 'last_ran_date', label: 'Date', value: 'date'},
+          {name: 'last_ran_range', label: 'Date Range', value: 'dateRange'}
+        ],
+        radSelection: 'date'
+      }
+    }
+  ];
+
+  defaultSort: any = {type:'modified_on', sort:'desc'};
+  sortModel: any = this.defaultSort;
+  oldSortModel: any = this.defaultSort;
+  sortOptions = [
+    {label:'Search Title', name:'Search Title', value:'title'},
+    {label:'Date Last Saved', name:'Date Last Saved', value:'modified_on'},
+    {label:'Date Last Run', name:'Date Last Run', value:'last_usage_date'}
+  ];
+
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
+              private savedSearchService: SavedSearchService,
+              private searchDictionariesService: SearchDictionariesService,
+              private fhService: FHService,
+              private dictionaryService: DictionaryService,
+              private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
@@ -169,6 +254,35 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
+
+        this.keywordsModel = data['keyword'] ? SavedSearchWorkspacePage.keywordToArray(data['keyword']) : [];
+
+        this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
+
+        this.domainCheckboxModel = typeof data['domain'] === "string" ? decodeURI(data['domain']).split(",") : this.defaultDomains;
+
+        this.dateFilterModel = [];
+        if (data['saved_date'] || data['saved_date.to'] || data['saved_date.from']) {
+          let date = {};
+          if (data['saved_date']) {
+            date['date'] = data['saved_date'];
+          } else {
+            date['dateRange'] = {'startDate': data['saved_date.from'], 'endDate': data['saved_date.to']};
+          }
+
+          this.dateFilterModel[0] = date;
+          this.dateFilterIndex = 0;
+        } else if (data['last_ran_date'] || data['last_ran_date.to'] || data['last_ran_date.from']) {
+          let date = {};
+          if (data['last_ran_date']) {
+            date['date'] = data['last_ran_date'];
+          } else {
+            date['dateRange'] = {'startDate': data['last_ran_date.from'], 'endDate': data['last_ran_date.to']};
+          }
+
+          this.dateFilterModel[1] = date;
+          this.dateFilterIndex = 1;
+        }
 
         this.runSavedSearch();
       });
@@ -189,17 +303,87 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       qsobj['page'] = 1;
     }
 
+    if (this.keywordsModel.length > 0) {
+      qsobj['keyword'] = SavedSearchWorkspacePage.keywordToString(this.keywordsModel);
+    } else {
+      this.keywordsModel = [];
+    }
+
+    if (this.domainCheckboxModel) {
+      qsobj['domain'] = this.domainCheckboxModel.join();
+    }
+
+    if (this.dateFilterModel && this.dateFilterModel.length > 0) {
+      if (this.dateFilterModel[0] && this.dateFilterIndex == 0) {
+        if (this.dateFilterModel[0]['dateRange']) {
+          qsobj['saved_date.to'] = this.dateFilterModel[0]['dateRange']['endDate'];
+          qsobj['saved_date.from'] = this.dateFilterModel[0]['dateRange']['startDate'];
+        } else if (this.dateFilterModel[0]['date']) {
+          qsobj['saved_date'] = this.dateFilterModel[0]['date'];
+        }
+      } else if (this.dateFilterModel[1] && this.dateFilterIndex == 1) {
+        if (this.dateFilterModel[1]['dateRange']) {
+          qsobj['last_ran_date.to'] = this.dateFilterModel[1]['dateRange']['endDate'];
+          qsobj['last_ran_date.from'] = this.dateFilterModel[1]['dateRange']['startDate'];
+        } else if (this.dateFilterModel[1]['date']) {
+          qsobj['last_ran_date'] = this.dateFilterModel[1]['date'];
+        }
+      }
+    }
+
+    //If changing sort option, reset to default sort order for that option
+    if(this.sortModel && this.oldSortModel['type'] !== this.sortModel['type']){
+      switch(this.sortModel['type']){
+          case 'modified_on':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'last_usage_date':
+            this.sortModel['sort'] = 'desc';
+            break;
+          case 'title':
+            this.sortModel['sort'] = 'asc';
+            break;
+      }
+    }
+
+    if(this.sortModel){
+      qsobj['sortBy'] = (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']);
+    }
+    else {
+      qsobj['sortBy'] = '';
+    }
+
     return qsobj;
   }
 
   runSavedSearch() {
+    let params = {
+      Cookie: this.cookieValue,
+      pageNum: this.pageNum,
+      keyword: SavedSearchWorkspacePage.keywordToString(this.keywordsModel),
+      sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
+      domain: this.domainCheckboxModel.join(',')
+    };
+
+    if (this.dateFilterModel[0] && this.dateFilterIndex == 0) {
+      if (this.dateFilterModel[0]['dateRange']) {
+        params['saved_date.to'] = this.dateFilterModel[0]['dateRange']['endDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[0]['dateRange']['endDate']);
+        params['saved_date.from'] = this.dateFilterModel[0]['dateRange']['startDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[0]['dateRange']['startDate']);
+      } else if (this.dateFilterModel[0]['date']) {
+        params['saved_date'] = this.dateFilterModel[0]['date'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[0]['date']);
+      }
+    } else if (this.dateFilterModel[1] && this.dateFilterIndex == 1) {
+      if (this.dateFilterModel[1]['dateRange']) {
+        params['last_ran_date.to'] = this.dateFilterModel[1]['dateRange']['endDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[1]['dateRange']['endDate']);
+        params['last_ran_date.from'] = this.dateFilterModel[1]['dateRange']['startDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[1]['dateRange']['startDate']);
+      } else if (this.dateFilterModel[1]['date']) {
+        params['last_ran_date'] = this.dateFilterModel[1]['date'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel[1]['date']);
+      }
+    }
 
     // make api call
-    this.runSearchSub = this.savedSearchService.getAllSavedSearches({
-      Cookie: this.cookieValue,
-      pageNum: this.pageNum
-    }).subscribe(data => {
-        if(data._embedded && data._embedded.preferences) {
+    this.runSearchSub = this.savedSearchService.getAllSavedSearches(params).subscribe(data => {
+        if (data._embedded && data._embedded.preferences) {
           this.data = data._embedded.preferences;
           this.totalCount = data.page['totalElements'];
           this.size = data.page['size'];
@@ -208,6 +392,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           this.totalCount = 0;
           this.data = [];
         }
+        this.oldKeyword = SavedSearchWorkspacePage.keywordToString(this.keywordsModel);
         this.initLoad = false;
         this.createOrgNameMap();
         this.getLabelsFromDictionaries();
@@ -219,6 +404,8 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
         let errorRes = error.json();
         if (error && error.status === 404) {
           this.router.navigate(['404']);
+        } else if (error && error.status === 401) {
+          this.router.navigate(['401']);
         } else if (error && error.status === 400) {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
@@ -231,7 +418,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
   getLabelsFromDictionaries() {
     let indexes = [];
-    if(this.data.length > 0) {
+    if (this.data.length > 0) {
       this.data.map(data => {
         if (data.data.index) {
           indexes.push(data.data.index.toString());
@@ -242,7 +429,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     let uniqueIndexList = Array.from(new Set(indexes));
     let ctx = this;
 
-    if(uniqueIndexList && uniqueIndexList.length > 0) {
+    if (uniqueIndexList && uniqueIndexList.length > 0) {
       uniqueIndexList.forEach(function (i) {
         switch (i) {
           case 'cfda':
@@ -282,9 +469,9 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
   }
 
-  createOrgNameMap(){
+  createOrgNameMap() {
     let idArray = new Set(this.data.map(data => {
-      if(data.data.parameters && data.data.parameters.organization_id) {
+      if (data.data.parameters && data.data.parameters.organization_id) {
         let id = data.data.parameters.organization_id;
 
         if (typeof id !== 'string') {
@@ -295,11 +482,11 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     }));
     let uniqueIdList = Array.from(idArray).join();
     let ctx = this;
-    if(uniqueIdList && uniqueIdList.length > 0) {
+    if (uniqueIdList && uniqueIdList.length > 0) {
       this.fhService.getOrganizationsByIds(uniqueIdList)
         .subscribe(
           data => {
-            data._embedded.orgs.forEach(function(org){
+            data._embedded.orgs.forEach(function (org) {
               ctx.orgMap.set(org.org.orgKey.toString(), org.org.name);
             });
             this.addParameterLabels();
@@ -313,75 +500,75 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   }
 
   getProgramsDictionaryData(id) {
-      let ctx = this;
-      this.dictionaryService.getProgramDictionaryById(id).subscribe(
-        data => {
-          if(data && data.hasOwnProperty('applicant_types')) {
-            data['applicant_types'].forEach(function (item) {
-              ctx.applicantMap.set(item.code, item.value);
-            });
-          }
-
-          if(data && data.hasOwnProperty('beneficiary_types')) {
-            data['beneficiary_types'].forEach(function (item) {
-              ctx.beneficiaryMap.set(item.code, item.value);
-            });
-          }
-
-          if(data && data.hasOwnProperty('assistance_type')) {
-            data['assistance_type'].forEach(function (item) {
-              ctx.assistanceMap.set(item.element_id, item.code + '-' + item.value);
-              if(item.elements!=null) {
-                for (var element of item.elements) {
-                  ctx.assistanceMap.set(element.element_id, item.code + '-' + element.value);
-                }
-              }
-            });
-          }
-          this.addParameterLabels();
-        },
-        error => {
-          console.error("Error!!", error);
+    let ctx = this;
+    this.dictionaryService.getProgramDictionaryById(id).subscribe(
+      data => {
+        if (data && data.hasOwnProperty('applicant_types')) {
+          data['applicant_types'].forEach(function (item) {
+            ctx.applicantMap.set(item.code, item.value);
+          });
         }
-      );
+
+        if (data && data.hasOwnProperty('beneficiary_types')) {
+          data['beneficiary_types'].forEach(function (item) {
+            ctx.beneficiaryMap.set(item.code, item.value);
+          });
+        }
+
+        if (data && data.hasOwnProperty('assistance_type')) {
+          data['assistance_type'].forEach(function (item) {
+            ctx.assistanceMap.set(item.element_id, item.code + '-' + item.value);
+            if (item.elements != null) {
+              for (var element of item.elements) {
+                ctx.assistanceMap.set(element.element_id, item.code + '-' + element.value);
+              }
+            }
+          });
+        }
+        this.addParameterLabels();
+      },
+      error => {
+        console.error("Error!!", error);
+      }
+    );
   }
 
   getCommonDictionaryData(id) {
-      let ctx = this;
-      this.dictionaryService.getOpportunityDictionary(id).subscribe(
-        data => {
-          if(data && data.hasOwnProperty('naics_code')){
-            data['naics_code'].forEach(function (item) {
-              ctx.naicsMap.set(item.code, item.value);
-            });
-          }
-
-          if(data && data.hasOwnProperty('classification_code')) {
-            data['classification_code'].forEach(function (item) {
-              ctx.pscMap.set(item.code, item.value);
-            });
-          }
-
-          if(data && data.hasOwnProperty('procurement_type')) {
-            data['procurement_type'].forEach(function (item) {
-              ctx.noticeTypeMap.set(item.code, item.value);
-            });
-          }
-
-          if(data && data.hasOwnProperty('set_aside_type')) {
-            data['set_aside_type'].forEach(function (item) {
-              ctx.setAsideMap.set(item.code, item.value);
-            });
-          }
-          this.addParameterLabels();
-        },
-        error => {
-          console.error("Error!!", error);
+    let ctx = this;
+    this.dictionaryService.getOpportunityDictionary(id).subscribe(
+      data => {
+        if (data && data.hasOwnProperty('naics_code')) {
+          data['naics_code'].forEach(function (item) {
+            ctx.naicsMap.set(item.code, item.value);
+          });
         }
-      );
+
+        if (data && data.hasOwnProperty('classification_code')) {
+          data['classification_code'].forEach(function (item) {
+            ctx.pscMap.set(item.code, item.value);
+          });
+        }
+
+        if (data && data.hasOwnProperty('procurement_type')) {
+          data['procurement_type'].forEach(function (item) {
+            ctx.noticeTypeMap.set(item.code, item.value);
+          });
+        }
+
+        if (data && data.hasOwnProperty('set_aside_type')) {
+          data['set_aside_type'].forEach(function (item) {
+            ctx.setAsideMap.set(item.code, item.value);
+          });
+        }
+        this.addParameterLabels();
+      },
+      error => {
+        console.error("Error!!", error);
+      }
+    );
 
     let idArray = new Set(this.data.map(data => {
-      if(data.data.parameters && data.data.parameters.duns) {
+      if (data.data.parameters && data.data.parameters.duns) {
         let id = data.data.parameters.duns;
 
         if (typeof id !== 'string') {
@@ -391,10 +578,10 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       }
     }));
     let uniqueIdList = Array.from(idArray).join();
-    if(uniqueIdList && uniqueIdList.length > 0) {
+    if (uniqueIdList && uniqueIdList.length > 0) {
       this.searchDictionariesService.dunsPersistGrabber(uniqueIdList)
-        .subscribe(duns => {
-              duns.forEach(function (item) {
+        .subscribe((duns: [{ value: string, label: string }]) => {
+            duns.forEach(function (item) {
               ctx.dunsMap.set(item.value, item.label);
             });
           },
@@ -406,55 +593,176 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   }
 
   getWageDeterminationDictionaryData(id) {
-      let ctx = this;
-      this.dictionaryService.getWageDeterminationDictionary(id).subscribe(
-        data => {
-          if(data && data.hasOwnProperty('wdStates')) {
-            data['wdStates'].forEach(function (item) {
-              ctx.statesMap.set(item.elementId, item.value);
-            });
-          }
-          if(data && data.hasOwnProperty('wdCounties')) {
-            data['wdCounties'].forEach(function (item) {
-              ctx.countiesMap.set(item.elementId, item.value);
-            });
-          }
-          if(data && data.hasOwnProperty('dbraConstructionTypes')) {
-            data['dbraConstructionTypes'].forEach(function (item) {
-              ctx.constructionMap.set(item.value, item.value);
-            });
-          }
-          if(data && data.hasOwnProperty('scaServices')) {
-            data['scaServices'].forEach(function (item) {
-              ctx.servicesMap.set(item.elementId, item.value);
-            });
-          }
-          this.addParameterLabels();
-        },
-        error => {
-          console.error("Error!!", error);
+    let ctx = this;
+    this.dictionaryService.getWageDeterminationDictionary(id).subscribe(
+      data => {
+        if (data && data.hasOwnProperty('wdStates')) {
+          data['wdStates'].forEach(function (item) {
+            ctx.statesMap.set(item.elementId, item.value);
+          });
         }
-      );
+        if (data && data.hasOwnProperty('wdCounties')) {
+          data['wdCounties'].forEach(function (item) {
+            ctx.countiesMap.set(item.elementId, item.value);
+          });
+        }
+        if (data && data.hasOwnProperty('dbraConstructionTypes')) {
+          data['dbraConstructionTypes'].forEach(function (item) {
+            ctx.constructionMap.set(item.value, item.value);
+          });
+        }
+        if (data && data.hasOwnProperty('scaServices')) {
+          data['scaServices'].forEach(function (item) {
+            ctx.servicesMap.set(item.elementId, item.value);
+          });
+        }
+        this.addParameterLabels();
+      },
+      error => {
+        console.error("Error!!", error);
+      }
+    );
+  }
+
+  workspaceSearchModel(event) {
+    if (event == null) {
+      this.autocomplete.inputValue = '';
+      this.keyword = '';
+    } else {
+      this.keyword = event;
+    }
+  }
+
+  static keywordToArray(keywordStringOrArray) {
+    if (typeof(keywordStringOrArray) === 'string') {
+      let tempArray = keywordStringOrArray.split(',');
+      return tempArray.map(function (item) {
+        return {label: item, value: item};
+      });
+    } else if (Array.isArray(keywordStringOrArray)) {
+      return keywordStringOrArray.map(function (item) {
+        return {label: item, value: item};
+      });
+    }
+  }
+
+  static keywordToString(keywordArray) {
+    let newString = '';
+
+    if (keywordArray && keywordArray !== '') {
+      newString = keywordArray.reduce(function (accumulator, currentVal) {
+        if (accumulator === '') {
+          return currentVal.value;
+        }
+
+        return accumulator + ',' + currentVal.value;
+      }, '');
+    }
+
+    return newString;
+  }
+
+  keywordsModelChange(value) {
+    if (value.length === 1) {
+      this.keywordsModel = value;
+    } else if (value.length > 1) {
+      this.keywordsModel = [value[value.length - 1]];
+    } else {
+      this.keywordsModel = [];
+    }
+
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+
+  workspaceSearchClick() {
+    this.pageNum = 0;
+    // build a new keywords model with keyword
+    this.keywordsModel = SavedSearchWorkspacePage.keywordToArray(this.keyword);
+    this.workspaceRefresh();
+    this.keyword = '';
+    this.autocomplete.inputValue = '';
+  }
+
+  setSortModel(sortBy) {
+    if(sortBy.substring(0, 1) == '-') {
+      return {type: sortBy.substring(1), sort: 'desc'};
+    } else {
+      return {type: sortBy, sort: 'asc'};
+    }
+  }
+
+  sortModelChange(event){
+    this.pageNum = 0;
+    this.oldSortModel = this.sortModel;
+    this.sortModel = event;
+    this.workspaceRefresh();
+  }
+
+  domainModelChanged(event) {
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+
+  dateFilterHandler(evt) {
+    this.pageNum = 0;
+    this.dateFilterIndex = evt['index'];
+    this.workspaceRefresh();
+  }
+
+  dateFilterClearHandler() {
+    this.dateFilterModel = [];
+    this.pageNum = 0;
+    this.workspaceRefresh();
+  }
+
+  //  TODO: Pull to Date Utility Service
+  static fetchFormattedTimeZoneOffset(date) {
+    let timezone_offset_min = new Date(date).getTimezoneOffset();
+    let offset_hrs: any = Math.abs(timezone_offset_min / 60);
+    let offset_min: any = Math.abs(timezone_offset_min % 60);
+    let timezone_standard;
+
+    if (offset_hrs < 10) {
+      offset_hrs = '0' + offset_hrs;
+    }
+
+    if (offset_min < 10) {
+      offset_min = '0' + offset_min;
+    }
+
+    // Add an opposite sign to the offset
+    if (timezone_offset_min < 0) {
+      timezone_standard = '+' + offset_hrs + ':' + offset_min;
+    } else if (timezone_offset_min > 0) {
+      timezone_standard = '-' + offset_hrs + ':' + offset_min;
+    } else if (timezone_offset_min == 0) {
+      timezone_standard = 'Z';
+    }
+
+    // Timezone difference in hours and minutes
+    // String such as +5:30 or -6:00 or Z
+    return timezone_standard;
   }
 
   //Add label names to data from dictionaries
   addParameterLabels() {
     let ctx = this;
-    ctx.data.forEach(function(data) {
-      if(data.data.parameters) {
+    ctx.data.forEach(function (data) {
+      if (data.data.parameters) {
         let params = data.data.parameters;
         for (var key in params) {
-          if (ctx.filters.hasOwnProperty(key)) {
+          if (ctx.dictionaries.hasOwnProperty(key)) {
             let items = [];
-            if(params[key].indexOf(",")>-1) {
+            if (params[key].indexOf(",") > -1) {
               items = params[key].split(",");
             } else {
               items.push(params[key]);
             }
             let array = [];
-            for(var i=0; i<items.length; i++) {
-              if(ctx.filters[key].get(items[i])!=undefined) {
-                array.push(ctx.filters[key].get(items[i].toString()));
+            for (var i = 0; i < items.length; i++) {
+              if (ctx.dictionaries[key].get(items[i]) != undefined) {
+                array.push(ctx.dictionaries[key].get(items[i].toString()));
               } else {
                 array.push(items[i].toString());
               }
@@ -463,16 +771,31 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           }
         }
       }
-  });
+    });
     ctx.data = _.cloneDeep(ctx.data);
   }
 
-  pageChange(pagenumber) {
-    this.pageNum = pagenumber;
+  clearAllFilters() {
+    //clear keyword
+    this.keywordsModel = [];
+
+    //clear date filter
+    this.dateFilterModel = [];
+    this.pageNum = 0;
+
+    //reset sort
+    this.oldSortModel = this.defaultSort;
+    this.sortModel = this.defaultSort;
+
     this.workspaceRefresh();
   }
 
-  workspaceRefresh(){
+  pageChange(page) {
+    this.pageNum = page;
+    this.workspaceRefresh();
+  }
+
+  workspaceRefresh() {
     let qsobj = this.setupQS();
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj

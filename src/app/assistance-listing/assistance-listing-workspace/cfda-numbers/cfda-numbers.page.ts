@@ -56,14 +56,6 @@ export class CfdaNumbersPage implements OnInit {
 
   ngOnInit(){
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
-    if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
-    }
     let orgLevelsAPI = this.getOrganizationLevels();
     this.loadCfdaNumbers(orgLevelsAPI);
 
@@ -93,14 +85,14 @@ export class CfdaNumbersPage implements OnInit {
           };
           this.onOrganizationChange(org);
         } else {
-          this.router.navigate(['accessrestricted']);
+          this.router.navigate(['/403']);
         }
         this.selectedOrganization = this.orgRoot;
       } else {
-        this.router.navigate(['accessrestricted']);
+        this.router.navigate(['/403']);
       }
     }, error => {
-      this.router.navigate(['accessrestricted']);
+      this.router.navigate(['/403']);
     });
   }
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ProgramService} from "../../../../api-kit/program/program.service";
 import * as Cookies from 'js-cookie';
+import {FALAuthGuard} from "../../../assistance-listing/components/authguard/authguard.service";
 
 @Component({
   selector: 'assistance-listing-widget',
@@ -8,19 +9,30 @@ import * as Cookies from 'js-cookie';
 })
 export class AssistanceListingWidgetComponent {
   permissions: any = {};
+  userPermissions: any = {};
   cookieValue: string;
   pendingApprovalCount: any;
   pendingRequestCount: any;
   rejectedCount: any;
   draftReviewCount: any;
 
-  constructor(private api: ProgramService) {}
-
+  constructor(private api: ProgramService, private falAuthGuard: FALAuthGuard) {}
+  
   ngOnInit() {
+    this.getUserPermissions();
+  }
+  
+  getUserPermissions() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     if(this.cookieValue!=null) {
-      this.api.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO, ORG_LEVELS').subscribe(res => {
+      this.api.getPermissions(this.cookieValue, 'FAL_REQUESTS, ORG_LEVELS').subscribe(res => {
           this.permissions = res;
+        },
+        error => {
+          console.log("Error getting permissions", error);
+        });
+      this.api.getPermissions(this.cookieValue).subscribe(res => {
+          this.userPermissions = res;
         },
         error => {
           console.log("Error getting permissions", error);

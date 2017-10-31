@@ -9,14 +9,15 @@ import {
   logger, isDebug
 } from './helpers';
 
-import { getMockCWSApplication } from './mocks';
+import { getMockCWSApplication, getMockCWSSummary } from './mocks';
 import { CWSApplication } from '../../../interfaces';
 
 const transforms = {
   intake(data: CWSApplication) {
-    let keys = ('contractOpportunities|contractData|entityInformation').split('|'),
+    let keys = ('contractOpportunities|contractData|entityInformation|systemAdmins|systemManagers').split('|'),
         key,
-        index;
+        index,
+        defaults = {};
 
     // Temporary property use
     if(data.interfacingSystemName) {
@@ -25,17 +26,16 @@ const transforms = {
 
     for(index = 0; index < keys.length; index++) {
       key = keys[index];
-
-      if(data[key]) {
-        data[key] = data[key].split(',');
-      }
+      data[key] = data[key] ? data[key].split(',') : [];
     }
+
+    data.applicationStatus = data.applicationStatus || 'Draft';
 
     return data;
   },
 
   outake(data: CWSApplication) {
-    let keys = ('contractOpportunities|contractData|entityInformation|statuses').split('|'),
+    let keys = ('contractOpportunities|contractData|entityInformation|systemAdmins|systemManagers|statuses').split('|'),
         key,
         index;
 
@@ -50,6 +50,7 @@ const transforms = {
     // Temporary property use
     if(data.statuses && typeof data.statuses === 'string') {
       data.interfacingSystemName = data.statuses;
+      delete data.statuses;
     }
 
     return data;
@@ -81,7 +82,7 @@ const application = {
       .get(endpoint)
       .set(auth)
       .then(response => {
-        $success(transforms.intake(response.body));
+        !response.body ? $error(exceptionHandler(response)) : $success(transforms.intake(response.body));;
       }, response => {
         $error(exceptionHandler(response));
       });
@@ -111,9 +112,7 @@ const application = {
       .set(auth)
       .then(response => {
         let applications = response.body || [];
-
         applications = applications.map(application => transforms.intake(application));
-
         $success(applications);
       }, response => {
         $error(exceptionHandler(response));
@@ -198,10 +197,13 @@ const application = {
       request
         .delete(endpoint)
         .set(auth)
-        .then(response => {
-          $success();
-        }, response => {
-          $error(exceptionHandler(response));
+        .responseType('text')
+        .end((error, response) => {
+          if(response == undefined && error) {
+            $success();
+          } else {
+            error ? $error(exceptionHandler(response)) : $success();
+          }
         });
     } else {
       $success();
@@ -239,5 +241,35 @@ const application = {
 
 
 export const cws = {
-  application
+  application,
+
+  status($success: Function = () => {}, $error: Function = () => {}) {
+    let endpoint = utilities.getUrl(config.cws.status),
+        auth = getAuthHeaders(),
+        mock = getMockCWSSummary();
+
+    if(isDebug()) {
+      $success(mock);
+      return;
+    }
+
+    if(!auth) {
+      $error({ message: 'Please sign in' });
+      return;
+    }
+
+    request
+      .get(endpoint)
+      .set(auth)
+      .then(response => {
+        $success(merge({
+          pending: 0,
+          approved: 0,
+          rejected: 0,
+          cancelled: 0,
+        }, response.body));
+      }, response => {
+        $error(exceptionHandler(response));
+      });
+  },
 };

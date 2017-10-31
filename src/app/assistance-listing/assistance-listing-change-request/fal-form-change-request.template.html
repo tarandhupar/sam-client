@@ -26,6 +26,7 @@
         <div class="sam-ui segment">
           <ng-container *ngIf="requestType == 'archive_request'">
             <sam-checkbox class="cb-request"
+                          [required]="true"
                           [label]="'Have you verified there is $0 funding for two years(current and prior), and no active awards against this listing on USASpending.gov?*'"
                           [name] ="'active-awards'"
                           aria-label="Request Checkbox"
@@ -58,19 +59,24 @@
               <div class="sub header">{{currentOrganization.l3Name}}</div>
             </div>
 
-            <sam-agency-picker
-              [label]="'New Agency'"
-              [multimode]="false"
-              [advancedMode]="false"
-              [required]="true"
-              (organization)="onOrganizationChange($event)"
-              [levelLimit]='3'
-              formControlName="organizationPicker">
-            </sam-agency-picker>
+            <sam-agency-picker-v2
+            [attr.id]="agencyPickerConfig.id"
+            [control]="falChangeRequestForm.get('organizationPicker')"
+            [formControl]="falChangeRequestForm.get('organizationPicker')"
+            [hint]="agencyPickerConfig.hint"
+            [label]="agencyPickerConfig.label"
+            [limit]="agencyPickerConfig.levelLimit"
+            [required]="agencyPickerConfig.required"
+            formControlName="organizationPicker"
+            [type]="agencyPickerConfig.type">
+          </sam-agency-picker-v2>
+
             <sam-alert [type]="'warning'" [title]="'Agency outside of your users scope'" *ngIf="agencyChangeAlertShow">
               The chosen agency is outside your users scope. If you continue and this request is approved, you will no longer have access to this program.
             </sam-alert>
           </ng-container>
+
+          <div class="sam-ui hidden divider"></div>
 
           <sam-fal-text *ngIf="requestType == 'program_number_request' && cfdaCode"
                     [maxlength]="3"

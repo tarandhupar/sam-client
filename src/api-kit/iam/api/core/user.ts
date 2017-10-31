@@ -21,15 +21,15 @@ const ROLE_MAPPINGS = {
     'system-accounts.migration',
   ],
 
+  systemApprover: [
+    //TODO
+  ],
+
   fsd: [
     'fsd.profile',
     'fsd.kba',
     'fsd.deactivate',
     'fsd.passreset',
-  ],
-
-  reviewer: [
-    //TODO
   ],
 };
 
@@ -49,12 +49,30 @@ export class User {
   public lastLogin = moment();
 
   public systemAccount = false;
+  public systemApprover = false;
   public fsd = false;
-  public reviewer = false;
 
   constructor(params) {
     params = params || {};
     this.set(this.reverseMappings(params));
+
+    //--> Temporary Role Set
+    let search;
+    const accounts = [
+      'kristin.wight@gsa.gov',
+      'salomeh.ghorbani@gsa.gov',
+      'raymond.vargas@gsa.gov',
+      'alexander.dick@gsa.gov',
+      'kevin.chiu@gsa.gov',
+      'samba.boppudi@gsa.gov'
+    ];
+
+    search = accounts.filter(account => (this.email == account));
+
+    if(search.length) {
+      this.systemApprover = true;
+    }
+    //--> Temporay Role Set
   }
 
   set(user) {
@@ -189,7 +207,7 @@ export class User {
     return Cookies.getJSON('IAMSession');
   }
 
-  static updateCache(data: { [key: string]: number|boolean|string }) {
+  static updateCache(data: { [key: string]: any }) {
     data = merge(Cookies.getJSON('IAMSession') || {}, data || {});
     Cookies.set('IAMSession', data, config.cookies());
   }

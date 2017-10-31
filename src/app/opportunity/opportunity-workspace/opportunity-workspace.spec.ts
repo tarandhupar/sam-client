@@ -15,8 +15,6 @@ import {SamUIKitModule} from 'sam-ui-kit';
 //app-component
 import {OPPWorkspacePage} from './opportunity-workspace.page';
 
-//Module
-// import {AppTemplatesModule} from "../../app-templates/index";
 import {OpportunityModule} from "../opportunity.module";
 import {AppComponentsModule} from '../../app-components/app-components.module';
 
@@ -25,6 +23,8 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 
 //other library
 import * as Cookies from 'js-cookie';
+import {UserService} from "../../role-management/user.service";
+import {UserAccessService} from "../../../api-kit/access/access.service";
 
 let component: OPPWorkspacePage;
 let fixture: ComponentFixture<OPPWorkspacePage>;
@@ -38,7 +38,7 @@ let mockOpportunityService = {
             "data": {
               "title": "Intent to Bundle Test Opportunity",
               "solicitationNumber": "AAA-AAA-11-1116",
-              "organizationId": '1',
+              "organizationId": '100000136',
               "type": 'a'
             },
             "status": {
@@ -66,14 +66,34 @@ let MockFHService = {
         "orgs": [
           {
             org: {
-              orgKey: "1",
-              parentOrgKey: "100010393",
-              name: 'FISH AND WILDLIFE SERVICE',
+              orgKey: "100000136",
+              parentOrgKey: "100000136",
+              name: 'TRANSPORTATION, DEPARTMENT OF',
               type: 'AGENCY'
             }
           }
         ]
       }
+    });
+  },
+  getOrganizationById: (id, includeChildren, includeOrgTypes, status, size, page, orderBy, hasFpds) => {
+    return Observable.of({
+      "_embedded":
+      [
+        {
+          org: {
+            orgKey: 100000136,
+            fpdsCode: "6900",
+            fullParentPath: "100000136",
+            hierarchy: [],
+            level: 1,
+            name: 'TRANSPORTATION, DEPARTMENT OF',
+            l1Name: 'TRANSPORTATION, DEPARTMENT OF',
+            l1OrgKey: 100000136,
+            type: 'DEPARTMENT'
+          }
+        }
+      ]
     });
   }
 };
@@ -101,7 +121,41 @@ let MockDictionaryService = {
   }
 };
 
-xdescribe('OPPWorkspacePage', () => {
+let MockUserService = {
+  getUser: () => {
+    return {
+      lastName: "Administrator",
+      _id: "FBO_AA@gsa.gov",
+      email: "FBO_AA@gsa.gov",
+      _links: {
+        self: {
+          href: "/comp/iam/auth/v4/session/"
+        }
+      }
+    }
+  }
+};
+
+let MockUserAccessService = {
+  getAllUserRoles: (uid, queryParams) => {
+    return Observable.of({
+      access: [{organization: {id: 100000136, val: "TRANSPORTATION, DEPARTMENT OF"}}],
+      domains: [{id: 2, val: "Contract Opportunities"}, {id: 5, val: "Federal Hierarchy"}],
+      limit: 10,
+      offset: 0,
+      roles: [{id: 6, val: "Agency Admin"}],
+      total: 1,
+      user: {lastName: "Administrator", _id: "fbo.test.user.aa@gmail.com", email: "fbo.test.user.aa@gmail.com"},
+      _links: {
+        request_access: {
+          href: "https://39rolemanagementcomp.apps.prod-iae.bsp.gsa.gov/rms/v1/requestaccess/"
+        }
+      }
+    })
+  }
+};
+
+describe('OPPWorkspacePage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       schemas: [ NO_ERRORS_SCHEMA ],
@@ -109,6 +163,8 @@ xdescribe('OPPWorkspacePage', () => {
       providers: [
         DictionaryService,
         OpportunityService,
+        UserService,
+        UserAccessService,
         BaseRequestOptions,
         MockBackend,
         {
@@ -125,7 +181,6 @@ xdescribe('OPPWorkspacePage', () => {
       ],
       imports: [
         OpportunityModule,
-        // AppTemplatesModule,
         SamUIKitModule,
         SamAPIKitModule,
         FormsModule,
@@ -140,7 +195,9 @@ xdescribe('OPPWorkspacePage', () => {
         providers: [
           {provide: OpportunityService, useValue: mockOpportunityService},
           {provide: FHService, useValue: MockFHService},
-          {provide: DictionaryService, useValue: MockDictionaryService}
+          {provide: DictionaryService, useValue: MockDictionaryService},
+          {provide: UserService, useValue: MockUserService},
+          {provide: UserAccessService, useValue: MockUserAccessService}
         ]
       }
     })
@@ -156,7 +213,7 @@ xdescribe('OPPWorkspacePage', () => {
     expect(component.totalCount).toBe(4);
     expect(component.totalPages).toBe(1);
     expect(component.data[0]['noticeType']).toBe("Award Notice");
-    expect(component.data[0]['officeName']).toBe("FISH AND WILDLIFE SERVICE");
+    expect(component.data[0]['officeName']).toBe("TRANSPORTATION, DEPARTMENT OF");
   });
 
   it('Initializes the status checkbox options', () => {
@@ -165,13 +222,18 @@ xdescribe('OPPWorkspacePage', () => {
 
   it('Initializes the notice type checkbox options', () => {
     expect(component.noticeTypeCheckboxConfig.options.length).toBe(12);
+  });
 
-  it('Initializes the default sort', () =>{
+  it('Initializes the default sort', () => {
     expect(component.defaultSort.type).toBe('postedDate');
   });
 
-  it('Initializes the default date tab', () =>{
+  it('Initializes the default date tab', () => {
     expect(component.currDateTab).toBe('posted');
+  });
+
+  it('Initializes the agency picker', () => {
+    expect(component.orgRoots).toContain(100000136);
   });
 
 });

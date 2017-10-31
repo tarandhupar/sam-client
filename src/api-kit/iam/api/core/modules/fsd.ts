@@ -71,7 +71,7 @@ const reset = {
 
         $success(data.status, data.token, data.message);
       }, (response) => {
-        $error(exceptionHandler(response.body));
+        $error(exceptionHandler(response));
       });
   }
 };

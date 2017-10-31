@@ -29,7 +29,7 @@ $itemTransition:
   box-shadow $defaultDuration $defaultEasing,
   color $defaultDuration $defaultEasing
 ;
-$itemFontWeight: normal;
+$itemFontWeight: 600;
 $itemTextColor: $textColor;
 
 /* Divider */
@@ -1244,6 +1244,7 @@ Floated Menu / Item
   align-self: center;
   box-shadow: none;
   border: none;
+  color: $linkColor;
   padding: $secondaryItemPadding;
   margin: $secondaryItemMargin;
   background: $secondaryItemBackground;

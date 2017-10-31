@@ -8,6 +8,8 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 import {OpportunityService} from "../../../api-kit/opportunity/opportunity.service";
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
+import {UserService} from "../../role-management/user.service";
+import {UserAccessService} from "../../../api-kit/access/access.service";
 
 @Component({
   moduleId: __filename,
@@ -40,7 +42,13 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   orgMap: any = new Map();
   noticeTypeMap = new Map();
   public permissions: any;
-  private showOpp: boolean = false;
+
+  agencyPickerModel = [];
+  previousStringList: string = '';
+  public organizationData: any;
+  public orgLevels: any;
+  public orgRoots: any = [];
+
   keywordsModel: any = [];
   keywordsConfiguration = {
     placeholder: "Keyword Search",
@@ -126,10 +134,11 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   };
 
   oppFacets: any = ['status','type'];
+  disabled:boolean = true;
 
 
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private opportunityService: OpportunityService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private opportunityService: OpportunityService, private userService: UserService, private userAccessService: UserAccessService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
@@ -141,6 +150,8 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
         this.noticeTypeCheckboxModel = typeof data['noticeType'] === "string" ? decodeURI(data['noticeType']).split(",") : [];
         this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
+        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+        this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
         this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
         this.postedDateFilterModel = data['dateTab'] && data['dateTab'] === this.POSTED ? this.formatDateModel(data) : {};
         this.responseDateFilterModel = data['dateTab'] && data['dateTab'] === this.RESPONSE ? this.formatDateModel(data) : {};
@@ -150,6 +161,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         this.currDateTab = data['dateTab'] ? decodeURI(data['dateTab']) : this.POSTED;
         this.runOpportunity();
       });
+    this.initFHDropdown();
   }
 
   ngOnDestroy() {
@@ -194,6 +206,9 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     }else{
       qsobj['noticeType'] = '';
     }
+    if(this.organizationId){
+      qsobj['organizationId'] = this.organizationId;
+    }
 
     //If changing sort option, reset to default sort order for that option
     if(this.sortModel && this.oldSortModel['type'] !== this.sortModel['type']){
@@ -227,6 +242,15 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     }
 
     return qsobj;
+  }
+
+  setupOrgsFromQS(orgsStr){
+    if(!orgsStr){
+      return [];
+    }
+    let decodedStr = decodeURIComponent(orgsStr);
+    let orgsArray = decodedStr.split(",");
+    return orgsArray;
   }
 
    // initiates a search with date filter
@@ -334,6 +358,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
       status: this.statusCheckboxModel.toString(),
       noticeType: this.noticeTypeCheckboxModel.toString(),
       sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
+      organizationId: this.organizationId,
       dateTab: this.currDateTab,
       dateFilter: dateObj,
       facets: this.oppFacets.toString(),
@@ -353,7 +378,6 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         }
         this.oldKeyword = this.keyword;
         this.initLoad = false;
-        this.showOpp = true;
 
         if(data._embedded && data._embedded.facets) {
           for(var facet of data._embedded.facets) {
@@ -367,6 +391,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
             }
           }
         }
+        this.disabled = false;
       },
       error => {
         console.error('Error!!', error);
@@ -381,6 +406,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
           this.serviceErrorFooterAlertModel.description = errorRes.message;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.serviceErrorFooterAlertModel)));
         }
+        this.disabled = false;
       },
       () => {
         //hide spinner when call is complete
@@ -424,6 +450,53 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.workspaceRefresh();
     this.keyword = '';
     this.autocomplete.inputValue = '';
+  }
+
+  //agency picker change handler
+  onOrganizationChange(selectedOrgs:any){
+    let organizationStringList = '';
+    let stringBuilderArray = selectedOrgs.map(function (organizationItem) {
+      if (organizationStringList === '') {
+        organizationStringList += organizationItem.value;
+      }
+      else {
+        organizationStringList += ',' + organizationItem.value;
+      }
+
+      return organizationStringList;
+    });
+
+    this.previousStringList = this.organizationId;
+
+    // storing current organization string list
+    this.organizationId = organizationStringList;
+
+    // we only want to change page number when the organization list has changed
+    if (this.previousStringList !== this.organizationId) {
+      this.pageNum = 0;
+      this.workspaceRefresh();
+    }
+
+  }
+
+  //TODO: Refactor this with more suitable way. Currently this method only returns single org Id for any user.
+  private initFHDropdown() {
+    try {
+      let user: any = this.userService.getUser();
+      if (user != null && user.email != null) {
+        this.userAccessService.getAllUserRoles(this.userService.getUser().email).subscribe(api => {
+          if (api != null && api.access != null && Array.isArray(api.access) && api.access.length> 0 && api.access[0].organization != null && api.access[0].organization.id != null){
+            this.orgRoots.push(api.access[0].organization.id);
+          }
+        }, error => { //failed to get user associated organization. Redirect to signin
+          this.router.navigate(['signin']);
+        });
+      } else { //failed to get user associated organization. Redirect to signin
+        this.router.navigate(['signin']);
+      }
+    } catch (exception) { //failed to get user associated organization. Redirect to signin
+      this.router.navigate(['signin']);
+    }
   }
 
   keywordRebuilder(keywordStringOrArray){
@@ -667,6 +740,11 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.workspaceRefresh();
   }
 
+  clearAgencyPickerFilter(){
+    this.agencyPickerModel = [];
+    this.organizationId = "";
+  }
+
   clearAllFilters(){
     //clear status && notice type
     this.statusCheckboxModel = this.defaultStatus;
@@ -674,6 +752,8 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
     //clear keyword
     this.keywordsModel = [];
+
+    this.clearAgencyPickerFilter();
 
     //clear date filter
     this.postedDateFilterModel = {};
@@ -690,6 +770,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   }
 
   workspaceRefresh(){
+    this.disabled = true;
     let qsobj = this.setupQS();
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj

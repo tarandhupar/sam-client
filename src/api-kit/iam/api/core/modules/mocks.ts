@@ -8,6 +8,10 @@ import {
   User as IUser,
 } from '../../../interfaces'
 
+function getRandomNumber(min: number = 0, max: number = 10) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export function getMockUser(): IUser {
   const answer = '        ';
 
@@ -82,16 +86,16 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
     systemAccountName: `System Account Mock #${index}`,
     interfacingSystemName: '1,1,0,0,0',
     interfacingSystemVersion: '1.0',
-    systemDescriptionAndFunction: 'Mock system account',
+    systemDescriptionAndFunction: `System Account application Mock #${index}`,
     departmentOrgId: '100006688',
     agencyOrgId: '',
     officeOrgId: '',
-    systemAdmins: [],
-    systemManagers: [],
+    systemAdmins: '',
+    systemManagers: '',
     contractOpportunities: 'read,read-sensitive',
     contractData: 'dod-data',
     entityInformation: 'read-public,read-sensitive',
-    FIPS199Categorization: 'medium',
+    fips199Categorization: 'medium',
     ipAddress: '',
     typeOfConnection: 'SFTP',
     physicalLocation: '',
@@ -113,6 +117,15 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
   };
 }
 
+export function getMockCWSSummary() {
+  return {
+    pending: getRandomNumber(0, 10),
+    approved: getRandomNumber(0, 30),
+    rejected: getRandomNumber(0, 5),
+    cancelled: getRandomNumber(0, 5),
+  }
+}
+
 export function getMockSystemAccount(index): System {
   const types = ['Gov','Non-Gov'];
 
@@ -123,6 +136,7 @@ export function getMockSystemAccount(index): System {
     email:             `system-email-${index}@email.com`,
     systemType:        types[Math.random()],
     systemName:        `System-Account-${index}`,
+    systemDescription: `System-Account-${index} description`,
     ipAddress:         `System-Account-${index}`,
 
     comments:          'System comments...',

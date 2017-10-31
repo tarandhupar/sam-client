@@ -4,7 +4,7 @@ import { isArray, merge } from 'lodash';
 import * as moment from 'moment';
 
 import { SamSortComponent } from '..';
-import { PeoplePickerService } from 'api-kit';
+import { FHService, PeoplePickerService } from 'api-kit';
 
 import { OptionsType } from 'sam-ui-kit/types';
 import { Filter, Sort, Options, PageState } from './user-directory.interfaces';
@@ -41,7 +41,8 @@ export class SamUserDirectoryComponent {
     page: {
       current:  1,
       total:    1,
-      count:    20
+      count:    20,
+      totalRecords:  0
     },
 
     sort: {
@@ -59,6 +60,7 @@ export class SamUserDirectoryComponent {
       <OptionsType>{ name: 'sort-last-login', label: 'Last Log In', value: 'lastLogin' },
     ],
 
+    departments: {},
     cache: []
   };
 
@@ -82,7 +84,7 @@ export class SamUserDirectoryComponent {
   @Output('onSort') _onSort: EventEmitter<Sort> = new EventEmitter();
   @Output('onPage') _onPage: EventEmitter<PageState> = new EventEmitter();
 
-  constructor(private api: PeoplePickerService) {}
+  constructor(private api: PeoplePickerService, private fh: FHService) {}
 
   ngOnInit() {
     this.setOptions(this._options);
@@ -104,15 +106,16 @@ export class SamUserDirectoryComponent {
   }
 
   get intStart(): number {
-    return (Math.max(0, this.states.page.current - 1) * 20) + 1;
+    return (Math.max(0, this.states.page.current - 1) * ((this.states.page.current == 1) ? this.store.cache.length : this.states.page.count)) +
+           (this.store.cache.length ? 1 : 0);
   }
 
   get intEnd(): number {
-    return Math.min(this.intTotal, this.intStart + this.states.page.count);
+    return this.intStart + Math.max(0, this.store.cache.length - 1)
   }
 
   get intTotal(): number {
-    return this.store.cache.length;
+    return this.states.page.totalRecords;
   }
 
   get sort(): Sort {
@@ -120,6 +123,10 @@ export class SamUserDirectoryComponent {
       type:  this.states.sort.type,
       order: this.states.sort.order,
     };
+  }
+
+  department(key) {
+    return this.store.departments[key] ? '' : '&nbsp;';
   }
 
   formatDate(value) {
@@ -140,7 +147,9 @@ export class SamUserDirectoryComponent {
 
   onPage(page) {
     this.states.page.current = page;
-    this._onPage.emit(this.states.page);
+    this.fetch(() => {
+      this._onPage.emit(this.states.page);
+    });
   }
 
   get params() {
@@ -162,23 +171,51 @@ export class SamUserDirectoryComponent {
 
   fetch(cb?: Function) {
     let params = this.params,
-          fnSubscription;
+        fnSubscription,
+        fnError = (error => {
+          this.states.loading = false;
+        });
 
     cb = cb || ((data) => {});
     fnSubscription = (data => {
-      let users = data._embedded.ldapUserResources,
-          page = data.page;
+      let users = isArray(data) ? data : data._embedded.ldapUserResources,
+          page = data.page,
+          departments;
 
       this.store.cache = users.map(item => new User(item.user));
-      this.states.page.total = page.totalPages;
+
+      departments = this.store.cache
+        .filter(item => item.departmentID)
+        .map(item => item.departmentID);
+
+      this.fh
+        .getOrganizations({ orgKey: departments.join(',') })
+        .subscribe(data => {
+          const items = data._embedded.orgs;
+
+          items.map(item => {
+            this.store.departments[item.orgKey] = item.orgName;
+          });
+
+          this.states.loading = false;
+        }, fnError);
+
+      if(page) {
+        this.states.page.total = page.totalPages;
+        this.states.page.totalRecords = page.totalElements;
+      } else {
+        this.states.page.current = 1;
+        this.states.page.total = 1;
+        this.states.page.totalRecords = this.store.cache.length;
+      }
 
       cb();
     });
 
     if(params['fle'].length || params['organization']) {
-      this.api.getFilteredList(params).subscribe(fnSubscription);
+      this.api.getFilteredList(params).subscribe(fnSubscription, fnError);
     } else {
-      this.api.getList(params).subscribe(fnSubscription);
+      this.api.getList(params).subscribe(fnSubscription, fnError);
     }
   }
 

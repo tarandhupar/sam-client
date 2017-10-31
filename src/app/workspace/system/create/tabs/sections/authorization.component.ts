@@ -13,14 +13,18 @@ import * as moment from 'moment';
 })
 export class AuthorizationComponent extends Section {
   @Input('group') form: FormGroup;
+  @Input() submitted: boolean = false;
 
   private options = {
-    authorizationConfirmation: [
-      { label: 'I certify that all the information for this system account is current and correct.', name: 'certifed', value: true },
-    ]
+    authorizationConfirmation: {
+      label: 'I certify that all the information for this system account is current and correct.',
+      name: 'authorization-confirmation',
+      value: true
+    },
   }
 
   private user: User = new User({});
+  private subscriptions = {};
 
   constructor(private api: IAMService) {
     super();
@@ -33,17 +37,64 @@ export class AuthorizationComponent extends Section {
   };
 
   ngOnInit() {
+    const form = this.form,
+          control = form.get('authorizationConfirmation');
+
     this.api.iam.user.get(user => {
       this.user = user;
     });
+
+    this.subscriptions['confirmation'] = control.valueChanges.subscribe(confirmation => {
+      if(!confirmation) {
+        form.get('authorizationDate').patchValue('');
+        form.get('authorizingOfficialName').patchValue('');
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe all subscriptions
+    Object.keys(this.subscriptions).map(key => {
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
+      }
+    });
+  }
+
+  errors(key: string = ''): string {
+    return this.getError(this.form, key, this.submitted);
   }
 
   get name(): string {
-    return this.user.fullName;
+    const form = this.form,
+          control = this.form.get('authorizingOfficialName');
+    let name = '';
+
+    if(form.get('authorizationConfirmation').value) {
+      if(!control.value) {
+        control.patchValue(this.user.fullName);
+      }
+
+      name = control.value;
+    }
+
+    return name;
   }
 
   get date(): string {
-    return moment().format('MMM D, h:mm a');
+    const form = this.form,
+          control = this.form.get('authorizationDate');
+    let date = '';
+
+    if(form.get('authorizationConfirmation').value) {
+      if(!control.value) {
+        control.patchValue(moment());
+      }
+
+      date = moment(control.value).format('MMM D, h:mm a');
+    }
+
+    return date;
   }
 
   get filename(): string {

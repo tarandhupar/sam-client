@@ -108,8 +108,40 @@ let savedSearchServiceStub = {
     }
   });
   },
+  getSavedSearch: ()=> {
+    return Observable.of({
+      "preferenceId": "abcde-12345",
+      "userId": "cfda.test.use.rsrloca@gmail.com",
+      "type": "saved_search",
+      "title": "Test Saved Search",
+      "createdOn": null,
+      "modifiedOn": "2017/09/27T17:43:16+0000",
+      "lastUsageDate": "2017/09/27T17:43:16+0000",
+      "numberOfUsages": 1,
+      "data": {
+        "index": ["cfda"],
+        "key": "test_saved_search",
+        "parameters": {
+          "is_active": true,
+          "beneficiary_type": "10",
+          "assistance_type": "0001001",
+          "organization_id": "100004222"
+        }
+      },
+      "_links": {
+        "self": {
+          "href": "https://gsaiae-dev02.reisys.com/preferences/v1/search/85e220d4-a48e-480f-8fe1-db3cd0bf4625"
+        }
+      }
+    });
+  },
   createSavedSearch: ()=> {
-  return Observable.of("abcd");
+  return Observable.of({
+    _body: "abcd"
+  });
+  },
+  updateSavedSearch: ()=> {
+    return Observable.of();
   }
 };
 
@@ -193,7 +225,7 @@ describe('src/app/search/search.spec.ts', () => {
            {provide: SearchService, useValue: searchServiceStub},
            {provide: SavedSearchService, useValue: savedSearchServiceStub},
            {provide: FHService, useValue: fhServiceStub},
-           {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': '1', 'index': 'cfda', 'keywords': 'education', 'assistance_type': '0001001'}])}
+           {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': '1', 'index': 'cfda', 'keywords': 'education', 'assistance_type': '0001001', 'preference_id': 'abcde-12345'}])}}
          ]
       }
     }).compileComponents();
@@ -302,7 +334,7 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.assistanceTypeFilterModel = "0001001";
     Cookies.set('iPlanetDirectoryPro', 'anything');
-    fixture.componentInstance.saveSearch(null);
+    fixture.componentInstance.saveNewSearch(null);
 
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.handleAction()).toHaveBeenCalled();
@@ -313,19 +345,40 @@ describe('src/app/search/search.spec.ts', () => {
     });
   });
 
-  it('SearchPage: should save a search', () => {
+  it('SearchPage: should save a new search', () => {
     fixture.componentInstance.index = "cfda";
     fixture.componentInstance.keywords = "education";
     fixture.componentInstance.assistanceTypeFilterModel = "0001001";
     fixture.savedSearchName = "Test save search";
     Cookies.set('iPlanetDirectoryPro', 'anything');
     fixture.detectChanges();
-    fixture.componentInstance.saveSearch(null);
+
+    fixture.componentInstance.saveNewSearch(null);
 
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.modal1.closeModal()).toHaveBeenCalledTimes(1);
       expect(fixture.componentInstance.showSavedSearches).toBe(true);
       expect(fixture.componentInstance.searchName).toBe("Test save search");
+      expect(fixture.componentInstance.preferenceId).toBe("abcd");
+      expect(fixture.componentInstance.actions.length).toBe(2);
+    });
+  });
+
+  it('SearchPage: should save same search', () => {
+    fixture.componentInstance.index = "cfda";
+    fixture.componentInstance.keywords = "education";
+    fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+    Cookies.set('iPlanetDirectoryPro', 'anything');
+    fixture.detectChanges();
+
+    fixture.componentInstance.handleAction({ name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback });
+
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.preferenceId).toBe("abcde-12345");
+      expect(fixture.componentInstance.saveSearch()).toHaveBeenCalled();
+      expect(fixture.componentInstance.searchName).toBe("Test Saved Search");
+      expect(fixture.componentInstance.actions.length).toBe(2);
+      expect(fixture.componentInstance.savedSearch['numberOfUsages']).toBe(1);
     });
   });
 

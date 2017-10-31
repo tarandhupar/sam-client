@@ -161,13 +161,11 @@ const account = {
       request
         .get(endpoint)
         .set(auth)
-        .end(function(error, response) {
+        .then(response => {
           let accounts = response.body || (isAll ? [] : {});
-          if(error) {
-            $error(accounts);
-          } else {
-            $success(accounts);
-          }
+          $success(accounts);
+        }, response => {
+          $error(exceptionHandler(response));
         });
     } else {
       if(isDebug()) {

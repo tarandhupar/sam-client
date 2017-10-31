@@ -1,10 +1,12 @@
-<h4 class="sam-ui header">
-  User Search
-</h4>
-<sam-autocomplete 
-  id="fsd-user-search"
-  name="fsd-user-search"
-  [config]="store.picker"
-  (enterEvent)="search($event)"
-  peoplepicker-autofill>
-</sam-autocomplete>
+<div grid class="equal width relaxed">
+  <div class="column">
+    <h4 class="sam-ui header">User Search</h4>
+    <sam-autocomplete
+      id="fsd-user-search"
+      name="fsd-user-search"
+      [config]="store.picker"
+      (enterEvent)="search($event)"
+      peoplepicker-autofill>
+    </sam-autocomplete>
+  </div>
+</div>

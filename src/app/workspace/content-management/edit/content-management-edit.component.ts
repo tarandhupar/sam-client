@@ -69,7 +69,7 @@ export class HelpContentManagementEditComponent {
 
   dataLoaded:boolean = false;
   mode:string = '';
-  formComplete:boolean = false;
+  activeTab = 0;
   hasUnsavedChanges:boolean = true;
 
   sourceVideoDivClass = 'file-input-div';
@@ -161,12 +161,15 @@ export class HelpContentManagementEditComponent {
 
   onFilesChange(file : File){
 
-    // load video URL
-    this.contentObj['sourceVideoFile']  = file.name;
-    let fileURL = URL.createObjectURL(file);
-    document.querySelector('video').src = fileURL;
-    document.querySelector('video').autoplay = false;
-    document.querySelector('video').pause();
+    // load video URL only if it is a video file
+    if(file.type.startsWith('video')){
+      this.contentObj['sourceVideoFile']  = file.name;
+      let fileURL = URL.createObjectURL(file);
+      document.querySelector('video').src = fileURL;
+      document.querySelector('video').autoplay = false;
+      document.querySelector('video').pause();
+    }
+
   }
 
   onDeselectFile(){
@@ -180,7 +183,7 @@ export class HelpContentManagementEditComponent {
     if(this.validateForm()){
       this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
     }else{
-      this.formComplete = false;
+      this.activeTab = 0;
     }
   }
 
@@ -189,7 +192,7 @@ export class HelpContentManagementEditComponent {
 
       this.contentObj['keywords'] = this.keywords.split(',');
       this.pageTitle = this.contentObj['title'];
-      this.formComplete = true;
+      this.activeTab = 1;
 
       // if(this.validateForm()){
       //   this.contentObj['keywords'] = this.keywords.split(',');
@@ -201,9 +204,10 @@ export class HelpContentManagementEditComponent {
       //   this.editTab.active = true;
       // }
     }else{
-      this.formComplete = false;
+      this.activeTab = 0;
     }
-    document.querySelector('video').pause();
+
+    if(document.querySelector('video')) document.querySelector('video').pause();
   }
 
   getExistingDomainOptions(){
@@ -239,7 +243,7 @@ export class HelpContentManagementEditComponent {
     if(this.validateForm()){
       this.contentObj['keywords'] = this.keywords.split(',');
       this.pageTitle = this.contentObj['title'];
-      this.formComplete = true;
+      this.activeTab = 1;
     }
 
   }
@@ -249,8 +253,12 @@ export class HelpContentManagementEditComponent {
     let sourceVideoValid = this.isSourceVideoValid();
     this.errors['title'] = this.contentObj['title'] === ""?'Title cannot be empty':'';
     this.errors['description'] = this.contentObj['description'] === ""?'Description cannot be empty':'';
-    this.inputFileWrapper.errorMessage = !sourceVideoValid?'Source video cannot be empty':'';
-    this.sourceVideoDivClass = sourceVideoValid?'file-input-div':'file-input-error-div';
+
+    if(this.inputFileWrapper){
+      this.inputFileWrapper.errorMessage = !sourceVideoValid?'Source video cannot be empty':'';
+      this.sourceVideoDivClass = sourceVideoValid?'file-input-div':'file-input-error-div';
+    }
+
     if(this.contentObj['title'] === "" || this.contentObj['description'] === "") return false;
 
     return sourceVideoValid;
@@ -261,7 +269,7 @@ export class HelpContentManagementEditComponent {
   }
 
   isSourceVideoValid(): boolean{
-    return this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '';
+    return (this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '') || this.curSection !== 'video-library';
   }
 
 }

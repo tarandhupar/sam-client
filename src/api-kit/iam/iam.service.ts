@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { Subject, Observable } from 'rxjs';
-// import { Logged } from './declarations/logged.d';
+import { isString, merge, pick, pickBy } from 'lodash';
 
 import { ApiService } from './api';
 
@@ -49,6 +49,12 @@ export interface User {
   accountClaimed: boolean,
 }
 
+interface Alert {
+  type?: 'success' | 'info' | 'warning' | 'error',
+  title?: string,
+  message?: string,
+}
+
 @Injectable()
 export class IAMService {
   private _emitter: Subject<User> = new Subject<User>();
@@ -57,6 +63,11 @@ export class IAMService {
   };
 
   public iam;
+  private _alert: Alert = {
+    type: 'success',
+    title: '',
+    message: '',
+  }
 
   constructor() {
     this.iam = new ApiService().iam;
@@ -69,5 +80,18 @@ export class IAMService {
 
   getUser(): Observable<User> {
     return this._emitter.asObservable();
+  }
+
+  get alert(): Alert {
+    return this._alert;
+  }
+
+  set alert(alert: Alert) {
+    alert = pick(pickBy(alert, isString), Object.keys(this._alert));
+    this._alert = merge({
+      type: 'success',
+      title: '',
+      message: '',
+    }, alert);
   }
 }

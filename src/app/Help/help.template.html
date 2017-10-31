@@ -1,7 +1,8 @@
-<div [class.usa-grid-full]="currentSection!=='overview'" class="p_B-6x help-content relative">
+<div [class.usa-grid-full]="router.url!=='/help/overview'" class="p_B-6x help-content relative">
 
-  <aside class="usa-width-one-fourth p_T-2x" *ngIf="currentSection!=='overview'">
-
+  <sam-breadcrumbs *ngIf="false" [crumbs]="crumbs"></sam-breadcrumbs> 
+   
+  <aside class="usa-width-one-fourth" *ngIf="router.url!=='/help/overview'">
     <div sam-sticky limit=1200 container="help-content">
 
       <div class="sam-ui hidden divider"></div>
@@ -114,13 +115,13 @@
           </div>
         </li>
       </ul>
-
+      
     </div>
-
+    &nbsp;
   </aside>
 
-  <div [class.usa-width-three-fourths]="currentSection!=='overview'">
-    <div [class.usa-width-one-whole]="currentSection!=='overview'">
+  <div [class.usa-width-three-fourths]="router.url!=='/help/overview'">
+    <div [class.usa-width-one-whole]="router.url!=='/help/overview'">
       <!--Content for Sections-->
       <router-outlet></router-outlet>
     </div>

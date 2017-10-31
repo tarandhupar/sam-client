@@ -43,7 +43,10 @@ export class DetailsComponent {
     labels: {
       personalPhone: {
         label: 'Mobile Phone',
-        hint: 'To receive one time passwords as text messages, you must provide a mobile phone number ond carrier.',
+        hint: `
+          To receive one time passwords as text messages, you must provide a mobile phone number and carrier.
+          <div><em>* Standard Text Messaging Rates May Apply</em></div>
+        `,
       }
     },
 
@@ -139,7 +142,19 @@ export class DetailsComponent {
       type: 'error',
       message: '',
       show: false
-    }
+    },
+
+    kba: {
+      type: 'error',
+      message: '',
+      show: false
+    },
+
+    deactivate: {
+      type: 'error',
+      message: '',
+      show: false
+    },
   };
 
   private selected = [];
@@ -565,6 +580,7 @@ export class DetailsComponent {
   question(questionID) {
     const questions = this.store.questions,
           mappings = this.store.indexes;
+
     return questions[mappings[questionID]].question;
   }
 
@@ -606,10 +622,14 @@ export class DetailsComponent {
   }
 
   deactivateAccount(cb) {
+    this.dismiss('deactivate');
+
     this.api.iam.user.deactivate(this.user.email, () => {
       cb();
-    }, () => {
-      //TODO
+    }, error => {
+console.log(error);
+      this.reconfirmModal.closeModal();
+      this.alert('deactivate', error.message);
     });
   }
 
@@ -636,8 +656,8 @@ export class DetailsComponent {
     this.alerts[key].message = '';
   }
 
-  alert(key: string, type?: string, message?: string) {
-    this.alerts[key].type = type || 'success';
+  alert(key: string, message?: string, type: string = 'error') {
+    this.alerts[key].type = type || 'error';
     this.alerts[key].message = message || '';
     this.alerts[key].show = true;
   }
@@ -652,10 +672,6 @@ export class DetailsComponent {
         key,
         intKey,
         intArrayKey;
-
-    if(!controls[key]) {
-      return valid;
-    }
 
     for(intKey = 0; intKey < entries.length; intKey++) {
       entries[intKey].updateState(true);
@@ -752,6 +768,7 @@ export class DetailsComponent {
         keys = mappings[groupKey].split('|'),
         valid = this.isValid(keys);
 
+    this.dismiss(groupKey);
     this.states.submitted = true;
 
     if(this.agencyPicker){
@@ -772,7 +789,7 @@ export class DetailsComponent {
       }, (error) => {
         this.states.edit[groupKey] = true;
         this.states.loading = false;
-        this.alert(groupKey, error.message, 'error');
+        this.alert(groupKey, error.message);
       });
     } else {
       this.states.edit[groupKey] = true;

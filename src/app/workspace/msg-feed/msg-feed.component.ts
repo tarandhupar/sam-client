@@ -41,7 +41,7 @@ export class MsgFeedComponent {
   sortOptionsMap = {
     'requests': [
       {label:'Request Date', name:'Date', value:'reqDate'},
-      {label:'Respond Date', name:'Date', value:'respDate'},
+      {label:'Response Date', name:'Date', value:'respDate'},
     ],
     'notifications': [{label:'Received Date', name:'Date', value:'recDate'}],
   };
@@ -73,10 +73,8 @@ export class MsgFeedComponent {
   };
   msgFeeds = [];
 
-  roleCount;
-  titleChangeCount;
-  numberChangeCount;
-  recievedCount;
+  requestTypeMap:any = {};
+
 
   constructor(private route:ActivatedRoute, private _router:Router, private msgFeedService:MsgFeedService, private capitalPipe: CapitalizePipe, private _sanitizer: DomSanitizer){}
 
@@ -127,6 +125,11 @@ export class MsgFeedComponent {
     this.loadFeeds(this.getTypeIdStr(this.filterObj), this.filterObj, this.sortByModel, this.curPage+1);
   }
 
+  /* Link to correct page by clicking on the feed item*/
+  onFeedItemClick(feed){
+    if(feed['link'])this._router.navigateByUrl(feed['link']);
+  }
+
   /* search message feeds with filter, sortby, page number*/
   loadFeeds(typeId, filterObj, sortBy, page){
 
@@ -135,10 +138,8 @@ export class MsgFeedComponent {
       if(filterObj.section === "requests"){
         this.msgFeeds = data['requestFeeds'];
         this.totalRecords = data['totalRecords'];
-        this.recievedCount = data['recievedCount'];
-        this.roleCount = data['roleCount'];
-        this.numberChangeCount = data['numberChangeCount'];
-        this.titleChangeCount = data['titleChangeCount'];
+        this.requestTypeMap = data['requestTypeMap'];
+
       } else if(filterObj.section === 'notifications'){
         this.msgFeeds = data['notificationFeeds'];
         this.totalRecords = data['notificationCount'];
@@ -188,13 +189,13 @@ export class MsgFeedComponent {
   }
 
   transformDateStr(dateStr):string{
-    let date = moment(dateStr).utc().format('MMM DD YYYY hh:mmA');
-    let now = moment().utc().format('MMM DD YYYY');
-    if(moment(dateStr).utc().isSame(now,'year')){
-      if(moment(dateStr).utc().isSame(now,'month') && moment(dateStr).utc().isSame(now,'day')){
-        return moment(dateStr).utc().format('hh:mmA');
+    let date = moment(dateStr).format('MMM DD YYYY hh:mmA');
+    let now = moment().format('YYYY-MM-DD');
+    if(moment(dateStr).isSame(now,'year')){
+      if(moment(dateStr).isSame(now,'month') && moment(dateStr).isSame(now,'day')){
+        return moment(dateStr).format('hh:mmA');
       }
-      return moment(dateStr).utc().format('MMM DD hh:mmA');
+      return moment(dateStr).format('MMM DD hh:mmA');
     }
     return date;
   }

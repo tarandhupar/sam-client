@@ -178,7 +178,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   updateViewModelRelatedPrograms(rpListDisplay) {
     let relatedPrograms = [];
-    if (rpListDisplay.length > 0) {
+    if (rpListDisplay && rpListDisplay.length > 0) {
       for (let rp of rpListDisplay) {
         relatedPrograms.push(rp.code);
       }

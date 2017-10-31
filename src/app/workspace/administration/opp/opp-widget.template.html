@@ -1,0 +1,46 @@
+<ng-container *ngIf="!isEmpty(permissions)">
+    <div grid class="equal width relaxed" >
+        <div class="column">
+            <div class="sam-ui divided selection list">
+                <ng-container>
+                    <a *ngIf="oppCounts.active" class="item" 
+                        [routerLink]="['/opp/workspace']" 
+                        [queryParams]="{status: 'published'}">
+                            <div class="sam-ui blue horizontal mini label">{{oppCounts.active}}</div>
+                            My Active Opportunities
+                    </a>
+                    <a class="item disabled" *ngIf="!oppCounts.active || oppCounts.active === 0">
+                            <div class="sam-ui horizontal mini label">0</div>
+                            My Active Opportunities
+                    </a>
+                </ng-container>
+                <ng-container>
+                    <a *ngIf="oppCounts.draft" class="item" 
+                        [routerLink]="['/opp/workspace']" 
+                        [queryParams]="{status: 'draft'}">
+                            <div class="sam-ui horizontal mini label">{{oppCounts.draft}}</div>
+                            My Draft Opportunities
+                    </a>
+                    <a class="item disabled" *ngIf="!oppCounts.draft || oppCounts.draft === 0">
+                            <div class="sam-ui horizontal mini label">0</div>
+                            My Draft Opportunities
+                    </a>
+                </ng-container>
+            </div>
+        </div>
+        <div class="column">    
+            <div class="sam-ui divided selection relaxed list">
+                <a
+                    class="item" 
+                    [routerLink]="['/opp/add']">
+                    <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+                    Create a New Opportunity
+                </a>
+            </div>
+        </div>
+        <div class="column">
+            <opp-pie-chart #pieChart [deadlineStatusData]='chartCounts'></opp-pie-chart>
+        </div>
+        
+    </div>
+</ng-container>

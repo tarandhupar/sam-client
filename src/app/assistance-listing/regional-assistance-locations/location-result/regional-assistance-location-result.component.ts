@@ -68,7 +68,7 @@ export class RegionalAssistanceLocationResult implements OnInit {
         {label: "Delete", value:"Delete", name:"Delete"}
       ]
     },
-    defaultOption: "Choose An Action"
+    defaultOption: "Choose an Action"
 
   };
   

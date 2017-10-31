@@ -8,13 +8,14 @@ import { OppComponentsModule } from '../components/index';
 import { OpportunityFormComponent } from './framework/form-component/opportunity-form.component';
 import { OpportunityFormService } from './framework/service/opportunity-form/opportunity-form.service';
 import { OpportunitySideNavService } from './framework/service/sidenav/opportunity-form-sidenav.service';
+import { OppNoticeTypeFieldService } from './framework/service/notice-type-field-map/notice-type-field-map.service';
 import { OpportunityFormResolver } from './opportunity-form-resolver.service';
 import { OpportunityFormRoutes } from './opportunity-form.route';
 import { OpportunityHeaderInfoComponent } from './sections/header-information/opp-form-header-info.component';
 import { OpportunityGeneralInfoComponent } from './sections/general-information/general-information.component';
 import { OpportunityDescriptionComponent } from "./sections/description/description.component";
 import { OpportunityContactInfoComponent } from './sections/contact-information/opp-form-contact-info.component';
-import {OpportunityClassificationComponent} from "./sections/classification/opp-form-classification.component";
+import { OpportunityClassificationComponent } from "./sections/classification/opp-form-classification.component";
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import {OpportunityClassificationComponent} from "./sections/classification/opp-
   providers: [
     OpportunityFormService,
     OpportunityFormResolver,
-    OpportunitySideNavService
+    OpportunitySideNavService,
+    OppNoticeTypeFieldService
   ],
   exports: [
 

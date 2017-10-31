@@ -38,59 +38,82 @@
   </div>
 </div>
 
-<div class="sam-ui section divider"></div>
+<div class="sam-ui hidden divider"></div>
 
 <!-- Main Content -->
-<div class="sam-ui container">
-  <div class="sam-ui vertically padded stackable grid">
+<div class="sam-ui padded grid">
+  <div class="row" style="background-color:#f4f5f9;">
     <div class="twelve wide column">
-      <div class="sam-ui three column stackable grid">
-        <div class="column">
-          <h2 class="sam-ui header">
-            <i class="fa fa-flag" aria-hidden="true" style="color: #e21c3d;"></i>
-            SAM is FREE
-          </h2>
-          <ul class="sam-ui bulleted list">
-            <li>100% Free to Use</li>
-            <li>Free to Search</li>
-            <li>Free to Run Reports</li>
-            <li>Free to Register</li>
-          </ul>
-        </div>
-        <div class="column">
-          <h2 class="sam-ui header">
-            <img alt="Award Data" src="src/assets/img/sam-icons/award-data-gray.png" style="padding-right: 5px; width: 40px; vertical-align: middle;">
-            Award Data
-          </h2>
-          <p>
-            Gain access to data in a variety of formats. Perform searches,
-            download extracts, and retrieve data through web services.
-          </p>
-          <a [routerLink]="['/help/award']">Learn more about beta.SAM.gov data sets</a>
-        </div>
-        <div class="column">
-          <h2 class="sam-ui header">
-            <img alt="Quick Start Guides" src="src/assets/img/sam-icons/guide-gray.png" style="padding-right: 5px; width: 40px; vertical-align: middle;">
-            Quick Start Guides
-          </h2>
-          <p>
-            If you've used one of the following systems, click below to learn
-            how to do the same things in beta.SAM.gov.
-          </p>
-          <div class="sam-ui two column grid">
-            <div class="column">
-              <ul class="sam-ui bulleted list">
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-WDOL2.pdf" target="WDOL">WDOL</a></li>
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-FPDS.pdf" target="FPDS">FPDS</a></li>
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-SAM.pdf" target="SAM">SAM</a></li>
-              </ul>
-            </div>
-            <div class="column">
-              <ul class="sam-ui bulleted list">
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-CFDA.pdf" target="CFDA">CFDA</a></li>
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-FBO.pdf" target="FBO">FBO</a></li>
-                <li><a href="https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_FederalHierarchy-Guide.pdf" target="Federal Hierarchy">Federal Hierarchy</a></li>
-              </ul>
+      <div class="sam-ui container">
+        <div class="sam-ui vertically very padded stackable grid">
+          <div class="twelve wide column">
+            <div class="sam-ui two column stackable grid">
+              <div class="column">
+                <h2 class="sam-ui header">
+                  <i class="fa fa-flag" aria-hidden="true" style="color: #e21c3d;"></i>
+                  SAM is FREE
+                </h2>
+                <p>
+                  Gain access to data in a variety of formats. Perform searches,
+                  download extracts.
+                </p>
+                <ul class="sam-ui bulleted list">
+                  <li><strong>100% Free to Use</strong></li>
+                  <li><strong>Free to Search</strong></li>
+                  <li><strong>Free to Run Reports</strong></li>
+                  <li><strong>Free to Register</strong></li>
+                </ul>
+              </div>
+              <div class="column">
+                <h2 class="sam-ui header">
+                  Award Domains
+                </h2>
+                <p>
+                  Different types of award data, or "domains", make up the heart of SAM.
+                  If you are coming from one of our legacy websites, click on the related 
+                  link below to learn how to use those same features here.
+                </p>
+                <div class="sam-ui two column grid">
+                  <div class="column">
+                    <ul class="sam-ui bulleted list">
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="assistanceListings">
+                          Assistance Listings (CFDA)
+                        </a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="opportunities">
+                          Contract Opportunities (FBO)
+                        </a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="awards">
+                          Contract Data (FPDS)
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="column">
+                    <ul class="sam-ui bulleted list">      
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="entities">
+                          Entity Information (SAM)
+                        </a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="federalHierarchy">
+                          Federal Hierarchy
+                        </a>
+                      </li>
+                      <li>
+                        <a [routerLink]="['help/award']" fragment="wageDeterminations">
+                          Wage Determinations (WDOL)
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -98,8 +121,6 @@
     </div>
   </div>
 </div>
-
-<div class="sam-ui hidden divider"></div>
 
 <div class="sam-ui padded grid">
   <div class="dark blue row">

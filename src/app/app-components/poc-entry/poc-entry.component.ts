@@ -39,11 +39,13 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     @Input() listBuilder;
     @Input() label;
     @Input() showAddress: boolean = true;
+    @Input() name: string = ''; // ids
     @Output() action = new EventEmitter();
 
     acSelection;
     disabledFlag: boolean;
     cachedData;
+    populationFlag: boolean = false;
 
     locationConfig = {
         keyValueConfig: {
@@ -65,6 +67,10 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef){ }
 
     ngOnInit(){
+        if(!this.name){
+            console.error("a name input is required for 508 compliance in this component");
+            return;
+        }
         let controlsConfig = {
           contactId: ["new"],
           title: [""],
@@ -122,6 +128,49 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
         //}
     }
 
+    nameSelection(entry){
+        if(this.populationFlag || !entry || !this.pocOptions || (this.pocEntryGroup.value.fullName 
+            && this.pocEntryGroup.value.fullName.key
+            && this.pocEntryGroup.value.fullName.key == entry.key)){
+            return;
+        }
+        let selected;
+        selected = this.pocOptions.find((val)=>{
+            if(val.fullName.key==entry.value){
+                return true;
+            }  
+        });
+        if(selected){
+            selected = Object.assign({},selected);
+            delete selected.fullName;
+            this.populateFields(selected);
+        }
+    }
+
+    emailSelection(entry){
+        if(this.populationFlag || !entry || !this.pocOptions || (this.pocEntryGroup.value.email
+            && this.pocEntryGroup.value.email.key
+            && this.pocEntryGroup.value.email.key == entry.key)){
+            return;
+        }
+        let selected;
+        selected = this.pocOptions.find((val)=>{
+            if(val.email.key==entry.value){
+                return true;
+            }  
+        });
+        if(selected){
+            selected = Object.assign({},selected);
+            delete selected.email;
+            this.populateFields(selected);
+        }
+    }
+
+    populateFields(poc){
+        this.populationFlag = true;
+        this.pocEntryGroup.patchValue(poc,{onlySelf:true,emitEvent:false});
+        this.populationFlag = false;
+    }
 
     //control value accessor methods
     onChange: any = () => { };

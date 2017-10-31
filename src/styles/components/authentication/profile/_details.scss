@@ -18,6 +18,7 @@
   }
 
   section {
+    position: relative;
     margin-bottom: 4rem;
 
     // Editable Inputs
@@ -115,11 +116,22 @@
     margin-top: 1em;
   }
 
-  .usa-button-controls {
-    sam-alert {
-      top: 50%;
-      left: 100px;
-      transform: translateY(-50%);
+  section {
+    > sam-alert {
+      bottom: -34px;
+      left: 200px;
+    }
+  }
+
+  #deactivate {
+    .usa-button-controls {
+      text-align: left;
+
+      sam-alert {
+        top: 50%;
+        left: 200px;
+        transform: translateY(-50%);
+      }
     }
   }
 }

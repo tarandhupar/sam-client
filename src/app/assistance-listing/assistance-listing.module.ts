@@ -35,6 +35,7 @@ import {RequestTypeLabelPipe} from "./pipes/request-type-label.pipe";
 import {FormatFederalHierarchyType} from "./pipes/format-federal-hierarchy-type.pipe";
 import {CfdaNumbersPage} from "./assistance-listing-workspace/cfda-numbers/cfda-numbers.page";
 import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda-number-management/fal-form-cfda-number-management.component";
+import {StatusPipe} from "./pipes/status.pipe";
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda
     AssistanceProgramResult,
     AccessRestrictedPage,
     ActionHistoryPipe,
-    FormatFederalHierarchyType
+    FormatFederalHierarchyType,
+    StatusPipe
   ],
   declarations: [
     AuthorizationPipe,
@@ -84,7 +86,8 @@ import {CFDANumberManagementComponent} from "./assistance-listing-workspace/cfda
     FALPublishComponent,
     FormatFederalHierarchyType,
     CfdaNumbersPage,
-    CFDANumberManagementComponent
+    CFDANumberManagementComponent,
+    StatusPipe
   ],
   providers: [
     FALFormErrorService,

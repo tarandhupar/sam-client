@@ -32,15 +32,17 @@ export class FALErrorDisplayComponent implements OnChanges {
     this.validationErrors = validationErrors;
     this.numErrors = 0;
     this.processErrors(this.validationErrors);
+    this.emitErrors();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     this.numErrors = 0;
     this.processErrors(this.validationErrors);
+    this.emitErrors();
   }
 
   // do any required processing here (recursive traversal)
-  private processErrors(validationErrors: FieldError | FieldErrorList) {
+  private processErrors(validationErrors: FieldError | FieldErrorList): void {
     // base case
     if (isFieldError(validationErrors)) {
       if (validationErrors.errors) {
@@ -54,6 +56,9 @@ export class FALErrorDisplayComponent implements OnChanges {
         this.processErrors(error);
       }
     }
+  }
+
+  private emitErrors(): void {
     if(this.numErrors > 0){
       this.message.emit('You must resolve ' + this.numErrors + ' issue(s) to submit the form');
     } else {

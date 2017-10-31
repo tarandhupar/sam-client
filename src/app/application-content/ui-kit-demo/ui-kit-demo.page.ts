@@ -866,4 +866,16 @@ export class UIKitDemoPage {
   private howdy;
   private howdydo;
   private howdydody;
+
+  private selectedPSC1;
+  private selectedPSC2;
+
+  private multiSelectedPSC1;
+  private multiSelectedPSC2;
+
+  private selectedNAICS1;
+  private selectedNAICS2;
+
+  private multiSelectedNAICS1;
+  private multiSelectedNAICS2;
 }

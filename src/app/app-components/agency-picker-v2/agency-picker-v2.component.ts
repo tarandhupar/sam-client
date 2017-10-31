@@ -71,6 +71,11 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
      */
     @Input() hasFpds: boolean = false;
 
+    /**
+     * Flag to show/hide inactive offices in advanced dropdown
+     */
+    @Input() activeOnly: boolean = true;
+
     orgLimit: number = 7;
     orgLevels: any[] = [];
 
@@ -193,6 +198,8 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 this.wrapper.formatErrors(this.control);
             });
         }
+      this.serviceOptions['activeOnly'] = this.activeOnly;
+      this.singleACConfig['activeOnly'] = this.activeOnly;
     }
 
     ngAfterViewInit(){
@@ -208,12 +215,13 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
 
     updateAdvanced(lvl,selection){
         if(selection){
+          let ctx = this;
             this.serviceCall(selection, true, this.hasFpds).subscribe(oData => {
                 //filter and sort if too many results
                 oData = oData._embedded[0].org;
                 oData["hierarchy"] = oData["hierarchy"]
-                .filter(this._filterActiveOrgs)
-                .sort(this._nameOrgSort);
+                  .filter(this.activeOnly? this._filterActiveOrgs : this._validOrgs)
+                  .sort(this._nameOrgSort);
 
                 if(oData["hierarchy"].length > this.dropdownLimit) {
                     oData["hierarchy"].length = this.dropdownLimit;
@@ -318,11 +326,17 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
 
     formatHierarchy(data) {
         return data.map((el,idx)=>{
-            let level = el["org"]["level"];
-            el["org"]["value"] = el["org"]["orgKey"];
-            el["org"]["label"] = this.fhTitleCasePipe.transform(el["org"]["name"]);
-            el["org"]["name"] = this.fhTitleCasePipe.transform(el["org"]["name"]);
-            return el["org"];
+            let org = el['org'];
+            org["value"] = org["orgKey"];
+            if(this.hasFpds){
+                let fpdsCode = org['fpdsCode'] || org['fpdsOrgId'] || 'N/A';
+                let department = org['type'] ? org['type'].charAt(0) : 'N/A';
+                org["label"] = this.fhTitleCasePipe.transform(org["name"]) + ' [' + department + '] [' + fpdsCode +']';;
+            } else {
+                org["label"] = this.fhTitleCasePipe.transform(org["name"]);
+            }
+            org["name"] = this.fhTitleCasePipe.transform(org["name"]);
+            return org;
         });
     }
 
@@ -340,6 +354,12 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             return false;
         return true;
     }
+
+    _validOrgs(org) {
+        if(!org["org"]['name'])
+            return false;
+        return true;
+        }
 
     //ControlValueAccessor methods
     setDisabledState(disabled) {

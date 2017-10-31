@@ -302,9 +302,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
         if (report.isSelected) {
           model.checkbox.push(report.code);
         }
-        if (report.description) {
-          model.textarea.push(report.description);
-        }
+        model.textarea.push(report.description || '');
       }
     }
 

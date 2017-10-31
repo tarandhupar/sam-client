@@ -1,12 +1,12 @@
-<div grid [formGroup]="form">
+<div grid [formGroup]="form" *ngIf="user">
   <div row>
     <div columns="10">
       <div [ngSwitch]="section" *ngIf="form">
-        <system-information *ngSwitchCase="'system-information'" [group]="form.get('system-information')"></system-information>
-        <organization *ngSwitchCase="'organization'" [group]="form.get('organization')"></organization>
-        <permissions *ngSwitchCase="'permissions'" [group]="form.get('permissions')"></permissions>
-        <security  *ngSwitchCase="'security'" [group]="form.get('security')"></security>
-        <authorization  *ngSwitchCase="'authorization'" [group]="form.get('authorization')"></authorization>
+        <system-information *ngSwitchCase="'system-information'" [group]="form.get('system-information')" [submitted]="submitted"></system-information>
+        <organization *ngSwitchCase="'organization'" [user]="user" [group]="form.get('organization')" [submitted]="submitted"></organization>
+        <permissions *ngSwitchCase="'permissions'" [group]="form.get('permissions')" [submitted]="submitted"></permissions>
+        <security  *ngSwitchCase="'security'" [group]="form.get('security')" [submitted]="submitted"></security>
+        <authorization  *ngSwitchCase="'authorization'" [group]="form.get('authorization')" [submitted]="submitted"></authorization>
       </div>
     </div>
   </div>

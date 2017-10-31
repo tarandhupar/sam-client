@@ -66,12 +66,12 @@ export class FALObligationSubFormComponent {
     name: 'checkbox-recReinveCheckbox'
   };
   // Past Fiscal Year - 2015
-  pastFiscalYearModel: {radioOptionId: '', textBoxValue: ''}
+  pastFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   pastFiscalYearConfig = {
     options: [
-      {value: 'pFYActual', label: 'Actual', name: 'radio-pFY', flag: 'number'},
-      {value: 'pFYNsi', label: 'Not Separately Identifiable', name: 'radio-pFY', flag: 'text'},
-      {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY', flag: 'text'}
+      {value: 'pFYActual', label: 'Actual', name: 'radio-pFY-actual', flag: 'number'},
+      {value: 'pFYNsi', label: 'Not Separately Identifiable', name: 'radio-pFY-nsi', flag: 'text'},
+      {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY-na', flag: 'text'}
     ],
     name: 'Past Fiscal year - 2016',
     id: FALFieldNames.PAST_FISCAL_YEAR,
@@ -80,12 +80,12 @@ export class FALObligationSubFormComponent {
     hint: ''
   };
   // Past Fiscal Year - 2016
-  currentFiscalYearModel: {radioOptionId: '', textBoxValue: ''}
+  currentFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   currentFiscalYearConfig = {
     options: [
-      {value: 'cFYEstimate', label: 'Estimate', name: 'radio-cFY', flag: 'number'},
-      {value: 'cFYNsi', label: 'Not Separately Identifiable', name: 'radio-cFY', flag: 'text'},
-      {value: 'cFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-cFY', flag: 'text'}
+      {value: 'cFYEstimate', label: 'Estimate', name: 'radio-cFY-actual', flag: 'number'},
+      {value: 'cFYNsi', label: 'Not Separately Identifiable', name: 'radio-cFY-nsi', flag: 'text'},
+      {value: 'cFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-cFY-na', flag: 'text'}
     ],
     name: 'Current Fiscal year - 2016',
     id: FALFieldNames.CURRENT_FISCAL_YEAR,
@@ -94,12 +94,12 @@ export class FALObligationSubFormComponent {
     hint: ''
   };
   // Budget Fiscal Year - 2017
-  budgetFiscalYearModel: {radioOptionId: '', textBoxValue: ''}
+  budgetFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   budgetFiscalYearConfig = {
     options: [
-      {value: 'bFYEstimate', label: 'Estimate', name: 'radio-bFY', flag: 'number'},
-      {value: 'bFYNsi', label: 'Not Separately Identifiable', name: 'radio-bFY', flag: 'text'},
-      {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY', flag: 'text'}
+      {value: 'bFYEstimate', label: 'Estimate', name: 'radio-bFY-actual', flag: 'number'},
+      {value: 'bFYNsi', label: 'Not Separately Identifiable', name: 'radio-bFY-nsi', flag: 'text'},
+      {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY-na', flag: 'text'}
     ],
     name: 'Budget Fiscal year - 2016',
     id: FALFieldNames.BUDGET_FISCAL_YEAR,
@@ -161,9 +161,9 @@ export class FALObligationSubFormComponent {
     if (obligation['values']) {
       for (let value of obligation['values']) {
         if (value['year'].toString() === currentFY.toString()) {
-          if (value['estimate']) {
+          if (value['estimate'] !== null && value['estimate'] >= 0) {
             current = 'cFYEstimate';
-            currentText = value['estimate'];
+            currentText = value['estimate'].toString();
           } else if (value['flag'] === 'nsi') {
             current = 'cFYNsi';
             currentText = value['explanation'];
@@ -173,9 +173,9 @@ export class FALObligationSubFormComponent {
           }
           pyValues.push(value);
         } else if (value['year'].toString() === nextFY.toString()) {
-          if (value['estimate']) {
+          if (value['estimate'] !== null && value['estimate'] >= 0) {
             budget = 'bFYEstimate';
-            budgetText = value['estimate'];
+            budgetText = value['estimate'].toString();
           } else if (value['flag'] === 'nsi') {
             budget = 'bFYNsi';
             budgetText = value['explanation'];
@@ -184,12 +184,12 @@ export class FALObligationSubFormComponent {
             budgetText = value['explanation'];
           }
         } else if (value['year'].toString() === prevFY.toString()) {
-          if ((value['actual'] && value['estimate']) || value['actual']) {
+          if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
             past = 'pFYActual';
-            pastText = value['actual'];
-          } else if (value['estimate']) {
+            pastText = value['actual'].toString();
+          } else if (value['estimate'] !== null && value['estimate'] >= 0) {
             past = 'pFYActual';
-            pastText = value['estimate'];
+            pastText = value['estimate'].toString();
           } else if (value['flag'] === 'nsi') {
             past = 'pFYNsi';
             pastText = value['explanation'];

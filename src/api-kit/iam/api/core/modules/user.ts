@@ -104,7 +104,7 @@ const password = {
         if(!err) {
           $success(response.body);
         } else {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         }
       });
   },
@@ -133,7 +133,7 @@ const password = {
 
           $success(data.token, data.question);
         } else {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         }
       });
   },
@@ -162,7 +162,7 @@ const password = {
         if(!err) {
           $success(data.status, data.token, data.question, data.message);
         } else {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         }
       });
   },
@@ -185,7 +185,7 @@ const password = {
         if(!err) {
           $success(response.body);
         } else {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         }
       });
   },
@@ -211,7 +211,7 @@ const password = {
           if(!err) {
             $success(response.body);
           } else {
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           }
         });
     } else {
@@ -249,7 +249,7 @@ export const user = {
             $success($user);
           }, response => {
             core.$base.removeSession();
-            $error(exceptionHandler(response.body));
+            $error(exceptionHandler(response));
           });
       }
     } else {
@@ -296,7 +296,7 @@ export const user = {
         let token;
 
         if(err) {
-          $error(exceptionHandler(response.body || {}));
+          $error(exceptionHandler(response || {}));
         } else {
           token = response.body.tokenId;
 
@@ -359,10 +359,10 @@ export const user = {
         .then(function(response) {
           $success(response);
         }, function(response) {
-          $error(exceptionHandler(response.body));
+          $error(exceptionHandler(response));
         });
     } else {
-      $error({ message: 'Please sign in' });
+      $error(exceptionHandler({ message: 'Please sign in' }));
     }
   },
 
@@ -388,7 +388,7 @@ export const user = {
       return this.states.fsd;
     } else {
       const user = new User(User.getCache() || {});
-      return this.isSignedIn() && user['fsd'] ? true : false;
+      return this.isSignedIn() && user.fsd ? true : false;
     }
   },
 
@@ -397,7 +397,7 @@ export const user = {
       return this.states.system;
     } else {
       const user = new User(User.getCache() || {});
-      return this.isSignedIn() && user['systemAccount'] ? true : false;
+      return this.isSignedIn() && user.systemAccount ? true : false;
     }
   }
 };

@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ProgramService } from './program.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
-xdescribe('src/api-kit/program/program.service.spec.ts', () => {
+describe('src/api-kit/program/program.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -56,6 +56,27 @@ xdescribe('src/api-kit/program/program.service.spec.ts', () => {
     testService.isProgramNumberUnique('93.869', 'b0b3ad4c60f3451b88b34471ff71c42a',  '').subscribe((res: Response) => {
       expect(res).toBeDefined();
       expect(res['content']['isProgramNumberUnique']).toBe(true);
+    });
+  }));
+
+  it('Program Service: should return response when subscribed to isCfdaCodeRestricted', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
+    backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: {
+      "content": {
+          "organizationId": "100171765",
+          "cfdaCode": "45",
+          "isRestricted": true
+        },
+        "_links": {
+          "self": {
+            "href": "/fac/v1/programs/federalHierarchyConfigurations/100171765/isCfdaCodeRestricted"
+          }
+        }
+      }
+    }))));
+
+    testService.isCfdaCodeRestricted('100171765', 'b0b3ad4c60f3451b88b34471ff71c42a').subscribe((res: Response) => {
+      expect(res).toBeDefined();
+      expect(res['content']['isRestricted']).toBe(true);
     });
   }));
 

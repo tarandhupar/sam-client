@@ -1044,7 +1044,12 @@ export class FALFormErrorService {
           startDateM = moment(deadlineItem.start);
           if(!startDateM.isValid() || deadlineItem.start == "Invalid date") {
             deadlineError.errors['startDateError'] = {
-              message: 'Deadlines: Row ' + (i + 1) + ' Invalid from date'
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid From date'
+            };
+          }
+          else if (startDateM.get('year') < 1000) {
+            deadlineError.errors['startDateError'] = {
+              message: 'Deadlines: Row ' + (i + 1) + ' Please enter 4 digit year in From date'
             };
           }
         }
@@ -1053,11 +1058,16 @@ export class FALFormErrorService {
           endDateM = moment(deadlineItem.end);
           if(!endDateM.isValid() || deadlineItem.end == "Invalid date") {
             deadlineError.errors['endDateError'] = {
-              message: 'Deadlines: Row ' + (i + 1) + ' Invalid to date'
+              message: 'Deadlines: Row ' + (i + 1) + ' Invalid To date'
+            };
+          }
+          else if (endDateM.get('year') < 1000) {
+            deadlineError.errors['endDateError'] = {
+              message: 'Deadlines: Row ' + (i + 1) + ' Please enter 4 digit year in To date'
             };
           }
 
-          if(endDateM.isValid() && startDateM.isValid() && startDateM.get('year') > 1000 && endDateM.get('year') > 1000 && endDateM.diff(startDateM) < 0) {
+          if(endDateM.isValid() && startDateM.isValid() && startDateM.get('year') >= 1000 && endDateM.get('year') >= 1000 && endDateM.diff(startDateM) < 0) {
             deadlineError.errors['dateRangeError'] = {
               message: 'Deadlines: Row ' + (i + 1) + ' Invalid date range'
             };

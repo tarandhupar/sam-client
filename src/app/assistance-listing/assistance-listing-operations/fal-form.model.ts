@@ -91,6 +91,13 @@ export class FALFormViewModel {
     return this._programId == null || typeof this._programId === 'undefined';
   }
 
+  get status(){
+    return this._fal.status;
+  }
+  get _links(){
+    return this._fal._links;
+  }
+
   get isRevision() {
     return this._fal.revision === true;
   }

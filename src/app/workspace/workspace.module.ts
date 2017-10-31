@@ -22,6 +22,7 @@ import {
   SystemGuard,
   SystemComponent,
   SystemDirectoryComponent,
+  SystemListingComponent,
   SystemCreateComponents,
   SystemProfileComponent,
   SystemPasswordComponent,
@@ -35,6 +36,8 @@ import {
   ProfileWidgetComponent,
   RMWidgetComponent,
   SystemWidgetComponent,
+  OppWidgetComponent,
+  OppPieChartComponent,
 } from "./administration";
 
 import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
@@ -79,6 +82,8 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
     ProfileWidgetComponent,
     RMWidgetComponent,
     SystemWidgetComponent,
+    OppWidgetComponent,
+    OppPieChartComponent,
 
     AssistanceListingWidgetComponent,
 
@@ -94,6 +99,7 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
      */
     SystemComponent,
     SystemDirectoryComponent,
+    SystemListingComponent,
     SystemCreateComponents,
     SystemProfileComponent,
     SystemPasswordComponent,

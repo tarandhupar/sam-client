@@ -118,6 +118,31 @@ describe('Opportunity Header Info Form', () => {
           code: 'o',
           elementId: 'o',
           value: 'Solicitation',
+        },
+        {
+          "elementId": "p",
+          "code": "p",
+          "value": "Presolicitation"
+        },
+        {
+          "elementId": "k",
+          "code": "k",
+          "value": "Combined Synopsis/Solicitation",
+        },
+        {
+          "elementId": "r",
+          "code": "r",
+          "value": "Sources Sought",
+        },
+        {
+          "elementId": "g",
+          "code": "g",
+          "value": "Sale of Surplus Property",
+        },
+        {
+          "elementId": "s",
+          "code": "s",
+          "value": "Special Notice"
         }
       ]
     }));
@@ -125,6 +150,12 @@ describe('Opportunity Header Info Form', () => {
     comp['loadTypeOptions']();
     tick();
     expect(comp.oppTypeConfig.options.length).toBeGreaterThan(0);
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 'o', label: 'Solicitation'}));
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 'p', label: 'Presolicitation'}));
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 'k', label: 'Combined Synopsis/Solicitation'}));
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 'r', label: 'Sources Sought'}));
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 'g', label: 'Sale of Surplus Property'}));
+    expect(comp.oppTypeConfig.options).toContain(jasmine.objectContaining({value: 's', label: 'Special Notice'}));
   }));
 
   it('should save office', fakeAsync(() => {
@@ -146,7 +177,7 @@ describe('Opportunity Header Info Form', () => {
     comp['saveOpportunityType'](type);
     expect(comp.oppHeaderInfoViewModel.opportunityType).toEqual(type);
   }));
-
+  
   it('should save procurementId', fakeAsync(() => {
     let id = 'testId';
     comp['saveProcurementId'](id);

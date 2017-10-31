@@ -2,9 +2,10 @@
 <!-- City -->
 <ng-container *ngIf="_cityConfig">
   <sam-autocomplete [ngModel]="city"
-                    city [stateVal] = "state"
-                    city [countyVal] = "county"
-                    city [countryVal] = "country"
+                    city [zipValCity] = "zip"
+                         [stateValCity] = "state"
+                         [countyValCity] = "county"
+                         [countryValCity] = "country"
                     (ngModelChange)="store.dispatch({ type:'CITY_CHANGE', value: $event })"
                     [name]="cityConfig.name"
                     [id]="cityConfig.id"
@@ -13,15 +14,17 @@
                     [config]="cityConfig.config"
                     [control]="cityConfig.control"
                     [required]="cityConfig.required"
-                    [disabled]="cityConfig.disabled">
+                    [disabled]="cityConfig.disabled"
+                    [errorMessage]="error.city">
   </sam-autocomplete>
   <!--<div>{{location.city | json}}</div>-->
 </ng-container>
 <!-- County -->
 <ng-container *ngIf="_countyConfig">
   <sam-autocomplete [ngModel]="county"
-                    county [stateVal] = "state"
-                    county [cityVal] = "city"
+                    county [stateValCounty] = "state"
+                           [cityValCounty] = "city"
+                           [zipValCounty] = "zip"
                     (ngModelChange)="store.dispatch({ type: 'COUNTY_CHANGE', value: $event })"
                     [name]="countyConfig.name"
                     [id]="countyConfig.id"
@@ -30,14 +33,15 @@
                     [config]="countyConfig.config"
                     [control]="countyConfig.control"
                     [required]="countyConfig.required"
-                    [disabled]="countyConfig.disabled">
+                    [disabled]="countyConfig.disabled"
+                    [errorMessage]="error.county">
   </sam-autocomplete>
   <!--<div>{{location.county | json}}</div>-->
 </ng-container>
 <!-- State -->
 <ng-container *ngIf="_stateConfig">
   <sam-autocomplete [ngModel]="state"
-                    state [countryVal]="country"
+                    state [countryValState]="country"
                     (ngModelChange)="store.dispatch({ type: 'STATE_CHANGE', value: $event })"
                     [name]="stateConfig.name"
                     [id]="stateConfig.id"
@@ -47,7 +51,8 @@
                     [control]="stateConfig.control"
                     [required]="stateConfig.required"
                     [disabled]="stateConfig.disabled"
-                    [allowAny]="'true'">
+                    [allowAny]="'true'"
+                    [errorMessage]="error.state">
   </sam-autocomplete>  
   <!--<div>{{location.state | json}}</div>-->
 </ng-container>
@@ -63,17 +68,18 @@
                     [config]="countryConfig.config"
                     [control]="countryConfig.control"
                     [required]="countryConfig.required"
-                    [disabled]="countryConfig.disabled">
-                    
-                   
+                    [disabled]="countryConfig.disabled"
+                    [errorMessage]="error.country">
   </sam-autocomplete>  
   <!--<div>{{location.country | json}}</div>-->
+  <!--(ngModelChange)="store.dispatch({ type: 'ZIP_CHANGE', value: $event })"-->
 </ng-container>
 <!-- Zip -->
 <ng-container *ngIf="_zipConfig">
   <sam-text [ngModel]="zip"
-            (ngModelChange)="store.dispatch({ type: 'ZIP_CHANGE', value: $event })"
+            (ngModelChange)="onZipChange($event)"
             [name]="zipConfig.name"
+            [errorMessage]="error.zip"
             [label]="'Zip'">
   </sam-text>  
 </ng-container>

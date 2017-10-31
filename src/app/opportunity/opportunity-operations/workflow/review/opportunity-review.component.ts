@@ -107,6 +107,7 @@ export class OpportunityReviewComponent implements OnInit {
   history: any;
   noHistory: boolean;
   keyword: string;
+  showIvls: boolean = false;
   ivls: any;
   ivlSort: any = { "type":"contractorCageNumber", "sort":"desc" };
   ivlSortOptions = [
@@ -161,7 +162,8 @@ export class OpportunityReviewComponent implements OnInit {
     'Description',
     'Packages',
     'Contact Information',
-    'History'
+    'History',
+    'Interested Vendors List'
   ];
 
   sideNavSelection;
@@ -230,6 +232,42 @@ export class OpportunityReviewComponent implements OnInit {
     }, {
       label: this.sectionLabels[7],
       route: "#history"
+    },]
+  };
+
+  sideNavModelIvls: MenuItem = {
+    label: "Contract Opportunities",
+    children:[{
+      label: this.sectionLabels[0],
+      route: "#" + OpportunitySectionNames.HEADER,
+      iconClass: this.pristineIconClass
+    },{
+      label: this.sectionLabels[2],
+      route: "#" + OpportunitySectionNames.GENERAL,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[3],
+      route: "#" + OpportunitySectionNames.CLASSIFICATION,
+      iconClass: this.pristineIconClass
+    }, {
+      label: this.sectionLabels[4],
+      route: "#" + OpportunitySectionNames.DESCRIPTION,
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[5],
+      route: "#" + OpportunitySectionNames.PACKAGES,
+      iconClass: this.pristineIconClass
+    },  {
+      label: this.sectionLabels[6],
+      route: "#" + OpportunitySectionNames.CONTACT,
+      iconClass: this.pristineIconClass
+    },{
+      label: this.sectionLabels[7],
+      route: "#history"
+    },{
+      label: this.sectionLabels[8],
+      route: "#" + OpportunitySectionNames.IVL,
+      iconClass: this.pristineIconClass
     }]
   };
 
@@ -330,6 +368,9 @@ export class OpportunityReviewComponent implements OnInit {
     this.updateSidenavIcons(this.sectionLabels[5]);
     this.updateSidenavIcons(this.sectionLabels[6]);
     this.updateSidenavIcons(this.sectionLabels[7]);
+    if(this.showIvls) {
+      this.updateSidenavIcons(this.sectionLabels[8]);
+    }
     this.sidenavModel.children = [];
   }
 
@@ -378,20 +419,16 @@ export class OpportunityReviewComponent implements OnInit {
   private getIVLs(opportunityAPI : Observable<any>) {
     let ivlSubject = new ReplaySubject(1);
     let ivlStream = opportunityAPI.switchMap(opportunity => {
-      if (opportunity._links && opportunity._links.ivl != null) {
+      if (opportunity._links && opportunity._links['opportunity:ivl:view'] != null) {
         let sort = ((this.ivlSort.sort == 'desc') ? '-' : '') + this.ivlSort.type;
         return this.opportunityService.getOpportunityIVLs(this.authToken, opportunity.id, this.keyword, this.pageNum, this.showPerPage, sort)
           .switchMap(ivls => {
             if(ivls != null && ivls.hasOwnProperty('_embedded') && ivls.hasOwnProperty('page')) {
               this.ivls = ivls;
-
-              let ivlSideNavContent = {
-                "label": "Interested Vendors List",
-                "route": this.pageRoute,
-                "field": this.opportunityFields.IVL
-              };
-
-              this.sidenavHelper.updateSideNav(this, true, ivlSideNavContent);
+              this.showIvls = true;
+              this.sideNavModel = this.sideNavModelIvls;
+              this.sidenavService.setModel(this.sideNavModelIvls);
+              this.setupSideNavMenus();
               return Observable.from(ivls['_embedded']['ivl']);
             } else {
               return [];
@@ -450,7 +487,7 @@ export class OpportunityReviewComponent implements OnInit {
 
     opportunityAPI.subscribe(api => {
       if(api.data.organizationId != null) {
-        this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+        this.fhService.getFHOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
         this.fhService.getOrganizationLogo(organizationSubject,
           (logoData) => {
             if (logoData != null) {
@@ -893,6 +930,23 @@ export class OpportunityReviewComponent implements OnInit {
 
       default:
         break;
+    }
+  }
+
+  public canEdit() {
+    // show edit button if user has update permission, except on published Opportunity, or if user has revise permission
+    if (this.opportunity._links && this.opportunity._links['opportunity:edit'] && this.opportunity.status && this.opportunity.status.code !== 'published') {
+      return true;
+    }
+
+    return false;
+  }
+
+  public onEditClick(page: string[]) {
+    if (this.opportunity._links && this.opportunity._links['opportunity:edit'] && this.opportunity._links['opportunity:edit'].href) {
+     let id = this.opportunity.id;
+      let url = '/opp/' + id + '/edit'.concat(page.toString());
+      this.router.navigateByUrl(url);
     }
   }
 

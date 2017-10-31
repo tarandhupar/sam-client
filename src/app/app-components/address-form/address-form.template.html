@@ -11,7 +11,7 @@
 
   <div class="usa-width-one-whole" *ngIf="!hideAddrForm">
 
-    <sam-location-component class="usa-width-one"
+    <sam-location-component #locationGroup
                             [(location)]="locationObj"
                             [cityConfig]="{name: 'city'}"
                             [stateConfig]="{name: 'state'}"

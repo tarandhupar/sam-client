@@ -2,7 +2,7 @@
 <div class="sam-ui hidden divider"></div>
 
 <!-- Edit menu -->
-<div *ngIf="isEdit || isAdmin" class="sam-ui labeled icon menu">
+<div *ngIf="isEdit || isAdmin" class="sam-ui small blue inverted menu">
   <a *ngIf="!isEdit && isAdmin" (click)="onEditPageClick()" class="item">
     <i class="icon fa fa-edit"></i>
     Edit
@@ -17,33 +17,109 @@
   </a>
 </div>
 
-<h1 class="sam-ui header">
-  <div class="sup header">Help Center</div>
-  Award Data
-</h1>
-
-<div class="sam-ui grid relative">
-  <div *ngIf="curConfig.legacyLogo" class="two wide column middle aligned">
-    <img style="width:140px;" [src]="curConfig.legacyLogo">
-  </div>
-  <div class="ten wide column middle aligned">
-    <!-- Title -->
-    <h2 class="sam-ui header">
+<div class="flex-container">
+  <div class="title-area">
+    <h1 class="sam-ui header">
+      <div class="sup header">Help Center</div>
       {{curConfig.heading}}
-      <div *ngIf="curConfig.legacyWebsiteContent" class="sub header">
-        {{curConfig.legacyWebsiteContent}}
-      </div>
-    </h2>
+    </h1>
   </div>
-  <div class="three wide column wdol-additional-list" *ngIf="curConfig.heading === 'Wage Determinations'">
-    <div class="wdol-additional-list-title">Additional Resources</div>
-    <div class="wdol-additional-list-item" *ngFor="let item of wdolCurList"><a (click)="onWDOLResourceClick(item)">{{item}}</a></div>
+  <div class="badge-area" *ngIf="curConfig.legacyLogo">
+    Legacy website
+    <img style="height:40px;" 
+      [src]="curConfig.legacyLogo" 
+      [alt]="curConfig.legacyWebsiteContent">
   </div>
 </div>
 
 <div class="sam-ui hidden divider"></div>
 
-<div *ngIf="!showLaborAgency()">
+<!-- Hide until we have video -->
+<ng-container *ngIf="false">
+  <div class="flex-container">
+    <div class="video-area">
+      <div>
+        <span>Transitioning from {{curConfig.legacyInitials}}</span>
+      </div>
+    </div>
+    <div class="menu-area">
+      <div class="sam-ui segments">
+        <div class="sam-ui lightest blue segment">
+          <div class="sam-ui relaxed list">
+            <a [href]="curConfig.publicStartGuide" 
+              [target]="curConfig.legacyInitials" 
+              class="item">
+              <i class="icon fa fa-book" aria-hidden="true"></i>
+              Public Quick Start Guide
+            </a>
+            <a class="disabled item">
+              <i class="icon fa fa-book" aria-hidden="true"></i>
+              Federal Quick Start Guide
+            </a>
+            <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }" 
+              class="item">
+              <i class="icon fa fa-search" aria-hidden="true"></i>
+              Search {{curConfig.heading}}
+            </a>
+          </div>
+        </div>
+        <div *ngIf="curConfig.workspaceRoute" class="sam-ui secondary segment">
+          <div class="sam-ui relaxed list">
+            <a [routerLink]="[curConfig.workspaceRoute]" class="item">
+              <div class="header">Manage {{curConfig.heading}}?</div>
+              Sign in to your Workspace
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sam-ui hidden divider"></div>
+</ng-container>
+
+<ng-container *ngIf="curConfig.heading === 'Wage Determinations' || curConfig.heading === 'Assistance Listings'">
+  <div class="menu-area" style="float: right; padding: 0 0 3rem 3rem;">
+    <div class="sam-ui segments">
+      <div class="sam-ui lightest blue segment">
+        <div class="sam-ui relaxed list">
+          <a [href]="curConfig.publicStartGuide" 
+            [target]="curConfig.legacyInitials" 
+            class="item">
+            <i class="icon fa fa-book" aria-hidden="true"></i>
+            Public Quick Start Guide
+          </a>
+          <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }" 
+            class="item">
+            <i class="icon fa fa-search" aria-hidden="true"></i>
+            Search {{curConfig.heading}}
+          </a>
+        </div>
+      </div>
+      <div *ngIf="curConfig.workspaceRoute" class="sam-ui secondary segment">
+        <div class="sam-ui relaxed list">
+          <a [routerLink]="[curConfig.workspaceRoute]" class="item">
+            <div class="header">Manage {{curConfig.heading}}?</div>
+            Sign in to your Workspace
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="curConfig.heading === 'Wage Determinations'" 
+  class="sam-ui tabular menu">
+  <a (click)="onWDOLResourceClick('Wage Determinations Help')" 
+    class="item" [class.active]="!showLaborAgency()">
+    Wage Determinations Help
+  </a>
+  <a (click)="onWDOLResourceClick('Labor Advisors')" 
+    class="item" [class.active]="showLaborAgency()">
+    Labor Advisors
+  </a>
+</div>
+
+<ng-container *ngIf="!showLaborAgency()">
   <!-- Splash Content -->
   <h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
     {{curConfig.splashContent}}
@@ -63,23 +139,26 @@
   <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
     {{curConfig.subContent}}
   </textarea>
-</div>
+</ng-container>    
 
-<div *ngIf="showLaborAgency()">
-  <h3>Wage Determinations - Agency Labor Advisors</h3>
-  <div class="labor-agency-header p_B-2x">
-    <h3>Department of Defense Agencies
+<div class="sam-ui hidden divider"></div>
+
+<ng-container *ngIf="showLaborAgency()">
+  
+  <div>
+    <h3 class="sam-ui dividing header">Department of Defense Agencies
       <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
       <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveDODAgency()">Save</button></span>
       <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editDODAgency(false)">Cancel</button></span>
     </h3>
   </div>
+  
   <div class="labor-agency-item" *ngFor="let item of defenceAgencies; let i = index;">
-    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <h4 class="sam-ui header">{{item.agency}}</h4>
     <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index;">
       <div *ngIf="!dodIsEdit">
-        <span>{{advisor.name}}</span><br/>
-        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <strong>{{advisor.name}}</strong><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''"><em>{{advisor.location}}</em><br/></span>
         <span class="labor-agency-contact-label">Email:</span><a>{{advisor.email}}</a><br/>
         <span class="labor-agency-contact-label">Phone:</span><span>{{advisor.phone}}</span><br/>
       </div>
@@ -94,15 +173,16 @@
     </div>
   </div>
 
-  <div class="labor-agency-header p_B-2x">
-    <h3>Civilian Contracting Agencies
+  <div>
+    <h3 class="sam-ui dividing header">Civilian Contracting Agencies
       <span class="pull-right" *ngIf="!contractIsEdit" (click)="editContractAgency(true)"><i class="fa fa-pencil"></i></span>
       <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveContractAgency()">Save</button></span>
       <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editContractAgency(false)">Cancel</button></span>
     </h3>
   </div>
+  
   <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
-    <span class="labor-agency-dept-title">{{item.agency}}</span><br/>
+    <h4 class="sam-ui header">{{item.agency}}</h4>
     <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
     <span *ngIf="item.advisorTitle !== '' && !contractIsEdit">{{item.advisorTitle}}<br/></span>
     <span *ngIf="item.email !== '' && !contractIsEdit">Email: <a>{{item.email}}</a><br/></span>
@@ -112,8 +192,8 @@
     </div>
     <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index">
       <div *ngIf="!contractIsEdit">
-        <span>{{advisor.name}}</span><br/>
-        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''">{{advisor.location}}<br/></span>
+        <strong>{{advisor.name}}</strong><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''"><em>{{advisor.location}}</em><br/></span>
         <span>Email: <a>{{advisor.email}}</a></span><br/>
         <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
       </div>
@@ -126,14 +206,38 @@
       </div>
     </div>
   </div>
+</ng-container>
+
+<div class="sam-ui hidden divider"></div>
+
+<div *ngIf="false" class="sam-ui segment intersecting-header">
+  <h3 class="sam-ui center aligned header">
+    Learning Center: {{curConfig.heading}}
+  </h3>
+  <div class="sam-ui four item secondary menu">
+    <a class="item">
+      <i class="fa fa-video-camera icon" aria-hidden="true"></i>
+      Video
+    </a>
+    <a class="item">
+      <i class="fa fa-commenting-o icon" aria-hidden="true"></i>
+      FAQs
+    </a>
+    <a class="item">
+      <i class="fa fa-file-text-o icon" aria-hidden="true"></i>
+      Articles
+    </a>
+    <a class="item">
+      <i class="fa fa-book icon" aria-hidden="true"></i>
+      Definitions
+    </a>
+  </div>
 </div>
 
 <div class="sam-ui hidden divider"></div>
 
 <!-- Features -->
-<!-- <ng-container *ngIf="this.curFeatures.length !== 0"> -->
 <ng-container *ngIf="false">
-
   <h3 class="sam-ui dividing header" *ngIf="isEdit">
     Features
   </h3>
@@ -168,7 +272,22 @@
       </tr>
     </tbody>
   </table>
+</ng-container>
 
+<ng-container *ngIf="curConfig.heading === 'Wage Determinations'" >
+  <h2 class="sam-ui header">Resources</h2>
+  <ul class="sam-ui bulleted list">
+    <li>
+      <a [routerLink]="['/help/reference']">
+        External Resources
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/alerts']">
+        Latest Updates
+      </a>
+    </li>
+  </ul>
 </ng-container>
 
 <div class="sam-ui hidden section divider"></div>

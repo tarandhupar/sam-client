@@ -18,45 +18,37 @@ let comp: SavedSearchRedirect;
 let fixture: ComponentFixture<SavedSearchRedirect>;
 
 let MockSavedSearchService = {
-    getAllSavedSearches: (obj) => {
+    getSavedSearch: (authToken, id) => {
         return Observable.of({
-            _embedded: {
-                preferences : [
-                    {
-                        "preferenceId": "85e220d4-a48e-480f-8fe1-db3cd0bf4625",
-                        "userId": "cfda.test.use.rsrloca@gmail.com",
-                        "type": "saved_search",
-                        "title": "Test Saved Search",
-                        "createdOn": null,
-                        "modifiedOn": "2017/09/27T17:43:16+0000",
-                        "lastUsageDate": "2017/09/27T17:43:16+0000",
-                        "numberOfUsages": 1,
-                        "data": {
-                            "index": ["cfda"],
-                            "key": "test_saved_search",
-                            "parameters": {
-                                "is_active": true,
-                                "beneficiary": "10",
-                                "assistance_type": "0001001",
-                                "organization_id": "100004222"
-                            }
-                        },
-                        "_links": {
-                            "self": {
-                                "href": "https://gsaiae-dev02.reisys.com/preferences/v1/search/85e220d4-a48e-480f-8fe1-db3cd0bf4625"
-                            }
-                        }
-                    }
-                ]
-            }
+              "preferenceId": "abcde-12345",
+              "userId": "cfda.test.use.rsrloca@gmail.com",
+              "type": "saved_search",
+              "title": "Test Saved Search",
+              "createdOn": null,
+              "modifiedOn": "2017/09/27T17:43:16+0000",
+              "lastUsageDate": "2017/09/27T17:43:16+0000",
+              "numberOfUsages": 1,
+              "data": {
+                  "index": ["cfda"],
+                  "key": "test_saved_search",
+                  "parameters": {
+                      "is_active": true,
+                      "beneficiary": "10",
+                      "assistance_type": "0001001",
+                      "organization_id": "100004222"
+                  }
+              },
+              "_links": {
+                  "self": {
+                      "href": "https://gsaiae-dev02.reisys.com/preferences/v1/search/85e220d4-a48e-480f-8fe1-db3cd0bf4625"
+                  }
+              }
         });
     },
-    updateSavedSearch: (authToken: string, id: string, data: any) => {
-        return Observable.of({
-
-        });
+    updateSavedSearchUsage: (authToken: string, id: string) => {
+        return Observable.of();
     }
-}
+};
 
 class MockRouter {
     navigate(url: string) { return url; }
@@ -89,18 +81,17 @@ describe('src/app/search/saved-search-workspace/saved-search-redirect/saved-sear
       Cookies.set('iPlanetDirectoryPro', 'AGENCY SUBMITTER');
     });
 
-it('SavedSearchRedirect: should FIND single saved search from list', () => {
+it('SavedSearchRedirect: should get saved search by id', () => {
     fixture.whenStable().then(() => {
         fixture.componentInstance.ngOnInit();
-        expect(fixture.componentInstance.savedSearches.length).toBe(1);
-        expect(fixture.componentInstance.savedSearch.data.key).toBe("test_saved_search");
+        expect(fixture.componentInstance.savedSearch.preferenceId).toBe("abcde-12345");
     });
 });
 
 it('SavedSearchRedirect: should increment number of usages', () => {
     fixture.whenStable().then(() => {
         fixture.componentInstance.ngOnInit();
-        expect(fixture.componentInstance.savedSearch.numberOfUsages).toBe(2);
+        expect(fixture.componentInstance.updateSavedSearchStatistics()).toHaveBeenCalled();
     });
 });
 

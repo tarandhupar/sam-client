@@ -12,7 +12,7 @@ export interface CWSApplication {
   contractOpportunities: string|string[]; // read,read-sensitive,co-write
   contractData: string|string[];          // read,cd-write,dod-data
   entityInformation: string|string[];     // read-public,read-fouo,read-sensitive
-  FIPS199Categorization: string;          // low,medium,high
+  fips199Categorization: string;          // low,medium,high
   ipAddress: string;
   typeOfConnection: string;               // Web Services,SFTP
   physicalLocation: string;

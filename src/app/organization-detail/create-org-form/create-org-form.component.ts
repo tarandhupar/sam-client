@@ -70,6 +70,7 @@ export class OrgCreateForm {
 
   reviewOrgPage:boolean = false;
   createOrgPage:boolean = true;
+  section = "create";
 
   locationConfig = {
     keyValueConfig: {
@@ -283,7 +284,7 @@ export class OrgCreateForm {
         "state": e.addrModel.state,
         "streetAddress":  e.addrModel.street1,
         "streetAddress2":  e.addrModel.street2,
-        "zipcode": e.addrModel.postalCode,
+        "zipcode": e.addrModel.zip,
       });
     });
   }
@@ -300,7 +301,7 @@ export class OrgCreateForm {
           addr["state"] = e.addrModel.state;
           addr["streetAddress"] =  e.addrModel.street1;
           addr["streetAddress2"] =  e.addrModel.street2;
-          addr["zipcode"] = e.addrModel.postalCode;
+          addr["zipcode"] = e.addrModel.zip;
         }
       })
     })
@@ -350,6 +351,7 @@ export class OrgCreateForm {
   onEditFormClick(){
     this.createOrgPage = true;
     this.reviewOrgPage = false;
+    this.section = 'create';
     this.onEditClick.emit(true);
   }
 
@@ -385,10 +387,10 @@ export class OrgCreateForm {
       if(this.orgAddresses[1].addrModel.addrType !== "") {
         lastAddrType = this.orgAddresses[1].addrModel.addrType === "Shipping Address"? "Billing Address" : "Shipping Address";
       }
-      this.orgAddresses.push({addrModel:{addrType:lastAddrType,country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
+      this.orgAddresses.push({addrModel:{addrType:lastAddrType,country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:false});
 
     }else if(this.orgAddresses.length < 2){
-      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",zip:""},showAddIcon:false});
     }
     this.orgAddresses.forEach( e => { e.showAddIcon = false;});
   }
@@ -416,6 +418,7 @@ export class OrgCreateForm {
   }
 
   updateOrgInfoForReview(){
+    this.section = 'review';
     this.createOrgPage = false;
     this.reviewOrgPage = true;
     this.orgInfo = [];

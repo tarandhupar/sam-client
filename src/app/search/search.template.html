@@ -6,7 +6,7 @@
     <div class ="sam-ui hidden divider"></div>
 
     <!-- Sidebar section -->
-    <sidebar *ngIf="showSavedSearches">
+    <sidebar *ngIf="!showRegionalOffices && showSavedSearches">
 
       <!-- Navigation -->
       <ul class="usa-sidenav-list">
@@ -23,9 +23,6 @@
       </ul>
 
     </sidebar>
-
-    
-
       <!-- Status -->
       <ng-container *ngIf="index !== 'fh' && showRegionalOffices==false">
         <h4 class="sam-ui header">Status</h4>
@@ -61,40 +58,65 @@
         <div class="sam-ui divider"></div>
       </ng-container>
 
+      <!-- Date Filters -->
       <div class="sam-ui segment">
         <ng-container *ngIf="index === 'cfda' && showRegionalOffices==false">
-          <sam-tab-date-range-filter 
+          <sam-tab-date-range-filter
             [tabConfig] = "cfdaDateRangeConfig"
+            [filterDisabled] = "disableCfdaFilter"
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "cfdaDateFilterModel"
+            (ngModelChange) = "determineFilterDateDisable($event)"
+            (tabIndexChange) = "dateTabChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
             (filterClearEvt)="filterClearHandler($event)">
           </sam-tab-date-range-filter>
-  
+
           <div class="sam-ui divider"></div>
         </ng-container>
-  
+
         <ng-container *ngIf="index === 'opp' && showRegionalOffices==false">
-          <sam-tab-date-range-filter 
+          <sam-tab-date-range-filter
             [tabConfig] = "fboDateRangeConfig"
+            [(filterDisabled)] = "disableOppFilter"
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "fboDateFilterModel"
+            (ngModelChange) = "determineFilterDateDisable($event)"
+            (tabIndexChange) = "dateTabChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
             (filterClearEvt)="filterClearHandler($event)">
           </sam-tab-date-range-filter>
-  
+
           <div class="sam-ui divider"></div>
         </ng-container>
-  
+
         <ng-container *ngIf="index === 'wd' && showRegionalOffices==false">
-          <sam-tab-date-range-filter 
+          <sam-tab-date-range-filter
             [tabConfig] = "wdDateRangeConfig"
+            [(filterDisabled)] = "disableWdFilter"
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "wdDateFilterModel"
+            (ngModelChange) = "determineFilterDateDisable($event)"
+            (tabIndexChange) = "dateTabChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
             (filterClearEvt)="filterClearHandler($event)">
           </sam-tab-date-range-filter>
-  
+
+          <div class="sam-ui divider"></div>
+        </ng-container>
+
+        <ng-container *ngIf="index === 'fpds' && showRegionalOffices==false">
+          <sam-tab-date-range-filter
+            [tabConfig] = "fpdsDateRangeConfig"
+            [(filterDisabled)] = "disableFpdsFilter"
+            [tabIndex] = "dateFilterIndex"
+            [(ngModel)]= "fpdsDateFilterModel"
+            (ngModelChange) = "determineFilterDateDisable($event)"
+            (tabIndexChange) = "dateTabChangeHandler($event)"
+            (filterEvt)="filterHandler($event)"
+            (filterClearEvt)="filterClearHandler($event)">
+          </sam-tab-date-range-filter>
+
           <div class="sam-ui divider"></div>
         </ng-container>
 
@@ -228,10 +250,10 @@
         </sam-radio-button>
         <div class="sam-ui divider"></div>
       </ng-container>
-
-      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
+      <!-- THIS IS TEMPORARILY REMOVED BUT WILL BE ADDED BACK AT A LATER DATE DO NOT REMOVE -->
+      <!-- <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
         <h4 class="sam-ui header">SCA: Subject to CBA</h4>
-        <!--Subject to CBA-->
+         Subject to CBA
         <sam-radio-button
           [(model)]="wdSubjectToCBAModel"
           [options]="wdSubjectToCBAConfig.options"
@@ -242,9 +264,10 @@
           (modelChange)="wdSubjectToCBAChanged($event)">
         </sam-radio-button>
         <div class="sam-ui divider"></div>
-      </ng-container>
+      </ng-container> -->
 
-      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
+      <!-- Non Standard Services Section -->
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo' || wdPreviouslyPerformedModel === 'prevPerfYesLocality') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
         <h4 class="sam-ui header">SCA: Non-Standard Services</h4>
         <!--Non-Standard Services radio buttons-->
         <sam-radio-button *ngIf="wdPreviouslyPerformedModel !== 'prevPerfNo'"
@@ -416,18 +439,22 @@
     <div class="usa-width-one">
       <sam-alert *ngIf="index==='wd' && !dismissWdAlert" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" (dismiss)="dismissWdAlert=true"><div [innerHTML]="wdSearchDescription"></div></sam-alert>
 
-      <div class="sam-ui equal width grid">
-        <div class="column middle aligned">
-          <h1 *ngIf="showSavedSearches && searchName!=''" class="m_T-0 p_T-6x">{{searchName}}</h1>
-          <h2 *ngIf="!showRegionalOffices" [ngClass]="(searchName!='') ? 'm_T-0 p_T-0x' : 'm_T-o p_T-6x'">Search Results</h2>
-          <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
+      <div *ngIf="!showRegionalOffices && showSavedSearches" class="sam-ui small subtle menu">
+        <div class="left">
+          <h2 *ngIf="searchName!=''" class="m_T-0 p_T-6x">{{searchName}}</h2>
         </div>
-
-        <div *ngIf="showSavedSearches" class="column right aligned">
+        <div class="right menu m_T-0 p_T-6x">
           <sam-actions-dropdown [disabled]="false"
                                 [actions]="actions"
                                 (emitAction)="handleAction($event)">
           </sam-actions-dropdown>
+        </div>
+      </div>
+
+      <div class="sam-ui equal width grid">
+        <div class="column middle aligned">
+          <h2 *ngIf="!showRegionalOffices" [ngClass]="showSavedSearches ? 'm_T-0 p_T-0x' : 'm_T-0 p_T-6x'">Search Results</h2>
+          <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
         </div>
       </div>
 
@@ -509,7 +536,7 @@
            [cancelButtonLabel]="'Cancel'"
            [submitButtonLabel]="'Save'"
            (onClose)="onModalClose($event)"
-           (onSubmit)="saveSearch($event)">
+           (onSubmit)="saveNewSearch($event)">
   <sam-text
     [(ngModel)]="savedSearchName"
     [name]="textConfig.name"

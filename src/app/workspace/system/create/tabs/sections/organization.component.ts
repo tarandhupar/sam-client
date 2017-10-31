@@ -1,7 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { AgencyPickerComponent } from 'app-components';
 
 import { Section } from './section';
+import { User } from 'api-kit/iam/interfaces'
 
 const getConfig = function(type: string) {
   let config = {
@@ -14,7 +17,7 @@ const getConfig = function(type: string) {
     //TODO
   }
 
-  return config;
+  return { keyValueConfig: config };
 }
 
 @Component({
@@ -22,15 +25,19 @@ const getConfig = function(type: string) {
   templateUrl: './organization.component.html',
 })
 export class OrganizationComponent extends Section {
+  @ViewChild(AgencyPickerComponent) agencyPicker;
+
   @Input('group') form: FormGroup;
+  @Input() user: User;
 
   private configs = {
     systemAdmins: getConfig('systemAdmins'),
     systemManagers: getConfig('systemManagers'),
   }
 
+  private _submitted:boolean = false;
   private subscriptions = {};
-  private organization = new FormControl('');
+  private organization = new FormControl('', [Validators.required]);
   private selected = [];
 
   constructor(private builder: FormBuilder) {
@@ -54,20 +61,57 @@ export class OrganizationComponent extends Section {
   }
 
   ngOnInit() {
-    this.organization.valueChanges.subscribe(organization => {
-      const orgKeys = (organization.fullParentPath || '').split('.');
+    this.updateSelected();
+  }
 
-      if(orgKeys[0])
-        this.form.get('departmentOrgId').setValue(orgKeys[0]);
-      if(orgKeys[1])
-        this.form.get('agencyOrgId').setValue(orgKeys[1]);
-      if(orgKeys[2])
-        this.form.get('officeOrgId').setValue(orgKeys[2]);
+  setHierarchy(hierarchy: Array<{ label: string, value: number }>) {
+    let organization;
+console.log(hierarchy);
+    if(hierarchy) {
+      this.form.get('departmentOrgId').setValue(this.getOrgKey(hierarchy[0]));
+      this.form.get('agencyOrgId').setValue(this.getOrgKey(hierarchy[1]));
+      this.form.get('officeOrgId').setValue(this.getOrgKey(hierarchy[2]));
 
       this.updateSelected();
-    });
+    }
+  }
 
-    this.updateSelected();
+  getOrgKey(org: { label: string, value: number }) {
+    let key = 0;
+
+    if(org) {
+      key = org.value || 0;
+    }
+
+    return key;
+  }
+
+  get submitted(): boolean {
+    return this._submitted;
+  }
+
+  @Input()
+  set submitted(submitted: boolean) {
+    this._submitted = submitted;
+    this.updateSelection();
+  };
+
+  updateSelection() {
+    if(this.submitted && this.agencyPicker) {
+      this.agencyPicker.setOrganizationFromBrowse();
+    }
+  }
+
+  errors(key: string = ''): string {
+    let error = '';
+
+    if(this.submitted && key == 'organization') {
+      error = this.organization.invalid ? 'At least an agency must be selected' : '';
+    } else {
+      error = this.getError(this.form, key, this.submitted);
+    }
+
+    return error;
   }
 
   updateSelected() {

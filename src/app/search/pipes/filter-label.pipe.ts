@@ -2,11 +2,33 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({name: "filterLabel"})
 export class FilterParamLabel implements PipeTransform {
+  
+  cfdaStringMap;
+  fboStringMap;
+  wdStringMap;
+  fpdsStringMap;
+  
+  constructor(){
+    this.cfdaStringMap = new Map()
+    .set(0, "Published Date")
+    .set(1, "Modified Date");
+    this.fboStringMap = new Map()
+    .set(0, "Modified Date")
+    .set(1, "Published Date")
+    .set(2, "Response Date");
+    this.wdStringMap = new Map()
+    .set(0, "Modified Date");
+    this.fpdsStringMap = new Map()
+    .set(0, "Modified Date")
+    .set(1, "Signed Date");
+  }
 
-  transform(param: string): string {
+  transform(param: string, dateFilterIndex: number): string {
+    if(!dateFilterIndex){dateFilterIndex = 0};  
+
     switch(param) {
       case "index": return "Domain";
-      break;
+        break;
       case "keywords": return "Keyword(s)";
         break;
       case "is_active": return "Active Only?";
@@ -30,7 +52,7 @@ export class FilterParamLabel implements PipeTransform {
       case "psc": return "PSC";
         break;
       case "award_or_idv": return "Award or IDV";
-      break;
+        break;
       case "award_type": return "Award Type";
         break;
       case "contract_type": return "Contract Type";
@@ -61,9 +83,21 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "page": return "Page";
         break;
-      case "true": return "Yes";
+      case "date_rad_selection": return "Date Type";
         break;
-      case "false": return "No";
+      case "fbo_date_filter_model": 
+        return this.fboStringMap.get(dateFilterIndex);
+        break;
+      case "cfda_date_filter_model": 
+        return this.cfdaStringMap.get(dateFilterIndex);
+        break;
+      case "wd_date_filter_model": 
+        return this.wdStringMap.get(dateFilterIndex);
+        break;
+      case "fpds_date_filter_model": 
+        return this.fpdsStringMap.get(dateFilterIndex);
+        break;
+      case "date_filter_index": return "Date Filter Type";
         break;
       default: return param;
     }

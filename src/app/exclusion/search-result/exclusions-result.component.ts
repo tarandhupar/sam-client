@@ -46,13 +46,13 @@ import * as moment from 'moment/moment';
               <strong>Classification</strong><br>
               {{ data.classification.code }}
             </li> 
-            <li *ngIf="data.activationDate!==null">
+            <li *ngIf="data.activationDate">
               <strong>Activation Date</strong><br>
               {{ data.activationDate }}
             </li>    
             <li>
               <strong>Termination Date</strong><br>
-              {{ data.terminationDate !== null ? data.terminationDate : 'Indefinite' }}
+              {{ data.terminationDate ? data.terminationDate : 'Indefinite' }}
             </li>      
           </ul>
         </div>
@@ -74,41 +74,41 @@ export class ExclusionsResult implements OnInit {
   }
 
   ngOnInit() {
-    if (this.data.organizationHierarchy != null && this.data.organizationHierarchy.organizationId != null && this.data.organizationHierarchy.organizationId.length > 0) {
+    if (this.data.organizationHierarchy && this.data.organizationHierarchy != null && this.data.organizationHierarchy.organizationId != null && this.data.organizationHierarchy.organizationId.length > 0) {
       this.orgIdConcat = this.data.organizationHierarchy.organizationId;
     } else {
       this.orgIdConcat = 'NA';
     }
 
-    if (this.data.samNumber != null && this.data.samNumber.length > 0) {
+    if (this.data.samNumber && this.data.samNumber != null && this.data.samNumber.length > 0) {
       this.samNumberConcat = this.data.samNumber;
     } else {
       this.samNumberConcat = 'NA';
     }
 
-    if (this.data.type != null) {
+    if (this.data.type && this.data.type != null) {
       this.typeConcat = this.data.type.code;
     } else {
       this.typeConcat = 'NA';
     }
 
-    if (this.data.ctCode != null && this.data.ctCode.length > 0) {
+    if (this.data.ctCode && this.data.ctCode != null && this.data.ctCode.length > 0) {
       this.ctCodeConcat = this.data.ctCode;
     } else {
       this.ctCodeConcat = 'NA';
     }
 
-    if (this.data.classification != null && this.data.classification.code === 'Firm') {
+    if (this.data.classification && this.data.classification != null && this.data.classification.code === 'Firm') {
       this.isFirm = true;
     }
 
     this.uniqueIdentifier = this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.ctCodeConcat;
 
-    if (this.data.activationDate !== null) {
+    if (this.data.activationDate) {
       this.data.activationDate = moment(this.data.activationDate).format("MMM D, Y");
     }
 
-    if (this.data.terminationDate !== null) {
+    if (this.data.terminationDate) {
       this.data.terminationDate = moment(this.data.terminationDate).format("MMM D, Y");
     }
   }

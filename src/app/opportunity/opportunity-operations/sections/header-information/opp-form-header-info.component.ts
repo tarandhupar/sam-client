@@ -134,7 +134,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     this.oppFormService.getOpportunityDictionary('procurement_type').subscribe((dict) => {
       if (dict['procurement_type'] && dict['procurement_type'].length > 0) {
         for (let type of dict['procurement_type']) {
-          if(type.code == 'o'){
+          if (type.code == 'o' || type.code == 'p' || type.code == 'k' || type.code == 'r' || type.code == 'g' || type.code == 's') {
             this.oppTypeConfig.options.push({
               value: type.elementId,
               label: type.value,

@@ -8,6 +8,10 @@ import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
 import { IBreadcrumb } from "sam-ui-kit/types";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import {FALAuthGuard} from "../components/authguard/authguard.service";
+import 'rxjs/Rx';
+import {Injectable} from 'angular2/core';
+
 
 
 @Component({
@@ -43,6 +47,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   addFALButtonText: string = 'Add Assistance Listing';
   cookieValue: string;
   runProgSub: any;
+  getTemplateSub: any;
   public permissions: any;
   pendingRequestCount: any;
   workspaceSearchConfig: any = {
@@ -130,13 +135,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     type: "error"
   };
   disabled:boolean = false;
+  userPermissions:any;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService, private falFormService: FALFormService, private alertFooterService: AlertFooterService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService,
+              private falFormService: FALFormService, private alertFooterService: AlertFooterService, private authGuard: FALAuthGuard) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     let userPermissionsAPI = this.loadUserPermissions();
+    this.getUserPermissions()
     this.loadCountPendingRequest(userPermissionsAPI);
     this.getOrganizationLevels();
   }
@@ -144,6 +152,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.runProgSub)
       this.runProgSub.unsubscribe();
+    if(this.getTemplateSub)
+      this.getTemplateSub.unsubscribe();
   }
 
   // builds object we set into url to persist data
@@ -341,7 +351,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   private loadUserPermissions(): ReplaySubject<any>{
     let apiSubject = new ReplaySubject(1);
-    this.programService.getPermissions(this.cookieValue, 'CREATE_FALS, FAL_REQUESTS, CREATE_RAO, ORG_LEVELS').subscribe(apiSubject);
+    this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS, ORG_LEVELS').subscribe(apiSubject);
     // runs anytime url changes, takes values from url and sets them into our variables
     apiSubject.subscribe(res => {
       this.permissions = res;
@@ -380,6 +390,9 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     });
 
     return apiSubject;
+  }
+  getUserPermissions() {
+      this.userPermissions = this.authGuard._falLinks;
   }
 
   setupOrgsFromQS(orgsStr){
@@ -852,6 +865,28 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     };
     this.router.navigate(['/fal/workspace/'], navigationExtras);
   }
+  
+  downloadFile() {
+    let file;
+    let url;
+    this.getTemplateSub = this.programService.getTemplate(this.cookieValue).subscribe(data => {
+        file = new Blob([data.blob()]);
+        if (window.navigator.msSaveOrOpenBlob) { // for IE and Edge
+          window.navigator.msSaveBlob(file , 'Assistance_Listing_Template.doc');
+        } else {
+          let link = document.createElement("a");
+          link.id = 'downloadlink';
+          url = URL.createObjectURL(file);
+          link.download = 'Assistance_Listing_Template.doc';
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+        }
+        
+      } ,
+      error => console.log("Error downloading the file.") ,
+      () => console.log('Completed file download.'));
+  }
 }
-
-

@@ -75,7 +75,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
   }
 
   updateViewModel(data){
-    this.viewModel.authDesc = data.description;
+    this.viewModel.authDesc = data.description ? data.description : null;
   }
 
   updateForm(){
@@ -83,7 +83,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
     this.updateAuthListForm();
 
     this.falAuthForm.patchValue({
-      description: this.viewModel.authDesc
+      description: this.viewModel.authDesc && this.viewModel.authDesc !== null ? this.viewModel.authDesc : ''
     });
 
     setTimeout(() => {
@@ -134,6 +134,9 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
           for(let type of authTypeKey){
             //set fields for each type
             list[type] = auth[type];
+            if(type === 'act' || type === 'executiveOrder') {
+              list[type]['description'] = auth[type]['description'] ? auth[type]['description'] : null;
+            }
 
             //set boolean value for each type in authorizationTypes
             if(auth.authType.indexOf(type) !== -1){

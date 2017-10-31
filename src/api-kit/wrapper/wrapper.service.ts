@@ -1,11 +1,16 @@
-import {Injectable} from '@angular/core';
+import {Injectable} from "@angular/core";
 import {
-  Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams,
+  Http ,
+  Headers ,
+  RequestOptions ,
+  Request ,
+  RequestMethod ,
+  Response ,
+  URLSearchParams ,
   QueryEncoder
-} from '@angular/http';
-import 'rxjs/add/operator/map';
+} from "@angular/http";
+import "rxjs/add/operator/map";
 import {Observable} from "rxjs";
-import { SamErrorService } from '../error-service';
 
 @Injectable()
 export class WrapperService {
@@ -98,6 +103,10 @@ export class WrapperService {
         "body": oApiParam.body,
         "url": baseUrl + ((!oApiParam.prefix) ? '' : oApiParam.prefix ) + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
     };
+    
+    if(oApiParam.responseType) {
+      jsonOption['responseType'] = oApiParam.responseType;
+    }
 
     switch (method.toUpperCase()){
         case "POST":

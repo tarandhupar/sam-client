@@ -71,6 +71,7 @@ export class OrgDetailProfilePage {
       params => {
         this.orgId = params['orgId'];
         this.getOrgDetail(this.orgId);
+        this.isEdit = false;
       });
   }
 
@@ -122,45 +123,66 @@ export class OrgDetailProfilePage {
   }
 
   onSaveEditPageClick(){
-    let validateRes = [];
-    this.addrForms.forEach( e => {validateRes.push(e.validateForm())});
-    Observable.forkJoin(validateRes).subscribe( results => {
-      let isAddrValid = true;
-      results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
-      if(isAddrValid){
-        this.isEdit = false;
-        let endDateStr = moment(this.orgObj['endDate']).format('Y-M-D');
-        let updatedAddresses = this.getUpdatedOrgAddresses();
-        if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname ||
-          endDateStr !== this.editedEndDate || JSON.stringify(updatedAddresses) !== JSON.stringify(this.orgObj['orgAddresses'])){
-          let updatedOrgObj = JSON.parse(JSON.stringify(this.orgObj));
-          updatedOrgObj['summary'] = this.editedDescription;
-          updatedOrgObj['shortName'] = this.editedShortname;
-          updatedOrgObj['endDate'] = this.editedEndDate;
-          updatedOrgObj['orgAddresses'] = updatedAddresses;
-          // this.orgObj['address'] = this.orgAddresses;
-          this.fhService.updateOrganization(updatedOrgObj).subscribe(
-            val => {
-              this.getOrgDetail(this.orgId);
-              this.alertFooter.registerFooterAlert({
-                title: "Success",
-                description: "Your edits have been saved",
-                type: 'success',
-                timer: 3200
-              });
-            },
-            error=> {
-              this.alertFooter.registerFooterAlert({
-                title: "Error",
-                description: "Failed to update your edits",
-                type: 'error',
-                timer: 3200
-              });
-            });
+    if(this.orgObj['type'].toLowerCase() === 'office'){
+      let validateRes = [];
+      this.addrForms.forEach( e => {validateRes.push(e.validateForm())});
+      Observable.forkJoin(validateRes).subscribe( results => {
+        let isAddrValid = true;
+        results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
+        if(isAddrValid){
+          this.isEdit = false;
+          let endDateStr = this.orgObj['endDate']? moment(this.orgObj['endDate']).format('Y-M-D'):'';
+          let shortNameStr = this.orgObj['shortName']? this.orgObj['shortName']:'';
+          let summaryStr = this.orgObj['summary']? this.orgObj['summary']:'';
+          let updatedAddresses = this.getUpdatedOrgAddresses();
+          if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname ||
+            endDateStr !== this.editedEndDate || JSON.stringify(updatedAddresses) !== JSON.stringify(this.orgObj['orgAddresses'])){
+            let updatedOrgObj = JSON.parse(JSON.stringify(this.orgObj));
+            updatedOrgObj['summary'] = this.editedDescription;
+            updatedOrgObj['shortName'] = this.editedShortname;
+            updatedOrgObj['endDate'] = this.editedEndDate === ''?null: this.editedEndDate;
+            updatedOrgObj['orgAddresses'] = updatedAddresses;
+            // this.orgObj['address'] = this.orgAddresses;
+            this.updateOrganization(updatedOrgObj);
+          }
         }
+      }, error => {});
+    }else{
+      this.isEdit = false;
+      let endDateStr = this.orgObj['endDate']? moment(this.orgObj['endDate']).format('Y-M-D'):'';
+      let shortNameStr = this.orgObj['shortName']? this.orgObj['shortName']:'';
+      let summaryStr = this.orgObj['summary']? this.orgObj['summary']:'';
+      if(summaryStr !== this.editedDescription || shortNameStr !== this.editedShortname || endDateStr !== this.editedEndDate) {
+        let updatedOrgObj = JSON.parse(JSON.stringify(this.orgObj));
+        updatedOrgObj['summary'] = this.editedDescription;
+        updatedOrgObj['shortName'] = this.editedShortname;
+        updatedOrgObj['endDate'] = this.editedEndDate === '' ? null : this.editedEndDate;
+        this.updateOrganization(updatedOrgObj);
       }
-    }, error => {});
+    }
 
+
+  }
+
+  updateOrganization(updatedOrgObj){
+    this.fhService.updateOrganization(updatedOrgObj).subscribe(
+      val => {
+        this.getOrgDetail(this.orgId);
+        this.alertFooter.registerFooterAlert({
+          title: "Success",
+          description: "Your edits have been saved",
+          type: 'success',
+          timer: 3200
+        });
+      },
+      error=> {
+        this.alertFooter.registerFooterAlert({
+          title: "Error",
+          description: "Failed to update your edits",
+          type: 'error',
+          timer: 3200
+        });
+      });
   }
 
   onEditPageClick(){

@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ViewChild} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, AbstractControl} from "@angular/forms";
 import {Location} from "@angular/common";
 import {Router, ActivatedRoute} from '@angular/router';
 import {FALFormService} from "../assistance-listing-operations/fal-form.service";
@@ -64,6 +64,14 @@ export class FALFormChangeRequestComponent implements OnInit {
     { breadcrumb: 'Assistance Workspace', url: '/fal/workspace'},
     { breadcrumb: 'Change Request'}
   ];
+  agencyPickerConfig = {
+    id: 'change-request-organization',
+    label: 'New Agency',
+    required: true,
+    hint: null,
+    type: 'single',
+    levelLimit: 3
+  };
 
   constructor(private fb: FormBuilder,
               private service: FALFormService,
@@ -80,11 +88,7 @@ export class FALFormChangeRequestComponent implements OnInit {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
 
     if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
+      this.router.navigate(['/401']);
     }
 
     this.service.getFAL(this.activatedRoute.snapshot.params['id']).subscribe(data => {
@@ -126,10 +130,10 @@ export class FALFormChangeRequestComponent implements OnInit {
         this.createForm(this.requestType);
         this.setTitle(this.requestType);
       } else { //implement the rest of request types
-        this.router.navigate(["accessrestricted"]);
+        this.router.navigate(['/403']);
       }
     } else {
-      this.router.navigate(["accessrestricted"]);
+      this.router.navigate(['/403']);
     }
   }
 
@@ -164,12 +168,11 @@ export class FALFormChangeRequestComponent implements OnInit {
             comment: ''
           });
           this.pageReady = true;
+          this.subscribeToChanges();
         });
       });
-
     }
   }
-
 
   setTitle(type: string) {
     if (type === 'archive_request') {
@@ -266,20 +269,34 @@ export class FALFormChangeRequestComponent implements OnInit {
     this.location.back();
   }
 
-  public onOrganizationChange(org: any) {
-    let orgVal;
-    if (org) {
-      orgVal = org.value;
-    }
-    else
-      orgVal = null;
+  private subscribeToChanges(): void {
+    this.linkControlTo(this.falChangeRequestForm.get('organizationPicker'), this.saveOrganization);
+  }
 
-    if(this.userOrganization.indexOf(String(orgVal)) > -1 || orgVal == null) {
+  private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
+    let boundCallback = callback.bind(this);
+    control.valueChanges.subscribe(value => {
+      boundCallback(value);
+    });
+  }
+
+  private saveOrganization(org) {
+    var orgId = null;
+    if(typeof org === 'object' && org !== null) {
+      orgId = org.orgKey;
+    } else {
+      orgId = org;
+    }
+    
+    if(orgId != null) {
+      this.newOrganizationId = orgId;
+    }
+
+    if(this.userOrganization.indexOf(String(orgId)) > -1 || orgId == null || orgId == '') {
       this.agencyChangeAlertShow = false;
-    }else {
+    } else {
       this.agencyChangeAlertShow = true;
     }
-    this.newOrganizationId = orgVal;
   }
 
   private prepareChangeRequestData(): ChangeRequestModel {

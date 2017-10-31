@@ -1,5 +1,5 @@
 <page
-  *ngIf="permissions"
+  *ngIf="permissions && userPermissions"
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
@@ -15,7 +15,7 @@
           Assistance Listings
         </a>
       </li>
-      <li *ngIf="permissions['CREATE_RAO']">
+      <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']">
         <a routerLink="/fal/myRegionalOffices">
           Manage Assistance Locations
         </a>
@@ -25,13 +25,18 @@
           CFDA Number Management
         </a>
       </li>
-      <li>
+      <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:request:access']">
         <a routerLink="/workspace/my-feed"
            [queryParams]="{domain: 'al', event: 'request', pending: true}">
           Pending Requests &nbsp;
           <span class="sam-ui circular red mini label">
             {{ pendingRequestCount }}
           </span>
+        </a>
+      </li>
+      <li *ngIf="userPermissions && userPermissions._links &&  userPermissions._links['program:template:download']">
+        <a (click)="downloadFile()">
+          Download New Assistance Listing Template
         </a>
       </li>
     </ul>
@@ -90,18 +95,20 @@
       </sam-checkbox>
 
       <!-- Change Request Filter -->
-      <h4 class="sam-ui header">Change Request Pending</h4>
-      <sam-checkbox
-        [(model)]="requestTypeCheckboxModel"
-        (modelChange)="requestTypeModelChanged()"
-        [name]="requestTypeCheckboxConfig.name"
-        [options]="requestTypeCheckboxConfig.options"
-        [label]="requestTypeCheckboxConfig.label"
-        [hint]="requestTypeCheckboxConfig.hint"
-        [errorMessage]="requestTypeCheckboxConfig.errorMessage"
-        [hasSelectAll]="requestTypeCheckboxConfig.hasSelectAll"
-        [disabled]="disabled">
-      </sam-checkbox>
+      <ng-container  *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:request:access']">
+        <h4 class="sam-ui header">Change Request Pending</h4>
+        <sam-checkbox
+          [(model)]="requestTypeCheckboxModel"
+          (modelChange)="requestTypeModelChanged()"
+          [name]="requestTypeCheckboxConfig.name"
+          [options]="requestTypeCheckboxConfig.options"
+          [label]="requestTypeCheckboxConfig.label"
+          [hint]="requestTypeCheckboxConfig.hint"
+          [errorMessage]="requestTypeCheckboxConfig.errorMessage"
+          [hasSelectAll]="requestTypeCheckboxConfig.hasSelectAll"
+          [disabled]="disabled">
+        </sam-checkbox>
+      </ng-container>
 
       <!--Date Filter-->
       <h4 class="sam-ui header">Date</h4>
@@ -159,7 +166,7 @@
   </sidebar>
 
   <!-- Main Content Section -->
-  <sam-button *ngIf="permissions['CREATE_FALS']"
+  <sam-button *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:create']"
               [buttonType]="'default'"
               [buttonText]="'Add Assistance Listing' "
               [buttonClass]="'sam-ui button dark blue'"

@@ -21,11 +21,12 @@ import { FieldErrorList } from '../../assistance-listing-operations/fal-form-err
             <!-- todo: don't hardcode maxwidth -->
             <div [style.display]="'inline-block'" [style.maxWidth]="0.9*length + 3 + 'rem'">
                 <input class="vertical-center"
-                            [attr.name]="'code-box' + i"
-                            [attr.maxlength]="length"
-                            [formControlName]="'codePart' + i"
-                            (keydown)="onKeyDown($event)"
-                            (change)="changeHandler()"
+                       [attr.aria-label]="'Code part ' + (i+1)"
+                       [attr.id]="'code-box' + i"
+                       [attr.maxlength]="length"
+                       [formControlName]="'codePart' + i"
+                       (keydown)="onKeyDown($event,i)"
+                       (change)="changeHandler()"
                 />
             </div>
             <span class="vertical-center" *ngIf="!isLast">-</span>

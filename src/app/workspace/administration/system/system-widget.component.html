@@ -1,13 +1,25 @@
-<div class="sam-ui divided selection list">
-  <ng-container *ngFor="let account of accounts; let $index = index;">
-    <a [routerLink]="['system/profile', account._id]" 
-      class="item"
-      [innerText]="account.systemName" preserveQueryParams>
-    </a>
-  </ng-container>
+<div grid class="equal width relaxed" *ngIf="user">
+  <div class="column">
+    <h4 class="sam-ui header">Requests</h4>
+    <div class="sam-ui selection relaxed list">
+      <a *ngFor="let status of summary | keys"
+         [routerLink]="['system']"
+         [queryParams]="{ status: status.key.toLowerCase() }"
+         class="item"
+         queryParamsHandling="merge">
+        <span class="icon fa fa-chevron-right" aria-hidden="true"></span>
+        <span [innerText]="status.value"></span>
+        <span [innerText]="status.key"></span>
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <h4 class="sam-ui header">&nbsp;</h4>
+    <div class="sam-ui selection relaxed list">
+      <a *ngIf="user.systemAccount" [routerLink]="['system/new']" class="item" queryParamsHandling="merge">
+        <span class="icon fa fa-chevron-right" aria-hidden="true"></span>
+        Request Account
+      </a>
+    </div>
+  </div>
 </div>
-
-<a class="sam-ui secondary button" 
-  [routerLink]="['system/profile']" preserveQueryParams>
-  Create
-</a>

@@ -1,4 +1,4 @@
-<page class="usa-workspace-system" [breadcrumbs]="breadcrumbs" [title]="store.title">
+<page class="usa-workspace-system" [breadcrumbs]="breadcrumbs" [title]="store.title" [theme]="states.legacy ? 'default' : 'inside'">
   <sidebar *ngIf="states.legacy && states.nav">
     <ul class="usa-sidenav-list">
       <li *ngFor="let nav of store.nav; let $index = index;">

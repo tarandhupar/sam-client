@@ -56,10 +56,10 @@
           <ng-container *ngIf="item.value.poc.phone">Phone: {{item.value.poc.phone}}<br/></ng-container>
         </p>
       </ng-template>
-      <ng-template #edit let-item>
+      <ng-template #edit let-item let-index="index">
         <form [formGroup]="item">
           <sam-poc-entry #poc
-            [attr.id]="'contact-information-entry'"
+            [name]="'fal-contact-information-entry-' + index"
             formControlName="poc"
             [manualList]="true"
             [listBuilder]="contactLB"

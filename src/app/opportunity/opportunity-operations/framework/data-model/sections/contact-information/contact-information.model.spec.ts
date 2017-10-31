@@ -1,7 +1,7 @@
 import { OppHeaderInfoViewModel } from "./header-information.model";
 import { OppContactInfoViewModel } from './contact-information.model';
 
-describe('Header Information Section View Model', () => {
+describe('Opportunity Contact Information Section View Model', () => {
 
   let dataModel: OppContactInfoViewModel;
 

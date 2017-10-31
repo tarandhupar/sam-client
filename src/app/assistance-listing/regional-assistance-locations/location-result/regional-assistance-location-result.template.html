@@ -102,10 +102,10 @@
 </div>
 
 <sam-modal #modal1
-  [type]="'info'"
-  [title]="'Are You Sure?'"
-  [cancelButtonLabel]="'No'"
-  [submitButtonLabel]="'Yes'"
+  [type]="'warning'"
+  [title]="'Delete Location'"
+  [cancelButtonLabel]="'Cancel'"
+  [submitButtonLabel]="'OK'"
   [description]="'Are you sure you want to delete this location? Note: Any updates made in this space will not be reflected in the public view.'"
   (onClose)="onModalClose($event)"
   (onSubmit)="deleteRAO($event)">

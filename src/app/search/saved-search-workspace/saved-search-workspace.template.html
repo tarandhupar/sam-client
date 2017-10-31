@@ -6,11 +6,10 @@
 
   <!-- Sidebar section -->
   <sidebar>
-
     <!-- Navigation -->
     <ul class="usa-sidenav-list">
       <li>
-        <a [routerLink]="['/search']">
+        <a [routerLink]="['/search']" [queryParams]="{'index': ''}">
           Search Results
         </a>
       </li>
@@ -21,22 +20,95 @@
       </li>
     </ul>
 
+    <div class="sam-ui segment">
+      <div *ngIf="!initLoad" custom-input class="search-bar">
+        <h4 class="sam-ui header">Search</h4>
+        <sam-autocomplete class="div-fill" #autocomplete
+                          [(ngModel)]="keyword"
+                          (ngModelChange)="workspaceSearchModel($event)"
+                          (enterEvent)="workspaceSearchClick()"
+                          [config]="workspaceSearchConfig"
+                          [options]="[]"
+                          [attr.id]="'fal-workspace-input-search'"
+                          [allowAny]="true"
+                          name="appsearch">
+        </sam-autocomplete>
+        <sam-button class="div-right"
+                    [buttonType]="'default'"
+                    [buttonText]="'Search' "
+                    [buttonClass]="'usa-button usa-search-submit search-btn'"
+                    (onClick)="workspaceSearchClick()">
+        </sam-button>
+      </div>
+
+      <!--Keywords Filter-->
+      <div>
+        <h4 class="sam-ui header">Keywords</h4>
+        <sam-chips
+          class="usa-award-filter"
+          [attr.id]="'keywordSearch'"
+          [name]="'keywordSearchName'"
+          [ngModel]="keywordsModel"
+          (ngModelChange)="keywordsModelChange($event)"
+          [keyValueConfig]="keywordsConfiguration.keyValueConfig"
+          [allowAny]="keywordsConfiguration.allowAny">
+        </sam-chips>
+      </div>
+
+      <div class="sam-ui divider"></div>
+
+      <!-- Status Filter -->
+      <h4 class="sam-ui header">Domains</h4>
+      <sam-checkbox
+        [(model)]="domainCheckboxModel"
+        (modelChange)="domainModelChanged($event)"
+        [name]="domainCheckboxConfig.name"
+        [options]="domainCheckboxConfig.options"
+        [label]="domainCheckboxConfig.label"
+        [hasSelectAll]="domainCheckboxConfig.hasSelectAll"
+        [disabled]="initLoad">
+      </sam-checkbox>
+
+      <div class="sam-ui divider"></div>
+
+      <sam-tab-date-range-filter
+        [tabConfig]="dateRangeConfig"
+        [tabIndex]="dateFilterIndex"
+        [(ngModel)]="dateFilterModel"
+        (filterEvt)="dateFilterHandler($event)"
+        (filterClearEvt)="dateFilterClearHandler($event)">
+      </sam-tab-date-range-filter>
+
+      <div class="sam-ui divider"></div>
+
+      <sam-button
+        buttonType="secondary"
+        buttonText="Clear All"
+        (click)='clearAllFilters()'>
+      </sam-button>
+    </div>
   </sidebar>
 
   <!-- No results -->
   <p *ngIf="data.length==0 && !initLoad">
-    No results found for '<strong>{{ oldKeyword }}</strong>'
+    <span *ngIf="oldKeyword">No results found for '<strong>{{ oldKeyword }}</strong>'</span>
+    <span *ngIf="!oldKeyword">No results found</span>
   </p>
   <!-- Page results -->
-  <results *ngIf="!data.length==0 && !initLoad"
+  <results *ngIf="data.length!=0 && !initLoad"
            [totalElements]="totalCount"
            [totalPages]="totalPages"
            [currentPage]="pageNum+1"
            (pageChange)="pageChange($event-1)">
 
+           <sam-sort [ngModel]="sortModel"
+                     [options]="sortOptions"
+                     (ngModelChange)="sortModelChange($event)">
+            </sam-sort>
+
     <!-- Results -->
     <div class="sam-ui segment" tabindex="-1" *ngFor="let row of data">
-      <saved-search-result [data]="row" [qParams]="qParams"></saved-search-result>
+      <saved-search-result [data]="row" [qParams]="qParams" (actionPerformed)="runSavedSearch()"></saved-search-result>
     </div>
 
 

@@ -1,12 +1,16 @@
 <div [formGroup]="form">
-  <sam-agency-picker-v2 [label]="label('organization')"
-                        [hint]="hint('organization')"
-                        [orgRoots]="selected"
-                        [defaultDept]="true"
-                        [required]="true"
-                        [formControl]="organization"
-                        name="organization"
-                        type="single"></sam-agency-picker-v2>
+  <sam-agency-picker [label]="label('organization')"
+                     [hint]="hint('organization')"
+                     [required]="true"
+                     [advancedMode]="true"
+                     [multimode]="false"
+                     [orgRoot]="user.departmentID"
+                     [initial]="selected"
+                     [searchMessage]="errors('organization')"
+                     [formControl]="organization"
+                     (orgFullPath)="setHierarchy($event)"
+                     *ngIf="user">
+  </sam-agency-picker>
 
   <sam-autocomplete-multiselect [label]="label('systemAdmins')"
                                 [hint]="hint('systemAdmins')"

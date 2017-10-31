@@ -12,7 +12,7 @@ export class StateServiceImpl implements AutocompleteService {
 
   constructor(private locationService: LocationService) { }
 
-  getAllStatesJSON(q:string, country:string): ReplaySubject<any> {
+  getAllStatesJSON(q?:string, country?:string): ReplaySubject<any> {
     const results = new ReplaySubject();
     this.locationService.getAutoCompleteStates(q,country)
       .catch(res => {
@@ -64,7 +64,7 @@ export class StateServiceImpl implements AutocompleteService {
   ]
 })
 export class SamStateServiceAutoDirective implements OnChanges {
-  @Input() countryVal: any;
+  @Input() countryValState: any;
   private autocompleteService: any;
 
   constructor(autocompleteService: AutocompleteService) {
@@ -77,8 +77,8 @@ export class SamStateServiceAutoDirective implements OnChanges {
   ngOnChanges() {
     // When country input on directive changes,
     // update service with new value
-    if (this.countryVal) {
-      this.autocompleteService.setCountry(this.countryVal.key);
+    if (this.countryValState) {
+      this.autocompleteService.setCountry(this.countryValState.key);
     } else {
       // If no country is set, default to USA
       this.autocompleteService.setCountry('USA');

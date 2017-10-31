@@ -56,7 +56,8 @@ export class ReportComponent implements OnInit {
     state: false,
     country: false,
     fiscalYear: false,
-    psc: false
+    psc: false,
+    descOfReq: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -100,6 +101,7 @@ export class ReportComponent implements OnInit {
       value: ''
     } 
   };
+  stateLabel = 'State Code';
   dateValidator = false;
   maxRange = '';
   currentReport = [];
@@ -126,13 +128,17 @@ export class ReportComponent implements OnInit {
     promptsAnswerXML: ''
   };
   promptsAccordian = 0;
-  psc;
+  psc: any = {
+    key: '',
+    value: ''
+  };
+  pscValues;
+  pscValidator: boolean = false;
+  descOfReq = '';
   hasFpds = true;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService,
-    private http: Http) {
+    private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
     this.zone.runOutsideAngular(() => {
       this.checkSession(() => {
         this.zone.run(() => {
@@ -178,6 +184,12 @@ export class ReportComponent implements OnInit {
           if (this.currentReport[0].prompts.indexOf('fiscalYear') >= 0) {
             this.usedPrompts.fiscalYear = true;
           }
+          if (this.currentReport[0].prompts.indexOf('descOfReq') >= 0) {
+            this.usedPrompts.descOfReq = true;
+          }
+          if (this.currentReport[0].prompts.indexOf('psc') >= 0) {
+            this.usedPrompts.psc = true;
+          }
         },
         err => console.log(err));
   }
@@ -195,6 +207,11 @@ export class ReportComponent implements OnInit {
     }
     if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
        this.localEnv = true;
+    }
+    
+    // Sets state prompt name based on specific report
+    if (this.id == '48EC50F946E3011C5DE470A6FEA8C1FD') {
+      this.stateLabel = 'Vendor State Code';
     }
   }      
 
@@ -222,7 +239,6 @@ export class ReportComponent implements OnInit {
       if (duration.years() >= this.PVMAXRANGE) {
         this.maxRange = "months"
         this.dateValidator = true;
-
       }
       else {
         if (evt == "execute") {
@@ -232,6 +248,25 @@ export class ReportComponent implements OnInit {
         if (evt == "export") {
           this.exportReport();
           this.dateValidator = false;
+        }
+      }
+    } else if (this.name == "Procurement History for Market Research Report") {
+      if (duration.years() >= this.REPORTMAXRANGE) {
+        this.maxRange = "years"
+        this.dateValidator = true;
+      } else if (!this.psc || this.psc.key.length === 0){
+        this.pscValidator = true;
+      }
+        else {
+        if (evt == "execute") {
+          this.reportExecute();
+          this.dateValidator = false;
+          this.pscValidator = false;
+        }
+        if (evt == "export") {
+          this.exportReport();
+          this.dateValidator = false;
+          this.pscValidator = false;
         }
       }
     }
@@ -289,7 +324,6 @@ export class ReportComponent implements OnInit {
 
   hitUrl(evt, docId) {
     let vm = this;
-    // &uid='+vm.user._id+'&role=GSA_REPORT_R_REPORT_USER
     if (this.name == "Small Business Goaling Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
     } else if (this.name == "Contract Detail Report") {
@@ -324,6 +358,8 @@ export class ReportComponent implements OnInit {
     this.checkIncludesAgencyName();
     this.checkIncludesStateCountry();
     this.checkFiscalYear();
+    this.checkPSC();
+    this.checkDescOfRequirements()
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -402,7 +438,7 @@ export class ReportComponent implements OnInit {
         encodedCountryVendor = encodeURIComponent(this.location.country.key);
       }
       // State code for geographical report by vendor location
-      if (this.id == 'B1BA646F4E0BD167A588FBBC4E9E06A8') {
+      if (this.id == 'B1BA646F4E0BD167A588FBBC4E9E06A8' || this.id == '48EC50F946E3011C5DE470A6FEA8C1FD') {
         stateXMLid = 'C333A9D1438B941088B6898EEE811323';
         countryXMLid = '88E6E25643D1743D6DA8D395CE631FC2';
         if (this.location.state && this.location.state.value.length > 0) {
@@ -439,6 +475,26 @@ export class ReportComponent implements OnInit {
       this.promptAnswersXML.elements[0].elements.push(fiscalYearXML);
     }
   }
+
+  checkPSC() {
+    if (this.usedPrompts.psc) {
+      let pscXML = {};
+      let pscParameter
+      if (this.psc && this.psc.key) {
+          pscParameter = [{type:"element",name:"at",attributes:{did:"B1F7110C405E965C9C3804B084821825",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"B1F7110C405E965C9C3804B084821825:"+this.psc.key,art:"1"}}];
+      }
+      pscXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"9BB87E5045DF2B7D323EE38373FBA9C4",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: pscParameter}]}]}
+      this.promptAnswersXML.elements[0].elements.push(pscXML);
+    }
+  }
+
+  checkDescOfRequirements() {
+    if (this.usedPrompts.descOfReq) {
+      let descOfReqXML = {};
+      descOfReqXML = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"39119FE847CCD05479775585C460ABE9",tp:"10"},elements:[{type:"text",text:this.descOfReq.toUpperCase()}]}
+      this.promptAnswersXML.elements[0].elements.push(descOfReqXML);
+    }
+  }
   
   resetParameter(){ 
     this.showReport = false;
@@ -457,6 +513,8 @@ export class ReportComponent implements OnInit {
       });
     }
     this.dateValidator = false;
+    this.psc = '';
+    this.descOfReq = '';
     
   }
 

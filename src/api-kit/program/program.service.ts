@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
+import {ResponseContentType} from "@angular/http";
 
 @Injectable()
 export class ProgramService{
@@ -30,13 +31,20 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
-  getRAOById(id){
+  getRAOById(id, cookie:string = null){
     let oApiParam = {
       name: 'program',
       suffix: '/regionalOffices/' + id,
       oParam: {},
+      headers: {},
       method: 'GET'
     };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
 
     return this.oAPIService.call(oApiParam);
   }
@@ -86,6 +94,24 @@ export class ProgramService{
     }
     return this.oAPIService.call(oApiParam);
 
+  }
+
+  isCfdaCodeRestricted(orgId: string, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/federalHierarchyConfigurations/' + orgId + '/isCfdaCodeRestricted',
+      oParam: {},
+      headers: {},
+      method: 'GET'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam);
   }
 
   getFederalHierarchyConfiguration(orgId: string, cookie: string) {
@@ -270,13 +296,18 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
   }
 
-  getPermissions(cookie: string, permissions: any, orgId: string = null) {
+  getPermissions(cookie: string, permissions: any = null, orgId: string = null) {
+    let paramObj = {};
+    if(permissions !== null) {
+      paramObj['permissions'] = permissions;
+    } else {
+      paramObj['size'] = 0;
+    }
+
     let oApiParam = {
       name: 'program',
-      suffix: '/permissions',
-      oParam: {
-        permissions: permissions
-      },
+      suffix: (permissions !== null) ? '/permissions' : '/',
+      oParam: paramObj,
       headers: {
         "X-Auth-Token": cookie
       },
@@ -429,5 +460,29 @@ export class ProgramService{
     };
 
     return this.oAPIService.call(oApiParam);
+  }
+
+  getLatestUnpublishedRevision(id: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/getLatestUnpublishedRevision',
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+  getTemplate(cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/template/download',
+      responseType: ResponseContentType.Blob,
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+  
+    return this.oAPIService.call(oApiParam, false);
   }
 }

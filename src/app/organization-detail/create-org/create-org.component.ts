@@ -45,7 +45,6 @@ export class OrgCreatePage {
         orgType: this.orgType,
       };
       this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-
     });
 
   }

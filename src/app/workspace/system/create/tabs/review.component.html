@@ -1,9 +1,11 @@
 <div *ngIf="form">
   <sam-fieldset-wrapper label="System Information">
     <a class="usa-additional_text edit" (click)="edit('system-information')" label-right><span class="fa fa-pencil"></span> Edit</a>
-    <sam-label-wrapper class="inline" label="Unique System ID:">{{ field(['system-identity','systemName']) }}</sam-label-wrapper>
-    <sam-label-wrapper class="inline" label="Interfacing System Name and Version:">{{ field(['system-identity','systemVersion']) }}</sam-label-wrapper>
-    <sam-label-wrapper label="System Description and Function">{{ field(['system-identity','systemDesciption']) }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Unique System ID:">{{ field(['system-information','systemAccountName']) }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Interfacing System Name and Version:">{{ field(['system-information','interfacingSystemVersion']) }}</sam-label-wrapper>
+    <sam-label-wrapper label="System Description and Function">
+      <div [innerText]="field(['system-information','systemDescriptionAndFunction'])"></div>
+    </sam-label-wrapper>
   </sam-fieldset-wrapper>
 
   <sam-fieldset-wrapper label="Organization Information">
@@ -32,14 +34,16 @@
     <sam-label-wrapper class="inline" label="Entity Information:">
       <div *ngFor="let permission of field('permissions.entityInformation')" [innerText]="permission"></div>
     </sam-label-wrapper>
-    <sam-label-wrapper class="inline" label="Overall FIPS 199 Categorization:">{{ field('permissions.FIPS199Categorization') }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Overall FIPS 199 Categorization:">{{ field('permissions.fips199Categorization') }}</sam-label-wrapper>
   </sam-fieldset-wrapper>
 
   <sam-fieldset-wrapper label="Security Information">
     <a class="usa-additional_text edit" (click)="edit('security')" label-right><span class="fa fa-pencil"></span> Edit</a>
     <sam-label-wrapper class="inline" label="IP Address:">{{ field('security.ipAddress') }}</sam-label-wrapper>
     <sam-label-wrapper class="inline" label="Type of Connection:">{{ field('security.typeOfConnection') }}</sam-label-wrapper>
-    <sam-label-wrapper label="Physical Location">{{ field('security.physicalLocation') }}</sam-label-wrapper>
+    <sam-label-wrapper label="Physical Location">
+      <div [innerText]="field('security.physicalLocation')"></div>
+    </sam-label-wrapper>
     <sam-label-wrapper label="Security Official">
       <div [innerText]="field('security.securityOfficialName')"></div>
       <div [innerText]="field('security.securityOfficialEmail')"></div>
@@ -50,14 +54,14 @@
     <a class="usa-additional_text edit" (click)="edit('authorization')" label-right><span class="fa fa-pencil"></span> Edit</a>
     <sam-label-wrapper label="Authorizing Official">
       <div>
-        <span class="fa" [ngClass]="field('authorizationConfirmation') ? 'fa-check-square-o' : 'fa-square-o'"></span>
+        <span class="fa" [ngClass]="field('authorization.authorizationConfirmation') ? 'fa-check-square-o' : 'fa-square-o'"></span>
         <div>
           I confirm thot I am the authorizing official for the requested System Account
           and certify that all the above provided information is current ond correct.
         </div>
       </div>
     </sam-label-wrapper>
-    <sam-label-wrapper class="inline" label="Name:">{{ field('security.authorizingOfficialName') }}</sam-label-wrapper>
-    <sam-label-wrapper class="inline" label="Date:">{{ field('security.authorizationDate') }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Name:">{{ field('authorization.authorizingOfficialName') }}</sam-label-wrapper>
+    <sam-label-wrapper class="inline" label="Date:">{{ field('authorization.authorizationDate') }}</sam-label-wrapper>
   </sam-fieldset-wrapper>
 </div>

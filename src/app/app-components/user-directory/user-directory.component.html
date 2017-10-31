@@ -43,7 +43,7 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="!states.loading">
         <tr *ngFor="let user of store.cache; let $index = index;">
           <td>
             <div class="user">
@@ -59,7 +59,7 @@
             </div>
             <div class="organization details">
               <div class="title">Department</div>
-              <div [innerText]="user.department"></div>
+              <div [innerHTML]="department(user.departmentID)"></div>
             </div>
           </td>
           <td class="details">

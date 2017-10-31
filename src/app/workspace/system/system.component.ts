@@ -75,6 +75,10 @@ export class SystemComponent {
       .replace(/#.+/, '')
       .replace(/\?.+/, '');
 
+    if(this.router.url.replace(/\?.+/, '') == '/workspace/system') {
+       this.states.legacy = false;
+    }
+
     if(!this.states.legacy) {
       this.store.title = '';
     }

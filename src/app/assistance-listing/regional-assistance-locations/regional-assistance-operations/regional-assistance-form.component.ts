@@ -2,9 +2,10 @@ import {Component, OnInit, ViewChild, Output, EventEmitter} from '@angular/core'
 import {ActivatedRoute, Router} from "@angular/router";
 import {RAOFormService} from "./regional-assistance-form.service";
 import {RAOFormViewModel} from "./regional-assistance-form.model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators, AbstractControl} from "@angular/forms";
 import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
-import {AuthGuard} from "../../../../api-kit/authguard/authguard.service";
+import {FALAuthGuard} from "../../components/authguard/authguard.service";
+import { IBreadcrumb } from "sam-ui-kit/types";
 
 @Component({
   moduleId: __filename,
@@ -23,6 +24,7 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   isEditForm: boolean;
   raoFormGroup: FormGroup;
   cookieValue: string;
+  hasPermissions: boolean;
 
   // submission alert obj
   submitFooterAlertModel = {
@@ -47,26 +49,36 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
     timer: 3000
   };
 
-  mockDropdown: any = {
-    config: {
-      "name": "mock",
-      "disabled": false,
-      options: [
-        {label: "Choose An Option", value:"Choose An Option", name:"Choose An Option", disabled:"false"},
-        {label: "Option1", value:"100004222"},
-        {label: "Option2", value:"100004222"}
-      ]
-    },
-    defaultOption: "Choose An Option"
-
+  agencyPickerConfig = {
+    id: 'rao-organization',
+    label: 'Federal Agency',
+    required: true,
+    hint: null,
+    type: 'single',
+    orgRoots: [],
+    levelLimit: 2,
+    disabled: false,
+    isReady: false
   };
+  orgData:any;
 
   stateDrpDwnOptions = [{label: "None Selected", value: 'na'}];
   countryDrpDwnOptions = [{label: "None Selected", value: 'na'}];
   divisionDrpDwnOptions = [{label: "None Selected", value: 'na'}];
 
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb:'Home', url:'/',},
+    { breadcrumb: 'Workspace', url: '/workspace' },
+    { breadcrumb: 'Regional Assistance Locations', url: '/fal/myRegionalOffices'}
+  ];
 
-  constructor(private service: RAOFormService, private route: ActivatedRoute, private router: Router, private fb: FormBuilder, private alertFooterService: AlertFooterService, private authGuard: AuthGuard) {
+  constructor(
+    private service: RAOFormService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder,
+    private alertFooterService: AlertFooterService,
+    private authGuard: FALAuthGuard) {
   }
 
   ngOnInit(): void {
@@ -74,65 +86,66 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
     // TODO: make api call, or determine if department is 1 value or multiple values in form
 
     this.raoFormGroup = this.fb.group({
-      organizationId:[''],
-      region:[''],
-      pointOfContact:[''],
-      streetAddress:['', [Validators.required]],
-      city:['', [Validators.required]],
-      state:['', [Validators.required]],
-      zip:['', [Validators.required]],
-      country:[''],
-      phone:['', [Validators.required]],
-      subBranch:[''],
-      division:['']
+      organizationId: [''],
+      region: [''],
+      pointOfContact: ['', [Validators.required]],
+      streetAddress: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      zip: ['', [Validators.required, Validators.maxLength(10)]],
+      country: [''],
+      phone: ['', [Validators.required]],
+      subBranch: [''],
+      division: ['']
     });
 
-
     // subscribe to form change and update viewModel when changed
-    this.raoFormGroup.valueChanges.subscribe( data => {
+    this.raoFormGroup.valueChanges.subscribe(data => {
       // call viewModelUpdater
       this.viewModelUpdater(data);
     })
 
-
     if (this.route.snapshot.params['id']) {
       this.route.data.subscribe((resolver: {rao: {data}}) => {
-        this.isEditForm = true;
-        this.RaoFormViewModel = new RAOFormViewModel(resolver.rao);
-        this.RaoFormViewModel.officeId = this.route.snapshot.params['id'];
+        if (resolver.rao && resolver.rao['_links'] != null && resolver.rao['_links']['program:regional:offices:update'] != null) {
+          this.isEditForm = true;
+          this.RaoFormViewModel = new RAOFormViewModel(resolver.rao);
+          this.RaoFormViewModel.officeId = this.route.snapshot.params['id'];
+          this.raoFormGroup.setValue({
+            organizationId: this.RaoFormViewModel.organizationId,
+            region: this.RaoFormViewModel.region,
+            pointOfContact: this.RaoFormViewModel.pointOfContact,
+            streetAddress: this.RaoFormViewModel.streetAddress,
+            city: this.RaoFormViewModel.city,
+            state: this.RaoFormViewModel.state,
+            zip: this.RaoFormViewModel.zip,
+            country: this.RaoFormViewModel.country,
+            phone: this.RaoFormViewModel.phone,
+            subBranch: this.RaoFormViewModel.subBranch,
+            division: this.RaoFormViewModel.division
+          });
+        } else {
+          this.router.navigate(['403']);
+        }
       });
+
+      this.crumbs.push({ breadcrumb: 'Edit Regional Assistance Location' });
     } else {
       this.isEditForm = false;
       this.RaoFormViewModel = new RAOFormViewModel(null);
+      this.crumbs.push({ breadcrumb: 'New Regional Assistance Location' });
     }
 
-    this.raoFormGroup.setValue({
-        organizationId: this.RaoFormViewModel.organizationId ,
-        region: this.RaoFormViewModel.region,
-        pointOfContact: this.RaoFormViewModel.pointOfContact,
-        streetAddress: this.RaoFormViewModel.streetAddress,
-        city: this.RaoFormViewModel.city,
-        state: this.RaoFormViewModel.state,
-        zip: this.RaoFormViewModel.zip,
-        country: this.RaoFormViewModel.country,
-        phone: this.RaoFormViewModel.phone,
-        subBranch: this.RaoFormViewModel.subBranch,
-        division: this.RaoFormViewModel.division
-    });
-
-    this.service.getRAOPermission('CREATE_RAO').subscribe(res => {
-      this.authGuard.checkPermissions('addoreditrao', res);
-    })
-
+    this.hasPermissions = this.authGuard.checkPermissions('addoreditrao', null);
     this.getDropDownData();
-
-
+    this.initFHDropdown();
+    this.subscribeToChanges();
   }
 
-  viewModelUpdater(data: any){
+  viewModelUpdater(data: any) {
     this.RaoFormViewModel.city = data.city;
     this.RaoFormViewModel.country = data.country;
-    this.RaoFormViewModel.organizationId = data.organizationId;
+    this.RaoFormViewModel.organizationId = (typeof data.organizationId === 'object' && data.organizationId.orgKey != null) ? data.organizationId.orgKey : data.organizationId;
     this.RaoFormViewModel.division = data.division;
     this.RaoFormViewModel.phone = data.phone;
     this.RaoFormViewModel.pointOfContact = data.pointOfContact;
@@ -143,8 +156,63 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
     this.RaoFormViewModel.zip = data.zip;
   }
 
+  private initFHDropdown() {
+    try {
+      this.service.getPermissions().subscribe(api => {
+        if (api != null && api.ORG_LEVELS != null) {
+          if (api.ORG_LEVELS.org != 'all' && api.ORG_LEVELS.level == 'all') {
+            this.agencyPickerConfig.orgRoots.push(api.ORG_LEVELS.org);
+            this.agencyPickerConfig.isReady = true;
+          } else if(api.ORG_LEVELS.org != 'all' && api.ORG_LEVELS.level == 'none') {
+              this.agencyPickerConfig.disabled = true;
+              this.agencyPickerConfig.isReady = true;
 
-  getDropDownData(){
+              this.service.getOrganization(api.ORG_LEVELS.org).subscribe(data => {
+                if(data && data['_embedded'] && data['_embedded'][0] && data['_embedded'][0]['org']) {
+                  this.orgData = data['_embedded'][0]['org'];
+                  if (!this.isEditForm) {
+                    this.raoFormGroup.get('organizationId').patchValue(this.orgData.orgKey, {
+                      emitEvent: false
+                    });
+                  }
+                }
+              }, error => {
+                console.error('error retrieving organization', error);
+              });
+          } else if(api.ORG_LEVELS.org == 'all' && api.ORG_LEVELS.level == 'all') {
+            this.agencyPickerConfig.isReady = true;
+          }
+        }
+      }, error => { //failed to get user associated organization. Redirect to signin
+        this.router.navigate(['signin']);
+      });
+    }
+    catch (exception) { //failed to get user associated organization. Redirect to signin
+      this.router.navigate(['signin']);
+    }
+  }
+
+  private subscribeToChanges(): void {
+    this.linkControlTo(this.raoFormGroup.get('organizationId'), this.saveOrganization);
+  }
+
+  private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
+    let boundCallback = callback.bind(this);
+    control.valueChanges.subscribe(value => {
+      boundCallback(value);
+    });
+    // actions to take after any field is updated
+  }
+
+  private saveOrganization(org) {
+    if(typeof org === 'object' && org !== null) {
+      this.RaoFormViewModel.organizationId = org.orgKey;
+    } else {
+      this.RaoFormViewModel.organizationId = org;
+    }
+  }
+
+  getDropDownData() {
     this.service.getRAODict().subscribe(data => {
       for (let state of data['states']) {
         this.stateDrpDwnOptions.push({label: state.value, value: state.code});
@@ -160,22 +228,8 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
     });
   }
 
-  public onOrganizationChange(org: any) {
-
-    let orgVal;
-    if (org) {
-      orgVal = org.value;
-    }
-    else
-      orgVal = null;
-
-    this.raoFormGroup.patchValue({
-      organizationId: this.RaoFormViewModel.organizationId = orgVal.toString()
-    });
-  }
-
   onCancelClick() {
-       this.cancel();
+    this.cancel();
   }
 
   cancel() {
@@ -184,8 +238,9 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.service.submitRAO(this.RaoFormViewModel.officeId, this.RaoFormViewModel.rao)
-      .subscribe(api => {
+    if (this.raoFormGroup.valid) {
+      this.service.submitRAO(this.RaoFormViewModel.officeId, this.RaoFormViewModel.rao)
+        .subscribe(api => {
           this.RaoFormViewModel.officeId = api._body;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.submitFooterAlertModel)));
           let url = 'fal/myRegionalOffices';
@@ -195,16 +250,22 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
           console.error('error saving assistance listing to api', error);
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.submitFooterErrorModel)));
         });
-  }git
+    } else {
+      for (let control in this.raoFormGroup.controls) {
+        this.raoFormGroup.controls[control].markAsDirty();
+        this.raoFormGroup.controls[control].updateValueAndValidity();
+      }
+    }
+  }
 
   onModalClose(event) {
 
   }
 
-  deleteRAO(event){
+  deleteRAO(event) {
     // call the service and pass the id from data
     this.service.deleteRAO(this.route.snapshot.params['id']).subscribe(
-      data =>{
+      data => {
         this.modal2.closeModal();
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteFooterAlertModel)));
         let url = 'fal/myRegionalOffices';

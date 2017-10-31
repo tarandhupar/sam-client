@@ -104,9 +104,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     let cookie = Cookies.get('iPlanetDirectoryPro');
 
     if (cookie != null) {
-      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
         this.cookieValue = cookie;
-      }
     }
 
     let programAPISource = this.loadProgram();
@@ -158,7 +156,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       this.programID = params['id'];
       this.alerts = [];
       this.relatedProgram = [];
-      return this.programService.getProgramById(params['id'], this.cookieValue);
+      return this.programService.getProgramById(params['id'] ? params['id'] : '', this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
 
@@ -167,7 +165,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       this.program = api;
 
       if (!this.program._links.self) {
-        this.router.navigate['accessrestricted'];
+        this.router.navigate['/403'];
       }
 
       this.checkCurrentFY();
@@ -182,7 +180,7 @@ export class ProgramPage implements OnInit, OnDestroy {
         "route": this.pageRoute,
         "children": []
       };
-      if (this.program.status.code != 'published') {
+      if (this.program && this.program.status && this.program.status.code != 'published') {
         falSideNavContent.children.push({
           "label": "Header Information",
           "field": "#program-information",
@@ -263,7 +261,8 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      return this.fhService.getOrganizationById(api.data.organizationId, false);
+      let organizationId = (api && api.data && api.data.organizationId) ? api.data.organizationId : '';
+      return this.fhService.getOrganizationById(organizationId, false);
     });
 
     apiStream.subscribe(apiSubject);
@@ -292,7 +291,9 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadHistoricalIndex(apiSource: Observable<any>) {
     // construct a stream of historical index data
     let historicalIndexStream = apiSource.switchMap(api => {
-      return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.id, api.data.programNumber);
+      let id = (api && api.id) ? api.id : '';
+      let programNumber = (api && api.data && api.data.programNumber) ? api.data.programNumber: '';
+      return this.historicalIndexService.getHistoricalIndexByProgramNumber(id, programNumber);
     });
 
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
@@ -317,7 +318,8 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadRelatedPrograms(apiSource: Observable<any>) {
     // construct a stream of related programs ids
     let relatedProgramsIdStream = apiSource.switchMap(api => {
-      if (api.data.relatedPrograms && api.data.relatedPrograms.length > 0) {
+      let relatedPrograms = (api && api.data && api.data.relatedPrograms) ? api.data.relatedPrograms : []
+      if (relatedPrograms && relatedPrograms.length > 0) {
         return Observable.from(api.data.relatedPrograms);
       }
       return Observable.empty<string>(); // if there are no related programs, don't trigger an update
@@ -371,11 +373,11 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
   private loadAssistanceTypes(apiSource: Observable<any>) {
     apiSource.subscribe(api => {
-      if (api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
+      if (api && api.data && api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
       }
 
-      if (api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
+      if (api && api.data && api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
         this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
       }
     });

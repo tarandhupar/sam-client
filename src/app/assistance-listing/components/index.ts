@@ -22,8 +22,9 @@ import {
 import { PipesModule } from '../../app-pipes/app-pipes.module';
 import { AppComponentsModule } from '../../app-components/app-components.module';
 import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
-import { SamFALTextComponent } from "./fal-text/fal-text.component.ts"
 import { TabsFalComponent } from "./tabs/tabs-fal.component";
+import {FALAuthGuard} from "./authguard/authguard.service";
+import {SamFALTextComponent} from "./fal-text/fal-text.component";
 
 @NgModule({
   imports: [
@@ -71,6 +72,9 @@ import { TabsFalComponent } from "./tabs/tabs-fal.component";
     CustomInlineErrorMessageComponent,
     SamFALTextComponent,
     TabsFalComponent
-  ]
+  ],
+  providers: [
+    FALAuthGuard
+  ],
 })
 export class FALComponentsModule {}

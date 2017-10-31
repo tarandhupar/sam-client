@@ -192,7 +192,7 @@ describe('FAL Compliance Requirements Form', () => {
     ]);
     reportsData = comp['loadReports']();
     expect(reportsData.checkbox.sort()).toEqual(['program', 'progress', 'expenditure'].sort());
-    expect(reportsData.textarea.sort()).toEqual(['description'].sort());
+    expect(reportsData.textarea.sort()).toEqual(['description', '', '', '', ''].sort());
   });
 
   it('should load audits',() => {

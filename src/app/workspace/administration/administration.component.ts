@@ -40,6 +40,7 @@ export class AdministrationComponent {
       profile: false,
       rm: false,
       system: false,
+      opp: false
     }
   };
   public widgetResult: any;
@@ -51,16 +52,17 @@ export class AdministrationComponent {
     profile: true,
     rm: false,
     system: false,
+    opp: true
   };
-  
+
   callback = () => {
     console.log("Help!");
   }
-  
+
   actions: Array<any> = [
-    { 
-      label: 'Help', 
-      icon: 'fa fa-question-circle', 
+    {
+      label: 'Help',
+      icon: 'fa fa-question-circle',
       callback: () => { this._router.navigate(['/help/award'], { fragment: 'federalHierarchy'});}
     }
   ];
@@ -120,24 +122,19 @@ export class AdministrationComponent {
   }
 
   initSession() {
-    //Get the sign in info
+    // Get the sign in info
     this.api.iam.checkSession((user) => {
       this.states.isSignedIn = true;
       this.user = user;
+
       this.initRoles();
     });
-
-    this.toggleControl.system = this.api.iam.user.isSystemAccount();
-    this.toggleControl.fsd = this.api.iam.user.isFSD();
   }
 
   initRoles() {
     this.states.public = !(this.user.gov || this.user.entity);
-
-    // Remove After Demo
-    if(this.user.email.match(/@(bah|governmentcio).com/g)) {
-      this.states.public = false;
-    }
+    this.toggleControl.system = this.user.systemAccount;
+    this.toggleControl.fsd = this.user.fsd;
   }
 
   getAlertStatistic(type, cb:(num)=>any){

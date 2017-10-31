@@ -6,9 +6,9 @@
     <div [attr.class]="'date-range-zone'" *ngIf="radioSelection=='dateRange'">
         <sam-date-range *ngIf="rangeType!='date-time'" [ngModel]="model.dateRange" (ngModelChange)="dateRangeChange($event)" name="date range"></sam-date-range>
         <sam-date-range *ngIf="rangeType=='date-time'" type="date-time" [ngModel]="model.dateRange" (ngModelChange)="dateRangeChange($event)" name="date range"></sam-date-range>
-        <sam-select *ngIf="rangeType=='date-time'" [ngClass]="'date-range-timezone'" [ngModel]="model.timezone" (ngModelChange)="dateRangeTimezoneChange($event)" name="time zone" [options]="timezoneOptions"></sam-select>
+        <!--Will bring this back soon --><sam-select *ngIf="rangeType=='date-time' && false" [ngClass]="'date-range-timezone'" [ngModel]="model.timezone" (ngModelChange)="dateRangeTimezoneChange($event)" name="time zone" [options]="timezoneOptions"></sam-select>
     </div>
-    <ng-container *ngIf="radioSelection=='timeSpan'">
+    <ng-container *ngIf="radioSelection=='timeSpan'"> 
         <sam-select [ngModel]="model.timeSpan" (ngModelChange)="timeSpanChange($event)" name="time span" [options]="timeSpanOptions"></sam-select>
     </ng-container>
 </sam-fieldset-wrapper>

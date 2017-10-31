@@ -171,7 +171,7 @@
 <div class="sam-ui-kit">
   <div class="usa-grid">
     <div class="usa-width-one-half">
-      <sam-poc-entry></sam-poc-entry>
+      <sam-poc-entry name="poc"></sam-poc-entry>
     </div>
   </div>
   <div class="usa-grid">
@@ -217,7 +217,124 @@
                                   [keyValueConfig]="multiselectConfigSelectable">
         </sam-autocomplete-multiselect>
     </div>
+  </div> <br/><br/><br/>
+
+ <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <sam-autocomplete [(ngModel)]="selectedPSC1"
+                        pscpicker-autofill [activeVal] = "'Y'"
+                        [labelText]="'PSC Picker (Active Only)'"
+                        [config]="{
+                          keyValueConfig: {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                          }
+                        }"
+                        [name]="'pscpicker'"
+                        [id]="'pscpicker'">
+      </sam-autocomplete><br/>
+      {{ selectedPSC1 | json }}
+    </div>
+    <div class="usa-width-one-half">
+      <sam-autocomplete [(ngModel)]="selectedPSC2"
+                        pscpicker-autofill [activeVal] = "'ALL'"
+                        [labelText]="'PSC Picker (Including Inactive) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Inactive code'"
+                        [config]="{
+                          keyValueConfig: {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                          }
+                        }"
+                        [name]="'pscpicker'"
+                        [id]="'pscpicker'">
+      </sam-autocomplete><br/>
+      {{ selectedPSC2 | json }}
+    </div>
   </div> <br/>
+
+  <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <sam-autocomplete-multiselect [(ngModel)]="multiSelectedPSC1"
+                        pscpicker-autofill [activeVal] = "'Y'"
+                        label="PSC Picker Multiselect (Active Only)"
+                        [keyValueConfig]=" {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                        }">
+      </sam-autocomplete-multiselect><br/>
+      {{ multiSelectedPSC1 | json }}
+    </div>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-multiselect [(ngModel)]="multiSelectedPSC2"
+                        pscpicker-autofill [activeVal] = "'ALL'"
+                        label="PSC Picker Multiselect (Including Inactive) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Inactive code"
+                        [keyValueConfig]=" {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                        }">
+      </sam-autocomplete-multiselect><br/>
+      {{ multiSelectedPSC2 | json }}
+    </div>
+  </div> <br/><br/><br/>
+
+<div class="usa-grid">
+    <div class="usa-width-one-half">
+      <sam-autocomplete [(ngModel)]="selectedNAICS1"
+                        naicspicker-autofill
+                        [labelText]="'NAICS Picker (Latest Year)'"
+                        [config]="{
+                          keyValueConfig: {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                          }
+                        }"
+                        [name]="'naicspicker'"
+                        [id]="'naicspicker'">
+      </sam-autocomplete><br/>
+      {{ selectedNAICS1 | json }}
+    </div>
+    <div class="usa-width-one-half">
+      <sam-autocomplete [(ngModel)]="selectedNAICS2"
+                        naicspicker-autofill [maxLevel] = "'4'"
+                        [labelText]="'NAICS Picker (Max Level = 4)'"
+                        [config]="{
+                          keyValueConfig: {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                          }
+                        }"
+                        [name]="'naicspicker'"
+                        [id]="'naicspicker'">
+      </sam-autocomplete><br/>
+      {{ selectedNAICS2 | json }}
+    </div>
+  </div> <br/>
+
+  <div class="usa-grid">
+    <div class="usa-width-one-half">
+      <sam-autocomplete-multiselect [(ngModel)]="multiSelectedNAICS1"
+                        naicspicker-autofill
+                        label="NAICS Picker Multiselect (Latest Year)"
+                        [keyValueConfig]=" {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                        }">
+      </sam-autocomplete-multiselect><br/>
+      {{ multiSelectedNAICS1 | json }}
+    </div>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-multiselect [(ngModel)]="multiSelectedNAICS2"
+                        naicspicker-autofill [sourceYears] = "['2012']"
+                        label="NAICS Picker Multiselect (Source Year 2012)"
+                        [keyValueConfig]=" {
+                            keyProperty: 'key',
+                            valueProperty: 'value'
+                        }">
+      </sam-autocomplete-multiselect><br/>
+      {{ multiSelectedNAICS2 | json }}
+    </div>
+  </div> <br/><br/><br/>
+
   <div class="usa-grid">
     <div class="usa-width-one-half">
       <h2>SAM agency-picker-v2 &lt;sam-agency-picker-v2&gt;</h2>
@@ -964,7 +1081,7 @@
   <div class="usa-grid">
     <h2 class="usa-width-one">Autocomplete Multiselect (Selectable Categories)</h2>
     <sam-autocomplete-multiselect class="usa-width-one-half"
-                                  label="Team Members" required="true"
+                                  label="Team Members" required="true" hint="Look at my cool hint"
                                   [keyValueConfig]="multiselectConfigSelectable"
                                   [options]="multiselectOptions"
                                   [categoryIsSelectable]="true"

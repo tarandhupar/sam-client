@@ -70,15 +70,15 @@
           <th></th>
         </thead>
         <tbody>
-          <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="!isMyAccess && roleOrg?._links?.edit_access && 'clickable'">
+          <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="isRowEditable(roleOrg) && 'clickable'">
             <td>{{orgName(roleOrg.organization)}}</td>
             <td>{{roleOrg.role.val}}</td>
             <td>
               <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
             </td>
             <td>
-              <i *ngIf="!isMyAccess && roleOrg?._links?.edit_access" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
-              <i *ngIf="!isMyAccess && roleOrg?._links?.delete_access" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
+              <i *ngIf="isRowEditable(roleOrg)" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
+              <i *ngIf="isRowDeletable(roleOrg)" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
             </td>
           </tr>
         </tbody>

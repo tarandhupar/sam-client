@@ -14,7 +14,7 @@ export class ContentManagementService{
         {domainName: 'Entity Information'},
         {domainName: 'Sub-Awards'},
         {domainName: 'Wage Determinationss'}
-        ]
+      ]
     });
   }
 

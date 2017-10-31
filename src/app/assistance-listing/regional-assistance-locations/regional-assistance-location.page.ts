@@ -3,6 +3,8 @@ import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
 import { IBreadcrumb } from "sam-ui-kit/types";
+import {FHService} from "../../../api-kit/fh/fh.service";
+import {FALAuthGuard} from "../components/authguard/authguard.service";
 
 @Component({
   moduleId: __filename,
@@ -31,15 +33,18 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   size: any = {};
   cookieValue: string;
   runProgSub: any;
-  sortBy: string = "";
+  sortBy: string = "-modifiedDate";
   oFilterParam: {};
   optionsHalLink: boolean;
+  orgMap = new Map();
   public permissions: any;
   raoExists: boolean = true;
   regionalLocationSearchConfig: any = {
     placeholder: "Search Regional Assistance Locations"
   };
-  
+  hasPermissions: boolean;
+  public userPermissions: any;
+
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
@@ -47,36 +52,32 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   ];
 
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService,
+  private falAuthGuard: FALAuthGuard) {
   }
 
   ngOnInit() {
+    this.getUserPermissions();
+  }
+  
+  getUserPermissions() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
-    if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
-    }
-
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, CREATE_RAO, ORG_ID, ORG_LEVELS').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'ORG_ID, ORG_LEVELS').subscribe(res => {
       this.permissions = res;
-      if (!this.permissions['CREATE_RAO']) {
-        this.router.navigate(['accessrestricted']);
-      } else {
-        //this.setupQS();
-        this.activatedRoute.queryParams.subscribe(
-          data => {
-            this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
-            this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-
-            this.checkRAOExists();
-            this.getRegionalAssistanceLocations();
-          });
-      }
     });
+    this.userPermissions = this.falAuthGuard._falLinks;
+    this.hasPermissions = this.falAuthGuard.checkPermissions('regAssLoc', null);
+    if(this.hasPermissions) {
+      //this.setupQS();
+      this.activatedRoute.queryParams.subscribe(
+        data => {
+          this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+          this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+      
+          this.checkRAOExists();
+          this.getRegionalAssistanceLocations();
+        });
+    }
   }
 
   ngOnDestroy() {
@@ -123,6 +124,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
       Cookie: this.cookieValue,
       keyword: this.keyword,
       page: this.pageNum,
+      sortBy: this.sortBy
     }).subscribe(
       data => {
 
@@ -135,9 +137,11 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
         } else {
           this.totalCount = 0;
           this.data = [];
+          this.totalPages = 0;
         }
         this.oldKeyword = this.keyword;
         this.initLoad = false;
+        this.createOrgNameMap();
       },
       error => {
         console.error('Error!!', error);
@@ -146,6 +150,41 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
     // construct qParams to pass parameters to object view pages
     this.qParams['keyword'] = this.keyword;
     this.qParams['index'] = this.index;
+  }
+
+  createOrgNameMap(){
+    let idArray = new Set(this.data.map(data => {
+      let id = data.organizationId;
+
+      if(typeof id !== 'string'){
+        return id.toString();
+      }
+      return id;
+     }));
+    let uniqueIdList = Array.from(idArray).join();
+    let ctx = this;
+    if(uniqueIdList && uniqueIdList.length > 0){
+      this.fhService.getOrganizationsByIds(uniqueIdList)
+        .subscribe(
+          data => {
+            data._embedded.orgs.forEach(function(org){
+              ctx.orgMap.set(org.org.orgKey.toString(), org.org.name);
+            });
+            this.addOrgNameToData();
+          },
+          error => {
+            console.error('Error!!', error);
+          }
+        );
+    }
+
+  }
+
+  addOrgNameToData() {
+    let ctx = this;
+    ctx.data.forEach(function(data){
+      data['title'] = ctx.orgMap.get(data.organizationId.toString());
+    });
   }
 
 

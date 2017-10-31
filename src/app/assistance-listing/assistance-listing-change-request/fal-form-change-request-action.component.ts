@@ -8,7 +8,8 @@ import {ProgramService} from "../../../api-kit/program/program.service";
 import {falCustomValidatorsComponent} from "../validators/assistance-listing-validators";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
-import {IBreadcrumb} from "../../../sam-ui-elements/src/ui-kit/types";
+import {IBreadcrumb} from "sam-ui-kit/types";
+
 
 enum ChangeRequestActionPermissionType {
   CANCEL,
@@ -85,10 +86,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
 
     if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
+      this.router.navigate(['/401']);
     }
 
     this.changeRequestService.getRequest(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(data => {
@@ -170,10 +168,10 @@ export class FALFormChangeRequestActionComponent implements OnInit {
         this.createForm(this.requestType);
         this.pageReady = true;
       } else {
-        this.router.navigate(["accessrestricted"]);
+        this.router.navigate(['/403']);
       }
     } else {
-      this.router.navigate(["accessrestricted"]);
+      this.router.navigate(['/403']);
     }
   }
 

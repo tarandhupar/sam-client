@@ -5,6 +5,7 @@ import * as Cookies from 'js-cookie';
 import {ActionHistoryLabelPipe} from "../../pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "../../pipes/request-type-label.pipe";
 import { IBreadcrumb } from "sam-ui-kit/types";
+import {FALAuthGuard} from "../../components/authguard/authguard.service";
 
 @Component({
   providers: [ActionHistoryLabelPipe, RequestTypeLabelPipe],
@@ -16,6 +17,7 @@ export class FeedsPage implements OnInit {
   requests: any;
   programRequestList: any;
   public permissions: any;
+  public userPermissions: any;
   domainLabel: any = "";
   isAL:boolean = false;
   isRequest: boolean = false;
@@ -30,6 +32,7 @@ export class FeedsPage implements OnInit {
   defaultDomainOption: any;
   defaultEventOption: any;
   defaultPendingRequestsOption: any;
+  hasPermissions: boolean;
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
@@ -37,39 +40,33 @@ export class FeedsPage implements OnInit {
   ];
 
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService , private authGuard: FALAuthGuard) {
   }
 
   ngOnInit(){
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
-    if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
-    }
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.defaultDomainOption = params['domain'];
       this.defaultEventOption = params['event'];
       this.defaultPendingRequestsOption = params['pending'];
     });
-
-
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, ORG_LEVELS, CREATE_RAO').subscribe(res => {
+    this.getUserPermissions();
+  }
+  
+  getUserPermissions() {
+    this.programService.getPermissions(this.cookieValue, 'ORG_LEVELS').subscribe(res => {
       this.permissions = res;
-      if (!this.permissions['FAL_LISTING']) {
-        this.router.navigate['accessrestricted'];
-      } else {
-        this.activatedRoute.queryParams.subscribe(
-          params => {
-            this.isPendingRequest = this.defaultPendingRequestsOption;
-            this.getRequests();
-          });
-      }
     });
+    this.userPermissions = this.authGuard._falLinks;
+    this.hasPermissions = this.authGuard.checkPermissions('feeds', null);
+    if(this.hasPermissions) {
+      this.activatedRoute.queryParams.subscribe(
+        params => {
+          this.isPendingRequest = this.defaultPendingRequestsOption;
+          this.getRequests();
+        });
+    }
   }
 
   getRequests(){

@@ -71,15 +71,15 @@ import * as moment from 'moment/moment';
             </li>
             <li *ngIf="data.responseDate" class="item current-response-date">
               <strong>Current Response Date</strong><br>
-              {{ data.responseDate  }}
+              {{ data.responseDate | date }}
             </li>
             <li *ngIf="data.modifiedDate" class="item last-modified-date">
               <strong>Last Modified Date</strong><br>
-              {{ data.modifiedDate  }} <a *ngIf="data.modifications?.count > 0" [routerLink]="['/opportunities', data._id]" [queryParams]="qParams" fragment="{{oppHistoryFragment}}">({{ data.modifications?.count}})</a>
+              {{ data.modifiedDate | date }} <a *ngIf="data.modifications?.count > 0" [routerLink]="['/opportunities', data._id]" [queryParams]="qParams" fragment="{{oppHistoryFragment}}">({{ data.modifications?.count}})</a>
             </li>
             <li *ngIf="data.publishDate" class="item last-published-date">
               <strong>Last Published Date</strong><br>
-              {{ data.publishDate  }}
+              {{ data.publishDate | date }}
             </li>
             <li class="item opportunity-type">
               <strong>Type</strong><br>

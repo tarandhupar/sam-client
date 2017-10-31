@@ -9,6 +9,7 @@ import { Section } from './section';
 })
 export class PermissionsComponent extends Section {
   @Input('group') form: FormGroup;
+  @Input() submitted: boolean = false;
 
   private options = {
     'contract-opportunities': [
@@ -29,7 +30,7 @@ export class PermissionsComponent extends Section {
       { label: 'Read Sensitive', name: 'ei-read-sensitive', value: 'read-sensitive' },
     ],
 
-    'FIPS199Categorization': ['Low','Medium','High']
+    'fips199Categorization': ['Low','Medium','High']
   };
 
   private keys = {
@@ -46,11 +47,15 @@ export class PermissionsComponent extends Section {
         hint: 'What permissions do you need?',
       },
 
-      FIPS199Categorization: {
+      fips199Categorization: {
         label: 'Overall FIPS 199 Categorization',
         hint: '',
       }
     };
+  }
+
+  errors(key: string = ''): string {
+    return this.getError(this.form, key, this.submitted);
   }
 
   titleize(value: string) {

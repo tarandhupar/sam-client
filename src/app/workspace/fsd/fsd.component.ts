@@ -48,10 +48,12 @@ export class FSDComponent {
 
   ngOnInit() {
     this.store.subscriptions['params'] = this.route.children[0].params.subscribe(params => {
-      this.api.iam.fsd.user(params['id'], (user) => {
-        this.store.subtitle = user._id;
-        this.store.title = user.fullName;
-      });
+      if(params['id']) {
+        this.api.iam.fsd.user(params['id'], (user) => {
+          this.store.subtitle = user._id;
+          this.store.title = user.fullName;
+        });
+      }
     });
 
     this.store.subscriptions['data'] = this.route.children[0].data.subscribe(data => {
@@ -63,8 +65,12 @@ export class FSDComponent {
   }
 
   ngOnDestroy() {
-    this.store.subscriptions['params'].unsubscribe();
-    this.store.subscriptions['data'].unsubscribe();
+    // Unsubscribe all subscriptions
+    Object.keys(this.store.subscriptions).map(key => {
+      if(this.store.subscriptions[key]) {
+        this.store.subscriptions[key].unsubscribe();
+      }
+    });
   }
 
   checkAccess() {

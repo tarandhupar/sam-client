@@ -6,6 +6,9 @@
   title="CFDA Number Configuration Change">
 
   <div class="sam-ui grid">
+    <sam-alert [type]="'error'" [title]="''" *ngIf="isCfdaCodeRestricted">
+      Your CFDA agency identifier is shared with other organizations and cannot be changed manually. If you need to adjust the number range for your organization please contact the Federal Service Desk for assistance.
+    </sam-alert>
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
       <div id="page-data" class="sam-ui segment" *ngIf="organization">
         <div class="sam-ui medium header">
@@ -46,6 +49,7 @@
         </div>
 
         <sam-button [buttonType]="buttonType"
+                    [buttonDisabled]="isCfdaCodeRestricted"
                     [attr.id]="'submit-btn'"
                     [buttonText]="'Submit'"
                     [buttonClass]="'usa-button-primary usa-search-submit search-btn'"

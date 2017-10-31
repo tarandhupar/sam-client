@@ -4,7 +4,6 @@ import {OpportunityAuthGuard} from "./components/authgaurd/authguard.service";
 import {OPPWorkspacePage} from "./opportunity-workspace/opportunity-workspace.page";
 import {OpportunityReviewComponent} from "./opportunity-operations/workflow/review/opportunity-review.component";
 
-import {AuthGuard} from "../../api-kit/authguard/authguard.service";
 
 export const routes: Routes = [
   {path: 'opportunities/:id', component: OpportunityPage}

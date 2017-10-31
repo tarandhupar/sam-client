@@ -108,8 +108,8 @@ this.cookie =  Cookies.get('iPlanetDirectoryPro');
     return this.programService.sendNotification(programId, FALFormService.getAuthenticationCookie());
   }
 
-  getFALPermission(type: string) {
-    return this.programService.getPermissions(FALFormService.getAuthenticationCookie(),type);
+  getFALPermission(type?: string) {
+    return this.programService.getPermissions(FALFormService.getAuthenticationCookie(), type);
   }
 
   getFederalHierarchyConfiguration(orgId: string){

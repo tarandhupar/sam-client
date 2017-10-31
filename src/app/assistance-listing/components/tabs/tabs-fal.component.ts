@@ -94,9 +94,7 @@ export class TabsFalComponent implements OnInit{
     let cookie = Cookies.get('iPlanetDirectoryPro');
 
     if (cookie != null) {
-      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
         this.cookieValue = cookie;
-      }
     }
 
     this.showHideButtons(this.data);

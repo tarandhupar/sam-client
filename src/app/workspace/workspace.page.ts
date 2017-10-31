@@ -9,7 +9,7 @@ export class WorkspacePage  {
 
   public showWelcome:boolean = true;
   public dataEntryWidgetControl:any =  {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
-  public administrationWidgetControl:any =  {profile:true,fh:true,rm:false,aacRequest:true,alerts:true,analytics:true};
+  public administrationWidgetControl:any =  {profile:true,fh:true,rm:false,aacRequest:true,alerts:true,analytics:true,opp:true};
 
   public userProfile = 'r-IAE-ad';
   public userMapping:any =  {1:'f-ng-na',2:'f-g-na',3:'r-ng-na',4:'r-g-na',5:'r-g-ad',6:'r-IAE-ad'};

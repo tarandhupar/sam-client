@@ -15,9 +15,17 @@
     </div>
   </sam-fieldset-wrapper>
 
-  <sam-checkbox [options]="options.authorizationConfirmation"
-                name="authorization-confirmation"
-                formControlName="authorizationConfirmation"></sam-checkbox>
+  <sam-fieldset-wrapper [errorMessage]="errors('authorizationConfirmation')">
+    <ul class="usa-unstyled-list">
+      <li>
+        <input type="checkbox"
+               formControlName="authorizationConfirmation"
+               [id]="options.authorizationConfirmation.id"
+               [value]="options.authorizationConfirmation.value">
+        <label [for]="options.authorizationConfirmation.id" [innerText]="options.authorizationConfirmation.label"></label>
+      </li>
+    </ul>
+  </sam-fieldset-wrapper>
 
   <sam-label-wrapper label="Name">
     <div [innerText]="name"></div>

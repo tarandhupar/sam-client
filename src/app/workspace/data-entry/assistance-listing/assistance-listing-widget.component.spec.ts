@@ -18,6 +18,10 @@ import {AlertFooterService} from "../../../app-components/alert-footer/alert-foo
 import {AssistanceListingWidgetComponent} from "./assistance-listing-widget.component";
 import {Observable} from 'rxjs';
 import * as Cookies from 'js-cookie';
+import {FALAuthGuard} from "../../../assistance-listing/components/authguard/authguard.service";
+import {FALFormErrorService} from "../../../assistance-listing/assistance-listing-operations/fal-form-error.service";
+import {FALFormService} from "../../../assistance-listing/assistance-listing-operations/fal-form.service";
+import {DictionaryService} from "../../../../api-kit/dictionary/dictionary.service";
 
 let component: AssistanceListingWidgetComponent;
 let fixture: ComponentFixture<AssistanceListingWidgetComponent>;
@@ -96,8 +100,6 @@ let MockProgramService = {
   },
   getPermissions: (cookieValue: string, perms: string) => {
     return Observable.of({
-      'CREATE_FALS': true,
-      'CREATE_RAO': true,
       'ORG_LEVELS': {
         'level': 'all'
       }
@@ -120,6 +122,10 @@ describe('Workspace Page: Assistance Listing Widget', () => {
         ProgramService,
         BaseRequestOptions,
         MockBackend,
+        FALAuthGuard,
+        FALFormErrorService,
+        FALFormService,
+        DictionaryService,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -151,8 +157,6 @@ describe('Workspace Page: Assistance Listing Widget', () => {
 
   it("should compile without error", () => {
     expect(component.permissions).toEqual({
-      'CREATE_FALS': true,
-      'CREATE_RAO': true,
       'ORG_LEVELS': {
         'level': 'all'
       }

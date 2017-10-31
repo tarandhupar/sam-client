@@ -57,9 +57,20 @@
       <div class="sam-ui hidden divider"></div>
 
       <div class="sam-ui padded raised segment">
+
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#header-information'])"
+           class="sam-ui top right attached mini blue label"
+           style="z-index: 1;">
+          Edit Section
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </a>
+
         <div class="sam-ui attached grid">
           <div class="column">
             <div class="sam-ui relaxed divided list">
+
               <div class="item" [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
                 <div class="content">
                   <div class="header">
@@ -168,72 +179,81 @@
           General Information
         </h2>
         <div class="sam-ui segment">
-        <ul class="usa-unstyled-list">
-          <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
-            <strong>Contract Opportunity Type: </strong>
-            <ng-container *ngIf="opportunity.data?.type !== 'm'">Original {{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
-            <ng-container *ngIf="opportunity.data?.type === 'm'">
-              <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">Canceled </ng-container>
-              <ng-container *ngIf="!opportunity.data?.statuses?.isCanceled">Updated </ng-container>
-              {{ originalOpportunity?.data?.type | opportunityTypeLabel}}
-            </ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
-            <strong>Update/Amendment Posted Date: </strong>
-            {{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}
-          </li>
-          <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
-            <strong>Original Posted Date: </strong>
-            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ResponseDate)">
-            <strong>Update/Amendment Response Date: </strong>
-            {{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
-          </li>
-          <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
-            <strong>Original Response Date: </strong>
-            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
-              [ngSwitch]="opportunity.data?.archive?.type">
-            <!-- <sam-label *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></sam-label> -->
-            <strong>Archiving Policy: </strong>
-            <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
-            <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
-            <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
-            <strong>Update/Amendment Archive Date: </strong>
-            {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
-          </li>
-          <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
-            <strong>Original Archive Date: </strong>
-            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
-            <strong>J&A Statutory Authority: </strong>
-            {{ opportunity?.data?.award?.justificationAuthority?.authority }}
-          </li>
-          <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.JustificationAuthority)">
-            <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
-            <ng-container *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && dictionariesUpdated === true">
-              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:findDictionary('fo_justification_authority'):'elementId':false:'')[0]?.value }}
-            </ng-container>
-          </li>
-          <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ModificationNumber)">
-            <strong>Modification Number: </strong>
-            {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
-          </li>
-          <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.SpecialLegislation)">
-            <strong>Special Legislation: </strong>
-            <ng-container *ngIf="opportunity?.data?.isRecoveryRelated == true">
-              Recovery and Reinvestment Act
-            </ng-container>
-          </li>
-        </ul>
+          <!-- Edit Button -->
+          <a *ngIf="canEdit()"
+             (click)="onEditClick(['#general-information'])"
+             class="sam-ui top right attached mini blue label"
+             style="z-index: 1;">
+            Edit Section
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </a>
+
+          <ul class="usa-unstyled-list">
+            <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
+              <strong>Contract Opportunity Type: </strong>
+              <ng-container *ngIf="opportunity.data?.type !== 'm'">Original {{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
+              <ng-container *ngIf="opportunity.data?.type === 'm'">
+                <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">Canceled </ng-container>
+                <ng-container *ngIf="!opportunity.data?.statuses?.isCanceled">Updated </ng-container>
+                {{ originalOpportunity?.data?.type | opportunityTypeLabel}}
+              </ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
+              <strong>Update/Amendment Posted Date: </strong>
+              {{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
+              <strong>Original Posted Date: </strong>
+              <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ originalOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+              <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ResponseDate)">
+              <strong>Update/Amendment Response Date: </strong>
+              {{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
+              <strong>Original Response Date: </strong>
+              <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+              <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ opportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
+                [ngSwitch]="opportunity.data?.archive?.type">
+              <!-- <sam-label *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></sam-label> -->
+              <strong>Archiving Policy: </strong>
+              <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
+              <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
+              <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
+              <strong>Update/Amendment Archive Date: </strong>
+              {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
+              <strong>Original Archive Date: </strong>
+              <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ originalOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+              <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ opportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
+              <strong>J&A Statutory Authority: </strong>
+              {{ opportunity?.data?.award?.justificationAuthority?.authority }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.JustificationAuthority)">
+              <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
+              <ng-container *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && dictionariesUpdated === true">
+                {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:findDictionary('fo_justification_authority'):'elementId':false:'')[0]?.value }}
+              </ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ModificationNumber)">
+              <strong>Modification Number: </strong>
+              {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.SpecialLegislation)">
+              <strong>Special Legislation: </strong>
+              <ng-container *ngIf="opportunity?.data?.isRecoveryRelated == true">
+                Recovery and Reinvestment Act
+              </ng-container>
+            </li>
+          </ul>
         <div class="sam-ui hidden section divider"></div>
         </div>
       </section>
@@ -244,15 +264,24 @@
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Classification</h2>
         <div class="sam-ui segment">
+          <!-- Edit Button -->
+          <a *ngIf="canEdit()"
+             (click)="onEditClick(['#classification'])"
+             class="sam-ui top right attached mini blue label"
+             style="z-index: 1;">
+            Edit Section
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </a>
+
             <ul class="usa-unstyled-list">
               <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
                 <strong> Original Set Aside: </strong>
-                <ng-container *ngIf="opportunity.parent != null && originalOpportunity?.data?.solicitation?.setAside && dictionariesUpdated === true">
+                <ng-container *ngIf="(opportunity.parent | json) != '{}' && originalOpportunity?.data?.solicitation?.setAside && dictionariesUpdated === true">
                   <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                     <ng-container>{{ element.value }}</ng-container>
                   </ng-container>
                 </ng-container>
-                <ng-container *ngIf="opportunity.parent == null && opportunity?.data?.solicitation?.setAside && dictionariesUpdated === true">
+                <ng-container *ngIf="(opportunity.parent | json) == '{}' && opportunity?.data?.solicitation?.setAside && dictionariesUpdated === true">
                   <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                     <ng-container>{{ element.value }}</ng-container>
                   </ng-container>
@@ -320,6 +349,15 @@
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Description</h2>
         <div class="sam-ui segment">
+          <!-- Edit Button -->
+          <a *ngIf="canEdit()"
+             (click)="onEditClick(['#description'])"
+             class="sam-ui top right attached mini blue label"
+             style="z-index: 1;">
+            Edit Section
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </a>
+
           <h3 class="sam-ui dividing header">
             <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
             <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
@@ -350,6 +388,15 @@
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Contact Information</h2>
         <div class="sam-ui segment">
+
+          <a *ngIf="canEdit()"
+             (click)="onEditClick(['#contact-information'])"
+             class="sam-ui top right attached mini blue label"
+             style="z-index: 1;">
+            Edit Section
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </a>
+
           <div class="usa-grid-full">
             <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
               <h3 class="sam-ui dividing header">
@@ -432,16 +479,14 @@
           <span *ngIf="noHistory === true">History not available</span>
         </div>
       </section>
-    </div>
 
-
-
-    <div *ngIf="selectedPage > 0 && selectedPageLabel == 'Interested Vendors List'">
-
-      <section  [attr.id]="generateID(opportunityFields.IVL)"
-                *ngIf="ivls">
+      <div *ngIf="showIvls">
+      <section  [attr.id]="generateID(opportunityFields.IVL)" *ngIf="ivls">
+        <a name="#/opp/{{opportunity.id}}/review#ivl-summary"></a>
 
         <div class="sam-ui hidden divider"></div>
+        <h2 class="sam-ui header">Interested Vendors List</h2>
+        <div class="sam-ui segment">
 
         <div class="usa-width-one-whole">
           <div class="pull-right">
@@ -571,12 +616,17 @@
         <ng-container *ngIf="ivls.page.totalElements == 0">
           No results found.
         </ng-container>
+        </div>
       </section>
       <sam-pagination *ngIf="ivls.page && ivls.page.totalPages && ivls.page.totalPages > 0"
                       (pageChange)="reloadIVLs($event-1)"
                       [currentPage]="ivls.page.number+1"
                       [totalPages]="ivls.page.totalPages">
       </sam-pagination>
+
+
+    </div>
+
     </div>
 
     <br><br>

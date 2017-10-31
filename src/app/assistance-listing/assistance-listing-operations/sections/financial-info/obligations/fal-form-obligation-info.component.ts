@@ -298,7 +298,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     if (obligation.pFY) {
       pastObj['year'] = parseInt(this.fyYearOptions.prevFY,10);
       if (obligation.pFY.radioOptionId === 'pFYActual') {
-        pastObj['actual'] = parseFloat(obligation.pFY.textboxValue) > 0 ? parseFloat(obligation.pFY.textboxValue) : null;
+        pastObj['actual'] = parseFloat(obligation.pFY.textboxValue) >= 0 ? parseFloat(obligation.pFY.textboxValue) : null;
       }
       if (obligation.pFY.radioOptionId === 'pFYNsi') {
         pastObj['flag'] = 'nsi';
@@ -331,7 +331,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     if (obligation.cFY) {
       currentObj['year'] = parseInt(this.fyYearOptions.currentFY,10);
       if (obligation.cFY.radioOptionId === 'cFYEstimate') {
-        currentObj['estimate'] = parseFloat(obligation.cFY.textboxValue) > 0 ? parseFloat(obligation.cFY.textboxValue) : null;
+        currentObj['estimate'] = parseFloat(obligation.cFY.textboxValue) >= 0 ? parseFloat(obligation.cFY.textboxValue) : null;
       }
       if (obligation.cFY.radioOptionId === 'cFYNsi') {
         currentObj['flag'] = 'nsi';
@@ -351,7 +351,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
     if (obligation.bFY) {
       budgetObj['year'] = parseInt(this.fyYearOptions.nextFY,10);
       if (obligation.bFY.radioOptionId === 'bFYEstimate') {
-        budgetObj['estimate'] =  parseFloat(obligation.bFY.textboxValue) > 0 ? parseFloat(obligation.bFY.textboxValue) : null;
+        budgetObj['estimate'] =  parseFloat(obligation.bFY.textboxValue) >= 0 ? parseFloat(obligation.bFY.textboxValue) : null;
       }
       if (obligation.bFY.radioOptionId === 'bFYNsi') {
         budgetObj['flag'] = 'nsi';

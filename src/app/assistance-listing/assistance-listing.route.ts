@@ -4,7 +4,7 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
 import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
 import {RejectFALComponent} from "./assistance-listing-operations/workflow/reject/reject-fal.component";
 import { FeedsPage } from "./assistance-listing-workspace/feeds/feeds.page";
-import {AuthGuard} from "../../api-kit/authguard/authguard.service";
+import { FALAuthGuard } from "./components/authguard/authguard.service";
 import { FalRegionalAssistanceLocationsPage } from './regional-assistance-locations/regional-assistance-location.page';
 import { FALReviewComponent } from "./assistance-listing-operations/workflow/review/fal-review.component";
 import { FALSubmitComponent } from "./assistance-listing-operations/workflow/submit/fal-form-submit.component";
@@ -20,23 +20,19 @@ export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
   {path: 'programs', component: ProgramPage},
   {path: 'accessrestricted', component: AccessRestrictedPage},
+  {path: 'fal/workspace', component: FalWorkspacePage, canActivate: [FALAuthGuard]},
+  {path: 'programs/:id/submit', component: FALSubmitComponent, canActivate: [FALAuthGuard]},
+  {path: 'programs/:id/reject', component: RejectFALComponent, canActivate: [FALAuthGuard]},
+  {path: 'programs/:id/review', component: FALReviewComponent, canActivate: [FALAuthGuard]},
+  {path: 'programs/:id/publish', component: FALPublishComponent, canActivate: [FALAuthGuard]},
+  {path: 'programs/:id/change-request', component: FALFormChangeRequestComponent},
+  {path: 'programs/change-request/:id/action', component: FALFormChangeRequestActionComponent},
+  {path: 'workspace/my-feed', component: FeedsPage, canActivate: [FALAuthGuard]},
+  {path: 'fal/workspace/cfda-numbers', component: CfdaNumbersPage, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalOffices/add', component: FALRegionalAssistanceFormComponent, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalOffices/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [FALAuthGuard]},
+  {path: 'fal/cfda-management/:id/edit', component: CFDANumberManagementComponent, canActivate: [FALAuthGuard]},
 ];
 
-if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
-  routes.unshift(
-    {path: 'fal/workspace', component: FalWorkspacePage, canActivate: [AuthGuard]},
-    {path: 'programs/:id/submit', component: FALSubmitComponent, canActivate: [AuthGuard]},
-    {path: 'programs/:id/reject', component: RejectFALComponent, canActivate: [AuthGuard]},
-    {path: 'programs/:id/review', component: FALReviewComponent, canActivate: [AuthGuard]},
-    {path: 'programs/:id/publish', component: FALPublishComponent, canActivate: [AuthGuard]},
-    {path: 'programs/:id/change-request', component: FALFormChangeRequestComponent},
-    {path: 'programs/change-request/:id/action', component: FALFormChangeRequestActionComponent},
-    {path: 'workspace/my-feed', component: FeedsPage, canActivate: [AuthGuard]},
-    {path: 'fal/workspace/cfda-numbers', component: CfdaNumbersPage, canActivate: [AuthGuard]},
-    {path: 'fal/myRegionalOffices/add', component: FALRegionalAssistanceFormComponent, canActivate: [AuthGuard]},
-    {path: 'fal/myRegionalOffices/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [AuthGuard]},
-    {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [AuthGuard]},
-    {path: 'fal/cfda-management/:id/edit', component: CFDANumberManagementComponent, canActivate: [AuthGuard]},
-  );
-}
 export const routing = RouterModule.forChild(routes);

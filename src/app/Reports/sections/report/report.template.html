@@ -48,22 +48,28 @@
           <div class="display-block">
             
             <div class="usa-width-one-half">
-              <!-- <sam-naics-psc-filter [attr.id]= "'naics-psc-filter'"
-                              [pscValues]="pscTypeModel"
-                              (pscValuesChange)="pscTypeSelected($event)"
-                              [pscOptions]="pscType.options"
-                              [pscConfig]="pscType"
-                              [naicsValues]="naicsTypeModel"
-                              (naicsValuesChange)="naicsTypeSelected($event)"
-                              [naicsOptions]="naicsType.options"
-                              [naicsConfig]="naicsType">
-              </sam-naics-psc-filter> -->
+               
+              <sam-autocomplete *ngIf="usedPrompts.psc" 
+                [(ngModel)]="psc"
+                pscpicker-autofill [activeVal] = "'ALL'"
+                [labelText]="'PSC Code'"
+                [config]="{
+                  keyValueConfig: {
+                    keyProperty: 'key',
+                    valueProperty: 'value'
+                  }
+                }"
+                [name]="'pscpicker'"
+                [id]="'pscpicker'"
+                [required]="true">
+              </sam-autocomplete>
+              <p *ngIf="pscValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">PSC Code is a required field.</p>
               <sam-autocomplete state
                 *ngIf="usedPrompts.state"
                 [(ngModel)]="location.state"
                 name="state"
                 [config]="autocompleteStateConfig" 
-                [labelText]="'State Code'"
+                [labelText]="stateLabel"
                 (enterEvent)="updateStateField($event)">
               </sam-autocomplete>
               <sam-autocomplete country
@@ -75,6 +81,11 @@
                 [config]="locationConfig" 
                 (enterEvent)="updateCountryField($event)">
               </sam-autocomplete>
+              <sam-text *ngIf="usedPrompts.descOfReq"
+                [(ngModel)]="descOfReq"
+                [label]="'Description of Requirement'"
+                [name]="'descOfReq'">
+              </sam-text>
               <sam-text *ngIf="usedPrompts.agencyName"
                 [(ngModel)]="agencyName"
                 [name]="'agencyName'"

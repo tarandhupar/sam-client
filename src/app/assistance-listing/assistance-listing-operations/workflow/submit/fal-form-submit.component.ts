@@ -3,12 +3,11 @@ import {FormControl, FormGroup, FormBuilder} from "@angular/forms";
 import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
 import {Router} from "@angular/router";
 import {FALFormService} from "../../fal-form.service";
-import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
+import {FALAuthGuard} from "../../../components/authguard/authguard.service";
 
 @Component({
   selector: 'fal-form-submit',
-  templateUrl: 'fal-form-submit.template.html',
-  providers: [AuthGuard]
+  templateUrl: 'fal-form-submit.template.html'
 })
 
 export class FALSubmitComponent {
@@ -38,7 +37,7 @@ export class FALSubmitComponent {
     description: 'Please enter in a submission comment and click the "Submit to OMB" button to send your submission for OMB Review/Publication.'
   };
 
-  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: AuthGuard) {
+  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: FALAuthGuard) {
   }
 
   ngOnInit() {

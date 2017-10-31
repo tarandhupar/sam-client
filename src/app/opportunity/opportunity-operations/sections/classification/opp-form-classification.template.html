@@ -13,24 +13,24 @@
                       [control]="oppClassificationForm.get('setAsideType')"
     ></sam-autocomplete>
   </div>
-  <div class="sam-ui segment">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PRODUCT_SERVICE_CODE')">
     <sam-autocomplete [options]="classificationCodeConfig.options"
                       [attr.id]="classificationCodeConfig.id"
                       [name]="classificationCodeConfig.name"
                       formControlName="classificationCodeType"
                       [config]="autocompleteConfig"
-                      [required]="classificationCodeConfig.required"
+                      [required]="checkFieldRequired('PRODUCT_SERVICE_CODE')"
                       [labelText]="classificationCodeConfig.label"
                       [control]="oppClassificationForm.get('classificationCodeType')"
     ></sam-autocomplete>
   </div>
-  <div class="sam-ui segment">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PRIMARY_NAICS_CODE')">
     <sam-autocomplete [options]="primaryNAICSCodeConfig.options"
                       [attr.id]="primaryNAICSCodeConfig.id"
                       [name]="primaryNAICSCodeConfig.name"
                       formControlName="primaryNAICSCodeType"
                       [config]="autocompleteConfig"
-                      [required]="primaryNAICSCodeConfig.required"
+                      [required]="checkFieldRequired('PRIMARY_NAICS_CODE')"
                       [labelText]="primaryNAICSCodeConfig.label"
                       [control]="oppClassificationForm.get('primaryNAICSCodeType')"
     ></sam-autocomplete>

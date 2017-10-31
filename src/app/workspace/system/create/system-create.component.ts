@@ -13,9 +13,6 @@ import { CWSApplication, User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './system-create.component.html',
-  providers: [
-    IAMService,
-  ],
 })
 export class SystemCreateComponent {
   @ViewChild(SamActionsDropdownComponent) actions: SamActionsDropdownComponent;
@@ -27,7 +24,7 @@ export class SystemCreateComponent {
     title: 'New System Account',
     messages: {
       requester: 'Complete and submit this form to request a new system account All fields are required for security review to establish your account, unless morked as optional.',
-      reviewer:  'Review the follow details ond select opprove or reject.',
+      approver:  'Review the follow details ond select opprove or reject.',
     },
 
     nav: {
@@ -44,14 +41,14 @@ export class SystemCreateComponent {
     fields: [
       ('systemAccountName|interfacingSystemVersion|systemDescriptionAndFunction').split('|'),
       ('systemAdmins|systemManagers').split('|'),
-      ('contractOpportunities|contractData|entityInformation|FIPS199Categorization').split('|'),
+      ('contractOpportunities|contractData|entityInformation|fips199Categorization').split('|'),
       ('ipAddress|typeOfConnection|physicalLocation|securityOfficerName|securityOfficerEmail').split('|'),
       ('uploadAto').split('|'),
     ],
 
     actions: [
-      { label: 'Status', name: 'action-status', callback: this.redirectToStatus, icon: 'fa fa-check-circle' },
-      { label: 'Delete', name: 'action-delete', callback: this.delete, icon: 'fa fa-times' },
+      { label: 'Status', name: 'action-status', callback: this.redirectToStatus.bind(this), icon: 'fa fa-check-circle' },
+      { label: 'Delete', name: 'action-delete', callback: this.delete.bind(this), icon: 'fa fa-times' },
     ],
 
     errors: '',
@@ -71,7 +68,7 @@ export class SystemCreateComponent {
     contractOpportunities: [],
     contractData: [],
     entityInformation: [],
-    FIPS199Categorization: '',
+    fips199Categorization: '',
     ipAddress: '',
     typeOfConnection: '',
     physicalLocation: '',
@@ -95,8 +92,8 @@ export class SystemCreateComponent {
   public states = {
     tab: 0,
     section: 0,
-    edit: true,
-    review: false,
+    submitted: false,
+    showDetails: false,
   };
 
   constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private api: IAMService) {}
@@ -120,6 +117,8 @@ export class SystemCreateComponent {
           this.application = merge({}, this.application, application);
           this.initForm();
           this.updateStatus();
+        }, () => {
+          this.router.navigate(['/workspace/system'], { queryParamsHandling: 'merge' });
         });
       } else {
         this.initForm();
@@ -128,7 +127,7 @@ export class SystemCreateComponent {
 
     this.subscriptions['qparams'] = this.route.queryParams.subscribe(qparams => {
       if(qparams['section']) {
-        this.states.section = qparams['section'];
+        this.states.section = parseInt(qparams['section']);
       }
     });
   }
@@ -136,7 +135,9 @@ export class SystemCreateComponent {
   ngOnDestroy() {
     // Unsubscribe all subscriptions
     Object.keys(this.subscriptions).map(key => {
-      this.subscriptions[key].unsubscribe();
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
+      }
     });
   }
 
@@ -162,11 +163,11 @@ export class SystemCreateComponent {
         contractOpportunities: [application.contractOpportunities],
         contractData: [application.contractData],
         entityInformation: [application.entityInformation],
-        FIPS199Categorization: [application.FIPS199Categorization, [Validators.required]],
+        fips199Categorization: [application.fips199Categorization, [Validators.required]],
       }),
 
       'security': this.builder.group({
-        ipAddress: [application.ipAddress],
+        ipAddress: [application.ipAddress, [Validators.required]],
         typeOfConnection: [application.typeOfConnection, [Validators.required]],
         physicalLocation: [application.physicalLocation, [Validators.required]],
         securityOfficialName: [application.securityOfficialName, [Validators.required]],
@@ -205,6 +206,16 @@ export class SystemCreateComponent {
     return (this.application.uid) ? false : true;
   }
 
+  get isPending(): boolean {
+    let status = this.application.applicationStatus;
+    return status.match(/(pending)/i) ? true : false;
+  }
+
+  get isComplete(): boolean {
+    let status = this.application.applicationStatus;
+    return status.match(/(approved|rejected)/i) ? true : false;
+  }
+
   get seed(): number {
     return Math.floor(Math.random() * 5);
   }
@@ -214,7 +225,7 @@ export class SystemCreateComponent {
   }
 
   get message(): string {
-    return this.store.messages.requester;
+    return this.user.systemApprover ? this.store.messages.approver : this.store.messages.requester;
   }
 
   get status(): string {
@@ -225,7 +236,7 @@ export class SystemCreateComponent {
     return this.store.nav[this.states.section];
   }
 
-  get errors(): string[] {
+  get errors(): string {
     let errors = [],
         intErrors = 0;
 
@@ -237,7 +248,7 @@ export class SystemCreateComponent {
 
     errors.push(`You must resolve ${intErrors} ${ intErrors > 1 ? 'issues' : 'issue'} to submit this request`);
 
-    return errors;
+    return errors.join('');
   }
 
   get data(): CWSApplication {
@@ -252,6 +263,23 @@ export class SystemCreateComponent {
     );
   }
 
+  showError() {
+    let items = this.store.nav.children,
+        errors;
+
+    errors = items
+      .map((item, intItem) => merge({ index: intItem }, item))
+      .filter(item => (item.iconClass == 'error'));
+
+    // Hide "Show Details" link if this is the last error otherwise, leave it showing
+    if(errors.length == 1) {
+      this.states.showDetails = false;
+    }
+
+    this.states.section = errors[0].index;
+    this.states.tab = 0;
+  }
+
   onNavigate(route) {
     let item,
         index;
@@ -260,33 +288,9 @@ export class SystemCreateComponent {
       item = this.store.nav.children[index];
       if(item.route == route) {
         this.states.section = index;
-        this.states.review = false;
-        this.states.edit = true;
+        this.states.tab = 0;
         return;
       }
-    }
-
-    this.states.review = false;
-    this.states.edit = true;
-  }
-
-  onTab(tab: SamTabComponent) {
-    switch(tab.title) {
-      case 'Submit':
-      case 'Approve':
-      case 'Reject':
-        this[tab.title.toLowerCase()]();
-        break;
-
-      case 'Edit':
-        this.states.edit = true;
-        //this.states.review = false;
-        break;
-
-      case 'Review':
-        //this.states.edit = false;
-        this.states.review = true;
-        break;
     }
   }
 
@@ -296,10 +300,12 @@ export class SystemCreateComponent {
 
   resetErrors() {
     this.store.errors = '';
+    this.states.showDetails = false;
+    this.states.submitted = false;
   }
 
-  redirectToStatus(application: CWSApplication) {
-    this.router.navigate(['/workspace/system/status/', application.uid]);
+  redirectToStatus() {
+    this.router.navigate(['/workspace/system/status/', this.application.uid], { queryParamsHandling: 'merge' });
   }
 
   edit(route: string) {
@@ -307,16 +313,24 @@ export class SystemCreateComponent {
   }
 
   cancel() {
-    this.router.navigate(['/workspace/system']);
+    this.router.navigate(['/workspace/system'], { queryParamsHandling: 'merge' });
   }
 
   review() {
-    // this.states.edit = false;
-    this.states.review = true;
+    this.save(() => {
+      if(typeof this.application.statuses === 'object') {
+        this.application.statuses[this.states.section] = 1;
+        this.updateStatus();
+      }
+
+      this.states.tab = 1;
+    });
   }
 
   previous() {
-    this.states.section--;
+    this.save(() => {
+      this.states.section = Math.max(0, this.states.section - 1);
+    });
   }
 
   next() {
@@ -328,20 +342,20 @@ export class SystemCreateComponent {
     }
 
     this.save(() => {
-      this.states.section++;
+      this.states.section = Math.min(this.states.section + 1, this.store.nav.children.length - 1);
     });
   }
 
-  save(cb: Function = () => {}) {
+  save(cb: Function = () => {}, section: string = this.store.nav.children[this.states.section].route) {
     const fn = this.isNew ? this.api.iam.cws.application.create : this.api.iam.cws.application.update;
-    let args: (string|number|Function|CWSApplication)[] = this.isNew ? [] : [this.application.uid],
-        section = this.store.nav.children[this.states.section].route;
+    let args: (string|number|Function|CWSApplication)[] = this.isNew ? [] : [this.application.uid];
 
     args.push(this.data, application => {
       this.form.get(section).patchValue(application);
 
       if(this.isNew) {
         this.router.navigate(['/workspace/system/new', application.uid], {
+          queryParamsHandling: 'merge',
           queryParams: {
             section: this.states.section + 1
           }
@@ -356,6 +370,15 @@ export class SystemCreateComponent {
     fn.apply(this.api.iam.cws, args);
   }
 
+  onChange(section: Array<string>) {
+    // Only run this for re-saving after all change detections run
+    if(section[0] == 'organization') {
+      this.save(() => {
+        return;
+      }, section[0]);
+    }
+  }
+
   submit() {
     let form = this.form,
         application = this.application;
@@ -367,15 +390,17 @@ export class SystemCreateComponent {
     }
 
     this.updateStatus();
+    this.states.submitted = true;
 
     if(form.valid) {
       application.applicationStatus = 'Pending Approval';
 
-      this.api.iam.cws.application.update(application.uid, this.data, this.redirectToStatus, error => {
+      this.api.iam.cws.application.update(application.uid, this.data, this.redirectToStatus.bind(this), error => {
         this.setError(error.message)
       });
     } else {
-      this.setError(this.errors[0]);
+      this.states.showDetails = true;
+      this.setError(this.errors);
     }
   }
 
@@ -392,8 +417,14 @@ export class SystemCreateComponent {
   }
 
   delete() {
-    this.api.iam.cws.delete(response => {
-      this.router.navigate(['/workspace/system']);
+    this.api.iam.cws.application.delete(this.application.uid, response => {
+      this.api.alert = {
+        type: 'success',
+        title: 'Success!',
+        message: `Your application: <strong>${this.application.systemAccountName}</strong> was successfully deleted!`,
+      };
+
+      this.router.navigate(['/workspace/system'], { queryParamsHandling: 'merge' });
     }, error => {
       this.store.errors = error.message;
     });

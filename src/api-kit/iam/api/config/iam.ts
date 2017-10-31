@@ -5,7 +5,7 @@ const getExpiration = ((minutes: number) => {
 });
 
 export default {
-  cookies(minutes: number = 15) {
+  cookies(minutes: number = 30) {
     return {
       path: '/',
       expires: getExpiration(minutes),
@@ -67,9 +67,11 @@ export default {
       create:  '/cws/v1/applications/submit',
       update:  '/cws/v1/applications/{id}',
       delete:  '/cws/v1/applications/{id}',
-      approve:  '/cws/v1/applications/approve',
+      approve: '/cws/v1/applications/approve',
       reject:  '/cws/v1/applications/reject',
-    }
+    },
+
+    status: '/cws/v1/applications/status',
   },
 
   system: {
@@ -81,7 +83,7 @@ export default {
       deactivate: '/cws/api/system-accounts/{id}/deactivate',
       import: {
         history: '/import/system-accounts/roles/{id}',
-        create: '/import/system-accounts/roles'
+        create:  '/import/system-accounts/roles'
       }
     }
   }

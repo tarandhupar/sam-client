@@ -103,7 +103,7 @@ export class LocationService {
   }
 
   //gets autocomplete cities
-  getAutoCompleteStates(q:string, countryCode:string) {
+  getAutoCompleteStates(q?:string, countryCode?:string) {
     var oApiParam = {
       name: 'location',
       suffix: '/states',
@@ -163,7 +163,8 @@ export class LocationService {
 
   }
 
-  validateZipWIthLocation(zip:string, state?:any, city?:any){
+  validateZipWIthLocation(zip:string, state?:any, city?:any , county?: any){
+    
     var oApiParam = {
       name: 'location',
       suffix: '/validatezip',
@@ -172,6 +173,7 @@ export class LocationService {
     };
     if(state) oApiParam.oParam['statecode'] = state.key;
     if(city) oApiParam.oParam['citycode'] = city.key;
+    if(county) oApiParam.oParam['countycode'] = county.key;
     return this.oAPIService.call(oApiParam);
   }
 
@@ -196,6 +198,19 @@ export class LocationService {
       method: 'GET'
     };
 
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getCityAndCountyDetailsByZip(zip:string, state?:any, city?:any , county?: any){
+    var oApiParam = {
+      name: 'location',
+      suffix: '/locationgroup',
+      oParam: {zip:zip},
+      method: 'GET'
+    };
+    if(state) oApiParam.oParam['statecode'] = state.key;
+    if(city) oApiParam.oParam['citycode'] = city.key;
+    if(county) oApiParam.oParam['countycode'] = county.key;
     return this.oAPIService.call(oApiParam);
   }
 

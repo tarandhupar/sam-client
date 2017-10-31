@@ -231,6 +231,7 @@ export class OpportunityService {
         page: (obj.pageNum == undefined) ? '' : obj.pageNum,
         status: (obj.status == undefined) ? '' : obj.status,
         noticeType: (obj.noticeType == undefined) ? '' : obj.noticeType,
+        organizationId: (obj.organizationId == undefined) ? '' : obj.organizationId,
         postedFrom: (obj.dateFilter && obj.dateTab && obj.dateTab === 'posted') ? obj.dateFilter.startDate : '',
         postedTo: (obj.dateFilter && obj.dateTab && obj.dateTab === 'posted') ? obj.dateFilter.endDate : '',
         responseFrom: (obj.dateFilter && obj.dateTab && obj.dateTab === 'response') ? obj.dateFilter.startDate : '',

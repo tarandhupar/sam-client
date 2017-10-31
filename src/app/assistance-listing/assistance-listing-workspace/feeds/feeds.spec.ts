@@ -24,12 +24,10 @@ import {FormatFederalHierarchyType} from "../../pipes/format-federal-hierarchy-t
 import {CfdaNumbersPage} from "../cfda-numbers/cfda-numbers.page";
 import {CFDANumberManagementComponent} from "../cfda-number-management/fal-form-cfda-number-management.component";
 import {PipesModule} from "../../../app-pipes/app-pipes.module";
-import {SamUIKitModule} from "../../../../sam-ui-elements/src/ui-kit/index";
 import {AppComponentsModule} from "../../../app-components/app-components.module";
 import {ProgramService} from "../../../../api-kit/program/program.service";
 import {FALFormModule} from "../../assistance-listing-operations/fal-form.module";
 import {FALComponentsModule} from "../../components/index";
-import { AccessRestrictedPage } from '../../assistance-listing-workspace/program-result/testauthenvironment.page';
 import { CommonModule } from '@angular/common';
 import {routing} from "../../assistance-listing.route";
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
@@ -37,6 +35,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import * as Cookies from 'js-cookie';
 import { async } from '@angular/core/testing';
 import { ActivatedRoute, Data } from '@angular/router';
+import {FALFormErrorService} from "../../assistance-listing-operations/fal-form-error.service";
+import {SamUIKitModule} from "sam-ui-kit/index";
+import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
+import {AccessRestrictedPage} from "../program-result/testauthenvironment.page";
+import {DictionaryService} from "../../../../api-kit/dictionary/dictionary.service";
 
 
 
@@ -1242,7 +1245,7 @@ describe('src/app/assistance-listing/assistance-listing-workspace/feeds/feeds.pa
         FormatFederalHierarchyType,
         CfdaNumbersPage,
         CFDANumberManagementComponent],
-      providers: [ActionHistoryLabelPipe, RequestTypeLabelPipe],
+      providers: [ActionHistoryLabelPipe, RequestTypeLabelPipe, FALFormErrorService, FALFormService, DictionaryService],
       imports: [
         PipesModule,
         CommonModule,

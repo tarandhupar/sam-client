@@ -11,8 +11,8 @@ export class CountryServiceImpl implements AutocompleteService {
 
   constructor(private locationService: LocationService) { }
 
- 
-  
+
+
 getAllCountriesJSON(q:string, historic:string): ReplaySubject<any> {
     const results = new ReplaySubject();
     this.locationService.getAutoCompleteCountries(q,historic).subscribe(
@@ -36,7 +36,7 @@ getAllCountriesJSON(q:string, historic:string): ReplaySubject<any> {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    
+
     let active = this.historic;
     console.log(this.historic);
     return this.getAllCountriesJSON(val,active).map(o => o);
@@ -45,7 +45,7 @@ getAllCountriesJSON(q:string, historic:string): ReplaySubject<any> {
   public setHistoric(historic: any) {
       this.historic = historic;
   }
-  
+
 }
 
 @Directive({
@@ -56,7 +56,7 @@ getAllCountriesJSON(q:string, historic:string): ReplaySubject<any> {
 })
 export class SamCountryServiceAutoDirective implements OnInit {
  @Input() historic: any;
- 
+
 
   private autocompleteService: any;
 
@@ -72,6 +72,6 @@ export class SamCountryServiceAutoDirective implements OnInit {
      if (this.historic){
         this.autocompleteService.setHistoric(this.historic);
      }
-     
+
   }
 }

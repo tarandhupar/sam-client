@@ -3,7 +3,7 @@
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
-  title="My feed">
+  title="Change Requests">
 
   <!-- Sidebar section -->
   <sidebar>
@@ -14,7 +14,7 @@
           Assistance Listings
         </a>
       </li>
-      <li *ngIf="permissions['CREATE_RAO']">
+      <li *ngIf="userPermissions && userPermissions._links && this.userPermissions._links['program:regional:offices:create']">
         <a routerLink="/fal/myRegionalOffices">
           Manage Assistance Locations
         </a>

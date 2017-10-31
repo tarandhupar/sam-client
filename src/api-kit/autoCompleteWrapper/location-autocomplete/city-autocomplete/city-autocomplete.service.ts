@@ -46,17 +46,19 @@ export class CityServiceImpl implements AutocompleteService {
     let stateCode;
     let country;
     let county;
+    let zip;
     
-  //  return this.getAllCities(val, state, country);
+  
 
-      
+      if(this.zip){
+        return this.getAllCities(val,'zipcode',this.zip,undefined, undefined).map(o => o);
+      }
+
+          
       if(this.county ){
+        
            county = searchOptions && searchOptions.county ?
                     searchOptions.county : this.county;
-            console.log(county.county);
-            console.log(county.state.stateCode);
-            console.log(county.state.country.countrycode);
-
             stateCode = searchOptions && searchOptions.state.statecode ?
                     searchOptions.state.statecode : this.state;
             country = searchOptions && searchOptions.state.country.countrycode ?
@@ -64,6 +66,8 @@ export class CityServiceImpl implements AutocompleteService {
                     this.country;
             return this.getAllCities(val,'statecode',stateCode,country, county.county).map(o => o);
       }
+
+      
 
       
       //operations without County
@@ -80,7 +84,6 @@ export class CityServiceImpl implements AutocompleteService {
      else if(this.state){
             stateCode = searchOptions && searchOptions.statecode ?
                     searchOptions.statecode : this.state;
-            console.log("Value of State in City"+stateCode);
             return this.getAllCities(val,'statecode',stateCode,'').map(o => o);
       }
 
@@ -88,7 +91,6 @@ export class CityServiceImpl implements AutocompleteService {
           country = searchOptions && searchOptions.country ?
                     searchOptions.country :
                     this.country;
-          console.log("Value of Country in City"+country)
           return this.getAllCities(val,'','', country).map(o => o);
       }
 
@@ -111,6 +113,10 @@ export class CityServiceImpl implements AutocompleteService {
   setCounty(county: any) {
     return this.county = county;
   }
+
+  setZip(zip: any) {
+    return this.zip = zip;
+  }
 }
 
 @Directive({
@@ -120,9 +126,10 @@ export class CityServiceImpl implements AutocompleteService {
   ]
 })
 export class SamCityServiceAutoDirective {
-  @Input() countryVal: any;
-  @Input() countyVal: any;
-  @Input() stateVal: any;
+  @Input() countryValCity: any;
+  @Input() countyValCity: any;
+  @Input() stateValCity: any;
+  @Input() zipValCity: any;
 
   private autocompleteService: any;
 
@@ -136,28 +143,37 @@ export class SamCityServiceAutoDirective {
   ngOnChanges() {
     // When country input on directive changes,
     // update service with new value
-    if (this.countryVal) {
-      this.autocompleteService.setCountry(this.countryVal.key);
+    if (this.countryValCity) {
+      this.autocompleteService.setCountry(this.countryValCity.key);
     }
 
     else{
       this.autocompleteService.setCountry('');
     }
 
-    if (this.stateVal) {
-      this.autocompleteService.setState(this.stateVal.key);
+    if (this.stateValCity) {
+      this.autocompleteService.setState(this.stateValCity.key);
     }
 
     else{
       this.autocompleteService.setState('');
     }
 
-    if (this.countyVal) {
-      this.autocompleteService.setCounty(this.countyVal);
+    if (this.countyValCity) {
+      this.autocompleteService.setCounty(this.countyValCity);
     }
 
     else{
       this.autocompleteService.setCounty('');
+    }
+
+    if (this.zipValCity){
+      this.autocompleteService.setZip(this.zipValCity);
+    }
+
+    else {
+      this.autocompleteService.setZip('');
+      
     }
   }
 }

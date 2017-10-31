@@ -1,93 +1,61 @@
-<div class="view-request-page usa-grid-full">
-  <div class = "usa-width-one-fourth pd-l-1em">
-    <sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>
+<form-only class="view-request-page" [theme]="'inside'">
+  <sam-breadcrumbs [crumbs]="myCrumbs"></sam-breadcrumbs>
+  <div style="margin-top: 1em;">
+    <sam-title-subtitle [titleText]="'Role Request'" [subtitle]="'Workspace'"></sam-title-subtitle>
   </div>
-  <div class="usa-width-three-fourths">
-    <h1 class="m_T-4x">View Request</h1>
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter m-r-7em">Role Request</h2>
 
-    <!-- Organization -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Organization</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.organization | capitalize}}</div>
-    </div>
-
-    <!-- Role -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Role</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.role}}</div>
-    </div>
-
-    <!-- Domains -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Domain</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.domains}}</div>
-    </div>
-
-    <!-- SuperVisor name-->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Supervisor Name</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.supervisorName}}</div>
-    </div>
-
-    <!-- SuperVisor email -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Supervisor Email</b>
-      </div>
-      <div class="usa-width-three-fourths">{{request.supervisorEmail}}</div>
-    </div>
-
-    <!-- Status -->
-    <div class="usa-grid-full p_B-4x">
-      <div class="usa-width-one-fourth">
-        <b>Status</b>
-      </div>
-      <div class="usa-width-three-fourths"><b>{{request.status}}</b></div>
-    </div>
-
-    <!-- Comments -->
-    <h2 class="p_All-2x usa-bgcolor-gray-lighter m-r-7em">Comments</h2>
-    <ng-container *ngIf="request.comments && request.comments.length">
-      <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
-        <div class="usa-width-one-fourth overflow-ellipsis">
-          <b [attr.title]="comment.userName">{{comment.userName}}</b>
+  <div style="background-color: white; border: 1px solid lightgrey; border-radius: 3px; padding: .5em; margin-top: .5em;">
+    <div class="clearfix">
+      <div style="float: left">
+        <div>
+          <b>User:&nbsp;</b>{{request.user}}
         </div>
-        <div class="usa-width-three-fourths">
-          {{comment.text}}
-          <div>
-            <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
-          </div>
+        <div style="margin-top: .5em;">
+          <b>Organization:&nbsp;</b>{{request.organization | capitalize}}
+        </div>
+        <div style="margin-top: .5em;">
+          <b>Role:&nbsp;</b>{{request.role}}
+        </div>
+        <div style="margin-top: .5em;">
+          <b>Domain:&nbsp;</b>{{request.domains}}
+        </div>
+        <div style="margin-top: .5em;">
+          <b>Supervisor:&nbsp;</b>{{request.supervisorName}}, {{request.supervisorEmail}}
         </div>
       </div>
-    </ng-container>
-    <ng-container *ngIf="!(request.comments && request.comments.length)">
-      <div class="text-center p_All-4x">
-        <em>No comments</em>
-      </div>
-    </ng-container>
-
-    <!-- Cancel / Confirm -->
-    <div>
-      <div class="pull-right clearfix m_T-4x m_B-4x m-r-12d5em">
-        <button [routerLink]="['/profile/access']" class="pull-left usa-button usa-button-outline m_0" type="button">Cancel</button>
-        <button id="done-button" class="pull-left usa-button usa-button-primary" (click) = "onDeleteClick()">Delete</button>
+      <div style="float: right">
+        <div style="padding: .3em 0; width: 10em; background-color: #E2E2E2; text-align: center; border-radius: 3px;">
+          <b>{{request.status}}</b>
+        </div>
+        <div style="width: 10em; text-align: center">
+          <i>{{(request.updatedDate || request.createdDate) | shortDate}}</i>
+        </div>
       </div>
     </div>
-
+    <div class="clearfix">
+      <div style="float: right">
+        <button (click)="location.back()" class="usa-button usa-button-transparent m_0" type="button">Back</button>
+        <sam-button *ngIf='canCancel()' buttonType="secondary" [buttonSize]="'small'" [buttonText]="'Cancel Request'" (click)="onCancelClick()"></sam-button>
+        <sam-button *ngIf='canReject()' buttonType="secondary" [buttonSize]="'small'" [buttonText]="'Reject'" (click)="onRejectClick()"></sam-button>
+        <sam-button *ngIf='canAssignRoles()' buttonType="primary" [buttonSize]="'small'" [buttonText]="'Assign Role'" [routerLink]="assignRolesUrl()" [queryParams]="assignRolesQueryParams()"></sam-button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Delete role modal -->
-<sam-modal #deleteRoleModal title="Confirm Request Deletion" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
-  <p>Are you sure you want to delete your role request? You won&apos;t be able to undo this action.</p>
-</sam-modal>
-
+  <h4>Comments</h4>
+  <ng-container *ngIf="request.comments && request.comments.length">
+    <div *ngFor="let comment of request.comments">
+      <b>{{comment.userName}}</b>&nbsp;{{comment.text}}
+      <div>
+        <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!(request.comments && request.comments.length)">
+    <div class="text-center p_All-4x">
+      <em>No comments</em>
+    </div>
+  </ng-container>
+  <sam-text-area [errorMessage]="errors.comment" [(ngModel)]="comment" name="comment"></sam-text-area>
+  <div style="min-height: 2em;">&nbsp;</div>
+</form-only>

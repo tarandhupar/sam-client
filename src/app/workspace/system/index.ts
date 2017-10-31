@@ -2,7 +2,7 @@ export { SystemGuard } from './system.guard';
 
 export { SystemComponent } from './system.component';
 
-export { SystemDirectoryComponent } from './directory/system-directory.component';
+export { SystemDirectoryComponent, SystemListingComponent } from './directory';
 export { SystemCreateComponents, SystemCreateComponent } from './create';
 export { SystemPasswordComponent } from './password/system-password.component';
 export { SystemProfileComponent } from './profile/system-profile.component';

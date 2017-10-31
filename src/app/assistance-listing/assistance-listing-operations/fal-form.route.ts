@@ -1,13 +1,14 @@
 import { Routes, RouterModule } from '@angular/router';
 import {FALFormComponent} from "./fal-form.component";
 import {FALFormResolver} from "./fal-form-resolver.service";
-import {AuthGuard} from "../../../api-kit/authguard/authguard.service";
+import {FALAuthGuard} from "../components/authguard/authguard.service";
 
 export const routes: Routes = [
   {
     path: 'programs/add',
     component: FALFormComponent,
-    canDeactivate: [AuthGuard]
+    canActivate: [FALAuthGuard],
+    canDeactivate: [FALAuthGuard]
   },
   {
     path: 'programs/:id/edit',
@@ -15,7 +16,8 @@ export const routes: Routes = [
     resolve: {
       fal: FALFormResolver,
     },
-    canDeactivate: [AuthGuard]
+    canActivate: [FALAuthGuard],
+    canDeactivate: [FALAuthGuard]
   }
 ];
 

@@ -35,6 +35,7 @@ export class CFDANumberManagementComponent implements OnInit{
     type: "success",
     timer: 3000
   };
+  isCfdaCodeRestricted: boolean = false;
 
   public assignmentOptions = [
     { value: 'false', label: 'Automatic', name: 'automaticAssignment'},
@@ -57,17 +58,9 @@ export class CFDANumberManagementComponent implements OnInit{
   ngOnInit(){
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
 
-    if (this.cookieValue === null || this.cookieValue === undefined) {
-      this.router.navigate(['signin']);
-    }
-
-    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
-      this.router.navigate(['accessrestricted']);
-    }
-
-    this.programService.getPermissions(this.cookieValue, 'CFDA_NUMBER').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'CFDA_NUMBER', this.activatedRoute.snapshot.params['id']).subscribe(res => {
       if (res.MANAGE_CFDA_NUMBER == false){
-        this.router.navigate(['accessrestricted']);
+        this.router.navigate(['/403']);
       } else {
         this.fhService.getOrganizationById(this.activatedRoute.snapshot.params['id'], false, false).subscribe(res =>{
           this.organization = res['_embedded'][0]['org'];
@@ -75,9 +68,9 @@ export class CFDANumberManagementComponent implements OnInit{
             let programNumberAuto = res.programNumberAuto != null ? res.programNumberAuto : true;
             let programNumberLow = res.programNumberLow != null ? res.programNumberLow : 0;
             let programNumberHigh = res.programNumberHigh != null ? res.programNumberHigh : 999;
-            this.createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh);
+            this.initCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh);
           }, err => {
-            this.createCFDANumberConfigForm(true, 0, 999);
+            this.initCFDANumberConfigForm(true, 0, 999);
             console.log("Error getting federal hierarchy configuration: ", err);
           });
         }, err => {
@@ -85,18 +78,35 @@ export class CFDANumberManagementComponent implements OnInit{
         });
       }
     }, err => {
-      this.router.navigate(['accessrestricted']);
+      this.router.navigate(['/403']);
     });
   }
 
-  createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh){
-    this.pageReady = true;
-    this.cfdaNumberConfigForm = this.fb.group({
-      lowNumber:[programNumberLow, falCustomValidatorsComponent.numberCheck],
-      highNumber: [programNumberHigh, falCustomValidatorsComponent.numberCheck],
-      assignment: (!programNumberAuto).toString()
+  initCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh){
+    this.programService.isCfdaCodeRestricted(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(res => {
+      this.createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh, (res != null && res.content != null) ? res.content.isRestricted : false);
+      this.isCfdaCodeRestricted = (res != null && res.content != null) ? res.content.isRestricted : false;
+    }, error => {
+      this.createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh, false);
+      this.isCfdaCodeRestricted = false;
     });
   }
+
+  createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh, disabled: boolean = true){
+      this.pageReady = true;
+      this.cfdaNumberConfigForm = this.fb.group({
+        lowNumber:[programNumberLow, falCustomValidatorsComponent.numberCheck],
+        highNumber: [programNumberHigh, falCustomValidatorsComponent.numberCheck],
+        assignment: (!programNumberAuto).toString()
+      });
+
+      if (disabled) {
+        this.cfdaNumberConfigForm.controls['lowNumber'].disable();
+        this.cfdaNumberConfigForm.controls['highNumber'].disable();
+        this.cfdaNumberConfigForm.controls['assignment'].disable();
+      }
+  }
+
   public cancelCFDANumberConfigChange() {
     this.location.back();
   }
@@ -117,16 +127,24 @@ export class CFDANumberManagementComponent implements OnInit{
       this.buttonType = 'disabled';
       if(parseInt(this.cfdaNumberConfigForm.get('highNumber').value) > parseInt(this.cfdaNumberConfigForm.get('lowNumber').value)) {
         this.numberAlertShow = false;
-        this.programService.saveCFDAConfiguration(this.activatedRoute.snapshot.params['id'], this.prepareCFDANumberChangeData(), this.cookieValue).subscribe(api => {
+        this.programService.saveCFDAConfiguration(this.activatedRoute.snapshot.params['id'], this.prepareCFDANumberChangeData(), this.cookieValue)
+          .subscribe(api => {
             this.notifyFooterAlertModel.description = "CFDA Number Configuration Changed";
             this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
             this.router.navigate(['/fal/workspace/cfda-numbers']);
-          },
-          error => {
+          }, 
+          (error: Response) => {
             console.error('error changing configuration', error);
             this.notifyFooterAlertModel.title = "Error";
             this.notifyFooterAlertModel.type = "error";
-            this.notifyFooterAlertModel.description = "An error has occurred please contact your administrator.";
+
+            let data: any = error.json();
+            if (data.errorCode != null && data.message != null) {
+              this.notifyFooterAlertModel.description = data.message;
+            } else {
+              this.notifyFooterAlertModel.description = "An error has occurred please contact your administrator.";
+            }
+
             this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
             this.buttonType = 'default';
           });

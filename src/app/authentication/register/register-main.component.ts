@@ -45,9 +45,12 @@ export class RegisterMainComponent {
     labels: {
       personalPhone: {
         label: 'Mobile Phone',
-        hint: 'When you sign in each time, you will need to receive a one time password. This password will automatically ' +
-              'be sent to your email address. To receive one time passwords as text messages instead, you must provide a ' +
-              'mobile phone number ond carrier.',
+        hint: `
+          When you sign in each time, you will need to receive a one time password. This password will automatically
+          be sent to your email address. To receive one time passwords as text messages instead, you must provide a
+          mobile phone number and carrier.
+          <div><em>* Standard Text Messaging Rates May Apply.</em></div>
+        `
       }
     }
   };
@@ -419,27 +422,29 @@ export class RegisterMainComponent {
     this.kbaComponents.forEach(function(kbaComponent, index) {
       kbaComponent.updateState(true);
     });
+
+    this.states.submitted = true;
   }
 
   register() {
     let userData,
-      onError = ((error) => {
-        // Error Promise
-        this.showAlert('error', error.message);
-        this.states.submitted = false;
-        this.states.loading = false;
-      });
+        onError = ((error) => {
+          // Error Promise
+          this.showAlert('error', error.message);
+          this.states.submitted = false;
+          this.states.loading = false;
+        });
 
     this.hideAlert();
     this.validate();
 
     if(this.userForm.valid) {
-      this.states.submitted = true;
       this.states.loading = true;
 
       userData = this.prepareData();
 
       this.api.iam.user.registration.register(this.token, userData, token => {
+        this.states.submitted = false;
         this.states.loading = false;
         this.router.navigate(['/profile/details']);
       }, onError);

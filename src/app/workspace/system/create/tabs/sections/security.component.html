@@ -18,14 +18,13 @@
                  maxlength="100"></sam-text-area>
 
   <sam-fieldset-wrapper [label]="label('securityOfficer')" [hint]="hint('securityOfficer')">
-    <sam-text name="security-officer-name"
+    <sam-text name="security-official-name"
               label="Name"
-              [errorMessage]="errors('securityOfficerName')"
-              [control]="form.get('securityOfficerName')"
-              formControlName="securityOfficialName"></sam-text>
-    <sam-text [errorMessage]="errors('securityOfficerEmail')"
-              name="security-officer-email"
+              formControlName="securityOfficialName"
+              [errorMessage]="errors('securityOfficialName')"></sam-text>
+    <sam-text name="security-official-email"
               label="Email"
-              formControlName="securityOfficialEmail"></sam-text>
+              formControlName="securityOfficialEmail"
+              [errorMessage]="errors('securityOfficialEmail')"></sam-text>
   </sam-fieldset-wrapper>
 </div>

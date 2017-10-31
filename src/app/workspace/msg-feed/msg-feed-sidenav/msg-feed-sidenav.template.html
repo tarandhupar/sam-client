@@ -2,12 +2,12 @@
   <ul class="usa-sidenav-list m_B-4x border-top-black border-bottom-black">
     <li class="relative" *ngIf="isCurrentSection('requests')">
       <a [ngClass]="getCurrentTabClass('requests')" (click)="onSectionTabClick('requests')">Requests</a>
-      <span class="request-total-count" *ngIf="!isCurrentPath('requests/sent') && !isCurrentPath('requests/received')">{{recievedCount}}</span>
+      <!--<span class="request-total-count" *ngIf="!isCurrentPath('requests/sent') && !isCurrentPath('requests/received')">{{recievedCount}}</span>-->
     </li>
     <ul class="usa-sidenav-list border-top-black sublist" *ngIf="isCurrentSection('requests')">
       <li class="relative"><a [ngClass]="getCurrentTabClass('requests/sent')" (click)="onSectionTabClick('requests/sent')">Sent</a>
       <li class="relative"><a [ngClass]="getCurrentTabClass('requests/received')" (click)="onSectionTabClick('requests/received')">Received</a>
-        <span class="request-total-count" *ngIf="isCurrentPath('requests/sent') || isCurrentPath('requests/received')">{{recievedCount}}</span></li>
+        <span class="request-total-count">{{recievedCount}}</span></li>
     </ul>
     <li *ngIf="isCurrentSection('notifications')">
       <a [ngClass]="getCurrentTabClass('notifications')" (click)="onSectionTabClick('notifications')">Notifications</a>
@@ -25,7 +25,7 @@
     <input id="search-keyword" placeholder="Find {{getSearchText()}}" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
   </div>
 
-  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
+  <div class="usa-width-one-whole m_B-4x" *ngIf="!isCurrentPath('requests/sent') && isCurrentSection('requests')">
     <sam-autocomplete-multiselect
       hint=""
       label="Search Requestor"
@@ -36,7 +36,7 @@
     </sam-autocomplete-multiselect>
   </div>
 
-  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
+  <div class="usa-width-one-whole m_B-4x" *ngIf="!isCurrentPath('requests/sent') && isCurrentSection('requests')">
     <sam-autocomplete-multiselect
       hint=""
       label="Search Approver"
@@ -47,12 +47,15 @@
     </sam-autocomplete-multiselect>
   </div>
 
-  <div class="usa-width-one-whole m_B-4x">
+  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
     <legend class="m_B-0">Organization</legend>
-    <sam-agency-picker-v2></sam-agency-picker-v2>
+    <sam-agency-picker-v2
+      [(ngModel)]="filterOption.orgs"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-agency-picker-v2>
   </div>
 
-  <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0">
+  <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0 && isCurrentSection('requests')">
     <div class="usa-width-three-fourths">
       <sam-checkbox
         [(ngModel)]="filterOption.requestType"
@@ -118,6 +121,6 @@
   </div>
 
   <div class="usa-width-one-whole">
-    <span class="pull-right"><a (click)="resetFilter()">Clear Filter</a></span>
+    <span class="pull-right"><a (click)="resetFilter()">Clear Filters</a></span>
   </div>
 </div>

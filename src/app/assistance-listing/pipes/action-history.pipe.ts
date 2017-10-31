@@ -149,7 +149,7 @@ export class ActionHistoryPipe implements PipeTransform {
         desc2.push("<em class='history-comment'><q>"+processedHistoryItem2['comment']+"</q></em>")
       }
       processedHistoryItem2['description'] = desc2.join("<br/>");
-        
+
       let processedHistoryArray = [processedHistoryItem1, processedHistoryItem2];
       return processedHistoryArray;
     };
@@ -160,11 +160,11 @@ export class ActionHistoryPipe implements PipeTransform {
       for (let i in arrayToReturn){
         if (
             (
-              (arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') && 
-              arrayToReturn[i]['date'] == null && 
+              (arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') &&
+              arrayToReturn[i]['date'] == null &&
               (arrayToReturn[i]['description'] == null || arrayToReturn[i]['description'] == '') &&
               arrayToReturn[i]['submitter'] == null
-            ) || 
+            ) ||
             arrayToReturn[i]['title'] == 'send_omb'){
           arrayToReturn.splice(i,1);
         }

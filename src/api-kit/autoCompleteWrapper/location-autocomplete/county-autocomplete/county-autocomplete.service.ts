@@ -12,6 +12,8 @@ export class CountyServiceImpl implements AutocompleteService {
 
   private city;
 
+  private zip;
+
   constructor(private locationService: LocationService) { }
 
   getAllCountiesJSON(q?:string , searchby?: string, statecode?: string, city?: string): ReplaySubject<any> {
@@ -27,7 +29,7 @@ export class CountyServiceImpl implements AutocompleteService {
                         [];
         results.next(list.reduce( (prev, curr) => {
           const newObj = {
-            key: curr.countyId.toString(),
+            key: curr.countyCode,
             value: curr.county + ", " + curr.state.stateCode
           }
 		  const returnObj = Object.assign({}, curr, newObj);
@@ -49,6 +51,11 @@ export class CountyServiceImpl implements AutocompleteService {
    let stateCode ;
    let city;
    
+
+    if(this.zip){
+           
+         return this.getAllCountiesJSON(val,'zipcode',this.zip,undefined).map(o => o);
+      }
   
     if(this.city){
 
@@ -79,6 +86,10 @@ export class CountyServiceImpl implements AutocompleteService {
    setCity(city: any) {
     this.city = city;
   }
+
+  setZip(zip: any) {
+    this.zip = zip;
+  }
 }
 
 @Directive({
@@ -88,9 +99,11 @@ export class CountyServiceImpl implements AutocompleteService {
   ]
 })
 export class SamCountyServiceAutoDirective implements OnChanges{
-  @Input() stateVal: any;
+  @Input() stateValCounty: any;
 
-  @Input() cityVal: any;
+  @Input() cityValCounty: any;
+
+  @Input() zipValCounty: any;
 
   private autocompleteService: any;
 
@@ -104,28 +117,30 @@ export class SamCountyServiceAutoDirective implements OnChanges{
   ngOnChanges() {
     // When state input on directive changes,
     // update service with new value
-    if (this.stateVal) {
-      this.autocompleteService.setState(this.stateVal.key);
+    if (this.stateValCounty) {
+      this.autocompleteService.setState(this.stateValCounty.key);
     }
 
     else{
       this.autocompleteService.setState('');
     }
 
-   
-    if (this.cityVal ){
-         
-
-      this.autocompleteService.setCity(this.cityVal)
+   if (this.cityValCounty ){
+      this.autocompleteService.setCity(this.cityValCounty)
     }
 
     else {
       this.autocompleteService.setCity('')
     }
-    // } else {
-    //   // If no country is set, default to USA
-    //   this.autocompleteService.setState('AL');
-    // }
+
+    if (this.zipValCounty){
+      this.autocompleteService.setZip(this.zipValCounty)
+    }
+
+    else {
+      this.autocompleteService.setZip('')
+    }
+    
   }
 
 }

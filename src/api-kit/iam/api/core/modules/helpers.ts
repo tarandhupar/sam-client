@@ -29,10 +29,21 @@ export function exceptionHandler(response) {
         message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
       },
 
-      body = isObject(response) ? merge({}, response) : {};
+      body = {};
 
-  if(response.timeout) {
-    body['message'] = 'The server timed out';
+  if(isObject(response)) {
+    response = isObject(response.response) ? response.response : response;
+
+    if(response.message) {
+      // If `response` is the body
+      body = response;
+    } else {
+      body = response.body || {};
+
+      if(response.timeout) {
+        body['message'] = 'The server timed out';
+      }
+    }
   }
 
   return merge({}, defaults, body);

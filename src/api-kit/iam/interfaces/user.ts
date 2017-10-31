@@ -48,7 +48,8 @@ export interface User {
   gov?: boolean;
   entity?: boolean;
   systemAccount?: boolean;
-  reviewer?: boolean;
+  systemApprover?: boolean;
+  fsd?: boolean;
   OTPPreference?: string;
   emailNotification?: boolean|string;
 }

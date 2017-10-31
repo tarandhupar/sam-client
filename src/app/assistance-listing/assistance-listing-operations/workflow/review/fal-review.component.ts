@@ -6,6 +6,7 @@ import {Location} from '@angular/common';
 import * as Cookies from 'js-cookie';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { LowerCasePipe } from '@angular/common';
 
 // Todo: avoid importing all of observable
 import {ReplaySubject, Observable, Subscription} from 'rxjs';
@@ -25,8 +26,9 @@ import {ActionHistoryPipe} from "../../../pipes/action-history.pipe";
 import { MenuItem } from 'sam-ui-kit/components/sidenav';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
-import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
+
 import { IBreadcrumb } from "sam-ui-kit/types";
+import {FALAuthGuard} from "../../../components/authguard/authguard.service";
 
 @Component({
   moduleId: __filename,
@@ -49,6 +51,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     ],
     name: 'show-hide-action-history'
   };
+  latestUnpublishedRevision: any;
   dictionariesUpdated:boolean = false;
   publicHistoryIsVisible:boolean = true;
   actionHistoryAndNote: any;
@@ -195,7 +198,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   nextFY: number;
   obligations = [];
   fiscalYears = [];
-  
+
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
               private route: ActivatedRoute,
@@ -207,7 +210,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
               private dictionaryService: DictionaryService,
               private service: FALFormService,
               private alertFooterService: AlertFooterService,
-              private errorService: FALFormErrorService, private el: ElementRef, private authGuard: AuthGuard) {
+              private errorService: FALFormErrorService, private el: ElementRef, private authGuard: FALAuthGuard) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -223,17 +226,12 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
-    let cookie = Cookies.get('iPlanetDirectoryPro');
-
-    if (cookie != null) {
-      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
-        this.cookieValue = cookie;
-      }
-    }
+    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     this.getFiscalYears();
     let programAPISource = this.loadProgram();
     this.loadDictionaries();
     this.loadLatestRevision();
+    this.loadLatestUnpublishedRevision();
     this.loadFederalHierarchy(programAPISource);
     let historicalIndexAPISource = this.loadHistoricalIndex(programAPISource);
     this.loadRelatedPrograms(programAPISource);
@@ -249,7 +247,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
 
   }
-  
+
   private makeSidenav() {
     this.route.fragment.subscribe((fragment: string) => {
       for (let item of this.sidenavModel.children) {
@@ -319,7 +317,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
       if (!this.program._links.self) {
-        this.router.navigate['accessrestricted'];
+        this.router.navigate['/403'];
       }
 
       if(this.program &&this.program.data && this.program.data.contacts && this.program.data.contacts.headquarters) {
@@ -334,11 +332,11 @@ export class FALReviewComponent implements OnInit, OnDestroy {
           this.items.push(item);
         }
       }
-  
+
       if (this.program && this.program.data && this.program.data.financial && this.program.data.financial.obligations && this.program.data.financial.obligations.length > 0) {
         this.obligations = this.populateObligations(this.program.data.financial.obligations);
       }
-      
+
       // Run validations
       this.viewModel = new FALFormViewModel(this.program);
       this.errorService.viewModel = this.viewModel;
@@ -808,7 +806,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       'labelname': 'rejected-fal-alert',
       'config': {
         'type': 'error',
-        'title': 'Rejected',
+        'title': 'Rejected: This FAL draft has been rejected by OMB',
         'description': ''
       }
     };
@@ -1006,6 +1004,20 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     return apiSubject;
   }
 
+  private loadLatestUnpublishedRevision() {
+    let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
+    let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
+      return this.programService.getLatestUnpublishedRevision(params['id']);
+    });
+    this.apiStreamSub = apiStream.subscribe(apiSubject);
+
+    this.apiSubjectSub = apiSubject.subscribe(api => {
+      // run whenever api data is updated
+      this.latestUnpublishedRevision = api;
+    });
+    return apiSubject;
+  }
+
   navHandler(obj) {
     this.router.navigate([], {fragment: obj.route.substring(1)});
   }
@@ -1064,14 +1076,14 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     this.nextFY = this.getCurrentFY() + 1;
     this.fiscalYears = [this.prevFY , this.currentFY , this.nextFY];
   }
-  
+
   private getCurrentFY() {
     let date = null;
     let d = new Date();
     date = d.getFullYear();
     return date;
   }
-  
+
   private populateObligations(obligations : any[]) {
     let obligationArray = [];
     if (obligations && obligations.length > 0) {
@@ -1081,7 +1093,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
     return obligationArray;
   }
-  
+
   private buildJSON(obligation: any) {
     let obligationData = {};
     let values = [];
@@ -1097,7 +1109,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     let prevFYActualorEstimate = 0;
     let currentFYEstimate = 0;
     let nextFYEstimate = 0;
-    
+
     if (!this.totalsByYear['totalpFY']) {
       this.totalsByYear['totalpFY'] = 0;
     }
@@ -1113,11 +1125,11 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         if (value['year'] === this.prevFY) {
           obj = {};
           obj['year'] = this.prevFY;
-          if ((value['actual'] && value['estimate']) || value['actual']) {
-            obj['actual'] = value['actual'];
+          if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
+            obj['actual'] = value['actual'].toString();
             prevFYActualorEstimate = value['actual'];
-          } else if (value['estimate']) {
-            obj['estimate'] = value['estimate'];
+          } else if (value['estimate'] !== null && value['estimate'] >= 0) {
+            obj['estimate'] = value['estimate'].toString();
             prevFYActualorEstimate = value['estimate'];
           } else if (value['flag'] === 'nsi') {
             obj['flag'] = value['flag'];
@@ -1129,8 +1141,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         } else if (value['year'] === this.currentFY) {
           obj = {};
           obj['year'] = this.currentFY;
-          if (value['estimate']) {
-            obj['estimate'] = value['estimate'];
+          if (value['estimate'] !== null && value['estimate'] >= 0) {
+            obj['estimate'] = value['estimate'].toString();
             currentFYEstimate = value['estimate'];
           } else if (value['flag'] === 'nsi') {
             obj['flag'] = value['flag']
@@ -1142,8 +1154,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         } else if (value['year'] === this.nextFY) {
           obj = {};
           obj['year'] = this.nextFY;
-          if (value['estimate']) {
-            obj['estimate'] = value['estimate'];
+          if (value['estimate'] !== null && value['estimate'] >= 0) {
+            obj['estimate'] = value['estimate'].toString();
             nextFYEstimate = value['estimate'];
           } else if (value['flag'] === 'nsi') {
             obj['flag'] = value['flag']
@@ -1170,12 +1182,12 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
     return values;
   }
-  
+
   private missingFiscalYear(fisacalYears, yearsObj) {
     let missing = fisacalYears.filter(item => yearsObj.indexOf(item) < 0);
     return missing;
   }
-  
+
   sortObligations(arr , order) {
     let sortedObligation = [];
     sortedObligation = arr.sort(function (a , b) {

@@ -1,5 +1,6 @@
 @import './system/system-directory';
 @import './system/system-create';
+@import './system/system-listing';
 @import './system/system-profile';
 @import './system/system-password';
 @import './system/system-migrations';
@@ -49,6 +50,26 @@ aside.usa-workspace-system {
   .usa-sidemenu {
     a {
       line-height: 1.4;
+    }
+  }
+}
+
+system-widget {
+  .column {
+    .list {
+      .icon {
+        padding-top: 0.2em;
+        padding-right: 0.4em;
+      }
+    }
+
+    &:nth-child(1) {
+      .list {
+        a > span:nth-child(2) {
+          display: inline-block;
+          min-width: 1.5em;
+        }
+      }
     }
   }
 }

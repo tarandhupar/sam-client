@@ -9,6 +9,7 @@ import { Section } from './section';
 })
 export class SystemInformationComponent extends Section {
   @Input('group') form: FormGroup;
+  @Input() submitted: boolean = false;
 
   constructor() {
     super();
@@ -28,5 +29,9 @@ export class SystemInformationComponent extends Section {
         hint: '<strong>Example</strong>: <em>The IRS stated in a current MOU that their system tracks all incoming commitment requests and captures the information necessary to make awards</em>',
       }
     }
+  }
+
+  errors(key: string = ''): string {
+    return this.getError(this.form, key, this.submitted);
   }
 }

@@ -45,7 +45,9 @@
       border-bottom: 2px solid $color-gray-medium;
     }
 
-    .org-logo-image{}
+    .org-logo-image{
+      max-width: 100%;
+    }
 
     .org-logo-container{
       padding: 15px 20px 10px 20px;

@@ -11,8 +11,8 @@
 </sam-modal>
 <table class="sam-ui table celled" [class.hide]="contactsInfo.length == 0">
   <thead>
-  <th>Contacts</th>
-  <th>Actions</th>
+  <th scope="col">Contacts</th>
+  <th scope="col">Actions</th>
   </thead>
   <tbody>
   <tr *ngFor="let contact of contactsInfo; let i=index">

@@ -12,7 +12,7 @@ export class AwardDataComponent {
 
   opportunityConfig: any = {
     heading:'Contract Opportunities',
-    legacyLogo: 'src/assets/img/logos/fbo-black.png',
+    legacyLogo: 'src/assets/img/logos/fbo-color.jpg',
     legacyWebsiteContent:' Federal Business Opportunities (FBO)',
     splashContent:`Find Available Contract Opportunities`,
     subContent:`
@@ -73,11 +73,14 @@ export class AwardDataComponent {
 
   wageConfig: any = {
     heading:'Wage Determinations',
-    legacyLogo: 'src/assets/img/logos/wdol-black.png',
+    legacyLogo: 'src/assets/img/logos/wdol-color.jpg',
+    legacyInitials: 'WDOL',
     legacyWebsiteContent:'Wage Determinations On-Line (WDOL)',
+    publicStartGuide: 'https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-WDOL2.pdf',
+    searchIndex: 'wd',
     splashContent:`Find minimal wage rates and benefits paid to Federal contractors.`,
     subContent:`
-      <p>
+      <p class="sam-ui lighter tiny header">
         A wage determination is a listing of wage rates and fringe benefit rates 
         for each labor category of workers which the U.S. Department of Labor 
         has determined to be prevailing in a given area.
@@ -132,7 +135,7 @@ export class AwardDataComponent {
 
   awardsConfig: any = {
     heading:'Contract Awards',
-    legacyLogo: 'src/assets/img/logos/fpds-black.png',
+    legacyLogo: 'src/assets/img/logos/fpds-color.jpg',
     legacyWebsiteContent:' Federal Procurement Data System (FPDS)',
     splashContent:`Find data on Federal contract awards`,
     subContent:`
@@ -219,7 +222,7 @@ export class AwardDataComponent {
 
   entityConfig: any = {
     heading:'Entity Registrations',
-    legacyLogo: 'src/assets/img/logos/sam-black.png',
+    legacyLogo: 'src/assets/img/logos/sam-color.jpg',
     legacyWebsiteContent:' System for Award Management (SAM)',
     splashContent:`Register to do business with the U.S. government, update or renew your entity registration, and check status of an entity registration.`,
     subContent:`
@@ -349,11 +352,15 @@ export class AwardDataComponent {
 
   assistListingConfig: any = {
     heading:'Assistance Listings',
-    legacyLogo: 'src/assets/img/logos/cfda-black.png',
+    legacyLogo: 'src/assets/img/logos/cfda-color.jpg',
+    legacyInitials: 'CFDA',
     legacyWebsiteContent:' Catalog of Federal Domestic Assistance (CFDA) ',
+    publicStartGuide: 'https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-CFDA.pdf',
+    searchIndex: 'cfda',
+    workspaceRoute: '/fal/workspace',
     splashContent:` Understand Available Financial Assistance.`,
     subContent:`
-      <p>
+      <p class="sam-ui lighter tiny header">
         The federal government provides assistance to the American public in the 
         form of projects, services, and activities. It supports a broad range of 
         programs—such as education, health care, research, infrastructure, 
@@ -413,7 +420,7 @@ export class AwardDataComponent {
 
   exclusionsConfig: any = {
     heading:'Entity Exclusions',
-    legacyLogo: 'src/assets/img/logos/sam-black.png',
+    legacyLogo: 'src/assets/img/logos/sam-color.jpg',
     legacyWebsiteContent:'System for Award Management (SAM)',
     splashContent:`Find Parties excluded from Federal contracts`,
     subContent:`
@@ -543,7 +550,12 @@ export class AwardDataComponent {
   baseURL = "/help/award";
 
   wdolCurResource = 'Wage Determination Help';
-  wdolResourcesList = ['External Resources', 'Labor Advisors', 'Latest Updates', 'Wage Determination Help'];
+  wdolResourcesList = [
+    'External Resources', 
+    'Labor Advisors', 
+    'Latest Updates', 
+    'Wage Determination Help'
+  ];
   wdolCurList = [];
   dodIsEdit = false;
   contractIsEdit = false;
@@ -690,26 +702,20 @@ constructor(private router:Router, private route:ActivatedRoute) {}
 
   ngOnInit(){
     this.loadSubSectionContent(this.curSubSection);
-    this.router.events.subscribe(
-      val => {
-        if(val['url'].startsWith(this.baseURL)){
-          let subSection = "";
-          let start = val['url'].indexOf("#");
-          if(start > 0){
-            subSection = val['url'].substr(start+1,val['url'].length-start-1);
-            this.setWDOLList(subSection);
-          }else{
-            subSection = "assistanceListings";
-          }
+    
+    this.route.fragment.subscribe(
+      subSection => {
+        if(subSection){
+          this.setWDOLList(subSection);
           if(subSection !== this.curSubSection) {
             this.curSubSection = subSection;
             this.loadSubSectionContent(this.curSubSection);
           }
         }
-      });
+      }
+    );
 
     this.fakeOutAdmin();
-
   }
 
   setWDOLList(subSection){

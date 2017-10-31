@@ -34,6 +34,7 @@
 
       <ng-container edit>
         <sam-poc-entry
+          name="poc-primary"
           (action)="onContactAction(pocConfig.primary.type, $event.type)"
           [formControl]="primaryPOC"
           [manualList]="pocConfig.pocEntry.manualList"
@@ -80,6 +81,7 @@
 
       <ng-container edit>
         <sam-poc-entry
+          name="poc-secondary"
           (action)="onContactAction(pocConfig.secondary.type, $event.type)"
           [formControl]="secondaryPOC"
           [manualList]="pocConfig.pocEntry.manualList"

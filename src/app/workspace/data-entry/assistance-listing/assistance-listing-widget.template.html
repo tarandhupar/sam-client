@@ -1,12 +1,12 @@
 <div grid class="equal width relaxed">
-  <div class="column" *ngIf=" pendingApprovalCount!=null || 
+  <div class="column" *ngIf=" pendingApprovalCount!=null ||
                               pendingRequestCount!=null ||
                               rejectedCount!=null ||
                               draftReviewCount!=null ">
     <div class="sam-ui divided selection list">
       <ng-container *ngIf="pendingApprovalCount!=null">
-        <a class="item" *ngIf="pendingApprovalCount !== 0" 
-          [routerLink]="['/fal/workspace']" 
+        <a class="item" *ngIf="pendingApprovalCount !== 0"
+          [routerLink]="['/fal/workspace']"
           [queryParams]="{status: 'pending'}">
           <div class="sam-ui blue horizontal mini label">{{ pendingApprovalCount }}</div>
           Pending Review Requests
@@ -16,23 +16,23 @@
           Pending Review Requests
         </a>
       </ng-container>
-      
+
       <ng-container *ngIf="pendingRequestCount!=null">
-        <a class="item" *ngIf="pendingRequestCount !== 0" 
-          [routerLink]="['/fal/workspace']" 
+        <a class="item" *ngIf="pendingRequestCount !== 0"
+          [routerLink]="['/fal/workspace']"
           [queryParams]="{status: '', requestType: 'archive_request,unarchive_request,title_request,agency_request,program_number_request'}">
           <div class="sam-ui blue horizontal mini label">{{ pendingRequestCount }}</div>
-          Pending Change Requests  
+          Pending Change Requests
         </a>
         <a class="item disabled" *ngIf="pendingRequestCount === 0">
           <div class="sam-ui horizontal mini label">0</div>
           Pending Change Requests
         </a>
       </ng-container>
-      
+
       <ng-container *ngIf="rejectedCount!=null">
-        <a class="item" *ngIf="rejectedCount !== 0" 
-          [routerLink]="['/fal/workspace']" 
+        <a class="item" *ngIf="rejectedCount !== 0"
+          [routerLink]="['/fal/workspace']"
           [queryParams]="{status: 'rejected'}">
           <div class="sam-ui blue horizontal mini label">{{ rejectedCount }}</div>
           Rejected Assistance Listings
@@ -44,8 +44,8 @@
       </ng-container>
 
       <ng-container *ngIf="draftReviewCount!=null">
-        <a class="item" *ngIf="draftReviewCount !== 0" 
-          [routerLink]="['/fal/workspace']" 
+        <a class="item" *ngIf="draftReviewCount !== 0"
+          [routerLink]="['/fal/workspace']"
           [queryParams]="{status: 'draft_review'}">
           <div class="sam-ui blue horizontal mini label">{{ draftReviewCount }}</div>
           Under Agency Coordinator Review
@@ -57,22 +57,22 @@
       </ng-container>
     </div>
   </div>
-  <div class="column">    
+  <div class="column">
     <div class="sam-ui divided selection relaxed list">
-      <a *ngIf="permissions['CREATE_FALS']" 
-        class="item" 
+      <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:create']"
+        class="item"
         [routerLink]="['/programs/add']">
         <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
         Create a New Listing
       </a>
-      <a *ngIf="permissions['CREATE_RAO']" 
-        class="item" 
+      <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']"
+        class="item"
         [routerLink]="['/fal/myRegionalOffices']">
         <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
         Manage Assistance Locations
       </a>
-      <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" 
-        class="item" 
+      <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'"
+        class="item"
         [routerLink]="['/fal/workspace/cfda-numbers']">
         <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
         Manage CFDA Numbers

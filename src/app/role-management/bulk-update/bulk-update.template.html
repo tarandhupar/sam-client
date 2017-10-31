@@ -23,8 +23,8 @@
             <sam-agency-picker-v2
               class="bulk-agency"
               [label]="'Organization'"
-              type="single"
-              [ngModel]="org.orgKey"
+              type="multiple"
+              [(ngModel)]="orgs"
               (ngModelChange)="onOrganizationChange($event)"
               [searchMessage]="errors.org"
               [defaultDept]="true"
@@ -66,7 +66,7 @@
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
-          <div class="usa-width-five-sixths">{{org && (org.name | capitalize)}}</div>
+          <div class="usa-width-five-sixths">{{getOrganizationNames()}}</div>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Role</b></div>
@@ -94,7 +94,7 @@
         <table style="background-color:white; width: 100%; border: 1px solid black;">
           <tbody>
             <tr *ngFor="let user of users" class="bulk-update-user-row" (click)="onUserRowClick(user)">
-              <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected" [label]="formatUserName(user)"></sam-toggle></td>
+              <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected"[label]="formatUserName(user)"></sam-toggle></td>
               <td>{{user.email}}</td>
             </tr>
           </tbody>
@@ -118,7 +118,7 @@
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
-          <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
+          <div class="usa-width-five-sixths">{{getOrganizationNames()}}</div>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Role</b></div>
@@ -168,10 +168,14 @@
             <ul class="column-wrappable">
               <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
                 <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
-                <div *ngFor="let permission of func.permissions">
-                  <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
-                  <label class="permission-label" >{{permission.name}}</label>
+                <div *ngFor="let permission of func.permissions" class="checkbox-group">
+                  <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+                  <label>{{permission.name}}</label>
                 </div>
+                <!--<div *ngFor="let permission of func.permissions">-->
+                  <!--<input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">-->
+                  <!--<label class="permission-label" >{{permission.name}}</label>-->
+                <!--</div>-->
               </li>
             </ul>
           </sam-tab>
@@ -190,8 +194,8 @@
       <h3>Filters</h3>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
-          <div class="usa-width-one-sixth"><b>Organization</b></div>
-          <div class="usa-width-five-sixths">{{org.name | capitalize}}</div>
+          <div class="usa-width-one-sixth"><b>Organizations</b></div>
+          <div class="usa-width-five-sixths">{{getOrganizationNames()}}</div>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Domain</b></div>
@@ -246,6 +250,7 @@
       <ng-container *ngIf="this.mode === 'remove'">
         <!-- Optional Message -->
         <sam-text-area
+          [errorMessage]="confirmationErrors.comments"
           name="comments"
           label="Removing users from a role significantly impacts their ability to perform their duties. Please be sure you want to remove them from this role, and provide a comment explaining why."
           [(ngModel)]="comments"

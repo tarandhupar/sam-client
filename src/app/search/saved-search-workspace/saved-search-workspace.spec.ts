@@ -28,7 +28,7 @@ import {SearchDictionariesService} from "../../../api-kit/search/search-dictiona
 
 let component: SavedSearchWorkspacePage;
 let fixture: ComponentFixture<SavedSearchWorkspacePage>;
-/*
+
 let mockSavedSearchService = {
   getAllSavedSearches: (obj: any) => {
     return Observable.of({
@@ -40,8 +40,8 @@ let mockSavedSearchService = {
             "type": "saved_search",
             "title": "Test Saved Search",
             "createdOn": null,
-            "modifiedOn": "2017/09/27T17:43:16+0000",
-            "lastUsageDate": "2017/09/27T17:43:16+0000",
+            "modifiedOn": "2017-10-23T16:58:28Z",
+            "lastUsageDate": "2017-10-23T16:58:28Z",
             "numberOfUsages": 1,
             "data": {
               "index": ["cfda"],
@@ -60,8 +60,8 @@ let mockSavedSearchService = {
             "type": "saved_search",
             "title": "Test Saved Search 1",
             "createdOn": null,
-            "modifiedOn": "2017/09/27T17:43:16+0000",
-            "lastUsageDate": "2017/09/27T17:43:16+0000",
+            "modifiedOn": "2017-10-22T16:58:28Z",
+            "lastUsageDate": "2017-10-22T16:58:28Z",
             "numberOfUsages": 1,
             "data": {
               "index": ["opp"],
@@ -80,8 +80,8 @@ let mockSavedSearchService = {
             "type": "saved_search",
             "title": "Test Saved Search 2",
             "createdOn": null,
-            "modifiedOn": "2017/09/27T17:43:16+0000",
-            "lastUsageDate": "2017/09/27T17:43:16+0000",
+            "modifiedOn": "2017-10-21T16:58:28Z",
+            "lastUsageDate": "2017-10-21T16:58:28Z",
             "numberOfUsages": 1,
             "data": {
               "index": ["ei"],
@@ -239,4 +239,3 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
   });
 
 });
-*/

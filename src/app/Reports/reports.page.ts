@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
 import { IAMService, ReportsService  } from 'api-kit';
 import { globals } from '../../app/globals.ts';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   providers: [IAMService, ReportsService],
@@ -13,12 +13,12 @@ export class ReportsPage {
     showSignIn: true
   };
   public user = null;
-  private currentSection: string = 'overview';
-  private currentUrl: string = '/reports/overview';
+  private currentSection: string;
+  private currentUrl: string;
   private baseUrl: string = '/reports/';
   private currentSubSection: string = '';
   private widthLimit: number = 1200;
-  constructor(private router: Router, private zone: NgZone, private api: IAMService) {
+  constructor(private router: Router, private zone: NgZone, private api: IAMService, private activatedRoute: ActivatedRoute) {
     this.zone.runOutsideAngular(() => {
       this.checkSession(() => {
         this.zone.run(() => {
@@ -38,6 +38,9 @@ checkSession(cb: () => void) {
     });
   }
   ngOnInit() {
+    this.currentUrl = this.router.url;
+    this.currentSection = this.activatedRoute.snapshot.firstChild.url["0"].path;
+
     this.router.events.subscribe(
       val => {
         if (val['url'].indexOf('#') > 0) {

@@ -8,9 +8,20 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from 'app-components/app-components.module';
 import { PipesModule } from 'app-pipes/app-pipes.module';
 
-import { SystemCreateComponent, SystemCreateComponents } from './';
+import { SystemCreateComponent } from './system-create.component';
+import { EditComponent, ReviewComponent } from './tabs';
+import {
+  SystemInformationComponent,
+  OrganizationComponent,
+  PermissionsComponent,
+  SecurityComponent,
+  AuthorizationComponent,
+} from './tabs/sections';
 
-xdescribe('[IAM] System Account Application', () => {
+import { FHService } from 'api-kit/fh/fh.service';
+import { FHServiceMock } from 'api-kit/fh/fh.service.mock';
+
+describe('[IAM] System Account Application', () => {
   let component: SystemCreateComponent,
       fixture: ComponentFixture<SystemCreateComponent>;
 
@@ -26,8 +37,19 @@ xdescribe('[IAM] System Account Application', () => {
       ],
 
       declarations: [
-        SystemCreateComponents,
+        SystemCreateComponent,
+        EditComponent,
+        ReviewComponent,
+        SystemInformationComponent,
+        OrganizationComponent,
+        PermissionsComponent,
+        SecurityComponent,
+        AuthorizationComponent,
       ],
+
+      providers: [
+        { provide: FHService, useClass: FHServiceMock },
+      ]
     });
 
     fixture = TestBed.createComponent(SystemCreateComponent);
@@ -70,10 +92,10 @@ xdescribe('[IAM] System Account Application', () => {
     });
   }));
 
-  it('verify "Approve" & "Reject" buttons showing for users with reviewer role', async(() => {
+  xit('verify "Approve" & "Reject" buttons showing for users with reviewer role', async(() => {
     let buttons;
 
-    component.user.reviewer = true;
+    component.user.systemApprover = true;
     component.states.tab = 1;
 
     fixture.detectChanges();

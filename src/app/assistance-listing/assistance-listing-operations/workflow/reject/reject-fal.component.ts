@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
-import {AuthGuard} from "../../../../../api-kit/authguard/authguard.service";
+import {FALAuthGuard} from "../../../components/authguard/authguard.service";
 
 @Component({
   selector: 'reject-fal',
@@ -42,7 +42,7 @@ export class RejectFALComponent implements OnInit {
   };
 
 
-  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: AuthGuard) {
+  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: FALAuthGuard) {
   }
 
   ngOnInit() {

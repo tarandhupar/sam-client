@@ -170,6 +170,18 @@ export class SearchService {
       oApiParam.oParam['response_date.to'] = obj['response_date.to'];
     }
 
+    if(typeof obj['signed_date'] !== undefined && obj['signed_date'] !== null && obj['signed_date'] !== ''){
+      oApiParam.oParam['signed_date'] = obj['signed_date'];
+    }
+
+    if(typeof obj['signed_date.from'] !== undefined && obj['signed_date.from'] !== null && obj['signed_date.from'] !== ''){
+      oApiParam.oParam['signed_date.from'] = obj['signed_date.from'];
+    }
+
+    if(typeof obj['signed_date.to'] !== undefined && obj['signed_date.to'] !== null && obj['signed_date.to'] !== ''){
+      oApiParam.oParam['signed_date.to'] = obj['signed_date.to'];
+    }
+
     //showRegionalOffices only when
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;

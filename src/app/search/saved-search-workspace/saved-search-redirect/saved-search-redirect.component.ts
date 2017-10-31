@@ -6,6 +6,7 @@ import * as Cookies from 'js-cookie';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs';
+import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -14,12 +15,8 @@ import {Observable} from 'rxjs';
 })
 export class SavedSearchRedirect implements OnInit {
     authToken : string = '';
-    savedSearches : any = [];
+    preferenceId: string;
     savedSearch : any = {};
-    key : string = '';
-    index : any = [];
-    pageNum = 0;
-    showRegionalOffices: boolean = false;
 
     serviceErrorFooterAlertModel = {
         title: "Error",
@@ -30,34 +27,19 @@ export class SavedSearchRedirect implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private service: SavedSearchService, private alertFooterService: AlertFooterService) {}
 
-    ngOnInit(){
+    ngOnInit() {
         this.authToken = Cookies.get('iPlanetDirectoryPro');
-        this.activatedRoute.params.subscribe(
-            value => {
-                this.key = value.id;
-            }
-        );
-        this.activatedRoute.queryParams.subscribe(data => {
-          this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+        this.activatedRoute.params.subscribe(value => {
+          this.preferenceId = value.id;
         });
-        this.service.getAllSavedSearches({
-          Cookie: this.authToken,
-          pageNum: this.pageNum
-        }).subscribe(data => {
-                this.savedSearches = data._embedded.preferences;
-                if(this.savedSearches && this.savedSearches.length > 0 && data && this.key){
-                    this.savedSearch = this.savedSearches.find(elem => {
-                        return elem.data.key === this.key;
-                    });
-
-                    //Update and redirect
-                    this.updateSavedSearchStatistics();
-                }
-            },
-            error => {
-                this.reportError(error);
-            }
-        );
+        this.service.getSavedSearch(this.authToken, this.preferenceId).subscribe(data => {
+          this.savedSearch = data;
+          //Update and redirect
+          this.updateSavedSearchStatistics();
+        },
+        error => {
+          this.reportError(error);
+        });
     }
 
     // this calls function to set up ES query params again and re-call the search endpoint with updated params
@@ -66,34 +48,13 @@ export class SavedSearchRedirect implements OnInit {
         let navigationExtras: NavigationExtras = {
             queryParams: qsobj
         };
-        if (this.showRegionalOffices) {
-            this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
-        } else {
-            this.router.navigate(['/search'], navigationExtras);
-        }
+      this.router.navigate(['/search'], navigationExtras);
     }
 
     updateSavedSearchStatistics(){
-        //Update number of usages
-        if(!this.savedSearch.numberOfUsages){
-            this.savedSearch.numberOfUsages = 1;
-        }else{
-            this.savedSearch.numberOfUsages += 1;
-        }
 
-        //Update last executed
-        let runTime = new Date().getTime();
-        this.savedSearch.lastUsageDate = runTime;
-
-        var updateSavedSearch= {
-            'title': this.savedSearch.title,
-            'data': this.savedSearch.data,
-            'lastUsageDate': this.savedSearch.lastUsageDate,
-            'numberOfUsages': this.savedSearch.numberOfUsages
-        }
-
-        //Send Update call to API
-        this.service.updateSavedSearch(this.authToken, this.savedSearch.preferenceId, updateSavedSearch)
+        //Make API call to update usage
+        this.service.updateSavedSearchUsage(this.authToken, this.preferenceId)
         .subscribe(
             data => {
                 this.searchRedirect();
@@ -113,8 +74,8 @@ export class SavedSearchRedirect implements OnInit {
         }else{
             qsobj['index'] = '';
         }
-        if(this.savedSearch.title) {
-          qsobj['saved_search'] = this.savedSearch.title;
+        if(this.savedSearch.preferenceId) {
+          qsobj['preference_id'] = this.savedSearch.preferenceId;
         }
 
         //key and value are read in reverse for some reason
@@ -130,9 +91,8 @@ export class SavedSearchRedirect implements OnInit {
         if (error && error.status === 404) {
           this.router.navigate(['404']);
         } else if (error && error.status === 401) {
-          this.router.navigate(['403']);
+          this.router.navigate(['401']);
         }
     }
-
 
 }

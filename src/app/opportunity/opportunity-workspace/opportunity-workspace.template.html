@@ -1,5 +1,4 @@
 <page
-  *ngIf="showOpp"
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
@@ -66,7 +65,8 @@
         [label]="statusCheckboxConfig.label"
         [hint]="statusCheckboxConfig.hint"
         [errorMessage]="statusCheckboxConfig.errorMessage"
-        [hasSelectAll]="statusCheckboxConfig.hasSelectAll">
+        [hasSelectAll]="statusCheckboxConfig.hasSelectAll"
+        [disabled]="disabled">
       </sam-checkbox>
 
       <!-- Notice Type Filter -->
@@ -79,7 +79,8 @@
         [label]="noticeTypeCheckboxConfig.label"
         [hint]="noticeTypeCheckboxConfig.hint"
         [errorMessage]="noticeTypeCheckboxConfig.errorMessage"
-        [hasSelectAll]="noticeTypeCheckboxConfig.hasSelectAll">
+        [hasSelectAll]="noticeTypeCheckboxConfig.hasSelectAll"
+        [disabled]="disabled">
       </sam-checkbox>
 
             <!--Date Filter-->
@@ -128,7 +129,19 @@
             <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
                         [buttonText]="'Filter'"></sam-button>
 
-      <br><br>
+      <!--Agency Picker Filter-->
+      <h4 class="sam-ui header">Federal Agency</h4>
+      <sam-agency-picker-v2 #agencyPickerV2
+                            *ngIf="(orgRoots && orgRoots.length>0)"
+                            [attr.id] = "'opp-agency-picker-filter'"
+                            [ngModel]="agencyPickerModel"
+                            [orgRoots]="orgRoots"
+                            (ngModelChange)="onOrganizationChange($event)"
+                            [editOnFlag]="false"
+                            [activeOnly]="false">
+      </sam-agency-picker-v2>
+
+      <br>
 
       <div>
           <sam-button (onClick)='clearAllFilters()' [buttonText]="'Clear All'"></sam-button>

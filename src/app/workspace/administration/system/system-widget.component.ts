@@ -6,13 +6,25 @@ import { IAMService } from 'api-kit';
   templateUrl: './system-widget.component.html'
 })
 export class SystemWidgetComponent {
-  private accounts = [];
+  public user;
+  private summary = {
+    Pending: '-',
+    Approved: '-',
+    Rejected: '-',
+    Cancelled: '-',
+  };
 
   constructor(private api: IAMService) {}
 
   ngOnInit() {
-    this.api.iam.system.account.get(accounts => {
-      this.accounts = accounts.filter((account, intAccount) => (intAccount < 3));
+    this.api.iam.user.get(user => {
+      this.user = user;
+      this.api.iam.cws.status(summary => {
+        this.summary.Pending = summary.pending;
+        this.summary.Approved = summary.approved;
+        this.summary.Rejected = summary.rejected;
+        this.summary.Cancelled = summary.cancelled;
+      });
     });
   }
 }

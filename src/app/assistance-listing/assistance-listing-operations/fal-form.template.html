@@ -13,7 +13,6 @@
 
 <form-step
   [ngClass]="'assistance-listing-operations'"
-  [hidden]="createPermissions === undefined"
   [crumbs]="crumbs"
   [pageTitle]="falFormViewModel.title ? falFormViewModel.title : 'Assistance Listing'"
   [sectionTitle]="falFormViewModel.title ? 'Assistance Listing' : 'Add'"
@@ -25,9 +24,11 @@
   [hasErrors]="hasErrors"
   [tabsComponent]="tabsComponent"
   statusBannerType="warning"
+  [(statusBannerExpanded)]="statusBannerExpanded"
   (action)="formActionHandler($event)"
   (sideNavOutput)="navHandler($event)"
-  (breadcrumbOut)="breadCrumbClick($event)">
+  (breadcrumbOut)="breadCrumbClick($event)"
+  [alerts] = "alerts">
 
   <div status-banner>
     <fal-error-display #errorDisplay

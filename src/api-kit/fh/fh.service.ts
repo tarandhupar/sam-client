@@ -88,6 +88,48 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
+  //gets organization with heirarchy data
+  getFHOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false, status: string = 'all', pageSize: number = 10, pageNum: number = 1, orderBy: string = "asc", hasFPDS: boolean = false) {
+    var oApiParam = {
+      name: '',
+      suffix: '',
+      oParam: {},
+      method: 'GET'
+    };
+
+    //organizationId length >= 30 -> call opportunity org End Point
+    if (id.length >= 30) {
+      oApiParam.name = 'contractOpportunity';
+      oApiParam.suffix = '/opportunities/' + id + '/organization';
+    } else { //organizationId less than 30 character then call Octo's FH End point
+      oApiParam.name = 'federalHierarchy';
+      oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
+      oApiParam.oParam = {
+        'sort': 'name',
+        'mode': 'slim'
+      };
+    }
+
+    if (includeOrgTypes) {
+      oApiParam.oParam['types'] = 'true';
+    }
+
+    if (status !== 'all') {
+      oApiParam.oParam['status'] = status;
+    }
+
+    if (includeChildrenLevels) {
+      oApiParam.oParam['limit'] = pageSize;
+      oApiParam.oParam['offset'] = pageNum;
+      oApiParam.oParam['order'] = orderBy;
+    }
+
+    if (hasFPDS) {
+      oApiParam.oParam['has-fpds'] = 'true';
+    }
+    return this.oAPIService.call(oApiParam);
+  }
+
   getOrganizationsByIds(ids: string) {
     var oApiParam = {
       name: 'federalHierarchy',
@@ -342,18 +384,18 @@ export class FHService {
   }
 
   addAuthHeader(options) {
-    let superToken = Cookie.get('superToken');
+    let superToken = Cookie.get('superFHToken');
     let iPlanetCookie = Cookie.get('iPlanetDirectoryPro');
 
     if (iPlanetCookie) {
-      Cookie.delete('superToken');
+      Cookie.delete('superFHToken');
     }
 
     if (!iPlanetCookie && !superToken) {
       return;
     }
     options.headers = options.headers || {};
-    options.headers['X-Auth-Token'] = iPlanetCookie ||  '***'+superToken;
+    options.headers['X-Auth-Token'] = iPlanetCookie || '***' + superToken;
   }
 
   callApi(oApiParam: any, convertToJSON: boolean = true) {

@@ -3,7 +3,7 @@ import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
 import { IAMService } from "api-kit/iam/iam.service";
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationCancel } from '@angular/router';
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from "rxjs";
 
@@ -15,11 +15,9 @@ export class MsgFeedSideNavComponent{
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
+  @Input() requestTypeCountMap:any = [];
   @Input() typeIdMap: any = {};
-  @Input() roleCount = 0;
-  @Input() titleChangeCount = 0;
-  @Input() numberChangeCount = 0;
-  @Input() recievedCount = 0;
+  recievedCount = 0;
 
   @Input() filterOption = {
     keyword:"",
@@ -75,6 +73,8 @@ export class MsgFeedSideNavComponent{
     }
   };
 
+  requestTypeMap = {};
+
   constructor(private msgFeedService: MsgFeedService,
               private systemAlertService: SystemAlertsService,
               private _router:Router,
@@ -83,7 +83,14 @@ export class MsgFeedSideNavComponent{
               private capitalPipe: CapitalizePipe,){}
 
   ngOnInit(){
-    this.signInCheck();
+
+    this.route.params.subscribe(param => {
+      this.resetFilterFields();
+      this.signInCheck();
+      this.loadCounts();
+
+    });
+
     this.route.queryParams.subscribe((params: any) => {
       if (params.statIds) {
         let par = params.statIds.split(',');
@@ -91,7 +98,7 @@ export class MsgFeedSideNavComponent{
       }
       if (params.reqIds) {
         let par = params.reqIds.split(',');
-        this.filterOption.requestType = par.map(p => +p);
+        this.filterOption.requestType = par;
       }
     });
   }
@@ -154,7 +161,7 @@ export class MsgFeedSideNavComponent{
   loadFilterData(){
     let typeStr = this.filterOption.subSection === ""? this.filterOption.section: this.filterOption.subSection;
     this.msgFeedService.getFilters(this.typeIdMap[typeStr]).subscribe(data =>{
-      this.loadRequestsTypeAndCount(data.requestTypes);
+      this.loadRequestsTypeMap(data.requestTypes);
       this.loadRequestStatus(data.requestStatus);
       this.loadAlertType(data.alertTypes);
       this.loadAlertStatus(data.alertStatus);
@@ -176,13 +183,11 @@ export class MsgFeedSideNavComponent{
     }
   }
 
-  loadRequestsTypeAndCount(requestTypes){
-    this.requestTypeCbxConfig.options = [];
+  loadRequestsTypeMap(requestTypes){
     if(requestTypes){
       requestTypes.forEach(type => {
-        this.requestTypeCbxConfig.options.push({value: type.requestTypeId, label: type.requestTypeNames, name: type.requestTypeNames, count:0});
+        this.requestTypeMap[type.requestTypeId] = type.requestTypeNames;
       });
-      this.loadCounts();
     }
   }
 
@@ -206,10 +211,12 @@ export class MsgFeedSideNavComponent{
   }
 
   loadCounts(){
-    this.requestTypeCbxConfig.options.forEach(e =>{
-      if(e.label.includes('Role'))e['count'] = this.roleCount;
-      if(e.label.includes('Title'))e['count'] = this.titleChangeCount;
-      if(e.label.includes('Number'))e['count'] = this.numberChangeCount;
+    this.requestTypeCbxConfig.options = [];
+    if(this.requestTypeCountMap.totalCount) this.recievedCount = this.requestTypeCountMap.totalCount;
+    Object.keys(this.requestTypeCountMap).forEach(key => {
+      if(key !== 'totalCount'){
+        this.requestTypeCbxConfig.options.push({value:key, label:this.requestTypeMap[key], name:this.requestTypeMap[key], count:this.requestTypeCountMap[key]});
+      }
     });
   }
 

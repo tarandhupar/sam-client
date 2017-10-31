@@ -5,6 +5,7 @@ import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.co
 import { LocationService } from 'api-kit/location/location.service';
 import { Observable } from 'rxjs';
 import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
+import {SamLocationComponent} from "../location-component/location.component";
 
 @Component ({
   selector: 'sam-address-form',
@@ -17,6 +18,7 @@ export class OrgAddrFormComponent {
   streetAddr2 = "";
 
   @ViewChild('MailAddrStreetAddr1') addrStreet1:SamTextComponent;
+  @ViewChild('locationGroup') locationGroup:SamLocationComponent;
 
 
   @Input() showAddIcon:boolean = true;
@@ -46,6 +48,14 @@ export class OrgAddrFormComponent {
 
     if(this.isAddrModelPopulated()){
       this.populateAddressFormField();
+    }else{
+      this.locationObj = {
+        city: '',
+        county: '',
+        state: '',
+        country: '',
+        zip: ''
+      };
     }
   }
 
@@ -108,18 +118,21 @@ export class OrgAddrFormComponent {
     if(this.streetAddr1 === '') return Observable.of({description:'INVALID'});
 
     this.updateAddrModel();
-    return Observable.of({description:"VALID"});
+    return this.locationGroup.locationValidation();
   }
 
   updateAddrModel(){
-    this.orgAddrModel['country'] = this.locationObj['country'].key;
-    this.orgAddrModel['state'] = this.locationObj['state'].key;
-    this.orgAddrModel['city'] = this.locationObj['city'].value.split(',')[0];
-    this.orgAddrModel['zip'] = this.locationObj['zip'];
-    this.orgAddrModel['street1'] = this.streetAddr1;
-    this.orgAddrModel['street2'] = this.streetAddr2;
+    if(this.locationObj['country'] && this.locationObj['state'] && this.locationObj['city']){
+      this.orgAddrModel['country'] = this.locationObj['country'].key;
+      this.orgAddrModel['state'] = this.locationObj['state'].key;
+      this.orgAddrModel['city'] = this.locationObj['city'].value?this.locationObj['city'].value.split(',')[0]:'';
+      this.orgAddrModel['zip'] = this.locationObj['zip'];
+      this.orgAddrModel['street1'] = this.streetAddr1;
+      this.orgAddrModel['street2'] = this.streetAddr2;
 
-    this.orgAddrModelChange.emit(this.orgAddrModel);
+      this.orgAddrModelChange.emit(this.orgAddrModel);
+    }
+
 
   }
 

@@ -52,7 +52,7 @@ describe('[IAM] User Profile - Details', () => {
     fixture.detectChanges();
   });
 
-  it('verify data-binding for email notification setting', () => {
+  xit('verify data-binding for email notification setting', () => {
     let checkbox;
 
     fixture.debugElement.query(By.css('#identity sam-editor .usa-additional_text')).nativeElement.click();

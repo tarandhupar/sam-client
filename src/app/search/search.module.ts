@@ -28,6 +28,7 @@ import {SavedSearchResult} from "./saved-search-workspace/saved-search-result/sa
 import {FilterParamLabel} from "./pipes/filter-label.pipe";
 import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirect/saved-search-redirect.component";
 import {FilterParamValue} from "./pipes/filter-value.pipe";
+import {SearchAuthGuard} from "./authguard.service";
 
 @NgModule({
   imports: [
@@ -73,6 +74,9 @@ import {FilterParamValue} from "./pipes/filter-value.pipe";
     FilterParamValue,
     SavedSearchRedirect
   ],
-  providers: [DunsEntityAutoCompleteWrapper],
+  providers: [
+    DunsEntityAutoCompleteWrapper,
+    SearchAuthGuard
+  ],
 })
 export class SearchModule { }

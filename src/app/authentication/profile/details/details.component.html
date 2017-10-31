@@ -140,7 +140,12 @@
   <!--==========================-->
   <!--=== Security Questions ===-->
   <!--==========================-->
-  <section id="kba" class="kba" *ngIf="user.kbaAnswerList.length">
+  <section id="kba" class="kba" *ngIf="store.questions.length && user.kbaAnswerList.length">
+    <sam-alert [type]="alerts.kba.type"
+               [title]="alerts.kba.message"
+               [showClose]="true"
+               [hidden]="!alerts.kba.show"
+               (dismiss)="dismiss('kba')"></sam-alert>
     <sam-editor label="Security Questions"
                 [showInputView]="states.edit.kba"
                 (action)="handleAction($event,'kba')"
@@ -170,7 +175,12 @@
       Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
       be permanently inaccessible and you will need to re-register to access SAM.gov.
     </div>
-    <div class="usa-button-controls text-left">
+    <div class="usa-button-controls">
+      <sam-alert [type]="alerts.deactivate.type"
+                 [title]="alerts.deactivate.message"
+                 [showClose]="true"
+                 [hidden]="!alerts.deactivate.show"
+                 (dismiss)="dismiss('deactivate')"></sam-alert>
       <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
     </div>
   </section>

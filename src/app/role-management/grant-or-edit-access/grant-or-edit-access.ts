@@ -1,13 +1,14 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { UserService } from "../user.service";
 import * as moment from 'moment';
-import { SamModalComponent } from "sam-ui-kit/components/modal/modal.component";
-import { Title } from "@angular/platform-browser";
 import { SamTitleService } from "../../../api-kit/title-service/title.service";
+import { Location } from "@angular/common";
+import { IBreadcrumb } from "sam-ui-kit/types";
+import { isArray } from 'lodash';
 
 function arrayIsRequired(c: FormControl) {
   if (!c.value || !c.value.length) {
@@ -33,101 +34,122 @@ export class GrantOrEditAccess {
   roleOptions = [];
   domainOptionsByRole: any = {};
   domainTabs = [];
-
+  crumbs: Array<IBreadcrumb> = [];
   comment = {
     userName: 'Justin Babbs',
     text: 'Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money Lorem Ipsum Dolor Money ',
     date: moment().subtract('minutes', 5).format(),
   };
 
-  editingOrg: boolean = false;
   grantOrEdit: 'grant'|'edit' = 'grant';
   errorMessage: string = '';
   domains: Array<number> = [];
   existingAccess = {};
   submitEnabled: boolean = true;
+  requestId: string;
 
   constructor(
-    fb: FormBuilder,
+    private fb: FormBuilder,
     private userAccessService: UserAccessService,
     private route: ActivatedRoute,
     private router: Router,
     private alertFooter: AlertFooterService,
     private userService: UserService,
     private samTitle: SamTitleService,
+    private location: Location,
   ) {
-    let defaultOrg = userService.getUser().departmentID;
+
+  }
+
+  ngOnInit() {
+    this.grantOrEdit = this.route.snapshot.data['grantOrEdit'];
+
+    let defaultOrg = this.route.snapshot.queryParams['org'] || this.userService.getUser().departmentID || '';
+
+    if (!isArray(defaultOrg)) {
+      // convert to array, remove empty elements
+      defaultOrg = [defaultOrg].filter(o => o);
+    }
 
     if (this.isGrant() && !defaultOrg) {
       this.errorMessage = 'Unable to determine your department id';
-      this.submitEnabled = false;
-      return;
     }
 
-    if (this.isEdit()) {
-      defaultOrg = this.route.snapshot.queryParams['org'];
-    }
-
-    this.form = fb.group({
+    this.form = this.fb.group({
       org: [defaultOrg, Validators.required],
       role: ['', Validators.required],
       domains: ['', arrayIsRequired],
       comment: ['', Validators.required],
     });
-  }
 
-  ngOnInit() {
     this.user = {
       email: this.route.snapshot.params['id'],
       firstName: '',
       lastName: '',
     };
-    this.grantOrEdit = this.route.snapshot.data['grantOrEdit'];
 
     this.samTitle.setTitleString(this.isEdit() ? 'Edit Access' : 'Assign Role');
     this.getPermittedRoleAndDomains();
-
-    if (this.isEdit()) {
-      this.parseInitialRolesAndDomains();
-    }
+    this.parseInitialValues();
+    this.setBreadCrumbsForRespondToRequest();
   }
 
   orgName() {
     return this.form.get('org').value.name || "";
   }
 
-  parseInitialRolesAndDomains() {
-    let qp = this.route.snapshot.queryParams;
-    let role = +qp['role'];
-    let domains = qp['domains'];
-
-    if (domains.toUpperCase) {
-      let d = +domains;
-      if (isNaN(d)) {
-        throw new Error('domains is invalid');
-      }
-      domains = [d];
-    } else {
-      domains = domains.map(d => {
-        let x = +d;
-        if (isNaN(x)) {
-          throw new Error('domains is invalid.');
-        }
-        return x;
-      });
+  // we only show breadcrumbs if we are responding to a request
+  setBreadCrumbsForRespondToRequest() {
+    if (!this.requestId) {
+      return [];
     }
 
-    let org = qp['org'];
+    this.crumbs = [
+      { breadcrumb: 'Workspace', url: '/workspace' },
+      { breadcrumb: 'Role Directory', url: '/role-management/roles-directory' },
+      { breadcrumb: this.userFullName(), url: '../access' },
+      { breadcrumb: 'Role Request', url: `/role-management/requests/${this.requestId}` },
+      { breadcrumb: 'Assign Role' },
+    ];
+  }
 
-    if (!role || !domains || !qp) {
-      this.errorMessage = 'Parameters missing from route';
-      return;
+  parseInitialValues() {
+    let qp = this.route.snapshot.queryParams;
+    let role = qp['role'] || '';
+    let orgs = qp['org'] || [];
+    let domains = qp['domains'] || [];
+
+    if (orgs.toUpperCase) {
+      orgs = [orgs];
+    }
+
+    this.requestId = qp['request'];
+
+    if (domains.toUpperCase) {
+      // convert a single domain to an array of domains
+      domains = [domains];
+    }
+
+    // map domains to a number
+    domains = domains.map(d => {
+      let x = +d;
+      if (isNaN(x)) {
+        throw new Error('domain is not a number.');
+      }
+      return x;
+    });
+
+    if (role) {
+      role = +role;
+      if (isNaN(role)) {
+        throw new Error("role is not a number");
+      }
     }
 
     this.existingAccess = {
-      organizations: [org],
-      role: +role,
-      domains: domains.map(d => +d)
+      organizations: orgs,
+      role: role,
+      domains: domains,
     };
 
     // we update the form value, for domains, once we get the text label from /checkaccess
@@ -152,9 +174,7 @@ export class GrantOrEditAccess {
           return { label: r.val, value: r.id };
         });
 
-        if (this.isEdit()) {
-          this.setFormDomains();
-        }
+        this.setFormDomains();
       } catch(err) {
         console.error(err);
         this.alertFooter.registerFooterAlert({
@@ -175,9 +195,18 @@ export class GrantOrEditAccess {
     });
   }
 
+  // Set domains if a role is selected and checkaccess returns a set of domains for that role
   setFormDomains() {
+    let role = this.form.value.role;
+    if (!role) {
+      return;
+    }
+    let options = this.domainOptionsByRole[this.form.value.role];
+    if (!options) {
+      return;
+    }
     this.form.patchValue({
-      domains: this.domainOptionsByRole[this.form.value.role].filter(d => {
+      domains: options.filter(d => {
         return this.domains.find(dParam => ''+d.key === ''+dParam);
       })
     });
@@ -216,8 +245,9 @@ export class GrantOrEditAccess {
     }
     let d = domains.map(i => i.key).join(',');
     let r = this.form.value.role;
+    let o = this.isEdit() ? this.form.value.org.map(o => ''+o.orgKey).join(',') : '';
 
-    this.userAccessService.getDomainDefinition('role', d, r, this.isEdit() ? this.user.email : undefined).subscribe(
+    this.userAccessService.getDomainDefinition('role', d, r, o, this.isEdit() ? this.user.email : undefined).subscribe(
       res => {
         try {
           this.domainTabs = res.map(
@@ -266,16 +296,6 @@ export class GrantOrEditAccess {
         });
       }
     );
-  }
-
-  onOrganizationChange(org) {
-    if (org) {
-      this.editingOrg = false;
-    }
-  }
-
-  onClickEditOrg() {
-    this.editingOrg = true;
   }
 
   pageTitle() {
@@ -332,6 +352,14 @@ export class GrantOrEditAccess {
     return this.form.valid;
   }
 
+  goToRequests() {
+    this.router.navigate(["/role-management/requests"]);
+  }
+
+  goToAccess() {
+    this.router.navigate(["../access"], { relativeTo: this.route});
+  }
+
   onSubmit() {
     this.errorMessage = '';
     if (!this.validate()) {
@@ -342,25 +370,31 @@ export class GrantOrEditAccess {
     let domains = this.getDomainData(this.domainTabs);
     let val = this.form.value;
 
+    let orgs = (!val.org || !val.org.length) ? [] : val.org.map(o => ''+o.orgKey);
     let body: any = {
       users: [this.user.email],
       updatedAccess: {
-        organizations: [''+val.org.orgKey],
+        organizations: orgs,
         role: +val.role,
         domainData: domains,
       },
       message: val.comment,
-      mode: this.isGrant() ? "GRANT" : "EDIT",
+      mode: this.requestId ? "APPROVE" : this.isGrant() ? "GRANT" : "EDIT",
     };
 
-    if (this.isEdit()) {
+    if (this.isEdit() || this.requestId) {
       body.existingAccess = this.existingAccess;
     }
 
     let apiMethod = this.isGrant() ? "postAccess" : "putAccess";
-    this.userAccessService[apiMethod](body).subscribe(
+    let qp = this.requestId ? { userAccessRequestId: this.requestId } : undefined;
+    this.userAccessService[apiMethod](body, qp).subscribe(
       res => {
-        this.router.navigate(["../access"], { relativeTo: this.route});
+        if (this.requestId) {
+          this.goToRequests();
+        } else {
+          this.goToAccess();
+        }
       },
       err => {
         if (err && err.status === 409) {

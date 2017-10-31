@@ -317,11 +317,13 @@ export class FinancialObligationChart implements OnChanges {
         .data(assistanceTotalsGroupedByYear)
         .enter()
         .append("th")
+        .attr("id", d => d.key)
         .attr("scope", "col")
         .attr("aria-label", "Fiscal Year")
         .text(d => d.values[0].value.year);
 
       thead.insert("th", ":first-child")
+        .attr("id", 'obligation')
         .attr("scope", "col")
         .text("Obligation(s)");
 
@@ -375,8 +377,8 @@ export class FinancialObligationChart implements OnChanges {
                   if (item.explanation) {
                     explanation += "FY " + String(item.year).slice(2, 4) +
                       " Exp: " + item.explanation + ", ";
-                      explanationArr[index] = explanationArr[index] || [];
-                      explanationArr[index] = explanation;
+                    explanationArr[index] = explanationArr[index] || [];
+                    explanationArr[index] = explanation;
                   }
 
                   if (item.ena && !item.amount) {
@@ -425,8 +427,8 @@ export class FinancialObligationChart implements OnChanges {
                 item.unshift(obligationArr[index] === ""
                   ? ""
                   : obligationArr[index]
-                  ? obligationArr[index]
-                  : obligationArr[0]);
+                    ? obligationArr[index]
+                    : obligationArr[0]);
               });
 
               if (rowArr.length === 1 && rowArr[0][0] === ""  && detailsArr.length === 0) {
@@ -446,7 +448,6 @@ export class FinancialObligationChart implements OnChanges {
           });
 
           let obligationsData = _.flatten(obligationsArr);
-
           return obligationsData;
         })
         .enter().append("tr")
@@ -454,13 +455,13 @@ export class FinancialObligationChart implements OnChanges {
         .data(d => d)
         .enter()
         .append(function(d, i) {
-          if (i === 0) {
+          if (i === 0 && d.trim().length > 0) {
             return document.createElement("th");
           }
           return document.createElement("td");
         })
         .html(function (d, i) {
-          if (i === 0) {
+          if (i === 0 && d.trim().length > 0) {
             d3.select(this).attr("scope", "row");
             d3.select(this.parentNode).style("font-weight", "700");
           }
@@ -472,6 +473,7 @@ export class FinancialObligationChart implements OnChanges {
         .style("font-weight", "700")
         .append("th")
         .text("Totals")
+        .attr("id", "totals")
         .attr("scope", "row");
 
       tbody.select("tr:last-child")
@@ -519,6 +521,12 @@ export class FinancialObligationChart implements OnChanges {
           }
 
           return d3.format("($,")(d.value.total);
+        });
+
+      tbody.selectAll("th:not([id])")
+        .html(function (d, i) {
+          d3.select(this).attr("id", "row-" + i);
+          return d;
         });
     })();
 
@@ -575,14 +583,14 @@ export class FinancialObligationChart implements OnChanges {
           } else if (item.isRecoveryAct != true) {
             obligation = "Salary or Expense";
           }
-  //        } else if(item.questions) {
-  //          for (let question of item.questions) {
-  //            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
-  //              obligation = "Salary or Expense";
-  //              break;
-  //            }
-  //          }
-  //        }
+          //        } else if(item.questions) {
+          //          for (let question of item.questions) {
+          //            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+          //              obligation = "Salary or Expense";
+          //              break;
+          //            }
+          //          }
+          //        }
 
           obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
 

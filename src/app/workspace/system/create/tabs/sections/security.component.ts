@@ -9,6 +9,7 @@ import { Section } from './section';
 })
 export class SecurityComponent extends Section {
   @Input('group') form: FormGroup;
+  @Input() submitted: boolean = false;
 
   private options = {
     typeOfConnection: ['Web Services','SFTP']
@@ -38,4 +39,8 @@ export class SecurityComponent extends Section {
       },
     }
   };
+
+  errors(key: string = ''): string {
+    return this.getError(this.form, key, this.submitted);
+  }
 }

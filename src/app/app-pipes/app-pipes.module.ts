@@ -8,6 +8,7 @@ import { KeysPipe } from './keyspipe.pipe';
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 import { SortArrayOfObjects } from "./sort-array-object.pipe";
 import { FHTitleCasePipe } from "./fhTitleCase.pipe";
+import { ShortDatePipe } from "./short-date.pipe";
 
 @NgModule({
   imports: [],
@@ -19,7 +20,8 @@ import { FHTitleCasePipe } from "./fhTitleCase.pipe";
     KeysPipe,
     OrganizationTypeCodePipe,
     SortArrayOfObjects,
-    FHTitleCasePipe
+    FHTitleCasePipe,
+    ShortDatePipe,
   ],
   declarations: [
     CapitalizePipe,
@@ -29,7 +31,8 @@ import { FHTitleCasePipe } from "./fhTitleCase.pipe";
     KeysPipe,
     OrganizationTypeCodePipe,
     SortArrayOfObjects,
-    FHTitleCasePipe
+    FHTitleCasePipe,
+    ShortDatePipe,
   ],
   providers: [],
 })

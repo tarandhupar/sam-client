@@ -1,96 +1,139 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { cloneDeep, isObject, merge } from 'lodash';
+import { cloneDeep, concat, isObject, merge } from 'lodash';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 
-import { IAMService, FHService } from 'api-kit';
+import { IAMService } from 'api-kit';
 
 @Component({
   templateUrl: './system-directory.component.html',
-  providers: [
-    FHService,
-    IAMService
-  ]
 })
 export class SystemDirectoryComponent {
+  private _applications = [];
+  private _accounts = [];
   private accounts = [];
-  private api = {
-    fh: null,
-    iam: null
+  private options = {
+    domains: [
+      { label: 'Contract Opportunities', name: 'filter-contract-opportunities', value: 'contract-opportunities' },
+      { label: 'Contract Data',          name: 'filter-contract-data',          value: 'contract-data' },
+      { label: 'Entity Information',     name: 'filter-entity-information',     value: 'entity-information' },
+    ],
+
+    statuses: [
+      { label: 'Draft',            name: 'filter-draft',     value: 'draft' },
+      { label: 'Pending Approved', name: 'filter-pending',   value: 'pending' },
+      { label: 'Published',        name: 'filter-published', value: 'published' },
+      { label: 'Rejected',         name: 'filter-rejected',  value: 'rejected' },
+    ],
+
+    sort: [
+      { label: 'Unique Account ID', name: 'sort-uid', value: 'uid' },
+    ],
   };
 
+  private subscriptions = {};
   private states = {
-    loading: false,
+    applications: false,
+    accounts: false,
+    loading: true,
     page: {
       current: 1,
       total: 1,
-      count: 20
+      count: 10,
     },
   };
 
   private store = {
+    section: 'Workspace',
+    title: 'System Accounts',
     records: [],
   }
 
-  constructor(private _fh: FHService, private _iam: IAMService) {
-    this.api.iam = _iam.iam;
-    this.api.fh = _fh;
-  }
+  private alert = {
+    type: 'success',
+    title: '',
+    message: '',
+  };
+
+  private search = {
+    keyword: '',
+    user: '',
+  };
+
+  private filter = {
+    domains: [],
+    statuses: [],
+  };
+
+  private sort = { type: 'uid', sort: 'asc' };
+
+  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {}
 
   ngOnInit() {
     let requests = [],
-        resolve = (() => {
-          this.api.iam.system.account.get(accounts => {
-            requests = accounts.map((account, intAccount) => {
-              accounts[intAccount].subtier = '';
+        resolve = ((type: string) => {
+          this.states[type] = true;
 
-              return account.department ?
-                this.api.fh.getOrganizationById(account.department) :
-                Observable.of(account.businessName || '');
-            });
-
-            Observable
-              .forkJoin(requests)
-              .subscribe(results => {
-                results.forEach((item, intItem) => {
-                  let organization = isObject(item) ?
-                    (item['_embedded'][0]['org']['l2Name'] || item['_embedded'][0]['org']['l1Name']) :
-                    item;
-
-                  accounts[intItem].subtier = organization;
-                });
-
-                Array.prototype.push.apply(this.accounts, accounts);
-                this.setupPaging();
-              }, () => {
-                this.setupPaging();
-              });
-          });
+          if(this.states.applications && this.states.accounts) {
+            this.states.loading = false;
+            this.accounts = concat(this._applications, this._accounts);
+            this.setupPaging();
+          }
         });
 
-    this.api.iam.cws.application.getAll(applications => {
-      this.accounts = applications.map(application => {
-        return {
-          _id: application.uid,
-          systemName: application.systemAccountName,
-          ipAddress: application.applicationStatus,
-          subtier: application.applicationStatus,
-          primaryOwnerName: application.applicationStatus,
-          primaryOwnerEmail: '',
-          new: true
-        };
-      });
+    // Dynamic Alerts
+    console.log
+    this.ping(this.api.alert)
 
-      resolve();
-    }, resolve);
+    this.api.iam.cws.application.getAll(applications => {
+      this._applications = applications;
+      resolve('applications');
+    }, () => {
+      resolve('applications')
+    });
+
+    this.api.iam.system.account.get(accounts => {
+      this._accounts = accounts;
+      resolve('accounts');
+    }, () => {
+      resolve('accounts');
+    });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe all subscriptions
+    Object.keys(this.subscriptions).map(key => {
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
+      }
+    });
+  }
+
+  axe(id: string|number) {
+    this.accounts = this.accounts.filter(account => (account.uid == id) ? false : true);
+    this.setupPaging();
   }
 
   setupPaging() {
-    let intStart = Math.max(0, (this.states.page.current * this.states.page.count) - this.states.page.count);
+    let intStart = Math.max(0, (this.states.page.current * this.states.page.count) - this.states.page.count),
+        intEnd = this.states.page.current * this.states.page.count;
 
     this.states.page.total = Math.ceil(this.accounts.length / this.states.page.count);
-    this.store.records = this.accounts.splice(intStart, this.states.page.count);
+    this.store.records = this.accounts.slice(intStart, intEnd);
+  }
+
+  ping(alert) {
+    this.alert.type = alert.type || 'info';
+    this.alert.title = alert.title || '';
+    this.alert.message = alert.message || '';
+  }
+
+  fetch(): void {
+    this.states.loading = true;
+    // TODO
+    this.states.loading = true;
   }
 
   onPage(page: number) {

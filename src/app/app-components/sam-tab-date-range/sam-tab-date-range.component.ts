@@ -23,16 +23,19 @@ export class SamTabDateRangeFilterComponent implements ControlValueAccessor {
     radioSelection?: string,
     rangeType?: string,
     label?: string,
-    radioName?: string
+    radioName?: string,
+    dateFilterConfig?: any
   }[] = [];
-
+ 
   /**
    * Passes in the Angular FormControl
    */
   @Input() control: FormControl;
-  @Input() tabIndex: Number = 0;
-  @Output() filterEvt: EventEmitter = new EventEmitter();
-  @Output() filterClearEvt: EventEmitter = new EventEmitter();
+  @Input() tabIndex: number = 0;
+  @Input() filterDisabled;
+  @Output() filterEvt: EventEmitter<any> = new EventEmitter();
+  @Output() filterClearEvt: EventEmitter<any> = new EventEmitter();
+  @Output() tabIndexChange: EventEmitter<any> = new EventEmitter();
   @ViewChild('wrapper') wrapper;
   model = {
     date:null,
@@ -57,15 +60,16 @@ export class SamTabDateRangeFilterComponent implements ControlValueAccessor {
   ngOnChanges(c){
     if(c["tabIndex"] && this.tabIndex > this.tabConfig.length && this.tabIndex < 0){
       this.tabIndex = 0;
-      this.selectTab(this.tabIndex);
+      this.selectedIndex = this.tabIndex;
     }
-    else{
-      this.selectTab(this.tabIndex);
+    else if(c["tabIndex"]){
+      this.selectedIndex = this.tabIndex;
     }
   }
 
   selectTab(i: int = 0){
     this.selectedIndex = i;
+    this.tabIndexChange.emit(this.selectedIndex);
   }
 
   getColorClass(i: int){

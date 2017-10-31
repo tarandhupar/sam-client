@@ -22,7 +22,6 @@ describe('ExclusionsResultComponent', () => {
       comp.data = {
         title: "SAMPLE NAME",
         cageCode: "1234",
-        terminationDate: null,
         isActive: true,
         address: {
           "city": "city",

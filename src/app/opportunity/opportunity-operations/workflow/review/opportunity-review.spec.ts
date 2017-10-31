@@ -23,6 +23,7 @@ import {FilesizePipe} from "../../../pipes/filesize.pipe";
 import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
 import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
+import {OpportunityFields} from "../../../opportunity.fields";
 
 let comp: OpportunityReviewComponent;
 let fixture: ComponentFixture<OpportunityReviewComponent>;
@@ -38,7 +39,17 @@ let MockOpportunityService = {
   getContractOpportunityById(id: string, authToken: string = null) {
     return Observable.of({
       "id": "213ji321hu3jk123",
-      "parentOpportunityId":"0000b08b003c3a28ae6f9dd254e4a9c8",
+      "parent":{
+        "opportunityId":"0000b08b003c3a28ae6f9dd254e4a9c8"
+      },
+      "description": [
+        {
+          "descriptionId": "Description Id goes here",
+          "body": "Content goes here",
+          "modifiedOn": "Date goes here",
+          "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
+        }
+      ],
       "data": {
         "type": "l",
         "solicitationNumber": "Solicitation Number goes here",
@@ -46,12 +57,6 @@ let MockOpportunityService = {
         "organizationId": "100010393",
         "organizationLocationId": "100010393",
         "relatedOpportunityId": "Related Opportunity Id goes here",
-        "descriptions": [
-          {
-            "descriptionId": "Description Id goes here",
-            "content": "Content goes here"
-          }
-        ],
         "link": {
           "href": "Link href goes here",
           "additionalInfo": {
@@ -117,71 +122,7 @@ let MockOpportunityService = {
     })
   },
 
-  getOpportunityLocationById(id: String) {
-    return Observable.of({
-      "zip": "77720",
-      "country": null,
-      "city": "Beaumont",
-      "street": "PO Box 26015 5430 Knauth Road",
-      "state": "TX"
-    });
-  },
-  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number, sort:string){
-    return Observable.of({
-      recipientCount: "16",
-      unparsableCount: "0",
-      count: "94",
-      totalAwardAmt: "38973373.6199999973",
-      relatedOpportunities: [
-        [
-          {
-            data: {
-              title: "Q--Global Dynamics, LLC 621I V797P-7333A 3/15/2011 - 3/14/2016",
-              descriptions: [ ],
-              link: {
-                additionalInfo: { }
-              },
-              naicsCode: [ ],
-              pointOfContact: [ ],
-              placeOfPerformance: { },
-              archive: { },
-              permissions: {
-                area: { }
-              },
-              solicitation: {
-                deadlines: { }
-              },
-              award: {
-                date: "2011-03-04",
-                number: "V797P-7333A",
-                amount: "125,000.00",
-                awardee: {
-                  duns: "962913526",
-                  location: {
-                    streetAddress2: ""
-                  }
-                },
-                justificationAuthority: { },
-                fairOpportunity: { }
-              }
-            },
-            links: [
-              {
-                rel: "self",
-                href: "http://10.98.29.81:122/v1/opportunity/ffa3a4f080f2506d17ae8e4f4e1e2a51"
-              },
-              {
-                rel: "attachments",
-                href: "http://10.98.29.81:122/v1/opportunity/ffa3a4f080f2506d17ae8e4f4e1e2a51/attachments"
-              }
-            ]
-          }
-        ]
-      ]
-    });
-  },
-
-  getPackages(id: String) {
+  getContractOpportunityPackages(id: String) {
     return Observable.of({
       packages: [
         {
@@ -247,12 +188,12 @@ let MockOpportunityService = {
         }
       }});
   },
-  getPackagesCount(id: String) {
+  getContractOpportunityPackagesCount(id: String) {
     return Observable.of(
       "6"
     );
   },
-  getOpportunityHistoryById(id: String){
+  getContractOpportunityHistoryById(id: String){
     return Observable.of({
       content: {
         history: [
@@ -301,7 +242,7 @@ let MockDictionaryService = {
   filterDictionariesToRetrieve(ids: String) {
     return "set_aside_type";
   },
-  getOpportunityDictionary(ids: String) {
+  getContractOpportunityDictionary(ids: String) {
     return Observable.of({
       _embedded: {
         dictionaries: [{
@@ -325,7 +266,7 @@ let MockDictionaryService = {
 };
 
 let MockFHService = {
-  getOrganizationById(id: string, includeChildren: boolean) {
+  getFHOrganizationById(id: string, includeChildren: boolean) {
     return Observable.of({
       "_embedded": [
         {
@@ -338,7 +279,7 @@ let MockFHService = {
     return Observable.of("");
   }
 };
-xdescribe('src/app/opportunity/opportunity-operations/workflow/review/opportunity-review.spec.ts', () => {
+describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity-review.spec.ts', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -402,12 +343,10 @@ xdescribe('src/app/opportunity/opportunity-operations/workflow/review/opportunit
     }, null]);
   };
 
-  xit('OpportunityReviewPage: Should init & load data', () => {
+  it('OpportunityReviewPage: Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
-    expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
     expect(comp.attachments).toBeDefined();
-    expect(comp.relatedOpportunities).toBeDefined();
     expect(comp.awardSort).toBeDefined();
     expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.id).toBe('213ji321hu3jk123');
@@ -417,6 +356,69 @@ xdescribe('src/app/opportunity/opportunity-operations/workflow/review/opportunit
     expect(comp.packages).toBeDefined();
     expect(comp.packagesWarning).toBeDefined();
     expect(comp.attachments).toBeDefined();
+  });
+
+  it('OpportunityPage: Should set display flag for fields for J&A type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check J&A
+    let jaExpected = {};
+    jaExpected[OpportunityFields.AwardAmount] = false;
+    jaExpected[OpportunityFields.LineItemNumber] = false;
+    jaExpected[OpportunityFields.AwardedName] = false;
+    jaExpected[OpportunityFields.AwardedDUNS] = false;
+    jaExpected[OpportunityFields.AwardedAddress] = false;
+    jaExpected[OpportunityFields.Contractor] = false;
+
+    jaExpected[OpportunityFields.JustificationAuthority] = false;
+    jaExpected[OpportunityFields.OrderNumber] = false;
+
+    setDisplaySpy(mockAPIDataType('j'));
+    for(let field in jaExpected) {
+      expect(comp.displayField[field]).toBe(jaExpected[field]);
+    }
+  });
+
+  it('OpportunityPage: Should set display flag for fields for intent to bundle type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check intent to bundle
+    let itbExpected = {};
+    itbExpected[OpportunityFields.AwardAmount] = false;
+    itbExpected[OpportunityFields.AwardDate] = false;
+    itbExpected[OpportunityFields.LineItemNumber] = false;
+    itbExpected[OpportunityFields.AwardedName] = false;
+    itbExpected[OpportunityFields.AwardedDUNS] = false;
+    itbExpected[OpportunityFields.AwardedAddress] = false;
+    itbExpected[OpportunityFields.Contractor] = false;
+
+    itbExpected[OpportunityFields.StatutoryAuthority] = false;
+    itbExpected[OpportunityFields.JustificationAuthority] = false;
+    itbExpected[OpportunityFields.ModificationNumber] = false;
+
+    setDisplaySpy(mockAPIDataType('i'));
+    for (let field in itbExpected) {
+      expect(comp.displayField[field]).toBe(itbExpected[field]);
+    }
+  });
+
+  it('OpportunityPage: Should set display flag for fields for Fair Opportunity / Limited Sources Justification type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check fair opportunity / limited sources
+    let fairOppExpected = {};
+    fairOppExpected[OpportunityFields.AwardAmount] = false;
+    fairOppExpected[OpportunityFields.LineItemNumber] = false;
+    fairOppExpected[OpportunityFields.AwardedName] = false;
+    fairOppExpected[OpportunityFields.AwardedDUNS] = false;
+    fairOppExpected[OpportunityFields.AwardedAddress] = false;
+    fairOppExpected[OpportunityFields.Contractor] = false;
+    fairOppExpected[OpportunityFields.StatutoryAuthority] = false;
+
+    setDisplaySpy(mockAPIDataType('l'));
+    for(let field in fairOppExpected) {
+      expect(comp.displayField[field]).toBe(fairOppExpected[field]);
+    }
   });
 
 });

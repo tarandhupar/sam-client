@@ -32,7 +32,6 @@ import { OrganizationDetailModule } from "./organization-detail/organization-det
 import { FALFormModule } from "./assistance-listing/assistance-listing-operations/fal-form.module";
 import { ForbiddenModule } from "./application-content/403/403.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
-import { AuthGuard } from "../api-kit/authguard/authguard.service";
 import { DictionaryService } from "../api-kit/dictionary/dictionary.service";
 import { SearchDictionariesService } from "../api-kit/search/search-dictionaries.service";
 import { SamTitleService } from 'api-kit/title-service/title.service';
@@ -44,7 +43,6 @@ import { LoginService } from './app-components/login/login.service';
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
-  AuthGuard,
   DictionaryService,
   SearchDictionariesService,
   SamTitleService,

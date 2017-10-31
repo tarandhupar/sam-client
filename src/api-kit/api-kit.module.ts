@@ -41,6 +41,12 @@ import { UserAccessMock } from "./access/access.service.mock";
 import { WatchlistServiceMock } from "./watchlist/watchlist.service.mock";
 import {SavedSearchService} from "./search/saved-search.service";
 import {ToggleService} from "./toggle/toggle.service";
+import { PscService } from "./psc/psc.service";
+import { SamPscServiceDirective } from './autoCompleteWrapper/psc-autocomplete.service';
+import { PscServiceImpl } from './autoCompleteWrapper/psc-autocomplete.service';
+import { NaicsService } from "./naics/naics.service";
+import { SamNaicsServiceDirective } from './autoCompleteWrapper/naics-autocomplete.service';
+import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.service';
 
 /**
  * A module for reusable SAM Web Design components
@@ -55,7 +61,9 @@ import {ToggleService} from "./toggle/toggle.service";
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
-    SamCityServiceAutoDirective
+    SamCityServiceAutoDirective,
+    SamPscServiceDirective,
+    SamNaicsServiceDirective
   ],
   exports: [
     SuggestionsServiceDirective,
@@ -65,7 +73,9 @@ import {ToggleService} from "./toggle/toggle.service";
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
-    SamCityServiceAutoDirective
+    SamCityServiceAutoDirective,
+    SamPscServiceDirective,
+    SamNaicsServiceDirective
   ],
   imports: [
     HttpModule,
@@ -110,6 +120,10 @@ import {ToggleService} from "./toggle/toggle.service";
     CountyServiceImpl,
     CityServiceImpl,
     ToggleService,
+    PscServiceImpl,
+    PscService,
+    NaicsServiceImpl,
+    NaicsService,    
   ]
 })
 export class SamAPIKitModule { }

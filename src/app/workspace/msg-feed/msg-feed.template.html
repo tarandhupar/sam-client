@@ -2,12 +2,11 @@
   <sidebar>
 
     <msg-feed-sidenav [filterOption]="filterObj"
+                      [requestTypeCountMap]="requestTypeMap"
                       (filterChange)="onFilterChange($event)"
-                      [typeIdMap]="typeIdMap"
-                      [roleCount]="roleCount"
-                      [titleChangeCount]="titleChangeCount"
-                      [numberChangeCount]="numberChangeCount"
-                      [recievedCount]="recievedCount"></msg-feed-sidenav>
+                      [typeIdMap]="typeIdMap">
+
+    </msg-feed-sidenav>
   </sidebar>
 
   <div class="usa-width-one-whole msg-feed-content">
@@ -21,25 +20,32 @@
 
     <!--Message Feeds Content-->
     <div class="usa-width-one-whole msg-feed-items-div" *ngIf="msgFeeds && msgFeeds.length > 0">
-      <div class="usa-width-one-whole msg-feed-item" *ngFor="let feed of msgFeeds" [innerHTML]="_sanitizer.bypassSecurityTrustHtml(feed.feeds)">
-        <!--<div class="pull-left" style="line-height: 0.5em;">-->
-        <!--&lt;!&ndash;For Alerts&ndash;&gt;-->
-        <!--<div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>-->
-        <!--&lt;!&ndash;For other types of feeds&ndash;&gt;-->
-        <!--<div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>-->
+      <ng-container  *ngFor="let feed of msgFeeds">
+        <div class="usa-width-one-whole msg-feed-item" (click)="onFeedItemClick(feed)">
+          <!--<div class="usa-width-one-whole msg-feed-item" *ngFor="let feed of msgFeeds" [innerHTML]="_sanitizer.bypassSecurityTrustHtml(feed.feeds)">-->
 
-        <!--</div>-->
-        <!--<div class="usa-width-two-thirds p_L-2x" *ngIf="feed.type === 'Alert'">-->
-        <!--<span class="usa-width-one-whole msg-feed-bold">{{feed.title}}</span>-->
-        <!--<span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>-->
-        <!--<span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>-->
-        <!--</div>-->
-        <!--<div class="usa-width-two-thirds p_L-2x p_T-2x" *ngIf="feed.type !== 'Alert'">-->
-        <!--<span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>-->
-        <!--<span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>-->
-        <!--</div>-->
-        <!--<span class="pull-right msg-feed-status m_T-2x p_R-3x" *ngIf="feed.type === 'Request'">{{feed.status}}</span>-->
-      </div>
+          <div class="usa-width-three-fourths p_L-2x p_T-1x" *ngIf="feed.alertTypeName">
+            <span class="usa-width-one-whole msg-feed-bold">Alert Title</span>
+            <span class="usa-width-one-whole msg-feed-description" [innerHTML]="_sanitizer.bypassSecurityTrustHtml(feed.feeds)"></span>
+            <span class="usa-width-one-whole msg-feed-date">{{transformDateStr(feed.requestorDate)}}</span>
+          </div>
+          <div class="usa-width-three-fourths p_L-2x p_T-1x" *ngIf="!feed.alertTypeName">
+            <span class="usa-width-one-whole msg-feed-description" [innerHTML]="_sanitizer.bypassSecurityTrustHtml(feed.feeds)"></span>
+            <span class="usa-width-one-whole msg-feed-date">{{transformDateStr(feed.requestorDate)}}</span>
+          </div>
+          <div class="usa-width-one-fourth p_T-1x" *ngIf="curSection.toLowerCase() === 'requests'">
+            <div class="usa-width-one-whole msg-feed-status">{{feed.responderId?'Approved':'Pending'}}</div>
+            <div class="usa-width-one-whole msg-feed-name">{{feed.responderId?feed.responderId:''}} &nbsp;</div>
+            <div class="usa-width-one-whole msg-feed-date">{{feed.responderDate?transformDateStr(feed.responderDate):''}} &nbsp;</div>
+          </div>
+          <div class="usa-width-one-fourth p_T-1x" *ngIf="feed.alertTypeName">
+            <div class="pull-right usa-alert m_T-2x m_R-3x" [ngClass]="getAlertFeedClass(feed)" *ngIf="!feed.status"></div>
+            <div class="usa-width-one-whole msg-feed-status" *ngIf="feed.status">Inactive</div>
+            <div class="usa-width-one-whole msg-feed-date" *ngIf="feed.status">{{feed.responderDate?transformDateStr(feed.responderDate):''}} &nbsp;</div>
+
+          </div>
+        </div>
+      </ng-container>
     </div>
 
     <div class="usa-width-one-whole" *ngIf="!msgFeeds || msgFeeds.length === 0">

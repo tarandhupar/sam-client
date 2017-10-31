@@ -1,8 +1,9 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {AutocompleteConfig} from "sam-ui-kit/types";
-import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import {OpportunityFormService} from "../../framework/service/opportunity-form/opportunity-form.service";
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
+import { AutocompleteConfig } from "sam-ui-kit/types";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
 
 @Component({
   selector: 'opp-form-classification',
@@ -13,6 +14,7 @@ export class OpportunityClassificationComponent implements OnInit {
   @Input() public viewModel: OpportunityFormViewModel;
   public oppClassificationForm: FormGroup;
   public oppClassificationViewModel: any;
+  public noticeType: any;
 
   classificationDictionaries = [];
 
@@ -33,7 +35,7 @@ export class OpportunityClassificationComponent implements OnInit {
     id: 'opp-setAsideType',
     label: 'Original/Updated Set Aside',
     name: 'opp-setAsideType-auto',
-    required: true,
+    required: false,
     hint: null,
     options: [
       // loaded asynchronously
@@ -105,7 +107,8 @@ export class OpportunityClassificationComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
-              private oppFormService: OpportunityFormService) {
+              private oppFormService: OpportunityFormService, private noticeTypeFieldService: OppNoticeTypeFieldService) {
+
     Object.freeze(this.setAsideConfig);
     Object.freeze(this.classificationCodeConfig);
     Object.freeze(this.primaryNAICSCodeConfig);
@@ -115,6 +118,7 @@ export class OpportunityClassificationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.noticeType = this.viewModel.oppHeaderInfoViewModel.opportunityType;
     this.oppClassificationViewModel = this.viewModel.oppClassificationViewModel;
     this.createForm();
     this.loadTypeOptions();
@@ -122,6 +126,14 @@ export class OpportunityClassificationComponent implements OnInit {
       this.updateForm();
     }
     this.subscribeToChanges();
+  }
+
+  private checkFieldDisplayOption(field) {
+    return this.noticeTypeFieldService.checkFieldVisibility(this.noticeType, field);
+  }
+
+  private checkFieldRequired(field) {
+    return this.noticeTypeFieldService.checkFieldRequired(this.noticeType, field);
   }
 
   private createForm(): void {
@@ -154,7 +166,6 @@ export class OpportunityClassificationComponent implements OnInit {
       console.error('error loading notice types', error);
     });
   }
-
 
   public populateList(data, lookUp) {
     let type = {};
@@ -211,7 +222,6 @@ export class OpportunityClassificationComponent implements OnInit {
     }
   }
 
-
   private updateFormListControls(): void {
     this.oppClassificationForm.patchValue({
       setAsideType: this.setAsideType,
@@ -224,7 +234,6 @@ export class OpportunityClassificationComponent implements OnInit {
       emitEvent: false,
     });
   }
-
 
   private updateForm(): void {
     this.oppClassificationForm.patchValue({

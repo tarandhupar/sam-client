@@ -1,5 +1,5 @@
 <page
-  *ngIf="permissions"
+  *ngIf="permissions && userPermissions"
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
@@ -54,14 +54,14 @@
     </div>
   </sidebar>
 
-  <sam-button *ngIf="permissions['CREATE_RAO']"
+  <sam-button *ngIf="userPermissions && userPermissions._links && this.userPermissions._links['program:regional:offices:create']"
               [buttonType]="'default'"
               [buttonText]="'Create New' "
               [buttonClass]="'sam-ui button dark blue'"
               (onClick)="createNewLocation()">
   </sam-button>
 
-  <p *ngIf="permissions['CREATE_RAO'] && !raoExists && !initLoad">
+  <p *ngIf="userPermissions && userPermissions._links && this.userPermissions._links['program:regional:offices:create'] && !raoExists && !initLoad">
     There are no Regional Agency Offices associated with user's department
   </p>
 

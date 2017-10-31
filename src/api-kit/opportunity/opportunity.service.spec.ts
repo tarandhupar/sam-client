@@ -146,6 +146,10 @@ describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
       expect(res).toBeDefined();
       expect(res).toBe(6);
     });
+    testService.getContractOpportunityPackagesCount("9e14590f674ab3ffbf8da6b85ddc8581, a2c630c37084d373200cc1bc6121bdf6").subscribe((res: Response) => {
+      expect(res).toBeDefined();
+      expect(res).toBe(6);
+    });
   }));
 
   it('Opportunity Service: should return response when subscribed to getPackages', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
@@ -221,6 +225,42 @@ describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
     testService.getPackages("9e14590f674ab3ffbf8da6b85ddc8581, a2c630c37084d373200cc1bc6121bdf6").subscribe((res: Response) => {
       expect(res['packages']).toBeDefined();
       expect(res['resources']).toBeDefined();
+    });
+    testService.getContractOpportunityPackages("9e14590f674ab3ffbf8da6b85ddc8581, a2c630c37084d373200cc1bc6121bdf6").subscribe((res: Response) => {
+      expect(res['packages']).toBeDefined();
+      expect(res['resources']).toBeDefined();
+    });
+  }));
+
+
+  it('Opportunity Service: should return response when subscribed getContractOpportunityHistoryById', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
+
+    let mockData = {
+      "content": [
+        {
+          "history": [
+            {
+              "authoritative": "0",
+              "cancel_notice": "0",
+              "index":"1",
+              "notice_id":"213ji321hu3jk123",
+              "parent_notice":null,
+              "procurement_type": "k",
+              "posted_date": 1452124800000
+            }
+          ]
+        }
+      ],
+      "_links": {
+        "self": {
+          "href": "http://10.98.29.81:122/v1/opportunity/9e14590f674ab3ffbf8da6b85ddc8581/history"
+        }
+      }
+    };
+
+    backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: mockData }))));
+    testService.getContractOpportunityHistoryById("9e14590f674ab3ffbf8da6b85ddc8581").subscribe((res: Response) => {
+      expect(res['content']).toBeDefined();
     });
   }));
 

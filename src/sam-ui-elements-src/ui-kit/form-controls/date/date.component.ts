@@ -137,45 +137,64 @@ export class SamDateComponent implements OnInit, OnChanges, ControlValueAccessor
     }
   }
 
-  onMonthBlur(value){
-    if(this._shouldPad(value)){
-      this.month.nativeElement.value = "0" + value;
-    }
-  }
-
-  onDayBlur(value){
-    if(this._shouldPad(value)){
-      this.day.nativeElement.value = "0" + value;
-    }
-  }
-
-  _shouldPad(value){
-    var leadingZero = value[0] === "0"
-    if(parseInt(value, 10) < 10 && !leadingZero){
-      return true;
-    }
-  }
-
   getDate(override=null) {
     let obj = override ? override : this.model;
     return moment([override.year, override.month-1, override.day]);
   }
-  
+
+  onMonthPaste(event){
+    let text = this._getClipboardText(event);
+    if(text){
+      if(text.length>2){
+        event.preventDefault();
+      }
+      let val = parseInt(text);
+      if(val<1 || val>12){
+        event.preventDefault();
+      }
+    }
+  }
+
+  onDayPaste(event){
+    let text = this._getClipboardText(event);
+    if(text){
+      if(text.length>2){
+        event.preventDefault();
+      }
+      let val = parseInt(text);
+      if(val<1 || val>31){
+        event.preventDefault();
+      }
+    }
+  }
+
+  onYearPaste(event){
+    let text = this._getClipboardText(event);
+    if(text){
+      if(text.length>4){
+        event.preventDefault();
+      }
+    }
+  }
+
   onMonthInput(event){
-    var inputNum = parseInt(event.key, 10);
-    var possibleNum;
+    if(this._checkCopyPasteChar(event.key)){
+      return;
+    }
+    let inputNum = parseInt(event.key, 10);
+    let possibleNum;
     if(!isNaN(this.month.nativeElement.value) && this.month.nativeElement.value!=""){
       possibleNum = (parseInt(this.month.nativeElement.value) * 10) + inputNum;
     } else{
       possibleNum = inputNum;
     }
-    if(possibleNum > 12 || this.allowChars.indexOf(event.key)==-1){
+    if(possibleNum > 12 || this.allowChars.indexOf(event.key)===-1){
       event.preventDefault();
       return;
     }
-    if(event.key.match(/[0-9]/)!=null){
-      if(event.target.value.length==1 || 
-        (event.target.value.length==0 && possibleNum > 3)){
+    if(this._keyIsNumber(event.key)){
+      if(event.target.value.length===1 || 
+        (event.target.value.length===0 && possibleNum > 1)){
         this.day.nativeElement.focus();
       }
       this.month.nativeElement.value = possibleNum;
@@ -183,25 +202,35 @@ export class SamDateComponent implements OnInit, OnChanges, ControlValueAccessor
       this.onChangeHandler(dupModel);
       event.preventDefault();
     }
-    if(event.key.match(/[0-9]/)!=null){
-    }
   }
 
   onDayInput(event){
-    var inputNum = parseInt(event.key, 10);
-    var possibleNum;
+    if(this._checkCopyPasteChar(event.key)){
+      return;
+    }
+    let inputNum = parseInt(event.key, 10);
+    let possibleNum;
+    let maxDate = 31;
+    let numJumpThreshold = 3;
+    if([4,6,9,11].indexOf(parseInt(this.month.nativeElement.value))!==-1){
+      maxDate = 30;
+    } 
+    if (this.month.nativeElement.value==2){
+      maxDate = 29;
+      numJumpThreshold = 2;
+    }
     if(!isNaN(this.day.nativeElement.value) && this.day.nativeElement.value!=""){
       possibleNum = (parseInt(this.day.nativeElement.value) * 10) + inputNum;
     } else{
       possibleNum = inputNum;
     }
-    if(possibleNum > 31 || this.allowChars.indexOf(event.key)==-1){
+    if(possibleNum > maxDate || this.allowChars.indexOf(event.key)==-1){
       event.preventDefault();
       return;
     }
-    if(event.key.match(/[0-9]/)!=null){ 
-      if(event.target.value.length==1 || 
-        (event.target.value.length==0 && possibleNum > 3)){
+    if(this._keyIsNumber(event.key)){ 
+      if(event.target.value.length===1 || 
+        (event.target.value.length===0 && possibleNum > numJumpThreshold)){
         this.year.nativeElement.focus();
       }
       this.day.nativeElement.value = possibleNum;
@@ -212,19 +241,22 @@ export class SamDateComponent implements OnInit, OnChanges, ControlValueAccessor
   }
 
   onYearInput(event){
-    var inputNum = parseInt(event.key, 10);
-    var possibleNum;
+    if(this._checkCopyPasteChar(event.key)){
+      return;
+    }
+    let inputNum = parseInt(event.key, 10);
+    let possibleNum;
     
     if(!isNaN(this.year.nativeElement.value) && this.year.nativeElement.value!=""){
       possibleNum = (parseInt(this.year.nativeElement.value) * 10) + inputNum;
     } else{
       possibleNum = inputNum;
     }
-    if(possibleNum > 9999 || this.allowChars.indexOf(event.key)==-1){
+    if(possibleNum > 9999 || this.allowChars.indexOf(event.key)===-1){
       event.preventDefault();
       return
     }
-    if(event.key.match(/[0-9]/)!=null){
+    if(this._keyIsNumber(event.key)){
       if(event.target.value.length+1==4){
         this.blurEvent.emit();
       }
@@ -304,6 +336,26 @@ export class SamDateComponent implements OnInit, OnChanges, ControlValueAccessor
     this.day.nativeElement.value = "";
     this.month.nativeElement.value = "";
     this.year.nativeElement.value = "";
+  }
+
+  _checkCopyPasteChar(char){
+    if(char==="c"||char==="v"){
+      return true;
+    }
+  }
+
+  _keyIsNumber(char){
+    if(char.match(/[0-9]/)!=null){
+      return true;
+    }
+  }
+  
+  _getClipboardText(event){
+    if(event.clipboardData && event.clipboardData.getData("text")){
+      return event.clipboardData.getData("text");
+    } else if(window['clipboardData'] && window['clipboardData'].getData('text')){
+      return window['clipboardData'].getData('text');
+    }
   }
 
   //controlvalueaccessor methods

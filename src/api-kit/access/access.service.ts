@@ -178,7 +178,7 @@ export class UserAccessService {
     return this.callApi(apiOptions,false);
   }
 
-  getDomainDefinition(mode : string, domainKey? : string, roleKey?, userName?) {
+  getDomainDefinition(mode : string, domainKey? : string, roleKey?, orgKey?: string, userName?) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -196,6 +196,10 @@ export class UserAccessService {
 
     if (roleKey) {
       apiOptions.oParam.roleKey = ''+roleKey;
+    }
+
+    if (orgKey) {
+      apiOptions.oParam.orgKey = ''+orgKey;
     }
 
     if (userName) {

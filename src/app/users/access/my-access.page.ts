@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
@@ -9,9 +9,9 @@ import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
 import { SamModalComponent } from "sam-ui-kit/components";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
-import { Title } from "@angular/platform-browser";
 import { SamTitleService } from "../../../api-kit/title-service/title.service";
 import { ToggleService } from "api-kit/toggle/toggle.service";
+import { get as getProperty } from 'lodash';
 
 @Component({
   templateUrl: 'my-access.template.html',
@@ -69,7 +69,6 @@ export class MyAccessPage implements OnInit {
 
   ngOnInit( ) {
     this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
-          console.log("Feature toggle status for enablemanagesubscription >>>>>"+isEnabled);
           if(!isEnabled){
              for(var i=this.navLinks.length-1; i>=0; i--) {
                if( this.navLinks[i].text == "Manage Subscriptions") {
@@ -250,8 +249,16 @@ export class MyAccessPage implements OnInit {
     return this.isMyAccess ? 'My Roles' : this.fullName;
   }
 
+  isRowDeletable(roleOrg) {
+    return !this.isMyAccess && getProperty(roleOrg, '_links.delete_access');
+  }
+
+  isRowEditable(roleOrg) {
+    return !this.isMyAccess && getProperty(roleOrg, '_links.edit_access');
+  }
+
   onRowClick(access) {
-    if (this.isMyAccess) {
+    if (!this.isRowEditable(access)) {
       return;
     }
 
@@ -296,7 +303,6 @@ export class MyAccessPage implements OnInit {
 
     this.userAccessService.deleteAccess(body).subscribe(
       () => {
-        //this.router.navigate(["../access"], { relativeTo: this.route});
         this.access.splice(this.indexToDelete, 1);
       },
       err => {

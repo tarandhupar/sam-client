@@ -1,5 +1,6 @@
 <div class="org-create-page relative">
-  <div class="usa-width-one-whole p_B-6x" [hidden]="!createOrgPage">
+  <ng-container [ngSwitch]="section">
+  <div class="usa-width-one-whole p_B-6x" *ngSwitchCase="'create'">
     <h2 class="p_T-3x" *ngIf="isCreateMode()">Create New {{orgType}}</h2>
     <p class="p_T-3x" *ngIf="isCreateMode()">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
@@ -70,7 +71,7 @@
     <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewFormClick()">Review <i class="fa fa-arrow-right"></i></button>
     <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelBtnClick()">Cancel</button>
   </div>
-  <div class="usa-width-one-whole p_B-6x" *ngIf="reviewOrgPage">
+  <div class="usa-width-one-whole p_B-6x" *ngSwitchCase="'review'">
     <div class="usa-width-one-whole org-confirm-header p_B-6x" *ngIf="isCreateMode()">
       <h2 class="p_T-3x">Confirm {{orgType}} Details</h2>
       <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
@@ -91,7 +92,7 @@
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
           <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street1}}<br>
             <span *ngIf="address.addrModel.street2.length > 0">{{address.addrModel.street2}}<br></span>
-            {{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
+            {{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.zip}}<br>{{address.addrModel.country}}</span>
         </p>
       </div>
 
@@ -99,4 +100,5 @@
     <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onConfirmFormClick()">Confirm</button>
     <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()"><i class="fa fa-arrow-left"></i>Edit</button>
   </div>
+  </ng-container>
 </div>

@@ -177,35 +177,53 @@ export class ObjectDetailsPage implements OnInit {
     );
   }
 
+  pushSelected(v) {
+    this.selectedPermissions.push(v);
+  }
+
   onAddPermissionClick(newValue: any) {
+    console.log(newValue);
     if (!newValue) {
       return;
     }
-    let isNew: boolean = typeof newValue === 'string';
-    let v: any = isNew ? newValue : newValue.permissionName; // object
 
-    if (!v || !v.length || !v.trim().length) {
+    // was the value typed or selected from the list
+    let wasTyped: boolean = typeof newValue === 'string';
+    let asString: any = wasTyped ? newValue : newValue.permissionName; // object
+
+    if (!asString || !asString.length || !asString.trim().length) {
       return;
     }
 
-    if (this.selectedPermissions.findIndex(sp => sp.val === v) !== -1) {
+    if (this.selectedPermissions.findIndex(sp => sp.val === asString) !== -1) {
       // No duplicates
       console.warn('duplicate permission');
       return;
     }
 
-    if (!isNew) {
+    if (!wasTyped) {
       // newValue is a id/value pair
-      this.selectedPermissions.push({
-        val: v,
+      this.pushSelected({
+        val: asString,
         id: newValue.id,
       });
     // User has input a new value
     } else {
-      this.selectedPermissions.push({
-        val: v,
-        isNew: true,
+      console.log(this.permissionOptions);
+      let i = this.permissionOptions.find((opt: any) => {
+        return opt.permissionName.toLowerCase() === asString.toLowerCase();
       });
+      if (i) {
+        this.pushSelected({
+          val: i.permissionName,
+          id: i.id,
+        })
+      } else {
+        this.pushSelected({
+          val: asString,
+          isNew: true,
+        });
+      }
     }
   }
 

@@ -2,9 +2,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { SamUIKitModule } from 'sam-ui-kit/index';
-import {OpportunityClassificationComponent} from "./opp-form-classification.component";
-import {OpportunityFormService} from "../../framework/service/opportunity-form/opportunity-form.service";
-import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import { OpportunityClassificationComponent } from "./opp-form-classification.component";
+import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
+
 
 describe('Opp Classification Form', () => {
   let comp: OpportunityClassificationComponent;
@@ -18,6 +20,7 @@ describe('Opp Classification Form', () => {
       ],
       providers: [
         { provide: OpportunityFormService, useValue: MockFormService },
+        OppNoticeTypeFieldService
       ],
       imports: [
         SamUIKitModule,
@@ -49,10 +52,10 @@ describe('Opp Classification Form', () => {
     let updateFormSpy = spyOn(comp, 'updateForm');
     spyOn(comp, 'loadTypeOptions').and.stub();
     fixture.detectChanges();
-    
+
     expect(updateFormSpy).not.toHaveBeenCalled();
   }));
-  
+
   it('should load type options', fakeAsync(() => {
     let dict = {
       set_aside_type: [
@@ -85,7 +88,7 @@ describe('Opp Classification Form', () => {
           "value": "Virginia"
         }
       ],
-    
+
     };
     MockFormService.getOpportunityDictionary.and.returnValue(Observable.of(dict));
     let updateFormListControlsSpy = spyOn(comp, 'updateFormListControls');

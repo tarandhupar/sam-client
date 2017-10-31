@@ -67,7 +67,7 @@
     </ng-container>
 
     <!--Addresses for the org-->
-    <ng-container *ngIf="orgAddresses.length > 0">
+    <ng-container *ngIf="orgAddresses.length > 0 && orgObj['type'].toLowerCase() === 'office'">
       <div class="usa-width-one-whole m_T-4x">
         <h3>{{currentHierarchyType}} Address</h3>
         <ng-container *ngIf="!isEdit; else addressForms">

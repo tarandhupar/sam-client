@@ -1,7 +1,8 @@
-<form-only class="grant-access"
-  theme="inside"
-  section="Workspace"
-  [title]="pageTitle()">
+<form-only class="grant-access" theme="inside">
+  <sam-breadcrumbs *ngIf="requestId" [crumbs]="crumbs"></sam-breadcrumbs>
+  <div style="margin-top: 1em;">
+    <sam-title-subtitle [titleText]="pageTitle()" [subtitle]="'Workspace'"></sam-title-subtitle>
+  </div>
 
   <form  [formGroup]="form" (ngSubmit)="onSubmit()">
     <hr>
@@ -15,22 +16,14 @@
           <span *ngIf="isEdit()">{{userFullName()}}</span>
         </div>
         <!-- Orgs -->
-        <div [hidden]="!editingOrg">
-          <sam-agency-picker-v2
-            formControlName="org"
-            [label]="'Organization'"
-            type="single"
-            [searchMessage]="errors.org"
-            [defaultDept]="!isSuperAdmin"
-            class="clearfix"
-            (ngModelChange)="onOrganizationChange($event)"
-          ></sam-agency-picker-v2>
-        </div>
-        <div [hidden]="editingOrg" style="margin-top: .5em">
-          <label style="display: inline">Organization:&nbsp;</label>
-          <span>{{orgName()}}</span>
-          <a class="pull-right" (click)="onClickEditOrg()">Edit&nbsp;<i class="fa fa-pencil"></i></a>
-        </div>
+        <sam-agency-picker-v2
+          formControlName="org"
+          [label]="'Organization'"
+          type="multiple"
+          [searchMessage]="errors.org"
+          [defaultDept]="!isSuperAdmin"
+          class="clearfix"
+        ></sam-agency-picker-v2>
 
         <!-- Role -->
         <div style="margin-top: .5em">
@@ -55,10 +48,6 @@
         <ul class="column-wrappable">
           <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
             <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
-            <!--<div *ngFor="let permission of func.permissions">-->
-              <!--<input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">-->
-              <!--<label class="permission-label" >{{permission.name}}</label>-->
-            <!--</div>-->
             <div *ngFor="let permission of func.permissions" class="checkbox-group">
               <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
               <label>{{permission.name}}</label>
@@ -83,8 +72,8 @@
 
     <!-- Cancel / Confirm -->
     <div class="pull-right clearfix m_T-4x m_B-4x">
-      <button routerLink="../access" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
-      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">Done</button>
+      <button (click)="location.back()" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
+      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">{{requestId ? 'Assign' : 'Done'}}</button>
     </div>
   </form>
 

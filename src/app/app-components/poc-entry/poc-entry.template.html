@@ -1,9 +1,9 @@
-<sam-fieldset-wrapper [label]="label" [required]="required">
+<sam-fieldset-wrapper [label]="label" [required]="required" [attr.id]="name">
     <div [formGroup]="pocEntryGroup">
         <input type="hidden" formControlName="contactId" />
         <sam-text
             label="Title"
-            name="title"
+            [name]="name + '-title'"
             [disabled]="disabledFlag"
             [control]="pocEntryGroup.get('title')"
             formControlName="title"
@@ -12,7 +12,8 @@
             *ngIf="!manualList"
             allowAny="true"
             labelText="Name"
-            name="full name"
+            [name]="name + '-full-name'"
+            [id]="name + '-full-name'"
             required="true"
             peoplepicker-autofill
             [control]="pocEntryGroup.get('fullName')"
@@ -23,39 +24,44 @@
             *ngIf="manualList"
             allowAny="true"
             labelText="Name"
-            name="full name"
+            [name]="name + '-full-name'"
+            [id]="name + '-full-name'"
             required="true"
             [options]="nameOptions"
             [config]="{keyValueConfig:acConfig}"
             [control]="pocEntryGroup.get('fullName')"
+            (ngModelChange)="nameSelection($event)"
             formControlName="fullName"
         ></sam-autocomplete>
         <sam-autocomplete
             *ngIf="!manualList"
             allowAny="true"
             labelText="Email Address"
-            name="email"
+            [name]="name + '-email'"
+            [id]="name + '-email'"
             required="true"
             peoplepicker-autofill
             [control]="pocEntryGroup.get('email')"
             [config]="{keyValueConfig:{keyProperty:'email',valueProperty:'email'}}"
             formControlName="email"
         ></sam-autocomplete>
-        <sam-autocomplete
+        <sam-autocomplete 
             *ngIf="manualList"
             allowAny="true"
             labelText="Email Address"
-            name="email"
+            [name]="name + '-email'"
+            [id]="name + '-email'"
             required="true"
             [options]="emailOptions"
             [config]="{keyValueConfig:acConfig}"
             [control]="pocEntryGroup.get('email')"
+            (ngModelChange)="emailSelection($event)"
             formControlName="email"
         ></sam-autocomplete>
         <sam-phone-entry
             [required]="true"
             label="Business Phone"
-            name="phone-input"
+            [prefix]="name + '-phone-input'"
             phoneNumberTemplate="1+(___)___-____"
             numbersOnly="true"
             [useDefaultValidations]="false"
@@ -63,7 +69,7 @@
             formControlName="phone"></sam-phone-entry>
         <sam-phone-entry
             label="Fax"
-            name="fax"
+            [prefix]="name + '-fax'"
             phoneNumberTemplate="1+(___)___-____"
             numbersOnly="true"
             [useDefaultValidations]="false"
@@ -73,21 +79,21 @@
         <ng-container *ngIf="showAddress">
             <sam-text-area
                 label="Street Address 1"
-                name="street"
+                [name]="name + '-street'"
                 required="true"
                 [control]="pocEntryGroup.get('streetAddress')"
                 formControlName="streetAddress"
             ></sam-text-area>
             <sam-text-area
                 label="Street Address 2"
-                name="street2"
+                [name]="name + '-street2'"
                 [control]="pocEntryGroup.get('streetAddress2')"
                 formControlName="streetAddress2"
             ></sam-text-area>
             <sam-text
                 city
                 label="City"
-                name="city"
+                [name]="name + '-city'"
                 required="true"
                 [control]="pocEntryGroup.get('city')"
                 formControlName="city"
@@ -103,14 +109,15 @@
                 state
                 labelText="State"
                 [config]="locationConfig"
-                name="state"
+                [name]="name + '-state'"
+                [id]="name + '-state'"
                 required="true"
                 [control]="pocEntryGroup.get('state')"
                 formControlName="state"
             ></sam-autocomplete>
             <sam-number
                 label="Zip Code"
-                name="zip"
+                [name]="name + '-zip'"
                 required="true"
                 [control]="pocEntryGroup.get('zip')"
                 formControlName="zip"
@@ -126,7 +133,8 @@
                 country
                 labelText="Country"
                 [config]="locationConfig"
-                name="country"
+                [name]="name + 'country'"
+                [id]="name + 'country'"
                 required="true"
                 [control]="pocEntryGroup.get('country')"
                 formControlName="country"

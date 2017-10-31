@@ -48,13 +48,13 @@ export class FALAuthSubFormComponent {
         title: [null],
         part:[null],
         section:[null],
-        description:[null]
+        description:['']
       }),
       executiveOrder: this.fb.group({
         title: [null],
         part:[null],
         section:[null],
-        description:[null]
+        description:['']
       }),
       publicLaw: this.fb.group({
         congressCode:[null],
@@ -174,7 +174,12 @@ export class FALAuthSubFormComponent {
 
   getObjWithoutNullValues(obj){
     for(let item in obj){
-      if(obj[item] == null)
+      if(item === 'act' || item === 'executiveOrder') {
+        if(obj[item] && obj[item]['description'] === null) {
+          obj[item]['description'] = '';
+        }
+      }
+      if(obj[item] === null)
         delete obj[item];
     }
     return obj;
