@@ -37,7 +37,7 @@
               <div class = "usa-width-one-third">
                 <div class = "usa-width-one-half">{{request.createdDate | dateFormat: 'MMM DD, YYYY'}}</div>
                 <div class = "usa-width-one-half">
-                  <a class="pull-right" [routerLink]="'/role-management/requests/' + request.id">{{request.status.val | capitalize}}</a>
+                  <a class="pull-right" [routerLink]="'/role-management/requests/' + request.id" [queryParams]="{ref: 'access'}">{{request.status.val | capitalize}}</a>
                 </div>
               </div>
             </div>
@@ -85,12 +85,12 @@
       </table>
     </results>
 
-    <ng-container *ngIf="numberOfSearches > 1 && !access?.length">
+    <ng-container *ngIf="shouldShowNoResults()">
       <div class="p_T-6x text-center" style="min-height: 300px;">
         <em>No results for selected criteria.</em>
       </div>
     </ng-container>
-    <ng-container *ngIf="numberOfSearches === 1 && !access?.length">
+    <ng-container *ngIf="shouldShowActions()">
       <div class="user-access">
         <div class="p_T-6x text-center" style="min-height: 300px;">
           <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>

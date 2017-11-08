@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FHService, IAMService } from 'api-kit';
 
 import { User } from 'api-kit/iam/interfaces';
-import { OptionsType } from 'sam-ui-kit/types'
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types'
 
 @Component({
   selector: 'profile-widget',

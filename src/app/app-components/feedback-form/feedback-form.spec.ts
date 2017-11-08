@@ -8,7 +8,7 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/ro
 
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamFeedbackComponent } from "./feedback-form.component";
 import { FeedbackService } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";

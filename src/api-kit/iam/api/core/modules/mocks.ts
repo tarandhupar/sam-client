@@ -90,12 +90,15 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
     departmentOrgId: '100006688',
     agencyOrgId: '',
     officeOrgId: '',
-    systemAdmins: '',
-    systemManagers: '',
+    systemAdmins: '['+
+                    '{"id":1,"accountClaimed":true,"commonName":"Kristin Wight","givenName":"Kristin","mail":"test@test.com","agencyID":100186663,"passwordResetInfo":"0:1496929225932:0:0","surName":"Wight","telephoneNumber":"1+(703)919-4503","uid":"kristin.wight@gsa.gov"},'+
+                    '{"id":3,"accountClaimed":true,"commonName":"Hassan Riaz","departmentID":"100006688","givenName":"Hassan","mail":"user5743@test.com","agencyID":100038056,"passwordResetInfo":"0:1494437307857:0:0","surName":"Riaz","telephoneNumber":"1+(123)456-7890","uid":"hassan.riaz@gsa.gov"}'+
+                  ']',
+    systemManagers: '[]',
     contractOpportunities: 'read,read-sensitive',
     contractData: 'dod-data',
     entityInformation: 'read-public,read-sensitive',
-    fips199Categorization: 'medium',
+    fips199Categorization: 'Medium',
     ipAddress: '',
     typeOfConnection: 'SFTP',
     physicalLocation: '',
@@ -115,6 +118,15 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
     rejectionReason: '',
     applicationStatus: 'Pending Approval',
   };
+}
+
+export function getMockCWSComments(index: number) {
+  return [
+    { id: 0, applicationUID: index, comment: `test comment ${index++}`, user: 'Jonathan Givens' },
+    { id: 1, applicationUID: index, comment: `test comment ${index++}`, user: 'Jonathan Givens' },
+    { id: 2, applicationUID: index, comment: `test comment ${index++}`, user: 'Jonathan Givens' },
+    { id: 3, applicationUID: index, comment: `test comment ${index++}`, user: 'Jonathan Givens' }
+  ]
 }
 
 export function getMockCWSSummary() {

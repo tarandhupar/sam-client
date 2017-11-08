@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
+import { OptionsType, IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
-import { SamModalComponent } from "sam-ui-kit/components";
+import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { SamTitleService } from "../../../api-kit/title-service/title.service";
 import { ToggleService } from "api-kit/toggle/toggle.service";
@@ -30,7 +30,7 @@ export class MyAccessPage implements OnInit {
   sortOptions = [
     { value: 'org', label: 'Organization' },
   ];
-  private access: any = null;
+  private access: Array = [];
   private domainOptions: Array<OptionsType> = [];
   private selectedDomainIds: any = [];
   private roleOptions: Array<OptionsType> = [];
@@ -47,7 +47,6 @@ export class MyAccessPage implements OnInit {
   private result: 'success'|'error'|'pending' = 'pending';
   private errorMessage: string = '';
   private isMyAccess: boolean = false;
-  private numberOfSearches: number = 0;
   private crumbs = [];
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
@@ -89,6 +88,18 @@ export class MyAccessPage implements OnInit {
     });
   }
 
+  areFiltersSelected() {
+    return this.selectedDomainIds.length || this.selectedRoleIds.length;
+  }
+
+  shouldShowActions() {
+    return !this.domainOptions.length && !this.roleOptions.length;
+  }
+
+  shouldShowNoResults() {
+    return this.areFiltersSelected() && !this.access.length;
+  }
+
   onSearchParamChange() {
     this.result = 'pending';
 
@@ -110,18 +121,11 @@ export class MyAccessPage implements OnInit {
         try {
           this.result = 'success';
 
-          if (this.numberOfSearches === 0) {
-            this.getPendingRequests();
-          }
-
-          this.numberOfSearches++;
+          this.getPendingRequests();
 
           if (!this.isMyAccess) {
             this.getUserDisplayName(res);
-
-            if (!this.isMyAccess) {
-              this.samTitle.setTitleString(this.fullName);
-            }
+            this.samTitle.setTitleString(this.fullName);
           }
 
           if (!res) {
@@ -130,16 +134,15 @@ export class MyAccessPage implements OnInit {
           }
 
           this.getAccessPriveleges(res);
-
           this.getPaginationVariables(res);
 
           this.access = res.access;
 
-          if (res.roles && res.roles.length) {
+          if (res.roles) {
             this.setRoleOptions(res.roles);
           }
 
-          if (res.domains && res.domains.length) {
+          if (res.domains) {
             this.setDomainOptions(res.domains);
           }
         } catch(error) {
@@ -304,6 +307,7 @@ export class MyAccessPage implements OnInit {
     this.userAccessService.deleteAccess(body).subscribe(
       () => {
         this.access.splice(this.indexToDelete, 1);
+        this.onSearchParamChange();
       },
       err => {
         console.error(err);

@@ -11,7 +11,7 @@ import { Location, LocationStrategy, HashLocationStrategy } from '@angular/commo
 import { OpportunityService, FHService } from 'api-kit';
 
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import {OpportunityReviewComponent} from "./opportunity-review.component";
 import {PipesModule} from "../../../../app-pipes/app-pipes.module";
 import {AppComponentsModule} from "../../../../app-components/app-components.module";

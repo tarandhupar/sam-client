@@ -134,7 +134,7 @@ export class FALErrorDisplayHelperComponent {
   public onErrorClick(fieldId: string): void {
     let section = FALSectionFieldsBiMap.fieldSections[fieldId];
     let programId = this.router.url.split('/')[2];
-    let url = '/programs/' + programId + '/edit';
+    let url = '/fal/' + programId + '/edit';
 
     if (fieldId.indexOf(FALFieldNames.COMPLIANCE_REPORTS) !== -1) {
       section = FALSectionNames.COMPLIANCE_REQUIREMENTS;

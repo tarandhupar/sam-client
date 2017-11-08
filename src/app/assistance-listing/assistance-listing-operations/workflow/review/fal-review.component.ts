@@ -10,7 +10,7 @@ import { LowerCasePipe } from '@angular/common';
 
 // Todo: avoid importing all of observable
 import {ReplaySubject, Observable, Subscription} from 'rxjs';
-import {SidenavService} from "sam-ui-kit/components/sidenav/services";
+import {SidenavService} from "sam-ui-elements/src/ui-kit/components/sidenav/services";
 import {HistoricalIndexService} from "../../../../../api-kit/historical-index/historical-index.service";
 import {ProgramService} from "../../../../../api-kit/program/program.service";
 import {FHService} from "../../../../../api-kit/fh/fh.service";
@@ -23,11 +23,11 @@ import {FALFormErrorService, FieldError, FieldErrorList} from "../../fal-form-er
 import {FALFormViewModel} from "../../fal-form.model";
 import {RequestLabelPipe} from "../../../pipes/request-label.pipe";
 import {ActionHistoryPipe} from "../../../pipes/action-history.pipe";
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
+import { MenuItem } from 'sam-ui-elements/src/ui-kit/components/sidenav';
 import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
 import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
 
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {FALAuthGuard} from "../../../components/authguard/authguard.service";
 
 @Component({
@@ -143,7 +143,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     'Authorizations',
     'Financial Information',
     'Criteria for Applying',
-    'Applying For Assistance',
+    'Applying for Assistance',
     'Compliance Requirements',
     'Contact Information',
     'History'
@@ -355,7 +355,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
 
-      this.pageRoute = "programs/" + this.program.id + "/review";
+      this.pageRoute = "fal/" + this.program.id + "/review";
       let falSideNavContent = {
         "label": "Assistance Listing",
         "route": this.pageRoute,
@@ -481,7 +481,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         if (program._links['program:request:approve'])
           this.toggleButtonTextOnPermissions('Publish', true);
       } else if (program._links['program:notify:coordinator']) {
-        this.toggleButtonTextOnPermissions('Notify Agency Coordinator', true);
+        this.toggleButtonTextOnPermissions('Notify Assistance Administrator', true);
         this.enableDisableButtons(errorFlag);
       }
     }
@@ -718,7 +718,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
 
   public onChangeRequestSelect(event) {
-    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type=' + event.value);
+    this.router.navigateByUrl('fal/' + event.program.id + '/change-request?type=' + event.value);
   }
 
   public canEdit() {
@@ -739,7 +739,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   public onEditClick(page: string[]) {
     if (this.program._links && this.program._links['program:update'] && this.program._links['program:update'].href) {
       let id = this.program._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
-      let url = '/programs/' + id + '/edit'.concat(page.toString());
+      let url = '/fal/' + id + '/edit'.concat(page.toString());
       this.router.navigateByUrl(url);
     } else if (this.program._links && this.program._links['program:revise']) {
       this.editModal.openModal(page.toString());
@@ -749,7 +749,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   public onEditModalSubmit(page: any[]) {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      let url = '/programs/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
+      let url = '/fal/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
       this.router.navigateByUrl(url);
     });
   }
@@ -1024,16 +1024,16 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   tabsNavigation(tabType) {
     let url;
     if(tabType === 'Public') {
-      url = '/programs/' + this.program.id + '/view';
+      url = '/fal/' + this.program.id + '/view';
     }
     if(tabType === 'Submit') {
-      url = '/programs/' + this.program.id + '/submit';
+      url = '/fal/' + this.program.id + '/submit';
     }
     if(tabType === 'Reject') {
-      url = '/programs/' + this.program.id + '/reject';
+      url = '/fal/' + this.program.id + '/reject';
     }
     if(tabType === 'Publish') {
-      url = '/programs/' + this.program.id + '/publish';
+      url = '/fal/' + this.program.id + '/publish';
     }
     if(tabType === 'Notify') {
       this.notifyAgencyCoordinator();
@@ -1055,7 +1055,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
       case 'Publish':
         this.tabsNavigation('Publish');
         break;
-      case 'Notify Agency Coordinator':
+      case 'Notify Assistance Administrator':
         this.tabsNavigation('Notify');
         break;
       default:

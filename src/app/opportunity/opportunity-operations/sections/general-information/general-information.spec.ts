@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
-import { SamUIKitModule } from 'sam-ui-kit/index';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
 import { OpportunityGeneralInfoComponent } from './general-information.component';

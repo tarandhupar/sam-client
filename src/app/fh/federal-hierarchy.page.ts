@@ -10,7 +10,7 @@ import { IAMService } from "api-kit";
 })
 export class FederalHierarchyPage {
 
-  recordsPerPage:number = 7;
+  recordsPerPage:number = 10;
 
   user:any;
   orgList:any = [];
@@ -274,6 +274,7 @@ export class FederalHierarchyPage {
   isAdminOrg(orgId):boolean{
     if(this.userRole === 'superAdmin' || this.userRole === 'deptAdmin') return true;
     if(this.userRole === 'officeAdmin') return false;
+
     return this.adminOrgKey == orgId;
   }
 
@@ -293,7 +294,7 @@ export class FederalHierarchyPage {
       navigationExtras.queryParams['parentID'] = this.adminOrgKey;
     }
 
-    this._router.navigate(["/create-organization"],navigationExtras);
+    this._router.navigate(["/org/create"],navigationExtras);
   }
 
   onSelectCreateOrg(orgType){
@@ -308,6 +309,11 @@ export class FederalHierarchyPage {
     this.searchOrgType = val;
     this.curPage = 0;
     this.showAdminOrg? this.searchFHAdmin(this.orgSearchStatusModel):this.searchFH();
+  }
+
+  newFhTextSearch(){
+    this.curPage = 0;
+    this.searchFH();
   }
 
   searchFH:any = () => {
@@ -331,13 +337,16 @@ export class FederalHierarchyPage {
       this.searchOrgType.forEach(e => {searchLevels.push(e.split('_')[0]);});
       Observable.forkJoin(
         this.fhService.fhSearchCount(this.searchText, this.searchType, this.orgSearchStatusModel, searchLevels, searchTypes, false, null, this.userRole !== 'superAdmin'),
-        this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage, this.orgSearchStatusModel, searchLevels, searchTypes, false, null, this.userRole !== 'superAdmin')
+        this.fhService.fhSearch(this.searchText, this.curPage + 1, this.recordsPerPage, this.orgSearchStatusModel, searchLevels, searchTypes, false, null, this.userRole !== 'superAdmin')
       ).subscribe( data => {
         this.curPageOrgs = data[1]._embedded;
         this.totalRecords = data[0];
         this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
         this.updateRecordsText();
       });
+    }else{
+      this.resultType = "default";
+      this.loadDefaultData('active');
     }
   };
 
@@ -360,6 +369,9 @@ export class FederalHierarchyPage {
 
   isDefaultResult():boolean{ return this.resultType === "default";}
   isDOD():boolean { return this.user.departmentID === "100000000";}
+  isOrgDoD(org):boolean{
+    return org.fullParentPathName.split('.').some(e=> {return e.includes("DEFENSE");})
+  }
 
   getOrgTypeText(org):string{
     if(org.type){

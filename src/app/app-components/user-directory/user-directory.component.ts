@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { SamSortComponent } from '..';
 import { FHService, PeoplePickerService } from 'api-kit';
 
-import { OptionsType } from 'sam-ui-kit/types';
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types';
 import { Filter, Sort, Options, PageState } from './user-directory.interfaces';
 import { User } from 'api-kit/iam/api/core/user.ts';
 

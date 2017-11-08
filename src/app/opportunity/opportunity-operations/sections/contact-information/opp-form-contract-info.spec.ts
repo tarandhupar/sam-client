@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
-import { SamUIKitModule } from 'sam-ui-kit/index';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityContactInfoComponent } from './opp-form-contact-info.component';
 

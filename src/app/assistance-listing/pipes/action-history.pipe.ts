@@ -123,7 +123,7 @@ export class ActionHistoryPipe implements PipeTransform {
         }
         processedHistoryItem1['titleNumberAgency'] = newProgramNumber + "<br />" + "From".bold() + ": " + currentProgramNumber;
       } else if (historyItem.action_type == 'publish'){
-        processedHistoryItem1['url'] = '/programs/' + historyItem.program_id + "/review";
+        processedHistoryItem1['url'] = '/fal/' + historyItem.program_id + "/review";
       }
       let desc1 = [];
       if(processedHistoryItem1['titleNumberAgency']){

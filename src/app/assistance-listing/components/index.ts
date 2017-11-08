@@ -4,7 +4,7 @@ import { FALAccountIdentificationCodeComponent } from './account-indentification
 import { SamCheckboxToggledTextareaComponent } from './checkbox-toggled-textarea/checkbox-toggled-textarea.component';
 import { SamTextRadioButtonComponent } from './text-radio/text-radio-button.component';
 import { FALAuthSubFormComponent } from './authorization-subform/authorization-subform.component';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FALFormulaMatchingComponent } from "./formula-matching/formula-matching.component";
 import { FALAuthInfoTableComponent } from "./authorization-table/authorization-table.component";

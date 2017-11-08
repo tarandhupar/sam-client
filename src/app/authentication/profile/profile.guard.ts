@@ -51,8 +51,10 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
   }
 
   signout() {
-    this.api.iam.logout(false);
-    this.router.navigate(['/signin']);
+    this.api.iam.logout(false, () => {
+      this.router.navigate(['/signin']);
+    });
+
     return false;
   }
 }

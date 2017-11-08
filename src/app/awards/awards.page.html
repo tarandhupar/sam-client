@@ -47,8 +47,8 @@
 										Address
 									</div>
 									<div class="description">
-										<ng-container *ngIf="awardData.contractorInformation.address.City">
-											{{awardData.contractorInformation.address.City}},
+										<ng-container *ngIf="awardData?.contractorInformation?.address?.city">
+											{{awardData?.contractorInformation?.address?.city}},
 										</ng-container>
 										<ng-container *ngIf="awardData.contractorInformation.address.state">
 											{{awardData.contractorInformation.address.state}}, 
@@ -608,7 +608,7 @@
 				<div class="sam-ui medium header">
 					Country of Incorporation
 					<div class="sub header">
-						{{awardData.businessCategory.countryOfIncorporation}}
+						{{countryOfIncorporation}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">

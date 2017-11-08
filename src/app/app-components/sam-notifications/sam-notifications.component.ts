@@ -5,23 +5,21 @@ import { NotificationItem } from "../interfaces";
   selector: 'sam-notifications',
   template: `
     <ul class="notifications-list">
-        <li *ngFor="let item of _notifications">
+        <li *ngFor="let item of _notifications; let i = index">
             <a (click)="linkHandler(item.link)">
-                <div class="name-block text-center">
+                <div class="name-block p_L-1x">
                     <ng-container [ngSwitch]="item.type">
-                        <span *ngSwitchCase="'request'">{{ item.username }}</span>
-                        <span *ngSwitchCase="'alert'" class="usa-alert" [ngClass]="item.icon"></span>
-                        <span *ngSwitchCase="'subscription'" class="title">{{ item.title }}</span>
+                        <span *ngSwitchCase="'request'" class="requestor-name">{{ item.username }}</span>
+                        <span *ngSwitchCase="'alert'" class="title">{{ item.title}}</span>
+                        <span *ngSwitchCase="'subscription'" class="title">Subscription</span>
                     </ng-container>
+                    <br/><span class="notification-time">{{ item.datetime | feedsDateTimeDsiplay }}</span>
                 </div>
                 
-                <span class="text-block">
-                   <ng-container [ngSwitch]="item.type">
-                      <span *ngSwitchCase="'request'" class="text">{{ item.text }}</span>
-                      <span *ngSwitchCase="'alert'"><span class="title">{{ item.title}}</span><br/><span class="text">{{ item.text }}</span></span>
-                      <span *ngSwitchCase="'subscription'" class="text">{{ item.text }}</span>
+                <span class="text-block p_L-1x">
+                   <ng-container>
+                      <span class="text">{{ item.text.substring(0,textMaxLength) }}<i class="fa fa-ellipsis-h p_L-1x" *ngIf="ellipseControlIndex.includes(i)"></i></span>
                     </ng-container>
-                   <br/>{{ item.datetime | dateTimeDisplay }}
                 </span>
             </a>
         </li>
@@ -36,6 +34,8 @@ export class SamNotificationsComponent {
   private textMaxLength: number = 66;
   private maxNumOfNotifications = 5;
   _notifications: NotificationItem[];
+  ellipseControlIndex: any = [];
+
 
   constructor(private router:Router){}
 
@@ -43,7 +43,7 @@ export class SamNotificationsComponent {
     if(this.notifications){
       this._notifications = this.notifications.slice(0,this.maxNumOfNotifications);
       for(var idx in this._notifications){
-        this._notifications[idx].text = this._notifications[idx].text.substring(0,this.textMaxLength);
+        if(this._notifications[idx].text.length > this.textMaxLength) this.ellipseControlIndex.push(+idx);
       }
     }
   }

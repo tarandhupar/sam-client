@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { RequestDetailsComponent } from "./request-details";
 
 describe('The request details component', () => {

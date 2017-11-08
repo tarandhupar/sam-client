@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule }  from "@angular/forms";
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamDateRangeFilterComponent } from './sam-date-range-filter.component';
 
 describe('The Sam Footer component', () => {

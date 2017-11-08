@@ -48,12 +48,12 @@
                         </div>
                         <div class="description">
                           <span class="inactive" *ngIf="isModActive() == false">
-                            <i class="fa fa-circle-thin fa-sm" aria-hidden="true"></i>
+                            <em class="fa fa-circle-thin fa-sm" aria-hidden="true"></em>
                             <em>Inactive</em>
                           </span>
 
                           <span class="active" *ngIf="isModActive() == true">
-                            <i class="fa fa-circle fa-sm" aria-hidden="true"></i>
+                            <em class="fa fa-circle fa-sm" aria-hidden="true"></em>
                             <em>Active</em>
                           </span>
                         </div>
@@ -122,17 +122,9 @@
             <h2 class="sam-ui header">Offices</h2>
           </ng-container>-->
         <!--</ng-container>-->
-
-        <p>
-          Showing results
-          <strong>
-            {{min +1}}
-            <span class="usa-sr-only">through</span> -
-            {{(totalOrganizationNumber < max) ? totalOrganizationNumber : max}}
-          </strong>
-          of
-          <strong>{{totalOrganizationNumber}}</strong>
-        </p>
+        <strong>
+          <list-results-message [showing]="10" [currentPage]="min+1" [total]="totalOrganizationNumber" [suffix]="listMessageSuffix"></list-results-message>
+        </strong>
 
         <ul id="org-pagination" class="usa-zebra-list">
           <li tabindex="-1" *ngFor = "let element of organizationPerPage">

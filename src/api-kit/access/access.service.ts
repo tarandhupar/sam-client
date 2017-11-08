@@ -47,6 +47,12 @@ export class UserAccessService {
             this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
           }
         }
+        // This seems risky... I don't want to redirect unless I'm sure they are forbidden
+        // if (res && res.status === 403) {
+        //   if (!this.router.url.match(/\/workspace/i)) {
+        //     this.router.navigate(['/403']);
+        //   }
+        // }
         return Observable.throw(res);
       });
   }
@@ -90,7 +96,7 @@ export class UserAccessService {
     let apiOptions: any = {
       name: 'rms',
       method: 'GET',
-      suffix: '/userdomains/',
+      suffix: '/domains/',
     };
 
     this.addAuthHeader(apiOptions);

@@ -55,6 +55,7 @@ export class WrapperService {
         'subscriptions':'/watchlistservice/v1/api/subscriptions',
         'myFeeds':'/feeds/v1',
         'gettoggeServices':'/feature/v1/',
+        'helpContent':'/content/v1'
     };
 
   constructor(private _http: Http){}
@@ -103,7 +104,7 @@ export class WrapperService {
         "body": oApiParam.body,
         "url": baseUrl + ((!oApiParam.prefix) ? '' : oApiParam.prefix ) + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
     };
-    
+
     if(oApiParam.responseType) {
       jsonOption['responseType'] = oApiParam.responseType;
     }

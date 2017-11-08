@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup } from "@angular/forms";
-import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
 import {DictionaryService} from "api-kit";
 
 @Component({

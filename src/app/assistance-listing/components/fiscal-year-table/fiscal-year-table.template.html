@@ -24,7 +24,7 @@
 
   <div *ngIf="fyTableGroup" [formGroup]="fyTableGroup">
     <div [hidden]="!model.isApplicable">
-      <table class="sam-ui table celled" *ngIf="model.entries && containsDisplayedEntries()">
+      <table class="sam-ui table celled lightest blue" *ngIf="model.entries && containsDisplayedEntries()">
         <thead>
         <tr>
           <th scope="col" id="fiscal-year">
@@ -53,19 +53,19 @@
               <ng-container *ngIf="!isEditing">
                 <a class="fal-table-edit" (click)="editEntry(i)">
                   Edit
-                  <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editEntry(i)"></i>
+                  <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editEntry(i)"></em>
                 </a>
 
                 <a class="fal-table-delete" (click)="onDeleteClick(i)">
                   Delete
-                  <i class="fa fa-times fal-table-delete" aria-hidden="true" (click)="onDeleteClick(i)"></i>
+                  <em class="fa fa-times fal-table-delete" aria-hidden="true" (click)="onDeleteClick(i)"></em>
                 </a>
               </ng-container>
               <ng-container *ngIf="isEditing">
                 <span class="fal-table-edit disabled">Edit</span>
-                <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+                <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
                 <span class="fal-table-delete disabled">Delete</span>
-                <i class="fa fa-times fal-table-delete disabled" aria-hidden="true"></i>
+                <em class="fa fa-times fal-table-delete disabled" aria-hidden="true"></em>
               </ng-container>
             </td>
           </tr>

@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 //KITs
 import {SamErrorService} from '../../../api-kit/error-service';
 import {ProgramService, SamAPIKitModule, FHService, DictionaryService} from 'api-kit';
-import {SamUIKitModule} from 'sam-ui-kit';
+import {SamUIKitModule} from 'sam-ui-elements/src/ui-kit';
 
 //app-component
 import {FalWorkspacePage} from './assistance-listing-workspace.page';

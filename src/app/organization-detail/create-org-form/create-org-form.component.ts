@@ -1,9 +1,9 @@
 import { Component, Input, Output, ViewChild, ViewChildren, QueryList, EventEmitter } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { Observable } from 'rxjs';
@@ -83,6 +83,9 @@ export class OrgCreateForm {
   addrTypeMaping = {M:"Mailing Address", B:"Billing Address", S:"Shipping Address"};
   orgTypeWithAddress = "office";
   showFullDes:boolean = false;
+
+  orgTypeMap = {"department":"Dept/Ind Agency", "agency":"Sub-Tier", "office":"Office", "majcommand":"Major Command", "subcommand":"Sub Command"};
+
 
   constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService, public flashMsgService:FlashMsgService, private location: Location) {}
 
@@ -362,8 +365,8 @@ export class OrgCreateForm {
         val => {
           this.flashMsgService.showFlashMsg();
           this.flashMsgService.isCreateOrgSuccess = true;
-          this.router.navigate(['/organization-detail',val,'profile']);
-          setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
+          this.router.navigate(['/org/detail',val,'profile']);
+          setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 5000);
         }
       );
     }else{
@@ -373,8 +376,8 @@ export class OrgCreateForm {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isMoveOrgSuccess = true;
 
-        this.router.navigate(['/organization-detail',this.orgFormConfig.org.orgKey,'profile']);
-        setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
+        this.router.navigate(['/org/detail',this.orgFormConfig.org.orgKey,'profile']);
+        setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 5000);
       })
 
     }

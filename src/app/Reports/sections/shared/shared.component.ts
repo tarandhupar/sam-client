@@ -11,40 +11,57 @@ import * as Cookies from 'js-cookie';
     templateUrl: './shared.template.html',
 })
 export class SharedComponent {
-    showReport = false;
-    sharedParams;
-    url;
-    isSignedIn = false;
-    user;
+    showReport: boolean = false;
+    sharedParams: string;
+    redirect: object;
+    url: SafeResourceUrl;
+    isSignedIn: boolean = false;
+    user: object;
 
     constructor(private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService,
-        private sanitizer: DomSanitizer, private http: Http) { }
+        private sanitizer: DomSanitizer, private http: Http) {}
 
     ngOnInit() {
-        let mstrParams = this.route.queryParams.subscribe(
-                params => {
-                    this.sharedParams = Object.keys(params).map(function(key) {
-                        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-                    }).join('&');
-                }
-            )
-        this.checkSignInUser();
-        if (this.isSignedIn) {
-            this.showReport = true;
-            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL + this.sharedParams + '&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro'));
-        } else {
-            this.router.navigate(['/signin']);
-        }
+        this.checkSession();
     }
 
-    checkSignInUser() {
-        this.isSignedIn = false;
-        this.api.iam.checkSession((user) => {
-            this.zone.run(() => {
-                this.isSignedIn = true;
-                this.user = user;
+    prepareRedirect() {
+        this.route.queryParams.subscribe(
+            params => {
+                let redirect = {};
+                Object.assign(redirect, params, {redirect: '/reports/shared/mstrWeb'});
+                this.redirect = redirect;
+            },
+            (err) => console.error(err)
+        );
+    }
+
+    getParametersForUrl() {
+        this.route.queryParams.subscribe(
+            params => {
+                this.sharedParams = Object.keys(params).map(function(key) {
+                        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+                    }).join('&');
+            },
+            (err) => console.error(err)
+        );
+    }
+
+    checkSession() {
+        this.api.iam.checkSession(user => {
+            this.isSignedIn = true;
+            this.user = user;
+            this.showReport = true;
+            this.getParametersForUrl();
+            this.url = this.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL + this.sharedParams + '&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro'));
+          }, () => {
+            this.isSignedIn = false;
+            this.user = null;
+            this.prepareRedirect();
+            this.router.navigate(['/signin'], {
+                queryParams: this.redirect
             });
-        });
+          });
     }
 }
 

@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
 import { OrgDetailProfilePage } from "./profile.component";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";

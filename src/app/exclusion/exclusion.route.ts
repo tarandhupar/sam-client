@@ -3,7 +3,7 @@ import { ExclusionsPage } from './exclusion.page.ts';
 
 export const routes: Routes = [
   {
-    path: 'exclusions/:id',
+    path: '',
     component: ExclusionsPage
   },
 ];

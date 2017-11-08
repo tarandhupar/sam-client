@@ -109,7 +109,7 @@
                   <div class="description">
                     <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
                       <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-                        <a [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" (click)="toTheTop()" >
+                        <a [attr.id]="'program-related-' + i"  [routerLink]="['/fal', item.id,'view']" (click)="toTheTop()" >
                           {{item.programNumber}}
                         </a>{{isLast ? '' : ', '}}
                       </ng-container>
@@ -124,7 +124,7 @@
               <div class="item">
                 <a target="_blank" class="field" id="grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
                   View available opportunities on Grants.gov related to this Assistance Listing
-                  <i aria-hidden="true" class="fa fa-external-link fa-sm"></i>
+                  <em aria-hidden="true" class="fa fa-external-link fa-sm"></em>
                 </a>
               </div>
 
@@ -141,7 +141,7 @@
     <!-- Overview -->
     <section id="program-overview">
 
-      <a name="#/programs/{{programID}}/view#overview" id="overview-anchor" hidden="true">Overview</a>
+      <a name="#/fal/{{programID}}/view#overview" id="overview-anchor" hidden="true">Overview</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -187,7 +187,7 @@
 
     <!-- Authorizations -->
     <section id="program-authorizations">
-      <a name="#/programs/{{programID}}/view#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
+      <a name="#/fal/{{programID}}/view#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -209,7 +209,7 @@
 
     <!--Financials-->
     <section id="program-financials">
-      <a name="#/programs/{{programID}}/view#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
+      <a name="#/fal/{{programID}}/view#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -272,7 +272,7 @@
     <!--Should I apply?-->
     <section id="program-application-criteria">
 
-      <a name="#/programs/{{programID}}/view#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
+      <a name="#/fal/{{programID}}/view#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -400,7 +400,7 @@
     <!--How do I apply?-->
     <section id="program-application-information">
 
-      <a name="#/programs/{{programID}}/view#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
+      <a name="#/fal/{{programID}}/view#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -614,7 +614,7 @@
 
     <!--Compliance requirements-->
     <section id="program-compliance-requirements">
-      <a name="#/programs/{{programID}}/view#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
+      <a name="#/fal/{{programID}}/view#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
 
       <div class="view-section-margin"></div>
       <div class="usa-grid-full">
@@ -798,7 +798,7 @@
 
     <!--Contact information-->
     <section id="program-contact-information">
-      <a name="#/programs/{{programID}}/view#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
+      <a name="#/fal/{{programID}}/view#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -806,8 +806,8 @@
         </div>
       </div>
 
-      <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
-      <span class="field" id="program-contacts-local" *ngIf="program?.data?.contacts?.local?.flag == 'appendix'"> <a [routerLink]="['/search/fal/regionalOffices']" [queryParams]="{ organization_id: federalHierarchy?.orgKey }">See Regional Agency Offices.</a> {{program?.data?.contacts['local']?.description }}</span>
+      <h3 class="sam-ui dividing header">Regional or Local Locations:</h3>
+      <span class="field" id="program-contacts-local" *ngIf="program?.data?.contacts?.local?.flag == 'appendix'"> <a [routerLink]="['/search/fal/regionalAssistanceLocations']" [queryParams]="{ organization_id: federalHierarchy?.orgKey }">See Regional Assistance Locations.</a> {{program?.data?.contacts['local']?.description }}</span>
       <span class="field" id="program-contacts-local" *ngIf="program?.data?.contacts?.local?.flag == 'none'"> None. {{program?.data?.contacts['local']?.description }}</span>
 
       <h3 class="sam-ui dividing header">Headquarters Office:</h3>
@@ -825,7 +825,7 @@
 
     <!--History Section-->
     <section class="program-history">
-      <a name="#/programs/{{programID}}/view#history" id="history-anchor" hidden="true">History</a>
+      <a name="#/fal/{{programID}}/view#history" id="history-anchor" hidden="true">History</a>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header header-history" id="history">History</h2>

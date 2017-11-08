@@ -71,13 +71,16 @@
 
       <div class="sam-ui divider"></div>
 
-      <sam-tab-date-range-filter
+      <sam-select-date-range-filter 
+        #selectDateFilter
         [tabConfig]="dateRangeConfig"
         [tabIndex]="dateFilterIndex"
         [(ngModel)]="dateFilterModel"
+        (ngModelChange)= "dateModelChange($event)"
         (filterEvt)="dateFilterHandler($event)"
-        (filterClearEvt)="dateFilterClearHandler($event)">
-      </sam-tab-date-range-filter>
+        (filterClearEvt)="dateFilterClearHandler($event)"
+        [id]="'date-range-filter'">
+      </sam-select-date-range-filter>
 
       <div class="sam-ui divider"></div>
 

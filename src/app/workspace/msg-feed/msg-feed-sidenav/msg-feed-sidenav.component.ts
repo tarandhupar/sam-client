@@ -1,5 +1,5 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
 import { IAMService } from "api-kit/iam/iam.service";

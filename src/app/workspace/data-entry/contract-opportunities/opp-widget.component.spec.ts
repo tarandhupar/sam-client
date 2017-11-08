@@ -7,7 +7,7 @@ import {
   import {RouterTestingModule} from "@angular/router/testing";
 
   import * as Cookies from 'js-cookie';
-  import {SamUIKitModule} from "sam-ui-kit";
+  import {SamUIKitModule} from "sam-ui-elements/src/ui-kit";
   import {SamAPIKitModule} from "api-kit";
   import {WorkspaceModule} from "../../workspace.module";
   import {OppWidgetComponent} from './opp-widget.component';

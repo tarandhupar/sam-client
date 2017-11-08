@@ -3,7 +3,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SideNavComponent} from "../../../../assistance-listing/assistance-listing-operations/navigation/side-nav.component";
 import {AppComponentsModule} from "../../../../app-components/app-components.module";
-import {SamUIKitModule} from "sam-ui-kit/index";
+import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {OpportunityFormModule} from "../../opportunity-form.module";
 import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import {OpportunityDescriptionComponent} from "./description.component";

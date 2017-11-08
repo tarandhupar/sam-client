@@ -1,7 +1,7 @@
 <sam-modal #titleModal
-           [showClose]="true"
-           [closeOnOutsideClick]="true"
-           [closeOnEscape]="true"
+           [showClose]="titleMissingConfig.showClose"
+           [closeOnOutsideClick]="titleMissingConfig.closeOnOutsideClick"
+           [closeOnEscape]="titleMissingConfig.closeOnEscape"
            [type]="'warning'"
            [title]="titleMissingConfig.title"
            [submitButtonLabel]="titleMissingConfig.confirmText"

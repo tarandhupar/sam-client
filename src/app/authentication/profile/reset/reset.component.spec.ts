@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule } from 'app-components/app-components.module';
 
 import { ResetComponent } from './reset.component';

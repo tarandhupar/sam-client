@@ -12,20 +12,28 @@ import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
 
 export const routes: Routes = [
   {
-    path: 'organization-detail/:orgId',
-    component: OrgDetailPage,
-    canActivateChild:[IsLoggedInGuard, FHAccessGuard],
-    children: [
-      { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile',  component: OrgDetailProfilePage },
-      { path: 'hierarchy',  component: OrgHierarchyPage },
-      { path: 'move',  component: OrgMovePage  }
+    path:'',
+    children:[
+      {
+        path: 'detail/:orgId',
+        component: OrgDetailPage,
+        canActivateChild:[FHAccessGuard],
+        data: { pageName:'FH/org-detail' },
+        children: [
+          { path:'', redirectTo:'profile', pathMatch:'full'},
+          { path: 'profile',  component: OrgDetailProfilePage },
+          { path: 'hierarchy',  component: OrgHierarchyPage },
+          { path: 'move',  component: OrgMovePage  }
+        ]
+      }
     ]
   },
   {
-    path: 'create-organization',
+    path:'create',
     component: OrgCreatePage,
-  },
+    data: { pageName:'FH/create-org' }
+  }
+
   // {
   //   path: 'aac-request/procurement/:orgId',
   //   component: AACRequestPage,

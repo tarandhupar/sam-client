@@ -9,12 +9,14 @@ import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 import { SortArrayOfObjects } from "./sort-array-object.pipe";
 import { FHTitleCasePipe } from "./fhTitleCase.pipe";
 import { ShortDatePipe } from "./short-date.pipe";
+import { FeedsDateTimePipe } from "./feeds-date-time-display.pipe";
 
 @NgModule({
   imports: [],
   exports: [
     CapitalizePipe,
     DateFormatPipe,
+    FeedsDateTimePipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,
@@ -26,6 +28,7 @@ import { ShortDatePipe } from "./short-date.pipe";
   declarations: [
     CapitalizePipe,
     DateFormatPipe,
+    FeedsDateTimePipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,

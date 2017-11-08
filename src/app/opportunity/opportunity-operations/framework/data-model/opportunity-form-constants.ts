@@ -56,7 +56,14 @@ export const OppNoticeTypeDbMap = {
 
 export const OppNoticeTypeFieldsMap = {
   [OpportunityNoticeTypes.SOURCES_SOUGHT] : {
-    [OpportunityFieldNames.PRODUCT_SERVICE_CODE]: { required: false, display: true },
-    [OpportunityFieldNames.PRIMARY_NAICS_CODE]: { required: false, display: true }
+    [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required : false , display : true} ,
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required : false , display : true}
+  } ,
+  [OpportunityNoticeTypes.SPECIAL_NOTICE] : {
+    [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required : false , display : true} ,
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required : false , display : true}
+  } ,
+  [OpportunityNoticeTypes.SALE_OF_SURPLUS_PROPERTY] : {
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required : false , display : true}
   }
 };

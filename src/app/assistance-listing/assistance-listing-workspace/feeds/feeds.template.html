@@ -81,7 +81,7 @@
                  </ng-container>
                </div>
                <div class="six wide column request-type">
-                 <div><a *ngIf="row?.requestType?.value" routerLink="/programs/change-request/{{row.id}}/action">
+                 <div><a *ngIf="row?.requestType?.value" routerLink="/fal/change-request/{{row.id}}/action">
                      {{row.requestType.value | requestTypeLabel}} in {{domainLabel}}
                  </a></div>
                  <div><ng-container *ngIf="row?.entryDate">

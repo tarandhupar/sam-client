@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
-import {AutocompleteConfig} from "sam-ui-kit/types";
+import {AutocompleteConfig} from "sam-ui-elements/src/ui-kit/types";
 import moment = require("moment");
 import * as _ from 'lodash';
 import { v4 as UUID } from 'uuid';

@@ -9,7 +9,7 @@ import {
   logger, isDebug
 } from './helpers';
 
-import { getMockCWSApplication, getMockCWSSummary } from './mocks';
+import { getMockCWSApplication, getMockCWSComments, getMockCWSSummary } from './mocks';
 import { CWSApplication } from '../../../interfaces';
 
 const transforms = {
@@ -26,7 +26,16 @@ const transforms = {
 
     for(index = 0; index < keys.length; index++) {
       key = keys[index];
-      data[key] = data[key] ? data[key].split(',') : [];
+
+      if(key.match(/(systemAdmins|systemManagers)/)) {
+        try {
+          data[key] = JSON.parse(data[key]);
+        } catch(error) {
+          data[key] = [];
+        }
+      } else {
+        data[key] = data[key] ? data[key].split(',') : [];
+      }
     }
 
     data.applicationStatus = data.applicationStatus || 'Draft';
@@ -43,7 +52,11 @@ const transforms = {
       key = keys[index];
 
       if(data[key]) {
-        data[key] = data[key].join(',');
+        if(key.match(/(systemAdmins|systemManagers)/)) {
+          data[key] = JSON.stringify(data[key]);
+        } else {
+          data[key] = data[key].join(',');
+        }
       }
     }
 
@@ -54,6 +67,38 @@ const transforms = {
     }
 
     return data;
+  }
+};
+
+const comment = {
+  get(id: string, $success: Function = () => {}, $error: Function = () => {}) {
+    let endpoint = utilities.getUrl(config.cws.application.get, { id: id }),
+        auth = getAuthHeaders(),
+        mock = transforms.intake(getMockCWSComments(id));
+
+    if(isDebug()) {
+      $success(mock);
+      return;
+    }
+
+    if(!id) {
+      $error({ message: 'Requires application `id`' });
+      return;
+    }
+
+    if(!auth) {
+      $error({ message: 'Please sign in' });
+      return;
+    }
+
+    request
+      .get(endpoint)
+      .set(auth)
+      .then(response => {
+        $success([]);
+      }, response => {
+        $error(exceptionHandler(response));
+      });
   }
 };
 
@@ -81,8 +126,9 @@ const application = {
     request
       .get(endpoint)
       .set(auth)
+      .ok(response => (response.status == 200))
       .then(response => {
-        !response.body ? $error(exceptionHandler(response)) : $success(transforms.intake(response.body));;
+        !response.body ? $error(exceptionHandler(response)) : $success(transforms.intake(response.body));
       }, response => {
         $error(exceptionHandler(response));
       });
@@ -110,6 +156,7 @@ const application = {
     request
       .get(endpoint)
       .set(auth)
+      .ok(response => (response.status == 200))
       .then(response => {
         let applications = response.body || [];
         applications = applications.map(application => transforms.intake(application));
@@ -213,30 +260,56 @@ const application = {
   approve(data: CWSApplication, $success: Function = () => {}, $error: Function = () => {}) {
     let endpoint = utilities.getUrl(config.cws.application.approve),
         auth = getAuthHeaders(),
-        id = data.uid,
-        params = data || {};
+        params = transforms.outake(data);
 
-    if(!id) {
-      $error({ message: 'Requires `uid` in the application object' });
+    if(logger(data)) {
+      $success(transforms.intake(data));
       return;
     }
 
-    this.update(id, data, $success, $error);
+    if(!auth) {
+      $error({ message: 'Please sign in' });
+      return;
+    }
+
+    request
+      .put(endpoint)
+      .set(auth)
+      .send(params)
+      .then(response => {
+        $success(transforms.intake(response.body || {}));
+      }, response => {
+        $error(exceptionHandler(response));
+      });
   },
 
   reject(data: CWSApplication, $success: Function = () => {}, $error: Function = () => {}) {
     let endpoint = utilities.getUrl(config.cws.application.reject),
         auth = getAuthHeaders(),
-        id = data.uid,
-        params = data || {};
+        params = transforms.outake(data);
 
-    if(!id) {
-      $error({ message: 'Requires `uid` in the application object' });
+    if(logger(data)) {
+      $success(transforms.intake(data));
       return;
     }
 
-    this.update(id, data, $success, $error);
-  }
+    if(!auth) {
+      $error({ message: 'Please sign in' });
+      return;
+    }
+
+    request
+      .put(endpoint)
+      .set(auth)
+      .send(params)
+      .then(response => {
+        $success(transforms.intake(response.body || {}));
+      }, response => {
+        $error(exceptionHandler(response));
+      });
+  },
+
+  comment: comment,
 };
 
 

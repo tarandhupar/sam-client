@@ -5,7 +5,7 @@ import { IAMService } from "api-kit";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 import { Location } from '@angular/common';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 
 @Component ({
   templateUrl: 'organization-detail.template.html'
@@ -36,7 +36,7 @@ export class OrgDetailPage {
   };
 
   currentUrl: string = "";
-  baseUrl: string = "/organization-detail/";
+  baseUrl: string = "/org/detail/";
   orgKeyLength = 9;
 
   constructor(private fhService: FHService,
@@ -53,23 +53,29 @@ export class OrgDetailPage {
       params => {
         this.orgId = params['orgId'];
         this.setupOrgName(this.orgId);
+        let val = {url: this.route.snapshot._routerState.url};
+        this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
+        this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
+        let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
+        section = section.length === 0? 'profile':section;
+        this.currentSection = section;
       });
 
-    this._router.events.subscribe(
-      value => {
-        if(!(value instanceof  NavigationCancel)){
-          let val = <NavigationCancel>value;
-          this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
-          this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
-
-          let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
-          section = section.length === 0? 'profile':section;
-          this.currentSection = section;
-        }else{
-          this.currentSection = this.location.path(false).substr(this.baseUrl.length);
-        }
-
-      });
+    // this._router.events.subscribe(
+    //   value => {
+    //     if(!(value instanceof  NavigationCancel)){
+    //       let val = <NavigationCancel>value;
+    //       this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
+    //       this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
+    //
+    //       let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
+    //       section = section.length === 0? 'profile':section;
+    //       this.currentSection = section;
+    //     }else{
+    //       this.currentSection = this.location.path(false).substr(this.baseUrl.length);
+    //     }
+    //
+    //   });
   }
 
 
@@ -140,7 +146,7 @@ export class OrgDetailPage {
     let parentOrgIds = fullParentPath.split('.');
     parentOrgIds.forEach((e, i) => {
       if(e != this.orgId){
-        this.crumbs.push({ url: '/organization-detail/'+e, breadcrumb: parentOrgNames[i]} );
+        this.crumbs.push({ url: '/org/detail/'+e, breadcrumb: parentOrgNames[i]} );
       }else{
         this.crumbs.push({ breadcrumb: parentOrgNames[i]} );
       }
@@ -148,7 +154,7 @@ export class OrgDetailPage {
   }
 
   onChangeOrgDetail(hierarchyName){
-    this._router.navigate(['organization-detail', this.hierarchyPathMap[hierarchyName],'profile'])
+    this._router.navigate(['org/detail', this.hierarchyPathMap[hierarchyName],'profile'])
   }
 
   getLastHierarchyClass(index){

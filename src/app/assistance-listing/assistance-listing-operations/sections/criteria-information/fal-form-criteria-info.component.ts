@@ -5,7 +5,7 @@ import {
 import {FALFormService} from "../../fal-form.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
-import {AutocompleteConfig} from "sam-ui-kit/types";
+import {AutocompleteConfig} from "sam-ui-elements/src/ui-kit/types";
 import {FALFormErrorService} from "../../fal-form-error.service";
 import {FALSectionNames} from '../../fal-form.constants';
 
@@ -400,7 +400,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       benDesc: this.viewModel.benDesc,
       lengthTimeDesc: this.viewModel.lengthTimeDesc,
       awardedType: this.viewModel.awardedType,
-      awardedDesc: this.viewModel.awardedDesc,
+      awardedDesc: this.viewModel.awardedDesc ? this.viewModel.awardedDesc : '',
       assUsageDesc: this.viewModel.assUsageDesc,
       usageRes: this.loadChkToggleTextarea(this.viewModel.usageRes),
       useDisFunds: this.loadChkToggleTextarea(this.viewModel.useDisFunds),

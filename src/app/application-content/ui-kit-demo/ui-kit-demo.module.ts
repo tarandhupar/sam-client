@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './ui-kit-demo.route';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UIKitDemoPage, TestACDirective } from './ui-kit-demo.page';
 import { SimpleFormDemoPage } from './simple-form-demo.page';

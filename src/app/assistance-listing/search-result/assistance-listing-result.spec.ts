@@ -3,7 +3,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AssistanceListingResult } from './assistance-listing-result.component';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 
 var fixture;
 var comp;

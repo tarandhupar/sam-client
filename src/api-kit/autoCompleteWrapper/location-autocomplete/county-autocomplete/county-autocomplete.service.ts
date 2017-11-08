@@ -1,7 +1,7 @@
 import { Directive, Injectable, Input, OnChanges } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
 import { AlertFooterService } from 'app/app-components/alert-footer/alert-footer.service';//this will be moved into sam-ui-kit soon
 
@@ -14,11 +14,13 @@ export class CountyServiceImpl implements AutocompleteService {
 
   private zip;
 
+  private country;
+
   constructor(private locationService: LocationService) { }
 
-  getAllCountiesJSON(q?:string , searchby?: string, statecode?: string, city?: string): ReplaySubject<any> {
+  getAllCountiesJSON(q?:string , searchby?: string, statecode?: string, city?: string , country?: string): ReplaySubject<any> {
     const results = new ReplaySubject();
-    this.locationService.getAutoCompleteCounties(q,searchby, statecode, city )
+    this.locationService.getAutoCompleteCounties(q,searchby, statecode, city, country )
 	 .catch(res => {
         return Observable.of([]);
       })
@@ -30,7 +32,7 @@ export class CountyServiceImpl implements AutocompleteService {
         results.next(list.reduce( (prev, curr) => {
           const newObj = {
             key: curr.countyCode,
-            value: curr.county + ", " + curr.state.stateCode
+            value: this.state ? curr.county : curr.county + ", " + curr.state.stateCode
           }
 		  const returnObj = Object.assign({}, curr, newObj);
           prev.push(returnObj);
@@ -50,6 +52,7 @@ export class CountyServiceImpl implements AutocompleteService {
     
    let stateCode ;
    let city;
+   let country;
    
 
     if(this.zip){
@@ -59,19 +62,32 @@ export class CountyServiceImpl implements AutocompleteService {
   
     if(this.city){
 
-         city = searchOptions && searchOptions.city ?
+          city = searchOptions && searchOptions.city ?
                     searchOptions.city : this.city;
-         stateCode = searchOptions && searchOptions.state.statecode ?
+          stateCode = searchOptions && searchOptions.state.statecode ?
                     searchOptions.state.statecode : this.state;
-          return this.getAllCountiesJSON('','statecode','statecode',city.city).map(o => o);
+          country = searchOptions && searchOptions.state.country.countrycode ?
+          searchOptions.state.country.countrycode : this.country;
+
+          return this.getAllCountiesJSON('','statecode',stateCode,city.city,this.country.countrycode).map(o => o);
         
      }
 
-     else if (this.state){
+     else if (this.state && this.country){
         stateCode = searchOptions && searchOptions.statecode ?
                     searchOptions.statecode : this.state;
-        return this.getAllCountiesJSON(val,'statecode',stateCode).map(o => o);
+        country = searchOptions && searchOptions.country ?
+                    searchOptions.country :
+                    this.country;
+        return this.getAllCountiesJSON(val,'statecode',stateCode,'', this.country.countrycode).map(o => o);
     }
+
+     else if(this.country){
+          country = searchOptions && searchOptions.country ?
+                    searchOptions.country :
+                    this.country;
+          return this.getAllCountiesJSON(val,'','','',this.country.key).map(o => o);
+     }
 
      else {
          return this.getAllCountiesJSON(val).map(o => o);
@@ -90,6 +106,10 @@ export class CountyServiceImpl implements AutocompleteService {
   setZip(zip: any) {
     this.zip = zip;
   }
+
+  setCountry(country: any) {
+    return this.country = country;
+  }
 }
 
 @Directive({
@@ -104,6 +124,8 @@ export class SamCountyServiceAutoDirective implements OnChanges{
   @Input() cityValCounty: any;
 
   @Input() zipValCounty: any;
+
+  @Input() countryValCounty: any;
 
   private autocompleteService: any;
 
@@ -139,6 +161,14 @@ export class SamCountyServiceAutoDirective implements OnChanges{
 
     else {
       this.autocompleteService.setZip('')
+    }
+
+    if (this.countryValCounty){
+      this.autocompleteService.setCountry(this.countryValCounty)
+    }
+
+    else {
+      this.autocompleteService.setCountry('')
     }
     
   }

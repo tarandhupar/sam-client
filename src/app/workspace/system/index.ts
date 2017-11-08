@@ -1,3 +1,4 @@
+export { SecurityGuard } from './security.guard';
 export { SystemGuard } from './system.guard';
 
 export { SystemComponent } from './system.component';

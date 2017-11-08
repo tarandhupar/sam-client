@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
-import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
+import { OptionsType, IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import * as _ from "lodash";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
+import { SamAutocompleteComponent } from "sam-ui-elements/src/ui-kit/form-controls/autocomplete";
 import { Observable } from "rxjs";
-import { SamActionInterface } from "sam-ui-kit/components/actions";
+import { SamActionInterface } from "sam-ui-elements/src/ui-kit/components/actions";
 import { get as getProp } from 'lodash';
 import { AgencyPickerV2Component } from "../../app-components/agency-picker-v2/agency-picker-v2.component";
 

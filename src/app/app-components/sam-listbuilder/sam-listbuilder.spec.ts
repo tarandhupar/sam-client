@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule,FormBuilder }  from "@angular/forms";
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamListBuilderComponent } from './sam-listbuilder.component';
 import { SamListBuilderCardComponent } from './sam-listbuilder-card.component';
 import { SamListBuilderActionComponent } from './sam-listbuilder-action.component';

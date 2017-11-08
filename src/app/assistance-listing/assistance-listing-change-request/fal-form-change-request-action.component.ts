@@ -8,7 +8,7 @@ import {ProgramService} from "../../../api-kit/program/program.service";
 import {falCustomValidatorsComponent} from "../validators/assistance-listing-validators";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
-import {IBreadcrumb} from "sam-ui-kit/types";
+import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
 
 
 enum ChangeRequestActionPermissionType {

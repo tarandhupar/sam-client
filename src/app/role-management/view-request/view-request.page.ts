@@ -1,28 +1,37 @@
 import { Component,ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { SamModalComponent } from "sam-ui-kit/components/modal";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components/modal";
+import { HistoryNodeType,IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { Location } from "@angular/common";
+import { ShortDatePipe } from "../../app-pipes/short-date.pipe";
 
 @Component({
   templateUrl: 'view-request.template.html',
+  providers: [ShortDatePipe]
 })
 export class ViewRequestPage {
   request: any;
   rawRequest: any;
   comment: string = '';
   errors = { comment: '' };
-  @ViewChild('deleteRoleModal') deleteRoleModal: SamModalComponent;
+  @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
-  private myCrumbs: Array<IBreadcrumb> = [];
+  myCrumbs: Array<IBreadcrumb> = [
+    { url: '/workspace', breadcrumb: 'Workspace' },
+    { url: '/workspace/myfeed/requests', breadcrumb: 'Requests', queryParams: {statIds: 1, reqIds: 1}},
+    { breadcrumb: 'Role Request' },
+  ];
+
+  historyNodes: Array<HistoryNodeType> = [];
 
   constructor(
     private route: ActivatedRoute,
     private userAccessService: UserAccessService,
     private router: Router,
     private alertFooter: AlertFooterService,
+    private shortDate: ShortDatePipe,
     private location: Location,
   ) {
     let req = this.route.snapshot.data['request'];
@@ -43,16 +52,18 @@ export class ViewRequestPage {
   }
 
   parseRequest(req) {
+    const statusString = this.initialCaps(req.status.val);
     this.request = {
       createdDate: req.createdDate,
       updatedDate: req.updatedDate,
+      updatedBy: req.updatedBy,
       user: req.requestorName,
       organization: req.organization.val,
       role: req.role.val,
       domains: req.domain.val,
       supervisorName: req.supervisorName,
       supervisorEmail: req.supervisorEmail,
-      status: req.status.val,
+      status: statusString,
       links: req._links,
       id: req.id,
       comments: []
@@ -73,23 +84,34 @@ export class ViewRequestPage {
     }
 
     let uName = req.requestorName;
-    this.myCrumbs = [
-      { url: '/workspace', breadcrumb: 'Workspace' },
-      { url: '/role-management/roles-directory', breadcrumb: 'Role Directory'},
-      { url: this.userRolesUrl(), breadcrumb: uName},
-      { breadcrumb: 'Role Request' },
-    ];
+
+    if (req.createdDate) {
+      const nodeCreated: HistoryNodeType = {
+        id: 'created',
+        date: this.shortDate.transform(req.createdDate),
+        description: '<em>Status: Pending</em>',
+      };
+      this.historyNodes = [nodeCreated];
+
+      if (req.updatedDate) {
+        const nodeUpdated: HistoryNodeType = {
+          id: 'updated',
+          date: this.shortDate.transform(req.updatedDate),
+          description: `<em>Status: ${statusString}</em>`
+        };
+        this.historyNodes.unshift(nodeUpdated);
+      }
+    }
   }
 
-  onDeleteClick(){
-    this.deleteRoleModal.openModal();
-  }
-
-  onDeleteConfirm() {
-    this.userAccessService.updateRequest(this.request.id,{status: 'cancel'}).subscribe(res => {
-      this.deleteRoleModal.closeModal();
-      this.router.navigate(['/profile', 'access']);
-    });
+  initialCaps(s) {
+    if (!s || !s.length) {
+      return '';
+    }
+    if (s.length === 1) {
+      return s[0].toUpperCase();
+    }
+    return s[0].toUpperCase() + s.slice(1).toLowerCase();
   }
 
   assignRolesUrl() {
@@ -109,8 +131,13 @@ export class ViewRequestPage {
     };
   }
 
-  onCancelClick() {
-   this.setRequestStatus('cancel');
+  onDeleteClick() {
+    this.deleteModal.openModal();
+  }
+
+  onDeleteConfirm() {
+    this.setRequestStatus('cancel');
+
   }
 
   onRejectClick() {
@@ -123,6 +150,10 @@ export class ViewRequestPage {
     this.setRequestStatus('rejected');
   }
 
+  isCanceled(req) {
+    return req.status === 'Canceled';
+  }
+
   setRequestStatus(status) {
     let newStatus = {
       status: status,
@@ -131,7 +162,12 @@ export class ViewRequestPage {
 
     this.userAccessService.updateRequest(this.rawRequest.id, newStatus).subscribe(
       () => {
-        let verb = 'status' === 'rejected' ? 'rejected' : 'canceled';
+        let verb;
+        switch (status) {
+          case 'cancel': verb = 'canceled'; break;
+          case 'rejected': verb = 'rejected'; break;
+          default: verb = 'updated'; break;
+        }
         this.alertFooter.registerFooterAlert({
           title: 'Success',
           description: `The request was ${verb}.`,

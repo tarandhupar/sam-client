@@ -1029,6 +1029,7 @@ export class FALFormErrorService {
       for (let i = 0; i < deadlineList.length; i++) {
         let deadlineItem = deadlineList[i];
         let startDateM, endDateM: any;
+        let isStartDateValid: boolean;
 
         let deadlineError = {
           id: FALFieldNames.DEADLINES_LIST + i,
@@ -1039,10 +1040,13 @@ export class FALFormErrorService {
           deadlineError.errors['startDateError'] = {
             message: 'Deadlines: Row ' + (i + 1) + ' From Date is required'
           };
+          isStartDateValid = false;
         }
         else {
           startDateM = moment(deadlineItem.start);
-          if(!startDateM.isValid() || deadlineItem.start == "Invalid date") {
+          isStartDateValid = startDateM.isValid();
+
+          if(!isStartDateValid || deadlineItem.start == "Invalid date") {
             deadlineError.errors['startDateError'] = {
               message: 'Deadlines: Row ' + (i + 1) + ' Invalid From date'
             };
@@ -1067,7 +1071,7 @@ export class FALFormErrorService {
             };
           }
 
-          if(endDateM.isValid() && startDateM.isValid() && startDateM.get('year') >= 1000 && endDateM.get('year') >= 1000 && endDateM.diff(startDateM) < 0) {
+          if(endDateM.isValid() && isStartDateValid && startDateM.get('year') >= 1000 && endDateM.get('year') >= 1000 && endDateM.diff(startDateM) < 0) {
             deadlineError.errors['dateRangeError'] = {
               message: 'Deadlines: Row ' + (i + 1) + ' Invalid date range'
             };

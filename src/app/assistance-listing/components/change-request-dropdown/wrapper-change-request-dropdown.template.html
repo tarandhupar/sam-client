@@ -6,13 +6,13 @@
   [ngClass]="{'disabled': disabled}"
   style="font-weight: 600;" >
   {{defaultOption}}
-  <i class="dropdown icon fa fa-caret-down" aria-hidden="true"></i>
+  <em class="dropdown icon fa fa-caret-down" aria-hidden="true"></em>
 </a>
 <a *ngIf="!displayDropdown"
   class="sam-ui item disabled"
   style="font-weight: 600;" >
   {{defaultOption}}
-  <i class="dropdown icon fa fa-caret-down" aria-hidden="true"></i>
+  <em class="dropdown icon fa fa-caret-down" aria-hidden="true"></em>
 </a>
 <div [@dropdown]="'in'" *ngIf="openDropdown" class="workspace-dropdown">
   <ng-container *ngFor="let option of renderOptions">

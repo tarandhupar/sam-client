@@ -10,6 +10,7 @@ import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
 import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
 import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
 import * as Cookies from 'js-cookie';
+import * as _ from 'lodash';
 import {SavedSearchService} from "../../api-kit/search/saved-search.service";
 
 
@@ -69,7 +70,7 @@ export class SearchPage implements OnInit {
   agencyPickerModel = [];
   showSavedSearches: boolean = false;
   searchName: string = "";
-  fboDateFilterModel;
+  oppDateFilterModel;
   cfdaDateFilterModel;
   wdDateFilterModel;
   fpdsDateFilterModel;
@@ -101,7 +102,7 @@ export class SearchPage implements OnInit {
         }
       }
     ];
-    fboDateRangeConfig = [
+    oppDateRangeConfig = [
       {title: 'Modified',
         dateFilterConfig: {
             options: this.defaultDateOptions,
@@ -123,7 +124,7 @@ export class SearchPage implements OnInit {
     }
     ];
     wdDateRangeConfig = [
-      {title: 'Modified',
+      {title: 'Modified/Revised',
       dateFilterConfig: {
           options: this.defaultDateOptions,
           radSelection: 'date'
@@ -551,7 +552,7 @@ export class SearchPage implements OnInit {
   };
 
   regionalType = {
-    "placeholder": "Regional Agency Location",
+    "placeholder": "Regional Assistance Location",
     "addOnIconClass": "fa fa-search"
   };
 
@@ -638,7 +639,7 @@ export class SearchPage implements OnInit {
     }
 
 
-    if (window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0) {
+    if (window.location.pathname.localeCompare("/search/fal/regionalAssistanceLocations") === 0) {
       this.showRegionalOffices = true;
     } else {
       this.showRegionalOffices = false;
@@ -677,7 +678,7 @@ export class SearchPage implements OnInit {
         this.sortModel = typeof data['sort'] === "string" ? this.setSortModel(decodeURI(data['sort'])) : this.defaultSortModel;
         this.noticeTypeModel = data['notice_type'] && data['notice_type'] !== null ? data['notice_type'] : '';
         this.setAsideModel = data['set_aside'] && data['set_aside'] !== null ? data['set_aside'] : '';
-        this.fboDateFilterModel = data['fbo_date_filter_model'] && data['fbo_date_filter_model'] !== null ? JSON.parse(data['fbo_date_filter_model']) : [];
+        this.oppDateFilterModel = data['opp_date_filter_model'] && data['opp_date_filter_model'] !== null ? JSON.parse(data['opp_date_filter_model']) : [];
         this.cfdaDateFilterModel = data['cfda_date_filter_model'] && data['cfda_date_filter_model'] !== null ? JSON.parse(data['cfda_date_filter_model']) : [];
         this.wdDateFilterModel = data['wd_date_filter_model'] && data['wd_date_filter_model'] !== null ? JSON.parse(data['wd_date_filter_model']) : [];
         this.fpdsDateFilterModel = data['fpds_date_filter_model'] && data['fpds_date_filter_model'] !== null ? JSON.parse(data['fpds_date_filter_model']) : [];
@@ -754,7 +755,7 @@ export class SearchPage implements OnInit {
         queryParams: qsobj
       };
       if (this.showRegionalOffices) {
-        this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+        this.router.navigate(['/search/fal/regionalAssistanceLocations'], navigationExtras);
       } else {
         this.router.navigate(['/search'], navigationExtras);
       }
@@ -848,7 +849,7 @@ export class SearchPage implements OnInit {
     //wd Non Standard radio button param
     if (this.wdNonStandardRadModel.length > 0) {
       qsobj['is_wd_even'] = this.wdNonStandardRadModel;
-      // this rad button determins isStandard as well
+      // this rad button determines isStandard as well
       qsobj["is_standard"] = this.isStandard;
     }
 
@@ -910,7 +911,7 @@ export class SearchPage implements OnInit {
     if (this.keywordsModel && this.keywordsModel.length > 0) {
       qsobj['keywords'] = this.keywordSplitter(this.keywordsModel);
       this.blankSearch = false;
-    } else{
+    } else {
       qsobj['keywords'] = '';
       this.blankSearch = true;
     }
@@ -923,19 +924,19 @@ export class SearchPage implements OnInit {
       qsobj['set_aside'] = this.setAsideModel;
     }
 
-    if (this.fboDateFilterModel && this. fboDateFilterModel.length > 0){
-      qsobj['fbo_date_filter_model'] = JSON.stringify(this.fboDateFilterModel);
+    if (this.oppDateFilterModel && !_.isEmpty(this.oppDateFilterModel)){
+      qsobj['opp_date_filter_model'] = JSON.stringify(this.oppDateFilterModel);
     }
 
-    if (this.cfdaDateFilterModel && this. cfdaDateFilterModel.length > 0){
+    if (this.cfdaDateFilterModel && !_.isEmpty(this.cfdaDateFilterModel)){
       qsobj['cfda_date_filter_model'] = JSON.stringify(this.cfdaDateFilterModel);
     }
 
-    if (this.wdDateFilterModel && this. wdDateFilterModel.length > 0){
+    if (this.wdDateFilterModel && !_.isEmpty(this.wdDateFilterModel)){
       qsobj['wd_date_filter_model'] = JSON.stringify(this.wdDateFilterModel);
     }
 
-    if (this.fpdsDateFilterModel && this. fpdsDateFilterModel.length > 0){
+    if (this.fpdsDateFilterModel && !_.isEmpty(this.fpdsDateFilterModel)){
       qsobj['fpds_date_filter_model'] = JSON.stringify(this.fpdsDateFilterModel);
     }
 
@@ -1236,7 +1237,7 @@ export class SearchPage implements OnInit {
 
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     if (this.showRegionalOffices) {
-      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+      this.router.navigate(['/search/fal/regionalAssistanceLocations'], navigationExtras);
     } else {
       this.router.navigate(['/search'], navigationExtras);
     }
@@ -1383,12 +1384,9 @@ export class SearchPage implements OnInit {
     else if (this.wdNonStandardRadModel === 'true' || this.wdNonStandardRadModel === 'false') {
       this.isStandard = 'true';
     }
-    else {
-      this.isStandard = '';
-    }
 
     // show end of filters notification
-    if (this.wdNonStandardRadModel) {
+    if (this.wdNonStandardRadModel !== 'yesNSS' || (this.wdNonStandardRadModel === 'yesNSS' && this.wdNonStandardSelectModel !== '')) {
       if (this.alertFooterService.getAlerts().length < 1) {
         // show end of filters notification
         this.alertFooterService.registerFooterAlert({
@@ -1411,22 +1409,9 @@ export class SearchPage implements OnInit {
       this.wdNonStandardSelectModel = this.wdNonStandardSelectObject ? this.wdNonStandardSelectObject.value : '';
     // if drop down selection made, auto-select yes rad button
     if (this.wdNonStandardSelectModel !== '') {
-      this.wdNonStandardRadModel = 'yesNSS';
+      this.wdNonStandardRadModel = 'yesNSS'
+      this.wdNonStandardRadChanged(this.wdNonStandardRadModel);
     }
-
-    // show end of filters notification
-    if (this.wdNonStandardSelectModel) {
-      // show end of filters notification
-      this.alertFooterService.registerFooterAlert({
-        title: "Search Criteria Complete",
-        description: "",
-        type: "success",
-        timer: 3000
-      });
-    }
-
-    this.pageNum = 0;
-    this.searchResultsRefresh();
   }
 
   //Award model change events
@@ -1500,7 +1485,7 @@ export class SearchPage implements OnInit {
       queryParams: qsobj
     };
     if (this.showRegionalOffices) {
-      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+      this.router.navigate(['/search/fal/regionalAssistanceLocations'], navigationExtras);
     } else {
       this.router.navigate(['/search'], navigationExtras);
     }
@@ -1616,10 +1601,11 @@ export class SearchPage implements OnInit {
     // clear notice type filter
     this.noticeTypeModel = '';
 
-    this.fboDateFilterModel = [];
+    this.oppDateFilterModel = [];
     this.cfdaDateFilterModel = [];
     this.wdDateFilterModel = [];
     this.fpdsDateFilterModel = [];
+    this.dateFilterIndex = 0;
 
     this.disableAllDateFilter();
 
@@ -2031,8 +2017,7 @@ export class SearchPage implements OnInit {
     var tempModel = this.determineTempModel();
 
     // determine date radio button selection
-    this.dateRadSelection = tempModel[this.dateFilterIndex] && tempModel[this.dateFilterIndex].hasOwnProperty('dateRange') ? 'dateRange' : 'date';
-
+    this.dateRadSelection = tempModel && tempModel.hasOwnProperty('dateRange') ? 'dateRange' : 'date';
     // set rad selection in the appropriate config object to persist rad selection
     this.resetRadSelection();
     this.pageNum = 0;
@@ -2040,10 +2025,11 @@ export class SearchPage implements OnInit {
   }
 
   filterClearHandler(evt){
-    this.fboDateFilterModel = [];
-    this.cfdaDateFilterModel = [];
-    this.wdDateFilterModel = [];
-    this.fpdsDateFilterModel = [];
+    this.oppDateFilterModel = {};
+    this.cfdaDateFilterModel = {};
+    this.wdDateFilterModel = {};
+    this.fpdsDateFilterModel = {};
+    this.dateFilterIndex = 0;
     this.disableAllDateFilter();
 
     this.pageNum = 0;
@@ -2057,15 +2043,15 @@ export class SearchPage implements OnInit {
     var tempMap = this.determineTempMap();
 
     // check passed param against tempmap[index] to see if they match if they do continue check if not return ""
-    if(tempModel && tempModel.length > 0){
+    if(tempModel && !_.isEmpty(tempModel)){
       if(tempMap){
         // checking if selected date-type matches -- if it doesn't we will return nothing (we only want to send dates to the backend for currently selected tab)
         if(tempMap.get(this.dateFilterIndex) === param){
           // check passed 'type' against radSelection variable
           if(this.dateRadSelection === 'date' && type === 'date'){
             // build 'date' date if it exists in the model
-            if(tempModel.hasOwnProperty(this.dateFilterIndex) && tempModel[this.dateFilterIndex].hasOwnProperty('date')){
-              return tempModel[this.dateFilterIndex]['date'] + this.fetchFormattedTimeZoneOffset(tempModel[this.dateFilterIndex]['date'])
+            if(tempModel && tempModel.hasOwnProperty('date')){
+              return tempModel['date'] + this.fetchFormattedTimeZoneOffset(tempModel['date'])
             }
           }
           // if radio selection is dateRange then type should be from or to
@@ -2074,23 +2060,23 @@ export class SearchPage implements OnInit {
             if(this.index === 'opp' && this.dateFilterIndex === 2){
               // if type is 'from' build from date
               if(type === 'from'){
-                return tempModel[this.dateFilterIndex]['dateRange']['startDate'] + "T" + tempModel[this.dateFilterIndex]['dateRange']['startTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel[this.dateFilterIndex]['dateRange']['startDate']);
+                return tempModel['dateRange']['startDate'] + "T" + tempModel['dateRange']['startTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['startDate']);
               }
               // if type is 'to' build to date
               else if(type === 'to'){
-                return tempModel[this.dateFilterIndex]['dateRange']['endDate'] + "T" + tempModel[this.dateFilterIndex]['dateRange']['endTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel[this.dateFilterIndex]['dateRange']['endDate']);
+                return tempModel['dateRange']['endDate'] + "T" + tempModel['dateRange']['endTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['endDate']);
               }
             }
             // all other dates don't require time
             else{
               // if type is 'from' build from date
               if(type === 'from'){
-                return tempModel[this.dateFilterIndex]['dateRange']['startDate'] + this.fetchFormattedTimeZoneOffset(tempModel[this.dateFilterIndex]['dateRange']['startDate']);
+                return tempModel['dateRange']['startDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['startDate']);
               }
 
               // if type is 'to' build to date
               else if(type === 'to'){
-                return tempModel[this.dateFilterIndex]['dateRange']['endDate'] + this.fetchFormattedTimeZoneOffset(tempModel[this.dateFilterIndex]['dateRange']['endDate']);
+                return tempModel['dateRange']['endDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['endDate']);
               }
             }
           }
@@ -2135,7 +2121,7 @@ export class SearchPage implements OnInit {
     if(this.index === 'cfda'){
       this.cfdaDateRangeConfig[this.dateFilterIndex]['dateFilterConfig']['radSelection'] = this.dateRadSelection;
     }else if(this.index === 'opp'){
-      this.fboDateRangeConfig[this.dateFilterIndex]['dateFilterConfig']['radSelection'] = this.dateRadSelection;
+      this.oppDateRangeConfig[this.dateFilterIndex]['dateFilterConfig']['radSelection'] = this.dateRadSelection;
     }else if(this.index === 'wd'){
       this.wdDateRangeConfig[this.dateFilterIndex]['dateFilterConfig']['radSelection'] = this.dateRadSelection;
     }else if(this.index === 'fpds'){
@@ -2150,7 +2136,7 @@ export class SearchPage implements OnInit {
     if(this.index === 'cfda'){
       tempModel = this.cfdaDateFilterModel;
     }else if(this.index === 'opp'){
-      tempModel = this.fboDateFilterModel;
+      tempModel = this.oppDateFilterModel;
     }else if(this.index === 'wd'){
       tempModel = this.wdDateFilterModel;
     }else if(this.index === 'fpds'){
@@ -2166,7 +2152,7 @@ export class SearchPage implements OnInit {
     let cfdaStringMap = new Map()
     .set(0, "publish")
     .set(1, "modified");
-    let fboStringMap = new Map()
+    let oppStringMap = new Map()
     .set(0, "modified")
     .set(1, "publish")
     .set(2, "response");
@@ -2180,7 +2166,7 @@ export class SearchPage implements OnInit {
     if(this.index === 'cfda'){
       tempMap = cfdaStringMap;
     }else if(this.index === 'opp'){
-      tempMap = fboStringMap;
+      tempMap = oppStringMap;
     }else if(this.index === 'wd'){
       tempMap = wdStringMap;
     }else if(this.index === 'fpds'){
@@ -2192,19 +2178,19 @@ export class SearchPage implements OnInit {
   // this function determines if the appropriate filter button for the different dates should be disabled or not
   determineFilterDateDisable(evt){
     // check the state of the current date[index] thats all that matters
-    if(evt && evt[this.dateFilterIndex]){
+    if(evt){
       // if date range
-      if(evt[this.dateFilterIndex].hasOwnProperty('dateRange') && evt[this.dateFilterIndex]['dateRange'] !== undefined && evt[this.dateFilterIndex]['dateRange'] !== null){
+      if(evt.hasOwnProperty('dateRange') && evt['dateRange'] !== undefined && evt['dateRange'] !== null){
         // if date range has invalid date
-        if(evt[this.dateFilterIndex]['dateRange']['startDate'].toLowerCase() === 'invalid date' || evt[this.dateFilterIndex]['dateRange']['endDate'].toLowerCase() === 'invalid date'){
+        if(evt['dateRange']['startDate'].toLowerCase() === 'invalid date' || evt['dateRange']['endDate'].toLowerCase() === 'invalid date'){
           this.disableAppropriateFilter();
         }
         // if one of the date range dates was not filled out
-        else if(evt[this.dateFilterIndex]['dateRange']['startDate'] === '' || evt[this.dateFilterIndex]['dateRange']['endDate'] === ''){
+        else if(evt['dateRange']['startDate'] === '' || evt['dateRange']['endDate'] === ''){
           this.disableAppropriateFilter();
         }
         // if one of the date ranges doesn't have the full year
-        else if(evt[this.dateFilterIndex]['dateRange']['startDate'].substring(0,1) === '0' || evt[this.dateFilterIndex]['dateRange']['endDate'].substring(0,1) === '0'){
+        else if(evt['dateRange']['startDate'].substring(0,1) === '0' || evt['dateRange']['endDate'].substring(0,1) === '0'){
           this.disableAppropriateFilter();
         }
         else{
@@ -2212,13 +2198,13 @@ export class SearchPage implements OnInit {
         }
       }
       // if date
-      else if(evt[this.dateFilterIndex].hasOwnProperty('date') && evt[this.dateFilterIndex]['date'] !== undefined && evt[this.dateFilterIndex]['date'] !== null){
+      else if(evt.hasOwnProperty('date') && evt['date'] !== undefined && evt['date'] !== null){
         // invalid date
-        if(evt[this.dateFilterIndex]['date'].toLowerCase() === 'invalid date'){
+        if(evt['date'].toLowerCase() === 'invalid date'){
           this.disableAppropriateFilter();
         }
         // if date doesn't have full year
-        else if(evt[this.dateFilterIndex]['date'].substring(0,1) === '0'){
+        else if(evt['date'].substring(0,1) === '0'){
           this.disableAppropriateFilter();
         }else{
           this.enableAppropriateFilter();
@@ -2234,6 +2220,7 @@ export class SearchPage implements OnInit {
       this.disableAllDateFilter();
     }
   }
+
   // enables the date filter button for the current index sam-tab-date-range
   enableAppropriateFilter(){
     if(this.index === 'cfda'){

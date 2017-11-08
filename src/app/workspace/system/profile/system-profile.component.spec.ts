@@ -8,7 +8,7 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { merge } from 'lodash';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { SystemProfileComponent } from './system-profile.component';
 

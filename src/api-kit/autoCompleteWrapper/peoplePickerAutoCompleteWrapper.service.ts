@@ -1,7 +1,7 @@
 import { Injectable, Directive, Input, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { PeoplePickerService } from '../people-picker/people-picker.service';
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { Observable }    from 'rxjs/Observable';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class PeoplePickerAutoCompleteWrapper implements AutocompleteService{
       return this.oPeoplePickerService.getFilteredList({
           fle: val
       }).map(data => {
-        return data._embedded.userResources.map((value)=>{
+        return data.map((value)=>{
           return value.user;
         });
       });

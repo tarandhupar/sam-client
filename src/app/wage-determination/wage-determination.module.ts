@@ -5,7 +5,7 @@ import { WageDeterminationDocumentPage } from "./wage-determination-document.pag
 import { routing } from './wage-determination.route';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 
 

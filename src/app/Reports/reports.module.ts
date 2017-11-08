@@ -11,7 +11,7 @@ import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { AlertsModule } from '../alerts/alerts.module';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { IAMService } from 'api-kit';
 import { ReportsService } from 'api-kit';
 import { SamAPIKitModule } from 'api-kit';

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { routing } from './role-management.route';
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { SamAPIKitModule } from "../../api-kit/api-kit.module";
 import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";
 import { RoleDetailsPage } from "./role-details/role-details.page";

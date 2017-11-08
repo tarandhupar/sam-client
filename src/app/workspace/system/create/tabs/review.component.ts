@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { FHService } from 'api-kit';
 
+import { isArray, isString } from 'lodash';
 import * as moment from 'moment';
 
 @Component({
@@ -11,6 +12,7 @@ import * as moment from 'moment';
 })
 export class ReviewComponent {
   @Input() form: FormGroup;
+  @Input() editable: boolean = true;
   @Output() onEdit: EventEmitter<string> = new EventEmitter();
 
   private subscriptions = {};
@@ -69,19 +71,43 @@ export class ReviewComponent {
     }
   }
 
+  titleize(value: string) {
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.replace(word[0], word[0].toUpperCase()))
+      .join(' ');
+  }
+
+  unslugify(value: string) {
+    return value.replace(/-/g, ' ');
+  }
+
   field(key: Array<string|number>|string = '') {
-    let field = '';
+    let field = null,
+        pattern = /(contractOpportunities|contractData|entityInformation|fips199Categorization)/,
+        control;
 
     if(this.form.get(key)) {
-      if(typeof key == 'string' && key.match(/authorizationDate/i)) {
-        if(moment(this.form.get(key).value)) {
-          field = moment(this.form.get(key).value).format('MMM D, h:mm a')
-        } else {
-          field = '';
+      control = this.form.get(key);
+
+      if(control.value) {
+        field = control.value;
+
+        if(typeof key == 'string' && key.match(/authorizationDate/i)) {
+          if(moment(field).isValid()) {
+            field = moment(field).format('MMM D, h:mm a')
+          }
+        } else if(typeof key == 'string' && key.match(pattern)) {
+          if(isArray(field)) {
+            field = field.map(value => this.titleize(this.unslugify(value)));
+          } else {
+            field = this.titleize(field);
+          }
         }
-      } else {
-        field = this.form.get(key).value || '';
       }
+
+      field = field || '';
     }
 
     return field;

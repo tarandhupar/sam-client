@@ -2,7 +2,7 @@ import { Injectable, Directive, Input, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { FHService } from '../fh/fh.service';
 import { SuggestionsService } from '../search/suggestions.service';
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { Observable }    from 'rxjs/Observable';
 
 @Injectable()

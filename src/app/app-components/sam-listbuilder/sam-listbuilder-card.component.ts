@@ -1,8 +1,8 @@
 import { ChangeDetectorRef,Component,ViewChild,ViewChildren,ContentChild, Input, Output, EventEmitter,forwardRef,TemplateRef } from "@angular/core";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR,AbstractControl,FormControl,ValidatorFn } from "@angular/forms"
-import { OptionsType } from 'sam-ui-kit/types';
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types';
 import { FormBuilder,FormGroup,FormArray } from '@angular/forms';
-import { SamModalComponent } from 'sam-ui-kit/components/modal/modal.component';
+import { SamModalComponent } from 'sam-ui-elements/src/ui-kit/components/modal/modal.component';
 import * as _ from 'lodash';
 
 @Component ({

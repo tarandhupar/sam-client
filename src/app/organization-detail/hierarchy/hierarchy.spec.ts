@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Load the implementations that should be tested
 import { OrgHierarchyPage } from "./hierarchy.component";
 import { AppComponentsModule } from "../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHService } from "api-kit/fh/fh.service";

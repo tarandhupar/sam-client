@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SamAPIKitModule } from 'api-kit';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 import { AppComponentsModule } from '..//app-components/app-components.module';
 import { PipesModule } from '../app-pipes/app-pipes.module';

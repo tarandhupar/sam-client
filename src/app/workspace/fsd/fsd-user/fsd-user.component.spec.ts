@@ -7,7 +7,7 @@ import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { FSDUserComponent } from './fsd-user.component';
 
 import { FHService } from 'api-kit';

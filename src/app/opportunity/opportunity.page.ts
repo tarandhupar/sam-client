@@ -10,7 +10,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
-import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
 import { FilesizePipe } from "./pipes/filesize.pipe";

@@ -14,7 +14,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
 import {RouterTestingModule} from "@angular/router/testing";
@@ -392,7 +392,7 @@ let MockProgramService = {
     "archived": false,
     "_links": {
       "self": {
-        "href": "/programs/677d60d2d329d827b666946673f76aaf/view"
+        "href": "/fal/677d60d2d329d827b666946673f76aaf/view"
       }
     },
     "id": "3077ea1df409265fb4378e0e844b8811"

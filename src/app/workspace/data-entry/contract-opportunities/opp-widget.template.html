@@ -3,8 +3,8 @@
         <div class="column">
             <div class="sam-ui divided selection list">
                 <ng-container>
-                    <a *ngIf="oppCounts.active" class="item" 
-                        [routerLink]="['/opp/workspace']" 
+                    <a *ngIf="oppCounts.active" class="item"
+                        [routerLink]="['/opp/workspace']"
                         [queryParams]="{status: 'published'}">
                             <div class="sam-ui blue horizontal mini label">{{oppCounts.active}}</div>
                             My Active Opportunities
@@ -15,8 +15,8 @@
                     </a>
                 </ng-container>
                 <ng-container>
-                    <a *ngIf="oppCounts.draft" class="item" 
-                        [routerLink]="['/opp/workspace']" 
+                    <a *ngIf="oppCounts.draft" class="item"
+                        [routerLink]="['/opp/workspace']"
                         [queryParams]="{status: 'draft'}">
                             <div class="sam-ui horizontal mini label">{{oppCounts.draft}}</div>
                             My Draft Opportunities
@@ -28,12 +28,12 @@
                 </ng-container>
             </div>
         </div>
-        <div class="column">    
+        <div class="column">
             <div class="sam-ui divided selection relaxed list">
                 <a
-                    class="item" 
+                    class="item"
                     [routerLink]="['/opp/add']">
-                    <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+                    <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
                     Create a New Opportunity
                 </a>
             </div>
@@ -41,6 +41,6 @@
         <div class="column">
             <opp-pie-chart #pieChart [deadlineStatusData]='chartCounts'></opp-pie-chart>
         </div>
-        
+
     </div>
 </ng-container>

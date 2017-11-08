@@ -1,3 +1,6 @@
+export { BadgeConfig } from './components/badge';
+export { PageConfig } from './layout/types';
+
 export interface OptionsType {
   /**
    * The model value
@@ -63,7 +66,7 @@ export interface HistoryNodeType {
   /**
    * Title value for node
    */
-  title: string;
+  title?: string;
   /**
    * Optional description for node
    */
@@ -244,6 +247,7 @@ export interface IBreadcrumb {
   url?: string;
   urlmock?: boolean;
   breadcrumb: string;
+  queryParams?: object;
 }
 
 export interface NameEntryType{

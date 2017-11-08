@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Comment, CommentsService } from 'sam-ui-kit/components/comments';
+import { Comment, CommentsService } from 'sam-ui-elements/src/ui-kit/components/comments';
 
 export { CommentsService }; 
 

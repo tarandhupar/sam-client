@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from "@angular/forms";
 import { RoleDetailsPage } from "./role-details.page";
 import { PermissionSelectorComponent } from "../permission-selector/permission-selector";
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { RouterTestingModule } from "@angular/router/testing";
 import { UserAccessMock } from "../../../api-kit/access/access.service.mock";
 import { UserAccessService } from "../../../api-kit/access/access.service";

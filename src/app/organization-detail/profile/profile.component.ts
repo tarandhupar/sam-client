@@ -46,6 +46,7 @@ export class OrgDetailProfilePage {
   dodHierarchy = ["Dept/Ind Agency", "Sub-Tier", "Maj Command", "Sub-Command 1", "Sub-Command 2","Sub-Command 3", "Office"];
   adminTypeMap = {"Dept/Ind Agency":"Department", "Sub-Tier":"Agency", "Maj Command":"Office", "Sub-Command 1":"Office", "Sub-Command 2":"Office","Sub-Command 3":"Office", "Office":"Office"};
   createTypeMap = {"Dept/Ind Agency":"Department", "Sub-Tier":"Agency", "Maj Command":"MajCommand", "Sub-Command 1":"SubCommand", "Sub-Command 2":"SubCommand","Sub-Command 3":"SubCommand", "Office":"Office"};
+  editTypeMap = {"Dept/Ind Agency":"Department", "Sub-Tier":"AGENCY", "Office":"Office", "Maj Command":"Major Command", "Sub-Command 1":"Sub Command", "Sub-Command 2":"Sub Command","Sub-Command 3":"Sub Command"};
 
   selectConfig = {
     options:[],
@@ -114,7 +115,7 @@ export class OrgDetailProfilePage {
     if(hierarchyName !== this.hierarchyPath[this.hierarchyPath.length - 1]){
       // make API call to get selected organization detail
       this.getOrgDetail(this.hierarchyPathMap[hierarchyName]);
-      this._router.navigate(["/organization-detail",this.hierarchyPathMap[hierarchyName],"profile"]);
+      this._router.navigate(["org/detail",this.hierarchyPathMap[hierarchyName],"profile"]);
     }
   }
 
@@ -165,6 +166,7 @@ export class OrgDetailProfilePage {
   }
 
   updateOrganization(updatedOrgObj){
+    updatedOrgObj['type'] = this.editTypeMap[this.orgObj['type']];
     this.fhService.updateOrganization(updatedOrgObj).subscribe(
       val => {
         this.getOrgDetail(this.orgId);
@@ -416,7 +418,7 @@ export class OrgDetailProfilePage {
     let navigationExtras: NavigationExtras = {
       queryParams: { parentID: this.orgId, orgType: val},
     };
-    this._router.navigate(["/create-organization"],navigationExtras);
+    this._router.navigate(["org/create"],navigationExtras);
   }
 
   capitalizeFirstLetter(str:string):string {

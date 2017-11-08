@@ -19,10 +19,10 @@
       </div>
       <ul class="usa-sidenav-list m_B-3x">
         <li class="m_B-3x"><h3>{{orgName}}</h3></li>
-        <li><a [ngClass]="getSectionClass('profile')" [routerLink]="['/organization-detail',orgId,'profile']" (click)="selectCurrentSection('profile')">Profile</a></li>
-        <li *ngIf="orgType.toLowerCase() !== 'office'"><a [ngClass]="getSectionClass('hierarchy')" [routerLink]="['/organization-detail',orgId,'hierarchy']" (click)="selectCurrentSection('hierarchy')">Hierarchy</a></li>
+        <li><a [ngClass]="getSectionClass('profile')" [routerLink]="['/org/detail',orgId,'profile']" (click)="selectCurrentSection('profile')">Profile</a></li>
+        <li *ngIf="orgType.toLowerCase() !== 'office'"><a [ngClass]="getSectionClass('hierarchy')" [routerLink]="['/org/detail',orgId,'hierarchy']" (click)="selectCurrentSection('hierarchy')">Hierarchy</a></li>
         <!--<li><a [ngClass]="getSectionClass('access')" (click)="selectCurrentSection('access')">Access</a></li>-->
-        <li *ngIf="isMoveOffice()"><a [ngClass]="getSectionClass('move')" [routerLink]="['/organization-detail',orgId,'move']" (click)="selectCurrentSection('move')">Move Office</a></li>
+        <li *ngIf="isMoveOffice()"><a [ngClass]="getSectionClass('move')" [routerLink]="['/org/detail',orgId,'move']" (click)="selectCurrentSection('move')">Move Office</a></li>
         <!--<li><a [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')">Administration</a></li>-->
       </ul>
       <sam-collapsible [label]="'Status'" [startOpened]="true" *ngIf="currentSection === 'hierarchy'">

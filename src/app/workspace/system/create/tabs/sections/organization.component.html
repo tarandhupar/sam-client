@@ -1,26 +1,32 @@
 <div [formGroup]="form">
-  <sam-agency-picker [label]="label('organization')"
-                     [hint]="hint('organization')"
-                     [required]="true"
-                     [advancedMode]="true"
-                     [multimode]="false"
-                     [orgRoot]="user.departmentID"
-                     [initial]="selected"
-                     [searchMessage]="errors('organization')"
-                     [formControl]="organization"
-                     (orgFullPath)="setHierarchy($event)"
-                     *ngIf="user">
-  </sam-agency-picker>
+  <div class="sam-ui segment">
+    <sam-agency-picker [label]="label('organization')"
+                       [hint]="hint('organization')"
+                       [required]="true"
+                       [advancedMode]="true"
+                       [multimode]="false"
+                       [orgRoot]="user.departmentID"
+                       [initial]="selected"
+                       [searchMessage]="errors('organization')"
+                       [formControl]="organization"
+                       (orgFullPath)="setHierarchy($event)"
+                       *ngIf="user">
+    </sam-agency-picker>
+  </div>
 
-  <sam-autocomplete-multiselect [label]="label('systemAdmins')"
-                                [hint]="hint('systemAdmins')"
-                                [keyValueConfig]="configs.systemAdmins"
-                                formControlName="systemAdmins"
-                                peoplepicker-autofill></sam-autocomplete-multiselect>
+  <div class="sam-ui segment">
+    <sam-autocomplete-multiselect [label]="label('systemAdmins')"
+                                  [hint]="hint('systemAdmins')"
+                                  [keyValueConfig]="configs.systemAdmins"
+                                  formControlName="systemAdmins"
+                                  peoplepicker-autofill></sam-autocomplete-multiselect>
+  </div>
 
-  <sam-autocomplete-multiselect [label]="label('systemManagers')"
-                                [hint]="hint('systemManagers')"
-                                [keyValueConfig]="configs.systemManagers"
-                                formControlName="systemManagers"
-                                peoplepicker-autofill></sam-autocomplete-multiselect>
+  <div class="sam-ui segment">
+    <sam-autocomplete-multiselect [label]="label('systemManagers')"
+                                  [hint]="hint('systemManagers')"
+                                  [keyValueConfig]="configs.systemManagers"
+                                  formControlName="systemManagers"
+                                  peoplepicker-autofill></sam-autocomplete-multiselect>
+  </div>
 </div>

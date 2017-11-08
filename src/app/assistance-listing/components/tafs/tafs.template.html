@@ -89,15 +89,15 @@
         <td>
           <ng-container *ngIf="!isEditing">
             <a class="fal-table-edit" (click)="editTafs(i)">Edit</a>
-            <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editTafs(i)"></i>
+            <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editTafs(i)"></em>
             <a class="fal-table-delete" (click)="onDeleteClick(i)">Delete</a>
-            <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="onDeleteClick(i)"></i>
+            <em class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="onDeleteClick(i)"></em>
           </ng-container>
           <ng-container *ngIf="isEditing">
             <span class="fal-table-edit disabled">Edit</span>
-            <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+            <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
             <span class="fal-table-delete disabled">Delete</span>
-            <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+            <em class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></em>
           </ng-container>
         </td>
       </tr>

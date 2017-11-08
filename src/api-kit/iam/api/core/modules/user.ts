@@ -225,6 +225,7 @@ export const user = {
     auth: isDebug(),
     fsd: isDebug(),
     system: isDebug(),
+    security: isDebug(),
   },
 
   get($success, $error) {
@@ -399,5 +400,14 @@ export const user = {
       const user = new User(User.getCache() || {});
       return this.isSignedIn() && user.systemAccount ? true : false;
     }
-  }
+  },
+
+  isSecurityApprover() {
+    if(isDebug()) {
+      return this.states.security;
+    } else {
+      const user = new User(User.getCache() || {});
+      return this.isSignedIn() && user.systemApprover ? true : false;
+    }
+  },
 };

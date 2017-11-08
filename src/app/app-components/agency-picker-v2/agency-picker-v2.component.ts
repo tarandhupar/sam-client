@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { FHService, IAMService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR,AbstractControl } from '@angular/forms';
 import { DpmtSelectConfig, AgencySelectConfig, OfficeSelectConfig } from './configs';
-import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
 import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
 import adminLevel from "app/role-management/admin-level";
 import * as _ from 'lodash';
@@ -200,6 +200,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         }
       this.serviceOptions['activeOnly'] = this.activeOnly;
       this.singleACConfig['activeOnly'] = this.activeOnly;
+      this.serviceOptions['hasFpds'] = this.hasFpds;
     }
 
     ngAfterViewInit(){
@@ -268,6 +269,11 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 let orgOption = this.orgLevels[idx].options.find((item)=>{
                     return item.value == selection;
                 });
+                if(this.hasFpds && (orgOption['name'].indexOf('[') < 1)){
+                    let fpdsCode = orgOption['fpdsCode'] || orgOption['fpdsOrgId'] || 'N/A';
+                    let department = orgOption['type'] ? orgOption['type'].charAt(0) : 'N/A';
+                    orgOption['name'] = orgOption['name'] + ' [' + department + '] [' + fpdsCode +']';
+                }
                 selectedOrgs.push(orgOption);
             }
         }
@@ -331,7 +337,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             if(this.hasFpds){
                 let fpdsCode = org['fpdsCode'] || org['fpdsOrgId'] || 'N/A';
                 let department = org['type'] ? org['type'].charAt(0) : 'N/A';
-                org["label"] = this.fhTitleCasePipe.transform(org["name"]) + ' [' + department + '] [' + fpdsCode +']';;
+                org["label"] = this.fhTitleCasePipe.transform(org["name"]) + ' [' + department + '] [' + fpdsCode +']';
             } else {
                 org["label"] = this.fhTitleCasePipe.transform(org["name"]);
             }

@@ -81,11 +81,6 @@ module.exports = {
     // Make sure root is src
     root: helpers.root('src'),
 
-    // aliases
-    alias: {
-      "sam-ui-kit": helpers.root('src/sam-ui-elements/src/ui-kit')
-    },
-
     // remove other default values
     modulesDirectories: ['node_modules','app']
 
@@ -98,6 +93,11 @@ module.exports = {
    */
   module: {
 
+    noParse: [
+
+      /aws-sdk/
+
+    ],
     /*
      * An array of applied pre and post loaders.
      *

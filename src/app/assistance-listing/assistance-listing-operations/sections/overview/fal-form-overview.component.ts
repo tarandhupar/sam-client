@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } fro
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
-import { AutocompleteConfig } from "sam-ui-kit/types";
+import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
 import {
   FiscalYearTableConfig
 } from "../../../components/fiscal-year-table/fiscal-year-table.component";

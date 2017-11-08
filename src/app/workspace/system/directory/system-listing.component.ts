@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { FHService, IAMService } from 'api-kit';
 
-import { SamActionInterface } from 'sam-ui-kit/components/actions';
+import { SamActionInterface } from 'sam-ui-elements/src/ui-kit/components/actions';
 import { CWSApplication, System } from 'api-kit/iam/interfaces';
 
 import { isNull, merge, omitBy } from 'lodash';
@@ -52,8 +52,8 @@ export class SystemListingComponent {
   private statuses = {
     'Draft': { label: 'Draft', class: '' },
     'Pending Approval': { label: 'Pending Approval', class: '' },
-    'Approved': { label: 'Published', class: '' },
-    'Rejected': { label: 'Rejected', class: '' },
+    'approved': { label: 'Published', class: '' },
+    'rejected': { label: 'Rejected', class: '' },
   };
 
   private actions: Array<SamActionInterface> = [
@@ -107,7 +107,7 @@ export class SystemListingComponent {
         id: account._id,
         name: account.systemName,
         description: account.systemDescription,
-        status: 'Approved',
+        status: 'approved',
         gov: account.department ? true : false,
       }, isNull));
 

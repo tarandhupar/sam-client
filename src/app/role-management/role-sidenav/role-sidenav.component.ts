@@ -1,9 +1,11 @@
 import { Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { PropertyCollector } from "../../app-utils/property-collector";
+import { uniq } from 'lodash';
 
 @Component({
   selector : 'role-sidenav',
@@ -24,24 +26,6 @@ export class RoleSideNav implements OnInit{
     domainList : any;
     domains : any;
     path: 'roles'|'objects' = 'roles';
-
-
-    private filters = {
-      domains: { options: [ ], value: [] },
-    };
-
-    private crumbs: Array<IBreadcrumb> = [
-      { url: '/workspace', breadcrumb: 'Workspace' },
-      { breadcrumb: 'Definitions' }
-    ];
-
-    ngOnInit() {
-      this.determinePath();
-      this.domainList = this.route.parent.snapshot.data['domains']._embedded.domainList;
-      this.filters.domains.options = this.domainList.map((e) => { return this.mapLabelAndName(e) });
-      this.domains = this.domainList.map((e) => { return this.mapLabel(e) });
-    }
-
     accordionHeading1 = "Role Management Definitions";
     accordionName1 = "Role Management Definitions Filter";
 
@@ -58,6 +42,23 @@ export class RoleSideNav implements OnInit{
 
     newDomain = '';
     textErrorMessage = '';
+
+    private filters = {
+      domains: { options: [ ], value: [] },
+    };
+
+    private crumbs: Array<IBreadcrumb> = [
+      { url: '/workspace', breadcrumb: 'Workspace' },
+      { breadcrumb: 'Definitions' }
+    ];
+
+    ngOnInit() {
+      this.determinePath();
+      this.role.getDomains().subscribe(res => {
+        const doms = res._embedded.domainList;
+        this.filters.domains.options = doms.map((e) => { return this.mapLabelAndName(e) });
+      });
+    }
 
     ChangeRoute(value){
       if(value === "roles"){

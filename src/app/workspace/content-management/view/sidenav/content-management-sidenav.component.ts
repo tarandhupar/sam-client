@@ -73,8 +73,14 @@ export class HelpContentManagementSideNavComponent{
   }
 
   loadFilterData(){
-    this.msgFeedService.getFilters('3').subscribe(data =>{
-      if(data['domainTypes']) this.loadDomains(data['domainTypes']);
+    this.msgFeedService.getDomains().subscribe(data =>{
+      try{
+        if(data._embedded['domainList'] && data._embedded['domainList'].length > 0)
+          this.loadDomains(data._embedded['domainList']);
+
+      }catch (error){
+        console.log(error);
+      }
     });
   }
 

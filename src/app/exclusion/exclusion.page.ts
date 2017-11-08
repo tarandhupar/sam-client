@@ -6,7 +6,7 @@ import { ExclusionService, FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
 import {CapitalizePipe} from "../app-pipes/capitalize.pipe";
 import { BackToSearch } from "../app-utils/back-to-search-helper";
-import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import { SidenavHelper } from "../app-utils/sidenav-helper";
 import { LocationService } from 'api-kit/location/location.service';
 import * as _ from 'lodash';

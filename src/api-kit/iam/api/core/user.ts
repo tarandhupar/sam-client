@@ -22,7 +22,7 @@ const ROLE_MAPPINGS = {
   ],
 
   systemApprover: [
-    //TODO
+    'security.approver',
   ],
 
   fsd: [
@@ -55,24 +55,6 @@ export class User {
   constructor(params) {
     params = params || {};
     this.set(this.reverseMappings(params));
-
-    //--> Temporary Role Set
-    let search;
-    const accounts = [
-      'kristin.wight@gsa.gov',
-      'salomeh.ghorbani@gsa.gov',
-      'raymond.vargas@gsa.gov',
-      'alexander.dick@gsa.gov',
-      'kevin.chiu@gsa.gov',
-      'samba.boppudi@gsa.gov'
-    ];
-
-    search = accounts.filter(account => (this.email == account));
-
-    if(search.length) {
-      this.systemApprover = true;
-    }
-    //--> Temporay Role Set
   }
 
   set(user) {

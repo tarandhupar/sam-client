@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import {SamFALTextComponent} from "./fal-text.component";
-import {LabelWrapper} from "../../../../sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component";
+import {LabelWrapper} from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component";
 
 describe('The Sam Text component', () => {
   let component: SamFALTextComponent;

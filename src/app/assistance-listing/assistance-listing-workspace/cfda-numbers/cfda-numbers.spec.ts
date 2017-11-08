@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CfdaNumbersPage} from "./cfda-numbers.page";
 import {ProgramService} from "../../../../api-kit/program/program.service";
-import {IBreadcrumb} from "../../../../sam-ui-elements/src/ui-kit/types";
+import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
 import {Observable} from "rxjs/Observable";
-import {SamUIKitModule} from "../../../../sam-ui-elements/src/ui-kit/index";
+import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {SamAPIKitModule} from "../../../../api-kit/api-kit.module";
 import {AppComponentsModule} from "../../../app-components/app-components.module";
 // import {AppTemplatesModule} from "../../../app-templates/index";

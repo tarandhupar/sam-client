@@ -14,7 +14,7 @@ import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FormsModule } from '@angular/forms';
 
 import { routing } from './search.route';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';

@@ -1,5 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "../../.";
 import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";

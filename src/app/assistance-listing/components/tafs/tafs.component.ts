@@ -3,7 +3,7 @@ import {
   ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators,
   NG_VALIDATORS, Validator, AbstractControl, ValidatorFn
 } from "@angular/forms";
-import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
 import { ValidationErrors } from "../../../app-utils/types";
 import * as _ from 'lodash';
 

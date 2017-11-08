@@ -9,7 +9,7 @@ import {ChangeRequestService} from "../../../api-kit/program/change-request.serv
 import {falCustomValidatorsComponent} from "../validators/assistance-listing-validators";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import {FHService} from "../../../api-kit/fh/fh.service";
-import {IBreadcrumb} from "../../../sam-ui-elements/src/ui-kit/types";
+import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
 
 interface ChangeRequestModel {
   programId: string,
@@ -72,6 +72,7 @@ export class FALFormChangeRequestComponent implements OnInit {
     type: 'single',
     levelLimit: 3
   };
+  qParams: any = {};
 
   constructor(private fb: FormBuilder,
               private service: FALFormService,
@@ -98,6 +99,11 @@ export class FALFormChangeRequestComponent implements OnInit {
       });
       this.activatedRoute.queryParams.subscribe(params => {
         this.requestType = params['type'];
+        for(var param in params) {
+          if(param!="type") {
+            this.qParams[param] = params[param];
+          }
+        }
         if(this.requestType === 'program_number_request'){
           this.programService.getFederalHierarchyConfiguration(this.program.data.organizationId, this.cookieValue).subscribe(res => {
             this.programNumberLow = res.programNumberLow;
@@ -247,7 +253,10 @@ export class FALFormChangeRequestComponent implements OnInit {
       this.changeRequestService.submitRequest(this.prepareChangeRequestData(), this.cookieValue).subscribe(api => {
           this.notifyFooterAlertModel.description = (this.permissionType == ChangeRequestPermissionType.REQUEST) ? "Request Submitted" : actionTypes[this.requestType].success;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
-          this.router.navigate(['/fal/workspace']);
+          let navigationExtras: NavigationExtras = {
+              queryParams: this.qParams
+            };
+          this.router.navigate(['/fal/workspace'], navigationExtras);
         },
         error => {
           console.error('error submitting request', error);
@@ -287,7 +296,7 @@ export class FALFormChangeRequestComponent implements OnInit {
     } else {
       orgId = org;
     }
-    
+
     if(orgId != null) {
       this.newOrganizationId = orgId;
     }

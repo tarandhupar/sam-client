@@ -8,7 +8,7 @@ import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { UserAccessMock } from "../../../api-kit/access/access.service.mock";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { PipesModule } from "../../app-pipes/app-pipes.module";
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FHServiceMock } from "../../../api-kit/fh/fh.service.mock";

@@ -29,7 +29,7 @@
       </ul>
       <div class="usa-agency-picker-icon-area">
         <a (click)="setOrganizationFromSearch()" aria-label="Set Organization From Search Link" class="usa-agency-picker-submit-text">
-          <i class="usa-agency-picker-icon fa fa-plus" aria-hidden="true"></i>
+          <em class="usa-agency-picker-icon fa fa-plus" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -58,7 +58,7 @@
             (click)="removeOrg(org.value)"
             tabindex="0"
             (keyup.enter)="removeOrg(org.value)">
-        {{org.name}} <i class="icon close fa fa-times" aria-hidden="true"></i>
+        {{org.name}} <em class="icon close fa fa-times" aria-hidden="true"></em>
       </span>
     </li>
   </ul>

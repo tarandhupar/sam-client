@@ -1,30 +1,35 @@
 <div [formGroup]="form">
-  <sam-text [label]="label('ipAddress')"
-            [hint]="hint('ipAddress')"
-            [errorMessage]="errors('ipAddress')"
-            name="ip-address"
-            formControlName="ipAddress"></sam-text>
-
-  <sam-autocomplete [labelText]="label('typeOfConnection')"
-                    [options]="options.typeOfConnection"
-                    [control]="form.get('typeOfConnection')"
-                    formControlName="typeOfConnection"></sam-autocomplete>
-
-  <sam-text-area [label]="label('physicalLocation')"
-                 [hint]="hint('physicalLocation')"
-                 [errorMessage]="errors('physicalLocation')"
-                 name="physical-location"
-                 formControlName="physicalLocation"
-                 maxlength="100"></sam-text-area>
-
-  <sam-fieldset-wrapper [label]="label('securityOfficer')" [hint]="hint('securityOfficer')">
-    <sam-text name="security-official-name"
-              label="Name"
-              formControlName="securityOfficialName"
-              [errorMessage]="errors('securityOfficialName')"></sam-text>
-    <sam-text name="security-official-email"
-              label="Email"
-              formControlName="securityOfficialEmail"
-              [errorMessage]="errors('securityOfficialEmail')"></sam-text>
-  </sam-fieldset-wrapper>
+  <div class="sam-ui segment">
+    <sam-text [label]="label('ipAddress')"
+              [hint]="hint('ipAddress')"
+              [errorMessage]="errors('ipAddress')"
+              name="ip-address"
+              formControlName="ipAddress"></sam-text>
+  </div>
+  <div class="sam-ui segment">
+    <sam-autocomplete [labelText]="label('typeOfConnection')"
+                      [options]="options.typeOfConnection"
+                      [control]="form.get('typeOfConnection')"
+                      formControlName="typeOfConnection"></sam-autocomplete>
+  </div>
+  <div class="sam-ui segment">
+    <sam-text-area [label]="label('physicalLocation')"
+                   [hint]="hint('physicalLocation')"
+                   [errorMessage]="errors('physicalLocation')"
+                   name="physical-location"
+                   formControlName="physicalLocation"
+                   maxlength="100"></sam-text-area>
+  </div>
+  <div class="sam-ui segment">
+    <sam-fieldset-wrapper [label]="label('securityOfficer')" [hint]="hint('securityOfficer')">
+      <sam-text name="security-official-name"
+                label="Name"
+                formControlName="securityOfficialName"
+                [errorMessage]="errors('securityOfficialName')"></sam-text>
+      <sam-text name="security-official-email"
+                label="Email"
+                formControlName="securityOfficialEmail"
+                [errorMessage]="errors('securityOfficialEmail')"></sam-text>
+    </sam-fieldset-wrapper>
+  </div>
 </div>

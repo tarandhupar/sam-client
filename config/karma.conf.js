@@ -4,9 +4,15 @@
 
 //override phantomjs with chrome argument
 let browsersList =  ['PhantomJS'];
+let clientArgs = [];
 if(process.argv.indexOf("--chrome")!=-1){
   browsersList =  ['Chrome'];
 }
+process.argv.forEach(function(val,index,arr){
+  if(val.indexOf("--focus=")!=-1){    
+    clientArgs.push("--focusFlag")
+  }
+});
 
 module.exports = function(config) {
   var testWebpackConfig = require('./webpack.test.js');
@@ -88,7 +94,7 @@ module.exports = function(config) {
      * level of logging
      * possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
      */
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_ERROR,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
@@ -113,7 +119,8 @@ module.exports = function(config) {
     },
 
     client: {
-        captureConsole: true
+        captureConsole: true,
+        args: clientArgs
     },
     /*
      * Continuous Integration mode

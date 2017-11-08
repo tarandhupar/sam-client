@@ -54,7 +54,6 @@ declare var System: SystemJS;
 declare var API_UMBRELLA_URL: string;
 declare var API_UMBRELLA_KEY: string;
 declare var SHOW_OPTIONAL: string;
-declare var SHOW_HIDE_RESTRICTED_PAGES: string;
 declare var IDLE_TIME: string;
 declare var GIT_LOG: string;
 declare var BUILD_DATE: string;
@@ -62,24 +61,30 @@ declare var PINGER_TIME: string;
 declare var TIMEOUT_DURATION: string;
 // Determine which environment is running on
 declare var ENVIRONMENT: string;
+declare var REPORT_MICRO_STRATEGY_ENV: string;
+declare var REPORT_MICRO_STRATEGY_URL: string;
+declare var ENABLE_REPORTING_AREA: string;
+declare var REPORT_MICRO_STRATEGY_SERVER: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
 }
-/** SHOW_HIDE_RESTRICTED_PAGES : defined to hide components in Prodlike/Prod*/
 interface GlobalEnvironment {
   ENV;
   HMR;
   API_UMBRELLA_URL;
   API_UMBRELLA_KEY;
   SHOW_OPTIONAL;
-  SHOW_HIDE_RESTRICTED_PAGES;
   IDLE_TIME;
   GIT_LOG;
   BUILD_DATE;
   PINGER_TIME;
   TIMEOUT_DURATION;
   ENVIRONMENT;
+  REPORT_MICRO_STRATEGY_ENV;
+  REPORT_MICRO_STRATEGY_URL;
+  ENABLE_REPORTING_AREA;
+  REPORT_MICRO_STRATEGY_SERVER;
 
   SystemJS: SystemJS;
   System: SystemJS;
@@ -131,6 +136,10 @@ interface WebpackRequire {
 
 interface WebpackContext extends WebpackRequire {
     keys(): string[];
+}
+
+interface Window {
+  AWS?: any;
 }
 
 interface ErrorStackTraceLimit {

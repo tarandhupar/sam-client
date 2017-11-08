@@ -6,7 +6,7 @@ import { FinancialObligationChart } from './assistance-listing.chart';
 import { routing } from './assistance-listing.route';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';

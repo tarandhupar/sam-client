@@ -10,7 +10,7 @@
           (onSubmit)="onDeleteModalSubmit()">
 </sam-modal>
 
-<table [class.hide]="displayAuthInfo.length == 0" class="sam-ui table celled">
+<table [class.hide]="displayAuthInfo.length == 0" class="sam-ui table celled lightest blue">
   <thead>
   <th scope="col" id="authorization-table">Authorization(s)/Amendments</th>
   <th colspan="2" scope="colgroup" id="actions">Actions</th>
@@ -22,36 +22,36 @@
         <span class='usa-input-error-message' *ngIf="subFormErrorIndex[auth.index]"><sup>*</sup>This field is required</span>
         {{auth.label}}
       </td>
-      <td>
+      <td class="single line">
         <ng-container *ngIf="!hideAddButton">
           <a class="fal-table-edit" (click)="editAuth(i)">
             Edit
-            <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(i)"></i>
+            <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(i)"></em>
           </a>
           <a class="fal-table-delete" (click)="removeAuth(i)">
             Delete
-            <i class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeAuth(i)"></i>
+            <em class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeAuth(i)"></em>
           </a>
         </ng-container>
 
         <ng-container *ngIf="hideAddButton">
           <span class="fal-table-edit disabled">Edit</span>
-          <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+          <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
           <span class="fal-table-delete disabled">Delete</span>
-          <i class="fa fa-times fal-table-delete disabled" aria-hidden="true"></i>
+          <em class="fa fa-times fal-table-delete disabled" aria-hidden="true"></em>
         </ng-container>
       </td>
 
-      <td>
+      <td class="single line">
         <ng-container *ngIf="!hideAddButton">
           <a class="fal-table-amend" (click)="addAmend(auth.index)">
             Amend
-            <i class="fa fa-plus fal-table-amend" aria-hidden="true" (click)="addAmend(auth.index)"></i>
+            <em class="fa fa-plus fal-table-amend" aria-hidden="true" (click)="addAmend(auth.index)"></em>
           </a>
         </ng-container>
         <ng-container *ngIf="hideAddButton">
           <span class="fal-table-amend disabled">Amend</span>
-          <i class="fa fa-plus fal-table-amend disabled" aria-hidden="true"></i>
+          <em class="fa fa-plus fal-table-amend disabled" aria-hidden="true"></em>
         </ng-container>
       </td>
     </tr>
@@ -66,19 +66,19 @@
           <ng-container *ngIf="!hideAddButton">
             <a class="fal-table-edit" (click)="editAuth(j, i)">
               Edit
-              <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(j, i)"></i>
+              <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(j, i)"></em>
             </a>
             <a class="fal-table-delete" (click)="removeAuth(j, i)">
               Delete
-              <i class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeAuth(j, i)"></i>
+              <em class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeAuth(j, i)"></em>
             </a>
           </ng-container>
 
           <ng-container *ngIf="hideAddButton">
             <span class="fal-table-edit disabled">Edit</span>
-            <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+            <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
             <span class="fal-table-delete disabled">Delete</span>
-            <i class="fa fa-times fal-table-delete disabled" aria-hidden="true"></i>
+            <em class="fa fa-times fal-table-delete disabled" aria-hidden="true"></em>
           </ng-container>
 
         </td>

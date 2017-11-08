@@ -627,7 +627,6 @@ export class DetailsComponent {
     this.api.iam.user.deactivate(this.user.email, () => {
       cb();
     }, error => {
-console.log(error);
       this.reconfirmModal.closeModal();
       this.alert('deactivate', error.message);
     });

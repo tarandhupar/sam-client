@@ -1,6 +1,6 @@
 import {TestBed} from "@angular/core/testing";
 import {FALFormChangeRequestComponent} from "./fal-form-change-request.component";
-import {SamUIKitModule} from "sam-ui-kit/index";
+import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {RouterTestingModule} from "@angular/router/testing";
 import {ProgramService} from "../../../api-kit/program/program.service";
 import {FormBuilder, ReactiveFormsModule, FormsModule} from "@angular/forms";

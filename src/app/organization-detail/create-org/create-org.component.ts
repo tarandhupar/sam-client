@@ -1,9 +1,9 @@
 import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { Observable } from 'rxjs';
@@ -94,6 +94,6 @@ export class OrgCreatePage {
   }
 
   onChangeOrgDetail(hierarchyName){
-    this._router.navigate(['organization-detail', this.hierarchyPathMap[hierarchyName],'profile'])
+    this._router.navigate(['org/detail', this.hierarchyPathMap[hierarchyName],'profile'])
   }
 }

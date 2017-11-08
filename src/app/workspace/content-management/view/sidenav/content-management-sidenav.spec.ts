@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Load the implementations that should be tested
 import { HelpContentManagementSideNavComponent } from "./content-management-sidenav.component";
 import { AppComponentsModule } from "../../../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { ContentManagementServiceMock } from "api-kit/content-management/content-management.mock";

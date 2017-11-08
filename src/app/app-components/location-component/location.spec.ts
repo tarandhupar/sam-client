@@ -3,7 +3,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { SamLocationComponent } from "./location.component";
 import { LocationService } from "../../../api-kit/location/location.service";
 import { LocationServiceMock } from "../../../api-kit/location/location.service.mock";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SamAPIKitModule } from "../../../api-kit/api-kit.module";
 

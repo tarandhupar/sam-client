@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { DetailsComponent } from './details.component';
 

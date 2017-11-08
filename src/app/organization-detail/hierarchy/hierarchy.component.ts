@@ -99,6 +99,11 @@ export class OrgHierarchyPage {
     return true;
   }
 
+  isDoD(org):boolean{
+    return org.fullParentPathName.split('.').some(e=> {return e.includes("DEFENSE");})
+  }
+
+
   getOrgTypeText(org):string{
     if(org.type){
       let orgType = org.type.toUpperCase();

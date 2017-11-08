@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
-import { SamTabComponent } from "sam-ui-kit/components/tabs/tabs.component";
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { SamTabComponent } from "sam-ui-elements/src/ui-kit/components/tabs/tabs.component";
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
+import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
+require('aws-sdk/dist/aws-sdk');
 
 @Component({
   templateUrl: './content-management-edit.template.html',
@@ -79,12 +81,14 @@ export class HelpContentManagementEditComponent {
     valueProperty: 'value',
     categoryProperty: 'category',
   };
+  domainMap = {};
 
   constructor(private _router:Router,
               private route: ActivatedRoute,
               private capitalPipe: CapitalizePipe,
               private contentManagementService: ContentManagementService,
-              private msgFeedService: MsgFeedService
+              private msgFeedService: MsgFeedService,
+              private alertFooter: AlertFooterService,
   ){}
 
   ngOnInit(){
@@ -134,7 +138,7 @@ export class HelpContentManagementEditComponent {
       sourceVideoFile:'',
       domain:[],
       keywords:'',
-      type:'New',
+      status:{status:'NEW'},
     };
 
     if(this.curSection.includes('data')) this.contentObj['source'] = '';
@@ -144,18 +148,25 @@ export class HelpContentManagementEditComponent {
   }
 
   loadExistingForm(id){
-    this.contentManagementService.getContentItem(id, this.curSection).subscribe( data => {
-      this.contentObj = data;
-      this.responseText = this.contentObj['description'];
-      this.keywords = this.contentObj['keywords'].join(',');
-      this.pageTitle = this.contentObj['title'];
-      let temp = [];
-      data['domain'].forEach(e => {
-        temp.push({key:e,value:e});
-      });
-      this.contentObj['domain'] = temp;
-      if(this.curSection === 'video-library')this.contentObj['sourceVideoFile'] = '';
-      this.dataLoaded= true;
+    this.contentManagementService.getContentItem(id).subscribe( data => {
+      try{
+        this.contentObj = data._embedded["contentDataWrapperList"][0].contentDataList[0];
+        this.responseText = this.contentObj['description'];
+        let tagNames = [];
+        this.contentObj['tags'].forEach(e => {tagNames.push(e.tagKey)});
+        this.keywords = tagNames.join(',');
+        this.pageTitle = this.contentObj['title'];
+        let domainNames = [];
+        this.contentObj['domains'].forEach(e => {
+          domainNames.push({key:e.domain_name,value:e.domain_name});
+        });
+        this.contentObj['domains'] = domainNames;
+        if(this.curSection === 'video-library')this.contentObj['sourceVideoFile'] = '';
+        this.dataLoaded= true;
+      }catch(err){
+        console.log(err);
+      }
+
     });
   }
 
@@ -168,6 +179,7 @@ export class HelpContentManagementEditComponent {
       document.querySelector('video').src = fileURL;
       document.querySelector('video').autoplay = false;
       document.querySelector('video').pause();
+      this.inputFile = file;
     }
 
   }
@@ -181,7 +193,30 @@ export class HelpContentManagementEditComponent {
     // POST data to server
     // Route back to search page
     if(this.validateForm()){
-      this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+      // upload video file
+      var AWSService = window.AWS;
+
+      AWSService.config.accessKeyId = 'AKIAJ7QJTKFV5HMJJ2KQ';
+
+      AWSService.config.secretAccessKey = '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';
+
+      var bucket = new AWSService.S3({params: {Bucket: 'taran-test'}});
+
+      var params = {Key: 'videos/'+this.inputFile.name, Body: this.inputFile};
+
+      bucket.upload(params, (err, data) => {
+        if(err){
+          this.alertFooter.registerFooterAlert({
+            title: "",
+            description: "Failed to upload video to S3",
+            type: 'error',
+            timer: 3200
+          });
+        }else{
+          this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+        }
+
+      });
     }else{
       this.activeTab = 0;
     }
@@ -210,14 +245,21 @@ export class HelpContentManagementEditComponent {
     if(document.querySelector('video')) document.querySelector('video').pause();
   }
 
+
   getExistingDomainOptions(){
-    this.contentManagementService.getDomains().subscribe(data =>{
-      if(data['domainTypes']){
-        this.domainOptions = [];
-        data['domainTypes'].forEach(domain => {
-          this.domainOptions.push({value: domain.domainName, key: domain.domainName});
-        });
-        this.domainOptions.push({value: 'Other Domain', key: 'Other Domain'});
+    this.domainOptions = [];
+    this.msgFeedService.getDomains().subscribe(data =>{
+      try{
+        if(data._embedded['domainList'] && data._embedded['domainList'].length > 0) {
+          data._embedded['domainList'].forEach(domain => {
+            if (domain.isActive){
+              this.domainOptions.push({value: domain.domainName, key: domain.domainName, name: domain.domainName});
+              this.domainMap[domain.domainName] = domain.id;
+            }
+          });
+        }
+      }catch (error){
+        console.log(error);
       }
     });
   }
@@ -228,7 +270,7 @@ export class HelpContentManagementEditComponent {
 
   getDomainListStr(){
     let domainList = [];
-    this.contentObj['domain'].forEach(e => {
+    this.contentObj['domains'].forEach(e => {
       domainList.push(e['key']);
     });
     return domainList.join(', ');

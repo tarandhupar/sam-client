@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { HelpContentManagementViewComponent } from "./content-management-view.component";
 import { HelpContentManagementSideNavComponent } from "./sidenav/content-management-sidenav.component";
 import { AppComponentsModule } from "../../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { ContentManagementServiceMock } from "api-kit/content-management/content-management.mock";

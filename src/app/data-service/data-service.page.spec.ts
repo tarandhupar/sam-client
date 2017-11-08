@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { DataServicePage } from "./data-service.page";
 import { DataServiceModule } from "./data-service.module";

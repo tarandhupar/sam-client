@@ -3,8 +3,8 @@ import {
   ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup,
   AbstractControl
 } from "@angular/forms";
-import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
-import { OptionsType } from "sam-ui-kit/types";
+import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
+import { OptionsType } from "sam-ui-elements/src/ui-kit/types";
 
 
 @Component({

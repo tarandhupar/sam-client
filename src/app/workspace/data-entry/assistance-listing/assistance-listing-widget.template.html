@@ -9,11 +9,11 @@
           [routerLink]="['/fal/workspace']"
           [queryParams]="{status: 'pending'}">
           <div class="sam-ui blue horizontal mini label">{{ pendingApprovalCount }}</div>
-          Pending Review Requests
+          Pending OMB Review Requests
         </a>
         <a class="item disabled" *ngIf="pendingApprovalCount === 0">
           <div class="sam-ui horizontal mini label">0</div>
-          Pending Review Requests
+          Pending OMB Review Requests
         </a>
       </ng-container>
 
@@ -48,11 +48,11 @@
           [routerLink]="['/fal/workspace']"
           [queryParams]="{status: 'draft_review'}">
           <div class="sam-ui blue horizontal mini label">{{ draftReviewCount }}</div>
-          Under Agency Coordinator Review
+          Under Draft Review
         </a>
         <a class="item disabled" *ngIf="draftReviewCount == 0">
           <div class="sam-ui horizontal mini label">0</div>
-          Under Agency Coordinator Review
+          Under Draft Review
         </a>
       </ng-container>
     </div>
@@ -61,20 +61,20 @@
     <div class="sam-ui divided selection relaxed list">
       <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:create']"
         class="item"
-        [routerLink]="['/programs/add']">
+        [routerLink]="['/fal/add']">
         <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
         Create a New Listing
       </a>
       <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']"
         class="item"
         [routerLink]="['/fal/myRegionalOffices']">
-        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
         Manage Assistance Locations
       </a>
       <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'"
         class="item"
         [routerLink]="['/fal/workspace/cfda-numbers']">
-        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
         Manage CFDA Numbers
       </a>
     </div>

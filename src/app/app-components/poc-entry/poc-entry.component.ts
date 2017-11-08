@@ -129,7 +129,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     }
 
     nameSelection(entry){
-        if(this.populationFlag || !entry || !this.pocOptions || (this.pocEntryGroup.value.fullName 
+        if(this.populationFlag || !entry || !entry.value || !this.pocOptions || (this.pocEntryGroup.value.fullName
             && this.pocEntryGroup.value.fullName.key
             && this.pocEntryGroup.value.fullName.key == entry.key)){
             return;
@@ -138,7 +138,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
         selected = this.pocOptions.find((val)=>{
             if(val.fullName.key==entry.value){
                 return true;
-            }  
+            }
         });
         if(selected){
             selected = Object.assign({},selected);
@@ -148,7 +148,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     }
 
     emailSelection(entry){
-        if(this.populationFlag || !entry || !this.pocOptions || (this.pocEntryGroup.value.email
+        if(this.populationFlag || !entry || !entry.value || !this.pocOptions || (this.pocEntryGroup.value.email
             && this.pocEntryGroup.value.email.key
             && this.pocEntryGroup.value.email.key == entry.key)){
             return;
@@ -157,7 +157,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
         selected = this.pocOptions.find((val)=>{
             if(val.email.key==entry.value){
                 return true;
-            }  
+            }
         });
         if(selected){
             selected = Object.assign({},selected);

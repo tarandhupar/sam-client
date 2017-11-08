@@ -2,24 +2,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 
 @Component({
   selector: 'exclusionCrossReference',
-  template: `
-		<div>
-			<a [routerLink]="['/exclusions', uniqueIdentifier]" [queryParams]="qParams">
-			{{crossReference.identityInfo.companyName}}</a>
-			<br />
-			<strong>Cross Reference Type: </strong>{{crossReference.crossReferenceType}}
-			<br />
-			<strong>Excluding Agency: </strong>{{crossReference.excludingAgencyName}}
-			<br />
-			<strong>Exclusion Type: </strong>{{crossReference.exclusionType}}
-			<br />
-			<strong>Active Date: </strong>{{crossReference.activateDate | date: 'MMM dd, y'}}
-			<br />
-			<strong>Termination Date: </strong>{{crossReference.terminationDate != 'Indefinite' ? (crossReference.terminationDate | date: 'MMM dd, y') : crossReference.terminationDate}}
-			<br />
-			<br />
-		</div>
-  `
+  templateUrl: 'exclusion-cross-reference.html',
 })
 export class ExclusionCrossReference implements OnInit {
   
@@ -49,11 +32,22 @@ export class ExclusionCrossReference implements OnInit {
 
     //Refactor this later with appropriate solution
     if(this.crossReference.exclusionType!=null && this.crossReference.exclusionType.length > 0){
-      if(this.crossReference.exclusionType.indexOf("/")>-1) {
-        this.typeConcat = this.crossReference.exclusionType.replace(/[/]/g, "SLASH");
-      } else {
-        this.typeConcat = this.crossReference.exclusionType;
-      }
+	    if(this.crossReference.exclusionType == 'Ineligible (Proceedings Pending)')
+	    {
+	    	this.typeConcat = '1';
+	    }
+	    else if(this.crossReference.exclusionType == 'Ineligible (Proceedings Completed)')
+	    {
+	    	this.typeConcat = '2';
+	    }
+	    else if(this.crossReference.exclusionType == 'Prohibition/Restriction')
+	    {
+	    	this.typeConcat = '3';
+	    }
+	    else if(this.crossReference.exclusionType == 'Voluntary Exclusion')
+	    {
+	    	this.typeConcat = '4';
+	    }
     }
     else {
       this.typeConcat='NA';

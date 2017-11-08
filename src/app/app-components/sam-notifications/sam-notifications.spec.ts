@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule }  from "@angular/forms";
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamNotificationsComponent } from './sam-notifications.component';
 import { PipesModule } from 'app/app-pipes/app-pipes.module';
 

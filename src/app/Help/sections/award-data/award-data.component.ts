@@ -78,6 +78,7 @@ export class AwardDataComponent {
     legacyWebsiteContent:'Wage Determinations On-Line (WDOL)',
     publicStartGuide: 'https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-WDOL2.pdf',
     searchIndex: 'wd',
+    secondaryMenuLink: 'https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp',
     splashContent:`Find minimal wage rates and benefits paid to Federal contractors.`,
     subContent:`
       <p class="sam-ui lighter tiny header">
@@ -85,6 +86,7 @@ export class AwardDataComponent {
         for each labor category of workers which the U.S. Department of Labor 
         has determined to be prevailing in a given area.
       </p>
+      <div class="sam-ui hidden divider"></div>
       <p>
         Wage determinations fall under two categories: Davis-Bacon Act (DBA) WDs 
         and Service Contract Act (SCA) WDs. The DBA applies to contracts 
@@ -357,7 +359,7 @@ export class AwardDataComponent {
     legacyWebsiteContent:' Catalog of Federal Domestic Assistance (CFDA) ',
     publicStartGuide: 'https://sam.gov/sam/transcript/beta/Beta.SAM.Gov_QuickStartGuide-CFDA.pdf',
     searchIndex: 'cfda',
-    workspaceRoute: '/fal/workspace',
+    workspaceRoute: '/signin',
     splashContent:` Understand Available Financial Assistance.`,
     subContent:`
       <p class="sam-ui lighter tiny header">
@@ -367,6 +369,7 @@ export class AwardDataComponent {
         economic development and other programs—through grants, loans, 
         scholarships, insurance, and other types of financial assistance.
       </p>
+      <div class="sam-ui hidden divider"></div>
       <p>
         SAM provides detailed, public descriptions of federal assistance 
         listings available to State and local governments 

@@ -55,6 +55,7 @@
   </sidebar>
 
   <sam-button *ngIf="userPermissions && userPermissions._links && this.userPermissions._links['program:regional:offices:create']"
+              [attr.id] = "'create-new-btn'"
               [buttonType]="'default'"
               [buttonText]="'Create New' "
               [buttonClass]="'sam-ui button dark blue'"

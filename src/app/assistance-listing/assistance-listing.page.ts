@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
-import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import * as Cookies from 'js-cookie';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -174,7 +174,7 @@ export class ProgramPage implements OnInit, OnDestroy {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
 
-      this.pageRoute = "programs/" + this.program.id + "/view";
+      this.pageRoute = "fal/" + this.program.id + "/view";
       let falSideNavContent = {
         "label": "Assistance Listing",
         "route": this.pageRoute,
@@ -403,7 +403,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
     }
   }
   onEditViewClick() {
-    let url = '/programs/' + this.program.id + '/review';
+    let url = '/fal/' + this.program.id + '/review';
     this.router.navigateByUrl(url);
   }
   public canEdit() {
@@ -418,16 +418,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
   tabsNavigation(tabType) {
     let url;
     if(tabType === 'Authenticated') {
-      url = '/programs/' + this.program.id + '/review';
+      url = '/fal/' + this.program.id + '/review';
     }
     if(tabType === 'Submit') {
-      url = '/programs/' + this.program.id + '/submit';
+      url = '/fal/' + this.program.id + '/submit';
     }
     if(tabType === 'Reject') {
-      url = '/programs/' + this.program.id + '/reject';
+      url = '/fal/' + this.program.id + '/reject';
     }
     if(tabType === 'Publish') {
-      url = '/programs/' + this.program.id + '/publish';
+      url = '/fal/' + this.program.id + '/publish';
     }
     if(tabType === 'Notify') {
       this.notifyAgencyCoordinator();
@@ -460,7 +460,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
       case 'Publish':
         this.tabsNavigation('Publish');
         break;
-      case 'Notify Agency Coordinator':
+      case 'Notify Assistance Administrator':
         this.tabsNavigation('Notify');
         break;
       default:

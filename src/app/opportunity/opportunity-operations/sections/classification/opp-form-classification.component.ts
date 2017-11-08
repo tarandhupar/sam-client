@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
-import { AutocompleteConfig } from "sam-ui-kit/types";
+import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
 import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';

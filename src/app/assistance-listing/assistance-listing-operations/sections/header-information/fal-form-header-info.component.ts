@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { AutocompleteConfig } from "sam-ui-kit/types";
+import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
 import { ProgramService } from "../../../../../api-kit/program/program.service";
 import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
 import { FALFormErrorService } from '../../fal-form-error.service';

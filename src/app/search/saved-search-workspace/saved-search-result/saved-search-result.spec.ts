@@ -4,7 +4,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SavedSearchResult } from './saved-search-result.component';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import moment = require("moment");
 import {FilterParamLabel} from "../../pipes/filter-label.pipe";
 import {FilterParamValue} from "../../pipes/filter-value.pipe";

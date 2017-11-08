@@ -1,21 +1,13 @@
 .usa-workspace-system-new {
   title-and-section {
-    h1 {
-      margin-top: 1.2em !important;
-    }
-
-    .sam-ui.label {
-      margin-top: 0.3em !important;
-    }
+    display: block;
+    margin-top: 1.2em;
   }
 
   sam-alert {
-    position: absolute;
-    width: 100%;
-    top: -68px;
-
     .usa-alert {
       min-height: 74px;
+      margin-top: 0px;
     }
 
     .usa-alert-text {
@@ -23,22 +15,9 @@
     }
   }
 
-  .header-hint {
-    margin-top: 0.5em;
-    margin-bottom: 2em;
-  }
-
   sam-label-wrapper {
     > div {
       margin-bottom: 1em;
-    }
-  }
-
-  sam-tabs {
-    .last {
-      button {
-        margin-left: 0em !important;
-      }
     }
   }
 
@@ -62,6 +41,24 @@
         margin-left: 1em !important;
       }
     }
+
+    .menu {
+      margin-top: 2.5rem !important;
+    }
+
+    .last {
+      button {
+        margin-left: 0em !important;
+      }
+    }
+
+    .row {
+      padding-top: 0.5rem !important;
+    }
+
+    .sam-ui.segment {
+      padding-top: 0.5rem;
+    }
   }
 
   form {
@@ -78,6 +75,10 @@
     position: absolute;
     top: 0.7em;
     right: 0px;
+
+    .usa-button {
+      background-color: transparent;
+    }
 
     &:focus,
     button:focus {
@@ -147,10 +148,28 @@
     }
   }
 
+  .sam-ui.segment {
+    sam-fieldset-wrapper {
+      fieldset {
+        margin-bottom: 0em;
+      }
+    }
+  }
+
+  legend {
+    font-size: 2rem;
+  }
+
+  sam-checkbox {
+    legend {
+      margin-bottom: 1rem;
+      font-size: 1.7rem;
+    }
+  }
+
   .review {
     legend {
       margin-bottom: 0.5em;
-      font-size: 2rem;
     }
 
     .fa {

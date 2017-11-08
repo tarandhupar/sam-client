@@ -4,7 +4,7 @@ import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
 import {ActionHistoryLabelPipe} from "../../pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "../../pipes/request-type-label.pipe";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {FALAuthGuard} from "../../components/authguard/authguard.service";
 
 @Component({

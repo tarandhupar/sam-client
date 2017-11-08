@@ -3,6 +3,8 @@ import { PageNotFoundErrorPage } from './application-content/404';
 
 export let ROUTES: Routes = [
   { path: 'awards/:id', loadChildren: './awards/awards.module#AwardsModule' },
+  { path: 'entity/:id', loadChildren: './entity/entity.module#EntityModule' },
+  { path: 'exclusions/:id', loadChildren: './exclusion/exclusion.module#ExclusionModule' },
   { path: 'help', loadChildren: './Help/help.module#HelpModule' },
   { path: 'alerts', loadChildren: './alerts/alerts.module#AlertsModule' },
   { path: 'ui-kit', loadChildren: './application-content/ui-kit-demo/ui-kit-demo.module#UIKitDemoModule' },
@@ -11,5 +13,6 @@ export let ROUTES: Routes = [
   { path: 'federal-hierarchy', loadChildren: './fh/federal-hierarchy.module#FederalHierarchyModule' },
   { path: 'reports', loadChildren: './Reports/reports.module#ReportsModule' },
   { path: 'role-management', loadChildren: './role-management/role-management.module#RoleManagementModule' },
+  { path: 'org', loadChildren: './organization-detail/organization-detail.module#OrganizationDetailModule' },
   { path: '**',    component: PageNotFoundErrorPage },
 ];

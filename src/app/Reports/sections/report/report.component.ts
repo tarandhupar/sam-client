@@ -8,11 +8,11 @@ import { Cookie } from 'ng2-cookies';
 import all = protractor.promise.all;
 import * as xmljs from 'xml-js';
 import * as moment from 'moment';
-import { OptionsType } from 'sam-ui-kit/types';
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types';
 import * as base64 from 'base-64';
 import { ReportsService } from 'api-kit';
 import * as Cookies from 'js-cookie';
-import { SamDateRangeComponent } from 'sam-ui-kit/form-controls/date-range';
+import { SamDateRangeComponent } from 'sam-ui-elements/src/ui-kit/form-controls/date-range';
 import * as _ from 'lodash';
 
 @Component({
@@ -62,14 +62,14 @@ export class ReportComponent implements OnInit {
   officeId: any = '';
   agencyId: any = '';
   departmentId: any = '';
-  piid = '';
-  promptAnswersXML;
-  contractingRegion = '';
-  orgCode = "";
-  orgCodeXML;
-  includesBases;
-  includesBasesXML;
-  agencyName = "";
+  piid: any = '';
+  promptAnswersXML: any;
+  contractingRegion: any = '';
+  orgCode: any = "";
+  orgCodeXML: any;
+  includesBases: any;
+  includesBasesXML: any;
+  agencyName: any = "";
   agencyNameXML: any = "";
   basesOptions: OptionsType[] = [
     { name: 'all', label: 'All', value: 'all'},
@@ -77,11 +77,7 @@ export class ReportComponent implements OnInit {
   ];
   contractingRegionOptions: OptionsType[] = [{name:'empty', label: '', value: ''},{name:'00',label:'00',value:'00'},{name:'01',label:'01',value:'01'},{name:'02',label:'02',value:'02'},{name:'03',label:'03',value:'03'},{name:'04',label:'04',value:'04'},{name:'05',label:'05',value:'05'},{name:'06',label:'06',value:'06'},{name:'07',label:'07',value:'07'},{name:'08',label:'08',value:'08'},{name:'09',label:'09',value:'09'},{name:'1',label:'1',value:'1'},{name:'10',label:'10',value:'10'},{name:'11',label:'11',value:'11'},{name:'12',label:'12',value:'12'},{name:'13',label:'13',value:'13'},{name:'14',label:'14',value:'14'},{name:'15',label:'15',value:'15'},{name:'16',label:'16',value:'16'},{name:'17',label:'17',value:'17'},{name:'18',label:'18',value:'18'},{name:'19',label:'19',value:'19'},{name:'2',label:'2',value:'2'},{name:'20',label:'20',value:'20'},{name:'21',label:'21',value:'21'},{name:'22',label:'22',value:'22'},{name:'23',label:'23',value:'23'},{name:'24',label:'24',value:'24'},{name:'25',label:'25',value:'25'},{name:'26',label:'26',value:'26'},{name:'27',label:'27',value:'27'},{name:'28',label:'28',value:'28'},{name:'29',label:'29',value:'29'},{name:'3',label:'3',value:'3'},{name:'30',label:'30',value:'30'},{name:'32',label:'32',value:'32'},{name:'33',label:'33',value:'33'},{name:'34',label:'34',value:'34'},{name:'35',label:'35',value:'35'},{name:'36',label:'36',value:'36'},{name:'37',label:'37',value:'37'},{name:'38',label:'38',value:'38'},{name:'39',label:'39',value:'39'},{name:'4',label:'4',value:'4'},{name:'5',label:'5',value:'5'},{name:'50',label:'50',value:'50'},{name:'6',label:'6',value:'6'},{name:'60',label:'60',value:'60'},{name:'65',label:'65',value:'65'},{name:'7',label:'7',value:'7'},{name:'70',label:'70',value:'70'},{name:'75',label:'75',value:'75'},{name:'8',label:'8',value:'8'},{name:'9',label:'9',value:'9'},{name:'90',label:'90',value:'90'},{name:'99',label:'99',value:'99'},{name:'AC',label:'AC',value:'AC'},{name:'AF',label:'AF',value:'AF'},{name:'AK',label:'AK',value:'AK'},{name:'AZ',label:'AZ',value:'AZ'},{name:'BA',label:'BA',value:'BA'},{name:'BC',label:'BC',value:'BC'},{name:'BR',label:'BR',value:'BR'},{name:'C',label:'C',value:'C'},{name:'CA',label:'CA',value:'CA'},{name:'CE',label:'CE',value:'CE'},{name:'CI',label:'CI',value:'CI'},{name:'CN',label:'CN',value:'CN'},{name:'CO',label:'CO',value:'CO'},{name:'CR',label:'CR',value:'CR'},{name:'DC',label:'DC',value:'DC'},{name:'DN',label:'DN',value:'DN'},{name:'EA',label:'EA',value:'EA'},{name:'ER',label:'ER',value:'ER'},{name:'ES',label:'ES',value:'ES'},{name:'EU',label:'EU',value:'EU'},{name:'FA',label:'FA',value:'FA'},{name:'FP',label:'FP',value:'FP'},{name:'GP',label:'GP',value:'GP'},{name:'HQ',label:'HQ',value:'HQ'},{name:'ID',label:'ID',value:'ID'},{name:'IG',label:'IG',value:'IG'},{name:'II',label:'II',value:'II'},{name:'LC',label:'LC',value:'LC'},{name:'MP',label:'MP',value:'MP'},{name:'MT',label:'MT',value:'MT'},{name:'NC',label:'NC',value:'NC'},{name:'NE',label:'NE',value:'NE'},{name:'NM',label:'NM',value:'NM'},{name:'NR',label:'NR',value:'NR'},{name:'NV',label:'NV',value:'NV'},{name:'OC',label:'OC',value:'OC'},{name:'OR',label:'OR',value:'OR'},{name:'OS',label:'OS',value:'OS'},{name:'PC',label:'PC',value:'PC'},{name:'PN',label:'PN',value:'PN'},{name:'RM',label:'RM',value:'RM'},{name:'SC',label:'SC',value:'SC'},{name:'SE',label:'SE',value:'SE'},{name:'SR',label:'SR',value:'SR'},{name:'SW',label:'SW',value:'SW'},{name:'TC',label:'TC',value:'TC'},{name:'UC',label:'UC',value:'UC'},{name:'US',label:'US',value:'US'},{name:'UT',label:'UT',value:'UT'},{name:'W',label:'W',value:'W'},{name:'WH',label:'WH',value:'WH'},{name:'WO',label:'WO',value:'WO'},{name:'WR',label:'WR',value:'WR'},{name:'WY',label:'WY',value:'WY'}
   ];
-  roleData;
-  userRoleObject;
-  userRole;
-  testToken;
-  promptAnswersXMLSBG;
+  promptAnswersXMLSBG: any;
   departmentIdSBG: any = '';
   agencyIdSBG: any = '';
   officeIdSBG: any = '';
@@ -101,41 +97,33 @@ export class ReportComponent implements OnInit {
       value: ''
     } 
   };
-  stateLabel = 'State Code';
-  dateValidator = false;
-  maxRange = '';
-  currentReport = [];
-  stateXML;
-  countryXML;
-  fiscalYearXML;
-  localEnv = false;
+  stateLabel: string = 'State Code';
+  dateValidator: boolean = false;
+  maxRange: any = '';
+  currentReport: any = [];
+  stateXML: any;
+  countryXML: any;
+  fiscalYearXML: any;
+  localEnv: boolean = false;
   PVMAXRANGE = 1.000;
   REPORTMAXRANGE = 12.000;
-  userOrg = [];
-  autocompleteStateConfig = {
+  userOrg: any = [];
+  autocompleteStateConfig: any = {
     serviceOptions:'USA', 
     keyValueConfig: { keyProperty: 'key', valueProperty: 'value' }
   }
-  fiscalYear = '';
-  dateRangeLabel = 'Date range correspond to the Date Signed on Procurement Awards';
-  queryParams = {
-    server:'',
-    project: '',
-    port: '',
-    evt: '',
-    currentViewMedia: '',
-    iPlanetDirectoryPro: '',
-    promptsAnswerXML: ''
-  };
-  promptsAccordian = 0;
+  fiscalYear: string = '';
+  dateRangeLabel: string = 'Date range correspond to the Date Signed on Procurement Awards';
+  promptsAccordian: number = 0;
   psc: any = {
     key: '',
     value: ''
   };
-  pscValues;
+  pscValues: string;
   pscValidator: boolean = false;
-  descOfReq = '';
-  hasFpds = true;
+  descOfReq: string = '';
+  hasFpds: boolean = true;
+  devIframe: boolean = false;
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -202,15 +190,18 @@ export class ReportComponent implements OnInit {
       });
 
     // Data range lavel for 'Inherently Governmental Functions Actions and Dollars Report'
-    if (this.id == 'BE206C4B4A24C65846C6A686B576860F') {
+    if (this.id === 'BE206C4B4A24C65846C6A686B576860F') {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
     }
     if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
        this.localEnv = true;
     }
+    if (REPORT_MICRO_STRATEGY_ENV==='dev') {
+      this.devIframe = true;
+    }
     
     // Sets state prompt name based on specific report
-    if (this.id == '48EC50F946E3011C5DE470A6FEA8C1FD') {
+    if (this.id === '48EC50F946E3011C5DE470A6FEA8C1FD') {
       this.stateLabel = 'Vendor State Code';
     }
   }      
@@ -235,22 +226,22 @@ export class ReportComponent implements OnInit {
     var startComparison = moment(this.dateRangeModel.startDate);
     var endComparison = moment(this.dateRangeModel.endDate);
     var duration = moment.duration(endComparison.diff(startComparison));
-    if (this.name == "Potential Vendor Anomaly Report") {
+    if (this.name === "Potential Vendor Anomaly Report") {
       if (duration.years() >= this.PVMAXRANGE) {
         this.maxRange = "months"
         this.dateValidator = true;
       }
       else {
-        if (evt == "execute") {
+        if (evt === "execute") {
           this.reportExecute();
           this.dateValidator = false;
         }
-        if (evt == "export") {
+        if (evt === "export") {
           this.exportReport();
           this.dateValidator = false;
         }
       }
-    } else if (this.name == "Procurement History for Market Research Report") {
+    } else if (this.name === "Procurement History for Market Research Report") {
       if (duration.years() >= this.REPORTMAXRANGE) {
         this.maxRange = "years"
         this.dateValidator = true;
@@ -258,12 +249,12 @@ export class ReportComponent implements OnInit {
         this.pscValidator = true;
       }
         else {
-        if (evt == "execute") {
+        if (evt === "execute") {
           this.reportExecute();
           this.dateValidator = false;
           this.pscValidator = false;
         }
-        if (evt == "export") {
+        if (evt === "export") {
           this.exportReport();
           this.dateValidator = false;
           this.pscValidator = false;
@@ -276,11 +267,11 @@ export class ReportComponent implements OnInit {
         this.dateValidator = true;
       }
       else {
-        if (evt == "execute") {
+        if (evt === "execute") {
         this.reportExecute();
         this.dateValidator = false;
         }
-        if (evt == "export") {
+        if (evt === "export") {
           this.exportReport();
           this.dateValidator = false;
         }
@@ -324,9 +315,9 @@ export class ReportComponent implements OnInit {
 
   hitUrl(evt, docId) {
     let vm = this;
-    if (this.name == "Small Business Goaling Report") {
+    if (this.name === "Small Business Goaling Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
-    } else if (this.name == "Contract Detail Report") {
+    } else if (this.name === "Contract Detail Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
     } else {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
@@ -339,14 +330,17 @@ export class ReportComponent implements OnInit {
     this.officeId = '';
     if (this.agencyPicker) {
       for (let i in this.agencyPicker) {
-        if (this.agencyPicker[i].level == 1) {
-          this.departmentId = [{type:"element",name:"at",attributes:{did:"092E3409421A8C76CCE01CB6E423BE3B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"092E3409421A8C76CCE01CB6E423BE3B:"+this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'DEPARTMENT') {
+          let department: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+          this.departmentId = [{type:"element",name:"at",attributes:{did:"092E3409421A8C76CCE01CB6E423BE3B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"092E3409421A8C76CCE01CB6E423BE3B:"+department,art:"1"}}];
         }
-        if (this.agencyPicker[i].level == 2) {
-          this.agencyId = [{type:"element",name:"at",attributes:{did:"A1FE94BE483FD8D534B145B794EC4166",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"A1FE94BE483FD8D534B145B794EC4166:"+this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'AGENCY') {
+          let agency: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+          this.agencyId = [{type:"element",name:"at",attributes:{did:"A1FE94BE483FD8D534B145B794EC4166",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"A1FE94BE483FD8D534B145B794EC4166:"+agency,art:"1"}}];
         }
-        if (this.agencyPicker[i].level == 3) {
-          this.officeId = [{type:"element",name:"at",attributes:{did:"C556EB554CED80B514C5DFBC01CEFC5F",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C556EB554CED80B514C5DFBC01CEFC5F:"+this.agencyPicker[i].code,art:"1"}}];;
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'OFFICE') {
+          let office: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+          this.officeId = [{type:"element",name:"at",attributes:{did:"C556EB554CED80B514C5DFBC01CEFC5F",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C556EB554CED80B514C5DFBC01CEFC5F:"+office,art:"1"}}];;
         }
       }
     }
@@ -369,14 +363,17 @@ export class ReportComponent implements OnInit {
     this.officeIdSBG = '';
     if (this.agencyPicker) {
       for (let i in this.agencyPicker) {
-        if (this.agencyPicker[i].level == 1) {
-          this.departmentIdSBG = [{type:"element",name:"at",attributes:{did:"FB2AB4B34DE1D7C3FD6BEA964061C99E",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"FB2AB4B34DE1D7C3FD6BEA964061C99E:"+this.agencyPicker[i].code,art:"1"}}];
+        let department: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'DEPARTMENT') {
+          this.departmentIdSBG = [{type:"element",name:"at",attributes:{did:"FB2AB4B34DE1D7C3FD6BEA964061C99E",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"FB2AB4B34DE1D7C3FD6BEA964061C99E:"+department,art:"1"}}];
         }
-        if (this.agencyPicker[i].level == 2) {
-          this.agencyIdSBG = [{type:"element",name:"at",attributes:{did:"26FAF0F343FB91A7A80566A1F7C37235",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"26FAF0F343FB91A7A80566A1F7C37235:" + this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'AGENCY') {
+          let agency: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+          this.agencyIdSBG = [{type:"element",name:"at",attributes:{did:"26FAF0F343FB91A7A80566A1F7C37235",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"26FAF0F343FB91A7A80566A1F7C37235:" + agency,art:"1"}}];
         }
-        if (this.agencyPicker[i].level == 3) {
-          this.officeIdSBG = [{type:"element",name:"at",attributes:{did:"0156707745DF0346A1B8A7B0002BEBE0",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"0156707745DF0346A1B8A7B0002BEBE0:" + this.agencyPicker[i].code,art:"1"}}];
+        if (this.agencyPicker[i] && this.agencyPicker[i].type === 'OFFICE') {
+          let office: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
+          this.officeIdSBG = [{type:"element",name:"at",attributes:{did:"0156707745DF0346A1B8A7B0002BEBE0",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"0156707745DF0346A1B8A7B0002BEBE0:" + office,art:"1"}}];
         }
       }
     }
@@ -438,7 +435,7 @@ export class ReportComponent implements OnInit {
         encodedCountryVendor = encodeURIComponent(this.location.country.key);
       }
       // State code for geographical report by vendor location
-      if (this.id == 'B1BA646F4E0BD167A588FBBC4E9E06A8' || this.id == '48EC50F946E3011C5DE470A6FEA8C1FD') {
+      if (this.id === 'B1BA646F4E0BD167A588FBBC4E9E06A8' || this.id === '48EC50F946E3011C5DE470A6FEA8C1FD') {
         stateXMLid = 'C333A9D1438B941088B6898EEE811323';
         countryXMLid = '88E6E25643D1743D6DA8D395CE631FC2';
         if (this.location.state && this.location.state.value.length > 0) {
@@ -449,7 +446,7 @@ export class ReportComponent implements OnInit {
         }
       }
       // State code for geographical report by place of performance report
-      if (this.id == 'DD333E194817ECA449A3AAA12511955F') { 
+      if (this.id === 'DD333E194817ECA449A3AAA12511955F') { 
         stateXMLid = '79D5D8C241405AC36A4AAEB36CB4B62E';
         countryXMLid = 'D6D759164DCAC8BC56AAF88E3910C79A';
         if (this.location.state && this.location.state.value.length > 0) {

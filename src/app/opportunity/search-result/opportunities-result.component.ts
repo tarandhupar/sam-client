@@ -17,11 +17,6 @@ import * as moment from 'moment/moment';
           <p *ngIf="latestDescription!=null">
             <span [innerHTML]="latestDescription.content | slice:0:150"></span>...
           </p>
-          <p class= "service-classification">
-            <strong>Service Classifications</strong><br>
-            <span *ngIf="data.psc">{{data.psc[0]?.value}}</span><br>
-            <span *ngIf="data.naics">{{data.naics[0]?.value}}</span>
-          </p>
           <ul class="sam-ui small list">
             <li *ngIf="data.type?.value == 'Award Notice'">
             <strong>Awardee</strong><br>
@@ -89,10 +84,6 @@ import * as moment from 'moment/moment';
                 <ng-container *ngIf="!data.isCanceled">Updated </ng-container>
                 {{data.originalType?.value}}
               </ng-container>
-            </li>
-            <li *ngIf="data.solicitation?.setAside" class="item set-aside">
-              <strong>Primary Set Aside</strong><br>
-              <span>{{data.solicitation?.setAside?.value}}</span><br>
             </li>
           </ul>
         </div>

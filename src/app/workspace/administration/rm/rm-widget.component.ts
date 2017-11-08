@@ -3,7 +3,7 @@ import { UserAccessService } from "api-kit/access/access.service";
 import {Router, Route, ActivatedRoute} from "@angular/router";
 import { RMSUserServiceImpl } from "../../../users/request-access/username-autocomplete.component";
 import { ReplaySubject, Subject, Observable, Observer } from "rxjs";
-import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
+import { SamAutocompleteComponent } from "sam-ui-elements/src/ui-kit/form-controls/autocomplete";
 
 @Component({
   selector: 'rm-widget',

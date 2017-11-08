@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-//import { SamDateComponent } from 'sam-ui-kit/form-controls/date';
+//import { SamDateComponent } from 'sam-ui-elements/src/ui-kit/form-controls/date';
 import * as moment from 'moment';
 
 @Component({

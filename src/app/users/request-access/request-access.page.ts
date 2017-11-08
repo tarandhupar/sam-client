@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { UserService } from "../../role-management/user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 
 function arrayIsRequired(c: FormControl) {
   if (!c.value || !c.value.length) {

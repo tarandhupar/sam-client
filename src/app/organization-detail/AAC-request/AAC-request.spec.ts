@@ -7,10 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Load the implementations that should be tested
 import { AACRequestPage } from "./AAC-request.component";
 import { AppComponentsModule } from "../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 import { FHService } from "api-kit/fh/fh.service";
 import { FHServiceMock } from "api-kit/fh/fh.service.mock";

@@ -12,7 +12,7 @@ import { ReferenceLibraryComponent }  from './sections/reference-library/referen
 import { PartnersComponent } from './sections/partners/partners.component';
 import { AwardDataComponent } from './sections/award-data/award-data.component';
 import { AppComponentsModule } from '../app-components/app-components.module';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { TransitionToSamComponent } from './sections/transition-to-sam/transition-to-sam.component';
 import { ImageLibraryComponent } from './image-library/image-library.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

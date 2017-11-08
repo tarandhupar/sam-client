@@ -1,9 +1,10 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import * as Cookies from 'js-cookie';
+import * as _ from 'lodash';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 import {OpportunityService} from "../../../api-kit/opportunity/opportunity.service";
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
@@ -20,6 +21,7 @@ import {UserAccessService} from "../../../api-kit/access/access.service";
 export class OPPWorkspacePage implements OnInit, OnDestroy {
   @ViewChild('autocomplete') autocomplete: any;
   @ViewChild('postedDateRangeFilter') postedDateRangeFilter: any;
+  @ViewChild('selectDateFilter') selectDateFilter: any;
   private RESPONSE = 'response';
   private POSTED = 'posted';
   private ARCHIVE = 'archive';
@@ -119,19 +121,38 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     {label:'Title', name:'Title', value:'title'}
   ];
 
-  postedDateFilterModel: any = {};
-  responseDateFilterModel: any = {};
-  archiveDateFilterModel: any = {};
   internalDateModel: any = {};
-  currDateTab = this.POSTED;
+  dateFilterModel: any = {};
+  dateTypeOptions = [this.POSTED, this.RESPONSE, this.ARCHIVE];
   dateRadio = 'date';
-  dateFilterConfig = {
-    options: [
-      {name:'Date',label:'Date',value:'date'},
-      {name:'Date Range',label:'Date Range',value:'dateRange'}
-    ],
-    radSelection: 'date',
-  };
+  defaultDateOptions = [
+    {name:'Date',label:'Date',value:'date'},
+    {name:'Date Range',label:'Date Range',value:'dateRange'}
+  ]
+  dateRangeConfig = [
+    {
+      title: 'Posted',
+      dateFilterConfig: {
+          options: this.defaultDateOptions,
+          radSelection: 'date'
+      }
+    },
+    {
+      title: 'Response',
+      dateFilterConfig: {
+        options: this.defaultDateOptions,
+        radSelection: 'date'
+      }
+    },
+    {
+      title: 'Archive',
+      dateFilterConfig: {
+        options: this.defaultDateOptions,
+        radSelection: 'date'
+      },
+    }
+  ];
+  dateFilterIndex = 0;
 
   oppFacets: any = ['status','type'];
   disabled:boolean = true;
@@ -153,12 +174,11 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
         this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
         this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
-        this.postedDateFilterModel = data['dateTab'] && data['dateTab'] === this.POSTED ? this.formatDateModel(data) : {};
-        this.responseDateFilterModel = data['dateTab'] && data['dateTab'] === this.RESPONSE ? this.formatDateModel(data) : {};
-        this.archiveDateFilterModel = data['dateTab'] && data['dateTab'] === this.ARCHIVE ? this.formatDateModel(data) : {};
+        this.dateFilterModel = data['dateTab'] ? this.formatDateModel(data) : {};
         this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
-        this.dateFilterConfig.radSelection = this.dateRadio;
-        this.currDateTab = data['dateTab'] ? decodeURI(data['dateTab']) : this.POSTED;
+        
+        this.dateFilterIndex = data['dateTab'] && this.dateTypeOptions ? _.indexOf(this.dateTypeOptions, decodeURI(data['dateTab'])) : 0;
+        this.updateDateFilterConfig(this.dateFilterIndex);
         this.runOpportunity();
       });
     this.initFHDropdown();
@@ -167,6 +187,14 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.runOppSub)
       this.runOppSub.unsubscribe();
+  }
+
+
+  updateDateFilterConfig(index){
+    this.dateRangeConfig[index].dateFilterConfig.radSelection = this.dateRadio;
+    if(this.selectDateFilter){
+      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);      
+    }
   }
 
   // builds object we set into url to persist data
@@ -184,13 +212,13 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     }
 
     //Date Filter query params
-    if(this.currDateTab){
-      qsobj['dateTab'] = this.currDateTab;
+    if(!_.isEmpty(this.internalDateModel)){
+      qsobj['dateTab'] = this.dateTypeOptions[this.dateFilterIndex];
     }
-    if(this.dateFilterConfig){
+    if(this.dateRangeConfig && !_.isEmpty(this.internalDateModel)){
       qsobj['radSelection'] = this.dateRadio;
     }
-    if(this.internalDateModel){
+    if(this.internalDateModel && !_.isEmpty(this.internalDateModel)){
       qsobj['dateFrom'] = this.internalDateModel.startDate;
       qsobj['dateTo'] = this.internalDateModel.endDate;
     }
@@ -254,87 +282,57 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   }
 
    // initiates a search with date filter
-  filterByDate(){
+  filterByDate(event){
+     // setting dateFilterIndex
+    if(event){
+      if(event.index){
+        this.dateFilterIndex = event.index;     
+      }
+    }else{
+      this.dateFilterIndex = 0;
+    }
+
     this.pageNum = 0;
     this.workspaceRefresh();
   }
 
-
-  // FUNCTIONS FOR TABS ON DATE FILTER
-  selectTab(type){
-    this.currDateTab = type;
-
-    // run validation checks for filter button
-    if(this.currDateTab === this.POSTED){
-      this.dateModelChange(this.postedDateFilterModel);
-    } else if(this.currDateTab === this.RESPONSE){
-      this.dateModelChange(this.responseDateFilterModel);
-    } else if(this.currDateTab === this.ARCHIVE){
-      this.dateModelChange(this.archiveDateFilterModel);
-    }
-  }
-
-  isCurrentTab(type){
-    return this.currDateTab === type;
-  }
-
-  getColorClass(type):string{
-    if(this.currDateTab === type){
-      return 'active';
-    }
-    return '';
-  }
-
-  formatDateWrapper(tab, appendTime: boolean){
-    switch(tab){
-      case this.POSTED:
-        if(this.postedDateFilterModel.date){
-          return this.formatDate(this.postedDateFilterModel, appendTime);
-        }
-        if(this.postedDateFilterModel.dateRange){
-          return this.formatDateRange(this.postedDateFilterModel, appendTime);
-        }
-        break;
-      case this.RESPONSE:
-        if(this.responseDateFilterModel.date){
-          return this.formatDate(this.responseDateFilterModel, appendTime);
-        }
-        if(this.responseDateFilterModel.dateRange){
-          return this.formatDateRange(this.responseDateFilterModel, appendTime);
-        }
-        break;
-      case this.ARCHIVE:
-        if(this.archiveDateFilterModel.date){
-          return this.formatDate(this.archiveDateFilterModel, appendTime);
-        }
-        if(this.archiveDateFilterModel.dateRange){
-          return this.formatDateRange(this.archiveDateFilterModel, appendTime);
-        }
-        break;
-    }
-  }
-  formatDate(model, appendTime){
-    if(appendTime){
-      return {
-        'startDate': model.date + ' ' + this.START_DAY,
-        'endDate': model.date + ' ' + this.END_DAY
+  formatDateWrapper(appendTime: boolean){
+    if(!_.isEmpty(this.dateFilterModel)){
+      if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
+        return this.formatDate(this.dateFilterModel, appendTime);
+      }else if(this.dateFilterModel.hasOwnProperty('dateRange') && this.dateFilterModel.dateRange){
+        return this.formatDateRange(this.dateFilterModel, appendTime);
       }
     }
-    return {
-      'startDate': model.date,
-      'endDate': model.date
+  }
+
+  formatDate(model, appendTime){
+    if(!_.isEmpty(model)){
+      if(appendTime){
+        return {
+          'startDate': model.date + ' ' + this.START_DAY,
+          'endDate': model.date + ' ' + this.END_DAY
+        }
+      }
+      return {
+        'startDate': model.date,
+        'endDate': model.date
+      }
     }
+    
   }
   formatDateRange(model, appendTime){
-    if(appendTime){
-      return {
-        'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
-        'endDate': model.dateRange.endDate + ' ' + this.END_DAY
+    if(!_.isEmpty(model)){
+      if(appendTime){
+        return {
+          'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
+          'endDate': model.dateRange.endDate + ' ' + this.END_DAY
+        }
       }
-    }
-    return {
-      'startDate': model.dateRange.startDate,
-      'endDate': model.dateRange.endDate
+      return {
+        'startDate': model.dateRange.startDate,
+        'endDate': model.dateRange.endDate
+      }
     }
   }
 
@@ -346,10 +344,36 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     }
   }
 
+  dateModelChange(event){
+    this.filterDisabled = true;
+    if(event['date']){
+      if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
+        this.internalDateModel['startDate'] = event['date'];
+        this.internalDateModel['endDate'] = event['date'];
+        this.dateFilterModel = event;
+        this.dateRadio = 'date';
+        this.filterDisabled = false;
+      }
+    } else if(event['dateRange']){
+        // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
+        if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
+          if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
+            this.internalDateModel['startDate'] = event['dateRange']['startDate'];
+            this.internalDateModel['endDate'] = event['dateRange']['endDate'];
+            this.dateFilterModel = event;
+            this.dateRadio = 'dateRange';
+            this.filterDisabled = false;
+          }
+        }
+    }
+  }
+
   runOpportunity() {
     this.showSpinner = true;
-    var appendTime = this.currDateTab === this.RESPONSE;
-    var dateObj = this.formatDateWrapper(this.currDateTab, appendTime);
+
+    let dateTab = this.dateTypeOptions[this.dateFilterIndex]    
+    let appendTime = dateTab === this.RESPONSE && this.internalDateModel && !_.isEmpty(this.internalDateModel);
+    let dateObj = this.formatDateWrapper(appendTime);
 
     // make api call
     this.runOppSub = this.opportunityService.runOpportunity({
@@ -359,7 +383,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
       noticeType: this.noticeTypeCheckboxModel.toString(),
       sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
       organizationId: this.organizationId,
-      dateTab: this.currDateTab,
+      dateTab: dateTab,
       dateFilter: dateObj,
       facets: this.oppFacets.toString(),
       Cookie: this.cookieValue,
@@ -708,32 +732,8 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.workspaceRefresh();
   }
 
-  dateModelChange(event){
-    this.filterDisabled = true;
-    if(event['date']){
-      if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
-        this.internalDateModel['startDate'] = event['date'];
-        this.internalDateModel['endDate'] = event['date'];
-        this.dateRadio = 'date';
-        this.filterDisabled = false;
-      }
-    } else if(event['dateRange']){
-        // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
-        if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
-          if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
-            this.internalDateModel['startDate'] = event['dateRange']['startDate'];
-            this.internalDateModel['endDate'] = event['dateRange']['endDate'];
-            this.dateRadio = 'dateRange';
-            this.filterDisabled = false;
-          }
-        }
-    }
-  }
-
-  clearDateFilter(){
-    this.postedDateFilterModel = {};
-    this.responseDateFilterModel = {};
-    this.archiveDateFilterModel = {};
+  clearDateFilter(event){
+    this.dateFilterModel = {};
     this.internalDateModel = {};
     this.pageNum = 0;
 
@@ -756,10 +756,10 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.clearAgencyPickerFilter();
 
     //clear date filter
-    this.postedDateFilterModel = {};
-    this.responseDateFilterModel = {};
-    this.archiveDateFilterModel = {};
+    this.dateFilterModel = {};
     this.internalDateModel = {};
+    this.dateRadio = 'date';
+    this.dateFilterIndex = 0;
     this.pageNum = 0;
 
     //reset sort

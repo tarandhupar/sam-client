@@ -88,14 +88,7 @@
       <sam-alert [type]="'info'" [title]="''">
         Note: This is a previously published revision for this Assistance Listing.
         To view the most recent published revision, please click
-        <a [routerLink]="['/programs', latestRevision.id, 'review']">here</a>.
-      </sam-alert>
-    </ng-container>
-    <ng-container
-      *ngIf="latestUnpublishedRevision?.content?.status && latestUnpublishedRevision?.content?.program_id && program?.status?.code == 'published' && programID && latestRevision && (programID == latestRevision.id)">
-      <sam-alert [type]="'info'" [title]="''">
-        Note: An unpublished {{latestUnpublishedRevision.content.status | status | lowercase}} revision exists for this listing, please click
-        <a [routerLink]="['/programs', latestUnpublishedRevision?.content?.program_id, 'review']">here</a> to view it.
+        <a [routerLink]="['/fal', latestRevision.id, 'review']">here</a>.
       </sam-alert>
     </ng-container>
 
@@ -113,6 +106,11 @@
               Click <a class="fal-table-edit" (click)="onEditClick(['#header-information'])">here</a> to edit a draft of
               the Assistance Listing.
             </ng-container>
+            <ng-container
+              *ngIf="latestUnpublishedRevision?.content?.status && latestUnpublishedRevision?.content?.program_id && program?.status?.code == 'published' && programID && latestRevision && (programID == latestRevision.id)">
+                Note: An unpublished {{latestUnpublishedRevision.content.status | status | lowercase}} revision exists for this listing, please click
+                <a [routerLink]="['/fal', latestUnpublishedRevision?.content?.program_id, 'review']">here</a> to view it.
+            </ng-container>
           </ng-container>
         </sam-alert>
       </div>
@@ -127,8 +125,8 @@
   <!-- Pending Request Button -->
   <ng-container *ngIf="programRequest">
     <a class="sam-ui primary button right labeled icon"
-       [routerLink]="['/programs/change-request/', programRequest.id, 'action']">
-      <i aria-hidden="true" class="icon fa fa-arrow-circle-right"></i>
+       [routerLink]="['/fal/change-request/', programRequest.id, 'action']">
+      <em aria-hidden="true" class="icon fa fa-arrow-circle-right"></em>
       {{ programRequest.requestType?.value | requestLabel }}
     </a>
   </ng-container>
@@ -151,7 +149,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#header-information'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -223,7 +221,7 @@
                   <ng-container
                     *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
                     <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-                      <a [attr.id]="'program-related-' + i" [routerLink]="['/programs', item.id,'review']"
+                      <a [attr.id]="'program-related-' + i" [routerLink]="['/fal', item.id,'review']"
                          [queryParams]="qParams" (click)="toTheTop()">
                         {{item.programNumber}}
                       </a>{{isLast ? '' : ', '}}
@@ -241,7 +239,7 @@
               <a target="_blank" class="field" id="grants-dot-gov-link"
                  href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
                 View available opportunities on Grants.gov related to this Assistance Listing
-                <i aria-hidden="true" class="fa fa-external-link fa-sm"></i>
+                <em aria-hidden="true" class="fa fa-external-link fa-sm"></em>
               </a>
             </div>
 
@@ -254,7 +252,7 @@
   <!-- Overview Section -->
   <section id="program-overview">
 
-    <a name="#/programs/{{programID}}/review#overview" id="overview-anchor" hidden="true">Overview</a>
+    <a name="#/fal/{{programID}}/review#overview" id="overview-anchor" hidden="true">Overview</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -267,7 +265,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#overview'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -321,7 +319,7 @@
 
           <!-- Functional Codes -->
           <h3 class="sam-ui dividing header ">
-            <i class="icon fa fa-lock" aria-hidden="true"></i>
+            <em class="icon fa fa-lock" aria-hidden="true"></em>
             <div class="content">
               Functional Codes
             </div>
@@ -343,7 +341,7 @@
 
           <!-- Subject Terms -->
           <h3 class="sam-ui dividing header ">
-            <i class="icon fa fa-lock" aria-hidden="true"></i>
+            <em class="icon fa fa-lock" aria-hidden="true"></em>
             <div class="content">
               Subject Terms
             </div>
@@ -371,7 +369,7 @@
   <!-- Authorizations -->
   <section id="program-authorizations">
 
-    <a name="#/programs/{{programID}}/review#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
+    <a name="#/fal/{{programID}}/review#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -384,7 +382,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#authorization'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -417,7 +415,7 @@
   <!--Financials-->
   <section id="program-financials">
 
-    <a name="#/programs/{{programID}}/review#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
+    <a name="#/fal/{{programID}}/review#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -432,7 +430,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#financial-information-obligations'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -448,7 +446,7 @@
           </inline-error-message>
 
           <table
-            class="sam-ui table celled"
+            class="sam-ui table celled lightest blue"
             *ngIf="dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
             <thead>
             <tr>
@@ -591,7 +589,7 @@
 
           <!-- TAFS Codes -->
           <h3 class="sam-ui dividing header ">
-            <i aria-hidden="true" class="icon fa fa-lock"></i>
+            <em aria-hidden="true" class="icon fa fa-lock"></em>
             <div class="content">
               TAFS Codes
             </div>
@@ -602,7 +600,7 @@
           </inline-error-message>
 
           <table
-            class="sam-ui table celled"
+            class="sam-ui table celled lightest blue"
             *ngIf="dictionariesUpdated === true && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
             <thead>
             <tr>
@@ -670,7 +668,7 @@
   <!--Criteria for Applying-->
   <section id="program-application-criteria">
 
-    <a name="#/programs/{{programID}}/review#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
+    <a name="#/fal/{{programID}}/review#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -685,7 +683,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#criteria-information'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -886,7 +884,7 @@
   <!--Applying for Assistance-->
   <section id="program-application-information">
 
-    <a name="#/programs/{{programID}}/review#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
+    <a name="#/fal/{{programID}}/review#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -901,7 +899,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#applying-for-assistance'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -1159,7 +1157,7 @@
   <!--Compliance requirements-->
   <section id="program-compliance-requirements">
 
-    <a name="#/programs/{{programID}}/review#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
+    <a name="#/fal/{{programID}}/review#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -1174,7 +1172,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#compliance-requirements'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -1393,7 +1391,7 @@
   <!--Contact information-->
   <section id="program-contact-information">
 
-    <a name="#/programs/{{programID}}/review#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
+    <a name="#/fal/{{programID}}/review#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -1406,7 +1404,7 @@
         <a *ngIf="canEdit()"
            (click)="onEditClick(['#contact-information'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
       </div>
     </div>
@@ -1416,13 +1414,13 @@
       <div grid>
         <div columns="12">
 
-          <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
+          <h3 class="sam-ui dividing header">Regional or Local Location:</h3>
 
           <span id="program-contacts-local"
                 *ngIf="program.data?.contacts?.local?.flag == 'appendix'">
-            <a [routerLink]="['/search/fal/regionalOffices']"
+            <a [routerLink]="['/search/fal/regionalAssistanceLocations']"
                [queryParams]="{ organizationId: federalHierarchy?.orgKey }">
-              See Regional Agency Offices.
+              See Regional Assistance Locations.
             </a>
             {{program.data.contacts['local']?.description }}
           </span>
@@ -1467,7 +1465,7 @@
   <!--History Section-->
   <section #historySection id="program-history">
 
-    <a name="#/programs/{{programID}}/review#history" id="history-anchor" hidden="true">History</a>
+    <a name="#/fal/{{programID}}/review#history" id="history-anchor" hidden="true">History</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -1488,7 +1486,7 @@
       <div class="sam-ui info message"
            *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
         <div class="header">
-          <i class="fa fa-id-badge" aria-hidden="true"></i>
+          <em class="fa fa-id-badge" aria-hidden="true"></em>
           This history is only visible to managers of this listing
         </div>
       </div>

@@ -11,12 +11,7 @@
       [options]="currentFiscalYearCheckboxConfig.options"
        formControlName="isFundedCurrentFY">
     </sam-checkbox>
-  </div>
-  
-  <div class="sam-ui segment">
-    <div [attr.id]="'fal-obligation-obligationList'" class="fal-obligations-label">
-      Obligations
-    </div>
+
     <falObligationFYTable
       [fyYearOptions] = "fyYearOptions"
       [hideAddButton]="hideAddButton"

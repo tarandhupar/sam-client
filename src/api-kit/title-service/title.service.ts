@@ -15,6 +15,9 @@ const mappings = {
   "/role-management/bulk-update": "Bulk Update",
   "/role-management/roles-directory": "Roles Directory",
   "/role-management/requests": "Requests",
+  "/federal-hierarchy": "FH Landing",
+  "/org/detail": "FH Organization Detail",
+  "/org/create": "FH Create Organization",
   "/signin": "Sign In",
   "/search": "Search",
   "/signup": "Sign Up",
@@ -22,10 +25,11 @@ const mappings = {
   "/workspace/users": "FSD Users Directory",
   "/workspace/user": "FSD User Profile",
   "/workspace/system": "System Accounts Directory",
-  "/workspace/system/new": "New System Account",
+  "/workspace/system/new": "System Account Application",
   "/workspace/system/profile": "System Account Profile",
   "/workspace/system/password": "System Account Password Reset",
   "/workspace/system/migrations": "System Account Migration",
+  "/workspace/requests/system": "System Account Request",
 }
 
 const buildTitle =  function buildTitle(defaultString: string, appendedString: string): string {
@@ -55,6 +59,10 @@ export class SamTitleService {
     if (fragmentIndex !== -1) {
       route = route.slice(0, fragmentIndex);
     }
+
+    // Support for numeric route parameters (Only on the end of route)
+    route = route.replace(/(\/[0-9]+)$/, '');
+
     return this.ngTitleService.setTitle(buildTitle(this._titleTemplate, mappings[route]));
   }
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SamUIKitModule } from 'sam-ui-kit/index';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { OppComponentsModule } from './components/index';

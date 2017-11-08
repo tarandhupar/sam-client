@@ -20,11 +20,9 @@ import { PageNotFoundErrorPage } from './application-content/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { WageDeterminationModule } from './wage-determination';
-import { EntityModule } from './entity';
-import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
 import { UsersModule } from './users';
@@ -75,8 +73,6 @@ const APP_PROVIDERS = [
     AuthenticationModule,
     ProgramModule,
     OpportunityModule,
-    EntityModule,
-    ExclusionModule,
     OrganizationModule,
     HomeModule,
     SearchModule,

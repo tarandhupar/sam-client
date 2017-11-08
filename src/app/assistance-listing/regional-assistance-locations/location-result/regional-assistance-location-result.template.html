@@ -1,17 +1,17 @@
 <div class="sam-ui small subtle menu">
   <div class="right menu">
-    <a class="sam-ui item" 
+    <a class="sam-ui item"
       sam-click-outside
       (clickOutside)="openDropdown = false"
       (click)="openDropdown = !openDropdown"
       style="font-weight: 600;" >
-      {{actionsDropdown.defaultOption}}  
-      <i class="dropdown icon fa fa-caret-down" aria-hidden="true"></i>
+      {{actionsDropdown.defaultOption}}
+      <em class="dropdown icon fa fa-caret-down" aria-hidden="true"></em>
     </a>
     <div [@dropdown]="'in'" *ngIf="openDropdown" class="workspace-dropdown">
       <ng-container *ngFor="let option of actionsDropdown.config.options">
         <ng-container *ngIf="!option.disabled">
-          <a href="javascript:void(0);" 
+          <a href="javascript:void(0);"
             (click)="actionsDropdownSelect(option.value)">
             {{option.label}}
           </a>
@@ -22,7 +22,7 @@
 </div>
 
 <div class="sam-ui grid ">
-  <div class="twelve wide column"> 
+  <div class="twelve wide column">
     <h3 class="sam-ui header">
       <ng-container *ngIf="data.title">
         {{data.title}}
@@ -35,7 +35,7 @@
 </div>
 
 <div class="sam-ui equal width grid">
-  
+
   <div class="column">
     <div class="sam-ui medium header">
       State/Region
@@ -61,7 +61,7 @@
       <div class="sub header">{{data.phone}}</div>
     </div>
   </div>
-  
+
   <div class="column">
     <div class="sam-ui medium header">
       Sub-Branch
@@ -82,21 +82,21 @@
       </div>
     </div>
     <div class="sam-ui medium header">
-      Created 
+      Created
       <ng-container *ngIf="data.createdBy">By {{data.createdBy}}</ng-container>
       <div class="sub header">
         On {{data.createdDate|date: 'MMM d, yyyy h:mm a'}}
       </div>
     </div>
     <div class="sam-ui medium header">
-      Last Modified 
+      Last Modified
       <ng-container *ngIf="data.modifiedBy">By {{data.modifiedBy}}</ng-container>
       <div class="sub header">
         On {{data.modifiedDate|date: 'MMM d, yyyy h:mm a'}}
       </div>
     </div>
     <span class="sam-ui basic tiny blue label">
-      Regional Agency Location
+      Regional Assistance Location
     </span>
   </div>
 </div>

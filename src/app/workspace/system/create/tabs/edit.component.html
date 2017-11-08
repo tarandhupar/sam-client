@@ -1,6 +1,6 @@
 <div grid [formGroup]="form" *ngIf="user">
   <div row>
-    <div columns="10">
+    <div columns="12">
       <div [ngSwitch]="section" *ngIf="form">
         <system-information *ngSwitchCase="'system-information'" [group]="form.get('system-information')" [submitted]="submitted"></system-information>
         <organization *ngSwitchCase="'organization'" [user]="user" [group]="form.get('organization')" [submitted]="submitted"></organization>

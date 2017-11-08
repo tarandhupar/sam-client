@@ -17,7 +17,7 @@ import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import {SidenavHelper} from "../app-utils/sidenav-helper";
 import { AppComponentsModule } from "../app-components/app-components.module";
 

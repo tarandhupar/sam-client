@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'sam-ui-kit/index';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { DictionaryService } from '../../../../../api-kit/dictionary/dictionary.service';
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALFormViewModel } from '../../fal-form.model';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ExclusionsPage }   from './exclusion.page.ts';
 import { routing } from './exclusion.route.ts';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { CommonModule } from '@angular/common';
 import { ExclusionAddress } from './exclusion-address.component.ts';
 import { ExclusionIcon } from './exclusion-icon.component.ts';
@@ -16,13 +16,6 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     SamUIKitModule,
     CommonModule,
 	AppComponentsModule
-  ],
-  exports: [
-    ExclusionsPage,
-    ExclusionAddress,
-    ExclusionIcon,
-    ExclusionNatureEffect,
-    ExclusionCrossReference
   ],
   declarations: [
     ExclusionsPage,

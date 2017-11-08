@@ -235,15 +235,15 @@ class IAM {
     return utilities.getEnvironment();
   }
 
-  logout(refresh) {
+  logout(refresh: boolean = true, callback: Function = () => {}) {
     let cb;
-
-    refresh = refresh || true;
 
     cb = (() => {
       if(refresh) {
         window.location.reload(true);
       }
+
+      callback();
     });
 
     this.removeSession(cb, cb);

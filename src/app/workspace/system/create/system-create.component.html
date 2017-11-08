@@ -1,20 +1,19 @@
-<page [section]="store.section" [title]="title" [badge]="status">
+<page [section]="store.section" [title]="title" [badge]="status" [caption]="message" [options]="options.page">
   <sidebar>
     <sam-sidenav type="step"
                  [model]="store.nav"
                  [labelLookup]="store.nav.children[states.section].label"
                  (path)="onNavigate($event)"></sam-sidenav>
   </sidebar>
+
+  <sam-alert type="error" *ngIf="store.errors" message>
+    <div leading-content>
+      <div [innerText]="store.errors"></div>
+      <a (click)="showError()" *ngIf="states.showDetails">Show Details</a>
+    </div>
+  </sam-alert>
+
   <div>
-    <div class="header-hint" message [innerText]="message"></div>
-
-    <sam-alert type="error" *ngIf="store.errors">
-      <div leading-content>
-        <div [innerText]="store.errors"></div>
-        <a (click)="showError()" *ngIf="states.showDetails">Show Details</a>
-      </div>
-    </sam-alert>
-
     <form [formGroup]="form" *ngIf="user && form">
       <sam-actions-dropdown [actions]="store.actions" *ngIf="!isNew"></sam-actions-dropdown>
 

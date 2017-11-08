@@ -38,7 +38,7 @@
           <input *ngSwitchCase="'Shortname'" class="usa-width-two-thirds org-edit-input" [(ngModel)]="editedShortname">
           <div *ngSwitchCase="'End Date'">
             <div *ngIf="fhRoleModel.hasPermissionType('DELETE',adminTypeMap[currentHierarchyType]); else endDateValue">
-              <sam-date [label]="''" name='end-date' [value]="editedEndDate"></sam-date>
+              <sam-date [label]="''" name='end-date' [(ngModel)]="editedEndDate"></sam-date>
             </div>
             <ng-template #endDateValue><span class="usa-width-two-thirds p_T-2x p_B-1x">{{pair.value}}</span></ng-template>
           </div>
@@ -91,9 +91,9 @@
 
   </div>
 
-  <sam-alert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
-  <sam-alert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></sam-alert>
-  <sam-alert class="org-detail-alert-message" (dismiss)="dismissMoveOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="orgObj.name+' successfully moved under '+ orgObj.fullParentPath.split('.').pop()" *ngIf="flashMsgService.isMoveOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
-  <sam-alert class="org-detail-alert-message" (dismiss)="dismissAACRequestFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your AAC Request has been submitted.'" *ngIf="flashMsgService.isAACRequestSuccess && flashMsgService.isFlashMsgShow" ></sam-alert>
+  <div class="usa-alert-fixed-footer">
+    <sam-alert (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Organization Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
+    <sam-alert (dismiss)="dismissMoveOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="orgObj.name+' successfully moved under '+ orgObj.fullParentPath.split('.').pop()" *ngIf="flashMsgService.isMoveOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
+  </div>
 
 </div>

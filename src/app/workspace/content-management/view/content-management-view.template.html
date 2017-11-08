@@ -15,41 +15,46 @@
     </div>
 
     <!--FAQ Repository Content or Data Dictionary Content-->
-    <div class="usa-width-one-whole" *ngIf="contents.length > 0">
+    <div class="usa-width-one-whole" *ngIf="contents && contents.length > 0; else noContents">
       <div class="usa-width-one-whole content-item" *ngFor="let item of contents; let i = index;">
         <div class="usa-width-one-whole content-item-header">
-          <div class="usa-width-one-third content-header-type-div">{{item.type}}</div>
+          <div class="usa-width-one-third content-header-type-div">{{item.status.status}}</div>
           <div class="usa-width-two-thirds">
-            <sam-actions-dropdown class="pull-right" [actions]="actions" (emitAction)="onContentItemAction($event, i)"></sam-actions-dropdown>
+            <sam-actions-dropdown class="pull-right" [actions]="actions" (emitAction)="onContentItemAction($event, item.contentId)"></sam-actions-dropdown>
           </div>
         </div>
         <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'FAQ-repository' || curSection === 'data-dictionary'">
           <h4 class="content-title-text"><a>{{item.title}}</a></h4>
           <p class="content-description-text"> {{item.description}}</p>
-          <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.referenceId}}</span>
-          <span class="usa-width-one-whole"><strong>Domain: </strong>{{item.domain}}</span>
-          <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.latestUpdate}}</span>
+          <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.refId}}</span>
+          <span class="usa-width-one-whole">
+            <strong>Domain: </strong>
+            <span *ngIf="item.domains && item.domains.length > 0; else domainNA">{{getDomainStr(item.domains)}}</span>
+            <ng-template #domainNA>Not Available</ng-template>
+          </span>
+          <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.lastModifiedDate | feedsDateTimeDsiplay}}</span>
         </div>
         <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'video-library'">
           <div class="usa-width-two-thirds">
             <h4 class="content-title-text"><a>{{item.title}}</a></h4>
             <p class="content-description-text"> {{item.description}}</p>
-            <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.referenceId}}</span>
-            <span class="usa-width-one-whole"><strong>Keywords: </strong>{{item.keywords}}</span>
-            <span class="usa-width-one-whole"><strong>Domains: </strong>{{item.domains}}</span>
+            <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.refId}}</span>
+            <span class="usa-width-one-whole"><strong>Keywords: </strong>{{getTagStr(item.tags)}}</span>
+            <span class="usa-width-one-whole"><strong>Domains: </strong>{{getDomainStr(item.domains)}}</span>
           </div>
           <div class="usa-width-one-third relative ">
             <img class="video-image" src="src/assets/img/blank_icon.png">
             <a class="video-play-icon"><i class="fa fa-play-circle"></i></a>
-            <span class="video-time">{{item.video.time}}</span>
+            <span class="video-time">{{item.lastModifiedDate | feedsDateTimeDsiplay}}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="usa-width-one-whole" *ngIf="contents.length === 0">
-      No Content Available
-    </div>
+    <ng-template #noContents>
+        <sam-spinner class="m_R-1x" *ngIf="noContentsInfo === 'Loading'"></sam-spinner>{{noContentsInfo}}
+    </ng-template>
+
 
 
     <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="contents.length > 0">

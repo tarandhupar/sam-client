@@ -7,7 +7,7 @@ import { UserService } from "../user.service";
 import * as moment from 'moment';
 import { SamTitleService } from "../../../api-kit/title-service/title.service";
 import { Location } from "@angular/common";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { isArray } from 'lodash';
 
 function arrayIsRequired(c: FormControl) {
@@ -390,11 +390,7 @@ export class GrantOrEditAccess {
     let qp = this.requestId ? { userAccessRequestId: this.requestId } : undefined;
     this.userAccessService[apiMethod](body, qp).subscribe(
       res => {
-        if (this.requestId) {
-          this.goToRequests();
-        } else {
-          this.goToAccess();
-        }
+        this.goToAccess();
       },
       err => {
         if (err && err.status === 409) {

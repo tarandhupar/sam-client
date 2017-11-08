@@ -4,8 +4,8 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { cloneDeep, isArray, isNumber, merge } from 'lodash';
 
-import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
-import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry'
+import { SamNameEntryComponent } from 'sam-ui-elements/src/ui-kit/form-templates/name-entry';
+import { SamPhoneEntryComponent } from 'sam-ui-elements/src/ui-kit/form-templates/phone-entry'
 import { SamKBAComponent, SamPasswordComponent } from '../../app-components';
 import { AgencyPickerComponent } from '../../app-components/agency-picker/agency-picker.component'
 

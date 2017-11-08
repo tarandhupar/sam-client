@@ -3,7 +3,7 @@ import { UserService } from "../user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { Location } from "@angular/common";
 

@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 import { routing } from './workspace.route';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AppTemplatesModule } from 'app-templates';
@@ -19,6 +19,7 @@ import { DataEntryComponent } from "./data-entry/data-entry.component";
 import { AdministrationComponent } from "./administration/administration.component";
 import { FSDGuard, FSDComponent, FSDUserComponent, FSDUsersComponent } from './fsd';
 import {
+  SecurityGuard,
   SystemGuard,
   SystemComponent,
   SystemDirectoryComponent,
@@ -36,11 +37,15 @@ import {
   ProfileWidgetComponent,
   RMWidgetComponent,
   SystemWidgetComponent,
-  OppWidgetComponent,
-  OppPieChartComponent,
+
 } from "./administration";
 
-import { AssistanceListingWidgetComponent } from "./data-entry/assistance-listing/assistance-listing-widget.component";
+import {
+  OppWidgetComponent,
+  OppPieChartComponent,
+  AssistanceListingWidgetComponent
+} from "./data-entry";
+
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { MsgFeedSideNavComponent } from "./msg-feed/msg-feed-sidenav/msg-feed-sidenav.component";
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
@@ -48,6 +53,8 @@ import { HelpContentManagementSideNavComponent } from "./content-management/view
 import { UserService } from "../role-management/user.service";
 import { UserServiceMock } from "../role-management/user.service.mock";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
+
+import { ApplicationRequestsComponent } from './requests/application-requests/application-requests.component';
 
 import { FileValueAccessorDirective } from 'app-directives';
 import { DragDropDirective } from "./content-management/edit/drag-drop.directive";
@@ -82,9 +89,9 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
     ProfileWidgetComponent,
     RMWidgetComponent,
     SystemWidgetComponent,
+
     OppWidgetComponent,
     OppPieChartComponent,
-
     AssistanceListingWidgetComponent,
 
     /**
@@ -105,6 +112,11 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
     SystemPasswordComponent,
     SystemMigrationsComponent,
     SystemStatusComponent,
+
+    /**
+     * Requests
+     */
+    ApplicationRequestsComponent,
 
     /**
      * MyFeed
@@ -132,8 +144,12 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
      */
     FSDGuard,
     SystemGuard,
+    SecurityGuard,
+
+    /**
+     * Services
+     */
     UserService,
-    //{ provide: UserService, useClass: UserServiceMock },
   ],
 })
 export class WorkspaceModule { }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AwardsPage }   from './awards.page.ts';
 import { routing } from './awards.route.ts';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { CommonModule } from '@angular/common';
 import { DatexPipe } from './string-to-date.pipe';
 import { PhonePipe } from './phone.pipe';

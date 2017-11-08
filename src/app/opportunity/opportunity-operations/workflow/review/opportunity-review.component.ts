@@ -8,7 +8,7 @@ import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-a
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
-import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import {forEach} from "@angular/router/src/utils/collection";
 import { Subscription } from "rxjs/Subscription";
 import * as Cookies from 'js-cookie';
@@ -20,8 +20,8 @@ import {SetDisplayFields} from "../../../pipes/set-display-fields.pipe";
 import {GetResourceTypeInfo} from "../../../pipes/get-resource-type-info.pipe";
 import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
-import {MenuItem} from "sam-ui-kit/components/sidenav";
-import {IBreadcrumb} from "sam-ui-kit/types";
+import {MenuItem} from "sam-ui-elements/src/ui-kit/components/sidenav";
+import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
 import {OpportunitySectionNames} from "../../framework/data-model/opportunity-form-constants";
 
 @Component({
@@ -853,7 +853,7 @@ export class OpportunityReviewComponent implements OnInit {
       case 'Publish':
         this.tabsNavigation('Publish');
         break;
-      case 'Notify Agency Coordinator':
+      case 'Notify Assistance Administrator':
         this.tabsNavigation('Notify');
         break;
       default:

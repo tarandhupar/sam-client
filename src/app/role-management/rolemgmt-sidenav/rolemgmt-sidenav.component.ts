@@ -1,7 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
-import { SamCheckboxComponent } from "sam-ui-kit/form-controls/checkbox/checkbox.component";
+import { SamCheckboxComponent } from "sam-ui-elements/src/ui-kit/form-controls/checkbox/checkbox.component";
+import { PropertyCollector } from "../../app-utils/property-collector";
+import { uniqBy } from 'lodash';
 
 @Component({
   selector: 'rolemgmt-sidenav',
@@ -52,10 +54,17 @@ export class RoleMgmtSidenav implements OnInit{
 
 
       this.getAccessStatus();
-      this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map((d) => {
-        return this.mapDomainLabelAndVal(d);
+      this.role.checkAccess('requests').map(o => o.json()).subscribe((res) => {
+        const col: PropertyCollector = new PropertyCollector(res);
+        let supportedDomains = col.collect(['grantRoles', [], 'supportedDomains', []]);
+        let uniqueDomains = uniqBy(supportedDomains, 'id');
+        this.filters.domains.options = uniqueDomains.map(d => (this.mapLabelAndName(d)));
       });
       this.getRequestorIds();
+    }
+
+    mapLabelAndName(val) {
+      return { label: val.val, value: val.id, name: val.val };
     }
 
     getAccessStatus(){

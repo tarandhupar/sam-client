@@ -161,6 +161,7 @@ const account = {
       request
         .get(endpoint)
         .set(auth)
+        .ok(response => (response.status == 200))
         .then(response => {
           let accounts = response.body || (isAll ? [] : {});
           $success(accounts);

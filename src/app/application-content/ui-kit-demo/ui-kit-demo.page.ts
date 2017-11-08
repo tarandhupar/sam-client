@@ -3,8 +3,8 @@ import { AlertFooterService } from '../../app-components/alert-footer';
 
 import { FormControl,FormBuilder,FormGroup } from '@angular/forms';
 
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
-import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteDropdownButton } from 'sam-ui-elements/src/ui-kit/types';
 
 import { LocationService } from 'api-kit/location/location.service';
 

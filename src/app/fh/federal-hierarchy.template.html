@@ -18,8 +18,8 @@
     <h2 align="center">Search Federal Hierarchy Administrative Pages</h2>
     <div class="usa-width-one-whole">
       <div class="usa-offset-one-third usa-width-one-third relative">
-        <input class="usa-offset-one-whole" (keyup.enter)="searchFH()" [(ngModel)]="searchText">
-        <i class="fa fa-search" (click)="searchFH()"></i>
+        <input class="usa-offset-one-whole" (keyup.enter)="newFhTextSearch()" [(ngModel)]="searchText">
+        <i class="fa fa-search" (click)="newFhTextSearch()"></i>
       </div>
     </div>
 
@@ -31,7 +31,7 @@
     <div class="p_L-3x p_T-2x" [ngClass]="{'usa-width-one-whole':isDefaultResult(),'usa-width-three-fourths':!isDefaultResult()}">
       <div class="usa-width-one-whole federal-hierarchy-org-admin-section" *ngIf="userRole !== 'superAdmin' && dataLoaded && isDefaultResult()">
         <div class="usa-width-one-whole title-section">
-          <a class="federal-hierarchy-org-admin-title" [routerLink]="['/organization-detail',deptOrg.orgKey]">{{deptOrg.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="userRole === 'deptAdmin'"></i>
+          <a class="federal-hierarchy-org-admin-title" [routerLink]="['/org/detail',deptOrg.orgKey]">{{deptOrg.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="userRole === 'deptAdmin'"></i>
         </div>
         <div class="usa-width-one-whole">
           <div class="usa-width-one-sixth org-logo-container">
@@ -60,11 +60,11 @@
         </div>
 
         <!--<div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">-->
-        <div class="usa-width-one-fourth pull-right m_R-2x">
+        <div class="pull-right m_R-2x my-org-cbx-block" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">
           <div class="usa-width-five-sixths p_T-4x">
             <span class="pull-right">My Organization</span>
           </div>
-          <div class="usa-width-one-sixth p_T-4x">
+          <div class="usa-width-one-sixth">
             <input type="checkbox" id="my-org-cbx" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
             <label class="p_T-4x m_0 relative" for="my-org-cbx">&nbsp;<span style="position: absolute;right: 10000px">my organization</span></label>
           </div>
@@ -72,10 +72,24 @@
       </div>
       <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
         <div class="usa-width-one-whole">
-          <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
+          <a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
         </div>
         <div class="usa-width-three-fourths">
-          <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+
+          <ng-container *ngIf="!isOrgDoD(orgItem.org); else DoDCode">
+            <span class="usa-width-one-whole" *ngIf="orgItem.org.level == 1 || orgItem.org.level == 2; else officeAAC"><span class="org-description">CGAC:&nbsp;</span> {{orgItem.org.cgac}}</span>
+
+            <ng-template #officeAAC>
+              <span class="usa-width-one-whole"><span class="org-description">Procurement AAC Code:&nbsp;</span> {{orgItem.org.procurementAACCode}}</span>
+              <span class="usa-width-one-whole"><span class="org-description">Non-procurement AAC Code:&nbsp;</span> {{orgItem.org.nonProcurementAACCode}}</span>
+            </ng-template>
+
+          </ng-container>
+
+          <ng-template #DoDCode>
+            <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+          </ng-template>
+
           <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem.org)}}</span>
         </div>
         <div class="usa-width-one-fourth">

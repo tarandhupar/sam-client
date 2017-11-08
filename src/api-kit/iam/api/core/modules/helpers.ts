@@ -50,7 +50,7 @@ export function exceptionHandler(response) {
 };
 
 export function isDebug() {
-  return (utils.isLocal() && (utils.queryparams.debug !== undefined || false)) ||
+  return (utils.isLocal() && (utils.queryparams['debug'] !== undefined || false)) ||
          (ENV && ENV == 'test');
 };
 

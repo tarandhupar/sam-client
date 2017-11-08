@@ -94,8 +94,13 @@ export class FALFormViewModel {
   get status(){
     return this._fal.status;
   }
+
   get _links(){
     return this._fal._links;
+  }
+
+  get latest(){
+    return this._fal.latest;
   }
 
   get isRevision() {

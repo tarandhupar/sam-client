@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -27,6 +27,8 @@ export class MsgFeedComponent {
   };
 
   recordsPerPage = 10;
+
+  noFeedsInfo = "Loading Feeds";
 
   curSection:string = "";
   curSubSection:string = "";
@@ -82,6 +84,7 @@ export class MsgFeedComponent {
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
+        this.noFeedsInfo = "Loading Feeds";
         this.curSection = params['section'];
         this.curSubSection = params['subsection']? params['subsection']:'';
         this.crumbs[1].breadcrumb = this.capitalPipe.transform(this.curSection);
@@ -132,23 +135,30 @@ export class MsgFeedComponent {
 
   /* search message feeds with filter, sortby, page number*/
   loadFeeds(typeId, filterObj, sortBy, page){
+    this.msgFeeds = [];
+    this.noFeedsInfo = "Loading Feeds";
+    this.msgFeedService.getFeeds(typeId, filterObj, sortBy, page, this.recordsPerPage).subscribe(
+      data => {
+        if(filterObj.section === "requests"){
+          this.msgFeeds = data['requestFeeds'];
+          this.totalRecords = data['totalRecords'];
+          this.requestTypeMap = data['requestTypeMap'];
 
-    this.msgFeedService.getFeeds(typeId, filterObj, sortBy, page, this.recordsPerPage).subscribe(data => {
+        } else if(filterObj.section === 'notifications'){
+          this.msgFeeds = data['notificationFeeds'];
+          this.totalRecords = data['notificationCount'];
+        }
 
-      if(filterObj.section === "requests"){
-        this.msgFeeds = data['requestFeeds'];
-        this.totalRecords = data['totalRecords'];
-        this.requestTypeMap = data['requestTypeMap'];
+        if(this.msgFeeds.length === 0) this.noFeedsInfo = "No Message Feeds";
+        this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
 
-      } else if(filterObj.section === 'notifications'){
-        this.msgFeeds = data['notificationFeeds'];
-        this.totalRecords = data['notificationCount'];
-      }
+        this.updateRecordsText();
+      },
+      error=> {
+        this.noFeedsInfo = "No Message Feeds";
+        console.log(error);
+      });
 
-      this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-
-      this.updateRecordsText();
-    });
   }
 
 

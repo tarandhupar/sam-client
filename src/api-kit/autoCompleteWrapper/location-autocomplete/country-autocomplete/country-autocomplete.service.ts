@@ -1,7 +1,7 @@
 import { Directive, Injectable, Input, OnInit } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
 
 @Injectable()
@@ -38,7 +38,6 @@ getAllCountriesJSON(q:string, historic:string): ReplaySubject<any> {
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
 
     let active = this.historic;
-    console.log(this.historic);
     return this.getAllCountriesJSON(val,active).map(o => o);
   }
 

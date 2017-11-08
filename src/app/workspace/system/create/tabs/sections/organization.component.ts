@@ -17,7 +17,7 @@ const getConfig = function(type: string) {
     //TODO
   }
 
-  return { keyValueConfig: config };
+  return config;
 }
 
 @Component({
@@ -66,7 +66,7 @@ export class OrganizationComponent extends Section {
 
   setHierarchy(hierarchy: Array<{ label: string, value: number }>) {
     let organization;
-console.log(hierarchy);
+
     if(hierarchy) {
       this.form.get('departmentOrgId').setValue(this.getOrgKey(hierarchy[0]));
       this.form.get('agencyOrgId').setValue(this.getOrgKey(hierarchy[1]));

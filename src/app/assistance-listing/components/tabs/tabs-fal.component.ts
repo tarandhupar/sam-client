@@ -74,9 +74,9 @@ export class TabsFalComponent implements OnInit{
   programRequest: any;
 
   private tabItems: any = {
-    review: { label: "Authenticated", routeConfig: "programs/:id/review"},
-    edit: { label: "Edit", routeConfig: "programs/:id/edit"},
-    public: { label: "Public", routeConfig: "programs/:id/view"},
+    review: { label: "Authenticated", routeConfig: "fal/:id/review"},
+    edit: { label: "Edit", routeConfig: "fal/:id/edit"},
+    public: { label: "Public", routeConfig: "fal/:id/view"},
   };
 
   constructor(
@@ -148,7 +148,7 @@ export class TabsFalComponent implements OnInit{
             if (program._links['program:request:approve'])
               this.toggleButtonTextOnPermissions('Publish', true);
           } else if (program._links['program:notify:coordinator']) {
-            this.toggleButtonTextOnPermissions('Notify Agency Coordinator', true);
+            this.toggleButtonTextOnPermissions('Notify Assistance Administrator', true);
             this.enableDisableButtons(errorFlag);
           }
         }
@@ -176,7 +176,7 @@ export class TabsFalComponent implements OnInit{
   }
 
   public onChangeRequestSelect(event) {
-    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type=' + event.value);
+    this.router.navigateByUrl('fal/' + event.program.id + '/change-request?type=' + event.value);
   }
 
   /*
@@ -187,8 +187,9 @@ export class TabsFalComponent implements OnInit{
 
   public onEditClick(page: string[]) {
     if (this.data._links && this.data._links['program:update'] && this.data._links['program:update'].href) {
+      console.log(this.data._links);
       let id = this.data._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
-      let url = '/programs/' + id + '/edit'.concat(page.toString());
+      let url = '/fal/' + id + '/edit'.concat(page.toString());
       this.router.navigateByUrl(url);
     } else if (this.data._links && this.data._links['program:revise']) {
       this.editModal.openModal(page.toString());
@@ -198,7 +199,7 @@ export class TabsFalComponent implements OnInit{
   public onEditModalSubmit(page: any[]) {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.data.id, this.cookieValue).subscribe(res => {
-      let url = '/programs/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
+      let url = '/fal/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
       this.router.navigateByUrl(url);
     });
   }

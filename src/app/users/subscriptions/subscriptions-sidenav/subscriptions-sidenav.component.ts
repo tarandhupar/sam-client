@@ -1,7 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { SubscriptionsService } from "api-kit/subscriptions/subscriptions.service";
-import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
+import { SidenavService } from "sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service";
 import { SidenavHelper } from "../../../app-utils/sidenav-helper";
 import { Observable } from 'rxjs';
 import { ToggleService } from "api-kit/toggle/toggle.service";

@@ -61,52 +61,51 @@
       <!-- Date Filters -->
       <div class="sam-ui segment">
         <ng-container *ngIf="index === 'cfda' && showRegionalOffices==false">
-          <sam-tab-date-range-filter
+          <sam-select-date-range-filter
             [tabConfig] = "cfdaDateRangeConfig"
-            [filterDisabled] = "disableCfdaFilter"
+            [(filterDisabled)] = "disableCfdaFilter"
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "cfdaDateFilterModel"
             (ngModelChange) = "determineFilterDateDisable($event)"
             (tabIndexChange) = "dateTabChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
-            (filterClearEvt)="filterClearHandler($event)">
-          </sam-tab-date-range-filter>
+            (filterClearEvt)="filterClearHandler($event)"
+            [id]= "'date-range-filter'">
+          </sam-select-date-range-filter>
 
           <div class="sam-ui divider"></div>
         </ng-container>
 
         <ng-container *ngIf="index === 'opp' && showRegionalOffices==false">
-          <sam-tab-date-range-filter
-            [tabConfig] = "fboDateRangeConfig"
-            [(filterDisabled)] = "disableOppFilter"
-            [tabIndex] = "dateFilterIndex"
-            [(ngModel)]= "fboDateFilterModel"
-            (ngModelChange) = "determineFilterDateDisable($event)"
-            (tabIndexChange) = "dateTabChangeHandler($event)"
-            (filterEvt)="filterHandler($event)"
-            (filterClearEvt)="filterClearHandler($event)">
-          </sam-tab-date-range-filter>
-
-          <div class="sam-ui divider"></div>
+            <sam-select-date-range-filter
+              [tabConfig] = "oppDateRangeConfig"
+              [(filterDisabled)] = "disableOppFilter"
+              [tabIndex] = "dateFilterIndex"
+              [(ngModel)]= "oppDateFilterModel"
+              (ngModelChange) = "determineFilterDateDisable($event)"
+              (tabIndexChange) = "dateTabChangeHandler($event)"
+              (filterEvt)="filterHandler($event)"
+              (filterClearEvt)="filterClearHandler($event)"
+              [id]= "'date-range-filter'">
+            </sam-select-date-range-filter>          <div class="sam-ui divider"></div>
         </ng-container>
 
         <ng-container *ngIf="index === 'wd' && showRegionalOffices==false">
-          <sam-tab-date-range-filter
-            [tabConfig] = "wdDateRangeConfig"
-            [(filterDisabled)] = "disableWdFilter"
-            [tabIndex] = "dateFilterIndex"
-            [(ngModel)]= "wdDateFilterModel"
-            (ngModelChange) = "determineFilterDateDisable($event)"
-            (tabIndexChange) = "dateTabChangeHandler($event)"
-            (filterEvt)="filterHandler($event)"
-            (filterClearEvt)="filterClearHandler($event)">
-          </sam-tab-date-range-filter>
-
-          <div class="sam-ui divider"></div>
+            <sam-select-date-range-filter
+              [tabConfig] = "wdDateRangeConfig"
+              [(filterDisabled)] = "disableWdFilter"
+              [tabIndex] = "dateFilterIndex"
+              [(ngModel)]= "wdDateFilterModel"
+              (ngModelChange) = "determineFilterDateDisable($event)"
+              (tabIndexChange) = "dateTabChangeHandler($event)"
+              (filterEvt)="filterHandler($event)"
+              (filterClearEvt)="filterClearHandler($event)"
+              [id]= "'date-range-filter'">
+            </sam-select-date-range-filter>          <div class="sam-ui divider"></div>
         </ng-container>
 
         <ng-container *ngIf="index === 'fpds' && showRegionalOffices==false">
-          <sam-tab-date-range-filter
+          <sam-select-date-range-filter
             [tabConfig] = "fpdsDateRangeConfig"
             [(filterDisabled)] = "disableFpdsFilter"
             [tabIndex] = "dateFilterIndex"
@@ -114,8 +113,9 @@
             (ngModelChange) = "determineFilterDateDisable($event)"
             (tabIndexChange) = "dateTabChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
-            (filterClearEvt)="filterClearHandler($event)">
-          </sam-tab-date-range-filter>
+            (filterClearEvt)="filterClearHandler($event)"
+            [id]= "'date-range-filter'">
+          </sam-select-date-range-filter>
 
           <div class="sam-ui divider"></div>
         </ng-container>
@@ -454,7 +454,7 @@
       <div class="sam-ui equal width grid">
         <div class="column middle aligned">
           <h2 *ngIf="!showRegionalOffices" [ngClass]="showSavedSearches ? 'm_T-0 p_T-0x' : 'm_T-0 p_T-6x'">Search Results</h2>
-          <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h2>
+          <h2 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Regional Assistance Locations</h2>
         </div>
       </div>
 

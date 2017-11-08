@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {FHService} from "../../../api-kit/fh/fh.service";
 import {FALAuthGuard} from "../components/authguard/authguard.service";
 

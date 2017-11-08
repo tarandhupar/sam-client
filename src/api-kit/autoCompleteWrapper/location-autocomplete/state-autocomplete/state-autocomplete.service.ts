@@ -1,7 +1,7 @@
 import { Directive, Injectable, Input, OnChanges } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
 import { AlertFooterService } from 'app/app-components/alert-footer/alert-footer.service';//this will be moved into sam-ui-kit soon
 

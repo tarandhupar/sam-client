@@ -2,14 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { isArray, merge } from 'lodash';
+import { isArray, extend, merge } from 'lodash';
 
-import { SamActionsDropdownComponent } from 'sam-ui-kit/components/actions';
-import { SamTabsComponent, SamTabComponent } from 'sam-ui-kit/components/tabs';
+import { SamActionsDropdownComponent } from 'sam-ui-elements/src/ui-kit/components/actions';
+import { SamTabsComponent, SamTabComponent } from 'sam-ui-elements/src/ui-kit/components/tabs';
 import { IAMService } from 'api-kit';
 
 import { Validators as $Validators } from 'authentication/shared/validators';
 import { CWSApplication, User } from 'api-kit/iam/interfaces';
+import { PageConfig } from 'sam-ui-kit/layout/types';
 
 @Component({
   templateUrl: './system-create.component.html',
@@ -23,8 +24,8 @@ export class SystemCreateComponent {
     section: 'Workspace',
     title: 'New System Account',
     messages: {
-      requester: 'Complete and submit this form to request a new system account All fields are required for security review to establish your account, unless morked as optional.',
-      approver:  'Review the follow details ond select opprove or reject.',
+      requester: 'Complete and submit this form to request a new system account. All fields are required for security review to establish your account, unless marked as optional.',
+      approver:  'Review the following details and approve or reject.',
     },
 
     nav: {
@@ -52,6 +53,14 @@ export class SystemCreateComponent {
     ],
 
     errors: '',
+  };
+
+  private options = {
+    page: <PageConfig>{
+      badge: {
+        attached: 'top right'
+      }
+    }
   };
 
   public user: User;
@@ -99,16 +108,6 @@ export class SystemCreateComponent {
   constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
-    this.api.iam.user.get(user => {
-      this.user = user;
-
-      if(!user.gov) {
-        this.router.navigate(['/workspace/system']);
-      } else {
-        this.application.authorizingOfficialName = user.fullName;
-      }
-    });
-
     this.subscriptions['params'] = this.route.params.subscribe(params => {
       if(params['id']) {
         this.application.uid = params['id'];
@@ -128,6 +127,23 @@ export class SystemCreateComponent {
     this.subscriptions['qparams'] = this.route.queryParams.subscribe(qparams => {
       if(qparams['section']) {
         this.states.section = parseInt(qparams['section']);
+      }
+    });
+
+    this.api.iam.user.get(user => {
+      this.user = user;
+
+      // Role Debugging Environoment
+      if(this.api.iam.isDebug()) {
+        if(this.isPending && this.api.iam.getParam('approver')){
+          this.user.systemApprover = true;
+        }
+      }
+
+      if(!user.gov) {
+        this.router.navigate(['/workspace/system']);
+      } else {
+        this.application.authorizingOfficialName = user.fullName;
       }
     });
   }
@@ -202,6 +218,14 @@ export class SystemCreateComponent {
     }
   }
 
+  titleize(value: string) {
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.replace(word[0], word[0].toUpperCase()))
+      .join(' ');
+  }
+
   get isNew(): boolean {
     return (this.application.uid) ? false : true;
   }
@@ -229,7 +253,7 @@ export class SystemCreateComponent {
   }
 
   get status(): string {
-    return this.application.applicationStatus;
+    return this.titleize(this.application.applicationStatus);
   }
 
   get active(): string {
@@ -254,13 +278,15 @@ export class SystemCreateComponent {
   get data(): CWSApplication {
     let form = this.form;
 
-    return merge({}, this.application,
+    this.application = extend({}, this.application,
       form.get('system-information').value,
       form.get('organization').value,
       form.get('permissions').value,
       form.get('security').value,
       form.get('authorization').value
     );
+
+    return this.application;
   }
 
   showError() {

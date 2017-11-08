@@ -34,7 +34,7 @@ import 'rxjs/add/operator/map';
           <div class="four wide column">
             <ul class="sam-ui small list">
                <li>
-                 <span class="sam-ui mini label">Regional Agency Location</span>
+                 <span class="sam-ui mini label">Regional Assistance Location</span>
                </li>
                <li class="subbranch-name">  
                  <strong>Sub-Branch</strong><br>

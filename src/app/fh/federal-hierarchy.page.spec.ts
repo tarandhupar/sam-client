@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 // Load the implementations that should be tested
 import { FederalHierarchyPage } from "./federal-hierarchy.page";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../api-kit/fh/fh.service";
 import { FHServiceMock } from "api-kit/fh/fh.service.mock";

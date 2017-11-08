@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { UserAccessService } from "../../api-kit/access/access.service";
 import {RoleMgmtSidenav} from "./rolemgmt-sidenav/rolemgmt-sidenav.component";
 import { ActivatedRouteSnapshot, ActivatedRoute, Router, NavigationExtras } from "@angular/router";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 
 @Component({

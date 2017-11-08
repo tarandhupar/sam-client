@@ -1,10 +1,10 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { LocationService } from 'api-kit/location/location.service';
 import { Observable } from 'rxjs';
-import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
+import {SamAutocompleteComponent} from "sam-ui-elements/src/ui-kit/form-controls/autocomplete";
 import {SamLocationComponent} from "../location-component/location.component";
 
 @Component ({

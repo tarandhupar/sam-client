@@ -86,7 +86,6 @@ class Utilities {
   environment;
   baseUri;
   log;
-  queryparams;
 
   constructor(options?) {
     let params = $params();
@@ -102,8 +101,11 @@ class Utilities {
 
     this.log = this.isLocal() || (!this.isLocal && this.debug) || (params.debug !== undefined && params.debug);
 
-    this.queryparams = parseUrlQuery();
     this.baseUri = this.getBaseUri();
+  }
+
+  get queryparams(): { [key: string]: string } {
+    return parseUrlQuery();
   }
 
   isLocal() {

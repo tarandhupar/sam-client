@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { SubscriptionsService } from "api-kit/subscriptions/subscriptions.service";
 import { WatchlistService } from "api-kit/watchlist/watchlist.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
-import { SamActionInterface } from "sam-ui-kit/components/actions";
+import { SamActionInterface } from "sam-ui-elements/src/ui-kit/components/actions";
 import { Watchlist } from '../../app-components/watchlist/watchlist.model';
 import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 

@@ -32,9 +32,13 @@ export class SearchService {
     }
 
     // wage determination type filter
-    if(typeof obj.wdType !== 'undefined' && obj.organization_id !== null && obj.wdType !== '') {
+    if(typeof obj.wdType !== 'undefined' && obj.wdType !== null && obj.wdType !== '') {
         oApiParam.oParam['index'] = obj.wdType;
       }
+    //This block is needed to meet the business logic for SCA WD's as per SAM-18764. To show only standard SCA's on empty search.
+    if(obj.index=="wd" && obj.keyword=="") {
+      oApiParam.oParam['is_standard'] = true;
+    }
 
     // organization id filter
     if(typeof obj.organization_id !== 'undefined' && obj.organization_id !== null && obj.organization_id !== '') {
@@ -185,7 +189,7 @@ export class SearchService {
     //showRegionalOffices only when
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;
-      oApiParam.oParam['index'] = 'ro'; 
+      oApiParam.oParam['index'] = 'ro';
       oApiParam.oParam['sort'] = '-relevance';
     }
 

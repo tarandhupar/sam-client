@@ -52,20 +52,23 @@
 
 
     <!-- Intro Content -->
+    <a name="#/opp/{{opportunity.id}}/review#header"></a>
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
-      <a name="#/opp/{{opportunity.id}}/review#header"></a>
       <div class="sam-ui hidden divider"></div>
 
-      <div class="sam-ui padded raised segment">
-
-        <!-- Edit Button -->
+      <!-- Edit Button -->
+      <div grid class="middle aligned">
+        <div columns="9"></div>
+        <div columns="3" class="right aligned">
         <a *ngIf="canEdit()"
-           (click)="onEditClick(['#header-information'])"
-           class="sam-ui top right attached mini blue label"
-           style="z-index: 1;">
+           (click)="onEditClick(['#header-information'])">
           Edit Section
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
+        </div>
+      </div>
+
+      <div class="sam-ui padded raised segment">
 
         <div class="sam-ui attached grid">
           <div class="column">
@@ -121,8 +124,8 @@
     <div [class.hide]="selectedPage !== 0">
 
       <!-- Award Details -->
+      <a name="#/opportunities/{{opportunity.id}}/review#award"></a>
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
-        <a name="#/opportunities/{{opportunity.id}}/review#award"></a>
         <h2 class="sam-ui header">
           Award Details
           </h2>
@@ -172,22 +175,25 @@
       </section>
 
       <!-- General Information -->
+      <a name="#/opp/{{opportunity.id}}/review#general"></a>
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
-        <a name="#/opp/{{opportunity.id}}/review#general"></a>
         <div class="sam-ui hidden divider"></div>
-        <h2 class="sam-ui header">
-          General Information
-        </h2>
-        <div class="sam-ui segment">
-          <!-- Edit Button -->
-          <a *ngIf="canEdit()"
-             (click)="onEditClick(['#general-information'])"
-             class="sam-ui top right attached mini blue label"
-             style="z-index: 1;">
-            Edit Section
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </a>
 
+        <div grid class="middle aligned">
+          <div columns="9">
+            <h2 class="sam-ui header">General Information</h2>
+          </div>
+          <div columns="3" class="right aligned">
+            <!-- Edit Link -->
+            <a *ngIf="canEdit()"
+               (click)="onEditClick(['#general-information'])">
+              Edit Section
+              <em class="fa fa-pencil" aria-hidden="true"></em>
+            </a>
+          </div>
+        </div>
+
+        <div class="sam-ui segment">
           <ul class="usa-unstyled-list">
             <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
               <strong>Contract Opportunity Type: </strong>
@@ -259,20 +265,24 @@
       </section>
 
       <!-- Classification -->
+      <a name="#/opp/{{opportunity.id}}/review#classification"></a>
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-        <a name="#/opp/{{opportunity.id}}/review#classification"></a>
         <div class="sam-ui hidden divider"></div>
+        <div grid class="middle aligned">
+          <div columns="9">
         <h2 class="sam-ui header">Classification</h2>
-        <div class="sam-ui segment">
-          <!-- Edit Button -->
-          <a *ngIf="canEdit()"
-             (click)="onEditClick(['#classification'])"
-             class="sam-ui top right attached mini blue label"
-             style="z-index: 1;">
-            Edit Section
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </a>
+          </div>
+          <div columns="3" class="right aligned">
+            <!-- Edit Button -->
+            <a *ngIf="canEdit()"
+               (click)="onEditClick(['#classification'])">
+              Edit Section
+              <em class="fa fa-pencil" aria-hidden="true"></em>
+            </a>
+          </div>
+        </div>
 
+        <div class="sam-ui segment">
             <ul class="usa-unstyled-list">
               <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
                 <strong> Original Set Aside: </strong>
@@ -344,20 +354,25 @@
       </section>
 
       <!-- Synopsis -->
+      <a name="#/opp/{{opportunity.id}}/review#description"></a>
       <section [attr.id]="generateID(opportunityFields.Description)" *ngIf="shouldBeDisplayed(opportunityFields.Description)">
-        <a name="#/opp/{{opportunity.id}}/review#description"></a>
         <div class="sam-ui hidden divider"></div>
-        <h2 class="sam-ui header">Description</h2>
-        <div class="sam-ui segment">
-          <!-- Edit Button -->
-          <a *ngIf="canEdit()"
-             (click)="onEditClick(['#description'])"
-             class="sam-ui top right attached mini blue label"
-             style="z-index: 1;">
-            Edit Section
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </a>
 
+        <div grid class="middle aligned">
+          <div columns="9">
+            <h2 class="sam-ui header">Description</h2>
+          </div>
+          <div columns="3" class="right aligned">
+            <!-- Edit Button -->
+            <a *ngIf="canEdit()"
+             (click)="onEditClick(['#description'])">
+             Edit Section
+             <em class="fa fa-pencil" aria-hidden="true"></em>
+            </a>
+          </div>
+        </div>
+
+        <div class="sam-ui segment">
           <h3 class="sam-ui dividing header">
             <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
             <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
@@ -369,8 +384,8 @@
 
 
       <!-- Packages -->
+      <a name="#/opp/{{opportunity.id}}/review#packages"></a>
       <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && ready">
-        <a name="#/opp/{{opportunity.id}}/review#packages"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Packages</h2>
         <div class="sam-ui segment">
@@ -383,20 +398,24 @@
       </section>
 
       <!-- Contact Information -->
+      <a name="#/opp/{{opportunity.id}}/review#contact"></a>
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
-        <a name="#/opp/{{opportunity.id}}/review#contact"></a>
         <div class="sam-ui hidden divider"></div>
-        <h2 class="sam-ui header">Contact Information</h2>
+
+        <div grid class="middle aligned">
+          <div columns="9">
+            <h2 class="sam-ui header">Contact Information</h2>
+          </div>
+          <div columns="3" class="right aligned">
+            <a *ngIf="canEdit()"
+              (click)="onEditClick(['#contact-information'])">
+              Edit Section
+              <em class="fa fa-pencil" aria-hidden="true"></em>
+            </a>
+          </div>
+        </div>
+
         <div class="sam-ui segment">
-
-          <a *ngIf="canEdit()"
-             (click)="onEditClick(['#contact-information'])"
-             class="sam-ui top right attached mini blue label"
-             style="z-index: 1;">
-            Edit Section
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </a>
-
           <div class="usa-grid-full">
             <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
               <h3 class="sam-ui dividing header">
@@ -414,19 +433,19 @@
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-primary')"
                     *ngIf="opportunity.data?.pointOfContact[0]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
-                  <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-envelope-o" aria-hidden="true"></em> &nbsp;
                   <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
                     {{opportunity.data?.pointOfContact[0].email}}
                   </a>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-primary')"
                     *ngIf="opportunity.data?.pointOfContact[0]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
-                  <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-phone" aria-hidden="true"></em> &nbsp;
                   {{opportunity.data?.pointOfContact[0].phone}}
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-primary')"
                     *ngIf="opportunity.data?.pointOfContact[0]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
-                  <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-fax" aria-hidden="true"></em> &nbsp;
                   {{opportunity.data?.pointOfContact[0].fax}}
                 </li>
               </ul>
@@ -447,19 +466,19 @@
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-secondary')"
                     *ngIf="opportunity.data?.pointOfContact[1]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
-                  <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-envelope-o" aria-hidden="true"></em> &nbsp;
                   <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                     {{opportunity.data?.pointOfContact[1].email}}
                   </a>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
                     *ngIf="opportunity.data?.pointOfContact[1]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
-                  <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-phone" aria-hidden="true"></em> &nbsp;
                   {{opportunity.data?.pointOfContact[1].phone}}
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-secondary')"
                     *ngIf="opportunity.data?.pointOfContact[1]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
-                  <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+                  <em class="fa fa-fax" aria-hidden="true"></em> &nbsp;
                   {{opportunity.data?.pointOfContact[1].fax}}
                 </li>
               </ul>
@@ -470,8 +489,8 @@
       </section>
 
       <!-- History -->
+      <a name="#/opp/{{opportunity.id}}/review#history"></a>
       <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History)">
-        <a name="#/opp/{{opportunity.id}}/review#history"></a>
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">History</h2>
         <div class="sam-ui segment">
@@ -481,17 +500,17 @@
       </section>
 
       <div *ngIf="showIvls">
+      <a name="#/opp/{{opportunity.id}}/review#ivl-summary"></a>
       <section  [attr.id]="generateID(opportunityFields.IVL)" *ngIf="ivls">
-        <a name="#/opp/{{opportunity.id}}/review#ivl-summary"></a>
-
         <div class="sam-ui hidden divider"></div>
         <h2 class="sam-ui header">Interested Vendors List</h2>
         <div class="sam-ui segment">
 
         <div class="usa-width-one-whole">
           <div class="pull-right">
-            <input type="text" [(ngModel)] = "keyword">
+            <input type="text" [(ngModel)] = "keyword" id="search-input-ivl">
             <sam-button
+              [attr.id]="'search-ivl-button'"
               [buttonType]="'default'"
               [buttonText]="'Search' "
               [buttonClass]="'usa-button usa-search-submit search-btn'"
@@ -505,23 +524,16 @@
 
         <div class="sam-ui info message">
           <div class="header">
-            <i class="fa fa-id-badge" aria-hidden="true"></i>
+            <em class="fa fa-id-badge" aria-hidden="true"></em>
             This vendor list is only visible to owners of this opportunity
           </div>
         </div>
 
         <div class="sam-ui vertically middle aligned padded grid">
           <div class="five wide column">
-            <p>
-              Showing results
-              <strong>
-                {{ivls.page.number+1}}
-                <span class="usa-sr-only">through</span> -
-                {{ivls.page.totalPages}}
-              </strong>
-              of
-              <strong>{{ivls.page.totalElements}}</strong>
-            </p>
+            <strong>
+              <list-results-message [showing]="10" [currentPage]="ivls?.page?.number+1" [total]="ivls?.page?.totalElements" [suffix]="listMessageSuffix"></list-results-message>
+            </strong>
           </div>
           <div class="three wide column middle right aligned">
           </div>
@@ -575,8 +587,8 @@
                       Contact
                       <div class="sub header">
                         {{element.contactFirstName}} {{element.contactLastName}} <br />
-                        <ng-container *ngIf="element.contactEmail"><strong><i class="fa fa-envelope-o" aria-hidden="true"></i></strong> <a href="mailto:{{element.contactEmail}}">{{element.contactEmail}}</a> <br></ng-container>
-                        <ng-container *ngIf="element.contactPhone"><strong><i class="fa fa-phone" aria-hidden="true"></i></strong> {{element.contactPhone}}<br></ng-container>
+                        <ng-container *ngIf="element.contactEmail"><strong><em class="fa fa-envelope-o" aria-hidden="true"></em></strong> <a href="mailto:{{element.contactEmail}}">{{element.contactEmail}}</a> <br></ng-container>
+                        <ng-container *ngIf="element.contactPhone"><strong><em class="fa fa-phone" aria-hidden="true"></em></strong> {{element.contactPhone}}<br></ng-container>
                       </div>
                     </div>
                   </div>

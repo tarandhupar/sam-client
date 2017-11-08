@@ -3,7 +3,7 @@
     <div class="sam-ui segment" row>
       <div class="column right aligned">
         <div class="sam-ui label bottom left attached text-center" [ngClass]="status.class" [innerText]="status.label" *ngIf="status"></div>
-        <sam-actions-dropdown [actions]="actions" *ngIf="status.applicationStatus !== 'Approved'"></sam-actions-dropdown>
+        <sam-actions-dropdown [actions]="actions" *ngIf="status && status.label !== 'Approved'"></sam-actions-dropdown>
       </div>
     </div>
     <div row>

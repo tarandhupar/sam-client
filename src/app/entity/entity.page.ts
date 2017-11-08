@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { EntityService, FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
-import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import { SidenavHelper } from "../app-utils/sidenav-helper";
 import { BackToSearch } from "../app-utils/back-to-search-helper";
 import { LocationService } from 'api-kit/location/location.service';

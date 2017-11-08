@@ -1,10 +1,10 @@
 <div class="sam-ui small subtle menu">
   <a *ngIf="requestTypeValue && requestId"
-      [routerLink]="['/programs/change-request/', requestId, 'action']"
+      [routerLink]="['/fal/change-request/', requestId, 'action']"
       class="active inverted blue item pending-request-button">
     {{ requestTypeValue | requestLabel }}
     &nbsp;
-    <i aria-hidden="true" class="fa fa-arrow-circle-right"></i>
+    <em aria-hidden="true" class="fa fa-arrow-circle-right"></em>
   </a>
   <div class="right menu">
     <wrapper-fal-change-request-dropdown
@@ -23,7 +23,7 @@
   <div class="twelve wide column">
     <h3 class="sam-ui header">
       <a *ngIf="data.data.title"
-        [routerLink]="['/programs', data.id, 'review']">
+        [routerLink]="['/fal', data.id, 'review']">
         {{data.data.title}}
       </a>
       <ng-container *ngIf="!data.data.title">

@@ -1,14 +1,22 @@
 /**
  * @author: @AngularClass
  */
+let focusPath = "../src/app"
+process.argv.forEach(function(val,index,arr){
+  if(val.indexOf("--focus=")!=-1){    
+    focusPath = "../"+val.split("=")[1];
+  }
+});
 
 const helpers = require('./helpers');
+const path = require('path');
 
 /**
  * Webpack Plugins
  */
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 
 /**
  * Webpack Constants
@@ -189,7 +197,10 @@ var conf = {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
-
+    new ContextReplacementPlugin(
+      /..[\/\\]src[\/\\]app/,
+      path.resolve(__dirname,focusPath)
+    ),
     /**
      * Plugin: DefinePlugin
      * Description: Define free variables.
@@ -206,7 +217,11 @@ var conf = {
       'API_UMBRELLA_URL': JSON.stringify("dummy"), // we do not test with a real backend, but the url and key must be defined
       'API_UMBRELLA_KEY': JSON.stringify("dummy"),
       'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true'),
-      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true')
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true'),
+      'REPORT_MICRO_STRATEGY_ENV': JSON.stringify("dummy"),
+      'REPORT_MICRO_STRATEGY_URL': JSON.stringify("dummy"),
+      'ENABLE_REPORTING_AREA': JSON.stringify(process.env.ENABLE_REPORTING_AREA === 'true'),
+      'REPORT_MICRO_STRATEGY_SERVER': JSON.stringify("dummy")
     }),
 
 

@@ -87,19 +87,15 @@ export class RoleDetailsPage {
   }
 
   getAllDomains() {
-    this.domains = this.route.parent.snapshot.data['domains']._embedded.domainList;
-    this.domainOptions = this.domains.map(d => {
-      return {
-        label: d.domainName,
-        value: d.id,
-      };
+    this.accessService.getDomains().subscribe(res => {
+      this.domains = res._embedded.domainList;
+      this.domainOptions = this.domains.map(d => ({label: d.domainName, name: d.domainName, value: d.id}));
+
+      if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
+        this.selectedDomain = this.domainOptions[0].value;
+        this.onDomainChange();
+      }
     });
-
-    if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
-      this.selectedDomain = this.domainOptions[0].value;
-      this.onDomainChange();
-    }
-
   }
 
   setObjectPermissions() {

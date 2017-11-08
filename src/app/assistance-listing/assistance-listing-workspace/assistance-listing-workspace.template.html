@@ -16,12 +16,12 @@
         </a>
       </li>
       <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']">
-        <a routerLink="/fal/myRegionalOffices">
+        <a id="manage-fal-sidetab"routerLink="/fal/myRegionalOffices">
           Manage Assistance Locations
         </a>
       </li>
       <li>
-        <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
+        <a id="cfda-number-management-sidetab" *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
           CFDA Number Management
         </a>
       </li>
@@ -111,39 +111,16 @@
       </ng-container>
 
       <!--Date Filter-->
-      <h4 class="sam-ui header">Date</h4>
-      <div class="sam-ui secondary pointing menu">
-        <a (click)="selectTab('posted')" class="item" [ngClass]="getColorClass('posted')">
-          Posted
-        </a>
-        <a (click)="selectTab('modified')" class="item" [ngClass]="getColorClass('modified')">
-          Modified
-        </a>
-      </div>
-      <sam-date-range-filter *ngIf="isCurrentTab('posted')"
-                             #postedDateRangeFilterVar="ngModel"
-                             [control]="postedDateRangeFilterVar.control"
-                             [(ngModel)]="postedDateFilterModel"
-                             (ngModelChange)="dateChangehandler($event)"
-                             [radioSelection]="dateFilterConfig.radSelection"
-                             [dateRadioOptions]="dateFilterConfig.options"
-                             [class]="'falDateFilter'">
-      </sam-date-range-filter>
-      <sam-date-range-filter *ngIf="isCurrentTab('modified')"
-                             #modifiedDateRangeFilterVar="ngModel"
-                             [control]="modifiedDateRangeFilterVar.control"
-                             [(ngModel)]="modifiedDateFilterModel"
-                             (ngModelChange)="dateChangehandler($event)"
-                             [radioSelection]="dateFilterConfig.radSelection"
-                             [dateRadioOptions]="dateFilterConfig.options"
-                             [class]="'falDateFilter'">
-      </sam-date-range-filter>
-
-      <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
-      <!--filter button-->
-      <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
-                  [buttonText]="'Filter'"></sam-button>
-
+      <sam-select-date-range-filter
+        #selectDateFilter
+        [tabConfig] = "dateRangeConfig"
+        [tabIndex] = "dateFilterIndex"
+        [(ngModel)]= "dateFilterModel"
+        (ngModelChange) = "dateModelChange($event)"
+        (filterEvt)="filterByDate($event)"
+        (filterClearEvt)="clearDateFilter($event)"
+        [id]= "'fal-date-range-filter'">
+      </sam-select-date-range-filter>
 
       <!--Agency Picker Filter-->
       <h4 class="sam-ui header">Federal Agency</h4>

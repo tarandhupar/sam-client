@@ -26,16 +26,16 @@
     <td>
       <ng-container *ngIf="!hideAddButton">
         <a class="fal-table-edit" (click)="editAssist(i)" >Edit</a>
-        <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAssist(i)"></i>
+        <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAssist(i)"></em>
         <a class="fal-table-delete" (click)="removeAssist(i)">Delete</a>
-        <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeAssist(i)"></i>
+        <em class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeAssist(i)"></em>
       </ng-container>
 
       <ng-container *ngIf="hideAddButton">
         <span class="fal-table-edit disabled">Edit</span>
-        <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+        <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
         <span class="fal-table-delete disabled">Delete</span>
-        <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+        <em class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></em>
       </ng-container>
 
     </td>

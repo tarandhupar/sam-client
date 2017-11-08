@@ -92,14 +92,14 @@ export class FALAuthGuard implements CanActivate, CanDeactivate<CanComponentDeac
             if (this._falLinks && this._falLinks._links && !this._falLinks._links['program:create']) {
               isRestricted = true;
             } else if (!this.viewModel.title) {
-              url = '/programs/add'.concat('#header-information');
+              url = '/fal/add'.concat('#header-information');
               this.router.navigateByUrl(url);
             }
           } else {
             if (program && program._links && !program._links['program:update']) {
               isRestricted = true;
             } else if (!this.viewModel.title) {
-              url = '/programs/' + this.viewModel.programId + '/edit'.concat('#header-information');
+              url = '/fal/' + this.viewModel.programId + '/edit'.concat('#header-information');
               this.router.navigateByUrl(url);
             }
           }
@@ -128,12 +128,12 @@ export class FALAuthGuard implements CanActivate, CanDeactivate<CanComponentDeac
     if (isRestricted) {
       this.router.navigate(this.restrictedUrl);
     }
-  
+
     return !isRestricted;
   }
 
   redirectionUrl(id: string, screen: string) {
-    let url = '/programs/' + id + '/' + screen;
+    let url = '/fal/' + id + '/' + screen;
     this.router.navigateByUrl(url);
   }
 }

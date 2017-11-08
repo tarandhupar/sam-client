@@ -8,7 +8,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 import { cloneDeep, keys, merge, pick } from 'lodash';
 
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule, AgencyPickerComponent } from 'app-components/app-components.module';
 import { RegisterMainComponent } from './register-main.component';
 

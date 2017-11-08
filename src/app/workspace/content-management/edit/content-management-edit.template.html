@@ -1,11 +1,11 @@
 <page [breadcrumbs]="crumbs">
   <form-only class="help-content-management-edit relative" [section]="title.toUpperCase()" [title]="contentObj.title" *ngIf="dataLoaded">
 
-    <span class="status-tag">{{contentObj.type}}</span>
+    <span class="status-tag">{{contentObj.status.status}}</span>
 
     <div class="relative m_T-2x">
       <div class="draft-btn-group">
-        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="contentObj.type === 'Draft'"></sam-button>
+        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="contentObj.status.status.toLowerCase() === 'draft'"></sam-button>
         <sam-button [buttonId]="'question-publish'" buttonText="Publish" (click)="onPublishClick()"></sam-button>
       </div>
 
@@ -14,7 +14,7 @@
         <!--Edit Form / New Form Tab-->
         <sam-tab [tabTitle]="'Edit'" #editTab>
           <div class="section-border" *ngIf="!isCreateMode()">
-            <h4>Reference ID: {{contentObj.referenceId}}</h4>
+            <h4>Reference ID: {{contentObj.refId}}</h4>
           </div>
 
           <div class="section-border">
@@ -77,7 +77,7 @@
             <span class="optional-text">Optional</span>
             <h4 class="m_T-0">Domains</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
-            <sam-autocomplete-multiselect [(ngModel)]="contentObj.domain" name="domain" label="" [options]="domainOptions" [keyValueConfig]="multiselectConfig"></sam-autocomplete-multiselect>
+            <sam-autocomplete-multiselect [(ngModel)]="contentObj.domains" name="domain" label="" [options]="domainOptions" [keyValueConfig]="multiselectConfig"></sam-autocomplete-multiselect>
 
           </div>
 
@@ -104,8 +104,8 @@
           <div class="relative" *ngIf="curSection !== 'video-library'; else videoLibraryView">
             <span class="public-view-tag">{{pageConfig[curSection.toLowerCase()].publicViewTag}}</span>
             <div class="m_T-1x m_B-1x">
-              <span style="font-weight: bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
-              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else domainNA">{{getDomainListStr()}}</span>
+              <span style="font-weight: bold">Domain<span *ngIf="contentObj.domains && contentObj.domains.length > 1">(s)</span>:</span>
+              <span *ngIf="contentObj.domains && contentObj.domains.length > 0; else domainNA">{{getDomainListStr()}}</span>
               <ng-template #domainNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x" *ngIf="pageConfig[curSection.toLowerCase()].sectionControl.source">
@@ -140,8 +140,8 @@
               <ng-template #videoDescriptionNA>Description Not Entered</ng-template>
             </div>
             <div class="m_T-1x m_B-1x">
-              <span class="bold">Domain<span *ngIf="contentObj.domain.length > 1">(s)</span>:</span>
-              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else videoDomainNA">{{getDomainListStr()}}</span>
+              <span class="bold">Domain<span *ngIf="contentObj.domains && contentObj.domains.length > 1">(s)</span>:</span>
+              <span *ngIf="contentObj.domains && contentObj.domains.length > 0; else videoDomainNA">{{getDomainListStr()}}</span>
               <ng-template #videoDomainNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x">

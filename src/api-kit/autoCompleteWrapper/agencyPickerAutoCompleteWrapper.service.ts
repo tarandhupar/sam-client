@@ -1,7 +1,7 @@
 import { Injectable, Directive, Input, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { FHService } from '../fh/fh.service';
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { Observable }    from 'rxjs/Observable';
 
 @Injectable()
@@ -13,12 +13,19 @@ export class AgencyPickerAutoCompleteWrapper implements AutocompleteService{
     let isCode = val && !isNaN(val);
     let parent = serviceOptions && serviceOptions['parent'] ? serviceOptions['parent'] : null;
     let defaultDept = !!(serviceOptions && serviceOptions['defaultDept']);
-    return this.oFHService.fhSearch(val,1,10,serviceOptions['activeOnly'] ? ['active'] : ['all'],[],null,isCode,parent,defaultDept).map(res => {
+    let hasFpds = !!(serviceOptions && serviceOptions['hasFpds']);
+    let activeOnly = serviceOptions && serviceOptions['activeOnly'] ? ['active'] : ['all']
+    return this.oFHService.fhSearch(val,1,10, activeOnly,[],null,isCode,parent,defaultDept).map(res => {
       if(res["_embedded"]) {
         return res["_embedded"].map((val)=>{
           let obj = val['org'];
           obj['key'] = obj['orgKey'];
           obj['name'] = this._titleCase(obj['name']);
+          if (hasFpds) {
+            let fpdsCode = obj['fpdsCode'] || obj['fpdsOrgId'] || 'N/A';
+            let department = obj['type'] ? obj['type'].charAt(0) : 'N/A';
+            obj['name'] = obj['name'] + ' [' + department + '] [' + fpdsCode +']';
+          }
           return obj;
         });
       } else {

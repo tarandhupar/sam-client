@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed, ComponentFixture, async } from '@angular/core/testing';
 import { ActivatedRoute} from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SamUIKitModule } from 'sam-ui-kit/index';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { AppComponentsModule } from '../../../../app-components/app-components.module';
 import { OppComponentsModule } from '../../../components/index';
 import { ReactiveFormsModule } from '@angular/forms';

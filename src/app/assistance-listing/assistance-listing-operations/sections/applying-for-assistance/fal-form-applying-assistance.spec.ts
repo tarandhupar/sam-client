@@ -4,7 +4,7 @@ import {FALFormService} from '../../fal-form.service';
 import {FALFormErrorService} from '../../fal-form-error.service';
 import {FALFormComponent} from '../../fal-form.component';
 import {SideNavComponent} from '../../navigation/side-nav.component';
-import {SamUIKitModule} from 'sam-ui-kit/index';
+import {SamUIKitModule} from 'sam-ui-elements/src/ui-kit/index';
 import {FALFormHeaderInfoComponent} from '../header-information/fal-form-header-info.component';
 import {FALFormViewModel} from '../../fal-form.model';
 import {FALFormObligationsInfoComponent} from '../financial-info/obligations/fal-form-obligation-info.component';

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { IAMService, ReportsService } from 'api-kit';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { globals } from '../../app/globals';
 import { FavoritePipe } from './favorite.pipe';
 import * as _ from 'lodash';

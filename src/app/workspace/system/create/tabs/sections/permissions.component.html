@@ -1,13 +1,17 @@
 <div [formGroup]="form">
-  <sam-fieldset-wrapper [label]="label('permissions')" [hint]="hint('permissions')">
-    <sam-checkbox *ngFor="let item of keys | keys"
-                  [name]="item.key"
-                  [label]="titleize(item.key)"
-                  [options]="options[item.key]"
-                  [formControlName]="item.value"></sam-checkbox>
-  </sam-fieldset-wrapper>
+  <div class="sam-ui segment">
+    <sam-fieldset-wrapper [label]="label('permissions')" [hint]="hint('permissions')">
+      <sam-checkbox *ngFor="let item of keys | keys"
+                    [name]="item.key"
+                    [label]="titleize(item.key)"
+                    [options]="options[item.key]"
+                    [formControlName]="item.value"></sam-checkbox>
+    </sam-fieldset-wrapper>
+  </div>
 
-  <sam-autocomplete [labelText]="label('fips199Categorization')"
-                    [options]="options.fips199Categorization"
-                    formControlName="fips199Categorization"></sam-autocomplete>
+  <div class="sam-ui segment">
+    <sam-autocomplete [labelText]="label('fips199Categorization')"
+                      [options]="options.fips199Categorization"
+                      formControlName="fips199Categorization"></sam-autocomplete>
+  </div>
 </div>

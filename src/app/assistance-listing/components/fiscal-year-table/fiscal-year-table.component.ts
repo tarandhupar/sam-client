@@ -2,8 +2,8 @@ import { Component, Input, forwardRef, ViewChild } from '@angular/core';
 import {
   ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, NG_VALIDATORS, AbstractControl, Validators
 } from "@angular/forms";
-import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
-import { OptionsType } from "sam-ui-kit/types";
+import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
+import { OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import * as moment from "moment";
 import { ValidationErrors } from '../../../app-utils/types';
 

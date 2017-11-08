@@ -7,7 +7,7 @@ import {SavedSearchRedirect} from './saved-search-workspace/saved-search-redirec
 
 export const routes: Routes = [
   { path: 'search',  component: SearchPage },
-  { path: 'search/fal/regionalOffices', component: SearchPage}
+  { path: 'search/fal/regionalAssistanceLocations', component: SearchPage}
 ];
 
   routes.unshift( {path: 'savedsearches/workspace', component: SavedSearchWorkspacePage, canActivate: [SearchAuthGuard] },

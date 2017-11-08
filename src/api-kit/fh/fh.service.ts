@@ -272,8 +272,8 @@ export class FHService {
     };
     if(org.type !== "DEPARTMENT"){
       apiOptions.oParam = {
-        'fullparentpath': fullParentPath,
-        'fullparentpathname': fullParentPathName
+        'fullParentPath': fullParentPath,
+        'fullParentPathName': fullParentPathName
       }
     }
     return this.callApi(apiOptions, true);

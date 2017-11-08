@@ -4,7 +4,7 @@ import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 import { FHService } from "api-kit/fh/fh.service";
 import { Location } from "@angular/common";
 import * as moment from 'moment/moment';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { IAMService } from "api-kit";
 import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
 

@@ -28,8 +28,13 @@ function gitLog() {
   return execSync('git log --pretty="%h - %s" -1 || echo "Git log failed"').toString().replace('\n', '');
 }
 
+
 function date() {
-  return execSync('date').toString().replace('\n', '');
+  let options = {
+    weekday: "long", year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit"
+  };
+  return new Date().toLocaleDateString('en-US', options);
 }
 
 exports.date = date;

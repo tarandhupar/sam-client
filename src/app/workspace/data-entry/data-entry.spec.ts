@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
 import { AppComponentsModule } from "../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { DataEntryComponent } from "./data-entry.component";
 import { WorkspaceModule } from "../workspace.module";

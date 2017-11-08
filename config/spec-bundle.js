@@ -1,7 +1,14 @@
 /**
  * @author: @AngularClass
  */
-
+var focusFlag = false;
+if(__karma__.config.args.length>0){
+  __karma__.config.args.forEach(function(element) {
+    if(element=="--focusFlag"){
+      focusFlag = true;
+    }
+  }, this);
+}
 /*
  * When testing with webpack and ES6, we have to do some extra
  * things to get testing to work right. Because we are gonna write tests
@@ -51,7 +58,10 @@ testing.TestBed.initTestEnvironment(
  * we say do this recursively
  */
 var testContext = require.context('../src/app', true, /\.spec\.ts/);
-var testContext2 = require.context('../src/api-kit', true, /\.spec\.ts/);
+var testContext2;
+if(!focusFlag){
+  testContext2 = require.context('../src/api-kit', true, /\.spec\.ts/);
+}
 
 /*
  * get all the files, for each file, call the context function
@@ -63,4 +73,7 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-var modules = requireAll(testContext).concat(requireAll(testContext2));
+var modules = requireAll(testContext);
+if(!focusFlag){
+  modules.concat(requireAll(testContext2));
+}

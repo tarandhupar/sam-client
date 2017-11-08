@@ -1,6 +1,6 @@
 import { Injectable, Directive, Input, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 
 import { SearchDictionariesService } from "../search/search-dictionaries.service";
 import { Observable, ReplaySubject } from "rxjs";

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
+import { SamAutocompleteComponent } from "sam-ui-elements/src/ui-kit/form-controls/autocomplete";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import * as _ from 'lodash';
@@ -118,18 +118,15 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   getAllDomains() {
-    this.domains = this.route.parent.snapshot.data['domains']._embedded.domainList;
-    this.domainOptions = this.domains.map(d => {
-      return {
-        label: d.domainName,
-        value: d.id,
-      };
-    });
+    this.accessService.getDomains().subscribe(res => {
+      this.domains = res._embedded.domainList;
+      this.domainOptions = this.domains.map(d => ({label: d.domainName, name: d.domainName, value: d.id}));
 
-    if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
-      this.selectedDomain = this.domainOptions[0].value;
-      this.onDomainChange();
-    }
+      if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
+        this.selectedDomain = this.domainOptions[0].value;
+        this.onDomainChange();
+      }
+    });
   }
 
   getAllPermissions() {

@@ -8,5 +8,13 @@
       <assistance-listing-widget></assistance-listing-widget>
     </workspace-widget>
   </div>
+  <div columns="12" *ngIf="toggleControl.opportunities">
+      <workspace-widget 
+          [title]="'Contract Opportunities'"
+          [actions]="actions"
+          [shortcut]="{ text: 'Contract Opportunities Workspace', routerLink: ['/opp/workspace'] }">
+          <opp-widget></opp-widget>
+      </workspace-widget>
+  </div>
   
 </div>

@@ -4,7 +4,7 @@ import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { UserService } from "../user.service";
-import { SamModalComponent } from "sam-ui-kit/components/modal/modal.component";
+import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components/modal/modal.component";
 import { SamTitleService } from "../../../api-kit/title-service/title.service";
 import { Location } from "@angular/common";
 

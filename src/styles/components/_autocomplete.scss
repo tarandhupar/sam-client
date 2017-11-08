@@ -7,14 +7,16 @@
   display: inline-block;
   overflow: visible;
   width: 100%;
-  max-width: 46rem;
+  
 
   & > sam-label-wrapper > div{
     position: relative;
   }
 
-  .input-container {
+  .input-container,
+  .sam-autocomplete-results {
     position: relative;
+    max-width: 46rem;
   }
 
   .icon-container {

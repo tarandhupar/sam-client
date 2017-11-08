@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { PipesModule } from "../../app-pipes/app-pipes.module";
 import { CommonModule } from "@angular/common";
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { FALFormRoutes } from "./fal-form.route";
 import { ReactiveFormsModule } from "@angular/forms";

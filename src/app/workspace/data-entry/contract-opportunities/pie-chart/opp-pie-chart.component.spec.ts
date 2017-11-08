@@ -4,7 +4,7 @@ import {
     ComponentFixture
   } from '@angular/core/testing';
 
-  import {SamUIKitModule} from "sam-ui-kit";
+  import {SamUIKitModule} from "sam-ui-elements/src/ui-kit";
   import {OppPieChartComponent} from './opp-pie-chart.component';
 
   let component: OppPieChartComponent;

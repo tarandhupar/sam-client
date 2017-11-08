@@ -27,7 +27,7 @@
                   </div>
                 </div>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
 </div>
 
 <page theme="inside">
-  
+
   <!--Welcome section for workspace-->
   <ng-container *ngIf="showWelcome">
     <h2 class="sam-ui header">Welcome to workspace!</h2>
@@ -48,10 +48,10 @@
       <li>Access our Federal Hierarchy Feature</li>
     </ol>
     <a (click)="closeWelcomeSection()">
-      <i class="fa fa-times-circle"></i> Close
+      <em class="fa fa-times-circle"></em> Close
     </a>
   </ng-container>
-  
+
   <!-- Shortcuts -->
   <div class="sam-ui segment">
     <h3 class="sam-ui header">Shortcuts</h3>
@@ -62,7 +62,7 @@
           <!-- <div class="floating sam-ui circular red label">
             0
           </div>   -->
-          <i class="fa fa-list-alt fa-4x"></i>
+          <em class="fa fa-list-alt fa-4x"></em>
           <br>
           Requests
         </a>
@@ -70,7 +70,7 @@
       <div class="column center aligned">
         <a [routerLink]="['/workspace/myfeed/notifications']"
           class="sam-ui medium">
-          <i class="fa fa-bell-o fa-4x"></i>
+          <em class="fa fa-bell-o fa-4x"></em>
           <br>
           Notifications
         </a>
@@ -79,8 +79,8 @@
         <a [routerLink]="['/savedsearches/workspace']"
           class="sam-ui medium">
           <span class="fa-stack fa-2x">
-            <i class="fa fa-cloud fa-stack-2x"></i>
-            <i class="fa fa-search fa-stack-1x fa-inverse"></i>
+            <em class="fa fa-cloud fa-stack-2x"></em>
+            <em class="fa fa-search fa-stack-1x fa-inverse"></em>
           </span>
           <br>
           Saved Searches
@@ -88,30 +88,30 @@
       </div>
     </div>
   </div>
-  
+
   <workspace-widget title="Profile"
     [actions]="actions"
     [shortcut]="states.public ? shortcuts.reset : shortcuts.profile">
     <profile-widget *ngIf="user" [user]="user"></profile-widget>
   </workspace-widget>
-  
+
   <div class="sam-ui hidden divider"></div>
-  
+
   <!--Data Entry section for workspace-->
   <h2 id="data-entry" class="sam-ui header" *ngIf="isDisplayDataEntry()">Data Entry</h2>
-  <workspace-data-entry 
-    [toggleControl]="dataEntryWidgetControl" 
+  <workspace-data-entry
+    [toggleControl]="dataEntryWidgetControl"
     *ngIf="isDisplayDataEntry()">
   </workspace-data-entry>
-  
+
   <div class="sam-ui hidden divider"></div>
-  
+
   <!--Administration section for workspace-->
   <h2 id="administration" class="sam-ui header">Administration</h2>
-  <workspace-administration 
+  <workspace-administration
     [toggleControl]="administrationWidgetControl">
   </workspace-administration>
-  
+
   <div class="sam-ui hidden divider"></div>
-  
+
 </page>

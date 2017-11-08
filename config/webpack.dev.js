@@ -22,6 +22,11 @@ const IDLE_TIME = process.env.IDLE_TIME || '12';
 const PINGER_TIME = process.env.PINGER_TIME || '14';
 const TIMEOUT_DURATION = process.env.TIMEOUT_DURATION || '2';
 const ENVIRONMENT = process.env.ENVIRONMENT || apiConfig.ENVIRONMENT || '';
+const REPORT_MICRO_STRATEGY_ENV = process.env.REPORT_MICRO_STRATEGY_ENV || apiConfig.REPORT_MICRO_STRATEGY_ENV;
+const REPORT_MICRO_STRATEGY_URL = process.env.REPORT_MICRO_STRATEGY_URL || apiConfig.REPORT_MICRO_STRATEGY_URL;
+const ENABLE_REPORTING_AREA = process.env.ENABLE_REPORTING_AREA || apiConfig.ENABLE_REPORTING_AREA;
+const GIT_COMMIT_ID = process.env.GIT_SHA || "No Commit Id";
+const REPORT_MICRO_STRATEGY_SERVER = process.env.REPORT_MICRO_STRATEGY_SERVER || apiConfig.REPORT_MICRO_STRATEGY_SERVER;
 
 if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
@@ -136,10 +141,14 @@ module.exports = webpackMerge(commonConfig, {
       'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES),
       'IDLE_TIME': JSON.stringify(IDLE_TIME),
       'BUILD_DATE': JSON.stringify(helpers.date()),
-      'GIT_LOG': JSON.stringify(helpers.gitLog()),
+      'GIT_LOG': JSON.stringify(GIT_COMMIT_ID),
       'PINGER_TIME': JSON.stringify(PINGER_TIME),
       'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION),
-      'ENVIRONMENT':JSON.stringify(ENVIRONMENT)
+      'ENVIRONMENT':JSON.stringify(ENVIRONMENT),
+      'REPORT_MICRO_STRATEGY_ENV': JSON.stringify(REPORT_MICRO_STRATEGY_ENV),
+      'REPORT_MICRO_STRATEGY_URL': JSON.stringify(REPORT_MICRO_STRATEGY_URL),
+      'ENABLE_REPORTING_AREA': JSON.stringify(ENABLE_REPORTING_AREA),
+      'REPORT_MICRO_STRATEGY_SERVER': JSON.stringify(REPORT_MICRO_STRATEGY_SERVER)
     }),
 
     /**

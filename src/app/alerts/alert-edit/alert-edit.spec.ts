@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertEditComponent } from './alert-edit.component';
 import { Alert } from '../alert.model';

@@ -4,7 +4,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import {ChangeRequestService} from "../../../api-kit/program/change-request.service";
 import {AppComponentsModule} from "../../app-components/app-components.module";
 import {SamAPIKitModule} from "../../../api-kit/api-kit.module";
-import {SamUIKitModule} from "../../../sam-ui-elements/src/ui-kit/index";
+import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {Observable} from "rxjs/Observable";
 // import Http = XRay.Http;

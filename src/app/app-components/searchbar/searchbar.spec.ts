@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamSearchbarComponent } from './searchbar.component';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AutoCompleteWrapper } from 'api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
 import { FHService } from 'api-kit/fh/fh.service';
 import { SuggestionsService } from 'api-kit/search/suggestions.service';

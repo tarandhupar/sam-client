@@ -1,7 +1,7 @@
 import { Directive, Injectable, Input } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteService } from 'sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class CityServiceImpl implements AutocompleteService {
         results.next(res._embedded.cityList.reduce( (prev, curr) => {
           const newObj = {
             key: curr.cityCode.toString(),
-            value: curr.city + ", " + curr.state.stateCode
+            value: this.state ? curr.city : curr.city + ", " + curr.state.stateCode
           }
 		      const returnObj = Object.assign({}, curr, newObj);
           prev.push(returnObj);
@@ -67,9 +67,6 @@ export class CityServiceImpl implements AutocompleteService {
             return this.getAllCities(val,'statecode',stateCode,country, county.county).map(o => o);
       }
 
-      
-
-      
       //operations without County
       else if(this.state && this.country){
           stateCode = searchOptions && searchOptions.statecode ?

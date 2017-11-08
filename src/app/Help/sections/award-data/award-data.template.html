@@ -71,6 +71,14 @@
             </a>
           </div>
         </div>
+        <div *ngIf="curConfig.secondaryMenuLink" class="sam-ui secondary segment">
+          <div class="sam-ui relaxed list">
+            <a [routerLink]="[curConfig.secondaryMenuLink]" class="item">
+              <div class="header">e98 Form</div>
+              e98(request official SCA WD from DOL)
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,6 +108,14 @@
           <a [routerLink]="[curConfig.workspaceRoute]" class="item">
             <div class="header">Manage {{curConfig.heading}}?</div>
             Sign in to your Workspace
+          </a>
+        </div>
+      </div>
+      <div *ngIf="curConfig.secondaryMenuLink" class="sam-ui secondary segment">
+        <div class="sam-ui relaxed list">
+          <a [routerLink]="[curConfig.secondaryMenuLink]" class="item">
+            <div class="header">e98 Form</div>
+            e98(request official SCA WD from DOL)
           </a>
         </div>
       </div>

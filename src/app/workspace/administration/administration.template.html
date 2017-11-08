@@ -27,15 +27,4 @@
       <rm-widget [widgetResult]="widgetResult"></rm-widget>
     </workspace-widget>
   </div>
-
-  <div columns="12" *ngIf="toggleControl.opp">
-      <workspace-widget 
-          [title]="'Contract Opportunities'"
-          [actions]="actions"
-          [shortcut]="{ text: 'Contract Opportunities Workspace', routerLink: ['/opp/workspace'] }">
-          <opp-widget></opp-widget>
-      </workspace-widget>
-    </div>
-
-  
 </div>

@@ -4,9 +4,10 @@ import {ProgramService} from 'api-kit';
 import {FHService} from 'api-kit';
 import { FALFormService } from "../assistance-listing-operations/fal-form.service";
 import * as Cookies from 'js-cookie';
+import * as _ from 'lodash';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import {FALAuthGuard} from "../components/authguard/authguard.service";
 import 'rxjs/Rx';
@@ -25,8 +26,12 @@ import {Injectable} from 'angular2/core';
 })
 
 export class FalWorkspacePage implements OnInit, OnDestroy {
+  private selectDateFilter: any;
   @ViewChild('autocomplete') autocomplete: any;
   @ViewChild('agencyPickerV2') agencyPickerV2;
+  @ViewChild('selectDateFilter') set content(content: any){
+    this.selectDateFilter = content;
+  }
   private MODIFIED = 'modified';
   private POSTED = 'posted';
   private START_DAY = '00:00:00';
@@ -58,7 +63,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   statusCheckboxConfig = {
     options: [
       {value: 'published', label: 'Published', name: 'checkbox-published'},
-      {value: 'pending', label: 'Pending', name: 'checkbox-pending'},
+      {value: 'pending', label: 'Pending - OMB', name: 'checkbox-pending'},
       {value: 'rejected', label: 'Rejected', name: 'checkbox-rejected'},
       {value: 'draft', label: 'Draft', name: 'checkbox-draft'},
       {value: 'draft_review', label: 'Draft Review', name: 'checkbox-draft-review'},
@@ -96,17 +101,34 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   postedTo: any;
   modifiedFrom: any;
   modifiedTo: any;
-  dateFilterConfig = {
-    options: [
-      {name:'Date',label:'Date',value:'date'},
-      {name:'Date Range',label:'Date Range',value:'dateRange'}
-    ],
-    radSelection: 'date',
-
-  };
-  tab = this.POSTED;
+  dateFilterModel: any = {};
+  internalDateModel: any = {};
+  dateTypeOptions = [this.POSTED, this.MODIFIED];
+  dateRangeConfig = [
+    {
+      title: 'Posted',
+      dateFilterConfig: {
+        options: [
+          {name: 'posted_date', label: 'Date', value: 'date'},
+          {name: 'posted_date_range', label: 'Date Range', value: 'dateRange'}
+        ],
+        radSelection: 'date'
+      }
+    },
+    {
+      title: 'Modified',
+      dateFilterConfig: {
+        options: [
+          {name: 'modified_date', label: 'Date', value: 'date'},
+          {name: 'modified_date_range', label: 'Date Range', value: 'dateRange'}
+        ],
+        radSelection: 'date'
+      }
+    }
+  ];
   dateRadio = 'date';
   filterDisabled = true;
+  dateFilterIndex = 0;
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'My Workspace', url: '/workspace' },
@@ -181,36 +203,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     else {
       qsobj['sortBy'] = '';
     }
-    if(this.tab){
-      qsobj['tab'] = this.tab;
+    //Date Filter query params
+    if(!_.isEmpty(this.internalDateModel)){
+      qsobj['dateTab'] = this.dateTypeOptions[this.dateFilterIndex];
     }
-    if(this.tab === this.MODIFIED){
-      if(this.modifiedDateFilterModel.hasOwnProperty('date')){
-        qsobj['radSelection'] = 'date'
-      }
-      else if(this.modifiedDateFilterModel.hasOwnProperty('dateRange')){
-        qsobj['radSelection'] = 'dateRange'
-      }
+    if(this.dateRangeConfig && !_.isEmpty(this.internalDateModel)){
+      qsobj['radSelection'] = this.dateRadio;
     }
-    if(this.tab === this.POSTED){
-      if(this.postedDateFilterModel.hasOwnProperty('date')){
-        qsobj['radSelection'] = 'date'
-      }
-      else if(this.postedDateFilterModel.hasOwnProperty('dateRange')){
-        qsobj['radSelection'] = 'dateRange'
-      }
-    }
-    if(this.postedTo){
-      qsobj['postedTo'] = this.postedTo;
-    }
-    if(this.postedFrom){
-      qsobj['postedFrom'] = this.postedFrom;
-    }
-    if(this.modifiedTo){
-      qsobj['modifiedTo'] = this.modifiedTo;
-    }
-    if(this.modifiedFrom){
-      qsobj['modifiedFrom'] = this.modifiedFrom;
+    if(this.internalDateModel && !_.isEmpty(this.internalDateModel)){
+      qsobj['dateFrom'] = this.internalDateModel.startDate;
+      qsobj['dateTo'] = this.internalDateModel.endDate;
     }
     if(this.organizationId){
       qsobj['organizationId'] = this.organizationId;
@@ -225,10 +227,106 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     return qsobj;
   }
 
+     // initiates a search with date filter
+    filterByDate(event){
+      // setting dateFilterIndex
+     if(event){
+       if(event.index){
+         this.dateFilterIndex = event.index;    
+       }
+     }else{
+       this.dateFilterIndex = 0;
+     }
+ 
+ 
+     this.pageNum = 0;
+     this.workspaceRefresh();
+   }
+ 
+   formatDateWrapper(appendTime: boolean){
+     if(!_.isEmpty(this.dateFilterModel)){
+       if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
+         return this.formatDate(this.dateFilterModel, appendTime);
+       }else if(this.dateFilterModel.hasOwnProperty('dateRange') && this.dateFilterModel.dateRange){
+         return this.formatDateRange(this.dateFilterModel, appendTime);
+       }
+     }
+   }
+ 
+   formatDate(model, appendTime){
+     if(!_.isEmpty(model)){
+       if(appendTime){
+         return {
+           'startDate': model.date + ' ' + this.START_DAY,
+           'endDate': model.date + ' ' + this.END_DAY
+         }
+       }
+       return {
+         'startDate': model.date,
+         'endDate': model.date
+       }
+     }
+     
+   }
+   formatDateRange(model, appendTime){
+     if(!_.isEmpty(model)){
+       if(appendTime){
+         return {
+           'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
+           'endDate': model.dateRange.endDate + ' ' + this.END_DAY
+         }
+       }
+       return {
+         'startDate': model.dateRange.startDate,
+         'endDate': model.dateRange.endDate
+       }
+     }
+   }
+ 
+   formatDateModel(data){
+     if(data.radSelection === 'date'){
+       return data.dateFrom ? {'date': data.dateFrom} : {'date': ''}
+     }else if(data.radSelection === 'dateRange'){
+       return data.dateFrom && data.dateTo ? {'dateRange': {'startDate' : data.dateFrom, 'endDate': data.dateTo}} : {'dateRange': {'startDate' : '', 'endDate': ''}}
+     }
+   }
+
+   dateModelChange(event){
+    this.filterDisabled = true;
+    if(event['date']){
+      if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
+        this.internalDateModel['startDate'] = event['date'];
+        this.internalDateModel['endDate'] = event['date'];
+        this.dateFilterModel = event;
+        this.dateRadio = 'date';
+        this.filterDisabled = false;
+      }
+    } else if(event['dateRange']){
+        // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
+        if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
+          if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
+            this.internalDateModel['startDate'] = event['dateRange']['startDate'];
+            this.internalDateModel['endDate'] = event['dateRange']['endDate'];
+            this.dateFilterModel = event;
+            this.dateRadio = 'dateRange';
+            this.filterDisabled = false;
+          }
+        }
+    }
+  }
+
+  updateDateFilterConfig(index){
+    this.dateRangeConfig[index].dateFilterConfig.radSelection = this.dateRadio;
+    if(this.selectDateFilter){
+      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);      
+    }
+  }
+
   runProgram() {
     this.showSpinner = true;
-    // determines what model to pull data from and formats the dates to meet api requirements
-    var dateResult = this.formatDates(this.postedDateFilterModel, this.modifiedDateFilterModel, true);
+    let dateTab = this.dateTypeOptions[this.dateFilterIndex]    
+    let appendTime = true;
+    let dateObj = this.formatDateWrapper(appendTime);
 
     // make api call
     this.runProgSub = this.programService.runProgram({
@@ -236,10 +334,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       pageNum: this.pageNum,
       Cookie: this.cookieValue,
       status: this.statusCheckboxModel ? this.statusCheckboxModel.toString() : this.defaultStatus,
-      postedFrom: dateResult.postedFrom,
-      postedTo: dateResult.postedTo,
-      modifiedFrom: dateResult.modifiedFrom,
-      modifiedTo: dateResult.modifiedTo,
+      dateTab: dateTab,
+      dateFilter: dateObj,
       sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
       organizationId: this.organizationId,
       requestType: this.requestTypeCheckboxModel ? this.requestTypeCheckboxModel.toString() : ''
@@ -289,8 +385,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       }
     );
     // construct qParams to pass parameters to object view pages
-    this.qParams['keyword'] = this.keyword;
-    this.qParams['index'] = this.index;
+    this.qParams = this.setupQS();
   }
 
 
@@ -304,7 +399,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   addAssistanceListingClick() {
-    this.router.navigate(['programs/add']);
+    this.router.navigate(['fal/add']);
   }
 
   manageAssistanceLocationsClick(){
@@ -360,19 +455,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
             this.statusCheckboxModel = typeof data['status'] === "string" ? decodeURI(data['status']).split(",") : this.defaultStatus;
             this.requestTypeCheckboxModel = typeof data['requestType'] === "string" ? decodeURI(data['requestType']).split(",") : [];
-            this.tab = data['tab'] && typeof data['tab'] === 'string' ? decodeURI(data['tab']) : this.POSTED;
-            this.dateRadio =  data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
-            this.dateFilterConfig.radSelection = this.dateRadio;
-            this.postedFrom = data['postedFrom'] ? data['postedFrom'] : "";
-            this.postedTo = data['postedTo'] ? data['postedTo'] : "";
-            this.modifiedFrom = data['modifiedFrom'] ? data['modifiedFrom'] : "";
-            this.modifiedTo = data['modifiedTo'] ? data['modifiedTo'] : "";
             this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
             this.agencyPickerModel = this.setupOrgsFromQS(data['organizationId']);
             this.keywordsModel = data['keywords'] ? this.keywordRebuilder(data['keywords']) : [];
+            this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
+            this.dateFilterModel = data['dateTab'] ? this.formatDateModel(data) : {};
+            this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
+            
+            this.dateFilterIndex = data['dateTab'] && this.dateTypeOptions ? _.indexOf(this.dateTypeOptions, decodeURI(data['dateTab'])) : 0;
+            this.updateDateFilterConfig(this.dateFilterIndex);
 
-            // sets the date models accordingly
-            this.modelRebuilder(data);
             this.sortModel = typeof data['sortBy'] === "string" ? this.setSortModel(decodeURI(data['sortBy'])) : this.defaultSort;
             this.runProgram();
           });
@@ -391,6 +483,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
     return apiSubject;
   }
+
   getUserPermissions() {
       this.userPermissions = this.authGuard._falLinks;
   }
@@ -468,7 +561,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           newObj = {value: 'rejected', label: 'Rejected (' + data[property]['count'] + ')', name: 'checkbox-rejected', disabled: isZero ? true : false};
           break;
         case 'total_pending_listing':
-          newObj = {value: 'pending', label: 'Pending (' + data[property]['count'] + ')', name: 'checkbox-pending', disabled: isZero ? true : false};
+          newObj = {value: 'pending', label: 'Pending - OMB (' + data[property]['count'] + ')', name: 'checkbox-pending', disabled: isZero ? true : false};
           break;
         case 'total_published_listing':
           newObj = {value: 'published', label: 'Published (' + data[property]['count'] + ')', name: 'checkbox-published', disabled: isZero ? true : false};
@@ -535,17 +628,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     });
   }
 
-  // clears date model
-  clearDateFilter(){
-    this.modifiedDateFilterModel = {};
-    this.postedDateFilterModel = {};
-    this.modifiedFrom = "";
-    this.modifiedTo = "";
-    this.postedFrom = "";
-    this.postedTo = "";
-
-    this.disabled = true;
+  clearDateFilter(event){
+    this.dateFilterModel = {};
+    this.internalDateModel = {};
     this.pageNum = 0;
+
     this.workspaceRefresh();
   }
 
@@ -558,7 +645,15 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.keywordsModel = [];
     this.clearAgencyPickerFilter();
     // this clears all date filters as well as refreshes the data on the page
-    this.clearDateFilter();
+
+    //clear date filter
+    this.dateFilterModel = {};
+    this.internalDateModel = {};
+    this.dateRadio = 'date';
+    this.dateFilterIndex = 0;
+    this.pageNum = 0;
+
+    this.workspaceRefresh();
   }
 
   clearAgencyPickerFilter(){
@@ -567,161 +662,20 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   // initiates a search with date filter
-  filterByDate(){
+  // filterByDate(){
 
-    // set 4 vars from model here
-    var returnObj = this.formatDates(this.postedDateFilterModel, this.modifiedDateFilterModel, false);
-    this.modifiedFrom = returnObj.modifiedFrom;
-    this.modifiedTo = returnObj.modifiedTo;
-    this.postedFrom = returnObj.postedFrom;
-    this.postedTo = returnObj.postedTo;
+  //   // set 4 vars from model here
+  //   var returnObj = this.formatDates(this.postedDateFilterModel, this.modifiedDateFilterModel, false);
+  //   this.modifiedFrom = returnObj.modifiedFrom;
+  //   this.modifiedTo = returnObj.modifiedTo;
+  //   this.postedFrom = returnObj.postedFrom;
+  //   this.postedTo = returnObj.postedTo;
 
-    this.disabled = true;
-    this.pageNum = 0;
-    this.workspaceRefresh();
-  }
+  //   this.disabled = true;
+  //   this.pageNum = 0;
+  //   this.workspaceRefresh();
+  // }
 
-
-  // FUNCTIONS FOR TABS ON DATE FILTER
-  selectTab(type){
-    this.tab = type;
-
-    // run validation checks for filter button
-    if(this.tab === this.POSTED){
-      this.dateChangehandler(this.postedDateFilterModel);
-    }
-    else if(this.tab === this.MODIFIED){
-      this.dateChangehandler(this.modifiedDateFilterModel);
-    }
-  }
-
-  isCurrentTab(type){
-    return this.tab === type;
-  }
-
-  getColorClass(type):string{
-    if(this.tab === type){
-      return "active";
-    }
-    return "";
-  }
-
-  // takes both modified and posted date models and returns an appropriately constructed object for date filtering
-  formatDates(postedModel, modifiedModel, appendTime: boolean){
-    var returnObj = {
-      modifiedFrom: '',
-      modifiedTo: '',
-      postedFrom: '',
-      postedTo: ''
-    };
-
-    // check selected tab, based on tab only populate the approriate properties in the constructed object
-    if(this.tab === this.MODIFIED){
-      // determine if we have been given a single date or a date span
-      if(modifiedModel.hasOwnProperty('date')){
-        if(modifiedModel.date){
-          // if single date generate the "To" date
-          // only return time if appendTime is true
-          if(appendTime){
-            returnObj.modifiedFrom = modifiedModel.date + ' ' + this.START_DAY;
-            returnObj.modifiedTo = modifiedModel.date + ' ' + this.END_DAY;
-          }else{
-            // don't append time if we are sending data for url
-            returnObj.modifiedFrom = modifiedModel.date;
-            returnObj.modifiedTo = modifiedModel.date;
-          }
-        }else{
-          returnObj.modifiedFrom = "";
-          returnObj.modifiedTo = "";
-        }
-      }
-      else if(modifiedModel.hasOwnProperty('dateRange')){
-        if(modifiedModel.dateRange){
-          if(appendTime){
-            returnObj.modifiedFrom = modifiedModel.dateRange.startDate + ' ' + this.START_DAY;
-            returnObj.modifiedTo = modifiedModel.dateRange.endDate + ' ' + this.END_DAY;
-          }else{
-            // only return time if appendTime is true
-            returnObj.modifiedFrom = modifiedModel.dateRange.startDate;
-            returnObj.modifiedTo = modifiedModel.dateRange.endDate;
-          }
-        }else{
-          returnObj.modifiedFrom = "";
-          returnObj.modifiedTo = "";
-        }
-      }
-    }
-    else if(this.tab === this.POSTED){
-      // determine if we have been given a single date or a date span
-      if(postedModel.hasOwnProperty('date')){
-        if(postedModel.date){
-          // if single date generate the "To" date
-          if(appendTime){
-            returnObj.postedFrom = postedModel.date + ' ' + this.START_DAY;
-            returnObj.postedTo = postedModel.date + ' ' + this.END_DAY;
-          }else{
-            // only return time if appendTime is true
-            returnObj.postedFrom = postedModel.date;
-            returnObj.postedTo = postedModel.date;
-          }
-        }
-        else{
-          returnObj.postedFrom = "";
-          returnObj.postedTo = "";
-        }
-      }
-      else if(postedModel.hasOwnProperty('dateRange')){
-        if(postedModel.dateRange){
-          if(appendTime){
-            returnObj.postedFrom = postedModel.dateRange.startDate + ' ' + this.START_DAY;
-            returnObj.postedTo = postedModel.dateRange.endDate + ' ' + this.END_DAY;
-          }else{
-            // only return time if appendTime is true
-            returnObj.postedFrom = postedModel.dateRange.startDate;
-            returnObj.postedTo = postedModel.dateRange.endDate;
-          }
-        }
-       else{
-          this.postedFrom = "";
-          this.postedTo = "";
-        }
-      }
-    }
-    return returnObj;
-  }
-
-  // this method rebuilds the date models with the provided data in the url - called in activated route subscription
-  // takes the data object from activated route
-  modelRebuilder(data){
-    var newModifiedModel = {};
-    var newPostedModel = {};
-
-    if(data.hasOwnProperty('tab')){
-      if(data.tab === this.MODIFIED){
-        if(data.radSelection === 'date'){
-          newModifiedModel['date'] = data.modifiedFrom ? data.modifiedFrom : "";
-        }
-        else if(data.radSelection === 'dateRange'){
-          newModifiedModel['dateRange'] = {};
-          newModifiedModel['dateRange']['startDate'] = data.modifiedFrom ? data.modifiedFrom : "";
-          newModifiedModel['dateRange']['endDate'] = data.modifiedTo ? data.modifiedTo : "";
-        }
-        this.modifiedDateFilterModel = newModifiedModel;
-    }
-      else {
-        if(data.radSelection === 'date'){
-          newPostedModel['date'] = data.postedFrom ? data.postedFrom : "";
-        }
-        else if(data.radSelection === 'dateRange'){
-          newPostedModel['dateRange'] = {};
-          newPostedModel['dateRange']['startDate'] = data.postedFrom ? data.postedFrom : "";
-          newPostedModel['dateRange']['endDate'] = data.postedTo ? data.postedTo : "";
-        }
-        this.postedDateFilterModel = newPostedModel;
-      }
-    }
-
-  }
 
   // sortBy model change
   sortModelChange(){
@@ -737,25 +691,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       return {type: sortBy, sort: 'asc'};
     }
   }
-
-
-  dateChangehandler(event: Object){
-    this.filterDisabled = true;
-
-    if(event['date']){
-      if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
-        this.filterDisabled = false;
-      }
-    }
-      else if(event['dateRange']){
-        // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
-        if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
-          if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
-            this.filterDisabled = false;
-          }
-        }
-      }
-    }
 
     //agency picker change handler
     onOrganizationChange(selectedOrgs:any){
@@ -775,7 +710,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
       // storing current organization string list
       this.organizationId = organizationStringList;
-      
+
       // we only want to change page number when the organization list has changed
       if (this.previousStringList !== this.organizationId) {
         this.pageNum = 0;
@@ -865,7 +800,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     };
     this.router.navigate(['/fal/workspace/'], navigationExtras);
   }
-  
+
   downloadFile() {
     let file;
     let url;
@@ -884,7 +819,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           URL.revokeObjectURL(url);
           document.body.removeChild(link);
         }
-        
+
       } ,
       error => console.log("Error downloading the file.") ,
       () => console.log('Completed file download.'));

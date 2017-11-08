@@ -1,7 +1,7 @@
 <form-only class="grant-access" theme="inside">
   <sam-breadcrumbs *ngIf="requestId" [crumbs]="crumbs"></sam-breadcrumbs>
   <div style="margin-top: 1em;">
-    <sam-title-subtitle [titleText]="pageTitle()" [subtitle]="'Workspace'"></sam-title-subtitle>
+    <sam-title-subtitle [titleText]="'Workspace'" [subtitle]="pageTitle()"></sam-title-subtitle>
   </div>
 
   <form  [formGroup]="form" (ngSubmit)="onSubmit()">

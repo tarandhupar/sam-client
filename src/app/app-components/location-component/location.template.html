@@ -15,6 +15,7 @@
                     [control]="cityConfig.control"
                     [required]="cityConfig.required"
                     [disabled]="cityConfig.disabled"
+                    [allowAny]="stateConfig.allowAny"
                     [errorMessage]="error.city">
   </sam-autocomplete>
   <!--<div>{{location.city | json}}</div>-->
@@ -25,6 +26,7 @@
                     county [stateValCounty] = "state"
                            [cityValCounty] = "city"
                            [zipValCounty] = "zip"
+                           [countryValCounty] = "country"
                     (ngModelChange)="store.dispatch({ type: 'COUNTY_CHANGE', value: $event })"
                     [name]="countyConfig.name"
                     [id]="countyConfig.id"
@@ -34,6 +36,7 @@
                     [control]="countyConfig.control"
                     [required]="countyConfig.required"
                     [disabled]="countyConfig.disabled"
+                    [allowAny]="stateConfig.allowAny"
                     [errorMessage]="error.county">
   </sam-autocomplete>
   <!--<div>{{location.county | json}}</div>-->
@@ -51,7 +54,7 @@
                     [control]="stateConfig.control"
                     [required]="stateConfig.required"
                     [disabled]="stateConfig.disabled"
-                    [allowAny]="'true'"
+                    [allowAny]="stateConfig.allowAny"
                     [errorMessage]="error.state">
   </sam-autocomplete>  
   <!--<div>{{location.state | json}}</div>-->

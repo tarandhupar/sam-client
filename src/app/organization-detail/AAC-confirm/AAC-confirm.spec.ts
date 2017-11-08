@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Load the implementations that should be tested
 import { AACConfirmPage } from "./AAC-confirm.component";
 import { AppComponentsModule } from "../../app-components/app-components.module";
-import { SamUIKitModule } from "sam-ui-kit";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 

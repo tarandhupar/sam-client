@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SamUIKitModule } from '../../sam-ui-elements/src/ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from '../../api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { AgencyPickerV2Component } from './agency-picker-v2/agency-picker-v2.component';
@@ -48,6 +48,8 @@ import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
 import { SamTableSelectComponent } from './sam-table-select/sam-table-select.component';
 import { SamChipsComponent } from './sam-chips/sam-chips.component';
 import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-date-range.component';
+import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-select-date-range-filter.component';
+
 /**
  * A module for reusable SAM Web Design components
  */
@@ -89,6 +91,7 @@ import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-dat
     SamTableSelectComponent,
     SamChipsComponent,
     SamTabDateRangeFilterComponent,
+    SamSelectDateRangeFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -134,6 +137,7 @@ import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-dat
     SamTableSelectComponent,
     SamChipsComponent,
     SamTabDateRangeFilterComponent,
+    SamSelectDateRangeFilterComponent,
   ],
   providers: [
     SamFeedbackComponent,

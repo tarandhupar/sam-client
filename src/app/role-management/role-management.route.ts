@@ -20,7 +20,7 @@ import { RoleCategoriesResolve } from "../users/roles-categories.resolve";
 
 export const routes: Routes = [{
   path: '',
-  resolve: { domains: DomainsResolve },
+  //resolve: { domains: DomainsResolve },
   canActivateChild: [IsLoggedInGuard],
   children: [
     {
@@ -42,7 +42,7 @@ export const routes: Routes = [{
           path: ':id/assign-roles',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
-          data: { grantOrEdit: 'grant', pageName: 'users/:id/grant-access' },
+          data: { grantOrEdit: 'grant', pageName: 'users/:id/assign-roles' },
         },
       ]
     },
@@ -56,48 +56,48 @@ export const routes: Routes = [{
       path: 'workspace',
       component: RoleDefinitionPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/workspace'}
+      data: {pageName:'workspace'}
     },
     {
       path: 'objects/new',
       component: ObjectDetailsPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/objects'}
+      data: {pageName:'objects'}
     },
     {
       path: 'roles/new',
       component: RoleDetailsPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/roles'}
+      data: {pageName:'roles'}
     },
     {
       path: 'objects/:objectId/edit',
       component: ObjectDetailsPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/objects'}
+      data: {pageName:'objects'}
     },
     {
       path: 'roles/:roleId/edit',
       component: RoleDetailsPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/roles'}
+      data: { pageName: 'roles' }
     },
     {
       path: 'requests',
       component: RoleMgmtWorkspace,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/requests'}
+      data: { pageName: 'requests' }
     },
     {
       path: 'roles-directory',
       component: RolesDirectoryPage,
       canActivate: [CheckAccessGuard],
-      data: {pageName:'access/user-roles-directory'},
+      data: {pageName:'roles-directory'},
     },
     {
       path: 'requests/:requestId',
       component: ViewRequestPage,
-      data: { pageName: 'access-requests/:id' },
+      data: { pageName: 'requests/:id' },
       canActivate: [ IsLoggedInGuard, CheckAccessGuard ],
       resolve: {
         request: RequestAccessResolve,
@@ -106,7 +106,7 @@ export const routes: Routes = [{
     {
       path: 'requests/:requestId/respond',
       component: RequestResponsePage,
-      data: { pageName: 'access-requests/:id/respond' },
+      data: { pageName: 'requests/:id/respond' },
       canActivate: [ IsLoggedInGuard, CheckAccessGuard ],
       resolve: {
         request: RequestAccessResolve,

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
+import { MenuItem } from 'sam-ui-elements/src/ui-kit/components/sidenav';
 import { OpportunitySectionNames } from '../../data-model/opportunity-form-constants';
 
 @Injectable()

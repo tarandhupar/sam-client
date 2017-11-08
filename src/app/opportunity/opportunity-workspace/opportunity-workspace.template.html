@@ -83,51 +83,16 @@
         [disabled]="disabled">
       </sam-checkbox>
 
-            <!--Date Filter-->
-            <h4 class="sam-ui header">Date</h4>
-            <div class="sam-ui secondary pointing menu">
-              <a (click)="selectTab('posted')" class="item" [ngClass]="getColorClass('posted')">
-                Posted
-              </a>
-              <a (click)="selectTab('response')" class="item" [ngClass]="getColorClass('response')">
-                Response
-              </a>
-              <a (click)="selectTab('archive')" class="item" [ngClass]="getColorClass('archive')">
-                Archive
-              </a>
-            </div>
-            <sam-date-range-filter *ngIf="isCurrentTab('posted')"
-                                   #postedDateRangeFilter="ngModel"
-                                   [control]="postedDateRangeFilter.control"
-                                   [(ngModel)]="postedDateFilterModel"
-                                   (ngModelChange)="dateModelChange($event)"
-                                   [radioSelection]="dateFilterConfig.radSelection"
-                                   [dateRadioOptions]="dateFilterConfig.options"
-                                   [class]="'falDateFilter'">
-            </sam-date-range-filter>
-            <sam-date-range-filter *ngIf="isCurrentTab('response')"
-                                   #responseDateRangeFilter="ngModel"
-                                   [control]="responseDateRangeFilter.control"
-                                   [(ngModel)]="responseDateFilterModel"
-                                   (ngModelChange)="dateModelChange($event)"
-                                   [radioSelection]="dateFilterConfig.radSelection"
-                                   [dateRadioOptions]="dateFilterConfig.options"
-                                   [class]="'falDateFilter'">
-            </sam-date-range-filter>
-            <sam-date-range-filter *ngIf="isCurrentTab('archive')"
-                                   #archiveDateRangeFilter="ngModel"
-                                   [control]="archiveDateRangeFilter.control"
-                                   [(ngModel)]="archiveDateFilterModel"
-                                   (ngModelChange)="dateModelChange($event)"
-                                   [radioSelection]="dateFilterConfig.radSelection"
-                                   [dateRadioOptions]="dateFilterConfig.options"
-                                   [class]="'falDateFilter'">
-            </sam-date-range-filter>
-
-            <sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'"></sam-button>
-            <!--filter button-->
-            <sam-button [buttonType]="(filterDisabled? 'disabled' : 'default')" (onClick)='filterByDate()'
-                        [buttonText]="'Filter'"></sam-button>
+      <sam-select-date-range-filter
+        #selectDateFilter
+        [tabConfig] = "oppDateRangeConfig"
+        [tabIndex] = "dateFilterIndex"
+        [(ngModel)]= "oppDateFilterModel"
+        (ngModelChange) = "dateModelChange($event)"
+        (filterEvt)="filterByDate($event)"
+        (filterClearEvt)="clearDateFilter($event)"
+        [id]= "'opp-date-range-filter'">
+      </sam-select-date-range-filter>
 
       <!--Agency Picker Filter-->
       <h4 class="sam-ui header">Federal Agency</h4>

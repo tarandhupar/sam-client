@@ -1,12 +1,12 @@
 import { Input, Output, Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { Alert } from '../alert.model';
-import { OptionsType } from 'sam-ui-kit/types';
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types';
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import * as moment from 'moment';
-import { SamDateTimeComponent } from 'sam-ui-kit/form-controls/date-time';
-import { SamSelectComponent } from 'sam-ui-kit/form-controls/select/select.component';
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { SamTextareaComponent } from 'sam-ui-kit/form-controls/textarea/textarea.component';
+import { SamDateTimeComponent } from 'sam-ui-elements/src/ui-kit/form-controls/date-time';
+import { SamSelectComponent } from 'sam-ui-elements/src/ui-kit/form-controls/select/select.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
+import { SamTextareaComponent } from 'sam-ui-elements/src/ui-kit/form-controls/textarea/textarea.component';
 
 function isNotBeforeToday(c: FormControl) {
   let error = {

@@ -2,7 +2,7 @@ import * as Cookies from 'js-cookie';
 import {Component, OnInit, Input, ViewChild} from "@angular/core";
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {FHService} from "../../../../api-kit/fh/fh.service";
 import {OrganizationConfigurationPipe} from "../../pipes/organization-configuration.pipe.ts";

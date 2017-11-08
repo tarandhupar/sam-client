@@ -86,7 +86,7 @@ export class FALFormContactInfoComponent implements OnInit {
           contactMirror.fullName = {
             key: contact.fullName,
             value: contact.fullName
-          }; 
+          };
         }
         if(contact.email){
           this.contactEmailOptions.push({
@@ -145,7 +145,7 @@ export class FALFormContactInfoComponent implements OnInit {
     // Checkboxes Component
     this.checkboxConfig = {
       options: [
-        {value: 'appendix', label: 'See Regional Agency Offices', name: 'checkbox-rao'},
+        {value: 'appendix', label: 'See Regional Assistance Locations', name: 'checkbox-rao'},
       ],
     };
 
@@ -327,6 +327,9 @@ export class FALFormContactInfoComponent implements OnInit {
           });
           obj['value'] = countryObj && countryObj['country'] ? countryObj['country'] : obj['key'];
           contact.country = obj;
+        }
+        if(contact['streetAddress2'] === undefined) {
+          contact['streetAddress2'] = '';
         }
         c.patchValue({
           poc:contact

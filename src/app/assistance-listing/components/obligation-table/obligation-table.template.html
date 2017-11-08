@@ -9,7 +9,7 @@
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit()">
 </sam-modal>
-<table class="sam-ui table celled" *ngIf="obligationsInfo && obligationsInfo.length > 0">
+<table class="sam-ui table celled lightest blue" *ngIf="obligationsInfo && obligationsInfo.length > 0">
   <thead>
   <tr>
     <th scope="col">Obligations</th>
@@ -49,19 +49,19 @@
         <ng-container *ngIf="!hideAddButton">
           <a class="fal-table-edit" (click)="editObligation(i)">
             Edit
-            <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
+            <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></em>
           </a>
           <a class="fal-table-delete" (click)="removeObligation(i)">
             Delete
-            <i class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></i>
+            <em class="fa fa-times fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></em>
           </a>
         </ng-container>
 
         <ng-container *ngIf="hideAddButton">
           <span class="fal-table-edit disabled">Edit</span>
-          <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+          <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
           <span class="fal-table-delete disabled">Delete</span>
-          <i class="fa fa-times fal-table-delete disabled" aria-hidden="true"></i>
+          <em class="fa fa-times fal-table-delete disabled" aria-hidden="true"></em>
         </ng-container>
       </td>
     </tr>

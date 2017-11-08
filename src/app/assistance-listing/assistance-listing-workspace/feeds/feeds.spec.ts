@@ -36,7 +36,7 @@ import * as Cookies from 'js-cookie';
 import { async } from '@angular/core/testing';
 import { ActivatedRoute, Data } from '@angular/router';
 import {FALFormErrorService} from "../../assistance-listing-operations/fal-form-error.service";
-import {SamUIKitModule} from "sam-ui-kit/index";
+import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
 import {AccessRestrictedPage} from "../program-result/testauthenvironment.page";
 import {DictionaryService} from "../../../../api-kit/dictionary/dictionary.service";

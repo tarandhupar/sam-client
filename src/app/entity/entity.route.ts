@@ -3,7 +3,7 @@ import { EntityPage } from './entity.page.ts';
 
 export const routes: Routes = [
   {
-    path: 'entity/:id',
+    path: '',
     component: EntityPage
   },
 ];

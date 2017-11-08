@@ -4,7 +4,7 @@ import { globals } from '../../app/globals.ts';
 import { Location } from '@angular/common';
 import { SamFeedbackComponent } from "../app-components/feedback-form/feedback-form.component";
 import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 
 @Component({
   providers: [ ],

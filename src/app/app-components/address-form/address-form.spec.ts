@@ -4,12 +4,12 @@
 // import { Observable } from 'rxjs';
 // import * as moment from 'moment/moment';
 // import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
-// import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-// import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+// import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
+// import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 //
 // // Load the implementations that should be tested
 // import { OrgAddrFormComponent } from "./address-form.component";
-// import { SamUIKitModule } from "sam-ui-kit";
+// import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 // import { SamAPIKitModule } from "api-kit";
 // import { LocationService } from "api-kit/location/location.service";
 //

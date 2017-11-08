@@ -1,6 +1,6 @@
 import {Component, Input, ViewChild, forwardRef, Output, EventEmitter} from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validators, ValidatorFn} from "@angular/forms";
-import {LabelWrapper} from "../../../../sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component";
+import {LabelWrapper} from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component";
 
 export const TEXT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,

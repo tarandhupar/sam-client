@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
-import { IBreadcrumb, OptionsType } from "sam-ui-kit/types";
+import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
@@ -58,7 +58,7 @@ export class HelpContentManagementViewComponent {
   };
 
   contents = [];
-
+  noContentsInfo = 'Loading';
   createTextMap = {
     'data-dictionary': "New Definition",
     'FAQ-repository': "New Question",
@@ -119,19 +119,20 @@ export class HelpContentManagementViewComponent {
 
   /* search message feeds with filter, sortby, page number and order*/
   loadContent(filterObj, sort, page){
-    let content;
-    if(filterObj.section.toLowerCase().includes('data')){
-      content = this.contentManagementService.getDataDictionaryContent(filterObj, sort, page, this.recordsPerPage);
-    }else if(filterObj.section.toLowerCase().includes('faq')){
-      content = this.contentManagementService.getFAQContent(filterObj, sort, page, this.recordsPerPage);
-    }else if(filterObj.section.toLowerCase().includes('video')){
-      content = this.contentManagementService.getVideoLibraryContent(filterObj, sort, page, this.recordsPerPage);
-    }
-    content.subscribe(data => {
-      this.contents = data['contents'];
-      this.totalRecords = data['totalCount'];
-      this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-      this.updateRecordsText();
+    this.noContentsInfo = 'Loading';
+    this.contents = [];
+    this.contentManagementService.getContent(filterObj, sort, page+1, this.recordsPerPage).subscribe(data => {
+      try{
+        this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
+        this.totalRecords = data._embedded.contentDataWrapperList[0]['totalRecords'];
+        this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+        this.updateRecordsText();
+        if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
+      }catch (err){
+        console.log(err);
+        this.noContentsInfo = "No Content Available";
+      }
+
     });
   }
 
@@ -185,5 +186,16 @@ export class HelpContentManagementViewComponent {
 
   }
 
+  getDomainStr(domains){
+    let domainNames = [];
+    domains.forEach(e => {domainNames.push(e.domain_name)});
+    return domainNames.join(',');
+  }
+
+  getTagStr(tags){
+    let tagNames = [];
+    tags.forEach(e => {tagNames.push(e.tagKey)});
+    return tagNames.join(',');
+  }
 
 }

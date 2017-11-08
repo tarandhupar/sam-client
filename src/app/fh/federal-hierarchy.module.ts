@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {Ng2PageScrollModule} from 'ng2-page-scroll';
 
 import { routing } from './federal-hierarchy.route';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { FederalHierarchyPage } from "./federal-hierarchy.page";

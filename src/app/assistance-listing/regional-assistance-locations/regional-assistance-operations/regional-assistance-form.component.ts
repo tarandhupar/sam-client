@@ -5,7 +5,7 @@ import {RAOFormViewModel} from "./regional-assistance-form.model";
 import {FormBuilder, FormGroup, Validators, AbstractControl} from "@angular/forms";
 import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
 import {FALAuthGuard} from "../../components/authguard/authguard.service";
-import { IBreadcrumb } from "sam-ui-kit/types";
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 
 @Component({
   moduleId: __filename,
@@ -145,7 +145,7 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   viewModelUpdater(data: any) {
     this.RaoFormViewModel.city = data.city;
     this.RaoFormViewModel.country = data.country;
-    this.RaoFormViewModel.organizationId = (typeof data.organizationId === 'object' && data.organizationId.orgKey != null) ? data.organizationId.orgKey : data.organizationId;
+    this.RaoFormViewModel.organizationId = (data.organizationId && typeof data.organizationId === 'object' && data.organizationId.orgKey != null) ? data.organizationId.orgKey : data.organizationId;
     this.RaoFormViewModel.division = data.division;
     this.RaoFormViewModel.phone = data.phone;
     this.RaoFormViewModel.pointOfContact = data.pointOfContact;

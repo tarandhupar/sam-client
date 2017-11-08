@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 import { SearchPage } from './search.page';
 import { SearchService, SamAPIKitModule } from 'api-kit';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';

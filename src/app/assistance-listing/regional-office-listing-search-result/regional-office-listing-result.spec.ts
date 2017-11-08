@@ -4,7 +4,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SamUIKitModule } from 'sam-ui-kit';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import {RegionalOfficeListingResult} from "./regional-office-listing-result.component";
 
 var fixture;

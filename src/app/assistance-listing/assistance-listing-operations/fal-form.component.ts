@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, ResolveStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { MenuItem } from 'sam-ui-kit/components/sidenav';
-import { IBreadcrumb } from 'sam-ui-kit/types';
+import { MenuItem } from 'sam-ui-elements/src/ui-kit/components/sidenav';
+import { IBreadcrumb } from 'sam-ui-elements/src/ui-kit/types';
 import { ProgramService } from '../../../api-kit/program/program.service';
 import { AlertFooterService } from '../../app-components/alert-footer/alert-footer.service';
 import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
@@ -29,7 +29,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tabsFalComponent') tabsFalComponent;
   hasErrors: any;
   tabsComponent: any;
-  titleMissingConfig = {title: '', description: '', confirmText: '', cancelText: ''};
+  titleMissingConfig = {title: '', description: '', confirmText: '', cancelText: '', showClose: '', closeOnOutsideClick: '', closeOnEscape: ''};
   sections: string[] = [
     FALSectionNames.HEADER,
     FALSectionNames.OVERVIEW,
@@ -79,6 +79,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   private invalidIconClass = 'error';
   fal: any;
   hasPermission: boolean = false;
+  closeModelFlag: boolean = false;
 
 
   sectionLabels: any = [
@@ -88,7 +89,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     'Obligations',
     'Other Financial Info',
     'Criteria for Applying',
-    'Applying For Assistance',
+    'Applying for Assistance',
     'Compliance Requirements',
     'Contact Information'
   ];
@@ -193,6 +194,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.title = this.falFormViewModel.title;
     this.updateBreadCrumbs();
     this.cdr.detectChanges();
+    if (this.falFormViewModel.status && this.falFormViewModel.status.code && (this.falFormViewModel.status.code === 'published' || this.falFormViewModel.status.code === 'pending') || (this.falFormViewModel.status && this.falFormViewModel.latest === false )){
+      this.router.navigate(['/403']);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -285,7 +289,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   onCancelClick() {
     let submitFragment = this.router.url.substring(this.router.url.lastIndexOf("#") + 1);
     if (submitFragment === 'review') {
-      let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit' : '/programs/add';
+      let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit' : '/fal/add';
       this.router.navigate([url], {fragment: this.sections[this.currentSection - 1]});
     } else {
       //  TODO: Add unsaved prompt
@@ -294,12 +298,12 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   cancel() {
-    let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
+    let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
     this.router.navigateByUrl(url);
   }
 
   navigateSection(section: number) {
-    let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit' : '/programs/add';
+    let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit' : '/fal/add';
     this.router.navigate([url], {
       fragment: this.sections[section],
       queryParams: this.route.snapshot.queryParams
@@ -403,7 +407,6 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   public showErrors(errors) {
     this.errorDisplayComponent.formatErrors(errors);
     this.hasErrors = FALFormErrorService.hasErrors(this.errorService.errors);
-    this.cdr.detectChanges();
     this.updateSidenavModel();
   }
 
@@ -429,26 +432,36 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onTitleModalNo() {
-    if (!this.modelBtnsNavigationFlag) {
-      this.formNavigationFlag = true;
-      this.router.navigateByUrl(this.globalLinksUrl);
+    if (!this.closeModelFlag) {
+      if(this.globalLinksUrl){
+        if (this.globalLinksUrl.indexOf('/add') >= 0 || this.globalLinksUrl.indexOf('/edit') >= 0) {
+          this.setSideNavtoHeaderSection();
+        } else {
+          this.formNavigationFlag = true;
+          this.router.navigateByUrl(this.globalLinksUrl);
+        }
+      } else {
+        this.setSideNavtoHeaderSection();
+      }
     }
-    this.modelBtnsNavigationFlag = false;
+    this.closeModelFlag = false;
   }
 
   onTitleModalYesorClose() {
-    this.modelBtnsNavigationFlag = true;
+    this.closeModelFlag = true;
+   this.setSideNavtoHeaderSection();
+    let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
+    this.globalLinksUrl = url;
+    this.titleModal.closeModal();
+    this.formNavigationFlag = false;
+  }
+
+  setSideNavtoHeaderSection() {
     this.sidenavSelection = "";
     this.cdr.detectChanges();
     this.sidenavSelection = "Header Information";
     this.cdr.detectChanges();
-    let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
-    this.globalLinksUrl = url;
-    this.titleModal.closeModal();
-    this.formNavigationFlag = false;
-    this.router.navigateByUrl(url);
   }
-
   public checkNavigation(target) {
     if (target.url === this.router.url) {
       let field = document.getElementById(target.fieldId);
@@ -464,7 +477,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         let title = 'No Title Provided';
         let description = 'You must provide a title for this draft assistance listing in order to proceed.';
         let confirmText = 'Close';
-        this.titleModelConfig(title, description, confirmText, '');
+        let showClose = true;
+        let closeOnOutsideClick = true;
+        let closeOnEscape = true;
+        this.titleModelConfig(title, description, confirmText, '', showClose, closeOnOutsideClick, closeOnEscape);
         this.titleModal.openModal();
       } else {
         //  TODO: Support partial update?
@@ -533,6 +549,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (dirtyFlag) {
       if (actionType !== 'Workspace' && actionType !== 'Home' && actionType !== 'links' && actionType !== 'falWorkspace') {
         this.saveForm(navObj, actionType, form, subForm);
+        if(actionType === 'SideNav') {
+          this.setFormDirty(form, subForm);
+        }
       } else {
         if (!this.falFormViewModel.title) {
           this.navigateSection(this.currentSection);
@@ -540,7 +559,10 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           let description = 'You must provide a title in order to save this draft assistance listing. <br>Do you wish to return to the listing to enter a title? <br>Select "yes" to return to the listing, or select "no" to navigate away from the listing without saving.';
           let confirmText = 'Yes';
           let cancelText = 'No';
-          this.titleModelConfig(title, description, confirmText, cancelText);
+          let showClose = false;
+          let closeOnOutsideClick = false;
+          let closeOnEscape = false;
+          this.titleModelConfig(title, description, confirmText, cancelText, showClose, closeOnOutsideClick, closeOnEscape);
         } else {
           this.saveForm(navObj, actionType, form, subForm);
         }
@@ -551,12 +573,15 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  titleModelConfig(title, description, confirmText, cancelText) {
+  titleModelConfig(title, description, confirmText, cancelText, showClose, closeOnOutsideClick, closeOnEscape) {
     this.titleModal.openModal();
     this.titleMissingConfig.title = title;
     this.titleMissingConfig.description = description;
     this.titleMissingConfig.confirmText = confirmText;
     this.titleMissingConfig.cancelText = cancelText;
+    this.titleMissingConfig.showClose = showClose;
+    this.titleMissingConfig.closeOnOutsideClick = closeOnOutsideClick;
+    this.titleMissingConfig.closeOnEscape = closeOnEscape;
   }
 
   saveForm(navObj , actionType, form, subForm) {
@@ -569,14 +594,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
           this.beforeNavigationAction();
           this.navigationOnAction(actionType, navObj);
-          if (form) {
-            form.markAsPristine();
-          }
-          if (subForm && subForm.length > 0) {
-            for (let sf of subForm) {
-              sf.markAsPristine();
-            }
-          }
+          this.setFormDirty(form, subForm);
         },
         error => {
           console.error('error saving assistance listing to api', error);
@@ -586,11 +604,11 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   navigationOnAction(actionType, navObj) {
     let url;
     if (actionType === 'SaveExit') {
-      url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
+      url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/review' : '/fal/workspace';
       this.router.navigate([url]);
     }
     if (actionType === 'SideNav') {
-      url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/edit' : '/programs/add';
+      url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit' : '/fal/add';
       if(this.isAdd) {
         this.scrollToTop = false;
       }
@@ -617,11 +635,11 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.router.navigate(['/fal/workspace']);
     }
     if (actionType === 'PublicView') {
-      let url = '/programs/' + this.falFormViewModel.programId + '/view';
+      let url = '/fal/' + this.falFormViewModel.programId + '/view';
       this.router.navigateByUrl(url);
     }
     if (actionType === 'Submit') {
-      let url = '/programs/' + this.falFormViewModel.programId + '/submit';
+      let url = '/fal/' + this.falFormViewModel.programId + '/submit';
       this.router.navigateByUrl(url);
     }
     if (actionType === 'Notify') {
@@ -674,7 +692,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'Submit':
         this.onSubmitClick();
         break;
-      case 'Notify Agency Coordinator':
+      case 'Notify Assistance Administrator':
         this.onNotifyClick();
         break;
       default:
@@ -737,6 +755,17 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       default:
         // noop
         break;
+    }
+  }
+
+  setFormDirty(form , subForm) {
+    if (form) {
+      form.markAsPristine();
+    }
+    if (subForm && subForm.length > 0) {
+      for (let sf of subForm) {
+        sf.markAsPristine();
+      }
     }
   }
 }

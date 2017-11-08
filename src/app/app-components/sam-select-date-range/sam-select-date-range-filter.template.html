@@ -1,0 +1,28 @@
+<h4 class="sam-ui header">Date</h4>
+<div class="sam-ui secondary pointing">
+    <sam-select
+        [label]="'Date Type'"
+        [name]="'date-select-filter'"
+        [attr.id]="dateFilterId"
+        [options]="dateTypeOptions"
+        [(model)]="dateTypeFilterModel"
+        (modelChange)="selectChangeHandler($event)">
+    </sam-select>
+</div>
+<br>
+<ng-container>
+    <sam-date-range-filter 
+        [ngModel]="dateFilterModel"
+        (ngModelChange)="dateChangeHandler($event)"
+        [radioSelection]="currDateOption?.dateFilterConfig?.radSelection ? currDateOption?.dateFilterConfig?.radSelection : null"
+        [dateRadioOptions]="currDateOption?.dateFilterConfig?.options ? currDateOption?.dateFilterConfig?.options : null"
+        [rangeType]="currDateOption?.dateFilterConfig?.rangeType ? currDateOption?.dateFilterConfig?.rangeType : null"
+        [class]="'falDateFilter'">
+    </sam-date-range-filter>
+</ng-container>
+
+<sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'" buttonType="tertiary"></sam-button>
+<!--filter button-->
+<sam-button buttonType="secondary" [buttonDisabled]="(filterDisabled? true : false)"
+            (onClick)='filterByDate()'
+            [buttonText]="'Filter'"></sam-button>

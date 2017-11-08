@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { SamUIKitModule } from "sam-ui-kit/index";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
 import { UserAccessMock } from "../../../api-kit/access/access.service.mock";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";

@@ -35,7 +35,7 @@ export class SecurityComponent extends Section {
 
       securityOfficer: {
         label: 'Security Official',
-        hint: 'Provide the name ond email oddress of the individual responsible for the security of the interfacing system (the ISSO, for example).',
+        hint: 'Provide the name and email address of the individual responsible for the security of the interfacing system (the ISSO, for example).',
       },
     }
   };
