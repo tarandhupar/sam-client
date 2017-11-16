@@ -46,20 +46,8 @@
   </div>
 
   <h4>Comments</h4>
-  <ng-container *ngIf="request.comments && request.comments.length">
-    <div *ngFor="let comment of request.comments">
-      <b>{{comment.userName}}</b>&nbsp;{{comment.text}}
-      <div>
-        <span class="text-lighter">{{comment.date | shortDate}}</span>
-      </div>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="!(request.comments && request.comments.length)">
-    <div class="text-center p_All-4x">
-      <em>No comments</em>
-    </div>
-  </ng-container>
-  <sam-text-area [errorMessage]="errors.comment" [(ngModel)]="comment" name="comment"></sam-text-area>
+  <rm-comments [comments]="comments" [postCB]="post" [newCommentsEnabled]="areNewCommentsEnabled()"></rm-comments>
+
   <h4>Request History</h4>
   <sam-history *ngIf="historyNodes.length" [data]="historyNodes"></sam-history>
   <div style="min-height: 2em;">&nbsp;</div>

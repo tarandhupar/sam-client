@@ -1,6 +1,6 @@
 <div class="sam-ui hidden divider"></div>
 <span class="usa-input-error-message" *ngIf="authInfo.length == 0 && toggleAtLeastOneEntryError "><sup>*</sup>You must add at least one authorization.</span>
-<sam-button [buttonId]="'authorization-add-btn'" buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></sam-button>
+<sam-button [buttonId]="'authorization-add-btn'" buttonType="secondary" buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
   <div formArrayName="authorizations">
@@ -142,7 +142,7 @@
 
         <div class="sam-ui hidden divider"></div>
         <sam-button [buttonId]="'authorization-cancel-btn-' + i" buttonType="tertiary" buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
-        <sam-button [buttonId]="'authorization-confirm-btn-' + i" buttonText="Confirm" (onClick)="onConfirmClick(i)"></sam-button>
+        <sam-button [buttonId]="'authorization-confirm-btn-' + i" buttonType="secondary" [buttonText]="mode === 'Add' ? 'Add' : 'Update'" (onClick)="onConfirmClick(i)"></sam-button>
       </div>
     </ng-container>
   </div>

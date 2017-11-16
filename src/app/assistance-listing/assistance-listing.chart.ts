@@ -147,7 +147,7 @@ export class FinancialObligationChart implements OnChanges {
       "#e59393", "#00a6d2", "#f9c642", "#aeb0b5", "#981b1e",
       "#3e94cf", "#4c2c92", "#8ba6ca"
     ];
-
+    
     let {series: series, keys: stackKeys} = getStackProperties(assistanceTotalsGroupedByYear);
 
     // Axis Range
@@ -540,17 +540,45 @@ export class FinancialObligationChart implements OnChanges {
     let existingYears;
     let missingYears;
     let allYears = d3.set();
+    let currentFY: number = null;
+    let prevFY: number = null;
+    let nextFY: number = null;
 
     function getAssistanceType(id): string {
       let result = self.FilterMultiArrayObjectPipe.transform([id], self.dictionaries.assistance_type, 'element_id', true, 'elements');
       return (result instanceof Array && result.length > 0) ? result[0].value : [];
     }
 
+    //If FAL has more than 3 FY years, then will loop and get the most recent 3-ones
+    if (this.financialData.length > 0) {
+      let idx: number = null;
+      let highestYear: number = null;
+      let truncatedFYFinancialData = _.cloneDeep(this.financialData);
+      //initialize fyYearOptions with highest years of the existing obligation
+      truncatedFYFinancialData.forEach((item, index) => {
+        let result = _.orderBy(item.values, 'year','desc');
+        if((result && result.length  && result[0] != undefined && result[0].year && result[0].year > highestYear)) {
+          highestYear = result[0].year;
+          idx = index;
+        }
+      });
+
+      if(idx !== null && truncatedFYFinancialData[idx]['values'] && truncatedFYFinancialData[idx]['values'].length > 0) {
+        let years: any[] = _.sortBy(_.map(truncatedFYFinancialData[idx]['values'], 'year'));
+
+        prevFY = (years && years[years.length-3]) ? years[years.length-3] : "";
+        currentFY = (years && years[years.length-2]) ? years[years.length-2] : "";
+        nextFY = (years && years[years.length-1]) ? years[years.length-1] : "";
+      }
+    }
+
     // Find all available years
     this.financialData.map(function(item){
       if(item.values) {
         for (let value of item.values) {
-          allYears.add(value.year);
+          if(value.year == prevFY || value.year == currentFY || value.year == nextFY || prevFY == null || prevFY == null || nextFY == null) {
+            allYears.add(value.year);
+          }
         }
       }
     });
@@ -560,7 +588,9 @@ export class FinancialObligationChart implements OnChanges {
       existingYears = [];
       if(item.values) {
         for (let value of item.values) {
-          existingYears.push(value.year);
+          if(value.year == prevFY || value.year == currentFY || value.year == nextFY || prevFY == null || prevFY == null || nextFY == null) {
+            existingYears.push(value.year);
+          }
         }
       }
 
@@ -576,36 +606,38 @@ export class FinancialObligationChart implements OnChanges {
     this.financialData.map(function (item) {
       if(item.values){
         for (let value of item.values) {
-          let year = value.year;
-          let obligation = "No Obligation";
-          if (item.assistanceType && item.assistanceType.length > 0) {
-            obligation = getAssistanceType(item.assistanceType);
-          } else if (item.isRecoveryAct != true) {
-            obligation = "Salary or Expense";
+          if (allYears.has(value.year)) {
+            let year = value.year;
+            let obligation = "No Obligation";
+            if (item.assistanceType && item.assistanceType.length > 0) {
+              obligation = getAssistanceType(item.assistanceType);
+            } else if (item.isRecoveryAct != true) {
+              obligation = "Salary or Expense";
+            }
+            //        } else if(item.questions) {
+            //          for (let question of item.questions) {
+            //            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+            //              obligation = "Salary or Expense";
+            //              break;
+            //            }
+            //          }
+            //        }
+
+            obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
+
+            let financialItem = {
+              "obligation": obligation,
+              "info": item.description ? item.description || "" : "",
+              "year": +year,
+              "amount": value["actual"] || value["estimate"] || 0,
+              "estimate": !value["actual"],
+              "ena": value.flag == "ena" || value.flag == "na" ? true : false,
+              "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
+              "empty": value.flag == "empty" ? true : false,
+              "explanation": value.explanation || ""
+            };
+            formattedFinancialData.push(financialItem);
           }
-          //        } else if(item.questions) {
-          //          for (let question of item.questions) {
-          //            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
-          //              obligation = "Salary or Expense";
-          //              break;
-          //            }
-          //          }
-          //        }
-
-          obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
-
-          let financialItem = {
-            "obligation": obligation,
-            "info": item.description ? item.description || "" : "",
-            "year": +year,
-            "amount": value["actual"] || value["estimate"] || 0,
-            "estimate": !value["actual"],
-            "ena": value.flag == "ena" || value.flag == "na" ? true : false,
-            "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
-            "empty": value.flag == "empty" ? true : false,
-            "explanation": value.explanation || ""
-          };
-          formattedFinancialData.push(financialItem);
         }
       }
     });

@@ -26,6 +26,7 @@ import { SubscriptionsComponent } from "./subscriptions/subscriptions.component"
 import { SubscriptionsSideNavComponent } from "./subscriptions/subscriptions-sidenav/subscriptions-sidenav.component";
 import { SubscriptionActionsComponent } from "./subscriptions/subscription-actions/subscription-actions.component";
 import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant-or-edit-access";
+import { RmCommentsComponent } from "../role-management/rm-comments/rm-comments.component";
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { GrantOrEditAccess } from "../role-management/grant-or-edit-access/grant
     MyAccessPage,
   ],
   declarations: [
+    RmCommentsComponent,
     MyAccessPage,
     RequestAccessPage,
     ViewRequestPage,

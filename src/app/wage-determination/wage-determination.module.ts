@@ -23,7 +23,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
   ],
   declarations: [
     WageDeterminationPage,
-    WageDeterminationDocumentPage
+    WageDeterminationDocumentPage,
   ],
 })
 export class WageDeterminationModule { }

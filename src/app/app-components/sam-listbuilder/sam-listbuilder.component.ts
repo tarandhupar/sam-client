@@ -23,7 +23,7 @@ export class SamListBuilderComponent {
     @Input() deleteModalConfig = {
         title: 'test',
         type: "error",
-        description: 'xzcvzcxvzcxv',
+        description: '',
     };
     @Input() control:AbstractControl;
     @Input() hideDefaultBtns:boolean= false;
@@ -39,6 +39,7 @@ export class SamListBuilderComponent {
     @ViewChildren('cards') cards;
 
     editIndex:number;
+    deleteIndex:number;
     model = [];
     returnModel = [];
     showAddSubform: boolean = false;
@@ -130,6 +131,7 @@ export class SamListBuilderComponent {
         }
         if(event.type=="delete"){
             if(this.deleteModalFlag){
+                this.deleteIndex = event.data;
                 this.modal.openModal();
             }
             else {
@@ -139,9 +141,10 @@ export class SamListBuilderComponent {
             }
         }
         if(event.type=="deleteModal"){
-            let index = event.data;
+            let index = this.deleteIndex;
             this.model.splice(index,1);
             this.formArrayChange.emit(this.model);
+            this.deleteIndex = null;
         }
         if(event.type=="moveup"){
             let index = event.data;
@@ -165,10 +168,10 @@ export class SamListBuilderComponent {
         if(event.type=="edit-cancel"){
             this.showEditSubform = false;
             this.model[event.data.index].reset(event.data.data);
-            if(!this.sortable && this.sortingFn){
-                this.model = this.model.sort(this.sortingFn);
-            }
-            this.formArrayChange.emit(this.model);
+            // if(!this.sortable && this.sortingFn){
+            //     this.model = this.model.sort(this.sortingFn);
+            // }
+            // this.formArrayChange.emit(this.model);
         }
         this.action.emit(event.type);
     }

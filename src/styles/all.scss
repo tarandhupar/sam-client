@@ -132,7 +132,7 @@ $large: $current-large;
 @import 'components/image-library';
 @import 'components/list-builder';
 @import 'components/notifications'; // REVIEW: Move to common components
-//@import 'components/search-header'; 
+//@import 'components/search-header';
 @import 'components/searchbar';
 @import 'components/sort'; // REVIEW: Move to common components
 @import 'components/status_banner';
@@ -150,7 +150,7 @@ $large: $current-large;
 @import 'components/autocomplete';
 @import 'components/banner';
 @import 'components/bread-crumbs';
-@import 'components/card'; 
+@import 'components/card';
 @import 'components/collapsible';
 @import 'components/comments';
 @import 'components/date-range';
@@ -161,7 +161,7 @@ $large: $current-large;
 @import 'components/info-accordion';
 @import 'components/input';
 //@import 'components/label-wrapper';
-//@import 'components/list-input'; 
+//@import 'components/list-input';
 @import 'components/modal';
 @import 'components/multiselect-dropdown';
 //@import 'components/multiselect';
@@ -173,7 +173,7 @@ $large: $current-large;
 /*-------------------
      Pages
 --------------------*/
-// TODO: Move pages found in components 
+// TODO: Move pages found in components
 // folder to the pages folder
 @import 'pages/entity-object-view';
 @import 'pages/opportunity';
@@ -348,11 +348,11 @@ select {
 
 // https://stackoverflow.com/questions/7492062/css-overflow-scroll-always-show-vertical-scroll-bar
 ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
+  background-color: rgba(128,128,128,.2);
+  width: 15px;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: rgba(0,0,0,.5);
   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }

@@ -20,7 +20,7 @@
               (click)="cancelEdit()">
             </sam-button>
             <sam-button
-              buttonText="Done"
+              [buttonText]="addMode ? 'Add' : 'Update'"
               buttonType="secondary"
               (click)="actionHandler('editSubmit')">
             </sam-button>

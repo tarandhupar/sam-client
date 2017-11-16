@@ -187,7 +187,6 @@ export class TabsFalComponent implements OnInit{
 
   public onEditClick(page: string[]) {
     if (this.data._links && this.data._links['program:update'] && this.data._links['program:update'].href) {
-      console.log(this.data._links);
       let id = this.data._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
       let url = '/fal/' + id + '/edit'.concat(page.toString());
       this.router.navigateByUrl(url);

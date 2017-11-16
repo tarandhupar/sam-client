@@ -7,7 +7,7 @@ export class RequestHistoryLabelPipe implements PipeTransform {
     let label = "";
     switch(actionType){
       case "title_request":
-        label = "Title Changed Requested";
+        label = "Title Change Requested";
         break;
       case "agency_request":
         label = "Agency Change Requested";

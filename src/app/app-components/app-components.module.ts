@@ -41,7 +41,6 @@ import { SamListBuilderActionComponent } from './sam-listbuilder/sam-listbuilder
 import { SamWatchComponent } from './watchlist/watchlist.component';
 import { AlertHeaderComponent } from './alert-header';
 import { AlertFooterComponent } from './alert-footer';
-import { RequestDetailsComponent } from './request-details/request-details';
 import { SamLocationComponent } from './location-component';
 import { SamTableEntryComponent } from './sam-table-entry/sam-table-entry.component';
 import { SamPOCEntryComponent } from './poc-entry/poc-entry.component';
@@ -85,7 +84,6 @@ import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-s
     SamListBuilderActionComponent,
     SamListBuilderCardComponent,
     SamLocationComponent,
-    RequestDetailsComponent,
     SamTableEntryComponent,
     SamPOCEntryComponent,
     SamTableSelectComponent,
@@ -130,7 +128,6 @@ import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-s
     SamWatchComponent,
     SamListBuilderComponent,
     SamListBuilderCardComponent,
-    RequestDetailsComponent,
     SamLocationComponent,
     SamTableEntryComponent,
     SamPOCEntryComponent,

@@ -7,7 +7,7 @@ export class ContentManagementService{
   constructor(private oAPIService: WrapperService) { }
 
   typeMap = {
-    'data-definition':1,
+    'data-dictionary':1,
     'faq-repository':2,
     'video-library':3,
   };
@@ -24,11 +24,12 @@ export class ContentManagementService{
     });
   }
 
-  getContentItem(id, ){
+  getContentItem(id, section){
     let oApiParam = {
       name: 'helpContent',
       suffix: '/data',
       oParam: {
+        type: this.typeMap[section.toLowerCase()],
         contentid: id,
       },
       method: 'GET'
@@ -43,15 +44,68 @@ export class ContentManagementService{
       suffix: '/data',
       oParam: {
         type: this.typeMap[filterObj.section.toLowerCase()],
-        // sortBy: sortBy.type,
-        // order: sortBy.sort,
+        orderBy: sortBy.type,
+        order: sortBy.sort,
         limit: pageSize,
         offset: pageNum,
       },
       method: 'GET'
     };
 
+    if(filterObj.domains.length > 0) oApiParam.oParam['domains'] = filterObj.domains.join(',');
+    if(filterObj.keyword !== '') oApiParam.oParam['q'] = filterObj.keyword;
+    if(filterObj.status.length > 0) oApiParam.oParam['statusid'] = filterObj.status.join(',');
+
     return this.oAPIService.call(oApiParam);
+  }
+
+  createContent(content){
+    if(content['type'].typeId == null) content['type'] = {'typeId':this.typeMap[content['type']]};
+    let oApiParam = {
+      name: 'helpContent',
+      suffix: '/data/create',
+      oParam: {},
+      body: content,
+      method: 'POST'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  updateContent(content){
+    let oApiParam = {
+      name: 'helpContent',
+      suffix: '/data/update',
+      oParam: {},
+      body: content,
+      method: 'PUT'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  createTag(tagKey){
+    let oApiParam = {
+      name: 'helpContent',
+      suffix: '/data/tags/create',
+      oParam: {},
+      body: {tagKey:tagKey},
+      method: 'POST'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getTags(q){
+    let oApiParam = {
+      name: 'helpContent',
+      suffix: '/data/tags',
+      oParam: {},
+      method: 'GET'
+    };
+    if(q !== '') oApiParam.oParam['q'] = q;
+    return this.oAPIService.call(oApiParam);
+
   }
 
   getFAQContent(filterObj, sortBy, orderBy, pageNum, pageSize = 10){

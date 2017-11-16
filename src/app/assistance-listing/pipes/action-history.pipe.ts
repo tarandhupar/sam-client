@@ -25,9 +25,6 @@ export class ActionHistoryPipe implements PipeTransform {
 
       /** Process history into a form usable by history component **/
 
-      //remove send_omb whole item including it's request from the list before processing it
-      actionHistoryArray._embedded.jSONObjectList = _.filter(actionHistoryArray._embedded.jSONObjectList, item => { return (item.action_type != "send_omb") });
-
       let processOrganizationNames = function(historyItem){
         if (historyItem.action_type == 'agency' && historyItem.requested_organizationId != null && historyItem.requested_organizationId.length > 0){
           return historyItem.requested_organizationId + "," + historyItem.current_organization_id;
@@ -158,14 +155,10 @@ export class ActionHistoryPipe implements PipeTransform {
       let objectToReturn;
       let arrayToReturn = _.flatten(actionHistoryArray._embedded.jSONObjectList.map(processHistoryItem));
       for (let i in arrayToReturn){
-        if (
-            (
-              (arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') &&
+        if ((arrayToReturn[i]['title'] == null || arrayToReturn[i]['title'] == '') &&
               arrayToReturn[i]['date'] == null &&
               (arrayToReturn[i]['description'] == null || arrayToReturn[i]['description'] == '') &&
-              arrayToReturn[i]['submitter'] == null
-            ) ||
-            arrayToReturn[i]['title'] == 'send_omb'){
+              arrayToReturn[i]['submitter'] == null){
           arrayToReturn.splice(i,1);
         }
       }

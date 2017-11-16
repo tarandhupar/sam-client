@@ -44,15 +44,25 @@ export class SidenavHelper {
   sidenavPathEvtHandler(displayComponent, data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 
-    if (displayComponent.pageFragment == data.substring(1)) {
-      document.getElementById(displayComponent.pageFragment).scrollIntoView();
-    }
-    else if(data.charAt(0)=="#"){
-      displayComponent.router.navigate([], { fragment: data.substring(1) });
+    if (data.charAt(0)=="#") {
+      this.scrollToWithBannerOffset(data.substring(1));
     }
     else {
       displayComponent.router.navigate([data]);
     }
+  }
+
+  // When scrolling to an element, we get the visible height of the sticky banner and offset the scrolling by it
+  // This prevents the banner from overlapping the anchor target
+  private scrollToWithBannerOffset(targetId) {
+    let bannerHeight = document.getElementsByClassName('sticky-banner')[0].clientHeight;
+    let element = document.getElementById(targetId);
+    element.scrollIntoView(true);
+    window.scrollBy(0, -bannerHeight);
+
+    // after scrolling, update the url fragment as well
+    // we use pushState so that the browser does not try to navigate to the anchor
+    history.pushState({}, '', window.location.pathname + '#' + targetId);
   }
 
   DOMComplete(displayComponent, observable){

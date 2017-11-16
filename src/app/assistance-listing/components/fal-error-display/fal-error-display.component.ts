@@ -27,16 +27,12 @@ export class FALErrorDisplayComponent implements OnChanges {
   @Output() onNavigation = new EventEmitter();
 
   public numErrors: number = 0;
+  public numPristine: number = 0;
 
-  public formatErrors(validationErrors: FieldError | FieldErrorList): void {
+  public formatErrors(validationErrors: FieldError | FieldErrorList, pristineSections: any[]): void {
     this.validationErrors = validationErrors;
     this.numErrors = 0;
-    this.processErrors(this.validationErrors);
-    this.emitErrors();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    this.numErrors = 0;
+    this.numPristine = pristineSections.length;
     this.processErrors(this.validationErrors);
     this.emitErrors();
   }
@@ -59,8 +55,27 @@ export class FALErrorDisplayComponent implements OnChanges {
   }
 
   private emitErrors(): void {
-    if(this.numErrors > 0){
-      this.message.emit('You must resolve ' + this.numErrors + ' issue(s) to submit the form');
+    if ((this.numErrors + this.numPristine) > 0) {
+      // Construct a message of the form 'You must resolve X issues and complete Y sections in order to submit the form.'
+      let message = 'You must ';
+
+      if (this.numErrors > 0) {
+        message += 'resolve ';
+        message += this.numErrors + ' ';
+        message += this.numErrors === 1 ? 'issue ' : 'issues ';
+        if (this.numPristine > 0) {
+          message += 'and ';
+        }
+      }
+
+      if (this.numPristine > 0) {
+        message += 'complete ';
+        message += this.numPristine + ' ';
+        message += this.numPristine === 1 ? 'section ' : 'sections ';
+      }
+
+      message += 'in order to submit the form.';
+      this.message.emit(message);
     } else {
       this.message.emit('');
     }

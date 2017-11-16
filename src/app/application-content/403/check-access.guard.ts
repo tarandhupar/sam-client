@@ -73,7 +73,7 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
           this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
           this.alertFooter.registerFooterAlert({
             title: "",
-            description: "You must be logged in to perform his action.",
+            description: "You must be logged in to perform this action.",
             type: 'error',
             timer: 3200
           });

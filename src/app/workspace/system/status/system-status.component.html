@@ -2,16 +2,16 @@
   <div row>
     <div columns="2"></div>
     <div columns="8">
-      <title-and-section section="Workspace" [title]="application.systemAccountName" [badge]="application.applicationStatus"></title-and-section>
+      <title-and-section section="Workspace" [title]="application.systemAccountName" [badge]="label"></title-and-section>
 
       <div class="usa-progress-bar">
-        <div class="progress-header" [ngClass]="'step-'+status">
+        <div class="progress-header" [ngClass]="className()">
           <span *ngIf="status >= 1">Draft</span>
           <span *ngIf="status >= 2">Pending Approval</span>
-          <span *ngIf="status >= 3" [innerText]="application.applicationStatus"></span>
+          <span *ngIf="status >= 3" [innerText]="label"></span>
         </div>
         <div class="progress-body">
-          <div [ngClass]="'step-'+status">
+          <div [ngClass]="className()">
             <span>
               <span class="fa fa-check-circle" *ngIf="status > 1"></span>
             </span>

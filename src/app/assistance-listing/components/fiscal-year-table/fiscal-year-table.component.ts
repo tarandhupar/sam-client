@@ -118,6 +118,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   public fyTableGroup: FormGroup;
   public checkboxControl: FormControl;
 
+  // buttons
+  public cancelBtnText = 'Cancel';
+  public confirmBtnText = 'Add'; // dynamic based on whether user is adding new entry (Add) or editing existing one (Update)
+
   // label wrapper
   @ViewChild('fyTableWrapper') fyTableWrapper: LabelWrapper;
 
@@ -257,6 +261,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     this.currentIndex = index;
     this.isEditing = true;
+    this.confirmBtnText = 'Update';
 
     this.onChange();
   }
@@ -336,12 +341,16 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public getCurrentFY(): number {
+    // fiscal year has been redefined as calendar year
+    return moment().year();
+
     // fiscal year changes on start of Q4
-    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
+    // return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
   }
 
   public displayForm() {
     this.isEditing = true;
+    this.confirmBtnText = 'Add';
   }
 
   public resetForm() {
@@ -401,7 +410,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     if (this.config && this.config.required === true) {
       if (this.model.isApplicable === true) {
-        let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+        let fy: number = moment().year();
         // Only take into account the previous, current, and budget fiscal years
         let applicable = this.model.entries.filter((entry) => {
           let year: number = entry.year;

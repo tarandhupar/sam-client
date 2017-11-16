@@ -10,7 +10,8 @@ export const routes: Routes = [
   {
     path: 'wage-determination/:referencenumber/:revisionnumber/document',
     component: WageDeterminationDocumentPage
-  }
+  },
+  
 ];
 
 

@@ -7,7 +7,7 @@ import { Validators as $Validators } from '../../authentication/shared/validator
 import { FormControl, Validators } from '@angular/forms';
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { FeedbackFormService } from "./feedback-form.service";
-
+import { globals } from "./feedback-form.globals";
 
 export let navigateAwayObj = {
   discardFeedbackRes: false,
@@ -68,6 +68,7 @@ export class SamFeedbackComponent {
               private alertFooterService: AlertFooterService,
               formService: FeedbackFormService){
     formService.componentInstance = this;
+    globals.feedbackFormInstance = this;
     this.createBackdrop();
   }
 

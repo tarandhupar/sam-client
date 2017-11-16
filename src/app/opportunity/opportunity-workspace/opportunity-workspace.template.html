@@ -85,10 +85,12 @@
 
       <sam-select-date-range-filter
         #selectDateFilter
-        [tabConfig] = "oppDateRangeConfig"
+        [tabConfig] = "dateRangeConfig"
+        [(filterDisabled)] = "filterDisabled"
         [tabIndex] = "dateFilterIndex"
-        [(ngModel)]= "oppDateFilterModel"
+        [(ngModel)]= "dateFilterModel"
         (ngModelChange) = "dateModelChange($event)"
+        (dateIndexChange) = "dateTypeChangeHandler($event)"
         (filterEvt)="filterByDate($event)"
         (filterClearEvt)="clearDateFilter($event)"
         [id]= "'opp-date-range-filter'">
@@ -101,6 +103,7 @@
                             [attr.id] = "'opp-agency-picker-filter'"
                             [ngModel]="agencyPickerModel"
                             [orgRoots]="orgRoots"
+                            [limit]="orgLevels"
                             (ngModelChange)="onOrganizationChange($event)"
                             [editOnFlag]="false"
                             [activeOnly]="false">

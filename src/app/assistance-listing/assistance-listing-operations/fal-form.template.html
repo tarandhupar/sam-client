@@ -31,7 +31,7 @@
   [alerts] = "alerts">
 
   <div status-banner>
-    <fal-error-display #errorDisplay
+    <fal-error-display *ngIf="!isAdd" #errorDisplay
       (message)="updateLeadingMsg($event)"
       (onNavigation)="checkNavigation($event)">
     </fal-error-display>

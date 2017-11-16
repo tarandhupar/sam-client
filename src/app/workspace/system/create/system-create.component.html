@@ -6,12 +6,14 @@
                  (path)="onNavigate($event)"></sam-sidenav>
   </sidebar>
 
-  <sam-alert type="error" *ngIf="store.errors" message>
-    <div leading-content>
-      <div [innerText]="store.errors"></div>
-      <a (click)="showError()" *ngIf="states.showDetails">Show Details</a>
-    </div>
-  </sam-alert>
+  <div message>
+    <sam-alert type="error" *ngIf="store.errors">
+      <div leading-content>
+        <div [innerText]="store.errors"></div>
+        <a (click)="showError()" *ngIf="states.showDetails">Show Details</a>
+      </div>
+    </sam-alert>
+  </div>
 
   <div>
     <form [formGroup]="form" *ngIf="user && form">

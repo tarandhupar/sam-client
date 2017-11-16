@@ -29,14 +29,27 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   hideAddButton: boolean = false;
   programTitle: string;
   fyYearOptions: any;
-  totalvalue: any;
   persistPreYearsData = [];
   assistanceTypeArray = [];
   options = [];
   @ViewChild('obligationTable') obligationTable;
   toggleAttleatOneEntryError: boolean = false;
   ac_categories = [];
-
+  hasObligationDataChanged: boolean = false;
+  tableView: any = {
+    isReady: false,
+    obligationsInfo: [],
+    fyYearOptions: {
+      prevFY: '',
+      currentFY: '',
+      nextFY : ''
+    },
+    totalValue: {
+      totalpFY: 0,
+      totalcFY: 0,
+      totalbFY: 0
+    }
+  }; //for table view
 
   // Current Fiscal year Checkbox config
   currentFiscalYearCheckboxModel: any = [''];
@@ -55,6 +68,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
 
   }
+
   parseDictionariesList(data) {
     if (data['assistance_type'] && data['assistance_type'].length > 0) {
       for (let dictionaries of data['assistance_type']) {
@@ -72,28 +86,39 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
           this.assistanceTypeArray[elementId] = name;
         }
       }
-      if(this.viewModel.obligations && this.viewModel.obligations.length > 0){
-        let index = 0;
-        for(let obligation of this.viewModel.obligations){
-          let code = obligation['assistanceType'];
-          delete obligation['assistanceType'];
-          obligation['assistanceType'] = code !== null ? {code: code, name : this.assistanceTypeArray[code]} : '';
-          const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
-          control.push(this.obligationSubForm.initobligations(obligation,false));
-          let initObligations = control.value;
-          control.at(index).patchValue(initObligations);
-          index = index + 1;
 
-        }
-      }
-      this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
-      this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
-      setTimeout(() => {
-        this.obligationSubForm.falObligationSubForm.markAsPristine({onlySelf: true});
-        this.updateObligationsErrors(this.errorService.validateObligationList(), true);
-      });
-      this.caluclateTotal(this.obligationsInfo);
+      //load the fiscal year for table view (without roll out)
+      this.initObligationTable(false);
+
+      //load form view obligation (with roll out)
+      this.initObligationForm();
     }
+  }
+
+  initObligationForm() {
+    let obligationData = _.cloneDeep(this.viewModel.obligations);
+    if(obligationData && obligationData.length > 0){
+      let index = 0;
+      for(let obligation of obligationData){
+        let code = obligation['assistanceType'];
+        delete obligation['assistanceType'];
+        obligation['assistanceType'] = code !== null ? {code: code, name : this.assistanceTypeArray[code]} : '';
+        const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
+        control.push(this.obligationSubForm.initobligations(obligation,false));
+        let initObligations = control.value;
+        control.at(index).patchValue(initObligations);
+        index = index + 1;
+
+      }
+    }
+
+    this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
+    this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
+
+    setTimeout(() => {
+      this.obligationSubForm.falObligationSubForm.markAsPristine({onlySelf: true});
+      this.updateObligationsErrors(this.errorService.validateObligationList(), true);
+    });
   }
 
   ngOnInit() {
@@ -102,15 +127,58 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       currentFY: this.getCurrentFY().toString(),
       nextFY : (this.getCurrentFY() + 1).toString()
     };
+
     this.createForm();
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
-    this.service.getObligation_Info_Dictionaries().subscribe(
-      data => this.parseDictionariesList(data),
-      error => {
-        console.error('error retrieving dictionary data', error);
+  }
+
+  private initObligationTable(rollOutFY: boolean = false) {
+    let currentFY = this.getCurrentFY();
+    let prevFY = (currentFY) - 1;
+    let nextFY = (currentFY) + 1;
+    let idx: number = null;
+    let obligationData = _.cloneDeep(this.viewModel.obligations);
+
+    //initialize fyYearOptions with highest years of the existing obligation
+    if (obligationData && obligationData.length > 0) {
+      let highestYear: number = null;
+      obligationData.forEach((item, index) => {
+        let result = _.orderBy(item.values, 'year','desc');
+        if((result && result.length  && result[0] != undefined && result[0].year && result[0].year > highestYear)) {
+          highestYear = result[0].year;
+          idx = index;
+        }
       });
+
+      if(this.viewModel.isRevision && idx !== null && obligationData[idx]['values'] && obligationData[idx]['values'].length > 0 && !rollOutFY) {
+        let years: any[] = _.sortBy(_.map(obligationData[idx]['values'], 'year'));
+
+        prevFY = (years && years[years.length-3]) ? years[years.length-3] : "";
+        currentFY = (years && years[years.length-2]) ? years[years.length-2] : "";
+        nextFY = (years && years[years.length-1]) ? years[years.length-1] : "";
+      }
+    }
+
+    this.tableView.fyYearOptions = {
+      prevFY: prevFY.toString(),
+      currentFY: currentFY.toString(),
+      nextFY : nextFY.toString()
+    };
+
+    if (obligationData && obligationData.length > 0) {
+      obligationData.forEach((item, index) => {
+        let code = item['assistanceType'];
+        delete item['assistanceType'];
+        item['assistanceType'] = code !== null ? {code: code, name : this.assistanceTypeArray[code]} : '';
+        this.tableView.obligationsInfo.push(this.obligationSubForm.initobligations(item, false, 'table'));
+      });
+    }
+
+    this.caluclateTotal(this.tableView.obligationsInfo);
+    this.tableView.isReady = true;
+    this.tableView = _.cloneDeep(this.tableView);
   }
 
   createForm() {
@@ -132,6 +200,13 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       if (this.viewModel.getSectionStatus(FALSectionNames.OBLIGATIONS) === 'updated') {
         this.toggleAttleatOneEntryError = true;
       }
+
+//        //Init Obligation 
+      this.service.getObligation_Info_Dictionaries().subscribe(
+        data => this.parseDictionariesList(data),
+        error => {
+          console.error('error retrieving dictionary data', error);
+      });
     });
   }
 
@@ -140,7 +215,9 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
   }
 
   updateObligationsViewModel(data) {
-    this.viewModel.obligations = this.saveObligations(data);
+    if (this.hasObligationDataChanged) {
+      this.viewModel.obligations = this.saveObligations(data);
+    }
   }
 
   updateForm() {
@@ -187,7 +264,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
         totalbFY = totalbFY + parseFloat(obligation.bFY.textboxValue);
       }
     }
-    this.totalvalue = {
+    this.tableView.totalValue = {
       totalpFY: totalpFY,
       totalcFY: totalcFY,
       totalbFY: totalbFY
@@ -198,8 +275,16 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       this.hideAddButton = event.hideAddButton;
     }
     if(event.type == 'confirm'){
+      this.hasObligationDataChanged = true;
       this.hideAddButton = event.hideAddButton;
       this.obligationsInfo = event.obligationsInfo;
+      //when user confirm the form, trigger updating viewModel with newest data since `hasObligationDataChanged` is flagged to true
+      let obligationData = {
+        obligations: event.obligationsInfo
+      };
+      this.updateObligationsViewModel(obligationData);
+      //sync up tableView with obligationInfo from form
+      this.updateTableViewData();
       this.caluclateTotal(this.obligationsInfo);
       setTimeout(() => {
           this.updateErrors();
@@ -217,6 +302,7 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
       this.editObligation(event.index);
     }
     if(event.type == 'remove'){
+      this.hasObligationDataChanged = true;
       this.removeObligaiton(event.index);
       if(this.obligationsInfo.length === 0) {
         this.obligationSubForm.falObligationSubForm.markAsDirty({onlySelf: true})
@@ -225,8 +311,17 @@ export class FALFormObligationsInfoComponent implements  AfterViewInit {
           this.updateErrors();
       });
       this.toggleAttleatOneEntryError = true;
+      //sync up tableView with obligationInfo from form
+      this.updateTableViewData();
     }
   }
+
+  updateTableViewData() {
+    this.tableView.obligationsInfo = _.cloneDeep(this.obligationsInfo);
+    this.tableView.fyYearOptions = _.cloneDeep(this.fyYearOptions);
+    this.tableView = _.cloneDeep(this.tableView);
+  }
+
   editObligation(i: number){
     this.obligationSubForm.editObligation(i);
     this.hideAddButton = this.obligationSubForm.hideAddButton;

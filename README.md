@@ -27,6 +27,7 @@ The following explains how to get set up locally. For instructions regarding bra
       <li><a href="#build-files">Build files</a></li>
       <li><a href="#hot-module-replacement">Hot module replacement</a></li>
       <li><a href="#watch-and-build-files">Watch and build files</a></li>
+      <li><a href="#bundle-analyzer">Generate and Analyze bundle report</a></li>
       <li><a href="#run-tests">Run tests</a></li>
       <li><a href="#end-to-end">End to end</a></li>
     </ul>
@@ -213,6 +214,14 @@ npm run server:dev:hmr
 npm run watch
 ```
 
+<h3 id="bundle-analyzer">Generate and Analyze bundle report</h3>
+
+```bash
+npm run build:prod
+```
+
+Check your /dist folder afterwards and grab `report.html`
+
 <h3 id="run-tests">Run tests</h3>
 
 **Base tests**
@@ -260,4 +269,3 @@ npm run webdriver:start
 # in another terminal
 npm run e2e:live 
 ```
-

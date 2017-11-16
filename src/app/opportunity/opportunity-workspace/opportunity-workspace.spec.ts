@@ -229,7 +229,7 @@ describe('OPPWorkspacePage', () => {
   });
 
   it('Initializes the default date tab', () => {
-    expect(component.currDateTab).toBe('posted');
+    expect(component.dateFilterIndex).toBe(0);
   });
 
   it('Initializes the agency picker', () => {

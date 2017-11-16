@@ -40,6 +40,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     @Input() label;
     @Input() showAddress: boolean = true;
     @Input() name: string = ''; // ids
+    @Input() mode: string = '';
     @Output() action = new EventEmitter();
 
     acSelection;
@@ -144,6 +145,7 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
             selected = Object.assign({},selected);
             delete selected.fullName;
             this.populateFields(selected);
+            this.pocEntryGroup.get('email').updateValueAndValidity({onlySelf:true,emitEvent:true});
         }
     }
 
@@ -163,12 +165,13 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
             selected = Object.assign({},selected);
             delete selected.email;
             this.populateFields(selected);
+            this.pocEntryGroup.get('fullName').updateValueAndValidity({onlySelf:true,emitEvent:true});
         }
     }
 
     populateFields(poc){
         this.populationFlag = true;
-        this.pocEntryGroup.patchValue(poc,{onlySelf:true,emitEvent:false});
+        this.pocEntryGroup.patchValue(poc,{onlySelf:true,emitEvent:true});
         this.populationFlag = false;
     }
 
@@ -247,9 +250,9 @@ export class SamPOCEntryComponent implements OnInit,ControlValueAccessor {
     //external validation
     public static pocValidations(control:FormGroup){
         let val = control.value;
-        let fieldList = ['fullName', 'email', 'phone', 'streetAddress', 'city', 'state', 'zip'];
+        let fieldList = ['fullName', 'email', 'phone', 'streetAddress', 'city', 'state', 'zip', 'country'];
         for(let item of fieldList){
-            if(!val[item]){
+            if(!val[item] || (item === 'phone' && val[item] && val[item].length !== 10)){
                 return {
                     "pocError" :{
                         message: "missing " + item

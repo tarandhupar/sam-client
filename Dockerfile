@@ -1,4 +1,7 @@
-FROM dtr-1.prod-iae.bsp.gsa.gov/docker-datacenter/node-nginx:7
+FROM dtr-1.prod-iae.bsp.gsa.gov/docker-datacenter/node-nginx:8
+
+ARG GIT_SHA
+ENV GIT_SHA $GIT_SHA
 
 # Delete default nginx config file & index file
 RUN rm /etc/nginx/sites-enabled/default
@@ -16,6 +19,7 @@ COPY . /usr/src/app/
 
 RUN npm config set registry https://artifactory.helix.gsa.gov/artifactory/api/npm/GS-IAE-Npm
 RUN npm install --production
+RUN apt-get remove -y binutils
 RUN npm rebuild node-sass
 
 # forward request and error logs to docker log collector

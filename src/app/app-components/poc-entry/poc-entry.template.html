@@ -45,7 +45,7 @@
             [config]="{keyValueConfig:{keyProperty:'email',valueProperty:'email'}}"
             formControlName="email"
         ></sam-autocomplete>
-        <sam-autocomplete 
+        <sam-autocomplete
             *ngIf="manualList"
             allowAny="true"
             labelText="Email Address"
@@ -147,7 +147,7 @@
                 (onClick)="formCancel()">
             </sam-button>
             <sam-button
-                [buttonText]="'Done'"
+                [buttonText]="mode === 'Add' ? 'Add' : 'Update'"
                 [buttonType]="'secondary'"
                 (onClick)="formSubmit()">
             </sam-button>

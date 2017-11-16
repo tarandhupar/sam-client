@@ -42,7 +42,7 @@
                   [required]="'Required'" 
                   name='dateRange'>
                 </sam-date-range>
-                <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">A Date Range can not exceed 12 {{maxRange}}.  Please refine your date criteria.</p> 
+                <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">{{dateValidatorMsg}}</p> 
             </div>
   
             <div class="display-block">
@@ -64,6 +64,16 @@
                   [required]="true">
                 </sam-autocomplete>
                 <p *ngIf="pscValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">PSC Code is a required field.</p>
+                <sam-text *ngIf="usedPrompts && usedPrompts.congressionalDistrictCode" 
+                  [(ngModel)]="congressionalDistrictCode"
+                  [name]="'congressionalDistrictCode'" 
+                  [label]="'Congressional District Code'">
+                </sam-text>
+                <sam-text *ngIf="usedPrompts && usedPrompts.locationCode" 
+                [(ngModel)]="locationCode"
+                [name]="'locationCode'" 
+                [label]="'Location'">
+              </sam-text>
                 <sam-autocomplete state
                   *ngIf="usedPrompts && usedPrompts.state"
                   [(ngModel)]="location.state"
@@ -128,6 +138,12 @@
                   [label] = "'Includes'"
                   (switchStatusChange)="includesBasesStatusChange($event)">
                 </sam-select>
+                <!-- <sam-select
+                  [name]="iframe.name"
+                  [(ngModel)]="iframeTest"
+                  [options]="iframeOptions"
+                  [label]="iframe.label">
+                </sam-select> -->
               </div>
             </div>  
   
@@ -147,7 +163,7 @@
                 [buttonType]="btnType" 
                 (click)="validate('export')">
               </sam-button>
-              <sam-button *ngIf="localEnv"
+              <sam-button *ngIf="localEnv" 
               [buttonId]="'defaultBtn'" 
                 [buttonText]="'TEST'" 
                 [buttonType]="btnType" 
@@ -158,11 +174,18 @@
         </sam-accordion-section>
       </sam-accordion>
       <br>
-      <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
-      <p *ngIf="showReport && devIframe" >Below iframe has sandbox sandbox="allow-scripts allow-same-origin allow-forms"</p>
-      <iframe sandbox="allow-scripts allow-same-origin allow-forms" name="viewport" [src]="url" *ngIf="showReport && devIframe" class="no-frame" height="800" width="100%"></iframe>
-      <p *ngIf="showReport && devIframe" >Below iframe has sandbox sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation"</p>
-      <iframe *ngIf="showReport && devIframe" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation" name="viewport" [src]="url" class="no-frame" height="800" width="100%"></iframe>  
+      <!-- <div *ngIf="showReport && iframeTest === 'base'"> -->
+          <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
+      <!-- </div> -->
+      <!-- <div *ngIf="showReport && iframeTest === 'iframe3'">
+        <p>Below iframe has sandbox sandbox="allow-scripts allow-same-origin allow-forms"</p>
+        <iframe sandbox="allow-scripts allow-same-origin allow-forms" name="viewport" [src]="url" *ngIf="showReport && devIframe" class="no-frame" height="800" width="100%"></iframe>
+      </div> 
+      <div *ngIf="showReport && iframeTest  === 'iframe11'">
+        <p>Below iframe has sandbox sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation"</p>
+        <iframe *ngIf="showReport && devIframe" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-top-navigation allow-top-navigation-by-user-activation" name="viewport" [src]="url" class="no-frame" height="800" width="100%"></iframe>
+      </div> -->
+      
       <div class="usa-width-one-whole">
         <sam-alert style="margin-top: 0" class="full-width" 
           [type]="'info'"

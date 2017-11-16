@@ -41,6 +41,8 @@
                 </div>
               </div>
             </div>
+            <p>Comment</p>
+            <p>{{request.requestorMessage}}</p>
           </div>
         </div>
       </div>
@@ -49,7 +51,8 @@
 
   <ng-container *ngIf="result === 'success'">
     <results *ngIf="access?.length"
-             [totalElements]="access.length"
+             [showing]="showing"
+             [totalElements]="totalElements"
              [totalPages]="totalPages"
              [currentPage]="currentPage"
              (pageChange)="onPageChange($event)">
@@ -59,7 +62,7 @@
                 (ngModelChange)="onSearchParamChange()"
       ></sam-sort>
       <div result-actions style="display: inline-block">
-        <a *ngIf="canRequest" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['../request-access']" class="sam-ui primary small button" >Request Access</a>
+        <a *ngIf="canRequest" style="font-size: 1.74rem; margin-right: 0" [routerLink]="['/profile/request-access']" class="sam-ui primary small button" >Request Access</a>
         <a *ngIf="canGrant" style="font-size: 1.74rem; margin-right: 0" [routerLink]="[getAssignRoleLink()]" class="sam-ui primary small button" >Assign Role</a>
       </div>
       <table *ngIf="access?.length" style="width: 100%; margin-top: 1rem; border: 1px solid black;">

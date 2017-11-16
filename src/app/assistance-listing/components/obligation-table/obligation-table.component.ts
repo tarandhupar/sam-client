@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild, OnChanges} from '@angular/core';
 import moment = require("moment");
 
 @Component({
@@ -6,11 +6,9 @@ import moment = require("moment");
   providers: [],
   templateUrl: 'obligation-table.template.html',
 })
-export class FALObligationFYTableComponent {
+export class FALObligationFYTableComponent implements OnChanges {
 
-  @Input() obligationsInfo = [];
-  @Input() fyYearOptions: any;
-  @Input() total: any;
+  @Input() tableView: any;
   @Input() hideAddButton: boolean;
   @Output() public obligationTableActionHandler = new EventEmitter();
   @ViewChild('deleteModal') deleteModal;
@@ -20,13 +18,19 @@ export class FALObligationFYTableComponent {
   prevFY: string;
   nextFY: string;
 
-
   ngOnInit() {
-    this.currentFY = this.fyYearOptions.currentFY.substring(2);
-    this.prevFY = this.fyYearOptions.prevFY.substring(2);
-    this.nextFY = this.fyYearOptions.nextFY.substring(2);
+    this.currentFY = this.tableView.fyYearOptions.currentFY.substring(2);
+    this.prevFY = this.tableView.fyYearOptions.prevFY.substring(2);
+    this.nextFY = this.tableView.fyYearOptions.nextFY.substring(2);
   }
-
+  
+  ngOnChanges(changes: any) {
+    if(changes && changes.tableView) {
+      this.currentFY = this.tableView.fyYearOptions.currentFY.substring(2);
+      this.prevFY = this.tableView.fyYearOptions.prevFY.substring(2);
+      this.nextFY = this.tableView.fyYearOptions.nextFY.substring(2);
+    }
+  }
 
   editObligation(index) {
     this.obligationTableActionHandler.emit({
@@ -42,8 +46,8 @@ export class FALObligationFYTableComponent {
     let assistanceType = {};
     let description = '';
     let msg = 'Please confirm that you want to delete "';
-    description = this.obligationsInfo[index].description;
-    assistanceType = this.obligationsInfo[index] && this.obligationsInfo[index].assistanceType ? this.obligationsInfo[index].assistanceType : null;
+    description = this.tableView.obligationsInfo[index].description;
+    assistanceType = this.tableView && this.tableView.obligationsInfo[index] && this.tableView.obligationsInfo[index].assistanceType ? this.tableView.obligationsInfo[index].assistanceType : null;
     if((description !== null && description !== '') && (assistanceType !== null)) {
       deleteModelMsg = msg + assistanceType['name'] + '. ' + description + '" obligation.';
     } else if((description !== null && description !== '') && (assistanceType === null)) {

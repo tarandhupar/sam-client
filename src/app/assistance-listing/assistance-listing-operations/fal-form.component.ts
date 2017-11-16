@@ -6,12 +6,12 @@ import { IBreadcrumb } from 'sam-ui-elements/src/ui-kit/types';
 import { ProgramService } from '../../../api-kit/program/program.service';
 import { AlertFooterService } from '../../app-components/alert-footer/alert-footer.service';
 import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
+import { FALAuthGuard } from "../components/authguard/authguard.service";
 import { FALErrorDisplayComponent } from '../components/fal-error-display/fal-error-display.component';
 import { FALFormErrorService } from './fal-form-error.service';
 import { FALSectionNames } from './fal-form.constants';
 import { FALFormViewModel } from './fal-form.model';
 import { FALFormService } from './fal-form.service';
-import {FALAuthGuard} from "../components/authguard/authguard.service";
 
 @Component({
   moduleId: __filename,
@@ -170,6 +170,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isAdd = false;
         this.fal = resolver.fal;
         this.hasPermission = this.authGuard.checkPermissions('addoredit', this.fal);
+        if(this.hasPermission) {
+          this.determineSection();
+        }
 
         this.errorService.viewModel = this.falFormViewModel;
         this.errorService.validateAll().subscribe(
@@ -187,10 +190,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
       this.hasPermission = this.authGuard.checkPermissions('addoredit', null);
+      if(this.hasPermission) {
+        this.determineSection();
+      }
       this.errorService.viewModel = this.falFormViewModel;
     }
+
     this.tabsComponent = this.tabsFalComponent;
-    this.determineSection();
     this.title = this.falFormViewModel.title;
     this.updateBreadCrumbs();
     this.cdr.detectChanges();
@@ -287,6 +293,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onCancelClick() {
+    this.formNavigationFlag = true;
     let submitFragment = this.router.url.substring(this.router.url.lastIndexOf("#") + 1);
     if (submitFragment === 'review') {
       let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit' : '/fal/add';
@@ -400,12 +407,33 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   navHandler(obj) {
+    this.updateTitle();
     this.formNavigationFlag = true;
     this.formsDirtyCheck('SideNav', obj);
   }
 
+  updateTitle() {
+    // check for whether title exists can happen before the title has been persisted to viewmodel
+    // as a workaround, we manually save the title first
+    // todo: find a better solution
+    for (let section of this.form._results) {
+      if (section && section.falHeaderInfoForm && section.updateTitle) {
+        section.updateTitle();
+      }
+    }
+  }
+
   public showErrors(errors) {
-    this.errorDisplayComponent.formatErrors(errors);
+    // todo: don't hardcode status names
+    let pristineSections = this.sections.filter(section => {
+      return this.falFormViewModel.getSectionStatus(section) === 'pristine';
+    });
+
+    if (!this.isAdd && (pristineSections.length > 0 || FALFormErrorService.hasErrors(errors))) {
+      // todo: remove setTimeout
+      setTimeout(() => {this.errorDisplayComponent.formatErrors(errors, pristineSections);});
+    }
+
     this.hasErrors = FALFormErrorService.hasErrors(this.errorService.errors);
     this.updateSidenavModel();
   }
@@ -416,6 +444,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   breadCrumbClick(event) {
+    this.updateTitle();
     let actionType = event;
     if (actionType === 'My Workspace') {
       this.formNavigationFlag = true;
@@ -450,7 +479,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   onTitleModalYesorClose() {
     this.closeModelFlag = true;
    this.setSideNavtoHeaderSection();
-    let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/programs/add'.concat('#header-information');
+    let url = this.falFormViewModel.programId ? '/fal/' + this.falFormViewModel.programId + '/edit'.concat('#header-information') : '/fal/add'.concat('#header-information');
     this.globalLinksUrl = url;
     this.titleModal.closeModal();
     this.formNavigationFlag = false;
@@ -530,7 +559,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       let dirty = false;
       if (form.otherFinancialInfoForm) {
         formInstance = form.otherFinancialInfoForm;
-        if (form.otherFinancialInfoForm.dirty || form.otherFinancialInfoForm.controls.accountIdentification.dirty || form.otherFinancialInfoForm.controls.tafs.dirty) {
+        if (form.otherFinancialInfoForm.dirty)  {
           dirty = true;
           subFormArray.push(form.otherFinancialInfoForm.controls.accountIdentification, form.otherFinancialInfoForm.controls.tafs);
         }
@@ -716,6 +745,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         } else {
           if (event instanceof ResolveStart) {
+            this.updateTitle();
             comp.formsDirtyCheck('links');
           }
         }

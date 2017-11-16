@@ -2,8 +2,8 @@ import {RequestHistoryLabelPipe} from "./request-history-label.pipe";
 
 describe('src/app/assistance-listing/pipes/request-history-label.pipe.spec.ts', () => {
   let pipe = new RequestHistoryLabelPipe();
-  it('RequestHistoryLabelPipe: transforms "title_request" to "Title Changed Requested"', () => {
-    expect(pipe.transform('title_request')).toBe('Title Changed Requested');
+  it('RequestHistoryLabelPipe: transforms "title_request" to "Title Change Requested"', () => {
+    expect(pipe.transform('title_request')).toBe('Title Change Requested');
   });
   it('RequestHistoryLabelPipe: transforms "agency_request" to "Agency Change Requested"', () => {
     expect(pipe.transform('agency_request')).toBe('Agency Change Requested');

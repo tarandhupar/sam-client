@@ -2,12 +2,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({name: "filterLabel"})
 export class FilterParamLabel implements PipeTransform {
-  
+
   cfdaStringMap;
   fboStringMap;
   wdStringMap;
   fpdsStringMap;
-  
+
   constructor(){
     this.cfdaStringMap = new Map()
     .set(0, "Published Date")
@@ -17,14 +17,14 @@ export class FilterParamLabel implements PipeTransform {
     .set(1, "Published Date")
     .set(2, "Response Date");
     this.wdStringMap = new Map()
-    .set(0, "Modified Date");
+    .set(0, "Modified/Revised Date");
     this.fpdsStringMap = new Map()
     .set(0, "Modified Date")
     .set(1, "Signed Date");
   }
 
   transform(param: string, dateFilterIndex: number): string {
-    if(!dateFilterIndex){dateFilterIndex = 0};  
+    if(!dateFilterIndex){dateFilterIndex = 0};
 
     switch(param) {
       case "index": return "Domain";
@@ -85,16 +85,16 @@ export class FilterParamLabel implements PipeTransform {
         break;
       case "date_rad_selection": return "Date Type";
         break;
-      case "fbo_date_filter_model": 
+      case "opp_date_filter_model":
         return this.fboStringMap.get(dateFilterIndex);
         break;
-      case "cfda_date_filter_model": 
+      case "cfda_date_filter_model":
         return this.cfdaStringMap.get(dateFilterIndex);
         break;
-      case "wd_date_filter_model": 
+      case "wd_date_filter_model":
         return this.wdStringMap.get(dateFilterIndex);
         break;
-      case "fpds_date_filter_model": 
+      case "fpds_date_filter_model":
         return this.fpdsStringMap.get(dateFilterIndex);
         break;
       case "date_filter_index": return "Date Filter Type";

@@ -60,6 +60,8 @@ export class Alert {
         return 'usa-color-info';
       case 'error':
         return 'usa-color-error';
+      case 'wage determination':
+        return 'usa-color-wd';
       default:
         return 'usa-color-error';
     }
@@ -73,6 +75,8 @@ export class Alert {
         return 'fa-info-circle';
       case 'error':
         return 'fa-exclamation-triangle';
+      case 'wage determination':
+        return 'fa-wage-determination';
       default:
         return 'fa-exclamation-triangle';
     }
@@ -86,6 +90,8 @@ export class Alert {
         return 'usa-alert-info';
       case 'error':
         return 'usa-alert-error';
+      case 'wage determination':
+        return 'usa-alert-wd';
       default:
         return 'usa-alert-error';
     }

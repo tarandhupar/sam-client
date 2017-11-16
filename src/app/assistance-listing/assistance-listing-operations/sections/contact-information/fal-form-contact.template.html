@@ -25,7 +25,8 @@
   </div>
 
   <div class="sam-ui segment">
-    <h4 [attr.id]="'fal-contact-list'">Headquarters Office</h4>
+    <sam-label-wrapper label="Headquarters Office" [attr.id]="'fal-contact-list'" [required]="true">
+    </sam-label-wrapper>
 
     <sam-listbuilder
       #contactLB
@@ -60,6 +61,7 @@
         <form [formGroup]="item">
           <sam-poc-entry #poc
             [name]="'fal-contact-information-entry-' + index"
+            [mode]="mode"
             formControlName="poc"
             [manualList]="true"
             [listBuilder]="contactLB"

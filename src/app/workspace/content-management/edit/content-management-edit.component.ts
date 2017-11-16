@@ -9,6 +9,7 @@ import { SamTabComponent } from "sam-ui-elements/src/ui-kit/components/tabs/tabs
 import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
+import { CMSMapping } from "../content-management-mapping"
 require('aws-sdk/dist/aws-sdk');
 
 @Component({
@@ -32,6 +33,8 @@ export class HelpContentManagementEditComponent {
 
   validSections = ['data-dictionary', 'FAQ-repository', 'video-library'];
 
+  tagOptions = [];
+  tagMap = {};
   existingDomains = [];
   domainOptions = [];
   errors = {
@@ -40,11 +43,11 @@ export class HelpContentManagementEditComponent {
   };
 
   responseText = '';
-  keywords = '';
+  keywords = [];
   isValidatePerformed = false;
   contentObj = {};
   inputFile:File;
-
+  originContentObj = {};
 
   pageConfig = {
     'data-dictionary': {
@@ -82,17 +85,19 @@ export class HelpContentManagementEditComponent {
     categoryProperty: 'category',
   };
   domainMap = {};
+  cmsMapping = new CMSMapping();
 
   constructor(private _router:Router,
               private route: ActivatedRoute,
               private capitalPipe: CapitalizePipe,
               private contentManagementService: ContentManagementService,
               private msgFeedService: MsgFeedService,
-              private alertFooter: AlertFooterService,
+              private alertFooter: AlertFooterService
   ){}
 
   ngOnInit(){
     this.getExistingDomainOptions();
+    this.getExistingTagOptions('');
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
@@ -109,7 +114,7 @@ export class HelpContentManagementEditComponent {
             this.loadEmptyForm();
           }else if(this.mode  === 'edit'){
             if(!queryParams['id']) this._router.navigateByUrl('/404');
-            this.loadExistingForm(queryParams['id']);
+            this.loadExistingForm(queryParams['id'], this.curSection);
           }else{
             this._router.navigateByUrl('/404');
           }
@@ -131,13 +136,21 @@ export class HelpContentManagementEditComponent {
     return str_tokens.join(" ");
   }
 
+  getKeywordsText(){
+    let keywordsTexts = [];
+    this.keywords.forEach(tag => {
+      keywordsTexts.push(tag.value);
+    });
+    return keywordsTexts.join(',');
+  }
+
   loadEmptyForm(){
     this.contentObj = {
       title:'',
       description:'',
       sourceVideoFile:'',
-      domain:[],
-      keywords:'',
+      domains:[],
+      keywords:[],
       status:{status:'NEW'},
     };
 
@@ -147,20 +160,26 @@ export class HelpContentManagementEditComponent {
     this.dataLoaded= true;
   }
 
-  loadExistingForm(id){
-    this.contentManagementService.getContentItem(id).subscribe( data => {
+
+
+  loadExistingForm(id, section){
+    this.contentManagementService.getContentItem(id, section).subscribe( data => {
       try{
-        this.contentObj = data._embedded["contentDataWrapperList"][0].contentDataList[0];
+        this.originContentObj = data._embedded["contentDataWrapperList"][0].contentDataList[0];
+        this.contentObj = {
+          title:this.originContentObj['title'],
+          description:this.originContentObj['description'],
+          sourceVideoFile:'',
+          domains:[],
+          keywords:[],
+          status:this.originContentObj['status'],
+        };
         this.responseText = this.contentObj['description'];
-        let tagNames = [];
-        this.contentObj['tags'].forEach(e => {tagNames.push(e.tagKey)});
-        this.keywords = tagNames.join(',');
+        this.originContentObj['tags'].forEach(e => {this.keywords.push({key:e.tagKey, value:e.tagKey})});
         this.pageTitle = this.contentObj['title'];
-        let domainNames = [];
-        this.contentObj['domains'].forEach(e => {
-          domainNames.push({key:e.domain_name,value:e.domain_name});
+        this.originContentObj['domains'].forEach(e => {
+          this.contentObj['domains'].push({key:e.domain_name,value:e.domain_name});
         });
-        this.contentObj['domains'] = domainNames;
         if(this.curSection === 'video-library')this.contentObj['sourceVideoFile'] = '';
         this.dataLoaded= true;
       }catch(err){
@@ -193,51 +212,35 @@ export class HelpContentManagementEditComponent {
     // POST data to server
     // Route back to search page
     if(this.validateForm()){
-      // upload video file
-      var AWSService = window.AWS;
-
-      AWSService.config.accessKeyId = 'AKIAJ7QJTKFV5HMJJ2KQ';
-
-      AWSService.config.secretAccessKey = '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';
-
-      var bucket = new AWSService.S3({params: {Bucket: 'taran-test'}});
-
-      var params = {Key: 'videos/'+this.inputFile.name, Body: this.inputFile};
-
-      bucket.upload(params, (err, data) => {
-        if(err){
-          this.alertFooter.registerFooterAlert({
-            title: "",
-            description: "Failed to upload video to S3",
-            type: 'error',
-            timer: 3200
-          });
-        }else{
-          this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
-        }
-
-      });
+      if(this.isCreateMode()){
+        this.createContent('PUBLISH');
+      }else{
+        this.updateContent('PUBLISH');
+      }
     }else{
       this.activeTab = 0;
     }
   }
 
+  onDeleteDraftClick(){
+    // Delete the Draft
+    this.originContentObj['activeStatus'] = false;
+    this.contentManagementService.updateContent(this.originContentObj).subscribe(
+      data => {
+        this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+      },
+      err => {
+        this.showAlertMessage('Failed to delete draft data');
+      }
+    );  }
+
   onSwitchTabs(tab){
     if(tab.title === 'Public View'){
 
-      this.contentObj['keywords'] = this.keywords.split(',');
+      this.contentObj['keywords'] = this.keywords;
       this.pageTitle = this.contentObj['title'];
       this.activeTab = 1;
 
-      // if(this.validateForm()){
-      //   this.contentObj['keywords'] = this.keywords.split(',');
-      //   this.pageTitle = this.contentObj['title'];
-      //   this.formComplete = true;
-      // } else{
-      //   tab.active = false;
-      //   this.formComplete = false;
-      //   this.editTab.active = true;
-      // }
     }else{
       this.activeTab = 0;
     }
@@ -246,10 +249,28 @@ export class HelpContentManagementEditComponent {
   }
 
 
+  getExistingTagOptions(q){
+    this.contentManagementService.getTags(q).subscribe(data =>{
+      try{
+        if(data._embedded['tagList'] && data._embedded['tagList'].length > 0) {
+          data._embedded['tagList'].forEach(tag => {
+            if(!this.tagMap.hasOwnProperty(tag.tagKey)){
+              this.tagOptions.push({value: tag.tagKey, key: tag.tagKey});
+              this.tagMap[tag.tagKey] = tag.tagId;
+            }
+          });
+        }
+      }catch (error){
+        console.log(error);
+      }
+    });
+  }
+
   getExistingDomainOptions(){
     this.domainOptions = [];
     this.msgFeedService.getDomains().subscribe(data =>{
       try{
+
         if(data._embedded['domainList'] && data._embedded['domainList'].length > 0) {
           data._embedded['domainList'].forEach(domain => {
             if (domain.isActive){
@@ -283,9 +304,14 @@ export class HelpContentManagementEditComponent {
   submitForm() {
 
     if(this.validateForm()){
-      this.contentObj['keywords'] = this.keywords.split(',');
+      this.contentObj['keywords'] = this.keywords;
       this.pageTitle = this.contentObj['title'];
       this.activeTab = 1;
+      if(this.isCreateMode()){
+        this.createContent('NEW');
+      }else{
+        this.updateContent('DRAFT');
+      }
     }
 
   }
@@ -312,6 +338,150 @@ export class HelpContentManagementEditComponent {
 
   isSourceVideoValid(): boolean{
     return (this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '') || this.curSection !== 'video-library';
+  }
+
+  createVideoContent(contentData){
+    var AWSService = window.AWS;
+
+    AWSService.config.accessKeyId = 'AKIAJ7QJTKFV5HMJJ2KQ';
+
+    AWSService.config.secretAccessKey = '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';
+
+    var bucket = new AWSService.S3({params: {Bucket: 'taran-test'}});
+
+    var params = {Key: 'videos/'+this.inputFile.name, Body: this.inputFile};
+
+    bucket.upload(params, (err, data) => {
+      if(err){
+        this.showAlertMessage("Failed to upload video to S3 bucket");
+      }else{
+        // POST video content here
+        contentData['sourceUrl'] = data.Location;
+        if(this.isCreateMode()){
+          this.postContentData(contentData);
+        }else{
+          if(status === 'DRAFT'){
+            contentData['activeStatus'] = true;
+            delete contentData['contentId'];
+            this.postContentData(contentData);
+          }else{
+            this.putContentData(contentData);
+          }        }
+      }
+    });
+  }
+
+  createContent(status){
+    let contentData = {
+      "activeStatus": true,
+      "description": this.contentObj['description'],
+      "status": {"statusId": this.cmsMapping.getStatusId(status)},
+      "title": this.contentObj['title'],
+      "type": this.curSection.toLowerCase(),
+      "domains": [],
+      "tags": []
+    };
+
+    if(this.contentObj['domains'].length > 0){
+      this.contentObj['domains'].forEach( domain => {contentData['domains'].push({domain_id:this.domainMap[domain.value], domain_name:domain.value});});
+    }
+
+    if(this.keywords.length > 0){
+      this.keywords.forEach( tag => {contentData['tags'].push({tagId:this.tagMap[tag.value], tagKey:tag.value});});
+    }
+    if(this.curSection.toLowerCase() === 'video-library'){
+      this.createVideoContent(contentData);
+    }else{
+      this.postContentData(contentData);
+    }
+  }
+
+  postContentData(contentData){
+    this.contentManagementService.createContent(contentData).subscribe(
+      data => {
+        if(contentData['status'].statusId === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+      },
+      err => {
+        // Maybe delete the video on the S3 bucket here
+
+        this.showAlertMessage('Failed to create content data');
+      }
+    );
+  }
+
+  updateContent(status){
+    this.originContentObj['title'] = this.contentObj['title'];
+    this.originContentObj['description'] = this.contentObj['description'];
+    this.originContentObj['status'] = {"statusId": this.cmsMapping.getStatusId(status)};
+    if(this.contentObj['domains'].length > 0){
+      this.originContentObj['domains'] = [];
+      this.contentObj['domains'].forEach( domain => {this.originContentObj['domains'].push({domain_id:this.domainMap[domain.value], domain_name:domain.value});});
+    }
+    if(this.keywords.length > 0){
+      this.originContentObj['tags'] = [];
+      this.keywords.forEach( tag => {this.originContentObj['tags'].push({tagId:this.tagMap[tag.value], tagKey:tag.value});});
+    }
+
+
+
+
+    if(this.curSection.toLowerCase() === 'video-library' && this.contentObj['sourceVideoFile'] !== ''){
+      this.createVideoContent(this.originContentObj);
+    }else{
+      if(status === 'DRAFT'){
+        this.originContentObj['activeStatus'] = true;
+        delete this.originContentObj['contentId'];
+        this.postContentData(this.originContentObj);
+      }else{
+        this.putContentData(this.originContentObj);
+      }
+    }
+  }
+
+  putContentData(contentData) {
+    this.contentManagementService.updateContent(contentData).subscribe(
+      data => {
+        if(contentData['status'].statusId === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+      },
+      err => {
+        this.showAlertMessage('Failed to update content data');
+      }
+    );
+  }
+
+  onEnterTagKey(){
+    let newTagKey = this.keywords[this.keywords.length-1]['value'];
+    if(!this.tagMap.hasOwnProperty(newTagKey)){
+      this.contentManagementService.createTag(newTagKey).subscribe(
+        data => {
+          try{
+            this.tagMap[data.tagKey] = data.tagId;
+          }catch(err){
+            // Failed to get the keyword id back
+            this.keywords.pop();
+          }
+        },
+        err => {
+          this.alertFooter.registerFooterAlert({
+            title: "",
+            description: "Failed to create a new Tag",
+            type: 'error',
+            timer: 3200
+          });
+          this.keywords.pop();
+        }
+      );
+    }
+
+  }
+
+  showAlertMessage(message){
+    this.alertFooter.registerFooterAlert({
+      title: "",
+      description: message,
+      type: 'error',
+      timer: 3200
+    });
   }
 
 }

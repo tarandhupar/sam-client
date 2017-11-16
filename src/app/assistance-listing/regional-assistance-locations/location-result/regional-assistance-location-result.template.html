@@ -85,14 +85,14 @@
       Created
       <ng-container *ngIf="data.createdBy">By {{data.createdBy}}</ng-container>
       <div class="sub header">
-        On {{data.createdDate|date: 'MMM d, yyyy h:mm a'}}
+        On {{data.createdDate}}
       </div>
     </div>
     <div class="sam-ui medium header">
       Last Modified
       <ng-container *ngIf="data.modifiedBy">By {{data.modifiedBy}}</ng-container>
       <div class="sub header">
-        On {{data.modifiedDate|date: 'MMM d, yyyy h:mm a'}}
+        On {{data.modifiedDate}}
       </div>
     </div>
     <span class="sam-ui basic tiny blue label">

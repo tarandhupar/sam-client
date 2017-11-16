@@ -1,0 +1,29 @@
+<div class="usa-grid wage-determination-page">
+    <div class="usa-width-one-fourth">
+            <sam-button
+            [buttonId]="'tertiaryBtn'"
+            [buttonText]="'Back'"
+            [buttonType]="'tertiary'"
+            (click)="onBackClick()">
+          </sam-button>
+    </div>
+    <!-- Main Content -->
+    <div class="usa-width-three-fourths">
+        <h2>Service Contract Act Wage Determinations Due To Be Revised</h2>
+        <div>The following SCA Wage Determinations are being revised or             
+                created new and will be available at WDOL.GOV on or after              
+                                   October 31, 2017</div>
+        <div>
+            <br>
+            <table class="sam-ui table celled">
+                <tr>
+                    <th>SCA Wage Determination</th>
+                </tr>
+                <tr *ngFor="let wd of scaWageDeterminations">
+                    <td>{{wd}}</td>
+                </tr>
+            </table>
+            <br>
+        </div>
+    </div>
+</div>

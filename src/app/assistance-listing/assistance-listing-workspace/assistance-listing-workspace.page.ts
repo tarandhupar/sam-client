@@ -94,7 +94,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     {label:'Listing Number', name:'Listing Number', value:'programNumber'},
     {label:'Listing Title', name:'Listing Title', value:'title'}
   ];
-  orgMap = new Map();
+  orgNameMap = new Map();
+  orgTypeMap = new Map();
   postedDateFilterModel: any = {};
   modifiedDateFilterModel: any = {};
   postedFrom: any;
@@ -232,17 +233,17 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       // setting dateFilterIndex
      if(event){
        if(event.index){
-         this.dateFilterIndex = event.index;    
+         this.dateFilterIndex = event.index;
        }
      }else{
        this.dateFilterIndex = 0;
      }
- 
- 
+
+
      this.pageNum = 0;
      this.workspaceRefresh();
    }
- 
+
    formatDateWrapper(appendTime: boolean){
      if(!_.isEmpty(this.dateFilterModel)){
        if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
@@ -252,7 +253,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
        }
      }
    }
- 
+
    formatDate(model, appendTime){
      if(!_.isEmpty(model)){
        if(appendTime){
@@ -266,7 +267,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
          'endDate': model.date
        }
      }
-     
+
    }
    formatDateRange(model, appendTime){
      if(!_.isEmpty(model)){
@@ -282,7 +283,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
        }
      }
    }
- 
+
    formatDateModel(data){
      if(data.radSelection === 'date'){
        return data.dateFrom ? {'date': data.dateFrom} : {'date': ''}
@@ -318,13 +319,13 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   updateDateFilterConfig(index){
     this.dateRangeConfig[index].dateFilterConfig.radSelection = this.dateRadio;
     if(this.selectDateFilter){
-      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);      
+      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);
     }
   }
 
   runProgram() {
     this.showSpinner = true;
-    let dateTab = this.dateTypeOptions[this.dateFilterIndex]    
+    let dateTab = this.dateTypeOptions[this.dateFilterIndex]
     let appendTime = true;
     let dateObj = this.formatDateWrapper(appendTime);
 
@@ -461,7 +462,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
             this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
             this.dateFilterModel = data['dateTab'] ? this.formatDateModel(data) : {};
             this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
-            
+
             this.dateFilterIndex = data['dateTab'] && this.dateTypeOptions ? _.indexOf(this.dateTypeOptions, decodeURI(data['dateTab'])) : 0;
             this.updateDateFilterConfig(this.dateFilterIndex);
 
@@ -609,9 +610,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
         .subscribe(
           data => {
             data._embedded.orgs.forEach(function(org){
-              ctx.orgMap.set(org.org.orgKey.toString(), org.org.name);
+              ctx.orgNameMap.set(org.org.orgKey.toString(), org.org.name);
+              ctx.orgTypeMap.set(org.org.orgKey.toString(), org.org.type);
             });
             this.addOrgNameToData();
+            this.addOrgTypeToData();
           },
           error => {
             console.error('Error!!', error);
@@ -624,7 +627,14 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   addOrgNameToData() {
     let ctx = this;
     ctx.data.forEach(function(data){
-        data['organizationName'] = ctx.orgMap.get(data.data.organizationId.toString());
+        data['organizationName'] = ctx.orgNameMap.get(data.data.organizationId.toString());
+    });
+  }
+
+  addOrgTypeToData() {
+    let ctx = this;
+    ctx.data.forEach(function(data){
+      data['organizationType'] = ctx.orgTypeMap.get(data.data.organizationId.toString());
     });
   }
 
@@ -697,10 +707,10 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       let organizationStringList = '';
       let stringBuilderArray = selectedOrgs.map(function (organizationItem) {
         if (organizationStringList === '') {
-          organizationStringList += organizationItem.value;
+          organizationStringList += organizationItem.orgKey;
         }
         else {
-          organizationStringList += ',' + organizationItem.value;
+          organizationStringList += ',' + organizationItem.orgKey;
         }
 
         return organizationStringList;
@@ -823,5 +833,9 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       } ,
       error => console.log("Error downloading the file.") ,
       () => console.log('Completed file download.'));
+  }
+
+  dateTypeChangeHandler(evt){
+    this.dateFilterModel = {};
   }
 }

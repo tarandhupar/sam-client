@@ -87,7 +87,9 @@ export class AlertEditComponent implements OnInit {
   typeOptions: OptionsType[] = [
     { name: 'information', label: 'Informational', value: 'Informational'},
     { name: 'error', label: 'Error', value: 'Error'},
-    { name: 'warning', label: 'Warning', value: 'Warning'}
+    { name: 'warning', label: 'Warning', value: 'Warning'},
+    { name: 'wage determination', label: 'Wage Determination', value: 'Wage Determination'}
+
   ];
 
   form: FormGroup;

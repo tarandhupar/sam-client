@@ -1,11 +1,7 @@
-import { Component, Input, ViewChild, forwardRef, ViewChildren } from "@angular/core";
-import {
-  ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup,
-  AbstractControl
-} from "@angular/forms";
-import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
-import { OptionsType } from "sam-ui-elements/src/ui-kit/types";
-
+import { Component, forwardRef, Input, ViewChild, ViewChildren } from "@angular/core";
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { OptionsType } from '../../../../sam-ui-elements/src/ui-kit/types';
+import { LabelWrapper } from '../../../../sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 @Component({
   selector: 'samCheckboxToggledTextarea',
@@ -174,7 +170,6 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private onChange() {
-    let errored: AbstractControl = new FormControl();
     this.onChangeCallback(this.model);
   }
 

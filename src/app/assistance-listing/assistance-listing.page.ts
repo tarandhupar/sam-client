@@ -74,6 +74,10 @@ export class ProgramPage implements OnInit, OnDestroy {
   private historicalIndexSub: Subscription;
   private relatedProgramsSub: Subscription;
 
+  public yearSort = (a, b) => {
+    return (a.fiscalYear || 0) - (b.fiscalYear || 0);
+  };
+
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
               private route: ActivatedRoute,
@@ -162,6 +166,16 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
+
+      // remap streetAddress -> address for sam-poc to display
+      let contacts = _.get(api, 'data.contacts.headquarters', null);
+      if (contacts) {
+        contacts.map((contact) => {
+          contact.address = contact.streetAddress;
+          contact.address2 = contact.streetAddress2;
+        });
+      }
+
       this.program = api;
 
       if (!this.program._links.self) {
@@ -389,7 +403,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
 
   public getCurrentFY(event) {
-    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+    return moment().year();
   }
 
   public containsExecutiveOrder() {

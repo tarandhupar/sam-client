@@ -57,7 +57,9 @@ export class ReportComponent implements OnInit {
     country: false,
     fiscalYear: false,
     psc: false,
-    descOfReq: false
+    descOfReq: false,
+    locationCode: false,
+    congressionalDistrictCode: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -123,7 +125,22 @@ export class ReportComponent implements OnInit {
   pscValidator: boolean = false;
   descOfReq: string = '';
   hasFpds: boolean = true;
-  devIframe: boolean = false;
+  congressionalDistrictCode: any = '';
+  locationCode: any = '';
+  dateValidatorMsg: string;
+
+  // Only for testing iframe security
+  // devIframe: boolean = false;
+  // iframeTest: any;
+  // iframe: any = {
+  //   label: 'iframe sandbox test',
+  //   name: 'iframe test'
+  // }
+  // iframeOptions: OptionsType[] = [
+  //   { name: 'iframeBase', label: 'No sandbox', value: 'base'},
+  //   { name: 'iframe3', label: '3 parameters', value: 'iframe3'},
+  //   { name: 'iframe11', label: '11 parameters', value: 'iframe11'}
+  // ]
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -178,6 +195,12 @@ export class ReportComponent implements OnInit {
           if (this.currentReport[0].prompts.indexOf('psc') >= 0) {
             this.usedPrompts.psc = true;
           }
+          if (this.currentReport[0].prompts.indexOf('locationCode') >= 0) {
+            this.usedPrompts.locationCode = true;
+          }
+          if (this.currentReport[0].prompts.indexOf('congressionalDistrictCode') >= 0) {
+            this.usedPrompts.congressionalDistrictCode = true;
+          }
         },
         err => console.log(err));
   }
@@ -192,13 +215,16 @@ export class ReportComponent implements OnInit {
     // Data range lavel for 'Inherently Governmental Functions Actions and Dollars Report'
     if (this.id === 'BE206C4B4A24C65846C6A686B576860F') {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
+    } else if (this.id === 'A733895D42D56A54679F95B20133D3C9') {
+      this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  This report is available starting from August 4, 2006.'
     }
+
     if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
        this.localEnv = true;
     }
-    if (REPORT_MICRO_STRATEGY_ENV==='dev') {
-      this.devIframe = true;
-    }
+    // if (REPORT_MICRO_STRATEGY_ENV==='dev') {
+    //   this.devIframe = true;
+    // }
     
     // Sets state prompt name based on specific report
     if (this.id === '48EC50F946E3011C5DE470A6FEA8C1FD') {
@@ -226,56 +252,30 @@ export class ReportComponent implements OnInit {
     var startComparison = moment(this.dateRangeModel.startDate);
     var endComparison = moment(this.dateRangeModel.endDate);
     var duration = moment.duration(endComparison.diff(startComparison));
-    if (this.name === "Potential Vendor Anomaly Report") {
-      if (duration.years() >= this.PVMAXRANGE) {
-        this.maxRange = "months"
-        this.dateValidator = true;
-      }
-      else {
-        if (evt === "execute") {
-          this.reportExecute();
-          this.dateValidator = false;
-        }
-        if (evt === "export") {
-          this.exportReport();
-          this.dateValidator = false;
-        }
-      }
-    } else if (this.name === "Procurement History for Market Research Report") {
-      if (duration.years() >= this.REPORTMAXRANGE) {
-        this.maxRange = "years"
-        this.dateValidator = true;
-      } else if (!this.psc || this.psc.key.length === 0){
-        this.pscValidator = true;
-      }
-        else {
-        if (evt === "execute") {
-          this.reportExecute();
-          this.dateValidator = false;
-          this.pscValidator = false;
-        }
-        if (evt === "export") {
-          this.exportReport();
-          this.dateValidator = false;
-          this.pscValidator = false;
-        }
-      }
+    if (this.name === "Potential Vendor Anomaly Report" && (duration.years() >= this.PVMAXRANGE)) {
+      this.dateValidatorMsg = "A Date Range can not exceed 12 months.  Please refine your date criteria."
+      this.dateValidator = true;
+    } else if (this.name === "Procurement History for Market Research Report" && (!this.psc || this.psc.key.length === 0)) {
+      this.pscValidator = true;
+    } else if (this.name === "Local Area Set Aside Report" && moment(this.dateRangeModel.startDate).isBefore("2006-08-04")) {
+      this.dateValidator = true;
+      this.dateValidatorMsg = "This report is available starting from August 4, 2006";
+    } else if (duration.years() >= this.REPORTMAXRANGE) {
+      this.dateValidatorMsg = "A Date Range can not exceed 12 years.  Please refine your date criteria."
+      this.dateValidator = true;
+    } else {
+      this.dateValidator ? this.dateValidator = false : null;
+      this.pscValidator ? this.pscValidator = false : null;
+      this.exportOrExecute(evt);
     }
-    else {
-      if (duration.years() >= this.REPORTMAXRANGE) {
-        this.maxRange = "years"
-        this.dateValidator = true;
-      }
-      else {
-        if (evt === "execute") {
-        this.reportExecute();
-        this.dateValidator = false;
-        }
-        if (evt === "export") {
-          this.exportReport();
-          this.dateValidator = false;
-        }
-      }
+  }
+
+  exportOrExecute(evt) {
+    if (evt === "execute") {
+      this.reportExecute();
+    }
+    if (evt === "export") {
+      this.exportReport();
     }
   }
 
@@ -354,6 +354,8 @@ export class ReportComponent implements OnInit {
     this.checkFiscalYear();
     this.checkPSC();
     this.checkDescOfRequirements()
+    this.checkCongressionalDistrictCode();
+    this.checkLocationCode();
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -456,6 +458,18 @@ export class ReportComponent implements OnInit {
           countryParameter = [{type:"element",name:"at",attributes:{did:"07A44AB54A1A22DAA7D21C89B148CF15",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"07A44AB54A1A22DAA7D21C89B148CF15:"+encodedCountryPoP.toUpperCase(),art:"1"}}];
         }
       }
+
+      // State code for Local Area Set Aside Report
+      if (this.id === 'A733895D42D56A54679F95B20133D3C9') { 
+        stateXMLid = '2642C82947F2A27C482311AE05BD198E';
+        countryXMLid = '245645964C5D134C1E6EE89D94110D3F';
+        if (this.location.state && this.location.state.value.length > 0) {
+          stateParameter = [{type:"element",name:"at",attributes:{did:"E807038644FD59F5F131D8824F801A57",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"E807038644FD59F5F131D8824F801A57:"+encodedStateVendor.toUpperCase(),art:"1"}}];
+        }
+        if (this.location.country && this.location.country.value.length > 0) {
+          countryParameter = [{type:"element",name:"at",attributes:{did:"C6527AEA47734553F264DABBE50886CC",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C6527AEA47734553F264DABBE50886CC:"+encodedCountryPoP.toUpperCase(),art:"1"}}];
+        }
+      }
       
       this.stateXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:stateXMLid,tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: stateParameter}]}]}
       this.promptAnswersXML.elements[0].elements.push(this.stateXML);
@@ -492,6 +506,30 @@ export class ReportComponent implements OnInit {
       this.promptAnswersXML.elements[0].elements.push(descOfReqXML);
     }
   }
+
+  checkCongressionalDistrictCode() {
+    if (this.usedPrompts.congressionalDistrictCode) {
+      let congressionalDistrictCodeXML = {};
+      let congressionalDistrictCodeParameter;
+      if (this.congressionalDistrictCode) {
+        congressionalDistrictCodeParameter = [{type:"element",name:"at",attributes:{did:"73BE91FF4115D4E86739A1B8533B1396",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"73BE91FF4115D4E86739A1B8533B1396:"+this.congressionalDistrictCode,art:"1"}}];
+      }
+      congressionalDistrictCodeXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"54B19CFC4B6ACE00A2D9878971EC3FB4",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: congressionalDistrictCodeParameter}]}]};
+      this.promptAnswersXML.elements[0].elements.push(congressionalDistrictCodeXML);
+    }
+  }
+  
+  checkLocationCode() {
+    if (this.usedPrompts.locationCode) {
+      let locationCodeXML = {};
+      let locationCodeParameter;
+      if (this.locationCode) {
+        locationCodeParameter = [{type:"element",name:"at",attributes:{did:"73A441B64E5147988C278996E39EF89B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"73A441B64E5147988C278996E39EF89B:"+this.locationCode,art:"1"}}];
+      }
+      locationCodeXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"A19589464A41A7E77C76BCA7A6B64A4F",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: locationCodeParameter}]}]};
+      this.promptAnswersXML.elements[0].elements.push(locationCodeXML);
+    }
+  }
   
   resetParameter(){ 
     this.showReport = false;
@@ -512,7 +550,8 @@ export class ReportComponent implements OnInit {
     this.dateValidator = false;
     this.psc = '';
     this.descOfReq = '';
-    
+    this.locationCode = '';
+    this.congressionalDistrictCode = ''; 
   }
 
   updateCountryField(val) {
@@ -523,7 +562,7 @@ export class ReportComponent implements OnInit {
     this.location.state = val;
   }
 
-  test() {
+  test() { 
   }
 
   _keyPress(event: any) {

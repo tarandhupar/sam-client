@@ -26,8 +26,8 @@
   </div>
   <div class="badge-area" *ngIf="curConfig.legacyLogo">
     Legacy website
-    <img style="height:40px;" 
-      [src]="curConfig.legacyLogo" 
+    <img style="height:40px;"
+      [src]="curConfig.legacyLogo"
       [alt]="curConfig.legacyWebsiteContent">
   </div>
 </div>
@@ -46,8 +46,8 @@
       <div class="sam-ui segments">
         <div class="sam-ui lightest blue segment">
           <div class="sam-ui relaxed list">
-            <a [href]="curConfig.publicStartGuide" 
-              [target]="curConfig.legacyInitials" 
+            <a [href]="curConfig.publicStartGuide"
+              [target]="curConfig.legacyInitials"
               class="item">
               <i class="icon fa fa-book" aria-hidden="true"></i>
               Public Quick Start Guide
@@ -56,7 +56,7 @@
               <i class="icon fa fa-book" aria-hidden="true"></i>
               Federal Quick Start Guide
             </a>
-            <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }" 
+            <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }"
               class="item">
               <i class="icon fa fa-search" aria-hidden="true"></i>
               Search {{curConfig.heading}}
@@ -90,13 +90,13 @@
     <div class="sam-ui segments">
       <div class="sam-ui lightest blue segment">
         <div class="sam-ui relaxed list">
-          <a [href]="curConfig.publicStartGuide" 
-            [target]="curConfig.legacyInitials" 
+          <a [href]="curConfig.publicStartGuide"
+            [target]="curConfig.legacyInitials"
             class="item">
             <i class="icon fa fa-book" aria-hidden="true"></i>
             Public Quick Start Guide
           </a>
-          <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }" 
+          <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }"
             class="item">
             <i class="icon fa fa-search" aria-hidden="true"></i>
             Search {{curConfig.heading}}
@@ -123,13 +123,13 @@
   </div>
 </ng-container>
 
-<div *ngIf="curConfig.heading === 'Wage Determinations'" 
+<div *ngIf="curConfig.heading === 'Wage Determinations'"
   class="sam-ui tabular menu">
-  <a (click)="onWDOLResourceClick('Wage Determinations Help')" 
+  <a (click)="onWDOLResourceClick('Wage Determinations Help')"
     class="item" [class.active]="!showLaborAgency()">
     Wage Determinations Help
   </a>
-  <a (click)="onWDOLResourceClick('Labor Advisors')" 
+  <a (click)="onWDOLResourceClick('Labor Advisors')"
     class="item" [class.active]="showLaborAgency()">
     Labor Advisors
   </a>
@@ -155,12 +155,12 @@
   <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
     {{curConfig.subContent}}
   </textarea>
-</ng-container>    
+</ng-container>
 
 <div class="sam-ui hidden divider"></div>
 
 <ng-container *ngIf="showLaborAgency()">
-  
+
   <div>
     <h3 class="sam-ui dividing header">Department of Defense Agencies
       <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
@@ -168,7 +168,7 @@
       <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editDODAgency(false)">Cancel</button></span>
     </h3>
   </div>
-  
+
   <div class="labor-agency-item" *ngFor="let item of defenceAgencies; let i = index;">
     <h4 class="sam-ui header">{{item.agency}}</h4>
     <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index;">
@@ -196,7 +196,7 @@
       <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editContractAgency(false)">Cancel</button></span>
     </h3>
   </div>
-  
+
   <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
     <h4 class="sam-ui header">{{item.agency}}</h4>
     <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
@@ -299,7 +299,7 @@
       </a>
     </li>
     <li>
-      <a [routerLink]="['/alerts']">
+      <a [routerLink]="['/alerts']" [queryParams]="{'status':'Active','type':'WageDetermination'}">
         Latest Updates
       </a>
     </li>

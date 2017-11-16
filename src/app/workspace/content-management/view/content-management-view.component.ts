@@ -4,6 +4,8 @@ import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
+import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
+import { CMSMapping } from "../content-management-mapping"
 
 @Component({
   templateUrl: './content-management-view.template.html',
@@ -35,9 +37,9 @@ export class HelpContentManagementViewComponent {
   };
 
   sortOptionsMap = {
-    'FAQ-repository': [{label:'Latest Update', name:'Latest Update', value:'latest update'}],
-    'data-dictionary': [{label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
-    'video-library': [{label:'Alphabetical', name:'Alphabetical', value:'alphabetical'}],
+    'FAQ-repository': [{label:'Latest Update', name:'Latest Update', value:'lastmodifieddate'}],
+    'data-dictionary': [{label:'Alphabetical', name:'Alphabetical', value:'title'}],
+    'video-library': [{label:'Alphabetical', name:'Alphabetical', value:'title'}],
   };
 
   //current results num data variables
@@ -65,7 +67,13 @@ export class HelpContentManagementViewComponent {
     'video-library': "New Video",
   };
 
-  constructor(private route:ActivatedRoute, private _router:Router, private contentManagementService:ContentManagementService, private capitalPipe: CapitalizePipe){}
+  cmsMapping = new CMSMapping();
+
+  constructor(private route:ActivatedRoute,
+              private _router:Router,
+              private contentManagementService:ContentManagementService,
+              private capitalPipe: CapitalizePipe,
+              private alertFooter: AlertFooterService){}
 
   ngOnInit(){
     this.route.params.subscribe(
@@ -82,7 +90,6 @@ export class HelpContentManagementViewComponent {
           this.loadQueryParamsFromURL(this.route.snapshot.queryParams);
           this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
         }
-
       });
   }
 
@@ -121,19 +128,23 @@ export class HelpContentManagementViewComponent {
   loadContent(filterObj, sort, page){
     this.noContentsInfo = 'Loading';
     this.contents = [];
-    this.contentManagementService.getContent(filterObj, sort, page+1, this.recordsPerPage).subscribe(data => {
-      try{
-        this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
-        this.totalRecords = data._embedded.contentDataWrapperList[0]['totalRecords'];
-        this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-        this.updateRecordsText();
-        if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
-      }catch (err){
-        console.log(err);
-        this.noContentsInfo = "No Content Available";
-      }
+    this.contentManagementService.getContent(filterObj, sort, page+1, this.recordsPerPage).subscribe(
+      data => {
+        try{
+          this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
+          this.totalRecords = data._embedded.contentDataWrapperList[0]['totalRecords'];
+          this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+          this.updateRecordsText();
+          if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
+        }catch (err){
+          console.log(err);
+          this.noContentsInfo = "No Content Available";
+        }
 
-    });
+      },
+      error => {
+        this.noContentsInfo = "No Content Available";
+      });
   }
 
   updateRecordsText(){
@@ -172,18 +183,52 @@ export class HelpContentManagementViewComponent {
     return str_tokens.join(" ");
   }
 
-  onContentItemAction(action, index){
-    // 1. Direct to Edit page on action edit
-    // 2. Delete current content item on action delete
-    if(action.name === 'Edit'){
-      let navigationExtras: NavigationExtras = {queryParams: {}};
-      navigationExtras.queryParams['mode'] = 'edit';
-      navigationExtras.queryParams['id'] = index;
-      this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+  onContentItemAction(action, item){
+    switch(action.name){
+      case 'Edit':
+        let navigationExtras: NavigationExtras = {queryParams: {}};
+        navigationExtras.queryParams['mode'] = 'edit';
+        navigationExtras.queryParams['id'] = item.contentId;
+        this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+        break;
+      case 'Publish':
+        item['status'] = {statusId:2};
+        this.contentManagementService.updateContent(item).subscribe(
+          data => {
+            this.showAlertMessage('success','Successfully published '+item.refId);
+            item = data;
+            //remove the published one if it was a draft
+            this.contents = this.contents.filter( content => {
+              if(content.contentId === item.contentId) return true;
+              return content.refId !== item.refId || content.type.typeId !== item.type.typeId;
+            });
+          },
+          err => {this.showAlertMessage('error','Failed to publish '+item.refId);}
+        );
+        break;
+      case 'Delete': case 'Delete Draft':
+        item['activeStatus'] = false;
+        this.contentManagementService.updateContent(item).subscribe(
+          data => {
+            this.showAlertMessage('success','Successfully deleted '+item.refId);
+            this.curPage = 0;
+            this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
+          },
+          err => {this.showAlertMessage('error','Failed to delete '+item.refId); }
+        );
+        break;
+      case 'Unarchive':
+        item['status'] = {statusId:3};
+        this.contentManagementService.updateContent(item).subscribe(
+          data => {
+            this.showAlertMessage('success','Successfully unarchive '+item.refId);
+            item = data;
+          },
+          err => {this.showAlertMessage('error','Failed to unarchive '+item.refId);}
+        );
+        break;
+
     }
-
-
-
   }
 
   getDomainStr(domains){
@@ -196,6 +241,42 @@ export class HelpContentManagementViewComponent {
     let tagNames = [];
     tags.forEach(e => {tagNames.push(e.tagKey)});
     return tagNames.join(',');
+  }
+
+  getAction(item){
+    let actions = [];
+    if(item.status){
+      let status = item.status.statusId;
+      switch (status){
+        case 1: //New
+          actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
+          actions.push({icon:"fa fa-times", label:"Delete", name:"Delete", callback: ()=>{}});
+          actions.push({icon:"", label:"Publish", name:"Publish", callback: ()=>{}});
+          break;
+        case 3: //Draft
+          actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
+          actions.push({icon:"fa fa-times", label:"Delete Draft", name:"Delete Draft", callback: ()=>{}});
+          actions.push({icon:"", label:"Publish", name:"Publish", callback: ()=>{}});
+          break;
+        case 2: //Publish
+          actions.push({icon:"fa fa-times", label:"Delete", name:"Delete", callback: ()=>{}});
+          if(!item.draftExist) actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
+          break;
+        case 4: //Archived
+          actions.push({icon:"", label:"Unarchive", name:"Unarchive", callback: ()=>{}});
+          break;
+      }
+    }
+    return actions;
+  }
+
+  showAlertMessage(type,message){
+    this.alertFooter.registerFooterAlert({
+      title: "",
+      description: message,
+      type: type,
+      timer: 3200
+    });
   }
 
 }

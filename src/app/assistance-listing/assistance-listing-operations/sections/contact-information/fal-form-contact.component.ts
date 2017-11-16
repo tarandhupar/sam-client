@@ -73,9 +73,17 @@ export class FALFormContactInfoComponent implements OnInit {
         this.countryDrpDwnOptions.push({value: country.value, key: country.code});
       }
     });
-
-    this.service.getContactsList().subscribe(api => {
-      for (let contact of api._embedded.contacts) {
+    Observable.zip(
+      this.service.getContactsList(),
+      this.locationService.getAllContries(),
+      function(data1,data2){
+        return {
+          contacts: data1,
+          country: data2,
+        }
+      }
+    ).subscribe((data)=>{
+      for (let contact of data['contacts']._embedded.contacts) {
 
         let contactMirror = Object.assign({},contact);
         if(contact.fullName){
@@ -111,9 +119,12 @@ export class FALFormContactInfoComponent implements OnInit {
         };
 
         contactMirror.country = {
-          key: contact.country,
-          value: contact.country
+          key: "",
+          value: ""
         };
+        if(contact.country && data['country']){
+          contactMirror.country = this._setCountry(contact.country,data['country']._embedded.countryList);
+        }
         this.contactDrpDwnOptions.push(contactMirror);
         //this.contactDrpDwnOptions = this.contactDrpDwnOptions.slice();
         this.contactDrpDwnInfo[contact.contactId] = contact;
@@ -185,7 +196,7 @@ export class FALFormContactInfoComponent implements OnInit {
         city: '',
         state: '',
         zip: '',
-        country: {key:"USA",value:'United States'}
+        country: {key:"USA",value:'USA - United States'}
       },SamPOCEntryComponent.pocValidations]
     });
   }
@@ -318,15 +329,7 @@ export class FALFormContactInfoComponent implements OnInit {
           contact.state = obj;
         }
         if(contact.country){
-          let obj = {};
-          obj['key'] = contact.country;
-          let countryObj = data['country']._embedded.countryList.find((row)=>{
-            if(contact.country==row.countrycode){
-              return true;
-            }
-          });
-          obj['value'] = countryObj && countryObj['country'] ? countryObj['country'] : obj['key'];
-          contact.country = obj;
+          contact.country = this._setCountry(contact.country,data['country']._embedded.countryList);
         }
         if(contact['streetAddress2'] === undefined) {
           contact['streetAddress2'] = '';
@@ -345,6 +348,22 @@ export class FALFormContactInfoComponent implements OnInit {
       this.updateErrors();
       this.updateSubformErrors();
     });
+  }
+
+  _setCountry(countryCode,countryList){
+    let obj = {};
+    obj['key'] = countryCode;
+    let countryObj = countryList.find((row)=>{
+      if(countryCode==row.countrycode || countryCode==row.countryCode2){
+        return true;
+      }
+    });
+    let countryStr = "";
+    if(countryObj && countryObj['countrycode'] && countryObj['country']){
+      countryStr = countryObj['countrycode'] + " - " + countryObj['country'];
+    }
+    obj['value'] = countryStr;
+    return obj;
   }
 
   saveData() {
@@ -455,12 +474,16 @@ export class FALFormContactInfoComponent implements OnInit {
 
   lbActionHandler(event){
     let formArray= <FormArray>this.falContactInfoForm.get('contacts');
-    if(event=="add-cancel"){
+    if(event=="add"){
+      this.mode = "Add";
+    } else if (event=="add-cancel"){
       this.mode = "";
       formArray.markAsDirty();
       this.updateErrors();
     } else if (event=="edit"){
       this.mode = "Edit";
+    } else if (event=="edit-cancel"){
+      this.mode = "";
     } else if (event=="delete"){
       formArray.markAsDirty();
       this.updateErrors();

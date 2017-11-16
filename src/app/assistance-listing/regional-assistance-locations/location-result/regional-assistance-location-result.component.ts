@@ -71,13 +71,18 @@ export class RegionalAssistanceLocationResult implements OnInit {
     defaultOption: "Choose an Action"
 
   };
-  
+
   openDropdown: boolean = false;
 
   constructor(private router: Router, private service: RAOFormService, private alertFooterService: AlertFooterService) { }
 
   ngOnInit() {
-
+    if (this.data.createdDate !== null) {
+      this.data.createdDate = moment(this.data.createdDate).format("MMM D, Y h:mm a");
+    }
+    if (this.data.modifiedDate !== null) {
+      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y h:mm a");
+    }
 
   }
 

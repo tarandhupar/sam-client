@@ -229,17 +229,20 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 }
 
                 let formattedData;
-                if(oData['hierarchy'] && oData['hierarchy'].length > 0) {
-
-                    for(let idx in this.orgLevels){
-                        if(idx>lvl+1){
-                            this.orgLevels[idx].options.length = 1;
-                            this.orgLevels[idx].options.selectedOrg = "";
-                            this.orgLevels[idx].show = false;
-                        }
+                let nextLvl = lvl+1;
+                for(let idx in this.orgLevels){
+                    if(idx>=nextLvl){
+                        this.orgLevels[idx].options.length = 1;
+                        this.orgLevels[idx].options.selectedOrg = "";
+                        this.orgLevels[idx].show = false;
                     }
+                }
+                if(this.orgLevels.length > nextLvl
+                    && oData['hierarchy']
+                    && oData['hierarchy'].length > 0) {
+
                     formattedData = this.formatHierarchy(oData["hierarchy"]);
-                    this.setAdvancedOrgOptions(lvl+1,formattedData);
+                    this.setAdvancedOrgOptions(nextLvl,formattedData);
                 }
 
             });
@@ -269,11 +272,12 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 let orgOption = this.orgLevels[idx].options.find((item)=>{
                     return item.value == selection;
                 });
-                if(this.hasFpds && (orgOption['name'].indexOf('[') < 1)){
-                    let fpdsCode = orgOption['fpdsCode'] || orgOption['fpdsOrgId'] || 'N/A';
-                    let department = orgOption['type'] ? orgOption['type'].charAt(0) : 'N/A';
-                    orgOption['name'] = orgOption['name'] + ' [' + department + '] [' + fpdsCode +']';
-                }
+                // if(this.hasFpds && (orgOption['name'].indexOf('[') < 1)){
+                //     // this.removeDuplicateOrgType(orgOption);
+                //     let fpdsCode = orgOption['fpdsCode'] || orgOption['fpdsOrgId'] || 'N/A';
+                //     let department = orgOption['type'] ? orgOption['type'].charAt(0) : 'N/A';
+                //     orgOption['name'] = orgOption['name'] + ' [' + department + '] [' + fpdsCode +']';
+                // }
                 selectedOrgs.push(orgOption);
             }
         }
@@ -281,6 +285,15 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             let org = selectedOrgs[selectedOrgs.length-1];
             this.addSelection(org);
             this.showAdvanced = false;
+        }
+    }
+
+    removeDuplicateOrgType(org) {
+        let newOrgType = org.type || org[0].type;
+        for (let i in this.selections) {
+            if (this.selections[i].type === newOrgType) {
+                this.selections.splice(i, 1);
+            }
         }
     }
 
@@ -307,6 +320,18 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 this.selections.push(val);
             }
         } else {
+            // if (this.hasFpds) {
+            //     if(val.length > 1){
+            //         for (let i in val) {
+            //             if (val[i].type === val[val.length-1].type) {
+            //                 console.log('before spliced from advanced', val);
+            //                 val.splice(i, 1);
+            //                 console.log('before spliced from advanced', val);
+            //             }
+            //         }
+            //     }
+
+            // };
             this.selections = val;
         }
         if(emit){

@@ -39,6 +39,8 @@ export class RequestAccessPage {
     { breadcrumb: 'Request Access'}
   ];
 
+  submitInProgress: boolean = false;
+
   constructor(
     fb: FormBuilder,
     private userAccessService: UserAccessService,
@@ -136,11 +138,13 @@ export class RequestAccessPage {
       organization : { id:val.org.orgKey, val:val.org.name}
     };
 
+    this.submitInProgress = true;
     this.userAccessService.requestAccess(body).subscribe(
       res => {
         this.router.navigate(['/profile', 'access']);
       },
       err => {
+        this.submitInProgress = false;
         this.alertFooter.registerFooterAlert({
           description: 'There was an error with a required service',
           type: "error",

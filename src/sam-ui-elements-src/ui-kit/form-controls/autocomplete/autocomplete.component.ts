@@ -221,10 +221,11 @@ export class SamAutocompleteComponent implements ControlValueAccessor, OnChanges
     if(!this.control){
       return;
     }
-    if(!this.useFormService){
-      this.control.statusChanges.subscribe(()=>{
-        this.wrapper.formatErrors(this.control);
-        this.cdr.detectChanges();
+    if (!this.useFormService) {
+      this.control.statusChanges.subscribe(() => {
+        setTimeout(() => {
+          this.wrapper.formatErrors(this.control);
+        })
       });
     }
     else {
@@ -237,11 +238,12 @@ export class SamAutocompleteComponent implements ControlValueAccessor, OnChanges
       });
     }
   }
-
-  ngAfterViewInit(){
-    if(this.control){
-      this.wrapper.formatErrors(this.control);
-      this.cdr.detectChanges();
+  
+  ngAfterViewInit() {
+    if (this.control) {
+      setTimeout(() => {
+        this.wrapper.formatErrors(this.control);
+      })
     }
   }
 
@@ -608,6 +610,7 @@ export class SamAutocompleteComponent implements ControlValueAccessor, OnChanges
       }
       this.selectedInputValue = this.inputValue;
       this.innerValue = value;
+      this.input.nativeElement.value = this.inputValue;//angular isn't populating this
     } else if (value === null) {
       this.inputValue = '';
       this.selectedInputValue = '';

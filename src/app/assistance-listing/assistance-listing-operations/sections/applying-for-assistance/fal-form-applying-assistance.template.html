@@ -36,7 +36,7 @@
         <ng-template #display let-item>
           <ng-container *ngIf="!item.valid">
             <span class='usa-input-error-message'>
-              <sup>*</sup>This deadline information has some errors.
+              <sup>*</sup>This deadline information has some errors
             </span>
           </ng-container>
           {{formatAssistInfo(item.value)}}
@@ -46,6 +46,7 @@
           <form [formGroup]="item">
 
             <sam-date-range
+              [fromRequired]="true"
               [control]="item.get('dateRange')"
               [defaultValidations]="false"
               name="deadline-date-range"
@@ -62,7 +63,7 @@
           </form>
         </ng-template>
       </sam-listbuilder>
-
+      <div><br></div>
       <sam-text-area
         [label]="'Other Deadline Information'"
         [name]="'deadlines-description'"

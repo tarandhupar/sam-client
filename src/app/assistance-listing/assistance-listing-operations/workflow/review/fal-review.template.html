@@ -72,11 +72,10 @@
 
     <sam-status-banner
       [type]="'warning'"
-      *ngIf="checkForErrors() && reviewErrorList && reviewErrorList.errorList && reviewErrorList.errorList.length > 0">
+      [hidden]="!(checkForErrors() && reviewErrorList) || (program?.status?.code == 'published' || program?.status?.code == 'archived' || program?.status?.code == 'pending')">
       <div leading-content>{{statusBannerLeadingText}}</div>
       <div main-content>
-        <fal-error-display
-          [validationErrors]="reviewErrorList"
+        <fal-error-display #errorDisplay
           (message)="updateBannerText($event)">
         </fal-error-display>
       </div>
@@ -142,7 +141,7 @@
 
     <div grid class="middle aligned">
       <div columns="9">
-        <h2 class="sam-ui header">Header Information</h2>
+        <h2 class="sam-ui header" id="header-information">Header Information</h2>
       </div>
       <div columns="3" class="right aligned">
         <!-- Edit Button -->
@@ -252,8 +251,6 @@
   <!-- Overview Section -->
   <section id="program-overview">
 
-    <a name="#/fal/{{programID}}/review#overview" id="overview-anchor" hidden="true">Overview</a>
-
     <div class="sam-ui hidden divider"></div>
 
     <div grid class="middle aligned">
@@ -290,7 +287,7 @@
           <h3 class="sam-ui dividing header">Examples of Funded Projects</h3>
           <div [ngSwitch]="program.data?.projects?.isApplicable">
             <ng-container *ngSwitchCase="true">
-              <ng-container *ngFor="let item of program.data?.projects?.list; let i = index">
+              <ng-container *ngFor="let item of program.data?.projects?.list?.sort(yearSort); let i = index">
                 <p [attr.id]="'program-project-example-' + i"
                    *ngIf="!item.fiscalYear || (item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1)">
 
@@ -369,8 +366,6 @@
   <!-- Authorizations -->
   <section id="program-authorizations">
 
-    <a name="#/fal/{{programID}}/review#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
-
     <div class="sam-ui hidden divider"></div>
 
     <div grid class="middle aligned">
@@ -415,8 +410,6 @@
   <!--Financials-->
   <section id="program-financials">
 
-    <a name="#/fal/{{programID}}/review#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
-
     <div class="sam-ui hidden divider"></div>
 
     <div grid class="middle aligned">
@@ -435,7 +428,6 @@
       </div>
     </div>
 
-
     <div class="sam-ui segment">
 
       <div grid class="vertically padded">
@@ -447,18 +439,18 @@
 
           <table
             class="sam-ui table celled lightest blue"
-            *ngIf="dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
+            *ngIf="values && dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
             <thead>
             <tr>
               <th scope="col" id="obligations">Obligations</th>
               <th scope="col" id="previous-fy">
-                FY {{ prevFY }}
+                FY {{ trimFYOptions.pFY }}
               </th>
               <th scope="col" id="current-fy">
-                FY {{ currentFY }} (est.)
+                FY {{ trimFYOptions.cFY }} (est.)
               </th>
               <th scope="col" id="next-fy">
-                FY {{ nextFY }} (est.)
+                FY {{ trimFYOptions.bFY }} (est.)
               </th>
             </tr>
             </thead>
@@ -475,10 +467,14 @@
                     *ngIf="item.assistanceType">
                     {{ getAssistanceType(item.assistanceType) }}
                   </ng-container>
+                  <ng-container
+                    *ngIf="item.description">
+                     {{(item.assistanceType ? ' - ' : '') + item.description}}
+                  </ng-container>
                 </td>
                 <td>
-                  <ng-container *ngIf="item.values[0]?.actual || item.values[0]?.estimate">
-                    ${{ ((item.values[0]?.actual && item.values[0]?.estimate) || item.values[0]?.actual) ? item.values[0]?.actual : item.values[0]?.estimate }}
+                  <ng-container *ngIf="item.values[0]?.actual > 0 || item.values[0]?.estimate > 0">
+                    ${{ (((item.values[0]?.actual && item.values[0]?.estimate) || item.values[0]?.actual) ? item.values[0]?.actual : item.values[0]?.estimate) | samCurrency:'USD':true:'1.2-2'}}
                   </ng-container>
                   <ng-container *ngIf="item.values[0]?.flag == 'nsi'">
                     Not Separately Identifiable
@@ -488,8 +484,8 @@
                   </ng-container>
                 </td>
                 <td>
-                  <ng-container *ngIf="item.values[1]?.estimate">
-                    ${{ item.values[1]?.estimate }}
+                  <ng-container *ngIf="item.values[1]?.estimate > 0">
+                    ${{ item.values[1]?.estimate | samCurrency:'USD':true:'1.2-2'}}
                   </ng-container>
                   <ng-container *ngIf="item.values[1]?.flag == 'nsi'">
                     Not Separately Identifiable
@@ -499,8 +495,8 @@
                   </ng-container>
                 </td>
                 <td>
-                  <ng-container *ngIf="item.values[2]?.estimate">
-                    ${{ item.values[2]?.estimate }}
+                  <ng-container *ngIf="item.values[2]?.estimate > 0">
+                    ${{ item.values[2]?.estimate | samCurrency:'USD':true:'1.2-2'}}
                   </ng-container>
                   <ng-container *ngIf="item.values[2]?.flag == 'nsi'">
                     Not Separately Identifiable
@@ -513,9 +509,9 @@
             </ng-container>
             <tr>
               <td>Total</td>
-              <td>${{totalsByYear.totalpFY}}</td>
-              <td>${{totalsByYear.totalcFY}}</td>
-              <td>${{totalsByYear.totalbFY}}</td>
+              <td>${{totalsByYear.totalpFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
+              <td>${{totalsByYear.totalcFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
+              <td>${{totalsByYear.totalbFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
             </tr>
             </tbody>
           </table>
@@ -547,7 +543,7 @@
               <inline-error-message
                 [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, 0, true)">
               </inline-error-message>
-              <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
+              <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list?.sort(yearSort); let i = index">
                 <inline-error-message
                   [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, i)"
                   *ngIf="(item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1) || !item.fiscalYear">
@@ -667,8 +663,6 @@
 
   <!--Criteria for Applying-->
   <section id="program-application-criteria">
-
-    <a name="#/fal/{{programID}}/review#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -811,11 +805,17 @@
             <inline-error-message
               [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('AWARDED_TYPE'))">
             </inline-error-message>
-            <span id="program-assistance-method"
-                  *ngIf="program.data?.eligibility?.limitation?.awarded">
-              Method of awarding/releasing assistance:
-              {{program.data.eligibility?.limitation?.awarded}}
-            </span>
+            <ng-container *ngIf="program.data?.eligibility?.limitation as limitation">
+              <span id="program-assistance-method" *ngIf="limitation?.awarded as awarded">
+                Method of awarding/releasing assistance:
+                <span *ngIf="awarded !== 'other'; else otherAwarded">
+                  {{awarded === 'lump' ? 'lump sum' : awarded}}
+                </span>
+                <ng-template #otherAwarded>
+                  {{limitation.awardedDescription}}
+                </ng-template>
+              </span>
+            </ng-container>
           </p>
 
           <div class="sam-ui hidden divider"></div>
@@ -883,8 +883,6 @@
 
   <!--Applying for Assistance-->
   <section id="program-application-information">
-
-    <a name="#/fal/{{programID}}/review#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
 
     <div class="sam-ui hidden divider"></div>
 
@@ -1157,8 +1155,6 @@
   <!--Compliance requirements-->
   <section id="program-compliance-requirements">
 
-    <a name="#/fal/{{programID}}/review#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
-
     <div class="sam-ui hidden divider"></div>
 
     <div grid class="middle aligned">
@@ -1391,8 +1387,6 @@
   <!--Contact information-->
   <section id="program-contact-information">
 
-    <a name="#/fal/{{programID}}/review#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
-
     <div class="sam-ui hidden divider"></div>
 
     <div grid class="middle aligned">
@@ -1464,8 +1458,6 @@
 
   <!--History Section-->
   <section #historySection id="program-history">
-
-    <a name="#/fal/{{programID}}/review#history" id="history-anchor" hidden="true">History</a>
 
     <div class="sam-ui hidden divider"></div>
 

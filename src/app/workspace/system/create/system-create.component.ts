@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { isArray, extend, merge } from 'lodash';
+import { extend, isArray, merge, mergeWith } from 'lodash';
 
 import { SamActionsDropdownComponent } from 'sam-ui-elements/src/ui-kit/components/actions';
 import { SamTabsComponent, SamTabComponent } from 'sam-ui-elements/src/ui-kit/components/tabs';
@@ -114,6 +114,7 @@ export class SystemCreateComponent {
 
         this.api.iam.cws.application.get(this.application.uid, application => {
           this.application = merge({}, this.application, application);
+
           this.initForm();
           this.updateStatus();
         }, () => {
@@ -276,17 +277,22 @@ export class SystemCreateComponent {
   }
 
   get data(): CWSApplication {
-    let form = this.form;
+    let form = this.form,
+        data = merge({ statuses: this.application.statuses },
+          form.get('system-information').value,
+          form.get('organization').value,
+          form.get('permissions').value,
+          form.get('security').value,
+          form.get('authorization').value
+        );
 
-    this.application = extend({}, this.application,
-      form.get('system-information').value,
-      form.get('organization').value,
-      form.get('permissions').value,
-      form.get('security').value,
-      form.get('authorization').value
-    );
+    data = mergeWith({}, this.application, data, (target, source, key) => {
+      if(isArray(target) && isArray(source)) {
+        return source;
+      }
+    });
 
-    return this.application;
+    return data;
   }
 
   showError() {
@@ -378,6 +384,7 @@ export class SystemCreateComponent {
 
     args.push(this.data, application => {
       this.form.get(section).patchValue(application);
+      this.application = extend({}, this.application, application);
 
       if(this.isNew) {
         this.router.navigate(['/workspace/system/new', application.uid], {

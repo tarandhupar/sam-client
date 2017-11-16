@@ -1,12 +1,10 @@
-import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
-import {AutocompleteConfig} from "sam-ui-elements/src/ui-kit/types";
-import moment = require("moment");
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import * as _ from 'lodash';
 import { v4 as UUID } from 'uuid';
-import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
-import {FALFieldNames, FALSectionNames} from "../../assistance-listing-operations/fal-form.constants";
-import {FALFormViewModel} from "../../assistance-listing-operations/fal-form.model";
+import { FALFieldNames } from "../../assistance-listing-operations/fal-form.constants";
+import { FALFormViewModel } from "../../assistance-listing-operations/fal-form.model";
+import { falCustomValidatorsComponent } from "../../validators/assistance-listing-validators";
 
 @Component({
   selector: 'obligation-subform',
@@ -20,6 +18,7 @@ export class FALObligationSubFormComponent {
   @Input() viewModel: FALFormViewModel;
   @Input() hideAddButton: boolean;
   @Input() fyYearOptions: any;
+  @Input() tableView: any;
   @Input() options: any;
   @Input() toggleAttleatOneEntryError: boolean;
   @Input() acCategories = [];
@@ -66,7 +65,6 @@ export class FALObligationSubFormComponent {
     name: 'checkbox-recReinveCheckbox'
   };
   // Past Fiscal Year - 2015
-  pastFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   pastFiscalYearConfig = {
     options: [
       {value: 'pFYActual', label: 'Actual', name: 'radio-pFY-actual', flag: 'number'},
@@ -80,7 +78,6 @@ export class FALObligationSubFormComponent {
     hint: ''
   };
   // Past Fiscal Year - 2016
-  currentFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   currentFiscalYearConfig = {
     options: [
       {value: 'cFYEstimate', label: 'Estimate', name: 'radio-cFY-actual', flag: 'number'},
@@ -94,7 +91,6 @@ export class FALObligationSubFormComponent {
     hint: ''
   };
   // Budget Fiscal Year - 2017
-  budgetFiscalYearModel: {radioOptionId: '', textBoxValue: ''};
   budgetFiscalYearConfig = {
     options: [
       {value: 'bFYEstimate', label: 'Estimate', name: 'radio-bFY-actual', flag: 'number'},
@@ -135,11 +131,11 @@ export class FALObligationSubFormComponent {
     });
   }
 
-  initobligations(obligation: {}, populateAddFalg: boolean) {
-    let year = new Date();
-    let currentFY = year.getFullYear();
-    let prevFY = (currentFY) - 1;
-    let nextFY = (currentFY) + 1;
+  initobligations(obligation: {}, populateAddFalg: boolean, screen: string = 'form'): FormGroup | any {
+    let currentFY = screen === 'table' ? this.tableView.fyYearOptions.currentFY : this.fyYearOptions.currentFY;
+    let prevFY = screen === 'table' ? this.tableView.fyYearOptions.prevFY : this.fyYearOptions.prevFY;
+    let nextFY = screen === 'table' ? this.tableView.fyYearOptions.nextFY : this.fyYearOptions.nextFY;
+
     this.currentFY = currentFY;
     this.prevFY = prevFY;
     this.nextFY = nextFY;
@@ -203,12 +199,7 @@ export class FALObligationSubFormComponent {
         }
       }
     }
-    this.persistPreYearsData.push(
-      {
-        obligationId: obligation['obligationId'],
-        values: pyValues
-      }
-    );
+
    let assistanceType;
     if(populateAddFalg) {
       assistanceType = '';
@@ -216,7 +207,7 @@ export class FALObligationSubFormComponent {
       assistanceType = obligation['assistanceType'];
     }
 
-    return this.fb.group({
+    let objObligation = {
       isRecoveryAct: [[isRecoveryAct]],
       assistanceType: [assistanceType, falCustomValidatorsComponent.autoCompleteRequired],
       pFY: {
@@ -233,8 +224,22 @@ export class FALObligationSubFormComponent {
       },
       description: obligation['description'] || '',
       obligationId: obligation['obligationId']
-    });
+    };
+
+    if (screen === 'table') {
+      objObligation.assistanceType = assistanceType;
+      return objObligation;
+    } else {
+      this.persistPreYearsData.push(
+        {
+          obligationId: obligation['obligationId'],
+          values: pyValues
+        }
+      );
+      return this.fb.group(objObligation);
+    }
   }
+
   onAddNewObliClick() {
     this.subFormLabel = "Add Obligation";
     const control = <FormArray> this.falObligationSubForm.controls['obligations'];
@@ -282,6 +287,10 @@ export class FALObligationSubFormComponent {
       uuid = obligationId;
     }
     control.at(i).patchValue({obligationId: uuid});
+    //Hotfix: needed for someone who roles obligation by edit existing one but doesn't change anything in the form
+    this.falObligationSubForm.markAsDirty();
+    this.falObligationSubForm.markAsTouched();
+    //
     this.obligationsInfo = _.cloneDeep(this.falObligationSubForm.value.obligations);
     this.hideAddButton = false;
     this.hideObligationsForm = true;

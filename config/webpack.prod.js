@@ -16,6 +16,7 @@ const IgnorePlugin = require('webpack/lib/IgnorePlugin');
 const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var apiConfig;
 try{
@@ -120,7 +121,11 @@ module.exports = webpackMerge(commonConfig, {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
-
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      defaultSizes: "gzip",
+      openAnalyzer: false,
+    }),
     /**
      * Plugin: WebpackMd5Hash
      * Description: Plugin to replace a standard webpack chunkhash with md5.

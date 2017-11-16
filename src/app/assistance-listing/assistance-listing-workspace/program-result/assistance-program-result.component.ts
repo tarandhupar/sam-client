@@ -82,7 +82,7 @@ export class AssistanceProgramResult implements OnInit {
     let navigationExtras: NavigationExtras = {
       queryParams: this.qParams
     };
-    this.router.navigate(['programs', event.program.id, 'change-request'], navigationExtras);
+    this.router.navigate(['fal', event.program.id, 'change-request'], navigationExtras);
   }
 }
 

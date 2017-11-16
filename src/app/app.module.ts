@@ -56,7 +56,7 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    PageNotFoundErrorPage
+    PageNotFoundErrorPage,
   ],
   imports: [
     // Angular Modules

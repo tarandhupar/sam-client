@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
 import { ProgramService } from "../../../../../api-kit/program/program.service";
 import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
 import { FALFormErrorService } from '../../fal-form-error.service';
 import { FALSectionNames } from '../../fal-form.constants';
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
+import { AutocompleteConfig } from "../../../../../sam-ui-elements/src/ui-kit/types";
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   providers: [FALFormService, ProgramService],
@@ -14,7 +15,7 @@ import { FALFormService } from "../../fal-form.service";
   templateUrl: 'fal-form-header-info.template.html'
 })
 
-export class FALFormHeaderInfoComponent implements OnInit {
+export class FALFormHeaderInfoComponent implements OnInit, OnDestroy {
   @Input() viewModel: FALFormViewModel;
   @Output() public showErrors = new EventEmitter();
 
@@ -53,6 +54,8 @@ export class FALFormHeaderInfoComponent implements OnInit {
   programNumberLow: number;
   programNumberHigh: number;
 
+  private subscriptions: Subscription = new Subscription();
+
   // Related Program multi-select
   rpNGModel: any;
   relProAutocompleteConfig: AutocompleteConfig = {
@@ -65,12 +68,17 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.populateMultiList();
     this.getOrganizationLevels();
 
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
+
+    this.subscribeToChanges();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   createForm() {
@@ -96,192 +104,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
       this.falHeaderInfoForm.get('programNumber').markAsDirty({onlySelf: true});
       this.falHeaderInfoForm.get('programNumber').updateValueAndValidity();
     }
-  }
-
-  setCustomValidatorsForFALNo(programNumber, code, orgId){
-
-    if(programNumber !== null && programNumber !== '' && orgId !== null && orgId !== '') {
-      this.falHeaderInfoForm.get('programNumber').setValidators(falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh));
-
-      if((this.falHeaderInfoForm.get('programNumber').errors && this.falHeaderInfoForm.get('programNumber').errors == null) || !this.falHeaderInfoForm.get('programNumber').errors) {
-          this.falHeaderInfoForm.get('programNumber')
-            .setAsyncValidators(falCustomValidatorsComponent.isProgramNumberUnique(this.programService, code.content.cfdaCode, this.viewModel.programId, FALFormService.getAuthenticationCookie(), orgId));
-      }
-    }
-  }
-
-  populateMultiList() {
-    if (this.viewModel.relatedPrograms && this.viewModel.relatedPrograms.length > 0) {
-      this.service.getRelatedProgramList(this.viewModel.relatedPrograms).subscribe(
-        data => this.parseRelatedPrograms(data),
-        error => {
-          console.error('error retrieving dictionary data', error);
-        });
-    } else {
-      this.falHeaderInfoForm.valueChanges.subscribe(data => {
-        this.updateViewModel(data);
-      });
-    }
-  }
-
-  parseRelatedPrograms(data: any) {
-    let rpListDisplay = [];
-    for (let dataItem of data) {
-      rpListDisplay.push({code: dataItem.id, name: dataItem.value});
-    }
-    this.falHeaderInfoForm.patchValue({
-      relatedPrograms: rpListDisplay
-    }, {
-      emitEvent: false
-    });
-
-    this.falHeaderInfoForm.valueChanges.subscribe(data => {
-      this.updateViewModel(data);
-    });
-  }
-
-  updateViewModel(data) {
-    let alternativeNames = [];
-    let relatedPrograms = [];
-    let orgId = '';
-
-    if(data.federalAgency) {
-      if(typeof data.federalAgency === 'object')
-        orgId = data.federalAgency.orgKey;
-      else
-        orgId = data.federalAgency;
-
-      this.getFHConfig(orgId, data['programNumber']);
-    }
-    else {
-      this.autoProgNoGeneration = true;
-      this.viewModel.programNumber = '';
-      this.falHeaderInfoForm.get('programNumber').clearAsyncValidators();
-      this.falHeaderInfoForm.get('programNumber').clearValidators();
-      this.falHeaderInfoForm.get('programNumber').patchValue('', {
-        emitEvent: false
-      });
-    }
-
-    relatedPrograms = this.updateViewModelRelatedPrograms(data['relatedPrograms']);
-    alternativeNames.push(data.alternativeNames);
-
-    this.viewModel.title = data['title'] || null;
-    this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
-    this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + '.' + data['programNumber'].replace(/\./g, '')) : null;
-    this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
-    this.viewModel.organizationId = orgId;
-
-    this.cdr.detectChanges();
-    this.updateErrors();
-  }
-
-  updateViewModelRelatedPrograms(rpListDisplay) {
-    let relatedPrograms = [];
-    if (rpListDisplay && rpListDisplay.length > 0) {
-      for (let rp of rpListDisplay) {
-        relatedPrograms.push(rp.code);
-      }
-    }
-    return relatedPrograms;
-  }
-
-  updateForm() {
-    let title = this.viewModel.title;
-
-    let popularName = (this.viewModel.alternativeNames.length > 0 ? this.viewModel.alternativeNames[0] : '');
-
-    this.falNo = (this.viewModel.programNumber ? this.viewModel.programNumber : '');
-
-    let falNoDotIndex = this.falNo.indexOf('.');
-    if (falNoDotIndex !== -1) {
-      //  Need to preserve prefix, TODO: Remove once FH API lookup is established
-      this.falNoPrefix = this.falNo.slice(0, falNoDotIndex);
-      this.falNo = this.falNo.slice(falNoDotIndex+1);
-    }
-    else {
-      this.falNoPrefix = '';
-    }
-    //set organization
-    let organizationId = this.viewModel.organizationId;
-    this.getOrganizationName(organizationId);
-
-    this.falHeaderInfoForm.patchValue({
-      title: title,
-      alternativeNames: popularName,
-      programNumber: this.falNo,
-      federalAgency: organizationId
-    }, {
-      emitEvent: false
-    });
-
-    this.getFHConfig(organizationId, this.falNo);
-
-    this.cdr.detectChanges();
-    this.updateErrors();
-  }
-
-  getFHConfig(orgId, progNo){
-
-    this.service.getFederalHierarchyConfiguration(orgId).subscribe(data => {
-
-      this.autoProgNoGeneration = data.programNumberAuto;
-
-      if(!this.autoProgNoGeneration) {
-        this.service.getCfdaCode(orgId).subscribe( (code) => {
-          this.falNoPrefix = code.content.cfdaCode;
-          this.viewModel.programNumber = progNo ? (this.falNoPrefix + '.' + progNo.replace(/\./g, '')) : null;
-
-          this.falHeaderInfoForm.get('programNumber').patchValue(progNo, {
-            emitEvent: false
-          });
-
-          this.setCustomValidatorsForFALNo(progNo, code, orgId);
-        });
-      }
-      else {
-        if(!this.viewModel.isRevision) {
-          this.viewModel.programNumber = '';
-          this.falHeaderInfoForm.get('programNumber').patchValue('', {
-            emitEvent: false
-          });
-        }// end of if
-      }
-    });
-  }
-
-  // todo: public for testing purposes
-  public updateErrors() {
-    this.errorService.viewModel = this.viewModel;
-
-    this.falHeaderInfoForm.get('title').clearValidators();
-    this.falHeaderInfoForm.get('title').setValidators((control) => {
-      return control.errors
-    });
-    this.falHeaderInfoForm.get('title').setErrors(this.errorService.validateHeaderTitle().errors);
-    this.markAndUpdateFieldStat('title');
-
-    this.falHeaderInfoForm.get('federalAgency').clearValidators();
-    this.falHeaderInfoForm.get('federalAgency').setValidators((control) => {
-      return control.errors
-    });
-    this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
-    this.markAndUpdateFieldStat('federalAgency');
-
-    this.falHeaderInfoForm.get('programNumber').clearValidators();
-
-    this.errorService.validateHeaderProgNo().subscribe(res => {
-      this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
-        return control.errors;
-      });
-      this.falHeaderInfoForm.get('programNumber').setErrors(res.errors);
-      this.markAndUpdateFieldStat('programNumber');
-      this.showErrors.emit(this.errorService.applicableErrors);
-    });
-  }
-
-  private markAndUpdateFieldStat(fieldName) {
-    this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
 
   getOrganizationLevels() {
@@ -318,5 +140,252 @@ export class FALFormHeaderInfoComponent implements OnInit {
       }, error => {
         console.error('error retrieving organization', error);
       });
+  }
+
+  updateForm() {
+    let title = this.viewModel.title;
+
+    let popularName = (this.viewModel.alternativeNames.length > 0 ? this.viewModel.alternativeNames[0] : '');
+
+    this.falNo = (this.viewModel.programNumber ? this.viewModel.programNumber : '');
+
+    let falNoDotIndex = this.falNo.indexOf('.');
+    if (falNoDotIndex !== -1) {
+      //  Need to preserve prefix, TODO: Remove once FH API lookup is established
+      this.falNoPrefix = this.falNo.slice(0, falNoDotIndex);
+      this.falNo = this.falNo.slice(falNoDotIndex+1);
+    }
+    else {
+      this.falNoPrefix = '';
+    }
+
+    //set organization
+    let organizationId = this.viewModel.organizationId;
+    this.getOrganizationName(organizationId);
+
+    this.falHeaderInfoForm.patchValue({
+      title: title,
+      alternativeNames: popularName,
+      programNumber: this.falNo,
+      federalAgency: organizationId
+    }, {
+      emitEvent: false
+    });
+
+    //set related programs
+    this.populateMultiList();
+
+    this.cdr.detectChanges();
+    this.updateErrors();
+  }
+
+  getFHConfig(orgId, progNo) {
+    this.service.getFederalHierarchyConfiguration(orgId).subscribe(data => {
+
+      this.autoProgNoGeneration = data.programNumberAuto;
+
+      if(!this.autoProgNoGeneration) {
+        this.service.getCfdaCode(orgId).subscribe( (code) => {
+          this.falNoPrefix = code.content.cfdaCode;
+          this.viewModel.programNumber = progNo ? (this.falNoPrefix + '.' + progNo.replace(/\./g, '')) : null;
+          this.setCustomValidatorsForFALNo(progNo, code, orgId);
+          this.falHeaderInfoForm.get('programNumber').patchValue(progNo, {
+            emitEvent: true
+          });
+        });
+      }
+    });
+  }
+
+  setCustomValidatorsForFALNo(programNumber, code, orgId){
+    if(programNumber !== null && programNumber !== '' && orgId !== null && orgId !== '') {
+      this.falHeaderInfoForm.get('programNumber').setValidators(falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh));
+
+      if((this.falHeaderInfoForm.get('programNumber').errors && this.falHeaderInfoForm.get('programNumber').errors == null) || !this.falHeaderInfoForm.get('programNumber').errors) {
+        this.falHeaderInfoForm.get('programNumber')
+          .setAsyncValidators(falCustomValidatorsComponent.isProgramNumberUnique(this.programService, code.content.cfdaCode, this.viewModel.programId, FALFormService.getAuthenticationCookie(), orgId));
+      }
+    }
+  }
+
+  populateMultiList() {
+    if (this.viewModel.relatedPrograms && this.viewModel.relatedPrograms.length > 0) {
+      this.service.getRelatedProgramList(this.viewModel.relatedPrograms).subscribe(
+        data => this.parseRelatedPrograms(data),
+        error => {
+          console.error('error retrieving dictionary data', error);
+        });
+    }
+  }
+
+  parseRelatedPrograms(data: any) {
+    let rpListDisplay = [];
+    for (let dataItem of data) {
+      rpListDisplay.push({code: dataItem.id, name: dataItem.value});
+    }
+    this.falHeaderInfoForm.patchValue({
+      relatedPrograms: rpListDisplay
+    }, {
+      emitEvent: false
+    });
+  }
+
+  // todo: public for testing purposes
+  public updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateTitleError();
+    this.updateFederalAgencyError();
+    this.updateProgNoError();
+  }
+
+  private updateTitleError() {
+    this.falHeaderInfoForm.get('title').clearValidators();
+    this.falHeaderInfoForm.get('title').setValidators((control) => {
+      return control.errors
+    });
+    this.falHeaderInfoForm.get('title').setErrors(this.errorService.validateHeaderTitle().errors);
+    this.markAndUpdateFieldStat('title');
+
+    this.emitErrorEvent();
+  }
+
+  private updateFederalAgencyError() {
+
+    this.falHeaderInfoForm.get('federalAgency').clearValidators();
+    this.falHeaderInfoForm.get('federalAgency').setValidators((control) => {
+      return control.errors
+    });
+    this.falHeaderInfoForm.get('federalAgency').setErrors(this.errorService.validateFederalAgency().errors);
+    this.markAndUpdateFieldStat('federalAgency');
+    this.emitErrorEvent();
+  }
+
+  private updateProgNoError() {
+
+    this.errorService.validateHeaderProgNo()
+      .subscribe(res => {
+
+      this.falHeaderInfoForm.get('programNumber').clearValidators();
+      this.falHeaderInfoForm.get('programNumber').setValidators((control) => {
+        if(control.pristine)
+          return null;
+        else
+          return control.errors;
+      });
+      this.falHeaderInfoForm.get('programNumber').setErrors(res.errors);
+      this.markAndUpdateFieldStat('programNumber');
+      this.emitErrorEvent();
+    });
+  }
+
+  private emitErrorEvent() {
+    this.showErrors.emit(this.errorService.applicableErrors);
+  }
+
+  private markAndUpdateFieldStat(fieldName) {
+    this.falHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
+  }
+
+  // needed as a workaround to provide a synchronous method of saving title
+  public updateTitle() {
+    this.saveTitle(this.falHeaderInfoForm.get('title').value);
+  }
+
+  subscribeToChanges(){
+    this.linkControlTo(this.falHeaderInfoForm.get('title'), this.saveTitle);
+    this.linkControlTo(this.falHeaderInfoForm.get('alternativeNames'), this.saveAlternativeNames);
+    this.linkControlTo(this.falHeaderInfoForm.get('federalAgency'), this.saveAgency);
+    this.linkControlTo(this.falHeaderInfoForm.get('programNumber'), this.saveProgramNo);
+    this.linkControlTo(this.falHeaderInfoForm.get('relatedPrograms'), this.saveRelatedPrograms)
+  }
+
+  private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
+    let boundCallback = callback.bind(this);
+    this.subscriptions.add(
+      control
+      .valueChanges
+      .debounceTime(10)
+      .distinctUntilChanged()
+      .subscribe(value => {
+        boundCallback(value);
+      })
+    );
+  }
+
+  private saveTitle(title) {
+    this.viewModel.title = title;
+    this.cdr.detectChanges();
+    this.updateTitleError();
+  }
+
+  private saveAlternativeNames(altName) {
+    let alternativeNames = [];
+    alternativeNames.push(altName);
+    this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
+  }
+
+  private saveAgency(federalAgency) {
+
+    if(federalAgency) {
+      let orgId = '';
+      let progId = '';
+      if (typeof federalAgency === 'object')
+        orgId = federalAgency.orgKey;
+      else
+        orgId = federalAgency;
+
+      if(this.viewModel.organizationId !== orgId) {
+        progId = '';
+        this.clearFALField();
+      }
+      else {
+        progId = this.falHeaderInfoForm.get('programNumber').value;
+      }
+
+      this.getFHConfig(orgId, progId);
+
+      this.viewModel.organizationId = orgId;
+    }
+    else {
+      this.autoProgNoGeneration = true;
+      this.viewModel.organizationId = null;
+      this.clearFALField();
+      this.falHeaderInfoForm.get('programNumber').patchValue('', {
+        emitEvent: false
+      });
+    }
+
+    this.cdr.detectChanges();
+    this.updateFederalAgencyError();
+    this.updateProgNoError();
+  }
+
+  private clearFALField() {
+    this.viewModel.programNumber = null;
+    this.falHeaderInfoForm.get('programNumber').clearAsyncValidators();
+    this.falHeaderInfoForm.get('programNumber').clearValidators();
+  }
+
+  private saveProgramNo(progNo) {
+    this.getFHConfig(this.viewModel.organizationId, progNo);
+    this.viewModel.programNumber = progNo ? (this.falNoPrefix + '.' + progNo.replace(/\./g, '')) : null;
+    this.cdr.detectChanges();
+    this.updateProgNoError();
+  }
+
+  private saveRelatedPrograms(progList) {
+    let relatedPrograms = [];
+    relatedPrograms = this.updateViewModelRelatedPrograms(progList);
+    this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
+  }
+
+  updateViewModelRelatedPrograms(rpListDisplay) {
+    let relatedPrograms = [];
+    if (rpListDisplay && rpListDisplay.length > 0) {
+      for (let rp of rpListDisplay) {
+        relatedPrograms.push(rp.code);
+      }
+    }
+    return relatedPrograms;
   }
 }

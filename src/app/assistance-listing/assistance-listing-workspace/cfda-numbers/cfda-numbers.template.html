@@ -31,15 +31,15 @@
         </a>
       </li>
     </ul>
-    <sam-agency-picker-v2
-      *ngIf="orgLevels && toggleAgencyPicker"
-      type="single"
-      label="Agency Picker"
-      [ngModel]="selectedOrganization"
-      (ngModelChange)="onOrganizationChange($event)"
-      hint="Pick a single agency"
-      [orgRoots]="orgRoot">
-    </sam-agency-picker-v2>
+    <div class="sam-ui segment">
+      <sam-agency-picker-v2
+        *ngIf="orgLevels && toggleAgencyPicker"
+        type="single"
+        [ngModel]="selectedOrganization"
+        (ngModelChange)="onOrganizationChange($event)"
+        [orgRoots]="orgRoot">
+      </sam-agency-picker-v2>
+    </div>
 
   </sidebar>
 

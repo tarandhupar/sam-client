@@ -205,6 +205,8 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     hasSelectAll: 'true'
   };
 
+  filterDisabled: boolean = true;
+
   dateFilterIndex = 0;
 
   dateFilterModel: any = {};
@@ -722,10 +724,12 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   }
   
   dateModelChange(event){
+    this.filterDisabled = true;
     if(event['date']){
       if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
         this.dateFilterModel = event;
         this.dateRadio = 'date';
+        this.filterDisabled = false;
       }
     } else if(event['dateRange']){
         // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
@@ -733,6 +737,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
           if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
             this.dateFilterModel = event;
             this.dateRadio = 'dateRange';
+            this.filterDisabled = false;
           }
         }
     }
@@ -829,6 +834,10 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       queryParams: qsobj
     };
     this.router.navigate(['/savedsearches/workspace/'], navigationExtras);
+  }
+
+  dateTypeChangeHandler(evt){
+    this.dateFilterModel = {};
   }
 }
 

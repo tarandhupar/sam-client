@@ -55,7 +55,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
   private store;
   private subscription;
 
-  private  error = {
+  private error = {
     city:'',
     state:'',
     country:'',
@@ -158,8 +158,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
       defaultConfig,
       {
         name: "location group state",
-        id: "location-group-state",
-        labelText: "State/Province"
+        id: "location-group-state"
       },
       this._stateConfig
     );
@@ -325,7 +324,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
                   city: state.countryConfig && state.location.country && state.location.country.key !== 'USA' ? state.location.city : '',
                   county: state.countryConfig && state.location.country && state.location.country.key !== 'USA' ? state.location.county : '',
                   state: state.stateConfig && action.value ? action.value : undefined,
-                  zip: '', // Zip is a text field. To clear, set empty string.
+                  zip: state.countryConfig && state.location.country && state.location.country.key !== 'USA' ? state.location.zip : ''  , // Zip is a text field. To clear, set empty string.
                   country: state.countryConfig && action.value && action.value.country ?
                             { key: action.value.country.countrycode,
                               value: action.value.country.country } :
@@ -466,7 +465,7 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   onZipChange(val){
-   if (val !== '' && val !== undefined && this.country !== undefined){
+   if (val !== '' && val !== undefined && this.country !== undefined && this.country.key == 'USA'){
      this.locationService.validateZipWIthLocation(val, this.state!== undefined ? this.state : undefined, 
                       this.city !== undefined ? this.city : undefined,
                       this.county!== undefined ? this.county : undefined)

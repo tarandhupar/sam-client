@@ -5,7 +5,7 @@
 <div *ngIf="otherFinancialInfoForm" [formGroup]="otherFinancialInfoForm">
   <div class="sam-ui segment">
     <sam-text-area [label]="'Range and Average of Financial Assistance'"
-                [name]="'assitance-range-input'"
+                [name]="'assistance-range-input'"
                 [hint]="rangeAndAverageHint"
                 [required]="false"
                 [attr.id]="'range-average'"
@@ -27,7 +27,7 @@
       label="Account Identification"
       [hint]="accountIdentificationConfigHint"
       [required]="true"
-      addEntryText="Add Account Indentification"
+      addEntryText="Add Account Identification"
       [deleteModalFlag]="true"
       [deleteModalConfig]="{
         title:'Delete Account Identification',
@@ -37,7 +37,7 @@
       [attr.id]="'fal-financial-info-account-identification'"
       [control]="otherFinancialInfoForm.get('accountIdentification')"
       [formArrayInput]="otherFinancialInfoForm.get('accountIdentification').controls"
-      [formGroupTemplate]="acctIdentifcationSubform"
+      [formGroupTemplate]="acctIdentificationSubform"
       (formArrayChange)="acctIdentifcationFormArrayChange($event)"
       (action)="acctIdentificationActionHandler($event)">
       <ng-template #display let-item>

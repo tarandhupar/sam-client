@@ -1,7 +1,7 @@
 <page *ngIf="pageReady"
   theme="inside"
   [attr.id]="'page-title'"
-  [breadcrumbs]=""
+  [breadcrumbs]="crumbs"
   section="Workspace"
   title="CFDA Number Configuration Change">
 
@@ -49,17 +49,17 @@
         </div>
 
         <sam-button [buttonType]="buttonType"
+                    [attr.id]="'cancel-btn'"
+                    [buttonText]="'Cancel'"
+                    [buttonClass]="'usa-button-primary usa-search-submit'"
+                    (onClick)="cancelCFDANumberConfigChange()">
+        </sam-button>
+        <sam-button [buttonType]="buttonType"
                     [buttonDisabled]="isCfdaCodeRestricted"
                     [attr.id]="'submit-btn'"
                     [buttonText]="'Submit'"
                     [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
                     (onClick)="submitCFDANumberConfigChange()">
-        </sam-button>
-        <sam-button [buttonType]="buttonType"
-                    [attr.id]="'cancel-btn'"
-                    [buttonText]="'Cancel'"
-                    [buttonClass]="'usa-button-primary usa-search-submit'"
-                    (onClick)="cancelCFDANumberConfigChange()">
         </sam-button>
       </form>
     </div>

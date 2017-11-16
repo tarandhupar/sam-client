@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable  } from '@angular/core';
 import { IAMService } from 'api-kit';
 import {
   ActivatedRouteSnapshot,
@@ -10,34 +10,44 @@ import {
 
 @Injectable()
 export class SystemGuard implements CanActivate, CanActivateChild {
-  private states = {
-    route: '/',
-    params: {},
-    query: {}
-  };
-
-  constructor(private router: Router, private zone: NgZone, private api: IAMService) {}
+  constructor(private router: Router, private api: IAMService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    let url = state.url;
-
-    this.states.route = state.url;
-    this.states.params = route.params;
-    this.states.query = route.queryParams;
-
-    return this.verifyRoute();
-  }
-
-  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    return this.canActivate(route, state);
-  }
-
-  verifyRoute() {
-    if(!this.api.iam.user.isSystemAccount()) {
-      this.router.navigate(['/workspace']);
-      return false;
+    if(!(this.api.iam.user.isSystemAccount() || this.api.iam.user.isSecurityApprover())) {
+      return this.toWorkspace();
     }
 
     return true;
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const url = state.url.replace(/\?.+$/, '');
+
+    switch(url) {
+      case '/workspace/system':
+      case '/workspace/system/profile':
+      case '/workspace/system/password':
+      case '/workspace/system/migrations':
+        if(!this.api.iam.user.isSystemAccount()) {
+          return this.toWorkspace();
+        }
+
+        break;
+
+      case '/workspace/system/new':
+      case '/workspace/system/status':
+        if(!(this.api.iam.user.isSystemAccount() || this.api.iam.user.isSecurityApprover())) {
+          return this.toWorkspace();
+        }
+
+        break;
+    }
+
+    return true;
+  }
+
+  toWorkspace() {
+    this.router.navigate(['/workspace']);
+    return false;
   }
 }

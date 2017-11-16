@@ -140,7 +140,9 @@ export class SubscriptionsComponent {
       if(data) {
         this.selectOptions = [];
         data['recordList'].forEach((d) => {
-           d.modified_date = new Date(d.modified_date);
+           if(d.modified_date) {
+             d.modified_date = new Date(d.modified_date);
+           }
            d.active = 'Y';
            if(!d.title) {
              d.title = d.record_id;

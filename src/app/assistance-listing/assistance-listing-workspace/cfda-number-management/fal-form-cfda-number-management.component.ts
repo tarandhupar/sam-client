@@ -8,6 +8,7 @@ import {AlertFooterService} from "../../../app-components/alert-footer/alert-foo
 import {Location} from "@angular/common";
 import * as Cookies from 'js-cookie';
 import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
+import {IBreadcrumb} from "../../../../sam-ui-elements/src/ui-kit/types";
 
 interface CFDANumberConfigChangeModel {
   startValue: string,
@@ -36,6 +37,12 @@ export class CFDANumberManagementComponent implements OnInit{
     timer: 3000
   };
   isCfdaCodeRestricted: boolean = false;
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb:'Home', url:'/',},
+    { breadcrumb: 'Workspace', url: '/workspace' },
+    { breadcrumb: 'CFDA Number Management', url: '/fal/workspace/cfda-numbers'},
+    { breadcrumb: 'CFDA Number Configuration Change'}
+  ];
 
   public assignmentOptions = [
     { value: 'false', label: 'Automatic', name: 'automaticAssignment'},
@@ -132,7 +139,7 @@ export class CFDANumberManagementComponent implements OnInit{
             this.notifyFooterAlertModel.description = "CFDA Number Configuration Changed";
             this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
             this.router.navigate(['/fal/workspace/cfda-numbers']);
-          }, 
+          },
           (error: Response) => {
             console.error('error changing configuration', error);
             this.notifyFooterAlertModel.title = "Error";

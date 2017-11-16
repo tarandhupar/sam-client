@@ -1,20 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { FormGroup,FormControl, FormBuilder, FormArray } from "@angular/forms";
-import { FALFormService } from "../../../fal-form.service";
-import { FALFormViewModel } from "../../../fal-form.model";
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { falCustomValidatorsComponent } from "app/assistance-listing/validators/assistance-listing-validators";
+import * as _ from 'lodash';
+import { AccountIdentificationConfig } from "../../../../components/account-identification/account-identification.component";
 import {
   FiscalYearTableConfig,
   FiscalYearTableModel
 } from "../../../../components/fiscal-year-table/fiscal-year-table.component";
-import {
-  AccountIdentificationConfig,
-  AccountIdentificationModel
-} from "../../../../components/account-identification/account-identification.component";
 import { TAFSConfig, TAFSModel } from "../../../../components/tafs/tafs.component";
 import { FALFormErrorService } from '../../../fal-form-error.service';
 import { FALFieldNames, FALSectionNames } from '../../../fal-form.constants';
-import { falCustomValidatorsComponent } from "app/assistance-listing/validators/assistance-listing-validators";
-import * as _ from 'lodash';
+import { FALFormViewModel } from "../../../fal-form.model";
+import { FALFormService } from "../../../fal-form.service";
 
 @Component({
   providers: [FALFormService],
@@ -63,11 +60,11 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
     },
 
     textarea: {
-      required: false
+      required: true,
     },
 
     select: {
-      required: false
+      required: true,
     },
 
     deleteModal: {
@@ -120,21 +117,19 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
   }
 
   ngAfterViewInit() {
+    this.otherFinancialInfoForm.markAsPristine();
     setTimeout(() => { // horrible hack to trigger angular change detection
       if (this.viewModel.getSectionStatus(FALSectionNames.OTHER_FINANCIAL_INFO) === 'updated') {
-        this.otherFinancialInfoForm.get('assistanceRange').markAsDirty();
+        this.otherFinancialInfoForm.get('assistanceRange').markAsDirty({onlySelf: true});
         this.otherFinancialInfoForm.get('assistanceRange').updateValueAndValidity();
-        this.otherFinancialInfoForm.get('accomplishments').markAsDirty();
+        this.otherFinancialInfoForm.get('accomplishments').markAsDirty({onlySelf: true});
         this.otherFinancialInfoForm.get('accomplishments').updateValueAndValidity();
-        this.otherFinancialInfoForm.get('accountIdentification').markAsDirty();
+        this.otherFinancialInfoForm.get('accountIdentification').markAsDirty({onlySelf: true});
         this.otherFinancialInfoForm.get('accountIdentification').updateValueAndValidity();
-        this.otherFinancialInfoForm.get('tafs').markAsDirty();
+        this.otherFinancialInfoForm.get('tafs').markAsDirty({onlySelf: true});
         this.otherFinancialInfoForm.get('tafs').updateValueAndValidity();
       }
     });
-    setTimeout(() => {
-      this.otherFinancialInfoForm.markAsPristine({onlySelf: true});
-    }, 200);
   }
 
   private createForm() {
@@ -176,7 +171,6 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       let formArr = <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
       for(let i in acErrors.errorList){
         let keys = Object.keys(acErrors.errorList[i]['errors']);
-        let errorObj = {};
         for(let key of keys){
           if(acErrors.errorList[i]['errors'][key]){
             if(!isNaN(acErrors.errorList[i]['errors'][key]['index'])){
@@ -198,7 +192,6 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       let formArr = <FormArray>this.otherFinancialInfoForm.get('tafs');
       for(let i in tafsErrors.errorList){
         let keys = Object.keys(tafsErrors.errorList[i]['errors']);
-        let errorObj = {};
         for(let key of keys){
           if(tafsErrors.errorList[i]['errors'][key]){
             if(!isNaN(tafsErrors.errorList[i]['errors'][key]['index'])){
@@ -219,23 +212,23 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
     let formArr = <FormArray>this.otherFinancialInfoForm.get('tafs');
     for(let i in formArr.controls){
       let group = <FormGroup>formArr.get(i);
-      group.get('accountCode').markAsDirty();
+      group.get('accountCode').markAsDirty({onlySelf: true});
       group.get('accountCode').updateValueAndValidity({onlySelf:true,emitEvent:true});
-      group.get('departmentCode').markAsDirty();
+      group.get('departmentCode').markAsDirty({onlySelf: true});
       group.get('departmentCode').updateValueAndValidity({onlySelf:true,emitEvent:true});
-      group.get('allocationTransferAgency').markAsDirty();
+      group.get('allocationTransferAgency').markAsDirty({onlySelf: true});
       group.get('allocationTransferAgency').updateValueAndValidity({onlySelf:true,emitEvent:true});
-      group.get('subAccountCode').markAsDirty();
+      group.get('subAccountCode').markAsDirty({onlySelf: true});
       group.get('subAccountCode').updateValueAndValidity({onlySelf:true,emitEvent:true});
-      group.get('fy1').markAsDirty();
+      group.get('fy1').markAsDirty({onlySelf: true});
       group.get('fy1').updateValueAndValidity({onlySelf:true,emitEvent:true});
-      group.get('fy2').markAsDirty();
+      group.get('fy2').markAsDirty({onlySelf: true});
       group.get('fy2').updateValueAndValidity({onlySelf:true,emitEvent:true});
     }
     formArr = <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
     for(let i in formArr.controls){
       let group = <FormGroup>formArr.get(i);
-      group.get('code').markAsDirty();
+      group.get('code').markAsDirty({onlySelf: true});
       group.get('code').updateValueAndValidity({onlySelf:true,emitEvent:true});
     }
   }
@@ -326,13 +319,13 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
     let tafs = null;
 
     if (tafsModel) {
-      tafs = tafsModel;//.tafs;
+      tafs = tafsModel;
     }
 
     return tafs;
   }
 
-  acctIdentifcationSubform:FormGroup = this.fb.group({
+  acctIdentificationSubform:FormGroup = this.fb.group({
     code: new FormControl("", falCustomValidatorsComponent.checkAcctIdenficationCode),
     description:""
   });
@@ -352,7 +345,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       formArray.removeAt(0);
     }
     for(var idx in data){
-      let control = _.cloneDeep(this.acctIdentifcationSubform);
+      let control = _.cloneDeep(this.acctIdentificationSubform);
       control.setValue(data[idx].value);
       formArray.markAsDirty();
       formArray.push(control);

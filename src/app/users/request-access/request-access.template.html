@@ -52,7 +52,8 @@
     <div>
       <div class="pull-right clearfix m_T-4x m_B-4x">
         <button routerLink="../access" class="pull-left usa-button usa-button-transparent m_0" type="button">Cancel</button>
-        <button id="done-button" class="pull-left usa-button usa-button-primary" type="submit">Submit</button>
+        <button id="done-button" class="pull-left usa-button usa-button-primary" type="submit" [disabled]="submitInProgress">Submit</button>
+        <sam-spinner *ngIf="submitInProgress"></sam-spinner>
       </div>
     </div>
   </form>

@@ -41,14 +41,6 @@ xdescribe('UserAccessService', () => {
     service.postAccess({mode: 'grant'}, 'Timmy!');
   })));
 
-  it('should get roles', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
-    backend.connections.subscribe((connection: MockConnection) => {
-      expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/uiroles/);
-    });
-    service.getUiRoles({}, 'john');
-  })));
-
   it('should get domains', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);

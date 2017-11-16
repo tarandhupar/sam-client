@@ -48,8 +48,9 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   agencyPickerModel = [];
   previousStringList: string = '';
   public organizationData: any;
-  public orgLevels: any;
+  public orgLevels: any = 3;
   public orgRoots: any = [];
+
 
   keywordsModel: any = [];
   keywordsConfiguration = {
@@ -614,7 +615,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
   createNoticeTypeMap(){
     let ctx = this;
-      this.dictionaryService.getOpportunityDictionary('procurement_type')
+      this.dictionaryService.getContractOpportunityDictionary('procurement_type')
         .subscribe(
           data => {
             data['procurement_type'].forEach(function(type){
@@ -778,4 +779,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.router.navigate(['/opp/workspace/'], navigationExtras);
   }
 
+  dateTypeChangeHandler(evt){
+    this.dateFilterModel = {};
+  }
 }

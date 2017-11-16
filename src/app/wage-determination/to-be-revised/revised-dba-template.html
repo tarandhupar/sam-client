@@ -1,0 +1,30 @@
+<div class="usa-grid wage-determination-page">
+    <!-- back button -->
+    <div class="usa-width-one-fourth">
+        <sam-button
+        [buttonId]="'tertiaryBtn'"
+        [buttonText]="'Back'"
+        [buttonType]="'tertiary'"
+        (click)="onBackClick()">
+        </sam-button>
+    </div>
+    <!-- Main Content -->
+    <div class="usa-width-three-fourths">
+        <h2>Davis-Bacon Act Wage Determinations Due To Be Revised</h2>
+        <div>The following DBA General Wage Determinations have  
+                been revised or created new and will be available  
+                at WDOL.gov on or after October 27, 2017 </div>
+        <div>
+            <br>
+            <table class="sam-ui table celled">
+                <tr>
+                    <th>DBA Wage Determination</th>
+                </tr>
+                <tr *ngFor="let wd of dbaWageDeterminations">
+                    <td>{{wd}}</td>
+                </tr>
+            </table>
+            <br><br>
+        </div>
+    </div>
+</div>

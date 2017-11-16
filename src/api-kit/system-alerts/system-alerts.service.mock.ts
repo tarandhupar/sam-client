@@ -12,6 +12,6 @@ export class SystemAlertsServiceMock {
   }
 
   getAlertTypes() {
-    return Observable.of(['Informational','Warning','Critical']);
+    return Observable.of(['Informational','Warning','Error','Wage Determination']);
   }
 }

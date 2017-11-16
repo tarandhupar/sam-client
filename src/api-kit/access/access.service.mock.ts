@@ -3,10 +3,12 @@ import { UserAccessInterface } from "./access.interface";
 import * as _ from 'lodash';
 
 export let UserAccessMock = {
+
   checkAccess() {
+    let access: any = {"isAdmin":true,"adminLevel":0,"email":"department.admin@gsa.gov","departmentID":100006688,"grantRoles":[{"id":1,"val":"Assistance Administrator","supportedDomains":[{"id":9,"val":"Assistance Listing"}]},{"id":2,"val":"Assistance User","supportedDomains":[{"id":9,"val":"Assistance Listing"}]},{"id":5,"val":"Assistance Listing Grand User","supportedDomains":[{"id":9,"val":"Assistance Listing"}]},{"id":6,"val":"Agency Admin","supportedDomains":[{"id":2,"val":"Contract Opportunities"},{"id":5,"val":"Federal Hierarchy"}]},{"id":7,"val":"Contracting Officer","supportedDomains":[{"id":1,"val":"Contract Data"},{"id":2,"val":"Contract Opportunities"}]},{"id":8,"val":"Contracting Specialist","supportedDomains":[{"id":1,"val":"Contract Data"},{"id":2,"val":"Contract Opportunities"}]},{"id":9,"val":"Vendor","supportedDomains":[{"id":2,"val":"Contract Opportunities"}]},{"id":10,"val":"Contract Opportunities Grand User","supportedDomains":[{"id":2,"val":"Contract Opportunities"}]},{"id":11,"val":"Contracting Officer Administrator","supportedDomains":[{"id":1,"val":"Contract Data"}]},{"id":12,"val":"Contract Data Grand User","supportedDomains":[{"id":1,"val":"Contract Data"}]},{"id":20,"val":"Admin","supportedDomains":[{"id":11,"val":"Reporting"}]},{"id":21,"val":"Report User","supportedDomains":[{"id":11,"val":"Reporting"}]},{"id":61,"val":"Super Admin","supportedDomains":[{"id":5,"val":"Federal Hierarchy"}]},{"id":62,"val":"Department Admin","supportedDomains":[{"id":5,"val":"Federal Hierarchy"}]},{"id":63,"val":"Office Admin","supportedDomains":[{"id":5,"val":"Federal Hierarchy"}]}]};
     return Observable.of({
       status: 200,
-      json: function() { return { adminLevel: 0 }; }
+      json: function() { return access; }
     });
   },
 
@@ -132,6 +134,14 @@ export let UserAccessMock = {
   },
 
   getPendingRequestById() {
-    return Observable.of({"requestorName":"akanksha.chauhan@gsa.gov","supervisorName":"AJ","supervisorEmail":"AJ@gsa.gov","domainId":1,"statusId":1,"requestorMessage":"test","adminMessage":"test","organizationId":"100006688","organizationName":"GSA","roleId":1,"domain":{"id":1,"val":"CONTRACT DATA"},"role":{"id":1,"val":"ADVANCED REPORTS USER"},"status":{"id":1,"val":"PENDING"},"organization":{"id":100006688,"val":"GSA"},"createdBy":"RMS","createdDate":"2017-07-07T08:10:15.677 EDT","updatedDate":"2017-07-07T08:10:15.677 EDT","links":[],"id":1});
+    return Observable.of({"requestorName":"akanksha.chauhan@gsa.gov","supervisorName":"tr","supervisorEmail":"dffg@gsa.gov","domainId":1,"statusId":1,"requestorMessage":"testing comments","organizationId":"100076383","organizationName":"Office of Government Wide Policy","roleId":7,"domain":{"id":1,"val":"Contract Data"},"role":{"id":7,"val":"Contracting Officer"},"status":{"id":1,"val":"PENDING"},"organization":{"id":100076383,"val":"Office of Government Wide Policy"},"comments":[{"createdBy":"akanksha chauhan","createdDate":"2017-11-06T13:16:57.537 EST","updatedDate":1509992217537,"content":"testing comments"}],"createdBy":"akanksha.chauhan@gsa.gov","createdDate":"2017-11-06T13:36:17.186 EST","_links":{"reject_request":{"href":"https://39rolemanagementcomp.apps.prod-iae.bsp.gsa.gov/rms/v1/requestaccess/152/"},"approve_request":{"href":"https://39rolemanagementcomp.apps.prod-iae.bsp.gsa.gov/rms/v1/requestaccess/152/"}},"id":152});
+  },
+
+  postRequestComment(requestId, message) {
+    return Observable.of({
+      "content": message,
+      "createdDate": "2017-07-07T08:10:15.677",
+      "createdBy": "job@gsa.gov",
+    }).delay(2);
   }
 };

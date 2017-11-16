@@ -12,6 +12,8 @@ import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.c
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FormsModule } from '@angular/forms';
+import { WageDeterminationRevisedDBAPage } from "../wage-determination/to-be-revised/revised-dba-page";
+import { WageDeterminationRevisedSCAPage } from "../wage-determination/to-be-revised/revised-sca-page";
 
 import { routing } from './search.route';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
@@ -29,6 +31,7 @@ import {FilterParamLabel} from "./pipes/filter-label.pipe";
 import {SavedSearchRedirect} from "./saved-search-workspace/saved-search-redirect/saved-search-redirect.component";
 import {FilterParamValue} from "./pipes/filter-value.pipe";
 import {SearchAuthGuard} from "./authguard.service";
+
 
 @NgModule({
   imports: [
@@ -72,7 +75,9 @@ import {SearchAuthGuard} from "./authguard.service";
     SavedSearchResult,
     FilterParamLabel,
     FilterParamValue,
-    SavedSearchRedirect
+    SavedSearchRedirect,
+    WageDeterminationRevisedDBAPage,
+    WageDeterminationRevisedSCAPage,
   ],
   providers: [
     DunsEntityAutoCompleteWrapper,

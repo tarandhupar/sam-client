@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, async } from '@angular/core/testing';
+import { TestBed, ComponentFixture, async, fakeAsync} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FALFormService } from '../../fal-form.service';
 import { FALFormErrorService } from '../../fal-form-error.service';
@@ -29,7 +29,7 @@ MockFormService.getFederalHierarchyConfiguration.and.returnValue(Observable.of({
 let MockProgramService = jasmine.createSpyObj('MockProgramService', ['isProgramNumberUnique']);
 let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateHeaderTitle', 'validateFederalAgency', 'applicableErrors']);
 
-xdescribe('FAL Header Info Form', () => {
+describe('FAL Header Info Form', () => {
   let comp: FALFormHeaderInfoComponent;
   let fixture: ComponentFixture<FALFormHeaderInfoComponent>;
 
@@ -97,32 +97,6 @@ xdescribe('FAL Header Info Form', () => {
     expect(comp.falHeaderInfoForm.controls['relatedPrograms'].value).toEqual([{code: '3b0a74bc', name: '10.112 - Price Loss Coverage'}]);
   });
 
-  it('should update viewmodel', () => {
-    // todo: need to udpate @types/jasmine to 2.5.53 for spyOnProperty to be recognized
-    // @types/jasmine 2.5.53 depends on Typescript 2.1+ depends on Angular 4+
-    let titleSpy = spyOnProperty(comp.viewModel, 'title', 'set');
-    let alternativeNamesSpy = spyOnProperty(comp.viewModel, 'alternativeNames', 'set');
-    let programNumberSpy = spyOnProperty(comp.viewModel, 'programNumber', 'set');
-    let relatedProgramsSpy = spyOnProperty(comp.viewModel, 'relatedPrograms', 'set');
-
-    comp.updateViewModel({
-      title: 'title',
-      alternativeNames: ['alternativeNames'],
-      programNumber: '123',
-      relatedPrograms: [
-        {
-          id: '3b0a74bc',
-          value: '10.112 - Price Loss Coverage',
-        },
-      ],
-    });
-
-    expect(titleSpy).toHaveBeenCalled();
-    expect(alternativeNamesSpy).toHaveBeenCalled();
-    expect(programNumberSpy).toHaveBeenCalled();
-    expect(relatedProgramsSpy).toHaveBeenCalled();
-  });
-
   it('should format related programs', () => {
     expect(comp.updateViewModelRelatedPrograms([
       {
@@ -153,13 +127,35 @@ xdescribe('FAL Header Info Form', () => {
     expect(orgIdSpy).toHaveBeenCalled();
   });
 
-  it('should register org change', () => {
-    comp.onOrganizationChange({
-      name: 'test org',
-      value: 1234,
-    });
+  it('should save title', fakeAsync(() => {
+    let title = 'Test title';
+    let updateErrorSpy = spyOn(comp, 'updateTitleError');
+    comp['saveTitle'](title);
+    expect(comp.viewModel.title).toEqual(title);
+    fixture.detectChanges();
+    expect(updateErrorSpy).toHaveBeenCalled();
+  }));
 
-    expect(comp.organizationId).toBe(1234);
-    expect(comp.viewModel.organizationId).toBe(1234);
-  });
+  it('should save AlternativeNames', fakeAsync(() => {
+    let altname = 'popular name';
+    comp['saveAlternativeNames'](altname);
+    expect(comp.viewModel.alternativeNames).toEqual([altname]);
+  }));
+
+  it('should save programNo', fakeAsync(() => {
+    let progNo = '233';
+    let fhConfigSpy = spyOn(comp, 'getFHConfig');
+    let updateErrorSpy = spyOn(comp, 'updateProgNoError');
+    comp['saveProgramNo'](progNo);
+    expect(comp.viewModel.programNumber).toEqual('.' + progNo);
+    fixture.detectChanges();
+    expect(updateErrorSpy).toHaveBeenCalled();
+  }));
+
+  it('should clear FAL No Field', fakeAsync(() => {
+    comp.viewModel.programNumber = '123';
+    comp['clearFALField']();
+    expect(comp.viewModel.programNumber).toEqual('');
+  }));
+
 });

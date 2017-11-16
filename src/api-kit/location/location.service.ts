@@ -214,4 +214,15 @@ export class LocationService {
     return this.oAPIService.call(oApiParam);
   }
 
+  //gets district details
+  getDistricts(searchby?: string, q?: string) {
+    var oApiParam = {
+      name: 'location',
+      suffix: '/district',
+      oParam: {searchby:searchby, q:q},
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
 }

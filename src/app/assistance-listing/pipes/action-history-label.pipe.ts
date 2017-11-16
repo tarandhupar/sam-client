@@ -16,7 +16,7 @@ export class ActionHistoryLabelPipe implements PipeTransform {
         label = "Program Rejected";
         break;
       case "send_omb":
-        label = "send_omb";
+        label = "Submitted to OMB";
         break;
       case "send_gsa":
         label = "Submitted to GSA";

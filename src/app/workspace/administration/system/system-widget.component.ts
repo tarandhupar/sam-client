@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IAMService } from 'api-kit';
 
+import { merge } from 'lodash';
+
 @Component({
   selector: 'system-widget',
   templateUrl: './system-widget.component.html'
@@ -20,10 +22,12 @@ export class SystemWidgetComponent {
     this.api.iam.user.get(user => {
       this.user = user;
       this.api.iam.cws.status(summary => {
-        this.summary.Pending = summary.pending;
-        this.summary.Approved = summary.approved;
-        this.summary.Rejected = summary.rejected;
-        this.summary.Cancelled = summary.cancelled;
+        this.summary = merge({}, this.summary, {
+          Pending: summary.pending,
+          Approved: summary.approved,
+          Rejected: summary.rejected,
+          Cancelled: summary.cancelled,
+        });
       });
     });
   }

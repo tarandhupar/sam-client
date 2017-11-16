@@ -48,13 +48,28 @@ export class UserAccessService {
           }
         }
         // This seems risky... I don't want to redirect unless I'm sure they are forbidden
-        // if (res && res.status === 403) {
-        //   if (!this.router.url.match(/\/workspace/i)) {
-        //     this.router.navigate(['/403']);
-        //   }
-        // }
+        if (res && res.status === 403) {
+          if (!this.router.url.match(/\/workspace/i)) {
+            this.router.navigate(['/403']);
+          }
+        }
         return Observable.throw(res);
       });
+  }
+
+  addAuthHeader(options) {
+    let superToken = Cookie.get('superToken');
+    let iPlanetCookie = Cookie.get('iPlanetDirectoryPro');
+
+    if (iPlanetCookie) {
+      Cookie.delete('superToken');
+    }
+
+    if (!iPlanetCookie && !superToken) {
+      return;
+    }
+    options.headers = options.headers || {};
+    options.headers['X-Auth-Token'] = iPlanetCookie || '***'+superToken;
   }
 
   getAccess(userId: string, filterOptions?: any, toJson?: boolean) {
@@ -72,24 +87,6 @@ export class UserAccessService {
     }
 
     return this.callApi(apiOptions, toJson);
-  }
-
-  getUiRoles(queryParams, userName?): Observable< Array<IRole> > {
-    let apiOptions: any = {
-      name: 'uiroles',
-      method: 'GET',
-      suffix: '',
-      oParam: {
-        fetchNames: 'true',
-      }
-    };
-
-    if (userName) {
-      apiOptions.suffix = '/'+userName+'/';
-    }
-
-    apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
-    return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   getDomains(): Observable< IDomain > {
@@ -494,21 +491,6 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  addAuthHeader(options) {
-    let superToken = Cookie.get('superToken');
-    let iPlanetCookie = Cookie.get('iPlanetDirectoryPro');
-
-    if (iPlanetCookie) {
-      Cookie.delete('superToken');
-    }
-
-    if (!iPlanetCookie && !superToken) {
-      return;
-    }
-    options.headers = options.headers || {};
-    options.headers['X-Auth-Token'] = iPlanetCookie || '***'+superToken;
-  }
-
   getOpenRequests(userId: string){
     let apiOptions: any = {
       name: 'rms',
@@ -531,6 +513,20 @@ export class UserAccessService {
     };
 
     apiOptions.oParam.query = query;
+
+    return this.callApi(apiOptions);
+  }
+
+  postRequestComment(requestId, message) {
+    let suffix = `/requestaccess/${requestId}/comments/`;
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: suffix,
+      method: 'POST',
+      body: {
+        content: message
+      }
+    };
 
     return this.callApi(apiOptions);
   }

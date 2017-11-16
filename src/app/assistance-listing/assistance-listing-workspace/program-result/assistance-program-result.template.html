@@ -45,7 +45,17 @@
     </div>
 
     <div class="sam-ui medium header">
-      Office
+      <ng-container class="content-block" [ngSwitch]="data.organizationType | lowercase">
+        <ng-container *ngSwitchCase="department">
+          Department/Ind. Agency
+        </ng-container>
+        <ng-container *ngSwitchCase="agency">
+          Sub-tier
+        </ng-container>
+        <ng-container *ngSwitchCase="office">
+          Office
+        </ng-container>
+      </ng-container>
       <div *ngIf="!data.organizationName" class="sub header">
         &#8212;&#8212;
       </div>

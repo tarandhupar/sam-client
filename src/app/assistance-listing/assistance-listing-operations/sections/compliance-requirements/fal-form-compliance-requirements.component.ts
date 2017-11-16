@@ -555,10 +555,12 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       let wrapperControl = this.reportsComp.compTextarea._results[id.substr(id.length - 1)];
       if(reportErrors) {
         let currentErrors = FALFormErrorService.findErrorById(reportErrors, FALFieldNames.COMPLIANCE_REPORTS + '-' + id) as FieldError;
-        if(currentErrors){
-          this.setControlErrors(fcontrol, currentErrors);
+        if(currentErrors) {
           if (this.viewModel.getSectionStatus(FALSectionNames.COMPLIANCE_REQUIREMENTS) === 'updated') {
             fcontrol.markAsDirty();
+          }
+          if (fcontrol.dirty) {
+            this.setControlErrors(fcontrol, currentErrors);
           }
           wrapperControl.wrapper.formatErrors(fcontrol);
         } //end of if
@@ -578,7 +580,9 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     if(auditErrors) {
       for (let id in this.auditsComp.validationGroup.controls) {
         let fcontrol =  this.auditsComp.validationGroup.get(id);
-        this.setControlErrors(fcontrol, auditErrors);
+        if (fcontrol.dirty) {
+          this.setControlErrors(fcontrol, auditErrors);
+        }
       }
     }
   }
@@ -587,7 +591,9 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     if(addDocErrors){
       for (let id in this.additionalDocumentationComp.validationGroup.controls) {
         let fcontrol =  this.additionalDocumentationComp.validationGroup.get(id);
-        this.setControlErrors(fcontrol, addDocErrors);
+        if (fcontrol.dirty) {
+          this.setControlErrors(fcontrol, addDocErrors);
+        }
       }
     }
   }

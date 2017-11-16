@@ -17,7 +17,7 @@
         </a>
       </ng-container>
 
-      <ng-container *ngIf="pendingRequestCount!=null">
+      <ng-container *ngIf="pendingRequestCount!=null && userPermissions && userPermissions._links && userPermissions._links['program:request:access']">
         <a class="item" *ngIf="pendingRequestCount !== 0"
           [routerLink]="['/fal/workspace']"
           [queryParams]="{status: '', requestType: 'archive_request,unarchive_request,title_request,agency_request,program_number_request'}">

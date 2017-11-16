@@ -9,7 +9,7 @@
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit()">
 </sam-modal>
-<table class="sam-ui table celled lightest blue" *ngIf="obligationsInfo && obligationsInfo.length > 0">
+<table class="sam-ui table celled lightest blue" *ngIf="tableView && tableView.isReady && tableView.obligationsInfo && tableView.obligationsInfo.length > 0">
   <thead>
   <tr>
     <th scope="col">Obligations</th>
@@ -22,9 +22,9 @@
   </thead>
   <tbody>
 
-  <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
+  <ng-container *ngFor="let obligation of tableView.obligationsInfo; let i = index">
     <tr>
-      <td><span class='usa-input-error-message' *ngIf="!obligation.assistanceType || obligation.assistanceType.code == ''"><sup>*</sup>This field is required</span>{{obligation.assistanceType && obligation.assistanceType.name ? obligation.assistanceType.name : ''}}</td>
+      <td><span class='usa-input-error-message' *ngIf="!obligation.assistanceType || obligation.assistanceType.code == undefined || obligation.assistanceType.code == ''"><sup>*</sup>This field is required</span>{{obligation.assistanceType && obligation.assistanceType.name ? obligation.assistanceType.name : ''}}</td>
       <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
         {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
         obligation['pFY']['textboxValue']:''}}
@@ -69,9 +69,9 @@
   </ng-container>
   <tr>
     <td>Total</td>
-    <td>${{total.totalpFY}}</td>
-    <td>${{total.totalcFY}}</td>
-    <td>${{total.totalbFY}}</td>
+    <td>${{tableView.totalValue.totalpFY}}</td>
+    <td>${{tableView.totalValue.totalcFY}}</td>
+    <td>${{tableView.totalValue.totalbFY}}</td>
     <td></td>
   </tr>
   </tbody>

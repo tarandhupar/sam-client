@@ -36,6 +36,7 @@ export class SamSelectDateRangeFilterComponent implements ControlValueAccessor {
   @Input() tabIndex;
   @Output() filterEvt: EventEmitter<any> = new EventEmitter();
   @Output() filterClearEvt: EventEmitter<any> = new EventEmitter();
+  @Output() dateIndexChange: EventEmitter<any> = new EventEmitter();
   @ViewChild('wrapper') wrapper;
   model = {
     date:null,
@@ -85,6 +86,7 @@ export class SamSelectDateRangeFilterComponent implements ControlValueAccessor {
     this.dateTypeFilterModel = event;
     this.currDateOption = this.tabConfig[event];
     this.onChange(this.currDateOption);
+    this.dateIndexChange.emit(event);
   }
 
   dateChangeHandler(evt){

@@ -119,6 +119,13 @@ export class AlertsPage {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(param => {
+      if(param['status']) {this.filters.statuses = [param['status']];}
+      if(param['type']) {
+        this.filters.types = [param['type']];
+        if(param['type'] === 'WageDetermination') this.filters.types = ['Wage Determination'];
+      }
+    });
     this.loadAlertType();
     this.doSearch();
 
@@ -133,6 +140,7 @@ export class AlertsPage {
         {value: 'Error', label: 'Error', name: 'error'},
         {value: 'Informational', label: 'Informational', name: 'informational'},
         {value: 'Warning', label: 'Warning', name: 'warning'},
+        {value: 'Wage Determination', label: 'Wage Determination', name: 'wage determination'},
       ]
     });
   }
@@ -155,9 +163,7 @@ export class AlertsPage {
   }
 
   doSearch() {
-    this.route.queryParams.subscribe(param => {
-      if(param['status']) {this.filters.statuses = [param['status']];}
-    });
+
     this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
 
   }
@@ -190,7 +196,7 @@ export class AlertsPage {
 
   defaultSort() { return 'pdd'; }
   defaultStatuses() { return ['Active']; }
-  defaultTypes() { return ['Error', 'Informational', 'Warning']; }
+  defaultTypes() { return ['Error', 'Informational', 'Warning', 'Wage Determination']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return ''; }
 

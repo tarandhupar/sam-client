@@ -141,8 +141,6 @@
     <!-- Overview -->
     <section id="program-overview">
 
-      <a name="#/fal/{{programID}}/view#overview" id="overview-anchor" hidden="true">Overview</a>
-
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header" id="overview">Overview</h2>
@@ -163,7 +161,7 @@
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
-          <ng-container *ngFor="let item of program.data?.projects?.list; let i = index">
+          <ng-container *ngFor="let item of program.data?.projects?.list?.sort(yearSort); let i = index">
             <p class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
               <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
             </p>
@@ -187,7 +185,6 @@
 
     <!-- Authorizations -->
     <section id="program-authorizations">
-      <a name="#/fal/{{programID}}/view#authorizations" id="authorization-anchor" hidden="true">Authorizations</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -209,7 +206,6 @@
 
     <!--Financials-->
     <section id="program-financials">
-      <a name="#/fal/{{programID}}/view#financial-information" id="financials-anchor" hidden="true">Financial Information</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -241,7 +237,7 @@
 
       <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
         <ng-container *ngSwitchCase="true">
-          <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
+          <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list?.sort(yearSort); let i = index">
             <p class="field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != '' && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
               <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
             </p>
@@ -271,8 +267,6 @@
 
     <!--Should I apply?-->
     <section id="program-application-criteria">
-
-      <a name="#/fal/{{programID}}/view#criteria-for-applying" id="criteria-anchor" hidden="true">Criteria for Applying</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -368,9 +362,17 @@
       <h3 class="sam-ui dividing header">Length and Time Phasing of Assistance</h3>
       <p>
         <span class="field" id="program-assistance-lengthtime">{{program?.data?.eligibility?.limitation?.description}}</span>
-        <span class="field" id="program-assistance-method" *ngIf="program?.data?.eligibility?.limitation?.awarded">
-          Method of awarding/releasing assistance: {{program?.data?.eligibility?.limitation?.awarded}}
-        </span>
+        <ng-container *ngIf="program.data?.eligibility?.limitation as limitation">
+          <span class="field" id="program-assistance-method" *ngIf="limitation?.awarded as awarded">
+            Method of awarding/releasing assistance:
+            <span *ngIf="awarded !== 'other'; else otherAwarded">
+              {{awarded === 'lump' ? 'lump sum' : awarded}}
+            </span>
+            <ng-template #otherAwarded>
+              {{limitation.awardedDescription}}
+            </ng-template>
+          </span>
+        </ng-container>
       </p>
 
       <div class="sam-ui hidden divider"></div>
@@ -399,8 +401,6 @@
 
     <!--How do I apply?-->
     <section id="program-application-information">
-
-      <a name="#/fal/{{programID}}/view#applying-for-assistance" id="assistance-anchor" hidden="true">Applying for Assistance</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -614,7 +614,6 @@
 
     <!--Compliance requirements-->
     <section id="program-compliance-requirements">
-      <a name="#/fal/{{programID}}/view#compliance-requirements" id="compliance-anchor" hidden="true">Compliance Requirements</a>
 
       <div class="view-section-margin"></div>
       <div class="usa-grid-full">
@@ -798,7 +797,6 @@
 
     <!--Contact information-->
     <section id="program-contact-information">
-      <a name="#/fal/{{programID}}/view#contact-information" id="contact-anchor" hidden="true">Contact Information</a>
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
@@ -825,7 +823,6 @@
 
     <!--History Section-->
     <section class="program-history">
-      <a name="#/fal/{{programID}}/view#history" id="history-anchor" hidden="true">History</a>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
           <h2 class="sam-ui header header-history" id="history">History</h2>

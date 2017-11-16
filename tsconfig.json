@@ -10,9 +10,6 @@
     "noEmitHelpers": true,
     "strictNullChecks": false,
     "baseUrl": "./src",
-    "paths": {
-      "sam-ui-kit/*": ["sam-ui-elements/src/ui-kit/*"]
-    },
     "lib": [
       "dom",
       "es6"

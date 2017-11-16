@@ -11,7 +11,8 @@ interface ProgramChangeRequestModel {
     code?: string
   },
   latest?: boolean,
-  archived?: boolean
+  archived?: boolean,
+  _links?: {}
 }
 
 @Component({
@@ -96,17 +97,22 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
     }
   }
 
-  private displayHideDropdown(){
-    //business logic to show the dropdown for published FAL & user's permission (logged in user)
-    if (this.program != null && this.program.archived === false && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
-      //remove `unarchive_request` option from the list
-      this.options.request = _.filter(this.options.request, item => { return (item.value != "unarchive_request") });
-      this.displayDropdown = true;
-      //business logic to show the dropdown archived FAL & user's permission (logged in user)
-    } else if (this.program != null && this.program.archived === true && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null)  {
-      //remove the other options from the list and keep only `unarchive_request`
-      this.options.request = _.filter(this.options.request, { value: 'unarchive_request' });
-      this.displayDropdown = true;
+  private displayHideDropdown() {
+    //checking wether a this user has the right to create Request & in the backend checks wether this FAL has existing revision or any existing pending change request
+    if(this.program != null && this.program._links != null && this.program._links['program:request:create'] && this.program._links['program:request:create'].href) {
+      //business logic to show the dropdown for published FAL & user's permission (logged in user)
+      if (this.program != null && this.program.archived === false && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
+        //remove `unarchive_request` option from the list
+        this.options.request = _.filter(this.options.request, item => { return (item.value != "unarchive_request") });
+        this.displayDropdown = true;
+        //business logic to show the dropdown archived FAL & user's permission (logged in user)
+      } else if (this.program != null && this.program.archived === true && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null)  {
+        //remove the other options from the list and keep only `unarchive_request`
+        this.options.request = _.filter(this.options.request, { value: 'unarchive_request' });
+        this.displayDropdown = true;
+      } else {
+        this.displayDropdown = false;
+      }
     } else {
       this.displayDropdown = false;
     }

@@ -25,10 +25,10 @@ export class HelpContentManagementSideNavComponent{
 
   statusCbxConfig = {
     options: [
-      {value: 'Published', label: 'Published', name: 'Published'},
-      {value: 'Draft', label: 'Draft', name: 'Draft'},
-      {value: 'Archived', label: 'Archived', name: 'Archived'},
-      {value: 'New', label: 'New', name: 'New'},
+      {value: '1', label: 'New', name: 'New'},
+      {value: '2', label: 'Published', name: 'Published'},
+      {value: '3', label: 'Draft', name: 'Draft'},
+      {value: '4', label: 'Archived', name: 'Archived'},
     ],
     name: 'Status',
     label: 'Status',

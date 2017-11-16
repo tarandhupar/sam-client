@@ -150,32 +150,46 @@ export class SamHeaderLinksComponent {
     this.checkSession();
     this.loginService.loginEvent$.subscribe(() => {this.onLinkClick("login")});
     this.msgFeedService.getNotificationFeeds('3,4,5', this.filterObj, {sort:'reqDate', type:'asc'}, 1, this.requestLimit).subscribe(data => {
-      data['notificationFeeds'].forEach( feed => {
-        let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
-        switch(feed['feedtypeId']){
-          case 5:
-            this.notifications.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:feed['alertTypeName']+' Alert',text:feedMsg,type:'alert'});
-            break;
-          case 3:
-            this.notifications.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:'Subscription',text:feedMsg,type:'subscription'});
-            break;
-        }
-      });
-    });
+      try{
+        data['notificationFeeds'].forEach( feed => {
+          let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
+          switch(feed['feedtypeId']){
+            case 5:
+              this.notifications.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:feed['alertTypeName']+' Alert',text:feedMsg,type:'alert'});
+              break;
+            case 3:
+              this.notifications.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:'Subscription',text:feedMsg,type:'subscription'});
+              break;
+          }
+        });
+      }catch(err){
+        this.notifications = [];
+        console.log(err);
+      }
+
+    },
+    err => {console.log(err)}
+    );
   }
   checkSession() {
     this.api.iam.checkSession(user => {
       this.states.isSignedIn = true;
       this.user = user;
       this.msgFeedService.getRequestsFeed('1,2', this.filterObj, {sort:'reqDate', type:'asc'}, 1, this.requestLimit).subscribe(data => {
-        data['requestFeeds'].forEach( feed => {
-          let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
-          let requestStrIndex = feedMsg.indexOf('request');
-          if(requestStrIndex !== -1) feedMsg = feedMsg.substring(requestStrIndex);
-          feedMsg = feedMsg.charAt(0).toUpperCase() + feedMsg.slice(1);
-          this.requests.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:'',text:feedMsg,type:'request'});
-        });
-      });
+        try{
+          data['requestFeeds'].forEach( feed => {
+            let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
+            let requestStrIndex = feedMsg.indexOf('request');
+            if(requestStrIndex !== -1) feedMsg = feedMsg.substring(requestStrIndex);
+            feedMsg = feedMsg.charAt(0).toUpperCase() + feedMsg.slice(1);
+            this.requests.push({link:feed['link'],datetime:feed['requestorDate'],username:feed['requestorId'],title:'',text:feedMsg,type:'request'});
+          });
+        }catch(err){
+          this.requests = [];
+          console.log(err);
+        }
+
+      }, err => {console.log(err)});
 
     }, () => {
       this.states.isSignedIn = false;

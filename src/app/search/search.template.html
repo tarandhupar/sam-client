@@ -67,7 +67,7 @@
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "cfdaDateFilterModel"
             (ngModelChange) = "determineFilterDateDisable($event)"
-            (tabIndexChange) = "dateTabChangeHandler($event)"
+            (dateIndexChange) = "dateTypeChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
             (filterClearEvt)="filterClearHandler($event)"
             [id]= "'date-range-filter'">
@@ -83,7 +83,7 @@
               [tabIndex] = "dateFilterIndex"
               [(ngModel)]= "oppDateFilterModel"
               (ngModelChange) = "determineFilterDateDisable($event)"
-              (tabIndexChange) = "dateTabChangeHandler($event)"
+              (dateIndexChange) = "dateTypeChangeHandler($event)"
               (filterEvt)="filterHandler($event)"
               (filterClearEvt)="filterClearHandler($event)"
               [id]= "'date-range-filter'">
@@ -97,7 +97,7 @@
               [tabIndex] = "dateFilterIndex"
               [(ngModel)]= "wdDateFilterModel"
               (ngModelChange) = "determineFilterDateDisable($event)"
-              (tabIndexChange) = "dateTabChangeHandler($event)"
+              (dateIndexChange) = "dateTypeChangeHandler($event)"
               (filterEvt)="filterHandler($event)"
               (filterClearEvt)="filterClearHandler($event)"
               [id]= "'date-range-filter'">
@@ -111,7 +111,7 @@
             [tabIndex] = "dateFilterIndex"
             [(ngModel)]= "fpdsDateFilterModel"
             (ngModelChange) = "determineFilterDateDisable($event)"
-            (tabIndexChange) = "dateTabChangeHandler($event)"
+            (dateIndexChange) = "dateTypeChangeHandler($event)"
             (filterEvt)="filterHandler($event)"
             (filterClearEvt)="filterClearHandler($event)"
             [id]= "'date-range-filter'">
@@ -437,7 +437,16 @@
 
   <div class="usa-width-two-thirds">
     <div class="usa-width-one">
-      <sam-alert *ngIf="index==='wd' && !dismissWdAlert" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" (dismiss)="dismissWdAlert=true"><div [innerHTML]="wdSearchDescription"></div></sam-alert>
+      <sam-alert *ngIf="index==='wd' && !dismissWdAlert" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" (dismiss)="dismissWdAlert=true">The Wage Determination filters to the left ask a series of questions to determine if the best WD is available on the site.
+        If any criteria such as a specific location is not present or the non-standard service does not strictly apply, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here</a> to submit an e98 form.
+        Users should note that the only WDs applicable to a particular solicitation or contract are those that have been incorporated by the contracting officer in that contract action.
+        <br>
+        <a href="https://www.wdol.gov/rollover-crosswalk2015.pdf" target="Rollover Crosswalk">Rollover crosswalk <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>
+        <br>
+        <a [routerLink]="['/wage-determination/toberevised/dba']">DBA's to be revised</a>
+        <br>
+        <a [routerLink]="['/wage-determination/toberevised/sca']">SCA's to be revised</a>
+      </sam-alert>
 
       <div *ngIf="!showRegionalOffices && showSavedSearches" class="sam-ui small subtle menu">
         <div class="left">

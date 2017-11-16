@@ -3,6 +3,7 @@ import { Router, NavigationEnd, NavigationCancel } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { Location } from '@angular/common';
 import { SamFeedbackComponent } from "../app-components/feedback-form/feedback-form.component";
+import { globals as feedbackGlobal } from "../app-components/feedback-form/feedback-form.globals";
 import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 
@@ -19,14 +20,14 @@ export class HelpPage {
   private widthLimit: number = 1200;
 
   private feedback: SamFeedbackComponent;
-  
+
   crumbs: Array<IBreadcrumb> = [];
 
   constructor(
     private router: Router,
-    private location:Location, 
+    private location:Location,
     feedbackFormService: FeedbackFormService) {
-    this.feedback = feedbackFormService.componentInstance;
+    this.feedback = feedbackGlobal.feedbackFormInstance;
   }
 
   ngOnInit(){

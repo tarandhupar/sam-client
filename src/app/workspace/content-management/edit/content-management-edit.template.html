@@ -1,11 +1,11 @@
 <page [breadcrumbs]="crumbs">
   <form-only class="help-content-management-edit relative" [section]="title.toUpperCase()" [title]="contentObj.title" *ngIf="dataLoaded">
 
-    <span class="status-tag">{{contentObj.status.status}}</span>
+    <span class="status-tag">{{cmsMapping.getStatusName(contentObj.status.statusId).toUpperCase()}}</span>
 
     <div class="relative m_T-2x">
       <div class="draft-btn-group">
-        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="contentObj.status.status.toLowerCase() === 'draft'"></sam-button>
+        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="cmsMapping.getStatusName(contentObj.status.statusId).toUpperCase() === 'DRAFT'" (click)="onDeleteDraftClick()"></sam-button>
         <sam-button [buttonId]="'question-publish'" buttonText="Publish" (click)="onPublishClick()"></sam-button>
       </div>
 
@@ -85,7 +85,7 @@
             <span class="optional-text">Optional</span>
             <h4 class="m_T-0">Keywords</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dictum tellus fermentum mi imperdiet, vel viverra est aliquet. Praesent sit amet dolor in lectus vulputate tincidunt.</p>
-            <input type="text" placeholder="separate keywords with comma" [(ngModel)] = 'keywords'>
+            <sam-autocomplete-multiselect [(ngModel)]="keywords" name="keywords" label="" [options]="tagOptions" [keyValueConfig]="multiselectConfig" [allowAny]="true" (keyup.enter)="onEnterTagKey()" (input)="getExistingTagOptions($event.target.value)"></sam-autocomplete-multiselect>
 
           </div>
 
@@ -114,8 +114,8 @@
               <ng-template #sourceNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x">
-              <span style="font-weight: bold">Keywords:</span>
-              <span *ngIf="keywords !== ''; else keywordsNA">{{keywords}}</span>
+              <span class="bold">Keywords:</span>
+              <span *ngIf="keywords && keywords.length > 0; else keywordsNA">{{getKeywordsText()}}</span>
               <ng-template #keywordsNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x">
@@ -145,8 +145,8 @@
               <ng-template #videoDomainNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x">
-              <span style="font-weight: bold">Keywords:</span>
-              <span *ngIf="keywords !== ''; else videoKeywordsNA">{{keywords}}</span>
+              <span class="bold">Keywords:</span>
+              <span *ngIf="keywords && keywords.length > 0; else videoKeywordsNA">{{getKeywordsText()}}</span>
               <ng-template #videoKeywordsNA>Not Entered</ng-template>
             </div>
             <div class="m_T-2x m_B-1x">

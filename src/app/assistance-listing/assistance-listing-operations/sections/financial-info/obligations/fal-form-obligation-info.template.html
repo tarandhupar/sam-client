@@ -11,20 +11,29 @@
       [options]="currentFiscalYearCheckboxConfig.options"
        formControlName="isFundedCurrentFY">
     </sam-checkbox>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-label-wrapper label="Obligation" [attr.id]="'fal-obligation-obligationList'" [required]="true">
+    </sam-label-wrapper>
 
     <falObligationFYTable
-      [fyYearOptions] = "fyYearOptions"
       [hideAddButton]="hideAddButton"
+      [tableView] = "tableView"
       [attr.id]="'financial-obligation-fy-table'"
-      [obligationsInfo]="obligationsInfo"
-      [total] = "totalvalue"
       (obligationTableActionHandler)="obligationActionHandler($event)" #obligationTable>
     </falObligationFYTable>
-    
-    <obligation-subform [acCategories]="ac_categories"  [fyYearOptions] = "fyYearOptions" [hideAddButton]="hideAddButton" [attr.id]="'financial-obligation-subform'" (subFormObligActionHandler)="obligationActionHandler($event)"
-                         [options] = "options"
-                         [toggleAttleatOneEntryError]="toggleAttleatOneEntryError"
-                        #obligationSubForm>
+
+    <obligation-subform
+      [acCategories]="ac_categories"
+      [fyYearOptions] = "fyYearOptions"
+      [hideAddButton]="hideAddButton"
+      [attr.id]="'financial-obligation-subform'"
+      (subFormObligActionHandler)="obligationActionHandler($event)"
+      [options] = "options"
+      [tableView]="tableView"
+      [toggleAttleatOneEntryError]="toggleAttleatOneEntryError"
+     #obligationSubForm>
     </obligation-subform>
   </div>
 </form>

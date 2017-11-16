@@ -455,7 +455,7 @@ export class FALFormErrorService {
     if (this._viewModel.projects && this._viewModel.projects.list && this._viewModel.projects.isApplicable) {
       let projects = this._viewModel.projects;
 
-      let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+      let fy: number = moment().year();
       // Only take into account the previous, current, and budget fiscal years
       let applicableProjects = projects.list.filter((project) => {
         let year: number = project.fiscalYear;
@@ -675,7 +675,7 @@ export class FALFormErrorService {
     if (this._viewModel.accomplishments && this._viewModel.accomplishments.list && this._viewModel.accomplishments.isApplicable) {
       let accomplishments = this._viewModel.accomplishments;
 
-      let fy: number = moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year();
+      let fy: number = moment().year();
       // Only take into account the previous, current, and budget fiscal years
       let applicableAccomplishments = accomplishments.list.filter((accomplishment) => {
         let year: number = accomplishment.fiscalYear;
@@ -711,7 +711,7 @@ export class FALFormErrorService {
           id: FALFieldNames.PROGRAM_ACCOMPLISHMENTS,
           errors: {
             atLeastOneAccomplishment: {
-              message: 'At least one program accomplishment is required.'
+              message: 'At least one program accomplishment is required'
             }
           }
         });
@@ -762,7 +762,7 @@ export class FALFormErrorService {
         errors: {
           atLeastOneAccount: {
             listError:true,
-            message: 'At least one valid account identification code is required.'
+            message: 'At least one valid account identification code is required'
           }
         }
       });
@@ -841,7 +841,7 @@ export class FALFormErrorService {
         errors: {
           atLeastOneTAFS: {
             listError: true,
-            message: 'At least one valid TAFS code is required.'
+            message: 'At least one valid TAFS code is required'
           }
         }
       });
@@ -1418,6 +1418,13 @@ export class FALFormErrorService {
     if(!contact.zip) {
       contactError.errors['missingZip'] = {
         message: 'Contacts: Row ' + (i + 1) + ' Zip is required'
+      }
+    }
+
+    //country validation
+    if(!contact.country) {
+      contactError.errors['missingCountry'] = {
+        message: 'Contacts: Row ' + (i + 1) + ' Country is required'
       }
     }
 

@@ -9,7 +9,7 @@ export class FilterParamValue implements PipeTransform {
   fboStringMap;
   wdStringMap;
   fpdsStringMap;
-  
+
   constructor(private datePipe: DatePipe){
     this.cfdaStringMap = new Map()
     .set(0, "Published Date")
@@ -61,7 +61,7 @@ export class FilterParamValue implements PipeTransform {
         break;
       case "date": return "Date"
         break;
-      
+
 
       default: return this.determineReturnValue(value,paramLabel,data);
     }
@@ -73,20 +73,19 @@ export class FilterParamValue implements PipeTransform {
     //**DATE**
     // determine if date or dateRange exists
     if(value.search("\"date\":") >= 0 || value.search("\"dateRange\":") >= 0){
-      // use json.parse to convert string back into an array of objects
-      let tempArr = JSON.parse(value);
-      let tempIndex = data['parameters']['date_filter_index'] ? data['parameters']['date_filter_index'] : 0;
+      // use json.parse to convert string back into object
+      let tempObj = JSON.parse(value);
       let tempRadSelection = data['parameters']['date_rad_selection'] ? data['parameters']['date_rad_selection'] : 'date';
-      
+
       // use date filter index to pull out the only date we want and convert date to readable format
       // if dateRange
-      if(tempRadSelection === 'dateRange'){
+      if(tempRadSelection === 'dateRange' && tempObj[tempRadSelection]){
         // dateRange with time
-        if(tempArr[tempIndex][tempRadSelection].hasOwnProperty('startTime')){
-          let startDate = tempArr[tempIndex][tempRadSelection]['startDate'];
-          let endDate = tempArr[tempIndex][tempRadSelection]['endDate'];
-          let startTime = tempArr[tempIndex][tempRadSelection]['startTime'];
-          let endTime = tempArr[tempIndex][tempRadSelection]['endTime'];
+        if(tempObj[tempRadSelection].hasOwnProperty('startTime')){
+          let startDate = tempObj[tempRadSelection]['startDate'];
+          let endDate = tempObj[tempRadSelection]['endDate'];
+          let startTime = tempObj[tempRadSelection]['startTime'];
+          let endTime = tempObj[tempRadSelection]['endTime'];
           let returnDate = "From: " + startDate + " To: " + endDate;
           // append date together into a format that date pipe can accept
           let fromTempMoment = moment(startDate + "T" + startTime + ":00");
@@ -97,8 +96,8 @@ export class FilterParamValue implements PipeTransform {
         }
         // dateRange without time
         else{
-          let startDate = tempArr[tempIndex][tempRadSelection]['startDate'];
-          let endDate = tempArr[tempIndex][tempRadSelection]['endDate'];
+          let startDate = tempObj[tempRadSelection]['startDate'];
+          let endDate = tempObj[tempRadSelection]['endDate'];
           let fromTempMoment = moment(startDate);
           let toTempMoment = moment(endDate);
           let returnFrom = this.datePipe.transform(fromTempMoment, 'MMM dd, y');
@@ -109,7 +108,7 @@ export class FilterParamValue implements PipeTransform {
       }
       // if date
       else{
-        let returnDate = tempArr[tempIndex][tempRadSelection];
+        let returnDate = tempObj[tempRadSelection];
         let tempMoment = moment(returnDate);
         let returnMoment = this.datePipe.transform(tempMoment, 'MMM dd, y');
         return returnMoment;

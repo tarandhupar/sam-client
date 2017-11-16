@@ -388,11 +388,13 @@ export class GrantOrEditAccess {
 
     let apiMethod = this.isGrant() ? "postAccess" : "putAccess";
     let qp = this.requestId ? { userAccessRequestId: this.requestId } : undefined;
+    this.submitEnabled = false;
     this.userAccessService[apiMethod](body, qp).subscribe(
       res => {
         this.goToAccess();
       },
       err => {
+        this.submitEnabled = true;
         if (err && err.status === 409) {
           console.error(err);
           let e: string = 'The user already has access for this domain at one or more of the selected organization(s)';
@@ -405,7 +407,6 @@ export class GrantOrEditAccess {
             timer: 3200
           });
         }
-
       }
     )
   }

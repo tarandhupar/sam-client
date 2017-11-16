@@ -91,8 +91,8 @@
       ></sam-text-area>
 
       <sam-button [buttonId]="'fiscal-year-add-btn'" *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'secondary'"></sam-button>
-      <sam-button [buttonId]="'fiscal-year-cancel-btn'" *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'tertiary'"></sam-button>
-      <sam-button [buttonId]="'fiscal-year-confirm-btn'" *ngIf="isEditing" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="'secondary'"></sam-button>
+      <sam-button [buttonId]="'fiscal-year-cancel-btn'" *ngIf="isEditing" [buttonText]="cancelBtnText" (onClick)="resetForm()" [buttonType]="'tertiary'"></sam-button>
+      <sam-button [buttonId]="'fiscal-year-confirm-btn'" *ngIf="isEditing" [buttonText]="confirmBtnText" (onClick)="addEntry()" [buttonType]="'secondary'"></sam-button>
     </div>
   </div>
 

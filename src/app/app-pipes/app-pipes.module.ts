@@ -8,8 +8,10 @@ import { KeysPipe } from './keyspipe.pipe';
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 import { SortArrayOfObjects } from "./sort-array-object.pipe";
 import { FHTitleCasePipe } from "./fhTitleCase.pipe";
-import { ShortDatePipe } from "./short-date.pipe";
 import { FeedsDateTimePipe } from "./feeds-date-time-display.pipe";
+import {SamCurrencyPipe} from "./currency.pipe";
+
+
 
 @NgModule({
   imports: [],
@@ -23,7 +25,7 @@ import { FeedsDateTimePipe } from "./feeds-date-time-display.pipe";
     OrganizationTypeCodePipe,
     SortArrayOfObjects,
     FHTitleCasePipe,
-    ShortDatePipe,
+    SamCurrencyPipe,
   ],
   declarations: [
     CapitalizePipe,
@@ -35,7 +37,7 @@ import { FeedsDateTimePipe } from "./feeds-date-time-display.pipe";
     OrganizationTypeCodePipe,
     SortArrayOfObjects,
     FHTitleCasePipe,
-    ShortDatePipe,
+    SamCurrencyPipe,
   ],
   providers: [],
 })

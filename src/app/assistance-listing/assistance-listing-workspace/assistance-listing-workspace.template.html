@@ -115,8 +115,10 @@
         #selectDateFilter
         [tabConfig] = "dateRangeConfig"
         [tabIndex] = "dateFilterIndex"
+        [(filterDisabled)] = "filterDisabled"        
         [(ngModel)]= "dateFilterModel"
         (ngModelChange) = "dateModelChange($event)"
+        (dateIndexChange) = "dateTypeChangeHandler($event)"
         (filterEvt)="filterByDate($event)"
         (filterClearEvt)="clearDateFilter($event)"
         [id]= "'fal-date-range-filter'">

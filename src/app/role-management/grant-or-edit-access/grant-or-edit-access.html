@@ -74,6 +74,7 @@
     <div class="pull-right clearfix m_T-4x m_B-4x">
       <button (click)="location.back()" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
       <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">{{requestId ? 'Assign' : 'Done'}}</button>
+      <sam-spinner *ngIf="!submitEnabled"></sam-spinner>
     </div>
   </form>
 

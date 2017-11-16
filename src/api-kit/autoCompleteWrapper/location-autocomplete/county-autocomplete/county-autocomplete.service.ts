@@ -69,7 +69,7 @@ export class CountyServiceImpl implements AutocompleteService {
           country = searchOptions && searchOptions.state.country.countrycode ?
           searchOptions.state.country.countrycode : this.country;
 
-          return this.getAllCountiesJSON('','statecode',stateCode,city.city,this.country.countrycode).map(o => o);
+          return this.getAllCountiesJSON('','statecode',stateCode,city.city,this.country.key).map(o => o);
         
      }
 
@@ -79,7 +79,7 @@ export class CountyServiceImpl implements AutocompleteService {
         country = searchOptions && searchOptions.country ?
                     searchOptions.country :
                     this.country;
-        return this.getAllCountiesJSON(val,'statecode',stateCode,'', this.country.countrycode).map(o => o);
+        return this.getAllCountiesJSON(val,'statecode',stateCode,'', this.country.key).map(o => o);
     }
 
      else if(this.country){

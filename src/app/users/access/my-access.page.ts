@@ -30,14 +30,16 @@ export class MyAccessPage implements OnInit {
   sortOptions = [
     { value: 'org', label: 'Organization' },
   ];
-  private access: Array = [];
+  private access: Array<any> = [];
   private domainOptions: Array<OptionsType> = [];
   private selectedDomainIds: any = [];
   private roleOptions: Array<OptionsType> = [];
   private selectedRoleIds: any = [];
   // pagination
   private totalPages: number = 0;
+  private totalElements: number = 0;
   private currentPage: number = 1;
+  private showing: number = 0;
 
   private userName = '';
   private fullName = '';
@@ -169,6 +171,14 @@ export class MyAccessPage implements OnInit {
   }
 
   getPaginationVariables(res) {
+    if (res.limit) {
+      this.showing = res.limit;
+    } else {
+      this.showing = 0;
+    }
+
+    this.totalElements = res.total;
+
     if (res.total === 0) {
       this.totalPages = 0;
     } else {
@@ -177,6 +187,8 @@ export class MyAccessPage implements OnInit {
 
     if (Number.isInteger(res.offset)) {
       this.currentPage = Math.floor(res.offset / res.limit) + 1;
+    } else {
+      this.currentPage = 0;
     }
   }
 
@@ -227,10 +239,12 @@ export class MyAccessPage implements OnInit {
   }
 
   onDomainChange() {
+    this.currentPage = 1;
     this.onSearchParamChange();
   }
 
   onRoleChange() {
+    this.currentPage = 1;
     this.onSearchParamChange();
   }
 

@@ -1,20 +1,21 @@
-import { Component,ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components/modal";
 import { HistoryNodeType,IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { Location } from "@angular/common";
-import { ShortDatePipe } from "../../app-pipes/short-date.pipe";
+import { Observable } from "rxjs/Observable";
+import { ShortDatePipe } from "sam-ui-elements/src/ui-kit/pipes/short-date/short-date.pipe";
+import { Comment } from "sam-ui-elements/src/ui-kit/components/comments/interfaces";
 
 @Component({
   templateUrl: 'view-request.template.html',
   providers: [ShortDatePipe]
 })
-export class ViewRequestPage {
+export class ViewRequestPage implements OnInit {
   request: any;
   rawRequest: any;
-  comment: string = '';
   errors = { comment: '' };
   @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
@@ -23,8 +24,21 @@ export class ViewRequestPage {
     { url: '/workspace/myfeed/requests', breadcrumb: 'Requests', queryParams: {statIds: 1, reqIds: 1}},
     { breadcrumb: 'Role Request' },
   ];
-
   historyNodes: Array<HistoryNodeType> = [];
+  comments: Array<Comment> = [];
+
+  post: (text: string) => Observable<Comment> = (comment) => {
+    return this.userAccessService.postRequestComment(this.request.id, comment).map(
+      res => {
+        return <Comment>{
+          username: res.createdBy,
+          datetime: res.createdDate,
+          text: res.content,
+          extra: res.systemGeneratedComment,
+        };
+      }
+    )
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +48,10 @@ export class ViewRequestPage {
     private shortDate: ShortDatePipe,
     private location: Location,
   ) {
+
+  }
+
+  ngOnInit() {
     let req = this.route.snapshot.data['request'];
     this.rawRequest = req;
     this.parseRequest(req);
@@ -66,24 +84,21 @@ export class ViewRequestPage {
       status: statusString,
       links: req._links,
       id: req.id,
-      comments: []
     };
-    if (req.requestorMessage && req.requestorMessage.length) {
-      this.request.comments.push({
-        userName: req.requestorName,
-        text: req.requestorMessage,
-        date: req.createdDate,
+
+    if (req.comments && req.comments.length) {
+      this.comments = req.comments.map(com => {
+        return {
+          username: com.createdBy,
+          datetime: com.createdDate,
+          text: com.content,
+          extra: com.systemGeneratedComment,
+        };
       });
-    }
-    if (req.adminMessage && req.adminMessage.length) {
-      this.request.comments.push({
-        userName: req.updatedBy,
-        text: req.adminMessage,
-        date: req.updatedDate,
-      });
+    } else {
+      this.comments = [];
     }
 
-    let uName = req.requestorName;
 
     if (req.createdDate) {
       const nodeCreated: HistoryNodeType = {
@@ -141,12 +156,6 @@ export class ViewRequestPage {
   }
 
   onRejectClick() {
-    this.errors.comment = '';
-    if (!this.comment) {
-      this.errors.comment = 'A comment is required';
-      return;
-    }
-
     this.setRequestStatus('rejected');
   }
 
@@ -154,10 +163,14 @@ export class ViewRequestPage {
     return req.status === 'Canceled';
   }
 
+  areNewCommentsEnabled() {
+    const status = this.request.status;
+    return !(status === 'Canceled' || status === 'Rejected' || status === 'Approved');
+  }
+
   setRequestStatus(status) {
     let newStatus = {
       status: status,
-      adminMessage: this.comment,
     };
 
     this.userAccessService.updateRequest(this.rawRequest.id, newStatus).subscribe(

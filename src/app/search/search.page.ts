@@ -13,7 +13,6 @@ import * as Cookies from 'js-cookie';
 import * as _ from 'lodash';
 import {SavedSearchService} from "../../api-kit/search/saved-search.service";
 
-
 // Animation
 import { trigger, state, style, animate, transition } from '@angular/core';
 
@@ -119,7 +118,7 @@ export class SearchPage implements OnInit {
       dateFilterConfig: {
         options: this.defaultDateOptions,
         radSelection: 'date',
-        rangeType: 'date-time'
+        rangeType: 'date'
       },
     }
     ];
@@ -314,15 +313,6 @@ export class SearchPage implements OnInit {
   };
 
   // scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
-  wdSearchDescription: string = 'The Wage Determination filters to the left ask a series of questions to determine if the best WD is available on the site. '+
-                                'If any criteria such as a specific location is not present or the non-standard service does not strictly apply, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here</a> to submit an e98 form. '+
-                                'Users should note that the only WDs applicable to a particular solicitation or contract are those that have been incorporated by the contracting officer in that contract action.' +
-                                '<br>'+
-                                '<a href="https://www.wdol.gov/rollover-crosswalk2015.pdf" target="Rollover Crosswalk">Rollover crosswalk <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>'+
-                                '<br>'+
-                                '<a href="https://www.wdol.gov/newdba.aspx" target="Revise WD DBA">WD\'s to be revised DBA <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>'+
-                                '<br>'+
-                                '<a href="https://www.wdol.gov/newsca.aspx" target="Revise WD SCA">WD\'s to be revised SCA <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>';
   dismissWdAlert: boolean = false;
 
   //Select Award Types
@@ -678,16 +668,16 @@ export class SearchPage implements OnInit {
         this.sortModel = typeof data['sort'] === "string" ? this.setSortModel(decodeURI(data['sort'])) : this.defaultSortModel;
         this.noticeTypeModel = data['notice_type'] && data['notice_type'] !== null ? data['notice_type'] : '';
         this.setAsideModel = data['set_aside'] && data['set_aside'] !== null ? data['set_aside'] : '';
-        this.oppDateFilterModel = data['opp_date_filter_model'] && data['opp_date_filter_model'] !== null ? JSON.parse(data['opp_date_filter_model']) : [];
-        this.cfdaDateFilterModel = data['cfda_date_filter_model'] && data['cfda_date_filter_model'] !== null ? JSON.parse(data['cfda_date_filter_model']) : [];
-        this.wdDateFilterModel = data['wd_date_filter_model'] && data['wd_date_filter_model'] !== null ? JSON.parse(data['wd_date_filter_model']) : [];
-        this.fpdsDateFilterModel = data['fpds_date_filter_model'] && data['fpds_date_filter_model'] !== null ? JSON.parse(data['fpds_date_filter_model']) : [];
+        this.oppDateFilterModel = data['opp_date_filter_model'] && data['opp_date_filter_model'] !== null ? JSON.parse(data['opp_date_filter_model']) : {};
+        this.cfdaDateFilterModel = data['cfda_date_filter_model'] && data['cfda_date_filter_model'] !== null ? JSON.parse(data['cfda_date_filter_model']) : {};
+        this.wdDateFilterModel = data['wd_date_filter_model'] && data['wd_date_filter_model'] !== null ? JSON.parse(data['wd_date_filter_model']) : {};
+        this.fpdsDateFilterModel = data['fpds_date_filter_model'] && data['fpds_date_filter_model'] !== null ? JSON.parse(data['fpds_date_filter_model']) : {};
         this.dateFilterIndex = data.hasOwnProperty('date_filter_index') && data['date_filter_index'] !== null ? parseInt(data['date_filter_index']) : 0;
         this.dateRadSelection = data['date_rad_selection'] && data['date_rad_selection'] !== null ? data['date_rad_selection'] : "date";
         // recheck if date filter button should be disabled on refresh
         this.determineFilterDateDisable(this.determineTempModel());
         // reset date rad selection on appropriate config object (uses dateRadSelection above)
-        this.resetRadSelection()
+        this.resetRadSelection();
         this.builtDateModel = data['']
         //To display saved search title
         this.preferenceId = data['preference_id'] && data['preference_id'] !== null ? decodeURI(data['preference_id']) : '';
@@ -1601,10 +1591,10 @@ export class SearchPage implements OnInit {
     // clear notice type filter
     this.noticeTypeModel = '';
 
-    this.oppDateFilterModel = [];
-    this.cfdaDateFilterModel = [];
-    this.wdDateFilterModel = [];
-    this.fpdsDateFilterModel = [];
+    this.oppDateFilterModel = {};
+    this.cfdaDateFilterModel = {};
+    this.wdDateFilterModel = {};
+    this.fpdsDateFilterModel = {};
     this.dateFilterIndex = 0;
 
     this.disableAllDateFilter();
@@ -2056,28 +2046,14 @@ export class SearchPage implements OnInit {
           }
           // if radio selection is dateRange then type should be from or to
           else if(this.dateRadSelection === 'dateRange' && (type === 'from' || type === 'to')){
-            // if it is response date then we have to append time as well
-            if(this.index === 'opp' && this.dateFilterIndex === 2){
-              // if type is 'from' build from date
-              if(type === 'from'){
-                return tempModel['dateRange']['startDate'] + "T" + tempModel['dateRange']['startTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['startDate']);
-              }
-              // if type is 'to' build to date
-              else if(type === 'to'){
-                return tempModel['dateRange']['endDate'] + "T" + tempModel['dateRange']['endTime'] + ":00" + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['endDate']);
-              }
+            // if type is 'from' build from date
+            if(type === 'from'){
+              return tempModel['dateRange']['startDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['startDate']);
             }
-            // all other dates don't require time
-            else{
-              // if type is 'from' build from date
-              if(type === 'from'){
-                return tempModel['dateRange']['startDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['startDate']);
-              }
 
-              // if type is 'to' build to date
-              else if(type === 'to'){
-                return tempModel['dateRange']['endDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['endDate']);
-              }
+            // if type is 'to' build to date
+            else if(type === 'to'){
+              return tempModel['dateRange']['endDate'] + this.fetchFormattedTimeZoneOffset(tempModel['dateRange']['endDate']);
             }
           }
           return "";
@@ -2255,9 +2231,35 @@ export class SearchPage implements OnInit {
     this.disableWdFilter = true;
     this.changeDetectorRef.detectChanges();
   }
+
+  // this function just resets the rad selection in each date config to the default 'date'
+  resetAllRadSelection(){
+    this.cfdaDateRangeConfig.forEach(function(element){
+      element['dateFilterConfig']['radSelection'] = 'date';
+    });
+    this.oppDateRangeConfig.forEach(function(element){
+      element['dateFilterConfig']['radSelection'] = 'date';
+    });
+    this.wdDateRangeConfig.forEach(function(element){
+      element['dateFilterConfig']['radSelection'] = 'date';
+    });
+    this.fpdsDateRangeConfig.forEach(function(element){
+      element['dateFilterConfig']['radSelection'] = 'date';
+    });
+  }
+
   // handler when date filter tab is changed
-  dateTabChangeHandler(evt){
+  dateTypeChangeHandler(evt){
     this.dateFilterIndex = evt;
     this.determineFilterDateDisable(this.determineTempModel());
+    
+    // reset models on dateType change
+    this.wdDateFilterModel = {};
+    this.cfdaDateFilterModel = {};
+    this.fpdsDateFilterModel = {};
+    this.oppDateFilterModel = {};
+    
+    // reset all radio button selections to date on tab change
+    this.resetAllRadSelection();
   }
 }
