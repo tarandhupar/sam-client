@@ -24,6 +24,7 @@ interface CFDANumberConfigChangeModel {
 })
 
 export class CFDANumberManagementComponent implements OnInit{
+  buttonDisabled: boolean = false;
   cfdaNumberConfigForm: FormGroup;
   organization: any;
   pageReady: boolean = false;
@@ -130,6 +131,7 @@ export class CFDANumberManagementComponent implements OnInit{
 
   public submitCFDANumberConfigChange() {
     if (this.cfdaNumberConfigForm.valid) {
+      this.buttonDisabled = true;
       //disable button's event
       this.buttonType = 'disabled';
       if(parseInt(this.cfdaNumberConfigForm.get('highNumber').value) > parseInt(this.cfdaNumberConfigForm.get('lowNumber').value)) {
@@ -141,6 +143,7 @@ export class CFDANumberManagementComponent implements OnInit{
             this.router.navigate(['/fal/workspace/cfda-numbers']);
           },
           (error: Response) => {
+            this.buttonDisabled = false;
             console.error('error changing configuration', error);
             this.notifyFooterAlertModel.title = "Error";
             this.notifyFooterAlertModel.type = "error";

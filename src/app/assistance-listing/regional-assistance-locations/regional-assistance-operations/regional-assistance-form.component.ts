@@ -25,6 +25,7 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   raoFormGroup: FormGroup;
   cookieValue: string;
   hasPermissions: boolean;
+  buttonDisabled: boolean = false;
 
   // submission alert obj
   submitFooterAlertModel = {
@@ -69,7 +70,7 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
-    { breadcrumb: 'Regional Assistance Locations', url: '/fal/myRegionalOffices'}
+    { breadcrumb: 'Regional Assistance Locations', url: '/fal/myRegionalAssistanceLocations'}
   ];
 
   constructor(
@@ -233,20 +234,22 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   }
 
   cancel() {
-    let url = 'fal/myRegionalOffices';
+    let url = 'fal/myRegionalAssistanceLocations';
     this.router.navigateByUrl(url);
   }
 
   onSubmit() {
     if (this.raoFormGroup.valid) {
+      this.buttonDisabled = true;
       this.service.submitRAO(this.RaoFormViewModel.officeId, this.RaoFormViewModel.rao)
         .subscribe(api => {
           this.RaoFormViewModel.officeId = api._body;
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.submitFooterAlertModel)));
-          let url = 'fal/myRegionalOffices';
+          let url = 'fal/myRegionalAssistanceLocations';
           this.router.navigate([url]);
         },
         error => {
+          this.buttonDisabled = false;
           console.error('error saving assistance listing to api', error);
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.submitFooterErrorModel)));
         });
@@ -263,15 +266,17 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   }
 
   deleteRAO(event) {
+    this.buttonDisabled = true;
     // call the service and pass the id from data
     this.service.deleteRAO(this.route.snapshot.params['id']).subscribe(
       data => {
         this.modal2.closeModal();
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteFooterAlertModel)));
-        let url = 'fal/myRegionalOffices';
+        let url = 'fal/myRegionalAssistanceLocations';
         this.router.navigate([url]);
       },
       error => {
+        this.buttonDisabled = false;
         console.error('error occurred while deleting');
       }
     )

@@ -14,6 +14,7 @@ import {FALAuthGuard} from "../../../components/authguard/authguard.service";
 
 export class FALPublishComponent implements OnInit {
   falPublishForm: FormGroup;
+  processing: boolean = false;
   falFormViewModel: FALFormViewModel;
   title: string;
   alerts = [];
@@ -84,11 +85,15 @@ export class FALPublishComponent implements OnInit {
   publishSave(id: string) {
     let data = {"reason": this.falPublishForm.controls['ombComment'].value};
     let workflowRequestType = '/approve';
+    this.btnDisabled = true;
+    this.processing = true;
     this.service.falWFRequestTypeProgram(id, data, workflowRequestType).subscribe(api => {
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
         this.router.navigate(['/fal/workspace']);
       },
       error => {
+        this.btnDisabled = false;
+        this.processing = false;
         console.error('error  Submitting to OMB to api', error);
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.errorFooterAlertModel)));
       });

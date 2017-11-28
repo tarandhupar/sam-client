@@ -12,7 +12,7 @@
 
       <!-- Page title -->
       <h1 class="sam-ui header">
-        {{ organization.agencyName || organization.name || organization.orgKey}}
+        {{ organization.name || organization.agencyName || organization.orgKey}}
         {{ (organization.shortName == '' || organization.shortName == null) ?
         '': '('+organization.shortName+')'}}
       </h1>

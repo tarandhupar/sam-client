@@ -39,22 +39,22 @@ describe('Opp Classification Form', () => {
     expect(comp).toBeDefined();
     expect(comp.oppClassificationForm).toBeDefined();
   });
-  it('should load existing data on edit page', fakeAsync(() => {
-    comp.viewModel = new OpportunityFormViewModel({id: '12345'});
-    let updateFormSpy = spyOn(comp, 'updateForm');
-    let subscribeToChangesSpy = spyOn(comp, 'subscribeToChanges');
-    spyOn(comp, 'loadTypeOptions').and.stub();
-    fixture.detectChanges();
-    expect(updateFormSpy).toHaveBeenCalled();
-    expect(subscribeToChangesSpy).toHaveBeenCalled();
-  }));
-  it('should not load existing data on add page', fakeAsync(() => {
-    let updateFormSpy = spyOn(comp, 'updateForm');
-    spyOn(comp, 'loadTypeOptions').and.stub();
-    fixture.detectChanges();
+  // it('should load existing data on edit page', fakeAsync(() => {
+  //   comp.viewModel = new OpportunityFormViewModel({id: '12345'});
+  //   let updateFormSpy = spyOn(comp, 'updateForm');
+  //   let subscribeToChangesSpy = spyOn(comp, 'subscribeToChanges');
+  //   spyOn(comp, 'loadTypeOptions').and.stub();
+  //   fixture.detectChanges();
+  //   expect(updateFormSpy).toHaveBeenCalled();
+  //   expect(subscribeToChangesSpy).toHaveBeenCalled();
+  // }));
+  // it('should not load existing data on add page', fakeAsync(() => {
+  //   let updateFormSpy = spyOn(comp, 'updateForm');
+  //   spyOn(comp, 'loadTypeOptions').and.stub();
+  //   fixture.detectChanges();
 
-    expect(updateFormSpy).not.toHaveBeenCalled();
-  }));
+  //   expect(updateFormSpy).not.toHaveBeenCalled();
+  // }));
 
   it('should load type options', fakeAsync(() => {
     let dict = {

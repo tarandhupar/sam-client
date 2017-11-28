@@ -29,9 +29,9 @@ export const routes: Routes = [
   {path: 'fal/change-request/:id/action', component: FALFormChangeRequestActionComponent},
   {path: 'workspace/my-feed', component: FeedsPage, canActivate: [FALAuthGuard]},
   {path: 'fal/workspace/cfda-numbers', component: CfdaNumbersPage, canActivate: [FALAuthGuard]},
-  {path: 'fal/myRegionalOffices/add', component: FALRegionalAssistanceFormComponent, canActivate: [FALAuthGuard]},
-  {path: 'fal/myRegionalOffices/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [FALAuthGuard]},
-  {path: 'fal/myRegionalOffices', component: FalRegionalAssistanceLocationsPage, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalAssistanceLocations/add', component: FALRegionalAssistanceFormComponent, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalAssistanceLocations/:id/edit', component: FALRegionalAssistanceFormComponent, resolve: {rao: RAOFormResolver}, canActivate: [FALAuthGuard]},
+  {path: 'fal/myRegionalAssistanceLocations', component: FalRegionalAssistanceLocationsPage, canActivate: [FALAuthGuard]},
   {path: 'fal/cfda-management/:id/edit', component: CFDANumberManagementComponent, canActivate: [FALAuthGuard]},
 ];
 

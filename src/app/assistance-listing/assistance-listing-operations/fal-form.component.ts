@@ -641,7 +641,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       if(this.isAdd) {
         this.scrollToTop = false;
       }
-      this.router.navigate([url], {fragment: navObj.route.substring(1)});
+
+      if(this.currentFragment === navObj.route.substring(1)) {
+        window.location.reload();
+      }
+      else {
+        this.router.navigate([url], {fragment: navObj.route.substring(1)});
+      }
     }
     if (actionType === 'SaveBack') {
       this.gotoPreviousSection();
@@ -755,7 +761,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setAlerts() {
-    let cookie = FALFormService.getAuthenticationCookie()
+    let cookie = FALFormService.getAuthenticationCookie();
     let rejectedAlert = {
       'labelname': 'rejected-fal-alert',
       'config': {

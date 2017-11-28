@@ -66,7 +66,10 @@ export class falCustomValidatorsComponent {
       }
 
       let programNum = cfdaCode + '.' + control.value;
-      return programService.isProgramNumberUnique(programNum, id, cookie, OrgId).map(res => {
+      return programService.isProgramNumberUnique(programNum, id, cookie, OrgId)
+        .debounceTime(80)
+        .distinctUntilChanged()
+        .map(res => {
         if (!res['content']['isProgramNumberUnique']) {
           return { 'programNumberUnique': { 'message': 'CFDA Number already exists. Please enter a valid Number.' } };
         } else {

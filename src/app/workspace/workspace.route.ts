@@ -4,12 +4,14 @@ import { ApplicationRequestsComponent } from './requests/application-requests/ap
 import { FSDComponent, FSDGuard } from './fsd';
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
+import { HelpContentManagementDetailComponent } from "./content-management/detail/content-management-detail.component";
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
 import { SystemComponent, SystemGuard, SecurityGuard } from './system';
 import { WorkspacePage } from "./workspace.page";
 
 import { AdminLevelResolve } from "../application-content/403/admin-level.resolve";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
+import { FeatureToggleGuard } from "../application-content/403/feature-toggle.guard";
 
 import FSDRouter from './fsd/fsd.route';
 import SystemRouter from './system/system.route';
@@ -47,11 +49,21 @@ export const routes: Routes = [
   },
   {
     path: 'workspace/content-management/:section',
+    canActivate:[FeatureToggleGuard],
+    data: { featureToggleKey:'cms' },
     component: HelpContentManagementViewComponent
   },
   {
     path: 'workspace/content-management/:section/edit',
+    canActivate:[FeatureToggleGuard],
+    data: { featureToggleKey:'cms' },
     component: HelpContentManagementEditComponent
+  },
+  {
+    path: 'workspace/content-management/:section/detail',
+    canActivate:[FeatureToggleGuard],
+    data: { featureToggleKey:'cms' },
+    component: HelpContentManagementDetailComponent
   },
 ];
 

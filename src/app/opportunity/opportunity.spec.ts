@@ -368,7 +368,7 @@ xdescribe('src/app/opportunity/opportunity.spec.ts', () => {
         HttpModule,
         AppComponentsModule,
         RouterTestingModule.withRoutes([
-          { path: 'opportunities', component: OpportunityPage }
+          { path: 'opp', component: OpportunityPage }
         ]),
         SamUIKitModule,
         AppComponentsModule,

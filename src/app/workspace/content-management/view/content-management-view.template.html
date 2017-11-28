@@ -10,7 +10,7 @@
       <div class="pull-left p_T-3x">
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
-      <a class="sam-ui primary small button pull-right m_L-2x question-button" (click)="onCreateContentItem()">{{createTextMap[curSection]}}</a>
+      <a class="sam-ui primary small button pull-right m_L-2x question-button" (click)="onCreateContentItem()" *ngIf="toggleBtn">{{createTextMap[curSection]}}</a>
       <sam-sort class="pull-right" [(ngModel)]="sortByModel[curSection]" [options]="sortOptionsMap[curSection]" (ngModelChange)="onSortModelChange($event)"></sam-sort>
     </div>
 
@@ -18,34 +18,33 @@
     <div class="usa-width-one-whole" *ngIf="contents && contents.length > 0; else noContents">
       <div class="usa-width-one-whole content-item" *ngFor="let item of contents; let i = index;">
         <div class="usa-width-one-whole content-item-header">
-          <div class="usa-width-one-third content-header-type-div">{{cmsMapping.getStatusName(item.status.statusId).toUpperCase()}}</div>
-          <div class="usa-width-two-thirds">
+          <div class="usa-width-one-third content-header-type-div">{{cmsMapping.getStatusName(item.status).toUpperCase()}}</div>
+          <div class="usa-width-two-thirds" *ngIf="toggleBtn">
             <sam-actions-dropdown class="pull-right" [actions]="getAction(item)" (emitAction)="onContentItemAction($event, item)"></sam-actions-dropdown>
           </div>
         </div>
         <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'FAQ-repository' || curSection === 'data-dictionary'">
-          <h4 class="content-title-text"><a>{{item.title}}</a></h4>
-          <p class="content-description-text"> {{item.description}}</p>
+          <h4 class="content-title-text"><a [routerLink]="['/workspace/content-management',curSection,'detail']" [queryParams]="{id: item.contentId}">{{item.title}}</a></h4>
+          <p class="content-description-text"> {{item?.description}}</p>
           <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.refId}}</span>
           <span class="usa-width-one-whole">
             <strong>Domain: </strong>
-            <span *ngIf="item.domains && item.domains.length > 0; else domainNA">{{getDomainStr(item.domains)}}</span>
-            <ng-template #domainNA>Not Available</ng-template>
+            <span>{{getDomainStr(item.domain)}}</span>
           </span>
           <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.lastModifiedDate | feedsDateTimeDsiplay}}</span>
         </div>
         <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'video-library'">
           <div class="usa-width-two-thirds">
-            <h4 class="content-title-text"><a>{{item.title}}</a></h4>
-            <p class="content-description-text"> {{item.description}}</p>
+            <h4 class="content-title-text"><a [routerLink]="['/workspace/content-management',curSection,'detail']" [queryParams]="{id: item.contentId}">{{item.title}}</a></h4>
+            <p class="content-description-text"> {{item?.description}}</p>
             <span class="usa-width-one-whole"><strong>Reference ID: </strong>{{item.refId}}</span>
-            <span class="usa-width-one-whole"><strong>Keywords: </strong>{{getTagStr(item.tags)}}</span>
-            <span class="usa-width-one-whole"><strong>Domains: </strong>{{getDomainStr(item.domains)}}</span>
+            <span class="usa-width-one-whole"><strong>Keywords: </strong>{{getTagStr(item?.tags)}}</span>
+            <span class="usa-width-one-whole"><strong>Domains: </strong>{{getDomainStr(item?.domain)}}</span>
           </div>
           <div class="usa-width-one-third relative ">
-            <img class="video-image" src="src/assets/img/blank_icon.png">
-            <a class="video-play-icon"><i class="fa fa-play-circle"></i></a>
-            <span class="video-time">{{item.lastModifiedDate | feedsDateTimeDsiplay}}</span>
+            <img class="video-image" [attr.id]="item.refId" src={{getThumbnailImage(item)}} (error)="onThumbnailImageError(item)">
+            <a class="video-play-icon" [routerLink]="['/workspace/content-management',curSection,'detail']" [queryParams]="{id: item.contentId}"><i class="fa fa-play-circle"></i></a>
+            <span class="video-time">{{getDurationText(item.duration)}}</span>
           </div>
         </div>
       </div>

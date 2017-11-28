@@ -45,14 +45,14 @@
     </div>
 
     <div class="sam-ui medium header">
-      <ng-container class="content-block" [ngSwitch]="data.organizationType | lowercase">
-        <ng-container *ngSwitchCase="department">
+      <ng-container class="content-block" [ngSwitch]="data.organizationType">
+        <ng-container *ngSwitchCase='"department"'>
           Department/Ind. Agency
         </ng-container>
-        <ng-container *ngSwitchCase="agency">
+        <ng-container *ngSwitchCase='"agency"'>
           Sub-tier
         </ng-container>
-        <ng-container *ngSwitchCase="office">
+        <ng-container *ngSwitchCase='"office"'>
           Office
         </ng-container>
       </ng-container>

@@ -17,7 +17,7 @@ describe('src/app/assistance-listing/pipes/request-history-label.pipe.spec.ts', 
   it('RequestHistoryLabelPipe: transforms "unarchive_request" to "Unarchive Requested"', () => {
     expect(pipe.transform('unarchive_request')).toBe('Unarchive Requested');
   });
-  it('RequestHistoryLabelPipe: transforms "submit" to "Program Submitted"', () => {
-    expect(pipe.transform('submit')).toBe('Program Submitted');
+  it('RequestHistoryLabelPipe: transforms "submit" to "Submitted to OMB"', () => {
+    expect(pipe.transform('submit')).toBe('Submitted to OMB');
   });
 });

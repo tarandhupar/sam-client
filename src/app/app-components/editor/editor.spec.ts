@@ -26,8 +26,16 @@ describe('src/app/app-components/editor/editor.spec.ts', () => {
 
   it('SamEditorTest: basic compile test', ()  => {
     expect(true).toBe(true);
+    comp.action.subscribe(obj=>{
+      expect(obj["event"]).toBe("aaaa");
+    });
   });
 
-
+  it("SamEditorTest: should toggle on changes", ()=>{
+    comp.showInputView = null;
+    comp.ngOnChanges();
+    fixture.detectChanges();
+    expect(comp.toggleable).toBe(false);
+  });
 
 });

@@ -36,6 +36,7 @@ interface ChangeRequestActionModel {
   selector: 'fal-form-change-request-action'
 })
 export class FALFormChangeRequestActionComponent implements OnInit {
+  buttonDisabled: boolean = false;
   falChangeRequestActionForm: FormGroup;
   buttonType: string = 'default';
   pageReady: boolean = false;
@@ -101,6 +102,8 @@ export class FALFormChangeRequestActionComponent implements OnInit {
       } else {
         this.requestStatus = ChangeRequestStatus.PENDING;
       }
+    }, error => {
+      this.router.navigate(['/403']);
     });
   }
 
@@ -359,6 +362,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
 
   private submitChangeRequestAction(actionType: any) {
     if (this.falChangeRequestActionForm.valid) {
+      this.buttonDisabled = true;
       //disable button's event
       this.buttonType = 'disabled';
       this.changeRequestService.submitRequestAction(this.prepareChangeRequestActionData(actionType.action), this.cookieValue).subscribe(api => {
@@ -367,6 +371,7 @@ export class FALFormChangeRequestActionComponent implements OnInit {
         this.router.navigate(['/fal/workspace']);
       },
         error => {
+          this.buttonDisabled = false;
           console.error('error submitting request', error);
           this.notifyFooterAlertModel.title = "Error";
           this.notifyFooterAlertModel.type = "error";

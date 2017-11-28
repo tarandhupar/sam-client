@@ -1,6 +1,7 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
+import { Cookie } from "ng2-cookies";
 
 @Component({
   selector: 'content-management-sidenav',
@@ -75,9 +76,7 @@ export class HelpContentManagementSideNavComponent{
   loadFilterData(){
     this.msgFeedService.getDomains().subscribe(data =>{
       try{
-        if(data._embedded['domainList'] && data._embedded['domainList'].length > 0)
-          this.loadDomains(data._embedded['domainList']);
-
+        this.loadDomains(data);
       }catch (error){
         console.log(error);
       }
@@ -87,11 +86,10 @@ export class HelpContentManagementSideNavComponent{
   loadDomains(domainTypes){
     this.domainsCbxConfig.options = [];
     if(domainTypes){
-      domainTypes.forEach(domain => {
-        if(domain.isActive)
-          this.domainsCbxConfig.options.push({value: domain.id, label: domain.domainName, name: domain.domainName});
+      Object.keys(domainTypes).forEach(key => {
+        this.domainsCbxConfig.options.push({value: key, label: domainTypes[key], name: domainTypes[key]});
       });
-      this.domainsCbxConfig.options.push({value: 'other', label: 'Other Domain', name: 'Other Domain'});
+      this.domainsCbxConfig.options.push({value: 0, label: 'Other Domain', name: 'Other Domain'});
     }
   }
 

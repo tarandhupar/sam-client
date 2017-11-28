@@ -555,15 +555,15 @@
       <h3 class="sam-ui dividing header">Date Range for Approval/Disapproval</h3>
 
       <p class="field" id="program-application-approval-interval" [ngSwitch]="program?.data?.assistance?.approval?.interval">
-        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+        <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+        <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+        <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+        <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+        <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+        <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+        <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+        <ng-container *ngSwitchCase="'9'"></ng-container>
         <span class="field" id="program-application-approval">
           {{program?.data?.assistance?.approval?.description}}
         </span>
@@ -575,15 +575,15 @@
       <h3 class="sam-ui dividing header">Renewals</h3>
 
       <p class="field" id="program-application-renewal-interval" [ngSwitch]="program?.data?.assistance?.renewal?.interval">
-        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+        <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+        <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+        <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+        <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+        <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+        <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+        <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+        <ng-container *ngSwitchCase="'9'"></ng-container>
         <span class="field" id="program-application-renewal">
           {{program?.data?.assistance?.renewal?.description}}
         </span>
@@ -595,15 +595,15 @@
       <h3 class="sam-ui dividing header">Appeals</h3>
 
       <p class="field" id="program-application-appeal-interval" [ngSwitch]="program?.data?.assistance?.appeal?.interval">
-        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+        <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+        <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+        <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+        <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+        <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+        <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+        <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+        <ng-container *ngSwitchCase="'9'"></ng-container>
         <span class="field" id="program-application-appeal">
           {{program?.data?.assistance?.appeal?.description}}
         </span>

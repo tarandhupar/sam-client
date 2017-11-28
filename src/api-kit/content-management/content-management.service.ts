@@ -60,7 +60,6 @@ export class ContentManagementService{
   }
 
   createContent(content){
-    if(content['type'].typeId == null) content['type'] = {'typeId':this.typeMap[content['type']]};
     let oApiParam = {
       name: 'helpContent',
       suffix: '/data/create',

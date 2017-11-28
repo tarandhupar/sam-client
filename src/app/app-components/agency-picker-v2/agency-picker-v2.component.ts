@@ -39,6 +39,10 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
      */
     @Input() hint: string;
     /**
+     * Sets the placeholder text
+     */
+    @Input() placeholder: string = '';
+    /**
      * Sets the form control for checking validations and updating label messages
      */
     @Input() control: AbstractControl;
@@ -102,7 +106,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
             this.serviceOptions['parent'] = this.orgRoots[0];
             this.singleACConfig['serviceOptions'] = this.serviceOptions;
         }
-        if(c['defaultDept'] && this.defaultDept && adminLevel.adminLevel !== 0){
+        if(c['defaultDept'] && this.defaultDept && !adminLevel.showAllDepartments){
             this.serviceOptions['defaultDept'] = true;
             this.singleACConfig['serviceOptions'] = this.serviceOptions;
         }
@@ -178,7 +182,7 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
         if(this.type=="multiple"){
             this.selections = [];
         }
-        if(this.defaultDept && adminLevel.adminLevel !== 0){
+        if(this.defaultDept && !adminLevel.showAllDepartments){
             this.iamService.iam.user.get((data)=>{
                 this.orgRoots = [data.departmentID];
                 this.reset();

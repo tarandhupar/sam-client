@@ -31,7 +31,7 @@ import { AlertFooterService } from "../../app-components/alert-footer/alert-foot
         </label>
       </div>
       <span class="usa-input-error-message" *ngIf="error">{{error}}</span>
-      <textarea formControlName="comment"></textarea>
+      <textarea formControlName="comment" id="comment-component-input"></textarea>
 
       <div class="clearfix">
         <sam-button class="pull-right" [buttonType]="'submit'" [buttonText]="'submit'" [buttonDisabled]="form.controls.comment.disabled"></sam-button>

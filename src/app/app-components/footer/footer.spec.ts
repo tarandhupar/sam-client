@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamFooterComponent } from './footer.component';
 
-xdescribe('The Sam Footer component', () => {
+describe('The Sam Footer component', () => {
   let component: SamFooterComponent;
   let fixture: any;
 

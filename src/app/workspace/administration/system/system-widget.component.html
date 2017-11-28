@@ -1,4 +1,4 @@
-<div grid class="equal width relaxed" *ngIf="user">
+<div grid class="equal width relaxed" *ngIf="(user.systemAccount || user.systemApprover)">
   <div class="column">
     <h4 class="sam-ui header">Requests</h4>
     <div class="sam-ui selection relaxed list">

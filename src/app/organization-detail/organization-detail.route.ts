@@ -9,6 +9,7 @@ import { OrgMovePage } from "./move-org/move-org.component";
 import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
 import { FHAccessGuard } from "../application-content/403/fh-access.guard";
 import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
+import { FeatureToggleGuard } from "../application-content/403/feature-toggle.guard";
 
 export const routes: Routes = [
   {
@@ -17,8 +18,8 @@ export const routes: Routes = [
       {
         path: 'detail/:orgId',
         component: OrgDetailPage,
-        canActivateChild:[FHAccessGuard],
-        data: { pageName:'FH/org-detail' },
+        canActivateChild:[FHAccessGuard, FeatureToggleGuard],
+        data: { pageName:'FH/org-detail', featureToggleKey:'fh' },
         children: [
           { path:'', redirectTo:'profile', pathMatch:'full'},
           { path: 'profile',  component: OrgDetailProfilePage },
@@ -31,7 +32,8 @@ export const routes: Routes = [
   {
     path:'create',
     component: OrgCreatePage,
-    data: { pageName:'FH/create-org' }
+    canActivate:[FeatureToggleGuard],
+    data: { pageName:'FH/create-org', featureToggleKey:'fh' }
   }
 
   // {

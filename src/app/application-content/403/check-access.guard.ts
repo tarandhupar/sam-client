@@ -39,13 +39,13 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
     }
     return this.accessService.checkAccess(pageName)
       .map(res => {
-        adminLevel.adminLevel = 4;
+        adminLevel.showAllDepartments = false;
         if (res.status >= 200 && res.status < 300) {
           let body;
           try {
             body = res.json();
-            if (body && typeof body.adminLevel === 'number') {
-              adminLevel.adminLevel = body.adminLevel;
+            if (body && typeof body.showAllDepartments === 'boolean') {
+              adminLevel.showAllDepartments = body.showAllDepartments;
             }
           } catch(e) {
             return false;

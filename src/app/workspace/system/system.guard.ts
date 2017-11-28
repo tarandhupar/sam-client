@@ -24,7 +24,6 @@ export class SystemGuard implements CanActivate, CanActivateChild {
     const url = state.url.replace(/\?.+$/, '');
 
     switch(url) {
-      case '/workspace/system':
       case '/workspace/system/profile':
       case '/workspace/system/password':
       case '/workspace/system/migrations':
@@ -34,6 +33,7 @@ export class SystemGuard implements CanActivate, CanActivateChild {
 
         break;
 
+      case '/workspace/system':
       case '/workspace/system/new':
       case '/workspace/system/status':
         if(!(this.api.iam.user.isSystemAccount() || this.api.iam.user.isSecurityApprover())) {

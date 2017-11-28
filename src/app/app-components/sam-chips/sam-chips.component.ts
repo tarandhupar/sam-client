@@ -50,10 +50,6 @@ export class SamChipsComponent extends SamAutocompleteMultiselectComponent{
     samFormService:SamFormService){
         super(service,ref,samFormService);
     }
-    getResults(){
-
-    }
-    getItem(){}
     selectOnEnter(event) {
         if (event.keyCode== '13') {
             let obj = {};

@@ -59,7 +59,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getUserPermissions();
   }
-  
+
   getUserPermissions() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     this.programService.getPermissions(this.cookieValue, 'ORG_ID, ORG_LEVELS').subscribe(res => {
@@ -73,7 +73,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
         data => {
           this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
           this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-      
+
           this.checkRAOExists();
           this.getRegionalAssistanceLocations();
         });
@@ -194,11 +194,11 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['fal/myRegionalOffices/'], navigationExtras);
+    this.router.navigate(['fal/myRegionalAssistanceLocations/'], navigationExtras);
   }
 
   createNewLocation() {
-    this.router.navigate(['fal/myRegionalOffices/add']);
+    this.router.navigate(['fal/myRegionalAssistanceLocations/add']);
   }
 
   regionalLocationSearchModel(event) {
@@ -216,7 +216,7 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['/fal/myRegionalOffices/'], navigationExtras);
+    this.router.navigate(['/fal/myRegionalAssistanceLocations/'], navigationExtras);
   }
 }
 

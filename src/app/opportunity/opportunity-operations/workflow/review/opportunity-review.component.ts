@@ -757,7 +757,7 @@ export class OpportunityReviewComponent implements OnInit {
       queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
-    this.router.navigate(['/opportunities',this.opportunity.id],navigationExtras);
+    this.router.navigate(['/opp',this.opportunity.id],navigationExtras);
     document.getElementById('awards-list').focus();
   }
 
@@ -864,16 +864,16 @@ export class OpportunityReviewComponent implements OnInit {
   tabsNavigation(tabType) {
     let url;
     if(tabType === 'Public') {
-      url = '/opportunities/' + this.opportunity.id + '/view';
+      url = '/opp/' + this.opportunity.id + '/view';
     }
     if(tabType === 'Submit') {
-      url = '/opportunities/' + this.opportunity.id + '/submit';
+      url = '/opp/' + this.opportunity.id + '/submit';
     }
     if(tabType === 'Reject') {
-      url = '/opportunities/' + this.opportunity.id + '/reject';
+      url = '/opp/' + this.opportunity.id + '/reject';
     }
     if(tabType === 'Publish') {
-      url = '/opportunities/' + this.opportunity.id + '/publish';
+      url = '/opp/' + this.opportunity.id + '/publish';
     }
 
     this.router.navigateByUrl(url);

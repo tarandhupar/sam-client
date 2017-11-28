@@ -15,20 +15,24 @@
       </div>
 
       <sam-button
+        [buttonDisabled]="buttonDisabled"
         buttonText="Cancel"
         (onClick)="onCancelClick($event)">
       </sam-button>
       <sam-button
+        [buttonDisabled]="buttonDisabled"
         *ngIf="isEditForm"
         buttonText="Delete Location"
         (onClick)="modal2.openModal($event)">
       </sam-button>
       <sam-button
+        [buttonDisabled]="buttonDisabled"
         [attr.id] = "'submit-regional-assistance-location'"
         buttonText="Submit"
         (onClick)="onSubmit()"
         [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
       </sam-button>
+      <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
 
       <div class="sam-ui segment" *ngIf="isEditForm">
         <div class="sam-ui medium header">
@@ -132,13 +136,13 @@
           </sam-select>
 
           <!--Phone -->
-          <sam-text
-            [control]="raoFormGroup.controls['phone']"
-            [name]="'phone'"
-            [label]="'Phone:'"
-            [required]="true"
-            formControlName="phone">
-          </sam-text>
+          <sam-phone-entry [control]="raoFormGroup.controls['phone']"
+                           [label]="'Phone:'"
+                           [prefix]="'phone'"
+                           [required]="true"
+                           [numbersOnly]="true"
+                           formControlName="phone">
+          </sam-phone-entry>
 
           <!--Sub-Branch-->
           <sam-text
@@ -174,18 +178,23 @@
 
       <sam-button
         buttonText="Cancel"
+        [buttonDisabled]="buttonDisabled"
         (onClick)="onCancelClick($event)">
       </sam-button>
       <sam-button
         *ngIf="isEditForm"
+        [buttonDisabled]="buttonDisabled"
         buttonText="Delete Location"
         (onClick)="modal2.openModal()">
       </sam-button>
-      <sam-button [attr.id] = "'submit-regional-assistance-location'"
+      <sam-button
+        [buttonDisabled]="buttonDisabled"
+        [attr.id] = "'submit-regional-assistance-location'"
         buttonText="Submit"
         (onClick)="onSubmit()"
         [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
       </sam-button>
+      <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
 
     </div>
   </div>

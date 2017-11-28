@@ -14,9 +14,10 @@
                  (inputEventChange)="onTextChange($event)">
   </sam-text-area>
     <div class="usa-width-one-half">
-      <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button [buttonDisabled]="processing === true" buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
       <sam-button buttonText="Submit to OMB" (onClick)="onSubmitOMBClick($event)"
                   [buttonDisabled]="btnDisabled"></sam-button>
+      <ng-container *ngIf="processing === true">Processing Request...</ng-container>
     </div>
   </form>
 </div>

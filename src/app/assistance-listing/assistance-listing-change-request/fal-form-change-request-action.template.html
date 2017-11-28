@@ -133,8 +133,10 @@
             </ng-container>
           </div>
 
-          <sam-button [buttonType]="buttonType"
+          <sam-button
+            [buttonType]="buttonType"
             [buttonText]="'Back'"
+            [buttonDisabled]="buttonDisabled"
             [attr.id]="'back-btn'"
             [buttonClass]="'usa-button-outline'"
             (onClick)="goBack()">
@@ -142,13 +144,17 @@
 
           <!--Reviewer-->
           <ng-container *ngIf="isPermissionType('approve_reject')">
-            <sam-button [buttonType]="buttonType"
+            <sam-button
+              [buttonType]="buttonType"
+              [buttonDisabled]="buttonDisabled"
               [buttonText]="'Reject'"
               [attr.id]="'reject-btn'"
               [buttonClass]="'usa-button-primary-alt'"
               (onClick)="rejectRequest()">
             </sam-button>
-            <sam-button [buttonType]="buttonType"
+            <sam-button
+              [buttonType]="buttonType"
+              [buttonDisabled]="buttonDisabled"
               [buttonText]="'Approve'"
               [attr.id]="'approve-btn'"
               [buttonClass]="'usa-button-primary'"
@@ -158,13 +164,16 @@
 
           <!--Submitter-->
           <ng-container  *ngIf="isPermissionType('cancel')">
-            <sam-button [buttonType]="buttonType"
+            <sam-button
+              [buttonType]="buttonType"
+              [buttonDisabled]="buttonDisabled"
               [buttonText]="'Cancel Request'"
               [attr.id]="'cancel-btn'"
               [buttonClass]="'usa-button-primary'"
               (onClick)="cancelRequest()">
             </sam-button>
           </ng-container>
+          <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
         </ng-container>
 
         <!--Display view request-->

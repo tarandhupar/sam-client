@@ -131,10 +131,11 @@ export class FALFormHeaderInfoComponent implements OnInit, OnDestroy {
         if(data && data['_embedded'] && data['_embedded'][0] && data['_embedded'][0]['org']) {
           this.organizationData = data['_embedded'][0]['org'];
           if (this.viewModel.isNew && !this.toggleAgencyPicker) {
-            this.getFHConfig(this.organizationData.orgKey, '');
             this.falHeaderInfoForm.get('federalAgency').patchValue(this.organizationData.orgKey, {
               emitEvent: false
             });
+            this.viewModel.organizationId = this.organizationData.orgKey;
+            this.getFHConfig(this.organizationData.orgKey, '');
           }
         }
       }, error => {

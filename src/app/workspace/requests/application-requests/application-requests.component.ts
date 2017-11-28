@@ -18,6 +18,7 @@ import { Validators as $Validators } from 'authentication/shared/validators';
 export class ApplicationRequestsComponent {
   @ViewChild('confirmModal') confirmModal;
 
+  private subscriptions = {};
   private store = {
     section: 'Workspace',
     title: 'System Account Request',
@@ -33,6 +34,7 @@ export class ApplicationRequestsComponent {
   private states = {
     comments: true,
     pending: true,
+    redirectType: 0,
   };
 
   private user: User;
@@ -75,7 +77,7 @@ export class ApplicationRequestsComponent {
   constructor(private route: ActivatedRoute, private router: Router, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
-    this.store['observer'] = this.route.params.subscribe(params => {
+    this.subscriptions['params'] = this.route.params.subscribe(params => {
       if(params['id']) {
         this.api.iam.checkSession(user => this.user = user);
 
@@ -91,6 +93,21 @@ export class ApplicationRequestsComponent {
         }, error => {
           this.router.navigate(['/workspace/myfeed/requests']);
         });
+      }
+    });
+
+    this.subscriptions['queryParams'] = this.route.queryParams.subscribe(qparams => {
+      if(qparams['directory']) {
+        this.states.redirectType = 1;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe all subscriptions
+    Object.keys(this.subscriptions).map(key => {
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
       }
     });
   }
@@ -171,12 +188,14 @@ export class ApplicationRequestsComponent {
       form.get('authorization').value,
       { rejectionReason: form.get('rejectionReason').value },
     );
-console.log(this.application);
+
     return this.application;
   }
 
   close() {
-    this.router.navigate(['/workspace/myfeed/requests']);
+    this.router.navigate(
+      [(this.states.redirectType == 0) ? '/workspace/myfeed/requests' : '/workspace/system']
+    );
   }
 
   cancel() {

@@ -213,6 +213,7 @@ export class SearchPage implements OnInit {
     disabled: false,
     label: 'Select State',
     name: 'state',
+    placeholder: 'Select...',
     keyValueConfig: {
       keyProperty: 'value',
       valueProperty: 'label'
@@ -227,6 +228,7 @@ export class SearchPage implements OnInit {
     disabled: false,
     label: 'Select County/Independent City',
     name: 'county',
+    placeholder: 'Select...'
   };
 
   // Select Construct Type Component drop-down
@@ -239,6 +241,7 @@ export class SearchPage implements OnInit {
     disabled: false,
     label: 'Select Construction Type',
     name: 'constructionType',
+    placeholder: 'Select...',
     keyValueConfig: {
       keyProperty: 'value',
       valueProperty: 'label'
@@ -306,6 +309,7 @@ export class SearchPage implements OnInit {
     disabled: false,
     label: 'If a service is chosen, "Yes" will automatically be selected',
     name: 'constructionType',
+    placeholder: 'Select...',
     keyValueConfig: {
       keyProperty: 'value',
       valueProperty: 'label'
@@ -332,7 +336,7 @@ export class SearchPage implements OnInit {
   awardType = {
     "label": "Award-IDV Type",
     "name": "Award-IDV Type",
-    "placeholder": "Search Award-IDV Types",
+    "placeholder": "Select...",
     "selectedLabel": "Award - IDV Types Selected",
     "options": [
       {label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA'},
@@ -365,7 +369,7 @@ export class SearchPage implements OnInit {
   contractType = {
     "label": "Contract Type",
     "name": "Contract Type",
-    "placeholder": "Search Contract Types",
+    "placeholder": "Select...",
     "selectedLabel": "Contract Types Selected",
     "options": [
       {label: 'COST NO FEE', value: 'S', name: 'COST NO FEE'},
@@ -414,7 +418,7 @@ export class SearchPage implements OnInit {
   naicsType = {
     "label": "NAICS",
     "name": "NAICS Type",
-    "placeholder": "Search NAICS Types",
+    "placeholder": "Select...",
     "selectedLabel": "Codes Selected",
     "options": [],
     "config": {
@@ -430,7 +434,7 @@ export class SearchPage implements OnInit {
   pscType = {
     "label": "PSC",
     "name": "PSC Type",
-    "placeholder": "Search PSC Types",
+    "placeholder": "Select...",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -444,6 +448,7 @@ export class SearchPage implements OnInit {
   noticeTypeModel: any = '';
   noticeType = {
   "name": "Notice Type",
+  "placeholder": 'Select...',
   "options": [],
   "config": {
     keyValueConfig: {
@@ -457,6 +462,7 @@ export class SearchPage implements OnInit {
   setAsideModel: any = '';
   setAsideType = {
     "name": "Set Aside Type",
+    "placeholder": 'Select...',
     "options": [],
     "config": {
       keyValueConfig: {
@@ -499,7 +505,7 @@ export class SearchPage implements OnInit {
   benElType = {
     "label": "Beneficiaries",
     "name": "Beneficiary Eligibility",
-    "placeholder": "Search Beneficiary",
+    "placeholder": "Select...",
     "selectedLabel": "Codes Selected",
     "options": [],
     "config": {
@@ -515,7 +521,7 @@ export class SearchPage implements OnInit {
   appElType = {
     "label": "Applicants",
     "name": "Applicant Eligibility",
-    "placeholder": "Search Applicant",
+    "placeholder": "Select...",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -530,7 +536,7 @@ export class SearchPage implements OnInit {
   assistanceTypeOptions = {
     "label": "",
     "name": "Assistance Type",
-    "placeholder": "Search Assistance Type",
+    "placeholder": "Select...",
     "selectedLabel": "Selected",
     "options": [],
     "config": {
@@ -2252,13 +2258,13 @@ export class SearchPage implements OnInit {
   dateTypeChangeHandler(evt){
     this.dateFilterIndex = evt;
     this.determineFilterDateDisable(this.determineTempModel());
-    
+
     // reset models on dateType change
     this.wdDateFilterModel = {};
     this.cfdaDateFilterModel = {};
     this.fpdsDateFilterModel = {};
     this.oppDateFilterModel = {};
-    
+
     // reset all radio button selections to date on tab change
     this.resetAllRadSelection();
   }

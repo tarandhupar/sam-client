@@ -53,6 +53,7 @@ import { HelpContentManagementSideNavComponent } from "./content-management/view
 import { UserService } from "../role-management/user.service";
 import { UserServiceMock } from "../role-management/user.service.mock";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
+import { HelpContentManagementDetailComponent } from "./content-management/detail/content-management-detail.component";
 
 import { ApplicationRequestsComponent } from './requests/application-requests/application-requests.component';
 
@@ -130,6 +131,7 @@ import { DragDropDirective } from "./content-management/edit/drag-drop.directive
     HelpContentManagementViewComponent,
     HelpContentManagementEditComponent,
     HelpContentManagementSideNavComponent,
+    HelpContentManagementDetailComponent,
 
     /**
      * Directives

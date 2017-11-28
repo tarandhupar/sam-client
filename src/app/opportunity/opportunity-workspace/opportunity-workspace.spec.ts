@@ -118,6 +118,11 @@ let MockDictionaryService = {
               }
           ]
     });
+  },
+  getContractOpportunityDictionary(item){
+    return Observable.of({
+      'procurement_type':[]
+    });
   }
 };
 
@@ -212,7 +217,7 @@ describe('OPPWorkspacePage', () => {
   it('Initialize the OPP Workspace component', () => {
     expect(component.totalCount).toBe(4);
     expect(component.totalPages).toBe(1);
-    expect(component.data[0]['noticeType']).toBe("Award Notice");
+    //expect(component.data[0]['noticeType']).toBe("Award Notice");
     expect(component.data[0]['officeName']).toBe("TRANSPORTATION, DEPARTMENT OF");
   });
 

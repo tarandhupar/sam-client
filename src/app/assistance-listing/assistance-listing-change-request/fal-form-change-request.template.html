@@ -108,14 +108,17 @@
                     [attr.id]="'cancel-btn'"
                     [buttonText]="'Cancel'"
                     [buttonClass]="'usa-button-primary usa-search-submit'"
+                    [buttonDisabled]="buttonDisabled"
                     (onClick)="cancelChangeRequest()">
         </sam-button>
         <sam-button [buttonType]="buttonType"
                     [attr.id]="'submit-btn'"
                     [buttonText]="submitButtonText"
                     [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                    [buttonDisabled]="buttonDisabled"
                     (onClick)="submitChangeRequest()">
         </sam-button>
+        <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
       </form>
     </div>
   </div>

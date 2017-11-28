@@ -43,29 +43,14 @@ export class SavedSearchService {
         if (obj['domain']) {
           oApiParam['oParam']['domain'] = obj['domain'];
         }
-
-        if (obj['saved_date']) {
-          oApiParam['oParam']['saved_date'] = obj['saved_date'];
+        
+        if(obj.dateFilter && obj.dateTab && obj.dateTab === 'last_saved'){
+          oApiParam['oParam']['saved_date.from'] = obj.dateFilter.startDate;
+          oApiParam['oParam']['saved_date.to'] = obj.dateFilter.endDate;
         }
-
-        if (obj['saved_date.to']) {
-          oApiParam['oParam']['saved_date.to'] = obj['saved_date.to'];
-        }
-
-        if (obj['saved_date.from']) {
-          oApiParam['oParam']['saved_date.from'] = obj['saved_date.from'];
-        }
-
-        if (obj['last_ran_date']) {
-          oApiParam['oParam']['last_ran_date'] = obj['last_ran_date'];
-        }
-
-        if (obj['last_ran_date.to']) {
-          oApiParam['oParam']['last_ran_date.to'] = obj['last_ran_date.to'];
-        }
-
-        if (obj['last_ran_date.from']) {
-          oApiParam['oParam']['last_ran_date.from'] = obj['last_ran_date.from'];
+        if(obj.dateFilter && obj.dateTab && obj.dateTab === 'last_ran'){
+          oApiParam['oParam']['last_ran_date.from'] = obj.dateFilter.startDate;
+          oApiParam['oParam']['last_ran_date.to'] = obj.dateFilter.endDate;
         }
 
         return this.oAPIService.call(oApiParam);

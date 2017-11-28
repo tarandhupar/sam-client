@@ -9,7 +9,9 @@ import { SamTabComponent } from "sam-ui-elements/src/ui-kit/components/tabs/tabs
 import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
-import { CMSMapping } from "../content-management-mapping"
+import { CMSMapping } from "../content-management-mapping";
+import * as moment  from "moment";
+
 require('aws-sdk/dist/aws-sdk');
 
 @Component({
@@ -47,6 +49,7 @@ export class HelpContentManagementEditComponent {
   isValidatePerformed = false;
   contentObj = {};
   inputFile:File;
+  duration;
   originContentObj = {};
 
   pageConfig = {
@@ -55,19 +58,33 @@ export class HelpContentManagementEditComponent {
       sectionControl: {source: true, video: false},
       sectionText: ['Data Field', 'Definition'],
       breadCrumbText: 'Edit Definition',
+      title : 'Please provide the glossary term',
+      description: 'Please provide the complete definition of the glossary term',
+      source: 'If this term has been defined by policy, cite your source including the name, section and approval date of the policy',
+      domain: 'Select domain(s) to which this video can be associated. List of domains can be found here.',
+      keywords: 'Provide keywords to be associated with the term. Key words are words or phrases that help to define what the term is about. E.g. if your term is about entity registration. Key words can be entity or registration or both. Please select from the list or add a new keyword',
     },
     'faq-repository': {
       publicViewTag: 'FAQ',
       sectionControl: {source: false, video: false},
       sectionText: ['Question', 'Response'],
       breadCrumbText: 'Edit Question',
-
+      title : 'Please provide the FAQ',
+      description: 'Please provide the complete answer for the FAQ',
+      source: '',
+      domain: 'Select domain(s) to which this video can be associated. List of domains can be found here.',
+      keywords: 'Provide keywords to be associated with the FAQ. Key words are words or phrases that help to define what the FAQ is about. E.g. if your FAQ is about entity registration. Key words can be entity or registration or both. Please select from the list or add a new keyword',
     },
     'video-library': {
       publicViewTag: 'Video',
       sectionControl: {source: false, video: true},
       sectionText: ['Title', 'Description'],
       breadCrumbText: 'Edit Video',
+      title : 'Please provide a name for the video',
+      description: 'Please provide a short description about the video',
+      source: '',
+      domain: 'Select domain(s) to which this video can be associated. List of domains can be found here.',
+      keywords: 'Provide keywords to be associated with the video. Key words are words or phrases that help to define what the video is about. E.g. if your video is about entity registration. Key words can be entity or registration or both. Please select from the list or add a new keyword',
 
     },
   };
@@ -87,6 +104,13 @@ export class HelpContentManagementEditComponent {
   domainMap = {};
   cmsMapping = new CMSMapping();
 
+  bucket;
+  thumbnailBolb;
+  editVideo = false;
+
+  uploadThumbnailKey = '';
+  uploadVideoKey = '';
+
   constructor(private _router:Router,
               private route: ActivatedRoute,
               private capitalPipe: CapitalizePipe,
@@ -98,6 +122,7 @@ export class HelpContentManagementEditComponent {
   ngOnInit(){
     this.getExistingDomainOptions();
     this.getExistingTagOptions('');
+    this.setupS3Bucket();
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
@@ -149,7 +174,7 @@ export class HelpContentManagementEditComponent {
       title:'',
       description:'',
       sourceVideoFile:'',
-      domains:[],
+      domain:[],
       keywords:[],
       status:{status:'NEW'},
     };
@@ -170,16 +195,18 @@ export class HelpContentManagementEditComponent {
           title:this.originContentObj['title'],
           description:this.originContentObj['description'],
           sourceVideoFile:'',
-          domains:[],
+          domain:[],
           keywords:[],
           status:this.originContentObj['status'],
         };
         this.responseText = this.contentObj['description'];
         this.originContentObj['tags'].forEach(e => {this.keywords.push({key:e.tagKey, value:e.tagKey})});
         this.pageTitle = this.contentObj['title'];
-        this.originContentObj['domains'].forEach(e => {
-          this.contentObj['domains'].push({key:e.domain_name,value:e.domain_name});
-        });
+        if(this.originContentObj['domain']){
+          this.originContentObj['domain'].forEach(e => {
+            this.contentObj['domain'].push({key:this.getDomainName(e),value:this.getDomainName(e)});
+          });
+        }
         if(this.curSection === 'video-library')this.contentObj['sourceVideoFile'] = '';
         this.dataLoaded= true;
       }catch(err){
@@ -195,17 +222,29 @@ export class HelpContentManagementEditComponent {
     if(file.type.startsWith('video')){
       this.contentObj['sourceVideoFile']  = file.name;
       let fileURL = URL.createObjectURL(file);
-      document.querySelector('video').src = fileURL;
-      document.querySelector('video').autoplay = false;
-      document.querySelector('video').pause();
+      var previewVideo = document.querySelector('#previewVideo');
+      previewVideo.src = fileURL;
+      previewVideo.autoplay = false;
+      previewVideo.pause();
       this.inputFile = file;
+
+      var thumbnailVideo = document.getElementById('video-for-thumbnail');
+      thumbnailVideo.preload = 'metadata';
+      thumbnailVideo.src = fileURL;
+      thumbnailVideo.autoplay = false;
+      thumbnailVideo.pause();
+      thumbnailVideo.onloadedmetadata = () => {
+        this.duration = thumbnailVideo.duration;
+      };
     }
 
   }
 
   onDeselectFile(){
     this.contentObj['sourceVideoFile']  = '';
-    document.querySelector('video').src = '';
+    document.querySelector('#previewVideo').src = '';
+    this.duration = 0;
+    this.inputFile = null;
   }
 
   onPublishClick(){
@@ -213,9 +252,13 @@ export class HelpContentManagementEditComponent {
     // Route back to search page
     if(this.validateForm()){
       if(this.isCreateMode()){
-        this.createContent('PUBLISH');
+        if(this.curSection == 'video-library')this.createThumbnail();
+        this.createContent('PUBLISHED');
       }else{
-        this.updateContent('PUBLISH');
+        if( this.inputFile != null && this.curSection == 'video-library'){
+          this.createThumbnail();
+        }
+        this.updateContent('PUBLISHED');
       }
     }else{
       this.activeTab = 0;
@@ -225,29 +268,44 @@ export class HelpContentManagementEditComponent {
   onDeleteDraftClick(){
     // Delete the Draft
     this.originContentObj['activeStatus'] = false;
+    let thumbnailURL = this.originContentObj['thumbnailUrl'];
+    let videoURL = this.originContentObj['sourceUrl'];
     this.contentManagementService.updateContent(this.originContentObj).subscribe(
       data => {
+        // this.deleteFileFromS3Bucket();
         this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
       },
       err => {
-        this.showAlertMessage('Failed to delete draft data');
+        if(err.errorCode == null){
+          this.showAlertMessage('Failed to delete draft data');
+        }else{
+          this.showAlertMessage('Failed to update draft, error code: ' + err.errorCode +'. ' + err.errorMessage );
+        }
       }
     );  }
 
   onSwitchTabs(tab){
+    var previewVideo = document.getElementById('previewVideo');
     if(tab.title === 'Public View'){
 
       this.contentObj['keywords'] = this.keywords;
       this.pageTitle = this.contentObj['title'];
       this.activeTab = 1;
-
+      if(!this.isCreateMode() && this.inputFile == null){
+        previewVideo.src = this.originContentObj['sourceUrl'];
+        previewVideo.autoplay = false;
+        previewVideo.pause();
+      }
     }else{
       this.activeTab = 0;
     }
 
-    if(document.querySelector('video')) document.querySelector('video').pause();
+    if(previewVideo) previewVideo.pause();
   }
 
+  onEditExistingVideoFile(){
+    this.editVideo = true;
+  }
 
   getExistingTagOptions(q){
     this.contentManagementService.getTags(q).subscribe(data =>{
@@ -270,19 +328,23 @@ export class HelpContentManagementEditComponent {
     this.domainOptions = [];
     this.msgFeedService.getDomains().subscribe(data =>{
       try{
+        Object.keys(data).forEach(domainId => {
+          this.domainOptions.push({value: data[domainId], key: data[domainId], name: data[domainId]});
+          this.domainMap[data[domainId]] = domainId;
+        });
 
-        if(data._embedded['domainList'] && data._embedded['domainList'].length > 0) {
-          data._embedded['domainList'].forEach(domain => {
-            if (domain.isActive){
-              this.domainOptions.push({value: domain.domainName, key: domain.domainName, name: domain.domainName});
-              this.domainMap[domain.domainName] = domain.id;
-            }
-          });
-        }
       }catch (error){
         console.log(error);
       }
     });
+  }
+
+  getDomainName(domainId){
+    let domainName = '';
+    Object.keys(this.domainMap).forEach( key => {
+      if(this.domainMap[key] == domainId) domainName = key;
+    });
+    return domainName;
   }
 
   getUpdateDateStr(){
@@ -291,7 +353,7 @@ export class HelpContentManagementEditComponent {
 
   getDomainListStr(){
     let domainList = [];
-    this.contentObj['domains'].forEach(e => {
+    this.contentObj['domain'].forEach(e => {
       domainList.push(e['key']);
     });
     return domainList.join(', ');
@@ -302,15 +364,31 @@ export class HelpContentManagementEditComponent {
   }
 
   submitForm() {
+    var previewVideo = document.getElementById('previewVideo');
 
     if(this.validateForm()){
       this.contentObj['keywords'] = this.keywords;
       this.pageTitle = this.contentObj['title'];
       this.activeTab = 1;
+      if(this.curSection == 'video-library'){
+
+        // Load preview video if it is in edit mode and no input file has been selected
+        if(!this.isCreateMode() && this.inputFile == null){
+          previewVideo.src = this.originContentObj['sourceUrl'];
+          previewVideo.autoplay = false;
+          previewVideo.pause();
+        }
+
+        // Create Thumbnail if it is in create mode or input file has been selected in edit mode
+        if(this.isCreateMode() || !this.isCreateMode() && this.inputFile != null){
+          this.createThumbnail();
+        }
+      }
+
       if(this.isCreateMode()){
         this.createContent('NEW');
       }else{
-        this.updateContent('DRAFT');
+        this.cmsMapping.getStatusName(this.originContentObj['status']).toUpperCase() === 'NEW'? this.updateContent('NEW'):this.updateContent('DRAFT');
       }
     }
 
@@ -337,60 +415,86 @@ export class HelpContentManagementEditComponent {
   }
 
   isSourceVideoValid(): boolean{
-    return (this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '') || this.curSection !== 'video-library';
+    return (this.isCreateMode() && this.curSection === 'video-library' && this.contentObj['sourceVideoFile'] !== '') || !this.isCreateMode() || this.curSection !== 'video-library';
   }
 
-  createVideoContent(contentData){
-    var AWSService = window.AWS;
+  createVideoContent(contentData, status){
+    if(this.inputFile == null){
+      this.createVideoContentPostProcess(contentData, status);
+      return;
+    }
 
-    AWSService.config.accessKeyId = 'AKIAJ7QJTKFV5HMJJ2KQ';
+    var chunks = this.inputFile.name.split('.');
+    chunks.pop();
+    var fileNameNoExtension = chunks[0];
 
-    AWSService.config.secretAccessKey = '/B+FB2Nl8Ji85E7YY4x+QH2zDLNUaYEB/72ly61N';
+    this.uploadThumbnailKey = 'videos/thumbnails/' + moment().toISOString() + '/' + fileNameNoExtension + '.png';
+    this.uploadVideoKey = 'videos/' + moment().toISOString() + '/'  + this.inputFile.name;
+    var thumbnailParams = {Key: this.uploadThumbnailKey, Body: this.thumbnailBolb, ACL:'public-read'};
+    var videoParams = {Key: this.uploadVideoKey, Body: this.inputFile, ACL:'public-read'};
 
-    var bucket = new AWSService.S3({params: {Bucket: 'taran-test'}});
-
-    var params = {Key: 'videos/'+this.inputFile.name, Body: this.inputFile};
-
-    bucket.upload(params, (err, data) => {
-      if(err){
-        this.showAlertMessage("Failed to upload video to S3 bucket");
+    this.bucket.upload(thumbnailParams, (err, data) => {
+      if(err) {
+        this.showAlertMessage("Failed to upload video thumbnail to S3 bucket");
       }else{
-        // POST video content here
-        contentData['sourceUrl'] = data.Location;
-        if(this.isCreateMode()){
-          this.postContentData(contentData);
-        }else{
-          if(status === 'DRAFT'){
-            contentData['activeStatus'] = true;
-            delete contentData['contentId'];
-            this.postContentData(contentData);
+        contentData['thumbnailUrl'] = data.Location;
+        // upload video
+        this.bucket.upload(videoParams, (err, data) => {
+          if(err){
+            // Delete the uploaded thumbnail
+            this.deleteFileFromS3Bucket(this.uploadThumbnailKey);
+            this.showAlertMessage("Failed to upload video to S3 bucket");
           }else{
-            this.putContentData(contentData);
-          }        }
+            // POST video content here
+            contentData['sourceUrl'] = data.Location;
+            contentData['duration'] = this.duration+'';
+            this.createVideoContentPostProcess(contentData, status);
+          }
+        });
       }
+
     });
+
+
   }
+
+  createVideoContentPostProcess = (contentData, status) => {
+    if(this.isCreateMode()){
+      contentData['status'] = this.cmsMapping.getStatusId(status);
+      this.postContentData(contentData);
+    }else{
+      if(status === 'DRAFT' && this.cmsMapping.getStatusName(contentData['status']) === 'PUBLISHED'){
+        contentData['status'] = this.cmsMapping.getStatusId(status);
+        contentData['activeStatus'] = true;
+        delete contentData['contentId'];
+        this.postContentData(contentData);
+      }else{
+        contentData['status'] = this.cmsMapping.getStatusId(status);
+        this.putContentData(contentData);
+      }
+    }
+  };
 
   createContent(status){
     let contentData = {
       "activeStatus": true,
       "description": this.contentObj['description'],
-      "status": {"statusId": this.cmsMapping.getStatusId(status)},
+      "status": this.cmsMapping.getStatusId(status),
       "title": this.contentObj['title'],
-      "type": this.curSection.toLowerCase(),
-      "domains": [],
+      "type": this.cmsMapping.getTypeId(this.curSection.toLowerCase()),
+      "domain": [],
       "tags": []
     };
 
-    if(this.contentObj['domains'].length > 0){
-      this.contentObj['domains'].forEach( domain => {contentData['domains'].push({domain_id:this.domainMap[domain.value], domain_name:domain.value});});
+    if(this.contentObj['domain'].length > 0){
+      this.contentObj['domain'].forEach( domain => {contentData['domain'].push(this.domainMap[domain.value]);});
     }
 
     if(this.keywords.length > 0){
       this.keywords.forEach( tag => {contentData['tags'].push({tagId:this.tagMap[tag.value], tagKey:tag.value});});
     }
     if(this.curSection.toLowerCase() === 'video-library'){
-      this.createVideoContent(contentData);
+      this.createVideoContent(contentData, status);
     }else{
       this.postContentData(contentData);
     }
@@ -399,12 +503,20 @@ export class HelpContentManagementEditComponent {
   postContentData(contentData){
     this.contentManagementService.createContent(contentData).subscribe(
       data => {
-        if(contentData['status'].statusId === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+        if(contentData['status'] === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
       },
       err => {
-        // Maybe delete the video on the S3 bucket here
+        // Delete the video on the S3 bucket here
+        if(this.curSection ==  'video-library' && this.uploadThumbnailKey !== '' && this.uploadVideoKey !== ''){
+          this.deleteFileFromS3Bucket(this.uploadThumbnailKey);
+          this.deleteFileFromS3Bucket(this.uploadVideoKey)
+        }
 
-        this.showAlertMessage('Failed to create content data');
+        if(err.errorCode == null){
+          this.showAlertMessage('Failed to create content data');
+        }else{
+          this.showAlertMessage('Failed to create content, error code: ' + err.errorCode +'. ' + err.errorMessage );
+        }
       }
     );
   }
@@ -412,27 +524,25 @@ export class HelpContentManagementEditComponent {
   updateContent(status){
     this.originContentObj['title'] = this.contentObj['title'];
     this.originContentObj['description'] = this.contentObj['description'];
-    this.originContentObj['status'] = {"statusId": this.cmsMapping.getStatusId(status)};
-    if(this.contentObj['domains'].length > 0){
-      this.originContentObj['domains'] = [];
-      this.contentObj['domains'].forEach( domain => {this.originContentObj['domains'].push({domain_id:this.domainMap[domain.value], domain_name:domain.value});});
+    if(this.contentObj['domain']){
+      this.originContentObj['domain'] = [];
+      this.contentObj['domain'].forEach( domain => {this.originContentObj['domain'].push(this.domainMap[domain.value]);});
     }
     if(this.keywords.length > 0){
       this.originContentObj['tags'] = [];
       this.keywords.forEach( tag => {this.originContentObj['tags'].push({tagId:this.tagMap[tag.value], tagKey:tag.value});});
     }
 
-
-
-
     if(this.curSection.toLowerCase() === 'video-library' && this.contentObj['sourceVideoFile'] !== ''){
-      this.createVideoContent(this.originContentObj);
+      this.createVideoContent(this.originContentObj, status);
     }else{
-      if(status === 'DRAFT'){
+      if(status === 'DRAFT' && this.cmsMapping.getStatusName(this.originContentObj['status']) === 'PUBLISHED'){
+        this.originContentObj['status'] = this.cmsMapping.getStatusId(status);
         this.originContentObj['activeStatus'] = true;
         delete this.originContentObj['contentId'];
         this.postContentData(this.originContentObj);
       }else{
+        this.originContentObj['status'] = this.cmsMapping.getStatusId(status);
         this.putContentData(this.originContentObj);
       }
     }
@@ -441,10 +551,18 @@ export class HelpContentManagementEditComponent {
   putContentData(contentData) {
     this.contentManagementService.updateContent(contentData).subscribe(
       data => {
-        if(contentData['status'].statusId === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+        if(contentData['status'] === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
       },
       err => {
-        this.showAlertMessage('Failed to update content data');
+        if(this.curSection ==  'video-library' && this.uploadThumbnailKey !== '' && this.uploadVideoKey !== ''){
+          this.deleteFileFromS3Bucket(this.uploadThumbnailKey);
+          this.deleteFileFromS3Bucket(this.uploadVideoKey)
+        }
+        if(err.errorCode == null){
+          this.showAlertMessage('Failed to update content data');
+        }else{
+          this.showAlertMessage('Failed to update content, error code: ' + err.errorCode +'. ' + err.errorMessage );
+        }
       }
     );
   }
@@ -457,17 +575,11 @@ export class HelpContentManagementEditComponent {
           try{
             this.tagMap[data.tagKey] = data.tagId;
           }catch(err){
-            // Failed to get the keyword id back
             this.keywords.pop();
           }
         },
         err => {
-          this.alertFooter.registerFooterAlert({
-            title: "",
-            description: "Failed to create a new Tag",
-            type: 'error',
-            timer: 3200
-          });
+          this.showAlertMessage('Failed to create a new Tag');
           this.keywords.pop();
         }
       );
@@ -481,6 +593,52 @@ export class HelpContentManagementEditComponent {
       description: message,
       type: 'error',
       timer: 3200
+    });
+  }
+
+  createThumbnail(){
+    var video = document.getElementById('video-for-thumbnail');
+    let dimension = {width: video.offsetWidth, height:video.offsetHeight};
+    var canvas = document.createElement("canvas");
+
+    canvas.width = dimension.width;
+    canvas.height = dimension.height;
+
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    var dataURI = canvas.toDataURL('image/png');
+    this.thumbnailBolb = this.dataURItoBlob(dataURI);
+
+  }
+
+  dataURItoBlob(dataURI) {
+    var binary = atob(dataURI.split(',')[1]);
+    var array = [];
+    for(var i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], {type: 'image/png'});
+  }
+
+
+  setupS3Bucket(){
+
+    var AWSService = window.AWS;
+
+    AWSService.config.accessKeyId = 'AKIAJ7QJTKFV5HMJJ2KQ';
+
+    AWSService.config.secretAccessKey = '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';
+
+    this.bucket = new AWSService.S3({params: {Bucket: 'taran-test'}});
+
+  }
+
+  deleteFileFromS3Bucket(FileDirectory){
+    var params = {Bucket: 'taran-test', Key: FileDirectory};
+
+    this.bucket.deleteObject(params, (err, data) => {
+      if(err){
+        this.showAlertMessage('Failed to delete file from s3 at: ' + FileDirectory);
+      }
     });
   }
 

@@ -6,7 +6,7 @@ import {OpportunityReviewComponent} from "./opportunity-operations/workflow/revi
 
 
 export const routes: Routes = [
-  {path: 'opportunities/:id', component: OpportunityPage}
+  {path: 'opp/:id', component: OpportunityPage}
 ];
 
 routes.unshift(

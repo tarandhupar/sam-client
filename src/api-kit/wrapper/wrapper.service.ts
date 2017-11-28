@@ -26,6 +26,7 @@ export class WrapperService {
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "federalCreateOrg": "/federalorganizations/v1/organization",
         "federalHierarchyActive": "/federalorganizations/v1/activeorganizations",
+        "featureToggle": "/feature/v1/read",
         "entities": "/entities",
         "exclusions": "/exclusions",
         "awards": "/awards",
@@ -55,7 +56,7 @@ export class WrapperService {
         'subscriptions':'/watchlistservice/v1/api/subscriptions',
         'myFeeds':'/feeds/v1',
         'gettoggeServices':'/feature/v1/',
-        'helpContent':'/content/v1'
+        'helpContent':'/content/v1',
     };
 
   constructor(private _http: Http){}

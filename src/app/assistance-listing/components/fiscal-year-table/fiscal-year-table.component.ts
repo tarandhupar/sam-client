@@ -6,6 +6,7 @@ import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper"
 import { OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import * as moment from "moment";
 import { ValidationErrors } from '../../../app-utils/types';
+import {FALSectionNames} from "../../assistance-listing-operations/fal-form.constants";
 
 
 /** Interfaces **/
@@ -68,6 +69,7 @@ export interface FiscalYearTableConfig {
 }
 
 
+
 /** Component **/
 
 @Component({
@@ -94,6 +96,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   // all parameters are passed in a single config object for convenience
   // see FiscalYearTableConfig interface for supported parameters
   @Input() config: FiscalYearTableConfig;
+  @Input() viewModel: any;
 
   // the model serves as the single source of truth for this component's data
   // whenever data is input or actions are taken that modify the form, the model should also be updated
@@ -127,8 +130,8 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
   // modals
   @ViewChild('deleteModal') deleteModal;
-
-
+  
+  flag: boolean = false;
   /** Initial setup **/
   constructor() { }
 
@@ -354,6 +357,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public resetForm() {
+    this.flag = true;
     if(this.currentIndex !== this.model.entries.length) { // if currently editing an entry, any changes will be canceled
       this.removeYearOption(this.model.current.year); // so remove its year from the pool of available options
     }
@@ -416,9 +420,18 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
           let year: number = entry.year;
           return (year >= fy - 1) && (year <= fy + 1) || year == null;
         });
-
-        if (applicable.length === 0) {
-          return error;
+        if(this.viewModel.getSectionStatus(FALSectionNames.OTHER_FINANCIAL_INFO) === 'pristine') {
+          if (this.model.entries && this.model.entries.length === 0) {
+            if (this.flag) {
+              return error;
+            } else {
+              return null;
+            }
+          }
+        } else {
+          if(applicable.length === 0) {
+            return error;
+          }
         }
       }
     }

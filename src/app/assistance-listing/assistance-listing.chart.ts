@@ -60,6 +60,7 @@ export class FinancialObligationChart implements OnChanges {
       .sortKeys(d3.ascending)
       .rollup(values => {
         let ena = false,
+            estimate = false,
           nsi = false;
         values.forEach(item => {
           if (item.ena) {
@@ -68,10 +69,14 @@ export class FinancialObligationChart implements OnChanges {
           if (item.nsi) {
             nsi = true;
           }
+          if(item.estimate) {
+            estimate = true;
+          }
         });
         return {
           "items": values.length,
           "ena": ena,
+          "estimate": estimate,
           "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
         }
@@ -111,6 +116,7 @@ export class FinancialObligationChart implements OnChanges {
       .sortKeys(d3.ascending)
       .rollup(values => {
         let ena = false,
+            estimate = false,
           nsi = false;
         values.forEach(item => {
           if (item.ena) {
@@ -119,10 +125,14 @@ export class FinancialObligationChart implements OnChanges {
           if (item.nsi) {
             nsi = true;
           }
+          if(item.estimate) {
+            estimate = true;
+          }
         });
         return {
           "ena": ena,
           "nsi": nsi,
+          "estimate": estimate,
           "total": d3.sum(values, d => +d.amount)
         }
       })
@@ -303,8 +313,8 @@ export class FinancialObligationChart implements OnChanges {
      * --------------------------------------------------
      */
 
-    function actualOrEstimate(estimate: boolean) {
-      return estimate ? "Estimate Not Available" : "Actual Not Available";
+    function actualOrEstimate(estimate: boolean, isActualFY: boolean = true) {
+        return estimate && isActualFY ? "Estimate Not Available" : "Actual Not Available";
     }
 
     (function buildTable() {
@@ -349,7 +359,7 @@ export class FinancialObligationChart implements OnChanges {
                 assistanceTotal.values.forEach(year => {
                   let yearTotal;
                   if (year.value.ena && !year.value.total) {
-                    yearTotal = (year.value.items > 1 && year.value.nsi) ? "Not Available" : actualOrEstimate(year.value.ena);
+                    yearTotal = (year.value.items > 1 && year.value.nsi) ? "Not Available" : actualOrEstimate(year.value.ena, year.value.estimate);
                   } else if (year.value.nsi && !year.value.total) {
                     yearTotal = "Not Separately Identifiable";
                   } else {
@@ -490,7 +500,7 @@ export class FinancialObligationChart implements OnChanges {
             return "Not Available";
           }
           if (enaORnsi && totalAmountIsZero) {
-            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.value.ena);
+            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.value.ena, d.value.estimate);
           }
           if (enaORnsi && !totalAmountIsZero) {
             // Add asterix to the bar chart
@@ -625,13 +635,30 @@ export class FinancialObligationChart implements OnChanges {
 
             obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
 
+            let amount:number = 0;
+            let notAvailableFlag: boolean = false;
+
+            if (year == prevFY) {
+              if (value["actual"] != null) {
+                amount = value["actual"];
+              } else if(!(value.flag == "nsi" || value.flag == "no")) { //ena takes precedent over nsi
+                notAvailableFlag = true;
+              }
+            } else if (year == currentFY || year == nextFY) {
+              if (value["estimate"] != null) {
+                amount = value["estimate"];
+              } else if(!(value.flag == "nsi" || value.flag == "no")) { //ena takes precedent over nsi
+                notAvailableFlag = true;
+              }
+            }
+
             let financialItem = {
               "obligation": obligation,
               "info": item.description ? item.description || "" : "",
               "year": +year,
-              "amount": value["actual"] || value["estimate"] || 0,
-              "estimate": !value["actual"],
-              "ena": value.flag == "ena" || value.flag == "na" ? true : false,
+              "amount": amount,
+              "estimate": (year == prevFY) ? false : true,
+              "ena": value.flag == "ena" || value.flag == "na" || notAvailableFlag ? true : false,
               "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
               "empty": value.flag == "empty" ? true : false,
               "explanation": value.explanation || ""

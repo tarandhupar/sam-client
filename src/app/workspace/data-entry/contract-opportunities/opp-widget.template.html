@@ -39,6 +39,9 @@
             </div>
         </div>
         <div class="column">
+                <div *ngIf="showSpinner" id="search-spinner" align="right">
+                    <sam-spinner></sam-spinner>
+                </div>
             <opp-pie-chart #pieChart [deadlineStatusData]='chartCounts'></opp-pie-chart>
         </div>
 

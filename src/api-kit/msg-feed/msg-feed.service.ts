@@ -21,18 +21,29 @@ export class MsgFeedService{
   }
 
   getDomains(){
+    if(Cookie.check('domains')){
+      return Observable.of(JSON.parse(Cookie.get('domains')));
+    }
+
     let apiOptions: any = {
       name: 'rms',
       method: 'GET',
       suffix: '/domains/',
     };
 
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions).map(data => {
+      let domainMap = {};
+      data._embedded['domainList'].forEach( e => {
+        if(e.isActive)domainMap[e.id] = e.domainName;
+      });
+      Cookie.set('domains',JSON.stringify(domainMap));
+      return domainMap;
+    });
   }
 
   getFeeds(typeId, filterObj, sortBy, pageNum, pageSize = 10){
 
-    if(filterObj.section.toLowerCase() === 'requests'){
+    if(filterObj.section && filterObj.section.toLowerCase() === 'requests'){
       return this.getRequestsFeed(typeId, filterObj, sortBy, pageNum, pageSize);
     }else{
       return this.getNotificationFeeds(typeId, filterObj, sortBy, pageNum, pageSize);
@@ -52,10 +63,10 @@ export class MsgFeedService{
       },
       method: 'GET'
     };
-    if(filterObj.requestType.length > 0) oApiParam.oParam['reqIds'] = filterObj.requestType.join(',');
-    if(filterObj.status.length > 0) oApiParam.oParam['statIds'] = filterObj.status.join(',');
+    if(filterObj.requestType && filterObj.requestType.length > 0) oApiParam.oParam['reqIds'] = filterObj.requestType.join(',');
+    if(filterObj.status && filterObj.status.length > 0) oApiParam.oParam['statIds'] = filterObj.status.join(',');
     if(filterObj.keyword !== "") oApiParam.oParam['q'] = filterObj.keyword;
-    if(filterObj.orgs.length > 0) {
+    if(filterObj.orgs && filterObj.orgs.length > 0) {
       let orgs = [];
       filterObj.orgs.forEach(org => orgs.push(org.orgKey));
       oApiParam.oParam['orgIds'] = orgs.join(',');
@@ -77,10 +88,10 @@ export class MsgFeedService{
       },
       method: 'GET'
     };
-    if(filterObj.alertType.length > 0) oApiParam.oParam['alertType'] = filterObj.alertType.join(',');
-    if(filterObj.domains.length > 0) oApiParam.oParam['domainIds'] = filterObj.domains.join(',');
+    if(filterObj.alertType && filterObj.alertType.length > 0) oApiParam.oParam['alertType'] = filterObj.alertType.join(',');
+    if(filterObj.domains && filterObj.domains.length > 0) oApiParam.oParam['domainIds'] = filterObj.domains.join(',');
     if(filterObj.keyword !== "") oApiParam.oParam['q'] = filterObj.keyword;
-    if(filterObj.alertStatus.length === 1) oApiParam.oParam['alertStatus'] = filterObj.alertStatus[0];
+    if(filterObj.alertStatus && filterObj.alertStatus.length === 1) oApiParam.oParam['alertStatus'] = filterObj.alertStatus[0];
 
     return this.callApi(oApiParam);
 

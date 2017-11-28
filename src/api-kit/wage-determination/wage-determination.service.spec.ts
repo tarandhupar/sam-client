@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { WageDeterminationService } from './wage-determination.service';
 
-xdescribe('src/api-kit/wage-determination/wage-determination.service.spec.ts', () => {
+describe('src/api-kit/wage-determination/wage-determination.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -91,6 +91,18 @@ xdescribe('src/api-kit/wage-determination/wage-determination.service.spec.ts', (
       expect(res['revisionNumber']).toBeDefined();
       expect(res['fullReferenceNumber']).toBe('2002-0261');
       expect(res['revisionNumber']).toBe(8);
+    });
+  }));
+
+  it('Wage Determination Service: should return response when subscribed to getWageDeterminationFilterCountyData', inject([WageDeterminationService], (testService: WageDeterminationService) => {
+    testService.getWageDeterminationFilterCountyData({}).subscribe((res: Response) => {
+      expect(res).toBeDefined();
+    });
+  }));
+  
+  it('Wage Determination Service: should return response when subscribed to getWageDeterminationHistoryByReferenceNumber', inject([WageDeterminationService], (testService: WageDeterminationService) => {
+    testService.getWageDeterminationHistoryByReferenceNumber("8").subscribe((res: Response) => {
+      expect(res).toBeDefined();
     });
   }));
 });

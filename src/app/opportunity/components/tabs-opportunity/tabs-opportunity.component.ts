@@ -37,7 +37,7 @@ export class TabsOpportunityComponent implements OnInit {
   private tabItems: any = {
     review: {label: "Authenticated", routeConfig: "opp/:id/review"},
     edit: {label: "Edit", routeConfig: "opp/:id/edit"},
-    public: {label: "Public", routeConfig: "opportunities/:id"},
+    public: {label: "Public", routeConfig: "opp/:id"},
   };
 
   constructor(

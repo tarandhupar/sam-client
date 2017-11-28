@@ -217,7 +217,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   obligations = [];
   fiscalYears = [];
   values: boolean = false;
-  trimFYOptions ={pFY: '', cFY:'', bFY:''}
+  trimFYOptions = {pFY: '', cFY:'', bFY:''};
 
   constructor(private sidenavService: SidenavService,
               private sidenavHelper: SidenavHelper,
@@ -231,8 +231,14 @@ export class FALReviewComponent implements OnInit, OnDestroy {
               private service: FALFormService,
               private alertFooterService: AlertFooterService,
               private errorService: FALFormErrorService, private el: ElementRef, private authGuard: FALAuthGuard) {
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function(){
+      return false;
+    };
+
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
+        this.router.navigated = false;
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
       }
@@ -613,7 +619,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
           "index": value.index,
           "date": value.fiscalYear,
           "title": pipe.transform(value.actionType),
-          "description": value.changeDescription
+          "description": (value.actionType != 'archived' && value.actionType != 'unarchive') ? value.changeDescription : ''
         }
       });
       this.history = _.sortBy(this.history, ['index']);
@@ -1187,46 +1193,55 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         for (let value of obligation['values']) {
           if (value['year'] === this.prevFY) {
             obj = {};
-            obj = {year: '0' ,actual: '0', estimate: '0', flag:''};
             obj['year'] = this.prevFY;
-            if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
-              obj['actual'] = value['actual'].toString();
-              prevFYActualorEstimate = value['actual'];
-            } else if (value['estimate'] !== null && value['estimate'] >= 0) {
-              obj['estimate'] = value['estimate'].toString();
-              prevFYActualorEstimate = value['estimate'];
-            } else if (value['flag'] === 'nsi') {
-              obj['flag'] = value['flag'];
-            } else if (value['flag'] === 'ena') {
-              obj['flag'] = value['flag']
+            if(value['flag'] && value['flag'] !== null) {
+              if (value['flag'] === 'nsi') {
+                obj['flag'] = value['flag'];
+              } else if (value['flag'] === 'ena') {
+                obj['flag'] = value['flag']
+              }
+            } else {
+              if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
+                obj['actual'] = value['actual'].toString();
+                prevFYActualorEstimate = value['actual'];
+              } else if (value['estimate'] !== null && value['estimate'] >= 0) {
+                obj['estimate'] = value['estimate'].toString();
+                prevFYActualorEstimate = value['estimate'];
+              }
             }
             yearsArray.push(value['year']);
             values.push(obj);
           } else if (value['year'] === this.currentFY) {
             obj = {};
-            obj = {year: '0' ,actual: '0', estimate: '0', flag:''};
             obj['year'] = this.currentFY;
-            if (value['estimate'] !== null && value['estimate'] >= 0) {
-              obj['estimate'] = value['estimate'].toString();
-              currentFYEstimate = value['estimate'];
-            } else if (value['flag'] === 'nsi') {
-              obj['flag'] = value['flag']
-            } else if (value['flag'] === 'ena') {
-              obj['flag'] = value['flag']
+            if(value['flag'] && value['flag'] !== null) {
+              if (value['flag'] === 'nsi') {
+                obj['flag'] = value['flag'];
+              } else if (value['flag'] === 'ena') {
+                obj['flag'] = value['flag']
+              }
+            } else {
+              if (value['estimate'] !== null && value['estimate'] >= 0) {
+                obj['estimate'] = value['estimate'].toString();
+                currentFYEstimate = value['estimate'];
+              }
             }
             yearsArray.push(value['year']);
             values.push(obj);
           } else if (value['year'] === this.nextFY) {
             obj = {};
-            obj = {year: '0' ,actual: '0', estimate: '0', flag:''};
             obj['year'] = this.nextFY;
-            if (value['estimate'] !== null && value['estimate'] >= 0) {
-              obj['estimate'] = value['estimate'].toString();
-              nextFYEstimate = value['estimate'];
-            } else if (value['flag'] === 'nsi') {
-              obj['flag'] = value['flag']
-            } else if (value['flag'] === 'ena') {
-              obj['flag'] = value['flag']
+            if(value['flag'] && value['flag'] !== null) {
+              if (value['flag'] === 'nsi') {
+                obj['flag'] = value['flag'];
+              } else if (value['flag'] === 'ena') {
+                obj['flag'] = value['flag']
+              }
+            } else {
+              if (value['estimate'] !== null && value['estimate'] >= 0) {
+                obj['estimate'] = value['estimate'].toString();
+                nextFYEstimate = value['estimate'];
+              }
             }
             yearsArray.push(value['year']);
             values.push(obj);
@@ -1237,16 +1252,20 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         if (yearsArray.length === 0) {
           values = this.massageOldObligationsValues(prevPublishedValues);
         } else {
-          missingYears = this.missingFiscalYear(this.fiscalYears , yearsArray);
-          if (missingYears && missingYears.length > 0) {
-            for (let msYear of missingYears) {
-              obj = {};
-              obj['year'] = msYear;
-              obj['estimate'] = null
-              values.push(obj);
+          if (yearsArray.indexOf(this.nextFY) === -1) {
+            values = this.massageOldObligationsValues(obligation['values']);
+          } else {
+            missingYears = this.missingFiscalYear(this.fiscalYears , yearsArray);
+            if (missingYears && missingYears.length > 0) {
+              for (let msYear of missingYears) {
+                obj = {};
+                obj['year'] = msYear;
+                obj['estimate'] = null
+                values.push(obj);
+              }
             }
           }
-          
+
           this.totalsByYear['totalpFY'] = this.totalsByYear['totalpFY'] + prevFYActualorEstimate;
           this.totalsByYear['totalcFY'] = this.totalsByYear['totalcFY'] + currentFYEstimate;
           this.totalsByYear['totalbFY'] = this.totalsByYear['totalbFY'] + nextFYEstimate;
@@ -1270,10 +1289,14 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         let estimateCFY = 0;
         let estimateBFY = 0;
         counter = counter + 1;
-        if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
-          estimate = value['actual'];
-        } else if (value['estimate'] !== null && value['estimate'] >= 0) {
-          estimate = value['estimate'];
+        if (value['flag'] && value['flag'] !== null) {
+          estimate = 0
+        } else {
+          if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
+            estimate = value['actual'];
+          } else if (value['estimate'] !== null && value['estimate'] >= 0) {
+            estimate = value['estimate'];
+          }
         }
         if(counter === 1) {
           estimatePFY = estimate;

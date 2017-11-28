@@ -2,10 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
+import { FeatureToggleService } from "api-kit/feature-toggle/feature-toggle.service";
+import { MsgFeedService } from "api-kit/msg-feed/msg-feed.service";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { Observable } from 'rxjs';
 import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
-import { CMSMapping } from "../content-management-mapping"
+import { CMSMapping } from "../content-management-mapping";
+import * as moment  from "moment";
 
 @Component({
   templateUrl: './content-management-view.template.html',
@@ -23,6 +26,8 @@ export class HelpContentManagementViewComponent {
   ];
 
   recordsPerPage = 5;
+
+  toggleBtn:boolean = false;
 
   title:string = "";
   curSection:string = "";
@@ -68,14 +73,19 @@ export class HelpContentManagementViewComponent {
   };
 
   cmsMapping = new CMSMapping();
+  domainsMapping;
 
   constructor(private route:ActivatedRoute,
               private _router:Router,
               private contentManagementService:ContentManagementService,
               private capitalPipe: CapitalizePipe,
-              private alertFooter: AlertFooterService){}
+              private alertFooter: AlertFooterService,
+              private featureToggleService: FeatureToggleService,
+              private msgFeedService: MsgFeedService){}
 
   ngOnInit(){
+    this.setToggleFeature();
+    this.loadDomains();
     this.route.params.subscribe(
       params => {
         if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
@@ -91,6 +101,13 @@ export class HelpContentManagementViewComponent {
           this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
         }
       });
+  }
+
+  setToggleFeature(){
+    this.featureToggleService.checkFeatureToggle('cmsBtn').subscribe(
+      res => {if(res) this.toggleBtn = res;},
+      error => {// Still hide the button if error occurs}
+    )
   }
 
   validateUrlParams(params):boolean{
@@ -124,6 +141,10 @@ export class HelpContentManagementViewComponent {
     this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
   }
 
+  onThumbnailImageError(item){
+    document.getElementById(item.refId).src = "src/assets/img/logo-not-found.png";
+  }
+
   /* search message feeds with filter, sortby, page number and order*/
   loadContent(filterObj, sort, page){
     this.noContentsInfo = 'Loading';
@@ -131,11 +152,18 @@ export class HelpContentManagementViewComponent {
     this.contentManagementService.getContent(filterObj, sort, page+1, this.recordsPerPage).subscribe(
       data => {
         try{
-          this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
+          // show the last page if the page is out of boundary
           this.totalRecords = data._embedded.contentDataWrapperList[0]['totalRecords'];
           this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-          this.updateRecordsText();
-          if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
+          if(page + 1 > this.totalPages && this.totalPages >= 1){
+            this.curPage = this.totalPages - 1;
+            this.loadContent(filterObj, sort, this.curPage);
+          }else{
+            this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
+            this.updateRecordsText();
+            if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
+          }
+
         }catch (err){
           console.log(err);
           this.noContentsInfo = "No Content Available";
@@ -145,6 +173,12 @@ export class HelpContentManagementViewComponent {
       error => {
         this.noContentsInfo = "No Content Available";
       });
+  }
+
+  loadDomains(){
+    this.msgFeedService.getDomains().subscribe(data => {
+      this.domainsMapping = data;
+    })
   }
 
   updateRecordsText(){
@@ -183,6 +217,11 @@ export class HelpContentManagementViewComponent {
     return str_tokens.join(" ");
   }
 
+  getThumbnailImage(item){
+    if(item.thumbnailUrl == null) return "src/assets/img/logo-not-found.png";
+    return item.thumbnailUrl;
+  }
+
   onContentItemAction(action, item){
     switch(action.name){
       case 'Edit':
@@ -192,49 +231,44 @@ export class HelpContentManagementViewComponent {
         this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
         break;
       case 'Publish':
-        item['status'] = {statusId:2};
-        this.contentManagementService.updateContent(item).subscribe(
-          data => {
-            this.showAlertMessage('success','Successfully published '+item.refId);
-            item = data;
-            //remove the published one if it was a draft
-            this.contents = this.contents.filter( content => {
-              if(content.contentId === item.contentId) return true;
-              return content.refId !== item.refId || content.type.typeId !== item.type.typeId;
-            });
-          },
-          err => {this.showAlertMessage('error','Failed to publish '+item.refId);}
-        );
+        item['status'] = 2;
+        this.updateDataContent(item, 'Successfully published '+item.refId, 'Failed to publish '+item.refId);
         break;
       case 'Delete': case 'Delete Draft':
         item['activeStatus'] = false;
-        this.contentManagementService.updateContent(item).subscribe(
-          data => {
-            this.showAlertMessage('success','Successfully deleted '+item.refId);
-            this.curPage = 0;
-            this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
-          },
-          err => {this.showAlertMessage('error','Failed to delete '+item.refId); }
-        );
+        this.updateDataContent(item, 'Successfully deleted '+item.refId, 'Failed to delete '+item.refId);
         break;
       case 'Unarchive':
-        item['status'] = {statusId:3};
-        this.contentManagementService.updateContent(item).subscribe(
-          data => {
-            this.showAlertMessage('success','Successfully unarchive '+item.refId);
-            item = data;
-          },
-          err => {this.showAlertMessage('error','Failed to unarchive '+item.refId);}
-        );
+        item['status'] = 3;
+        this.updateDataContent(item, 'Successfully unarchived '+item.refId, 'Failed to unarchive '+item.refId);
         break;
-
+      case 'Archive':
+        item['status'] = 4;
+        this.updateDataContent(item, 'Successfully archived '+item.refId, 'Failed to archive '+item.refId);
+        break;
     }
   }
 
+  updateDataContent(content, successMsg, errorMsg){
+    this.contentManagementService.updateContent(content).subscribe(
+      data => {
+        this.showAlertMessage('success',successMsg);
+        this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
+      },
+      err => {
+        err.errorCode == null? this.showAlertMessage('error',errorMsg): this.showAlertMessage('error',errorMsg + ' Error code: ' + err.errorCode +'. ' + err.errorMessage );
+        this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
+      }
+    );
+  }
+
   getDomainStr(domains){
+    if(domains == null) return 'Not Available';
+    if(domains.length === 0) return 'Not Available';
+    if(this.domainsMapping == null) return 'Not Available';
     let domainNames = [];
-    domains.forEach(e => {domainNames.push(e.domain_name)});
-    return domainNames.join(',');
+    domains.forEach(e => {domainNames.push(this.domainsMapping[e])});
+    return domainNames.join(', ');
   }
 
   getTagStr(tags){
@@ -243,10 +277,15 @@ export class HelpContentManagementViewComponent {
     return tagNames.join(',');
   }
 
+  getDurationText(durationSec){
+    return moment("1900-01-01 00:00:00").add(durationSec, 'seconds').format("HH:mm:ss");
+  }
+
+
   getAction(item){
     let actions = [];
     if(item.status){
-      let status = item.status.statusId;
+      let status = item.status;
       switch (status){
         case 1: //New
           actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
@@ -259,8 +298,8 @@ export class HelpContentManagementViewComponent {
           actions.push({icon:"", label:"Publish", name:"Publish", callback: ()=>{}});
           break;
         case 2: //Publish
-          actions.push({icon:"fa fa-times", label:"Delete", name:"Delete", callback: ()=>{}});
           if(!item.draftExist) actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
+          actions.push({icon:"fa fa-times", label:"Archive", name:"Archive", callback: ()=>{}});
           break;
         case 4: //Archived
           actions.push({icon:"", label:"Unarchive", name:"Unarchive", callback: ()=>{}});

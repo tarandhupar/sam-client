@@ -261,7 +261,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public onViewClick() {
-    let url = '/opportunities/' + this.oppFormViewModel.opportunityId;
+    let url = '/opp/' + this.oppFormViewModel.opportunityId;
     this.router.navigateByUrl(url);
   }
 

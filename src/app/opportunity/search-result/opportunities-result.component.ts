@@ -10,7 +10,7 @@ import * as moment from 'moment/moment';
       <div class="row">
         <div class="eight wide column">
           <h3 class="opportunity-title">
-            <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">
+            <a [routerLink]="['/opp', data._id]" [queryParams]="qParams">
               {{ data.title }}
             </a>
           </h3>

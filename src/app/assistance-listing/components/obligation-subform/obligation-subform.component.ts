@@ -157,41 +157,53 @@ export class FALObligationSubFormComponent {
     if (obligation['values']) {
       for (let value of obligation['values']) {
         if (value['year'].toString() === currentFY.toString()) {
-          if (value['estimate'] !== null && value['estimate'] >= 0) {
-            current = 'cFYEstimate';
-            currentText = value['estimate'].toString();
-          } else if (value['flag'] === 'nsi') {
-            current = 'cFYNsi';
-            currentText = value['explanation'];
-          } else if (value['flag'] === 'ena') {
-            current = 'cFYNa';
-            currentText = value['explanation'];
+          if (value['flag'] && value['flag'] !== null) {
+            if (value['flag'] === 'nsi') {
+              current = 'cFYNsi';
+              currentText = value['explanation'];
+            } else if (value['flag'] === 'ena') {
+              current = 'cFYNa';
+              currentText = value['explanation'];
+            }
+          } else {
+            if (value['estimate'] !== null && value['estimate'] >= 0) {
+              current = 'cFYEstimate';
+              currentText = value['estimate'].toString();
+            }
           }
           pyValues.push(value);
         } else if (value['year'].toString() === nextFY.toString()) {
-          if (value['estimate'] !== null && value['estimate'] >= 0) {
-            budget = 'bFYEstimate';
-            budgetText = value['estimate'].toString();
-          } else if (value['flag'] === 'nsi') {
-            budget = 'bFYNsi';
-            budgetText = value['explanation'];
-          } else if (value['flag'] === 'ena') {
-            budget = 'bFYNa';
-            budgetText = value['explanation'];
+          if (value['flag'] && value['flag'] !== null) {
+            if (value['flag'] === 'nsi') {
+              budget = 'bFYNsi';
+              budgetText = value['explanation'];
+            } else if (value['flag'] === 'ena') {
+              budget = 'bFYNa';
+              budgetText = value['explanation'];
+            }
+          } else {
+            if (value['estimate'] !== null && value['estimate'] >= 0) {
+              budget = 'bFYEstimate';
+              budgetText = value['estimate'].toString();
+            }
           }
         } else if (value['year'].toString() === prevFY.toString()) {
-          if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
-            past = 'pFYActual';
-            pastText = value['actual'].toString();
-          } else if (value['estimate'] !== null && value['estimate'] >= 0) {
-            past = 'pFYActual';
-            pastText = value['estimate'].toString();
-          } else if (value['flag'] === 'nsi') {
-            past = 'pFYNsi';
-            pastText = value['explanation'];
-          } else if (value['flag'] === 'ena') {
-            past = 'pFYNa';
-            pastText = value['explanation'];
+          if (value['flag'] && value['flag'] !== null) {
+            if (value['flag'] === 'nsi') {
+              past = 'pFYNsi';
+              pastText = value['explanation'];
+            } else if (value['flag'] === 'ena') {
+              past = 'pFYNa';
+              pastText = value['explanation'];
+            }
+          } else {
+            if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
+              past = 'pFYActual';
+              pastText = value['actual'].toString();
+            } else if (value['estimate'] !== null && value['estimate'] >= 0) {
+              past = 'pFYActual';
+              pastText = value['estimate'].toString();
+            }
           }
           pyValues.push(value);
         } else if (value['year'].toString() !== prevFY.toString() || value['year'].toString() !== nextFY.toString() || value['year'].toString() !== currentFY.toString()) {

@@ -16,22 +16,13 @@
         </a>
       </li>
       <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']">
-        <a id="manage-fal-sidetab"routerLink="/fal/myRegionalOffices">
+        <a id="manage-fal-sidetab"routerLink="/fal/myRegionalAssistanceLocations">
           Manage Assistance Locations
         </a>
       </li>
       <li>
         <a id="cfda-number-management-sidetab" *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
           CFDA Number Management
-        </a>
-      </li>
-      <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:request:access']">
-        <a routerLink="/workspace/my-feed"
-           [queryParams]="{domain: 'al', event: 'request', pending: true}">
-          Pending Requests &nbsp;
-          <span class="sam-ui circular red mini label">
-            {{ pendingRequestCount }}
-          </span>
         </a>
       </li>
       <li *ngIf="userPermissions && userPermissions._links &&  userPermissions._links['program:template:download']">
@@ -115,7 +106,7 @@
         #selectDateFilter
         [tabConfig] = "dateRangeConfig"
         [tabIndex] = "dateFilterIndex"
-        [(filterDisabled)] = "filterDisabled"        
+        [(filterDisabled)] = "filterDisabled"
         [(ngModel)]= "dateFilterModel"
         (ngModelChange) = "dateModelChange($event)"
         (dateIndexChange) = "dateTypeChangeHandler($event)"

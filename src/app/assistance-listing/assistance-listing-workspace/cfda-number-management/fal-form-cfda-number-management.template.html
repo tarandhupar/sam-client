@@ -49,18 +49,20 @@
         </div>
 
         <sam-button [buttonType]="buttonType"
+                    [buttonDisabled]="buttonDisabled"
                     [attr.id]="'cancel-btn'"
                     [buttonText]="'Cancel'"
                     [buttonClass]="'usa-button-primary usa-search-submit'"
                     (onClick)="cancelCFDANumberConfigChange()">
         </sam-button>
         <sam-button [buttonType]="buttonType"
-                    [buttonDisabled]="isCfdaCodeRestricted"
+                    [buttonDisabled]="buttonDisabled || isCfdaCodeRestricted"
                     [attr.id]="'submit-btn'"
                     [buttonText]="'Submit'"
                     [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
                     (onClick)="submitCFDANumberConfigChange()">
         </sam-button>
+        <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
       </form>
     </div>
   </div>

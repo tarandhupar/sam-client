@@ -248,7 +248,9 @@ $large: $current-large;
 }
 
 .usa-alert{
-  width: 100%;
+  //width: 100%;
+  margin-top: 0;
+  margin-bottom: 1.5em;
 }
 
 /*
@@ -377,4 +379,8 @@ select {
   column-count: 2;
   column-gap: 20px;
   padding-left: 0;
+}
+
+.link-hover:hover {
+  background-color: #f1f1f1;
 }

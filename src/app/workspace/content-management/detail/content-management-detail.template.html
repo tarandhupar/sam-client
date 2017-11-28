@@ -1,0 +1,56 @@
+<page [breadcrumbs]="crumbs">
+  <form-only class="help-content-management-detail relative" [section]="sectionTitle" [title]="content.title" *ngIf="dataLoaded">
+
+    <!--Public view tab for data definition and FAQ repository-->
+    <div class="p_T-3x relative" *ngIf="curSection !== 'video-library'; else videoLibraryView">
+      <span class="public-view-tag">{{cmsMapping.getSectionPublicTagName(curSection)}}</span>
+      <div class="m_T-1x m_B-1x">
+        <span class="bold">Domain<span *ngIf="content.domains && content.domains.length > 1">(s)</span>:</span>
+        <span>{{getDomainListStr()}}</span>
+      </div>
+      <div class="m_T-2x m_B-1x">
+        <span class="bold">Source:</span>
+        <span *ngIf="content.source && content.source !== ''; else sourceNA">{{content.source}}</span>
+        <ng-template #sourceNA>Not Available</ng-template>
+      </div>
+      <div class="m_T-2x m_B-1x">
+        <span class="bold">Keywords:</span>
+        <span>{{getKeywordsText()}}</span>
+      </div>
+      <div class="m_T-2x m_B-1x">
+        <p>{{content.description}}</p>
+      </div>
+      <div class="m_T-2x m_B-1x">
+        <span class="bold">Latest Update:</span>
+        <span>{{content.lastModifiedDate | dateTimeDisplay}}</span>
+      </div>
+    </div>
+
+    <!--Public view tab for all video library -->
+    <ng-template #videoLibraryView>
+      <div class="videoLibrary-border relative">
+        <span class="video-public-view-tag">{{cmsMapping.getSectionPublicTagName(curSection)}}</span>
+        <div class="m_T-2x m_B-1x">
+          <video controls style="width: 100%" src={{content.sourceUrl}}></video>
+        </div>
+        <div class="m_T-2x m_B-1x">
+          <span class="bold">{{content.title}}</span><br/>
+          <span>{{content.description}}</span>
+        </div>
+        <div class="m_T-1x m_B-1x">
+          <span class="bold">Domain<span *ngIf="content.domains && content.domains.length > 1">(s)</span>:</span>
+          <span>{{getDomainListStr()}}</span>
+        </div>
+        <div class="m_T-2x m_B-1x">
+          <span class="bold">Keywords:</span>
+          <span >{{getKeywordsText()}}</span>
+        </div>
+        <div class="m_T-2x m_B-1x">
+          <span class="bold">Publish Update:</span>
+          <span>{{content.lastModifiedDate | dateTimeDisplay}}</span>
+        </div>
+      </div>
+    </ng-template>
+
+  </form-only>
+</page>

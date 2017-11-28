@@ -55,4 +55,15 @@ import {
             {label:'Active > 7,100%',value:100}
         ]);
     });
+
+    it('should have null visualization data', () => {
+        component.deadlineStatusData = {
+            'active': 1,
+            'archived': 1,
+            'outside_week': 0,
+            'within_week': 0
+        };
+
+        expect(component.prepareVisualizationData(component.deadlineStatusData)).toBeNull();
+    });
 });

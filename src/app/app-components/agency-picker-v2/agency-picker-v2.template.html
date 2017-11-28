@@ -24,7 +24,8 @@
             [ngModel]="selections"
             (ngModelChange)="addSelection($event)"
             [keyValueConfig]="multipleACConfig"
-            [serviceOptions]="serviceOptions">
+            [serviceOptions]="serviceOptions"
+            [placeholder]="placeholder">
         </sam-autocomplete-multiselect>
     </ng-container>
     <div *ngIf="showAdvanced">

@@ -128,19 +128,8 @@ export class ReportComponent implements OnInit {
   congressionalDistrictCode: any = '';
   locationCode: any = '';
   dateValidatorMsg: string;
-
-  // Only for testing iframe security
-  // devIframe: boolean = false;
-  // iframeTest: any;
-  // iframe: any = {
-  //   label: 'iframe sandbox test',
-  //   name: 'iframe test'
-  // }
-  // iframeOptions: OptionsType[] = [
-  //   { name: 'iframeBase', label: 'No sandbox', value: 'base'},
-  //   { name: 'iframe3', label: '3 parameters', value: 'iframe3'},
-  //   { name: 'iframe11', label: '11 parameters', value: 'iframe11'}
-  // ]
+  anomoly: boolean = false;
+  lasaReport: boolean = false;
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -229,6 +218,15 @@ export class ReportComponent implements OnInit {
     // Sets state prompt name based on specific report
     if (this.id === '48EC50F946E3011C5DE470A6FEA8C1FD') {
       this.stateLabel = 'Vendor State Code';
+    }
+
+    // Sets order of prompts for Local Area Set Aside Report
+    if(this.id === 'A733895D42D56A54679F95B20133D3C9') {
+      this.lasaReport = true;
+    }
+
+    if (this.name === 'IDVs whose Orders are over the Ceiling Amount' || 'Potential Vendor Anomaly Report' || 'Unique Vendors Report' || 'Contract Termination for Default-Cause Report' || 'Subcontracting Plan Report' || 'Orders Placed after IDV\'s Last Date to Order Report') {
+      this.anomoly = true;
     }
   }      
 
@@ -575,4 +573,3 @@ export class ReportComponent implements OnInit {
     }
   } 
 }
-

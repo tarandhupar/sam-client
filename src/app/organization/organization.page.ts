@@ -9,10 +9,7 @@ import * as _ from 'lodash';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'organization.page.html',
-  providers: [
-    FHService
-  ]
+  templateUrl: 'organization.page.html'
 })
 export class OrganizationPage implements OnInit, OnDestroy {
   subscription: Subscription;

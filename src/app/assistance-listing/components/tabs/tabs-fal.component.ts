@@ -36,7 +36,7 @@ export class TabsFalComponent implements OnInit{
   @ViewChild('deleteModal') deleteModal;
 
   modalConfig = {title: 'Delete Draft AL', description: ''};
-
+  processing: boolean = false;
   currentRouteConfig: string;
 
   cookieValue: string;
@@ -57,6 +57,20 @@ export class TabsFalComponent implements OnInit{
   notifyErrorFooterAlertModel = {
     title: "Error",
     description: "Error sending notification.",
+    type: "error",
+    timer: 3000
+  };
+
+  deleteSuccessFooterAlertModel = {
+    title: "Success",
+    description: "Deletion successful.",
+    type: "success",
+    timer: 3000
+  };
+
+  deleteErrorFooterAlertModel = {
+    title: "Error",
+    description: "Deletion unsuccessful.",
     type: "error",
     timer: 3000
   };
@@ -170,6 +184,8 @@ export class TabsFalComponent implements OnInit{
   }
 
   onButtonClick(event) {
+    this.enableDisableButtons(true);
+    this.processing = true;
     this.tabClick.emit({
       label: event
     });
@@ -216,10 +232,12 @@ export class TabsFalComponent implements OnInit{
   public onDeleteModalSubmit() {
     this.deleteModal.closeModal();
     this.programService.deleteProgram(this.data.id, this.cookieValue).subscribe(res => {
+      this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteSuccessFooterAlertModel)));
       this.router.navigate(['/fal/workspace']);
     }, err => {
       // todo: show error message when failing to delete
       console.log('Error deleting program ', err);
+      this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.deleteErrorFooterAlertModel)));
     });
   }
 

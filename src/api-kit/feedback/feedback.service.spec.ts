@@ -4,7 +4,7 @@ import { Http, Response, BaseRequestOptions, ResponseOptions, RequestMethod } fr
 import { FeedbackService } from './feedback.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
-xdescribe('Feedback Service', () => {
+describe('Feedback Service', () => {
   let basicFeedback = {
     userId: "",
     feedbackList: [

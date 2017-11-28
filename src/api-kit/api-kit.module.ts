@@ -47,6 +47,7 @@ import { PscServiceImpl } from './autoCompleteWrapper/psc-autocomplete.service';
 import { NaicsService } from "./naics/naics.service";
 import { SamNaicsServiceDirective } from './autoCompleteWrapper/naics-autocomplete.service';
 import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.service';
+import { FeatureToggleService } from "./feature-toggle/feature-toggle.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -113,6 +114,7 @@ import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.servi
     //{ provide: PeoplePickerService, useClass: PeoplePickerServiceMock }
     MsgFeedService,
     // { provide: MsgFeedService, useClass: MsgFeedServiceMock }
+    FeatureToggleService,
 
     SubscriptionsService,
     ContentManagementService,
@@ -123,7 +125,7 @@ import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.servi
     PscServiceImpl,
     PscService,
     NaicsServiceImpl,
-    NaicsService,    
+    NaicsService,
   ]
 })
 export class SamAPIKitModule { }

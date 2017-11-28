@@ -235,7 +235,7 @@ export class OpportunityPage implements OnInit {
   }
 
   private setupSideNavMenus(){
-    this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
+    this.pageRoute = "opp/" + this.opportunity.opportunityId;
     let opportunitySideNavContent = {
       "label": "Contract Opportunity",
       "route": this.pageRoute,
@@ -707,7 +707,7 @@ export class OpportunityPage implements OnInit {
       queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
-    this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
+    this.router.navigate(['/opp',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
     document.getElementById('awards-list').focus();
   }

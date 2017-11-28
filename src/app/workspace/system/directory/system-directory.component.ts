@@ -84,7 +84,6 @@ export class SystemDirectoryComponent {
         });
 
     // Dynamic Alerts
-    console.log
     this.ping(this.api.alert)
 
     this.api.iam.cws.application.getAll(applications => {

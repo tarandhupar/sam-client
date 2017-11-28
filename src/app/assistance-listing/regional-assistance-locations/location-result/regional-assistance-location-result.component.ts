@@ -88,7 +88,7 @@ export class RegionalAssistanceLocationResult implements OnInit {
 
   actionsDropdownSelect(event) {
     if(event === 'Update') {
-      this.router.navigateByUrl('/fal/myRegionalOffices/' + this.data.id + '/edit');
+      this.router.navigateByUrl('/fal/myRegionalAssistanceLocations/' + this.data.id + '/edit');
     }
     if(event === 'Delete') {
       this.modal1.openModal();

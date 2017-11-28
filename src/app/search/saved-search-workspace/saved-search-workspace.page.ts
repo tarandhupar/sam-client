@@ -17,6 +17,9 @@ import {SearchDictionariesService} from "../../../api-kit/search/search-dictiona
 
 export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   @ViewChild('selectDateFilter') selectDateFilter;
+  private LAST_SAVED = 'last_saved';
+  private LAST_RAN = 'last_ran';
+
   totalCount: any = 0;
   totalPages: any = 0;
   pageNum = 0;
@@ -235,7 +238,8 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       }
     }
   ];
-  currDateOption : any  = {};
+  internalDateModel : any  = {};
+  dateTypeOptions = [this.LAST_SAVED, this.LAST_RAN];
 
   defaultSort: any = {type:'modified_on', sort:'desc'};
   sortModel: any = this.defaultSort;
@@ -267,29 +271,12 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
         this.domainCheckboxModel = typeof data['domain'] === "string" ? decodeURI(data['domain']).split(",") : this.defaultDomains;
 
-        this.dateFilterModel = {};
-        if (data['saved_date'] || data['saved_date.to'] || data['saved_date.from']) {
-          let date = {};
-          if (data['saved_date']) {
-            date['date'] = data['saved_date'];
-          } else {
-            date['dateRange'] = {'startDate': data['saved_date.from'], 'endDate': data['saved_date.to']};
-          }
-
-          this.dateFilterModel = date;
-          this.dateFilterIndex = 0;
-        } else if (data['last_ran_date'] || data['last_ran_date.to'] || data['last_ran_date.from']) {
-          let date = {};
-          if (data['last_ran_date']) {
-            date['date'] = data['last_ran_date'];
-          } else {
-            date['dateRange'] = {'startDate': data['last_ran_date.from'], 'endDate': data['last_ran_date.to']};
-          }
-
-          this.dateFilterModel = date;
-          this.dateFilterIndex = 1;
-        }
-
+        this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
+        this.dateFilterModel = data['dateTab'] ? this.formatDateModel(data) : {};
+        this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
+        
+        this.dateFilterIndex = data['dateTab'] && this.dateTypeOptions ? _.indexOf(this.dateTypeOptions, decodeURI(data['dateTab'])) : 0;
+        this.updateDateFilterConfig(this.dateFilterIndex);
         this.runSavedSearch();
       });
   }
@@ -297,6 +284,42 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.runSearchSub) {
       this.runSearchSub.unsubscribe();
+    }
+  }
+
+  formatDateWrapper(){
+    if(!_.isEmpty(this.dateFilterModel)){
+      if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
+        return this.formatDate(this.dateFilterModel);
+      }else if(this.dateFilterModel.hasOwnProperty('dateRange') && this.dateFilterModel.dateRange){
+        return this.formatDateRange(this.dateFilterModel);
+      }
+    }
+  }
+
+  formatDate(model){
+    if(!_.isEmpty(model)){      
+      return {
+        'startDate': model.date + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['date']),
+        'endDate': model.date + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['date'])
+      }
+    }
+    
+  }
+  formatDateRange(model){
+    if(!_.isEmpty(model)){
+      return {
+        'startDate': model.dateRange.startDate + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['startDate']),
+        'endDate': model.dateRange.endDate + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['endDate'])
+      }
+    }
+  }
+
+  formatDateModel(data){
+    if(data.radSelection === 'date'){
+      return data.dateFrom ? {'date': data.dateFrom} : {'date': ''}
+    }else if(data.radSelection === 'dateRange'){
+      return data.dateFrom && data.dateTo ? {'dateRange': {'startDate' : data.dateFrom, 'endDate': data.dateTo}} : {'dateRange': {'startDate' : '', 'endDate': ''}}
     }
   }
 
@@ -326,22 +349,16 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
       qsobj['domain'] = this.domainCheckboxModel.join();
     }
 
-    if (this.dateFilterModel && !_.isEmpty(this.dateFilterModel)) {
-      if (this.dateFilterModel && this.dateFilterIndex == 0) {
-        if (this.dateFilterModel['dateRange']) {
-          qsobj['saved_date.to'] = this.dateFilterModel['dateRange']['endDate'];
-          qsobj['saved_date.from'] = this.dateFilterModel['dateRange']['startDate'];
-        } else if (this.dateFilterModel['date']) {
-          qsobj['saved_date'] = this.dateFilterModel['date'];
-        }
-      } else if (this.dateFilterModel && this.dateFilterIndex == 1) {
-        if (this.dateFilterModel['dateRange']) {
-          qsobj['last_ran_date.to'] = this.dateFilterModel['dateRange']['endDate'];
-          qsobj['last_ran_date.from'] = this.dateFilterModel['dateRange']['startDate'];
-        } else if (this.dateFilterModel['date']) {
-          qsobj['last_ran_date'] = this.dateFilterModel['date'];
-        }
-      }
+    //Date Filter query params
+    if(!_.isEmpty(this.internalDateModel)){
+      qsobj['dateTab'] = this.dateTypeOptions[this.dateFilterIndex];
+    }
+    if(this.dateRangeConfig && !_.isEmpty(this.internalDateModel)){
+      qsobj['radSelection'] = this.dateRadio;
+    }
+    if(this.internalDateModel && !_.isEmpty(this.internalDateModel)){
+      qsobj['dateFrom'] = this.internalDateModel.startDate;
+      qsobj['dateTo'] = this.internalDateModel.endDate;
     }
 
     //If changing sort option, reset to default sort order for that option
@@ -370,29 +387,18 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   }
 
   runSavedSearch() {
+    let dateTab = this.dateTypeOptions[this.dateFilterIndex];
+    let dateObj = this.formatDateWrapper();
+
     let params = {
       Cookie: this.cookieValue,
       pageNum: this.pageNum,
       keyword: SavedSearchWorkspacePage.keywordToString(this.keywordsModel),
       sortBy: (this.sortModel['sort'] == 'desc' ? '-' : '')+(this.sortModel['type']),
-      domain: this.domainCheckboxModel.join(',')
+      domain: this.domainCheckboxModel.join(','),
+      dateTab: dateTab,
+      dateFilter: dateObj
     };
-
-    if (this.dateFilterModel && this.dateFilterIndex == 0) {
-      if (this.dateFilterModel['dateRange']) {
-        params['saved_date.to'] = this.dateFilterModel['dateRange']['endDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['endDate']);
-        params['saved_date.from'] = this.dateFilterModel['dateRange']['startDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['startDate']);
-      } else if (this.dateFilterModel['date']) {
-        params['saved_date'] = this.dateFilterModel['date'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['date']);
-      }
-    } else if (this.dateFilterModel && this.dateFilterIndex == 1) {
-      if (this.dateFilterModel['dateRange']) {
-        params['last_ran_date.to'] = this.dateFilterModel['dateRange']['endDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['endDate']);
-        params['last_ran_date.from'] = this.dateFilterModel['dateRange']['startDate'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['dateRange']['startDate']);
-      } else if (this.dateFilterModel['date']) {
-        params['last_ran_date'] = this.dateFilterModel['date'] + SavedSearchWorkspacePage.fetchFormattedTimeZoneOffset(this.dateFilterModel['date']);
-      }
-    }
 
     // make api call
     this.runSearchSub = this.savedSearchService.getAllSavedSearches(params).subscribe(data => {
@@ -717,9 +723,18 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     this.workspaceRefresh();
   }
 
-  dateFilterHandler(evt) {
+  // initiates a search with date filter
+  filterByDate(event){
+    // setting dateFilterIndex
+    if(event){
+      if(event.index){
+        this.dateFilterIndex = event.index;    
+      }
+    }else{
+      this.dateFilterIndex = 0;
+    }
+
     this.pageNum = 0;
-    this.dateFilterIndex = evt['index'];
     this.workspaceRefresh();
   }
   
@@ -727,6 +742,8 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     this.filterDisabled = true;
     if(event['date']){
       if(event['date'] !== 'Invalid Date' && event['date'].substring(0,1) !== '0'){
+        this.internalDateModel['startDate'] = event['date'];
+        this.internalDateModel['endDate'] = event['date'];
         this.dateFilterModel = event;
         this.dateRadio = 'date';
         this.filterDisabled = false;
@@ -735,6 +752,8 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
         // checks if dateRange exists and does not equal invalid date and that all 4 "year" numbers have been filled in
         if(event['dateRange']['startDate'] && event['dateRange']['endDate'] && event['dateRange']['startDate'] !== 'Invalid date' && event['dateRange']['endDate'] !== 'Invalid date'){
           if(event['dateRange']['startDate'].substring(0,1) !== '0' && event['dateRange']['endDate'].substring(0,1) !== '0'){
+            this.internalDateModel['startDate'] = event['dateRange']['startDate'];
+            this.internalDateModel['endDate'] = event['dateRange']['endDate'];
             this.dateFilterModel = event;
             this.dateRadio = 'dateRange';
             this.filterDisabled = false;
@@ -743,9 +762,11 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
     }
   }
 
-  dateFilterClearHandler() {
+  clearDateFilter(event){
     this.dateFilterModel = {};
+    this.internalDateModel = {};
     this.pageNum = 0;
+
     this.workspaceRefresh();
   }
 
@@ -814,6 +835,7 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
 
     //clear date filter
     this.dateFilterModel = {};
+    this.internalDateModel = {};
     this.pageNum = 0; 
 
     //reset sort

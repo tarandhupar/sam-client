@@ -28,7 +28,7 @@
                       *ngFor="let account of store.records; let $index = index;"></system-listing>
 
       <span result-actions>
-        <sam-button buttonType="primary" buttonText="New Account" (onClick)="router.navigate(['/workspace/system/new'])"></sam-button>
+        <sam-button buttonType="primary" buttonText="New Account" (onClick)="router.navigate(['/workspace/system/new'])" *ngIf="api.iam.user.isSystemAccount()"></sam-button>
       </span>
     </results>
 

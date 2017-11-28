@@ -101,6 +101,7 @@
       </span>
       </div>
     </ng-container>
+    <ng-container *ngIf="processing === true">Processing Request...</ng-container>
 
     <!-- ==================== Delete ==================== -->
     <a *ngIf="canDelete()"

@@ -25,5 +25,9 @@ describe('src/app/app-components/create-page-template/create-page-template.spec.
 
   it('SamCreatePageTemplateComponent: Basic Compile', ()  => {
     expect(true).toBe(true);
+    comp.action.subscribe(obj=>{
+      expect(obj['event']).toBe("aaaa")
+    });
+    comp.formAction("aaaa");
   });
 });

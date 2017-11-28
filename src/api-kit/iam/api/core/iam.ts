@@ -165,7 +165,13 @@ class IAM {
 
               // Verifying Cookie Set
               if(data.tokenId === Cookies.get('iPlanetDirectoryPro')) {
-                $success(data);
+                // Verify user info before proceeding with success
+                this.checkSession(() => {
+                  $success(data);
+                }, response => {
+                  $error(exceptionHandler(response));
+                });
+
               } else {
                 this.removeSession();
                 $error({ message: cookieError });

@@ -5,7 +5,7 @@ import { NotificationItem } from "../interfaces";
   selector: 'sam-notifications',
   template: `
     <ul class="notifications-list">
-        <li *ngFor="let item of _notifications; let i = index">
+        <li *ngFor="let item of _notifications; let i = index" class="link-hover">
             <a (click)="linkHandler(item.link)">
                 <div class="name-block p_L-1x">
                     <ng-container [ngSwitch]="item.type">

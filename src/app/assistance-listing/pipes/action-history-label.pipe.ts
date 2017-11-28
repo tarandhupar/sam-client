@@ -7,13 +7,13 @@ export class ActionHistoryLabelPipe implements PipeTransform {
     let label = "";
     switch(actionType){
       case "retract":
-        label = "Program Retracted";
+        label = "Retracted";
         break;
       case "publish":
         label = "Revision Published";
         break;
       case "reject_program":
-        label = "Program Rejected";
+        label = "Rejected";
         break;
       case "send_omb":
         label = "Submitted to OMB";
@@ -25,7 +25,7 @@ export class ActionHistoryLabelPipe implements PipeTransform {
         label = "Archive Request Rejected";
         break;
       case "archive":
-        label = "Program Archived";
+        label = "Archived";
         break;
       case "archive_cancel":
         label = "Archive Request Cancelled";
@@ -64,7 +64,7 @@ export class ActionHistoryLabelPipe implements PipeTransform {
         label = "omb_extension";
         break;
       case "unarchive":
-        label = "Program Unarchived";
+        label = "Unarchived";
         break;
       case "unarchive_reject":
         label = "Unarchive Request Rejected";

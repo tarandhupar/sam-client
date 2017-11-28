@@ -79,8 +79,8 @@
         [(ngModel)]="dateFilterModel"
         (ngModelChange)= "dateModelChange($event)"
         (dateIndexChange) = "dateTypeChangeHandler($event)"
-        (filterEvt)="dateFilterHandler($event)"
-        (filterClearEvt)="dateFilterClearHandler($event)"
+        (filterEvt)="filterByDate($event)"
+        (filterClearEvt)="clearDateFilter($event)"
         [id]="'date-range-filter'">
       </sam-select-date-range-filter>
 

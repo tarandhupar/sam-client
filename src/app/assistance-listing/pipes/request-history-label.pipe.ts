@@ -21,14 +21,14 @@ export class RequestHistoryLabelPipe implements PipeTransform {
       case "unarchive_request":
         label = "Unarchive Requested";
         break;
-      case "submit":
-        label = "Program Submitted";
+      case "submit": //because we're hiding send_omb from the list of history action -> renaming submit label to match send_omb label
+        label = "Submitted to OMB";
         break;
       case "retract":
-        label = "Program Retraction Submitted";
+        label = "Retraction Submitted";
         break;
       case "revise":
-        label = "Program Revision Requested";
+        label = "Revision Requested";
         break;
     }
     return label;

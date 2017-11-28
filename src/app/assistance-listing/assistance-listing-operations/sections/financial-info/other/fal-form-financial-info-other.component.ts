@@ -97,8 +97,10 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
       description: '' // todo: complete description w/ reference to element
     }
   };
+  model: any;
 
   constructor(private fb: FormBuilder, private errorService: FALFormErrorService) {
+    this.model = errorService.viewModel;
   }
 
   ngOnInit() {

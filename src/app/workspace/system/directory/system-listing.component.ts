@@ -66,6 +66,10 @@ export class SystemListingComponent {
     this.api.iam = _iam.iam;
   }
 
+  ngOnInit() {
+
+  }
+
   ngOnDestroy() {
     this.unsubscribe();
   }
@@ -146,7 +150,15 @@ export class SystemListingComponent {
   }
 
   get route(): Array<string|number> {
-    return [instanceOfCWSApplication(this.$account) ? 'new' : 'profile', this._account.id];
+    if(this.api.iam.user.isSecurityApprover()) {
+      return ['/workspace/requests/system', this._account.id];
+    } else {
+      return [instanceOfCWSApplication(this.$account) ? 'new' : 'profile', this._account.id];
+    }
+  }
+
+  get queryParams(): { [key: string]: string } {
+    return this.api.iam.user.isSecurityApprover() ? { directory: true } : {};
   }
 
   redirectToStatus() {

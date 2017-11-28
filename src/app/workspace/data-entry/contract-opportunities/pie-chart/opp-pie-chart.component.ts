@@ -41,21 +41,25 @@ import * as _ from 'lodash'
         let percentages = {};
         if(data){
             let total = this.sumDataFromLabels(labels, data);
-            _.forEach(data, function(value, key){
-                percentages[key] = Math.floor(100 * (value / total));
-            });
-            return labels.map(function(label){
-                let display_label = '';
-                switch(label){
-                    case 'within_week':
-                        display_label = 'Active < 7,' + percentages[label]+'%';
-                        break;
-                    case 'outside_week':
-                        display_label = 'Active > 7,' + percentages[label]+'%';
-                        break;
-                }
-                return { label: display_label, value: percentages[label] }
-            });
+            if(total > 0){
+                _.forEach(data, function(value, key){
+                    percentages[key] = Math.floor(100 * (value / total));
+                });
+                return labels.map(function(label){
+                    let display_label = '';
+                    switch(label){
+                        case 'within_week':
+                            display_label = 'Active < 7,' + percentages[label]+'%';
+                            break;
+                        case 'outside_week':
+                            display_label = 'Active > 7,' + percentages[label]+'%';
+                            break;
+                    }
+                    return { label: display_label, value: percentages[label] }
+                });
+            }else{
+                return null;
+            }
         }else{
             console.error('Chart data not provided.');
         }

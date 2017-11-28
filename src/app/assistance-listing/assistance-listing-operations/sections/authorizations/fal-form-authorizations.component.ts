@@ -146,7 +146,6 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
               list['authorizationTypes'][type] = null;
               if(Object.keys(this.authSubForm.getObjWithoutNullValues(list[type])).length == 0)
                 list[type] = null;
-
             }
           }
         }//end of if authType.length

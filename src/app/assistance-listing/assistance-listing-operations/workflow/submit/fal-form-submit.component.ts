@@ -15,6 +15,7 @@ export class FALSubmitComponent {
   title: string;
   programId: string;
   data: any;
+  processing: boolean = false;
   btnDisabled: boolean = true;
   successFooterAlertModel = {
     title: "Success",
@@ -59,6 +60,8 @@ export class FALSubmitComponent {
   }
 
   onSubmitOMBClick() {
+    this.btnDisabled = true;
+    this.processing = true;
     this.programId = this.router.url.split('/')[2];
     let data = {"reason": this.falSubmitForm.controls['reason'].value};
     this.service.submitFAL(this.programId, data)
@@ -67,6 +70,8 @@ export class FALSubmitComponent {
           this.router.navigate(['/fal/workspace']);
         },
         error => {
+          this.btnDisabled = false;
+          this.processing = false;
           console.error('error  Submitting to OMB to api', error);
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.errorFooterAlertModel)));
 

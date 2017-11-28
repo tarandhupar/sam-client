@@ -34,8 +34,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
   private MODIFIED = 'modified';
   private POSTED = 'posted';
-  private START_DAY = '00:00:00';
-  private END_DAY = '23:59:59';
 
   showSpinner: boolean = false;
   keyword: string = '';
@@ -91,7 +89,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   sortOptions = [
     {label:'Date Published', name:'Date Published', value:'publishedDate'},
     {label:'Date Modified', name:'Date Modified', value:'modifiedDate'},
-    {label:'Listing Number', name:'Listing Number', value:'programNumber'},
+    {label:'CFDA Number', name:'CFDA Number', value:'programNumber'},
     {label:'Listing Title', name:'Listing Title', value:'title'}
   ];
   orgNameMap = new Map();
@@ -244,24 +242,18 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
      this.workspaceRefresh();
    }
 
-   formatDateWrapper(appendTime: boolean){
+   formatDateWrapper(){
      if(!_.isEmpty(this.dateFilterModel)){
        if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
-         return this.formatDate(this.dateFilterModel, appendTime);
+         return this.formatDate(this.dateFilterModel);
        }else if(this.dateFilterModel.hasOwnProperty('dateRange') && this.dateFilterModel.dateRange){
-         return this.formatDateRange(this.dateFilterModel, appendTime);
+         return this.formatDateRange(this.dateFilterModel);
        }
      }
    }
 
-   formatDate(model, appendTime){
+   formatDate(model){
      if(!_.isEmpty(model)){
-       if(appendTime){
-         return {
-           'startDate': model.date + ' ' + this.START_DAY,
-           'endDate': model.date + ' ' + this.END_DAY
-         }
-       }
        return {
          'startDate': model.date,
          'endDate': model.date
@@ -269,14 +261,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
      }
 
    }
-   formatDateRange(model, appendTime){
+   formatDateRange(model){
      if(!_.isEmpty(model)){
-       if(appendTime){
-         return {
-           'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
-           'endDate': model.dateRange.endDate + ' ' + this.END_DAY
-         }
-       }
        return {
          'startDate': model.dateRange.startDate,
          'endDate': model.dateRange.endDate
@@ -325,9 +311,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   runProgram() {
     this.showSpinner = true;
-    let dateTab = this.dateTypeOptions[this.dateFilterIndex]
-    let appendTime = true;
-    let dateObj = this.formatDateWrapper(appendTime);
+    let dateTab = this.dateTypeOptions[this.dateFilterIndex];
+    let dateObj = this.formatDateWrapper();
 
     // make api call
     this.runProgSub = this.programService.runProgram({
@@ -404,7 +389,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   manageAssistanceLocationsClick(){
-    this.router.navigate(['fal/myRegionalOffices']);
+    this.router.navigate(['fal/myRegionalAssistanceLocations']);
   }
 
   workspaceSearchModel(event) {
@@ -634,7 +619,10 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   addOrgTypeToData() {
     let ctx = this;
     ctx.data.forEach(function(data){
-      data['organizationType'] = ctx.orgTypeMap.get(data.data.organizationId.toString());
+      if(ctx.orgTypeMap.get(data.data.organizationId.toString()))
+        data['organizationType'] = ctx.orgTypeMap.get(data.data.organizationId.toString()).trim().toLowerCase();
+      else
+        data['organizationType'] = null;
     });
   }
 
@@ -670,22 +658,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.agencyPickerModel = [];
     this.organizationId = "";
   }
-
-  // initiates a search with date filter
-  // filterByDate(){
-
-  //   // set 4 vars from model here
-  //   var returnObj = this.formatDates(this.postedDateFilterModel, this.modifiedDateFilterModel, false);
-  //   this.modifiedFrom = returnObj.modifiedFrom;
-  //   this.modifiedTo = returnObj.modifiedTo;
-  //   this.postedFrom = returnObj.postedFrom;
-  //   this.postedTo = returnObj.postedTo;
-
-  //   this.disabled = true;
-  //   this.pageNum = 0;
-  //   this.workspaceRefresh();
-  // }
-
 
   // sortBy model change
   sortModelChange(){

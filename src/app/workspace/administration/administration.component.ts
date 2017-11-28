@@ -7,6 +7,7 @@ import { AdminService } from 'application-content/403/admin.service';
 import { Cookie } from "ng2-cookies";
 import { UserService } from "../../role-management/user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
+import { FeatureToggleService } from "../../../api-kit/feature-toggle/feature-toggle.service";
 
 @Component({
   selector: 'workspace-administration',
@@ -47,7 +48,7 @@ export class AdministrationComponent {
 
   @Input() toggleControl = {
     aacRequest: true,
-    fh: true,
+    fh: false,
     fsd: false,
     profile: true,
     rm: false,
@@ -73,6 +74,7 @@ export class AdministrationComponent {
               private alertService: SystemAlertsService,
               private userService: UserService,
               private userAccessService: UserAccessService,
+              private featureToggleService: FeatureToggleService
   ) {}
 
   ngOnInit() {
@@ -91,6 +93,12 @@ export class AdministrationComponent {
         err => {
           // don't show the widget on errors, or 401 or 405
         });
+      this.featureToggleService.checkFeatureToggle('fh').subscribe(
+        res => {
+          if (res) this.toggleControl.fh = true;
+        },
+        err => {}
+      )
     }
   }
 
@@ -133,7 +141,7 @@ export class AdministrationComponent {
 
   initRoles() {
     this.states.public = !(this.user.gov || this.user.entity);
-    this.toggleControl.system = this.user.systemAccount;
+    this.toggleControl.system = (this.user.systemAccount || this.user.systemApprover);
     this.toggleControl.fsd = this.user.fsd;
   }
 

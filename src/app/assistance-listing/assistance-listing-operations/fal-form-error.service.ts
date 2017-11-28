@@ -371,6 +371,8 @@ export class FALFormErrorService {
 
   public checkForUniqueProgNo(response, errors){
     this.falFormService.isProgramNumberUnique(this._viewModel.programNumber, this._viewModel.programId, this._viewModel.organizationId)
+      .debounceTime(80)
+      .distinctUntilChanged()
       .subscribe(res => {
         if(!res['content']['isProgramNumberUnique']) {
           errors = {

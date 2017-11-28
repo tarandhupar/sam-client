@@ -371,6 +371,13 @@ export class GrantOrEditAccess {
     let val = this.form.value;
 
     let orgs = (!val.org || !val.org.length) ? [] : val.org.map(o => ''+o.orgKey);
+    const orgMap = (!val.org || !val.org.length) ? [] : val.org.map(o => ({
+      orgKey: o.orgKey,
+      name: o.name,
+      level: o.level,
+      fullParentPath: o.fullParentPath,
+      type: o.type,
+    }));
     let body: any = {
       users: [this.user.email],
       updatedAccess: {
@@ -380,6 +387,7 @@ export class GrantOrEditAccess {
       },
       message: val.comment,
       mode: this.requestId ? "APPROVE" : this.isGrant() ? "GRANT" : "EDIT",
+      organizations: orgMap,
     };
 
     if (this.isEdit() || this.requestId) {
@@ -389,6 +397,7 @@ export class GrantOrEditAccess {
     let apiMethod = this.isGrant() ? "postAccess" : "putAccess";
     let qp = this.requestId ? { userAccessRequestId: this.requestId } : undefined;
     this.submitEnabled = false;
+
     this.userAccessService[apiMethod](body, qp).subscribe(
       res => {
         this.goToAccess();
@@ -396,13 +405,25 @@ export class GrantOrEditAccess {
       err => {
         this.submitEnabled = true;
         if (err && err.status === 409) {
+          try {
+            let resBody = err.json();
+            if (Array.isArray(resBody.errors)) {
+              this.errorMessage = resBody.errors.join('\n');
+              return;
+            } else if (typeof resBody.errors === 'string') {
+              this.errorMessage = resBody.errors;
+              return;
+            }
+          } catch(err) {
+
+          }
           console.error(err);
           let e: string = 'The user already has access for this domain at one or more of the selected organization(s)';
           this.errorMessage = e;
         } else {
           console.error(err);
           this.alertFooter.registerFooterAlert({
-            description: 'There was an error with a required service',
+            description: 'Unable to complete the requested action at this time. Please try again later.',
             type: "error",
             timer: 3200
           });

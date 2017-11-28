@@ -153,6 +153,7 @@
         <sam-agency-picker-v2 #agencyPickerV2
           [attr.id] = "'federal-organization-filter'"
           [label]="'Search Federal Organizations'"
+          [placeholder]="'Select...'"
           [ngModel]="agencyPickerModel"
           (ngModelChange)="onOrganizationChange($event)"
           [editOnFlag]="false"
@@ -344,8 +345,8 @@
                                       [name]="'Entity Duns'"
                                       [ngModel]="dunsModelList"
                                       (ngModelChange)="dunsModelChange($event)"
-                                      [keyValueConfig]="dunsConfiguration.keyValueConfig">
-
+                                      [keyValueConfig]="dunsConfiguration.keyValueConfig"
+                                      [placeholder]="dunsConfiguration.placeholder">
         </sam-autocomplete-multiselect>
         <div class="sam-ui divider"></div>
       </ng-container>
@@ -371,6 +372,7 @@
         <sam-agency-picker-v2 #agencyPickerV2
           [attr.id] = "'federal-organization-filter-ei'"
           [label]="'Search Federal Organizations'"
+          [placeholder]="'Select...'"
           [ngModel]="agencyPickerModel"
           (ngModelChange)="onOrganizationChange($event)"
           [editOnFlag]="false"

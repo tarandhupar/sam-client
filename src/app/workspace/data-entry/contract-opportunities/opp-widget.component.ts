@@ -14,6 +14,7 @@ export class OppWidgetComponent {
     cookieValue: string;
     oppCounts: any = {};
     chartCounts: any = {};
+    showSpinner: boolean = false;
 
     oppFacets: any = ['status', 'status_active'];
   
@@ -37,6 +38,7 @@ export class OppWidgetComponent {
     }
 
     loadOppCounts(){
+        this.showSpinner = true;    
         this.opportunityService.runOpportunity({
             facets: this.oppFacets.toString(),
             Cookie: this.cookieValue,
@@ -62,6 +64,9 @@ export class OppWidgetComponent {
         },
         error => {
             console.error("Error getting opportunity counts", error);
+        },
+        () => {
+            this.showSpinner = false; 
         })
     }
 

@@ -33,6 +33,7 @@ enum ChangeRequestPermissionType {
   selector: 'fal-form-change-request'
 })
 export class FALFormChangeRequestComponent implements OnInit {
+  buttonDisabled: boolean = false;
   falChangeRequestForm: FormGroup;
   buttonType: string = 'default';
   requestType: string;
@@ -230,6 +231,7 @@ export class FALFormChangeRequestComponent implements OnInit {
 
   public submitChangeRequest() {
     if (this.falChangeRequestForm.valid) {
+      this.buttonDisabled = true;
       //disable button's event
       this.buttonType = 'disabled';
       let actionTypes: any = {
@@ -259,6 +261,7 @@ export class FALFormChangeRequestComponent implements OnInit {
           this.router.navigate(['/fal/workspace'], navigationExtras);
         },
         error => {
+          this.buttonDisabled = false;
           console.error('error submitting request', error);
           this.notifyFooterAlertModel.title = "Error";
           this.notifyFooterAlertModel.type = "error";
