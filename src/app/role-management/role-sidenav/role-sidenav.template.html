@@ -34,7 +34,8 @@
       </sam-accordion>
       <div class = "tx-pad">
         <sam-label-wrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
-          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
+          <input id="new-domain-input" type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
+          <label for="new-domain-input" class="hide">Add New Domain</label>
         </sam-label-wrapper>
         <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
       </div>

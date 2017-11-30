@@ -6,7 +6,7 @@
 
   <!-- Domain label or dropdown -->
   <ng-container *ngIf="mode === 'edit'">
-    <label>Domain</label>
+    <span class="field-label">Domain</span>
     <p>{{getLabelForDomain(domain)}}</p>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
@@ -22,7 +22,7 @@
     </sam-label-wrapper>
 
     <div>
-      <label>Can this role administer to other roles?</label>
+      <span class="field-label">Can this role administer to other roles?</span>
       <sam-toggle-switch [isSwitchOn]="canAdministerRoles" (switchStatusChange)="onCanAdministerRolesChange($event)"></sam-toggle-switch>
     </div>
 

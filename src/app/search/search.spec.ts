@@ -33,6 +33,9 @@ import {ActivatedRoute} from "@angular/router";
 import * as Cookies from 'js-cookie';
 import {SavedSearchService} from "../../api-kit/search/saved-search.service";
 import {SearchModule} from "./search.module";
+import {SamModalComponent} from 'sam-ui-elements/src/ui-kit/components/modal/modal.component';
+import { SamComponentsModule } from 'sam-ui-elements/src/ui-kit/components';
+
 
 let fixture;
 
@@ -188,7 +191,7 @@ let fhServiceStub = {
 describe('src/app/search/search.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      schemas: [ NO_ERRORS_SCHEMA ],
+      schemas: [],
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
         EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
         SearchMultiSelectFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
@@ -213,6 +216,7 @@ describe('src/app/search/search.spec.ts', () => {
         SamUIKitModule,
         SamAPIKitModule,
         AppComponentsModule,
+        SamComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ]),
@@ -241,7 +245,7 @@ describe('src/app/search/search.spec.ts', () => {
 	});
 
   it('SearchPage: should "run" a featured search', () => {
-    fixture.componentInstance.keyword = "test";
+    fixture.componentInstance.keywords = "test";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
@@ -277,20 +281,18 @@ describe('src/app/search/search.spec.ts', () => {
     });
   });
 
-  it('SearchPage: should "check" if the agency picker variable is receiving a value', () => {
-    fixture.componentInstance.keyword = "test";
+  it('SearchPage: should "check" if the agency picker model variable is populated', () => {
+    fixture.componentInstance.keywords = "test";
     fixture.componentInstance.pageNum = 0;
-    fixture.componentInstance.runSearch();
-
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      expect(fixture.componentInstance.agencyPickerV2).toBeDefined();
-    });
+    fixture.componentInstance.organizationId = "100111929,100111828"
+    fixture.agencyPickerModel = fixture.componentInstance.setupOrgsFromQS(fixture.componentInstance.organizationId);
+    
+    expect(fixture.agencyPickerModel).toEqual(['100111929', '100111828']);
   });
 
   it('SearchPage: should "check" if FAL filters are defined', () => {
     fixture.componentInstance.index = "cfda";
-    fixture.componentInstance.keyword = "";
+    fixture.componentInstance.keywords = "";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
 
@@ -304,7 +306,7 @@ describe('src/app/search/search.spec.ts', () => {
 
   it('SearchPage: should "check" if award type filters are defined', () => {
     fixture.componentInstance.index = "fpds";
-    fixture.componentInstance.keyword = "";
+    fixture.componentInstance.keywords = "";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
 
@@ -322,8 +324,7 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.componentInstance.runSearch();
 
     fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.data.page.size).toBe(10);
-      expect(fixture.componentInstance.data.page.totalElements).toBe(123);
+      expect(fixture.componentInstance.totalCount).toBe(123);
       expect(fixture.componentInstance.showSavedSearches).toBe(false);
     });
   });
@@ -333,53 +334,79 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.componentInstance.keywords = "education";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+    let event = { name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback };
     Cookies.set('iPlanetDirectoryPro', 'anything');
     fixture.componentInstance.saveNewSearch(null);
 
+    spyOn(fixture.componentInstance, 'handleAction'); 
+    fixture.componentInstance.handleAction(event);
+
     fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.handleAction()).toHaveBeenCalled();
-      expect(fixture.componentInstance.modal1.open()).toHaveBeenCalled();
+      expect(fixture.componentInstance.handleAction).toHaveBeenCalled();
       expect(fixture.componentInstance.textConfig.errorMessage).toBe("Please provide a name");
-      expect(fixture.componentInstance.modal1.closeModal()).toHaveBeenCalledTimes(0);
       expect(fixture.componentInstance.searchName).toBe('');
     });
   });
 
-  it('SearchPage: should save a new search', () => {
-    fixture.componentInstance.index = "cfda";
-    fixture.componentInstance.keywords = "education";
-    fixture.componentInstance.assistanceTypeFilterModel = "0001001";
-    fixture.savedSearchName = "Test save search";
-    Cookies.set('iPlanetDirectoryPro', 'anything');
-    fixture.detectChanges();
+  // it('SearchPage: should save a new search', () => {
+  //   fixture.componentInstance.index = "cfda";
+  //   fixture.componentInstance.keywords = "education";
+  //   fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+  //   fixture.componentInstance.savedSearchName = "Test save search";
+  //   Cookies.set('iPlanetDirectoryPro', 'anything');
+  //   fixture.componentInstance.saveNewSearch(null);
+  //   fixture.detectChanges();
 
-    fixture.componentInstance.saveNewSearch(null);
-
-    fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.modal1.closeModal()).toHaveBeenCalledTimes(1);
-      expect(fixture.componentInstance.showSavedSearches).toBe(true);
-      expect(fixture.componentInstance.searchName).toBe("Test save search");
-      expect(fixture.componentInstance.preferenceId).toBe("abcd");
-      expect(fixture.componentInstance.actions.length).toBe(2);
-    });
-  });
+  //   fixture.whenStable().then(() => {
+  //     expect(fixture.componentInstance.showSavedSearches).toBe(true);
+  //     expect(fixture.componentInstance.searchName).toBe("Test save search");
+  //     expect(fixture.componentInstance.preferenceId).toBe("abcd");
+  //     expect(fixture.componentInstance.actions.length).toBe(2);
+  //   });
+  // });
 
   it('SearchPage: should save same search', () => {
     fixture.componentInstance.index = "cfda";
     fixture.componentInstance.keywords = "education";
     fixture.componentInstance.assistanceTypeFilterModel = "0001001";
+    let id = "abcde-12345";
     Cookies.set('iPlanetDirectoryPro', 'anything');
-    fixture.detectChanges();
-
+    spyOn(fixture.componentInstance, 'saveSearch');
+    fixture.componentInstance.getSavedSearch(id);
     fixture.componentInstance.handleAction({ name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback });
-
+    
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.preferenceId).toBe("abcde-12345");
-      expect(fixture.componentInstance.saveSearch()).toHaveBeenCalled();
+      expect(fixture.componentInstance.saveSearch).toHaveBeenCalled();
       expect(fixture.componentInstance.searchName).toBe("Test Saved Search");
       expect(fixture.componentInstance.actions.length).toBe(2);
       expect(fixture.componentInstance.savedSearch['numberOfUsages']).toBe(1);
     });
   });
+
+  it('SearchPage: should not run saved search due to null cookie', () => {    
+    expect(fixture.componentInstance.cookieValue).toBeFalsy();
+    expect(fixture.componentInstance.showSavedSearches).toBe(false);
+  });
+
+  it('SearchPage: error checking SavedSearchService init call', () => {
+    Cookies.set('iPlanetDirectoryPro', 'anything');    
+    const savedSearchService = fixture.debugElement.injector.get(SavedSearchService);
+    const mockCall = spyOn(savedSearchService, 'getAllSavedSearches').and.returnValue(Observable.throw({status: 404}));
+    
+    expect(fixture.componentInstance.showSavedSearches).toBe(false);
+  });
+
+  it('SearchPage: should get all saved searches on init', () => {
+    Cookies.set('iPlanetDirectoryPro', 'anything');
+    fixture.detectChanges();
+    //spyOn(fixture.componentInstance.savedSearchService, 'getAllSavedSearches');
+    expect(fixture.componentInstance.cookieValue).toBe('anything');
+    //expect(fixture.componentInstance.savedSearchService.getAllSavedSearches).toHaveBeenCalled();
+    expect(fixture.componentInstance.showSavedSearches).toBe(true);
+  });
+
+
+
 
 });

@@ -23,6 +23,7 @@
             <sam-agency-picker-v2
               class="bulk-agency"
               [label]="'Organization'"
+              [name]="'bulk-update-org-picker'"
               type="multiple"
               [(ngModel)]="orgs"
               (ngModelChange)="onOrganizationChange($event)"
@@ -62,7 +63,7 @@
 
     <!-- User Select Tab -->
     <ng-container *ngSwitchCase="'users'">
-      <h3>Filters</h3>
+      <h2 class="h3">Filters</h2>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
@@ -78,11 +79,11 @@
         </div>
       </div>
 
-      <h3>Users</h3>
+      <h2 class="h3">Users</h2>
       <p>The following users meet your filtering criteria. Select or deselect from this list to customize your selection.</p>
       <div class="clearfix">
         <div class="pull-left">
-          <sam-toggle [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'"></sam-toggle>
+          <sam-toggle style="display:inline-block" [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'" [name]="select-all"></sam-toggle>
           &nbsp;|&nbsp;
           <span>{{getSelectedUsers().length}} users</span>
         </div>
@@ -94,7 +95,7 @@
         <table style="background-color:white; width: 100%; border: 1px solid black;">
           <tbody>
             <tr *ngFor="let user of users" class="bulk-update-user-row" (click)="onUserRowClick(user)">
-              <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected"[label]="formatUserName(user)"></sam-toggle></td>
+              <td><sam-toggle [style.pointer-events]="'none'" [(ngModel)]="user.isSelected" [label]="formatUserName(user)" [name]="formatUserName(user)+'-toggle'"></sam-toggle></td>
               <td>{{user.email}}</td>
             </tr>
           </tbody>
@@ -114,7 +115,7 @@
 
     <!-- Access Tab -->
     <ng-container *ngSwitchCase="'access'">
-      <h3>Filters</h3>
+      <h2 class="h3">Filters</h2>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
@@ -129,7 +130,7 @@
           <div class="usa-width-five-sixths">{{getExistingDomainNames()}}</div>
         </div>
       </div>
-      <h3>Users</h3>
+      <h2 class="h3">Users</h2>
       <div [ngStyle]="staticContentStyle">
         <div style="max-height: 300px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
@@ -137,7 +138,7 @@
           </div>
         </div>
       </div>
-      <h3 class="m_T-4x">Access</h3>
+      <h2 class="h3 m_T-4x">Access</h2>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Updated Role -->
@@ -162,15 +163,15 @@
         </div>
       </div>
       <div *ngIf="updatedDomains?.length">
-        <label>Permissions</label>
-        <sam-tabs>
+        <span>Permissions</span>
+        <sam-tabs [active]="activeTab">
           <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
             <ul class="column-wrappable">
               <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
-                <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
-                <div *ngFor="let permission of func.permissions" class="checkbox-group">
-                  <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
-                  <label>{{permission.name}}</label>
+                <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
+                <div *ngFor="let permission of func.permissions;let i=index" class="checkbox-group">
+                  <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+                  <label [attr.for]="permission+'-cbx-'+i">{{permission.name}}</label>
                 </div>
                 <!--<div *ngFor="let permission of func.permissions">-->
                   <!--<input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">-->
@@ -181,7 +182,7 @@
           </sam-tab>
         </sam-tabs>
       </div>
-      <h3>Comments</h3>
+      <h2 class="h3">Comments</h2>
 
       <!-- Optional Message -->
       <sam-text-area name="comments" [(ngModel)]="comments" [errorMessage]="accessErrors.comments"></sam-text-area>
@@ -191,7 +192,7 @@
     <!-- Confirmation Tab -->
     <ng-container *ngSwitchCase="'confirmation'">
       <p>Confirm the information is correct</p>
-      <h3>Filters</h3>
+      <h2 class="h3">Filters</h2>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organizations</b></div>
@@ -207,7 +208,7 @@
         </div>
       </div>
 
-      <h3>Users</h3>
+      <h2 class="h3">Users</h2>
       <div [ngStyle]="staticContentStyle">
         <div style="max-height: 300px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
@@ -235,7 +236,7 @@
         </div>
       </ng-container>
 
-      <h3>Comments</h3>
+      <h2 class="h3">Comments</h2>
       <!-- Show the comment left on the access tab if mode === 'update' -->
       <ng-container *ngIf="this.mode === 'update'">
         <ng-container *ngIf="comments">

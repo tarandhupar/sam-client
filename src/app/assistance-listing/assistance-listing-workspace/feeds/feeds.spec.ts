@@ -1,44 +1,20 @@
 import {Observable} from "rxjs/Observable";
-import {AuthorizationPipe} from "../../pipes/authorization.pipe";
 import {TestBed} from '@angular/core/testing';
-import {ProgramPage} from "../../assistance-listing.page";
-import {FinancialObligationChart} from "../../assistance-listing.chart";
-import {HistoricalIndexLabelPipe} from "../../pipes/historical-index-label.pipe";
-import {AssistanceProgramResult} from "../program-result/assistance-program-result.component";
-import {FalWorkspacePage} from "../assistance-listing-workspace.page";
-import {RejectFALComponent} from "../../assistance-listing-operations/workflow/reject/reject-fal.component";
 import {FeedsPage} from "./feeds.page";
-import {FALFormChangeRequestActionComponent} from "../../assistance-listing-change-request/fal-form-change-request-action.component";
-import {FALFormChangeRequestComponent} from "../../assistance-listing-change-request/fal-form-change-request.component";
-import {FALSubmitComponent} from "../../assistance-listing-operations/workflow/submit/fal-form-submit.component";
-import {RequestLabelPipe} from "../../pipes/request-label.pipe";
-import {FALReviewComponent} from "../../assistance-listing-operations/workflow/review/fal-review.component";
-import {FalRegionalAssistanceLocationsPage} from "../../regional-assistance-locations/regional-assistance-location.page";
-import {RegionalAssistanceLocationResult} from "../../regional-assistance-locations/location-result/regional-assistance-location-result.component";
-import {ActionHistoryPipe} from "../../pipes/action-history.pipe";
 import {ActionHistoryLabelPipe} from "../../pipes/action-history-label.pipe";
 import {RequestTypeLabelPipe} from "../../pipes/request-type-label.pipe";
-import {FALRegionalAssistanceFormComponent} from "../../regional-assistance-locations/regional-assistance-operations/regional-assistance-form.component";
-import {FALPublishComponent} from "../../assistance-listing-operations/workflow/publish/fal-publish.component";
-import {FormatFederalHierarchyType} from "../../pipes/format-federal-hierarchy-type.pipe";
-import {CfdaNumbersPage} from "../cfda-numbers/cfda-numbers.page";
-import {CFDANumberManagementComponent} from "../cfda-number-management/fal-form-cfda-number-management.component";
 import {PipesModule} from "../../../app-pipes/app-pipes.module";
 import {AppComponentsModule} from "../../../app-components/app-components.module";
 import {ProgramService} from "../../../../api-kit/program/program.service";
-import {FALFormModule} from "../../assistance-listing-operations/fal-form.module";
 import {FALComponentsModule} from "../../components/index";
 import { CommonModule } from '@angular/common';
-import {routing} from "../../assistance-listing.route";
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import * as Cookies from 'js-cookie';
-import { async } from '@angular/core/testing';
 import { ActivatedRoute, Data } from '@angular/router';
 import {FALFormErrorService} from "../../assistance-listing-operations/fal-form-error.service";
 import {SamUIKitModule} from "sam-ui-elements/src/ui-kit/index";
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
-import {AccessRestrictedPage} from "../program-result/testauthenvironment.page";
 import {DictionaryService} from "../../../../api-kit/dictionary/dictionary.service";
 
 
@@ -1217,54 +1193,28 @@ var MockProgramService = {
 };
 
 describe('src/app/assistance-listing/assistance-listing-workspace/feeds/feeds.page.ts', () => {
-  beforeEach(async(() => {
 
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthorizationPipe,
-        ProgramPage,
-        FinancialObligationChart,
-        HistoricalIndexLabelPipe,
-        AssistanceProgramResult,
-        FalWorkspacePage,
-        AccessRestrictedPage,
-        RejectFALComponent,
+      declarations: [
         FeedsPage,
-        FALFormChangeRequestActionComponent,
-        FALFormChangeRequestComponent,
-        FALSubmitComponent,
-        RequestLabelPipe,
-        FALReviewComponent,
-        FalRegionalAssistanceLocationsPage,
-        RegionalAssistanceLocationResult,
-        FALReviewComponent,
-        ActionHistoryPipe,
-        ActionHistoryLabelPipe,
         RequestTypeLabelPipe,
-        FALRegionalAssistanceFormComponent,
-        FALPublishComponent,
-        FormatFederalHierarchyType,
-        CfdaNumbersPage,
-        CFDANumberManagementComponent],
-      providers: [ActionHistoryLabelPipe, RequestTypeLabelPipe, FALFormErrorService, FALFormService, DictionaryService],
+        ActionHistoryLabelPipe
+      ],
       imports: [
-        PipesModule,
-        CommonModule,
         SamUIKitModule,
         AppComponentsModule,
-        routing,
-        ReactiveFormsModule,
-        FormsModule,
-        FALComponentsModule,
-        FALFormModule,
         RouterTestingModule.withRoutes([
           {path: 'my-feed', component: FeedsPage}
-        ])
-      ]
-    }).overrideComponent(FeedsPage, {
-      set: {
-        providers: [
-          {provide: ProgramService, useValue: MockProgramService},
-          {provide: ActivatedRoute, useValue: {
+        ]),
+        FALComponentsModule,
+        CommonModule,
+        PipesModule,
+        FormsModule,
+      ],
+      providers: [
+        {provide: ProgramService, useValue: MockProgramService},
+        {provide: ActivatedRoute, useValue: {
             queryParams: {
               subscribe: (fn: (value: Data) => void) => fn({
                 domain: "al",
@@ -1273,14 +1223,13 @@ describe('src/app/assistance-listing/assistance-listing-workspace/feeds/feeds.pa
               })
             }
           }
-          }
-        ]
-      }
-    }).compileComponents();
+        },
+        FALFormErrorService,
+        FALFormService,
+        DictionaryService
+      ],
+    });
 
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(FeedsPage);
     comp = fixture.componentInstance;
     Cookies.set('iPlanetDirectoryPro', 'anything');

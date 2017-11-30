@@ -219,6 +219,20 @@
     </div>
   </div> <br/><br/><br/>
 
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+      <h3>Entity Picker Component</h3>
+      <sam-entity-picker
+        label="Entity Picker (single)"
+        required="true"
+        [(ngModel)]="entitypicker_selections"
+        hint="Pick a single entity">
+
+      </sam-entity-picker>
+      <div>Selection Result: {{entitypicker_selections}}</div>
+    </div>
+  </div>
+
  <div class="usa-grid">
     <div class="usa-width-one-half">
       <sam-autocomplete [(ngModel)]="selectedPSC1"

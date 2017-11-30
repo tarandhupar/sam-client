@@ -25,6 +25,7 @@ export class ViewRequestPage implements OnInit {
     { breadcrumb: 'Role Request' },
   ];
   historyNodes: Array<HistoryNodeType> = [];
+  latestNodeId: string;
   comments: Array<Comment> = [];
 
   post: (text: string) => Observable<Comment> = (comment) => {
@@ -107,7 +108,7 @@ export class ViewRequestPage implements OnInit {
         description: '<em>Status: Pending</em>',
       };
       this.historyNodes = [nodeCreated];
-
+      this.latestNodeId = 'created';
       if (req.updatedDate) {
         const nodeUpdated: HistoryNodeType = {
           id: 'updated',
@@ -115,6 +116,7 @@ export class ViewRequestPage implements OnInit {
           description: `<em>Status: ${statusString}</em>`
         };
         this.historyNodes.unshift(nodeUpdated);
+        this.latestNodeId = 'updated';
       }
     }
   }

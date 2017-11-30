@@ -90,8 +90,9 @@ it('SavedSearchRedirect: should get saved search by id', () => {
 
 it('SavedSearchRedirect: should increment number of usages', () => {
     fixture.whenStable().then(() => {
+        spyOn(fixture.componentInstance, 'updateSavedSearchStatistics');
         fixture.componentInstance.ngOnInit();
-        expect(fixture.componentInstance.updateSavedSearchStatistics()).toHaveBeenCalled();
+        expect(fixture.componentInstance.updateSavedSearchStatistics).toHaveBeenCalled();
     });
 });
 

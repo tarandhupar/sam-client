@@ -234,7 +234,7 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
       expect(component.data[0].data.parameters['assistance_type']).toBe("A-Formula Grants");
       expect(component.data[1].data.parameters['notice_type']).toBe("Presolicitation");
       expect(component.data[0].data.parameters['organization_id']).toBe("FISH AND WILDLIFE SERVICE");
-      expect(component.data[2].data.parameters['duns']).tobe("DUNS NAME");
+      expect(component.data[2].data.parameters['duns']).toBe("DUNS NAME");
     });
   });
 

@@ -48,6 +48,7 @@ import { NaicsService } from "./naics/naics.service";
 import { SamNaicsServiceDirective } from './autoCompleteWrapper/naics-autocomplete.service';
 import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.service';
 import { FeatureToggleService } from "./feature-toggle/feature-toggle.service";
+import { EntityPickerAutoCompleteDirective } from "./autoCompleteWrapper/entity-picker-autocomplete/entityPickerAutoCompleteWrapper.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -59,6 +60,7 @@ import { FeatureToggleService } from "./feature-toggle/feature-toggle.service";
     PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective,
     AgencyPickerAutoCompleteDirective,
+    EntityPickerAutoCompleteDirective,
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
@@ -71,6 +73,7 @@ import { FeatureToggleService } from "./feature-toggle/feature-toggle.service";
     PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective,
     AgencyPickerAutoCompleteDirective,
+    EntityPickerAutoCompleteDirective,
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,

@@ -14,6 +14,7 @@ import {BaseRequestOptions, Http} from "@angular/http";
 import {MockBackend} from "@angular/http/testing";
 import {SamAPIKitModule} from "../../../../api-kit/api-kit.module";
 import {AlertFooterService} from "../../../app-components/alert-footer/alert-footer.service";
+import { DatePipe } from '@angular/common';
 
 //other library
 import * as Cookies from 'js-cookie';
@@ -109,7 +110,7 @@ describe('src/app/search/saved-search-workspace/saved-search-result/saved-search
   it('SavedSearchResultComponent: should display a title', () => {
       expect(comp).toBeDefined();
       expect(titleEl.nativeElement.textContent).toContain("Test Search");
-      //expect(comp.data.createdOn).toEqual("2017-10-05");
+      expect(comp.data.createdOn).toEqual("2017-10-05T16:58:28Z");
       expect(comp.domain).toEqual("Assistance Listing");
       expect(comp.parameters).toEqual(parameters);
   });

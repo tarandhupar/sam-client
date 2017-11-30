@@ -70,7 +70,7 @@
           <th>Organization</th>
           <th>Role</th>
           <th>Domain(s)</th>
-          <th></th>
+          <th><span style="opacity: 0;">Operation</span></th>
         </thead>
         <tbody>
           <tr *ngFor="let roleOrg of access; let $index = index" (click)="onRowClick(roleOrg)" [ngClass]="isRowEditable(roleOrg) && 'clickable'">

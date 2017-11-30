@@ -99,7 +99,7 @@ let MockFHService = {
 };
 
 let MockDictionaryService = {
-  getOpportunityDictionary: (id) => {
+  getContractOpportunityDictionary: (id) => {
     return Observable.of({
         "procurement_type": [
               {

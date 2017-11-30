@@ -91,6 +91,7 @@ export class HelpContentManagementEditComponent {
 
   dataLoaded:boolean = false;
   mode:string = '';
+  isContentCreated: boolean = false;
   activeTab = 0;
   hasUnsavedChanges:boolean = true;
 
@@ -252,8 +253,13 @@ export class HelpContentManagementEditComponent {
     // Route back to search page
     if(this.validateForm()){
       if(this.isCreateMode()){
-        if(this.curSection == 'video-library')this.createThumbnail();
-        this.createContent('PUBLISHED');
+        if(this.isContentCreated){
+          this.updateContent('PUBLISHED')
+        } else {
+          if(this.curSection == 'video-library')this.createThumbnail();
+          this.createContent('PUBLISHED');
+        }
+
       }else{
         if( this.inputFile != null && this.curSection == 'video-library'){
           this.createThumbnail();
@@ -282,7 +288,8 @@ export class HelpContentManagementEditComponent {
           this.showAlertMessage('Failed to update draft, error code: ' + err.errorCode +'. ' + err.errorMessage );
         }
       }
-    );  }
+    );
+  }
 
   onSwitchTabs(tab){
     var previewVideo = document.getElementById('previewVideo');
@@ -461,7 +468,7 @@ export class HelpContentManagementEditComponent {
   createVideoContentPostProcess = (contentData, status) => {
     if(this.isCreateMode()){
       contentData['status'] = this.cmsMapping.getStatusId(status);
-      this.postContentData(contentData);
+      this.isContentCreated? this.putContentData(contentData): this.postContentData(contentData);
     }else{
       if(status === 'DRAFT' && this.cmsMapping.getStatusName(contentData['status']) === 'PUBLISHED'){
         contentData['status'] = this.cmsMapping.getStatusId(status);
@@ -503,7 +510,13 @@ export class HelpContentManagementEditComponent {
   postContentData(contentData){
     this.contentManagementService.createContent(contentData).subscribe(
       data => {
-        if(contentData['status'] === 2) this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+        this.isContentCreated = true;
+        this.originContentObj = data;
+        if(contentData['status'] === 2) {
+          this._router.navigateByUrl('/workspace/content-management/'+this.curSection);
+        }else{
+          this.alertFooter.registerFooterAlert({title: "", description: "Successfully created content data", type: 'success', timer: 3200});
+        }
       },
       err => {
         // Delete the video on the S3 bucket here

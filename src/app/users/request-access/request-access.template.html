@@ -21,6 +21,7 @@
             *ngIf="!isAdmin"
             formControlName="org"
             [label]="'Organization'"
+            [name]="'request-access-org-picker'"
             type="single"
             [searchMessage]="errors.org"
             [defaultDept]="!isSuperAdmin"

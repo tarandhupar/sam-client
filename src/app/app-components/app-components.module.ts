@@ -48,6 +48,7 @@ import { SamTableSelectComponent } from './sam-table-select/sam-table-select.com
 import { SamChipsComponent } from './sam-chips/sam-chips.component';
 import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-date-range.component';
 import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-select-date-range-filter.component';
+import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -77,6 +78,7 @@ import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-s
     SamDateRangeFilterComponent,
     //SamRMSUsersServiceAutoDirective,
     AgencyPickerV2Component,
+    EntityPickerComponent,
     SamSortComponent,
     SamNotificationsComponent,
     SamWatchComponent,
@@ -123,6 +125,7 @@ import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-s
     SamUserDirectoryComponent,
     SamDateRangeFilterComponent,
     AgencyPickerV2Component,
+    EntityPickerComponent,
     SamSortComponent,
     SamNotificationsComponent,
     SamWatchComponent,

@@ -25,8 +25,8 @@ function labelCompare(a, b) {
 @Component({
   selector: "sam-toggle",
   template: `
-    <input type="checkbox" [(ngModel)]="_checked" [disabled]="disabled" (click)="onSwitchClick()" style="max-width: 200px">
-    <label class="sam-toggle" [style.pointer-events]="disabled ? 'none' : 'all'">{{label}}</label>
+    <input type="checkbox" [attr.id]="name" [(ngModel)]="_checked" [disabled]="disabled" (click)="onSwitchClick()" style="max-width: 200px">
+    <label [attr.for]="name" class="sam-toggle" [style.pointer-events]="disabled ? 'none' : 'all'">{{label}}</label>
   `,
   providers: [{
     provide: NG_VALUE_ACCESSOR,
@@ -37,6 +37,7 @@ function labelCompare(a, b) {
 export class SamToggle implements ControlValueAccessor {
   @Input() label: string;
   @Input() disabled: boolean = false;
+  @Input() name: string = '';
   private _checked: boolean = false;
 
   constructor() { }
@@ -66,6 +67,7 @@ export class BulkUpdateComponent {
   ];
 
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
+  activeTab = 0;
   currentTab: any = 'filters';
   user: any = {};
   orgs = [];
@@ -534,7 +536,7 @@ export class BulkUpdateComponent {
   }
 
   onOrganizationChange(org) {
-  
+
   }
 
   getOrganizationNames() {
@@ -619,7 +621,7 @@ export class BulkUpdateComponent {
           timer:3200
         });
         this.areUsersLoading = false;
-      });
+      }
     );
   }
 

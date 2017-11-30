@@ -8,13 +8,13 @@
 
   <sidebar>
     <div class="sam-ui segment">
-      <h4 class="sam-ui header">Search</h4>
       <sam-autocomplete
         #userPicker
+        [id]="'user-picker'"
         [ngModelOptions]="{standalone: true}"
         [allowAny]="true"
         [(ngModel)]="dummySearchValue"
-        [labelText]="''"
+        [labelText]="'Search'"
         [config]="userConfig"
         (enterEvent)="onUserChange($event)"
         [httpRequest]="request"
@@ -22,7 +22,7 @@
 
       <div class="sam-ui divider"></div>
 
-      <h4 class="sam-ui header">Organization</h4>
+      <h3 class="h4">Organization</h3>
       <sam-agency-picker-v2
         #picker
         type="single"
@@ -34,7 +34,7 @@
       <div class="sam-ui divider"></div>
 
       <ng-container *ngIf="roleOptions && roleOptions.length">
-        <h4 class="sam-ui header">Roles</h4>
+        <h3 class="h4">Roles</h3>
         <div style="max-height: 20em; overflow-y: auto; padding-left: 4px; position: relative; overflow-x: hidden;">
           <sam-checkbox
             [name]="'role-select'"
@@ -47,7 +47,7 @@
 
       <ng-container *ngIf="domainOptions && domainOptions.length">
         <div class="sam-ui divider"></div>
-        <h4 class="sam-ui header">Domains</h4>
+        <h3 class="h4">Domains</h3>
         <div style="max-height: 320px; overflow-y: auto; padding-left: 4px; position: relative;">
           <sam-checkbox
             [name]="'domain-select'"
@@ -93,12 +93,12 @@
           <div class="item">
             <!-- User Icon and name -->
             <div class="sam-ui image" style="background-color: transparent;">
-              <img style="width: 50px; opacity: .5;" src="src/assets/img/sam-icons/user-darkgray.png">
+              <img style="width: 50px; opacity: .5;" src="src/assets/img/sam-icons/user-darkgray.png" [attr.alt]="fullName(user.user)+' img'">
             </div>
             <div class="content">
-              <h3 class="sam-ui header" *ngIf="fullName(user.user)">
+              <h2 class="h3" *ngIf="fullName(user.user)">
                 {{fullName(user.user)}}
-              </h3>
+              </h2>
               <div class="description" *ngIf="user?.user?.email">
                 <div class="sam-ui medium header">
                   <div class="sub header">

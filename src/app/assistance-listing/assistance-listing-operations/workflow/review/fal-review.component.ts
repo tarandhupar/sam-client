@@ -27,7 +27,7 @@ import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
 import {SamCurrencyPipe} from "../../../../app-pipes/currency.pipe";
-
+import {StatusPipe} from "../../../pipes/status.pipe";
 
 @Component({
   moduleId: __filename,
@@ -40,7 +40,8 @@ import {SamCurrencyPipe} from "../../../../app-pipes/currency.pipe";
     FALFormService,
     RequestLabelPipe,
     CurrencyPipe,
-    SamCurrencyPipe
+    SamCurrencyPipe,
+    StatusPipe
   ]
 })
 export class FALReviewComponent implements OnInit, OnDestroy {

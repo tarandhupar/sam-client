@@ -1913,7 +1913,7 @@ export class SearchPage implements OnInit {
         return {type: sortBy, sort: 'asc'};
       }
     }
-
+  
   handleAction(event) {
     if(event.name === 'saveAs') {
       this.modal1.openModal();
@@ -1942,6 +1942,7 @@ export class SearchPage implements OnInit {
       this.savedSearchService.createSavedSearch(this.cookieValue, createSavedSearch).subscribe(res => {
         this.preferenceId = res._body;
         this.searchName = this.savedSearchName;
+
         this.modal1.closeModal();
         this.refreshAfterSave();
       }, error => {
@@ -1958,6 +1959,7 @@ export class SearchPage implements OnInit {
 
   saveSearch() {
     this.savedSearch['data']['parameters'] = this.getParametersToSave();
+    
     this.savedSearchService.updateSavedSearch(this.cookieValue, this.preferenceId, this.savedSearch).subscribe(res => {
       this.refreshAfterSave();
     }, error => {

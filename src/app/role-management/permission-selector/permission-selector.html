@@ -15,16 +15,28 @@
     <tr>
       <td class="new-column">&nbsp;<!-- New! Column Spacer --></td>
       <td class="left-align-text">All</td>
-      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" class="check-all" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked"></td>
-      <td class="checkbox-cell"><input type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked"></td>
+      <td *ngIf="!hideDefaultColumn" class="checkbox-cell">
+        <input [attr.id]="titleText+'-default-all-cbx'" type="checkbox" class="check-all" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">
+        <label [attr.for]="titleText+'-default-all-cbx'" class="hide">Check All</label>
+      </td>
+      <td class="checkbox-cell">
+        <input [attr.id]="titleText+'-all-cbx'" type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked">
+        <label [attr.for]="titleText+'-all-cbx'" class="hide">Check All Default</label>
+      </td>
     </tr>
     <!-- data items -->
     <tr *ngFor="let option of options; let i = index">
       <ng-container *ngIf="option.value !== -1">
         <td class="left-align-text new-column"><em *ngIf="option.isNew">New</em>&nbsp;</td>
         <td class="left-align-text">{{option.label}}</td>
-        <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" class="check-all-defaults" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault"></td>
-        <td class="checkbox-cell"><input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected"></td>
+        <td *ngIf="!hideDefaultColumn" class="checkbox-cell">
+          <input [attr.id]="titleText+option.label+'-default-cbx-'+i" type="checkbox" class="check-all-defaults" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault">
+          <label [attr.for]="titleText+option.label+'-default-cbx-'+i" class="hide">Check All Default</label>
+        </td>
+        <td class="checkbox-cell">
+          <input [attr.id]="titleText+option.label+'-cbx-'+i" type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected">
+          <label [attr.for]="titleText+option.label+'-cbx-'+i" class="hide">Check All Default</label>
+        </td>
       </ng-container>
       <ng-container *ngIf="option.value === -1">
         <td style="text-align: center" colspan="4">

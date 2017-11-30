@@ -1,0 +1,11 @@
+<sam-label-wrapper [name]="labelName" [errorMessage]="searchMessage" [label]="label" [hint]="hint" [required]="required">
+
+  <sam-autocomplete
+    entitypicker-autofill
+    [name]="name+'picker'"
+    [id]="name+'picker'"
+    [ngModel]="selections"
+    [config]="singleACConfig">
+  </sam-autocomplete>
+
+</sam-label-wrapper>

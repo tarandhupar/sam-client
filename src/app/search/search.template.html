@@ -251,8 +251,7 @@
         </sam-radio-button>
         <div class="sam-ui divider"></div>
       </ng-container>
-      <!-- THIS IS TEMPORARILY REMOVED BUT WILL BE ADDED BACK AT A LATER DATE DO NOT REMOVE -->
-      <!-- <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
         <h4 class="sam-ui header">SCA: Subject to CBA</h4>
          Subject to CBA
         <sam-radio-button
@@ -265,10 +264,10 @@
           (modelChange)="wdSubjectToCBAChanged($event)">
         </sam-radio-button>
         <div class="sam-ui divider"></div>
-      </ng-container> -->
+      </ng-container>
 
       <!-- Non Standard Services Section -->
-      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo' || wdPreviouslyPerformedModel === 'prevPerfYesLocality') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
+      <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
         <h4 class="sam-ui header">SCA: Non-Standard Services</h4>
         <!--Non-Standard Services radio buttons-->
         <sam-radio-button *ngIf="wdPreviouslyPerformedModel !== 'prevPerfNo'"

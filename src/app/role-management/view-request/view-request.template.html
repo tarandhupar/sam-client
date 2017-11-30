@@ -45,11 +45,11 @@
     </div>
   </div>
 
-  <h4>Comments</h4>
+  <h3 class="h4">Comments</h3>
   <rm-comments [comments]="comments" [postCB]="post" [newCommentsEnabled]="areNewCommentsEnabled()"></rm-comments>
 
-  <h4>Request History</h4>
-  <sam-history *ngIf="historyNodes.length" [data]="historyNodes"></sam-history>
+  <h3 class="h4">Request History</h3>
+  <sam-history *ngIf="historyNodes.length" [data]="historyNodes" [currentId]="latestNodeId"></sam-history>
   <div style="min-height: 2em;">&nbsp;</div>
 </form-only>
 <sam-modal #deleteModal title="Confirm deletion of role request" cancelButtonLabel="Cancel" submitButtonLabel="Confirm" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">

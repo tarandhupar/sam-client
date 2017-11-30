@@ -12,7 +12,7 @@
             <h3 class="sam-ui header">About beta.SAM.GOV</h3>
             <ul class="sam-ui list">
               <li>
-                <a [routerLink]="[alertsUrl]" title="System Alerts">
+                <a *ngIf="isAdmin" [routerLink]="[alertsUrl]" title="System Alerts">
                   System Alerts
                 </a>
               </li>

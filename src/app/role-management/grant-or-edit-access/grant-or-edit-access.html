@@ -11,7 +11,7 @@
     <div class="sam-ui grid">
       <div class="column eight wide">
         <div style="margin-top: .5em;">
-          <label style="display: inline;">User:&nbsp;</label>
+          <span class="section-title-span" style="display: inline;">User:&nbsp;</span>
           <a *ngIf="isGrant()" [routerLink]="'../access'">{{userFullName()}}</a>
           <span *ngIf="isEdit()">{{userFullName()}}</span>
         </div>
@@ -19,6 +19,7 @@
         <sam-agency-picker-v2
           formControlName="org"
           [label]="'Organization'"
+          [name]="'access-org-picker'"
           type="multiple"
           [searchMessage]="errors.org"
           [defaultDept]="!isSuperAdmin"
@@ -27,8 +28,8 @@
 
         <!-- Role -->
         <div style="margin-top: .5em">
-          <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
-            <select formControlName="role" (ngModelChange)="onRoleChange($event)">
+          <sam-label-wrapper [label]="'Role'" [name]="'role-selector'" [errorMessage]="errors.role" style="margin-top: 2em">
+            <select formControlName="role" (ngModelChange)="onRoleChange($event)" id="role-selector">
               <option *ngFor="let role of roleOptions" [value]="role.value">{{role.label}}</option>
             </select>
           </sam-label-wrapper>
@@ -42,15 +43,15 @@
     </div>
 
     <!-- Permissions -->
-    <label>Permissions</label>
+    <span class="section-title-span">Permissions</span>
     <sam-tabs>
       <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
         <ul class="column-wrappable">
           <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
-            <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
-            <div *ngFor="let permission of func.permissions" class="checkbox-group">
-              <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
-              <label>{{permission.name}}</label>
+            <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
+            <div *ngFor="let permission of func.permissions; let i = index" class="checkbox-group">
+              <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+              <label [attr.for]="permission+'-cbx-'+i">{{permission.name}}</label>
             </div>
           </li>
         </ul>
@@ -59,7 +60,7 @@
     <p style="margin-bottom: .5em" *ngIf="!domainTabs?.length"><i>Select a domain.</i></p>
 
     <!-- Comments -->
-    <label>Comments</label>
+    <span class="section-title-span">Comments</span>
     <div class="sam-ui grid" *ngIf="false">
       <div row>
         <div columns="10"><b>{{comment.userName}}</b> - {{comment.text}}</div>
