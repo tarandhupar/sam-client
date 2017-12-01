@@ -222,14 +222,21 @@
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h3>Entity Picker Component</h3>
-      <sam-entity-picker
-        label="Entity Picker (single)"
-        required="true"
-        [(ngModel)]="entitypicker_selections"
-        hint="Pick a single entity">
+      <div class="usa-width-one-half">
+        <sam-entity-picker
+          label="Entity Picker (single)"
+          required="true"
+          [(ngModel)]="entitypicker_selections"
+          hint="Pick a single entity">
 
-      </sam-entity-picker>
-      <div>Selection Result: {{entitypicker_selections}}</div>
+        </sam-entity-picker>
+      </div>
+      <div class="usa-width-one-half">
+        <h3>Selection Model</h3>
+        <div *ngFor="let selection of entitypicker_selections">{{selection | json}}</div>
+      </div>
+
+
     </div>
   </div>
 
