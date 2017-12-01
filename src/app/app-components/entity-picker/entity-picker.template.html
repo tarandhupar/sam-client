@@ -1,11 +1,23 @@
-<sam-label-wrapper [name]="labelName" [errorMessage]="searchMessage" [label]="label" [hint]="hint" [required]="required">
+<sam-label-wrapper [name]="labelName" [errorMessage]="searchMessage" [label]="label" [hint]="hint">
 
-  <sam-autocomplete
+  <ng-template #myTemplate let-item>
+    <p>
+      <strong>{{item.name}}</strong><br/>
+      <span style="font-size: 85%">CAGE: {{item.cageCode}} | DUNS: {{item.duns}}</span><br/>
+      <span style="font-size: 85%">{{item.address}}</span>
+    </p>
+  </ng-template>
+  <sam-autocomplete-multiselect
     entitypicker-autofill
     [name]="name+'picker'"
     [id]="name+'picker'"
     [ngModel]="selections"
-    [config]="singleACConfig">
-  </sam-autocomplete>
+    (ngModelChange)="onSelection($event)"
+    [keyValueConfig]="multipleACConfig"
+    [serviceOptions]="serviceOptions"
+    [displayCategory]="false"
+    [itemTemplate]="myTemplate"
+    [required]="required">
+  </sam-autocomplete-multiselect>
 
 </sam-label-wrapper>

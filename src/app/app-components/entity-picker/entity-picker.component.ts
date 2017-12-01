@@ -16,7 +16,7 @@ import * as _ from 'lodash';
     multi: true
   }]
 })
-export class EntityPickerComponent implements ControlValueAccessor{
+export class EntityPickerComponent implements OnInit, ControlValueAccessor{
   /**
    * Sets the required text in the label wrapper
    */
@@ -40,32 +40,48 @@ export class EntityPickerComponent implements ControlValueAccessor{
   /**
    * Sets the label wrapper error message manually
    */
-  @Input() searchMessage: '';
-  /**
-   * Flag that controls emitting an event when the formControl passes down a new value to set
-   */
-  @Input() editOnFlag: boolean = true;
+  @Input() searchMessage: string = 'test';
+
 
   private _disabled: boolean = false;
 
-  labelName: string;
-  selections = null;
+  selections = [];
   serviceOptions = {};
-  singleACConfig = {keyValueConfig:{keyProperty: 'key',valueProperty: 'name'}};
-  multipleACConfig = {keyProperty: 'key',valueProperty: 'name'};
+  multipleACConfig = {keyProperty: 'key',valueProperty: 'name', categoryProperty: 'detail'};
 
-  constructor(private oFHService:FHService, private iamService: IAMService, private cdr:ChangeDetectorRef) {}
+  item = {title:'test title', email:'test email', name:'test name'};
 
-  onChange = (_: any)=>{ console.error('this will only get called if the component fails to register onChange')};
+  constructor(private cdr:ChangeDetectorRef) {}
+
+  onChange = (_: any)=>{};
   onTouched = ()=>{};
 
+  ngOnInit(){
+    this.selections = [];
+  }
 
+  onSelection(val,emit:boolean = true){
+    console.log(val);
+    this.selections = val;
+    if(emit){
+      this.emitSelections();
+    }
+  }
+
+  emitSelections(){
+    this.onChange(this.selections);
+  }
+
+  // Access control methods
   setDisabledState(disabled) {
     this._disabled = disabled;
   }
 
   writeValue(value){
+    if(value){
       this.selections = value;
+    }
+    console.log(this.selections);
   }
   registerOnChange(fn: any) {
     this.onChange = fn;

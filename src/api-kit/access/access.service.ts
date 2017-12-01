@@ -504,7 +504,7 @@ export class UserAccessService {
     return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
-  getUserAutoComplete(query : string){
+  getUserAutoComplete(query : string, isGov: boolean = true){
     let apiOptions: any = {
       name: 'rms',
       suffix: '/autocomplete/',
@@ -513,7 +513,7 @@ export class UserAccessService {
     };
 
     apiOptions.oParam.query = query;
-    apiOptions.oParam.gov = true;
+    apiOptions.oParam.gov = isGov;
 
 
     return this.callApi(apiOptions);
