@@ -480,12 +480,13 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  getUsersV1(queryParams = {}) {
+  getUsersV1(queryParams = {}, orgs = []) {
     let apiOptions: any = {
       name: 'rms',
       suffix: '/users/',
-      method: 'GET',
+      method: 'POST',
       oParam: queryParams,
+      body: orgs
     };
 
     return this.callApi(apiOptions);
@@ -504,7 +505,7 @@ export class UserAccessService {
     return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
-  getUserAutoComplete(query : string, isGov: boolean = true){
+  getUserAutoComplete(query : string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE){
     let apiOptions: any = {
       name: 'rms',
       suffix: '/autocomplete/',
@@ -514,8 +515,10 @@ export class UserAccessService {
 
     apiOptions.oParam.query = query;
     apiOptions.oParam.gov = isGov;
-
-
+    if(!isGov) {
+      apiOptions.oParam.limit = +limit;
+      apiOptions.oParam.page = page;
+    }
     return this.callApi(apiOptions);
   }
 

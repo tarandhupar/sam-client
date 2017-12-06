@@ -5,6 +5,8 @@ import {AlertFooterService} from "../../../../app-components/alert-footer/alert-
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {FALAuthGuard} from "../../../components/authguard/authguard.service";
+import {IBreadcrumb} from "../../../../../sam-ui-elements/src/ui-kit/types";
+import {PageConfig} from "../../../../../sam-ui-elements/src/ui-kit/layout/types";
 
 @Component({
   selector: 'fal-publish',
@@ -35,11 +37,14 @@ export class FALPublishComponent implements OnInit {
     type: "error",
     timer: 3000
   }
-  public publishAlertConfig = {
-    id: 'publish-fal-warning',
-    type: 'warning',
-    title: 'Confirm Publication',
-    description: 'Please add a comment as to why you are publishing and click the Publish button.'
+  description = 'Please add a comment as to why you are publishing and click the Publish button.';
+  crumbs: Array<IBreadcrumb> = [];
+  private options = {
+    page: <PageConfig>{
+      badge: {
+        attached: 'top right'
+      }
+    }
   };
 
 
@@ -62,6 +67,7 @@ export class FALPublishComponent implements OnInit {
       this.authGuard.checkPermissions('publish', res);
       this.createForm();
       this.title = res.data.title;
+      this.setBreadCrumbs(this.title);
       if (res && res['_links'] && res['_links']['program:request:approve'] && res['_links']['program:request:approve'].href) {
         let aaproveLink = res['_links']['program:request:approve'].href;
         this.approveProgramId = aaproveLink.split('/')[5];
@@ -79,15 +85,15 @@ export class FALPublishComponent implements OnInit {
   }
 
   onPublishClick() {
-    this.publishSave(this.approveProgramId);
+    this.publishSave();
   }
 
-  publishSave(id: string) {
+  publishSave() {
     let data = {"reason": this.falPublishForm.controls['ombComment'].value};
     let workflowRequestType = '/approve';
     this.btnDisabled = true;
     this.processing = true;
-    this.service.falWFRequestTypeProgram(id, data, workflowRequestType).subscribe(api => {
+    this.service.falWFRequestTypeProgram(this.approveProgramId, data, workflowRequestType).subscribe(api => {
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
         this.router.navigate(['/fal/workspace']);
       },
@@ -100,9 +106,7 @@ export class FALPublishComponent implements OnInit {
   }
 
   onCancelClick() {
-    let url = this.router.url;
-    url = url.replace("publish", "review");
-    this.router.navigateByUrl(url);
+    this.setNavigation();
   }
 
   onTextChange(event) {
@@ -110,6 +114,30 @@ export class FALPublishComponent implements OnInit {
       this.btnDisabled = false;
     else
       this.btnDisabled = true;
+  }
+  setBreadCrumbs(title) {
+    this.crumbs = [
+      {breadcrumb: 'Workspace', url: '/workspace'},
+      {breadcrumb: 'Assistance Listings', urlmock: true},
+      {breadcrumb: title, urlmock: true},
+      {breadcrumb: 'Publish Listing', urlmock: false}
+    ];
+  }
+  breadcrumbHandler(event) {
+    this.breadCrumbNavigation(event);
+  }
+
+  breadCrumbNavigation(event) {
+    if (event === 'Assistance Listings') {
+      this.router.navigateByUrl('fal/workspace')
+    } else {
+      this.setNavigation();
+    }
+  }
+  setNavigation() {
+    let url = this.router.url;
+    url = url.replace("publish", "review");
+    this.router.navigateByUrl(url);
   }
 }
 

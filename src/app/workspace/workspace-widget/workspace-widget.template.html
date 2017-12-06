@@ -10,12 +10,13 @@
   </div>
 
   <ng-content></ng-content>
-  
+
   <div grid class="right aligned horizontally padded">
     <div class="column">
       <div *ngIf="shortcut" class="sam-ui divider"></div>
       <a *ngIf="shortcut"
         [routerLink]="shortcut.routerLink"
+        queryParamsHandling="merge"
         (click)="onShortcutClick">
         {{shortcut.text}} &nbsp;
         <em aria-hidden="true" class="fa fa-chevron-right fa-sm"></em>

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, ChangeDetectorRef, Optional, forwardRef} from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, ChangeDetectorRef, Optional, forwardRef, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { LabelWrapper } from '../../wrappers/label-wrapper';
 import { AutocompleteService } from '../autocomplete/autocomplete.service';
@@ -137,6 +137,17 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
    * Allow a placeholder to component
    */
   @Input() placeholder: string = '';
+
+  /**
+   * Allow to insert a customized template for suggestions to use
+   */
+  @Input() itemTemplate: TemplateRef;
+
+  /**
+   * Allow to control whether display the category option in the result list or not
+   * @type {boolean}
+   */
+  @Input() displayCategory: boolean = true;
 
   public searchText: string = '';
 
@@ -293,7 +304,7 @@ export class SamAutocompleteMultiselectComponent implements ControlValueAccessor
    * item that is returned.
    */
   selectOnEnter(event) {
-    if (event.code === 'Enter' || event.keyIdentified === 'Enter') {
+    if (this.resultsList && this.resultsList.nativeElement && event.code === 'Enter' || event.keyIdentified === 'Enter') {
       let lookedUpItem = this.getItem();
       if(this.allowAny && lookedUpItem && lookedUpItem[this.keyValueConfig.keyProperty]==null && event.target.value !== ''){
         let obj = {};

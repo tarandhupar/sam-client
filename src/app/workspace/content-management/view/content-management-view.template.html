@@ -11,7 +11,7 @@
         Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
       </div>
       <a class="sam-ui primary small button pull-right m_L-2x question-button" (click)="onCreateContentItem()" *ngIf="toggleBtn">{{createTextMap[curSection]}}</a>
-      <sam-sort class="pull-right" [(ngModel)]="sortByModel[curSection]" [options]="sortOptionsMap[curSection]" (ngModelChange)="onSortModelChange($event)"></sam-sort>
+      <sam-sort class="pull-right" [(ngModel)]="sortByModel" [options]="sortOptions" (ngModelChange)="onSortModelChange($event)"></sam-sort>
     </div>
 
     <!--FAQ Repository Content or Data Dictionary Content-->
@@ -31,7 +31,7 @@
             <strong>Domain: </strong>
             <span>{{getDomainStr(item.domain)}}</span>
           </span>
-          <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.lastModifiedDate | feedsDateTimeDsiplay}}</span>
+          <span class="usa-width-one-whole"><strong>Latest Update: </strong>{{item.lastModifiedDate | shortDate}}</span>
         </div>
         <div class="usa-width-one-whole p_L-1x" *ngIf="curSection === 'video-library'">
           <div class="usa-width-two-thirds">

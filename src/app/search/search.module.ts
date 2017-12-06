@@ -13,7 +13,6 @@ import { WageDeterminationResult } from '../wage-determination/search-result/wag
 import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FormsModule } from '@angular/forms';
 import { WageDeterminationRevisedDBAPage } from "../wage-determination/to-be-revised/revised-dba-page";
-import { WageDeterminationRevisedSCAPage } from "../wage-determination/to-be-revised/revised-sca-page";
 
 import { routing } from './search.route';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
@@ -77,7 +76,6 @@ import {SearchAuthGuard} from "./authguard.service";
     FilterParamValue,
     SavedSearchRedirect,
     WageDeterminationRevisedDBAPage,
-    WageDeterminationRevisedSCAPage,
   ],
   providers: [
     DunsEntityAutoCompleteWrapper,

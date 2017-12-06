@@ -1,0 +1,197 @@
+<div>
+  <!--============================-->
+  <!--=== Identity Information ===-->
+  <!--============================-->
+  <section id="identity" class="identity">
+    <sam-alert [type]="alerts.identity.type"
+               [title]="alerts.identity.message"
+               [showClose]="true"
+               [hidden]="!alerts.identity.show"
+               (dismiss)="dismiss('identity')"></sam-alert>
+
+    <sam-editor label="Identifying Information"
+                [showInputView]="states.edit.identity"
+                (action)="handleAction($event,'identity')"
+                #identityEditor
+                *ngIf="detailsForm">
+      <div editor-display-view>
+        <div class="usa-form-group">
+          <label>Name:</label>
+          <div class="usa-form-control" [innerText]="name"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Suffix:</label>
+          <div class="usa-form-control" [innerText]="user.suffix"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Email:</label>
+          <div class="usa-form-control" [innerText]="user.email"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Mobile Phone:</label>
+          <div class="usa-form-control" [innerText]="personalPhone"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Mobile Carrier:</label>
+          <div class="usa-form-control" [innerText]="detailsForm.get('carrier').value"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>OTP Preference:</label>
+          <div class="usa-form-control" [innerText]="user.OTPPreference == 'sms' ? 'Text' : 'Email'"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Notifications:</label>
+          <div class="usa-form-control" [innerText]="(user.emailNotification ? 'On' : 'Off')"></div>
+        </div>
+      </div>
+      <div editor-input-view>
+          <sam-name-entry [model]="user" legend=""></sam-name-entry>
+
+          <sam-phone-entry [label]="store.labels.personalPhone.label"
+                           [hint]="store.labels.personalPhone.hint"
+                           [numbersOnly]="true"
+                           [formControl]="detailsForm.get('personalPhone')"
+                           phoneNumberTemplate="(___)___-____"></sam-phone-entry>
+          <sam-autocomplete labelText="Mobile Carrier"
+                            [options]="api.iam.carriers"
+                            [formControl]="detailsForm.get('carrier')"
+                            [errorMessage]="errors('carrier')"></sam-autocomplete>
+
+          <ul class="usa-unstyled-list">
+            <li>
+              <input type="checkbox"
+                     id="otp-preference"
+                     name="otp-preference"
+                     [checked]="user.OTPPreference == 'sms'"
+                     (change)="user.OTPPreference = (user.OTPPreference == 'sms') ? 'email' : 'sms'">
+                <label for="otp-preference">Use mobile phone as my default OTP option</label>
+            </li>
+            <li>
+              <input type="checkbox"
+                     id="email-notification"
+                     name="email-notification"
+                     [checked]="user.emailNotification"
+                     (change)="user.emailNotification = !user.emailNotification">
+              <label for="email-notification">I would like to be contacted when changes are made to the new SAM.gov</label>
+            </li>
+          </ul>
+      </div>
+    </sam-editor>
+  </section>
+  <!--============================-->
+  <!--=== Business Information ===-->
+  <!--============================-->
+  <section id="business" class="business">
+    <sam-alert [type]="alerts.business.type"
+               [title]="alerts.business.message"
+               [showClose]="true"
+               [hidden]="!alerts.business.show"
+               (dismiss)="dismiss('business')"></sam-alert>
+    <sam-editor [label]="states.isGov ? 'Organization Information' : 'Business Information'"
+                [showInputView]="states.edit.business"
+                (action)="handleAction($event,'business')"
+                #businessEditor
+                *ngIf="detailsForm">
+      <div editor-display-view>
+        <div class="usa-form-group" *ngIf="states.isGov">
+          <label>Department:</label>
+          <div class="usa-form-control" [innerText]="hierarchy.department"></div>
+        </div>
+        <div class="usa-form-group" *ngIf="states.isGov">
+          <label>Agency:</label>
+          <div class="usa-form-control" [innerText]="hierarchy.agency"></div>
+        </div>
+        <div class="usa-form-group" *ngIf="states.isGov">
+          <label>Office:</label>
+          <div class="usa-form-control" [innerText]="hierarchy.office"></div>
+        </div>
+        <div class="usa-form-group" *ngIf="states.isGov">
+          <label>Activity Access Code:</label>
+          <div class="usa-form-control" [innerText]="hierarchy.aac"></div>
+        </div>
+        <div class="usa-form-group">
+          <label>Business Phone:</label>
+          <div class="usa-form-control" [innerText]="phone"></div>
+        </div>
+      </div>
+      <div editor-input-view>
+          <sam-agency-picker *ngIf="states.isGov"
+                             [advancedMode]="true"
+                             [multimode]="false"
+                             [orgRoot]="user.departmentID"
+                             [orgId]="detailsForm.controls.officeID.value"
+                             [initial]="selected"
+                             [label]="'Select the office you work for:'"
+                             (orgFullPath)="setHierarchy($event)"
+                             (organization)="setAAC($event)"
+                             #agencyPicker>
+          </sam-agency-picker>
+
+          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)"></sam-phone-entry>
+      </div>
+    </sam-editor>
+  </section>
+  <!--==========================-->
+  <!--=== Security Questions ===-->
+  <!--==========================-->
+  <section id="kba" class="kba" *ngIf="store.questions.length && user.kbaAnswerList.length">
+    <sam-alert [type]="alerts.kba.type"
+               [title]="alerts.kba.message"
+               [showClose]="true"
+               [hidden]="!alerts.kba.show"
+               (dismiss)="dismiss('kba')"></sam-alert>
+    <sam-editor label="Security Questions"
+                [showInputView]="states.edit.kba"
+                (action)="handleAction($event,'kba')"
+                #kbaEditor>
+      <div editor-display-view>
+        <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
+          <label [innerText]="question(kbaAnswer.questionId)"></label>
+          <div class="usa-form-control" [innerHtml]="getHashedAnswer(kbaAnswer.answer)"></div>
+        </div>
+      </div>
+      <div editor-input-view>
+        <div *ngIf="questions.length">
+          <sam-kba-entry *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;"
+                         [(questions)]="questions[$index]"
+                         [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                         [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                         (onQuestionChange)="changeQuestion($event, $index)"
+                         label="Question {{ $index + 1 }}"
+                         #kba></sam-kba-entry>
+        </div>
+      </div>
+    </sam-editor>
+  </section>
+  <section id="deactivate">
+    <h3>Deactivate Account</h3>
+    <div>
+      Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
+      be permanently inaccessible and you will need to re-register to access SAM.gov.
+    </div>
+    <div class="usa-button-controls">
+      <sam-alert [type]="alerts.deactivate.type"
+                 [title]="alerts.deactivate.message"
+                 [showClose]="true"
+                 [hidden]="!alerts.deactivate.show"
+                 (dismiss)="dismiss('deactivate')"></sam-alert>
+      <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
+    </div>
+  </section>
+</div>
+
+<sam-modal #confirmModal
+           type="warning"
+           title="Are you sure you want to deactivate your account?"
+           showClose="true"
+           submitButtonLabel="Yes, deactivate my account"
+           cancelButtonLabel="No, cancel account deactivation"
+           (onSubmit)="reconfirmDeactivation()"></sam-modal>
+<sam-modal #reconfirmModal
+           type="warning"
+           title="Warning"
+           description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
+           showClose="true"
+           submitButtonLabel="Yes, continue with deactivation"
+           cancelButtonLabel="No, cancel deactivation"
+           (onSubmit)="deactivate()"></sam-modal>

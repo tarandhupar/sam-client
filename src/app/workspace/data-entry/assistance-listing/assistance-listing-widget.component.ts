@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import {ProgramService} from "../../../../api-kit/program/program.service";
+import { ProgramService } from "../../../../api-kit/program/program.service";
 import * as Cookies from 'js-cookie';
-import {FALAuthGuard} from "../../../assistance-listing/components/authguard/authguard.service";
+import { FALAuthGuard } from "../../../assistance-listing/components/authguard/authguard.service";
+import { FALFormService } from '../../../assistance-listing/assistance-listing-operations/fal-form.service';
+import { FALFormErrorService } from '../../../assistance-listing/assistance-listing-operations/fal-form-error.service';
 
 @Component({
+  providers: [ProgramService, FALAuthGuard, FALFormErrorService, FALFormService],
   selector: 'assistance-listing-widget',
   templateUrl: './assistance-listing-widget.template.html'
 })
@@ -17,11 +20,11 @@ export class AssistanceListingWidgetComponent {
   draftReviewCount: any;
 
   constructor(private api: ProgramService, private falAuthGuard: FALAuthGuard) {}
-  
+
   ngOnInit() {
     this.getUserPermissions();
   }
-  
+
   getUserPermissions() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     if(this.cookieValue!=null) {

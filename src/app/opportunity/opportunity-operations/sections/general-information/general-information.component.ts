@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
-import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
+import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
+import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
 
 @Component({
   selector: 'opp-form-general-information',
@@ -14,9 +15,9 @@ export class OpportunityGeneralInfoComponent implements OnInit {
   public oppGeneralInfoViewModel: any;
 
   public readonly archiveTypeConfig = {
-    id: 'opp-archive-policy',
+    id: OpportunityFieldNames.ARCHIVE_POLICY,
     label: 'Archiving Policy',
-    name: 'opp-archive-policy',
+    name: OpportunityFieldNames.ARCHIVE_POLICY + '-radio',
     required: true,
     hint: 'Archiving policy Synopsis and associated documents may be scheduled for archiving fifteen days after the response date or upon a user-specified date subsequent to the posting date.',
     options: [ // loaded asynchronously
@@ -24,15 +25,15 @@ export class OpportunityGeneralInfoComponent implements OnInit {
   };
 
   public readonly archiveDateConfig = {
-    id: 'opp-archive-date',
+    id: OpportunityFieldNames.ARCHIVE_DATE,
     label: 'Archiving Specific Date',
-    name: 'opp-archive-date'
+    name: OpportunityFieldNames.ARCHIVE_DATE + '-date'
   };
 
   public readonly vendorsCDIvlConfig = {
-    id: 'opp-vendor-cd-ivl',
+    id: OpportunityFieldNames.VENDORS_CD_IVL,
     label: 'Allow Vendors to Add/remove from IVL',
-    name: 'opp-vendor-cd-ivl',
+    name: OpportunityFieldNames.VENDORS_CD_IVL + '-radio',
     required: true,
     hint: 'Choose "yes" if you want vendors to be able to add/remove themselves.',
     options: [ // loaded asynchronously
@@ -40,16 +41,16 @@ export class OpportunityGeneralInfoComponent implements OnInit {
   };
 
   public readonly vendorsVIvlConfig = {
-    id: 'opp-vendor-v-ivl',
+    id: OpportunityFieldNames.VENDORS_V_IVL,
     label: 'Allow Vendors to View IVL',
-    name: 'opp-vendor-v-ivl',
+    name: OpportunityFieldNames.VENDORS_V_IVL + '-radio',
     required: true,
     hint: 'Choose "yes" if you want vendors to be able to view the interested vendors list.',
     options: [ // loaded asynchronously
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
+  constructor(private formBuilder: FormBuilder,
               private oppFormService: OpportunityFormService) {
     Object.freeze(this.archiveTypeConfig);
     Object.freeze(this.archiveDateConfig);
@@ -139,7 +140,10 @@ export class OpportunityGeneralInfoComponent implements OnInit {
 
   private linkControlTo(control: AbstractControl, callback: (field: any) => void): void {
     let boundCallback = callback.bind(this);
-    control.valueChanges.subscribe(value => {
+    control.valueChanges
+      .debounceTime(10)
+      .distinctUntilChanged()
+      .subscribe(value => {
       boundCallback(value);
     });
     // actions to take after any field is updated

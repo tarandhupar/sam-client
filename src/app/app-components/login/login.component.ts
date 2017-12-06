@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { get, merge } from 'lodash';
 
 import { IAMService } from 'api-kit';
-import { Validators as $Validators } from 'app/authentication/shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 
 @Component({
   selector: 'sam-login',

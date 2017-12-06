@@ -14,10 +14,8 @@ import { ROUTES } from './app.route';
 // App is our top level component
 import { App } from './app.component';
 import { AppState } from './app.service';
-import { AuthenticationModule } from './authentication';
 import { HomeModule } from './application-content/home';
 import { PageNotFoundErrorPage } from './application-content/404';
-import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { WageDeterminationModule } from './wage-determination';
 import { OrganizationModule } from './organization';
@@ -25,17 +23,20 @@ import { SearchModule } from './search';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
-import { UsersModule } from './users';
 import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
-import { FALFormModule } from "./assistance-listing/assistance-listing-operations/fal-form.module";
 import { ForbiddenModule } from "./application-content/403/403.module";
-import { WorkspaceModule } from "./workspace/workspace.module";
 import { DictionaryService } from "../api-kit/dictionary/dictionary.service";
 import { SearchDictionariesService } from "../api-kit/search/search-dictionaries.service";
 import { SamTitleService } from 'api-kit/title-service/title.service';
 import { SamErrorService } from 'api-kit/error-service';
 import { AlertFooterService } from './app-components/alert-footer/alert-footer.service';
 import { LoginService } from './app-components/login/login.service';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
+import { SupportComponent } from './Help/sections/support/support.component';
+import { SamUploadComponent } from './Help/sections/support/upload.component';
+
+import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { UserService } from 'role-management/user.service';
 
 
 // Application wide providers
@@ -46,7 +47,8 @@ const APP_PROVIDERS = [
   SamTitleService,
   SamErrorService,
   AlertFooterService,
-  LoginService
+  LoginService,
+  FeedbackFormService
 ];
 
 /**
@@ -57,6 +59,8 @@ const APP_PROVIDERS = [
   declarations: [
     App,
     PageNotFoundErrorPage,
+    SupportComponent,
+    SamUploadComponent,
   ],
   imports: [
     // Angular Modules
@@ -69,9 +73,6 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES),
 
     // Page View Modules
-    UsersModule,
-    AuthenticationModule,
-    ProgramModule,
     OpportunityModule,
     OrganizationModule,
     HomeModule,
@@ -79,10 +80,6 @@ const APP_PROVIDERS = [
     WageDeterminationModule,
     OrganizationDetailModule,
     ForbiddenModule,
-    WorkspaceModule,
-
-    //  Data Entry
-    FALFormModule,
 
     // Other Modules
     SamAPIKitModule,
@@ -92,6 +89,8 @@ const APP_PROVIDERS = [
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
     APP_PROVIDERS,
+    IsLoggedInGuard,
+    UserService,
   ]
 })
 export class AppModule {

@@ -9,8 +9,8 @@
   USWDS 0.13.3 Vendor scss files moved to the top
   of this file to be used by all files
 */
-@import '~uswds/src/stylesheets/lib/bourbon';
-@import '~uswds/src/stylesheets/lib/neat';
+@import 'vendor/uswds/lib/bourbon';
+@import 'vendor/uswds/lib/neat';
 
 /*-------------------
      Variables
@@ -22,7 +22,7 @@
 /*-------------------
        Reset
 --------------------*/
-@import '~uswds/src/stylesheets/lib/normalize';
+@import 'vendor/uswds/lib/normalize';
 
 /*-------------------
        Icons
@@ -36,7 +36,7 @@
 
 // Core -------------- //
 
-@import '~uswds/src/stylesheets/core/variables';
+@import 'vendor/uswds/core/variables';
 /*
   Variables moved here to avoid
   overriding USWDS grid variables
@@ -49,28 +49,28 @@ $current-large: $large;
 $small: new-breakpoint(min-width $small-screen $grid-columns-small);
 $medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
 $large: new-breakpoint(min-width $large-screen $grid-columns-large);
-@import '~uswds/src/stylesheets/core/grid';
+@import 'vendor/uswds/core/grid';
 // Restore variables to values defined in variables.scss
 $small: $current-small;
 $medium: $current-medium;
 $large: $current-large;
 
-@import '~uswds/src/stylesheets/core/utilities';
+@import 'vendor/uswds/core/utilities';
 
 // Elements -------------- //
 
-@import '~uswds/src/stylesheets/elements/buttons';
+@import 'vendor/uswds/elements/buttons';
 @import 'sam-ui/vendor/uswds'; // modified USWDS Input file
-@import '~uswds/src/stylesheets/elements/labels';
+@import 'vendor/uswds/elements/labels';
 
 
 // Components -------------- //
 
-@import '~uswds/src/stylesheets/components/accordions';
-@import '~uswds/src/stylesheets/components/alerts';
-@import '~uswds/src/stylesheets/components/forms';
-@import '~uswds/src/stylesheets/components/sidenav';
-@import '~uswds/src/stylesheets/components/search';
+@import 'vendor/uswds/components/accordions';
+@import 'vendor/uswds/components/alerts';
+@import 'vendor/uswds/components/forms';
+@import 'vendor/uswds/components/sidenav';
+@import 'vendor/uswds/components/search';
 
 
 /*******************************
@@ -175,6 +175,7 @@ $large: $current-large;
 --------------------*/
 // TODO: Move pages found in components
 // folder to the pages folder
+@import 'pages/_help-support.scss';
 @import 'pages/entity-object-view';
 @import 'pages/opportunity';
 @import 'pages/organization';

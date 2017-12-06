@@ -217,7 +217,7 @@ npm run watch
 <h3 id="bundle-analyzer">Generate and Analyze bundle report</h3>
 
 ```bash
-npm run build:prod
+npm run webpack-bundle-analyzer
 ```
 
 Check your /dist folder afterwards and grab `report.html`

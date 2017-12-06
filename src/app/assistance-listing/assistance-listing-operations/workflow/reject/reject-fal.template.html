@@ -1,25 +1,35 @@
-<div class="usa-grid-full" *ngIf="data">
-  <sam-alert [attr.id]="rejectAlertConfig.id" [type]="rejectAlertConfig.type"
-             [title]="rejectAlertConfig.title" [description]="rejectAlertConfig.description">
-  </sam-alert>
+<div class="usa-grid-full" *ngIf="data" [ngClass]="'assistance-listing-operations'">
+  <page
+    (breadcrumbOut)="breadcrumbHandler($event)"
+    theme="inside"
+    [breadcrumbs]="crumbs"
+    section="WORKSPACE"
+    [title]="'Reject Listing'"
+    [badge]="data.status.value"
+   [caption]="description"
+   [options]="options.page">
   <form [formGroup]="rejectALForm">
     <br>
-    <h2>{{title}}</h2>
-    <div>Assistance User Comment: {{submitReason}}</div>
-    <sam-text-area
-      [control]="rejectALForm.controls['ombComment']"
-      [name]="'ombrmo-input'"
-      [label]="'OMB/RMO Comment'"
-      [required]="true"
-      formControlName="ombComment"
-      (inputEventChange)="onTextChange($event)"
-    ></sam-text-area>
-    <div class="usa-width-one-half">
-        <sam-button [buttonDisabled]="processing === true" buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
-        <sam-button buttonText="Reject" (onClick)="onRejectClick($event)"
-                    [buttonDisabled]="btnDisabled"></sam-button>
+    <div class="sam-ui segment">
+      <h2>{{title}}</h2>
+      <div>Assistance User Comment: {{submitReason}}</div>
+      <sam-text-area
+        [control]="rejectALForm.controls['ombComment']"
+        [name]="'ombrmo-input'"
+        [label]="'OMB/RMO Comment'"
+        [required]="true"
+        formControlName="ombComment"
+        (inputEventChange)="onTextChange($event)"
+      ></sam-text-area>
+    </div>
+    <div class="text-align-right">
+      <sam-button [buttonDisabled]="processing === true" buttonText="Cancel"
+                  (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Reject" (onClick)="onRejectClick($event)"
+                  [buttonDisabled]="btnDisabled"></sam-button>
       <ng-container *ngIf="processing === true">Processing Request...</ng-container>
-      </div>
+    </div>
   </form>
+  </page>
 </div>
 

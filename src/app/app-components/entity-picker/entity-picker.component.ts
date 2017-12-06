@@ -40,7 +40,7 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor{
   /**
    * Sets the label wrapper error message manually
    */
-  @Input() searchMessage: string = 'test';
+  @Input() searchMessage: string = '';
 
 
   private _disabled: boolean = false;
@@ -48,8 +48,6 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor{
   selections = [];
   serviceOptions = {};
   multipleACConfig = {keyProperty: 'key',valueProperty: 'name', categoryProperty: 'detail'};
-
-  item = {title:'test title', email:'test email', name:'test name'};
 
   constructor(private cdr:ChangeDetectorRef) {}
 
@@ -61,7 +59,6 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor{
   }
 
   onSelection(val,emit:boolean = true){
-    console.log(val);
     this.selections = val;
     if(emit){
       this.emitSelections();
@@ -81,7 +78,6 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor{
     if(value){
       this.selections = value;
     }
-    console.log(this.selections);
   }
   registerOnChange(fn: any) {
     this.onChange = fn;

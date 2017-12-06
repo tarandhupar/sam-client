@@ -1,16 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { OptionsType, IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
+import { OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import { ActivatedRoute } from "@angular/router";
 import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { UserService } from "../../role-management/user.service";
 import { get as getProp } from "lodash";
-import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components";
+import { SamModalComponent } from "sam-ui-elements/src/ui-kit/components/modal";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
-import { SamTitleService } from "../../../api-kit/title-service/title.service";
-import { ToggleService } from "api-kit/toggle/toggle.service";
 import { get as getProperty } from 'lodash';
 
 @Component({
@@ -19,13 +17,6 @@ import { get as getProperty } from 'lodash';
 })
 export class MyAccessPage implements OnInit {
 
-  private navLinks = [
-    { text: 'Personal Details', routerLink: ['/profile/details'] },
-    { text: 'Reset Password',   routerLink: ['/profile/password'] },
-    { text: 'My Roles', active: true },
-    { text: 'Role Migrations',  routerLink: ['/profile/migrations'] },
-    { text: 'Manage Subscriptions',  routerLink: ['/profile/subscriptions'] },
-  ];
   sort: any = {type:'org', sort:'asc'};
   sortOptions = [
     { value: 'org', label: 'Organization' },
@@ -49,7 +40,6 @@ export class MyAccessPage implements OnInit {
   private result: 'success'|'error'|'pending' = 'pending';
   private errorMessage: string = '';
   private isMyAccess: boolean = false;
-  private crumbs = [];
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
   @ViewChild('deleteModal') deleteModal: SamModalComponent;
@@ -61,23 +51,9 @@ export class MyAccessPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertFooter: AlertFooterService,
-    private samTitle: SamTitleService,
-    private toggleService: ToggleService
-  )
-  {
-
-  }
+  ) {}
 
   ngOnInit( ) {
-    this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
-          if(!isEnabled){
-             for(var i=this.navLinks.length-1; i>=0; i--) {
-               if( this.navLinks[i].text == "Manage Subscriptions") {
-                  this.navLinks.splice(i,1); break;
-               }
-             }
-         }
-     }) ;
     this.isMyAccess = !!this.route.snapshot.data['isMyAccess'];
     let cookieUser = this.userCookieService.getUser() && this.userCookieService.getUser().uid;
     this.userName = this.route.snapshot.params['id'] || cookieUser;
@@ -127,7 +103,6 @@ export class MyAccessPage implements OnInit {
 
           if (!this.isMyAccess) {
             this.getUserDisplayName(res);
-            this.samTitle.setTitleString(this.fullName);
           }
 
           if (!res) {
@@ -209,13 +184,6 @@ export class MyAccessPage implements OnInit {
       console.warn('user name missing');
       this.fullName = "";
     }
-
-    let c: Array<IBreadcrumb> = [
-      { breadcrumb: 'Workspace', url: '/workspace' },
-      { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
-      { breadcrumb: this.fullName },
-    ];
-    this.crumbs = c;
   }
 
   setRoleOptions(roles) {
@@ -260,10 +228,6 @@ export class MyAccessPage implements OnInit {
   onPageChange($event) {
     this.currentPage = $event;
     this.onSearchParamChange();
-  }
-
-  getPageTitle() {
-    return this.isMyAccess ? 'My Roles' : this.fullName;
   }
 
   isRowDeletable(roleOrg) {

@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
-import { OppContactInfoViewModel } from '../sections/contact-information/contact-information.model';
-import { OppGeneralInfoViewModel } from '../sections/general-information/general-information.model';
 import { OppHeaderInfoViewModel } from '../sections/header-information/header-information.model';
-import {OppClassificationViewModel} from "../sections/classification/classification.model";
+import { OppAwardDetailsViewModel } from '../sections/award-details/award-details.model';
+import { OppGeneralInfoViewModel } from '../sections/general-information/general-information.model';
+import { OppClassificationViewModel } from "../sections/classification/classification.model";
+import { OppContactInfoViewModel } from '../sections/contact-information/contact-information.model';
 
 export interface SectionInfo { // todo: switch to string enum
   id: string, // one of OppSectionNames
@@ -22,10 +23,11 @@ export class OpportunityFormViewModel {
   private _data: any;
   private _additionalInfo: any;
   public _status: OpportunityStatus;
-  public oppGeneralInfoViewModel: OppGeneralInfoViewModel;
   public oppHeaderInfoViewModel: OppHeaderInfoViewModel;
-  public oppContactInfoViewModel: OppContactInfoViewModel;
+  public oppAwardDetailsViewModel: OppAwardDetailsViewModel;
+  public oppGeneralInfoViewModel: OppGeneralInfoViewModel;
   public oppClassificationViewModel: OppClassificationViewModel;
+  public oppContactInfoViewModel: OppContactInfoViewModel;
   public existing: any;
 
   constructor(opportunity) {
@@ -38,8 +40,9 @@ export class OpportunityFormViewModel {
 
     //sections
     //Note: Since Description section has only one field it is not moved to its own file.
-    this.oppGeneralInfoViewModel = new OppGeneralInfoViewModel(this._data);
     this.oppHeaderInfoViewModel = new OppHeaderInfoViewModel(this._data);
+    this.oppAwardDetailsViewModel = new OppAwardDetailsViewModel(this._data);
+    this.oppGeneralInfoViewModel = new OppGeneralInfoViewModel(this._data);
     this.oppClassificationViewModel = new OppClassificationViewModel(this._data);
     this.oppContactInfoViewModel = new OppContactInfoViewModel(this._data);
   }

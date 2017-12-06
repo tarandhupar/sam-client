@@ -7,13 +7,27 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
+
+  searchStartLimit: number = 3;
+  pageNum: number = 1;
+  resultList: any = [];
+  existingVal: any;
+
   constructor(private accessService:UserAccessService) {}
 
   //sam-ui-kit autocomplete
   fetch(val: any, endOfList: boolean, serviceOptions: any) {
-    return this.accessService.getUserAutoComplete(val, false).map(res => {
-      if(res && res.length > 0) {
-        return res.map((val)=>{
+    if(val.length < this.searchStartLimit) return Observable.of([]);
+    // if(this.existingVal !== val) {
+    //   this.pageNum = 1;
+    // }else {
+    //   if (endOfList) this.pageNum++;
+    // }
+
+    this.existingVal = val;
+    return this.accessService.getUserAutoComplete(val, false, this.pageNum, AUTOCOMPLETE_RECORD_PER_PAGE).map(res => {
+      if(res != null && res.length > 0) {
+        const list = res.map((val)=>{
           let obj = val;
           obj['key'] = obj['cageCode'];
           obj['name'] = obj['legalBusinessName'];
@@ -21,6 +35,9 @@ export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
           obj['address'] = this.formatAddressStr(val['address']);
           return obj;
         });
+        this.pageNum >= 2? this.resultList.concat(list): this.resultList = list;
+
+        return this.resultList;
       } else {
         return [];
       }

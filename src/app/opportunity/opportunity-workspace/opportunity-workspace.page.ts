@@ -11,6 +11,7 @@ import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service"
 import {FHService} from "../../../api-kit/fh/fh.service";
 import {UserService} from "../../role-management/user.service";
 import {UserAccessService} from "../../../api-kit/access/access.service";
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 @Component({
   moduleId: __filename,
@@ -28,6 +29,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   private START_DAY = '00:00:00';
   private END_DAY = '23:59:59';
 
+  feedback: any;
   showSpinner: boolean = false;
   keyword: string = '';
   organizationId: string = '';
@@ -160,11 +162,21 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
 
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private opportunityService: OpportunityService, private userService: UserService, private userAccessService: UserAccessService, private fhService: FHService, private dictionaryService: DictionaryService, private alertFooterService: AlertFooterService) {
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private router: Router, 
+    private opportunityService: OpportunityService, 
+    private userService: UserService, 
+    private userAccessService: UserAccessService, 
+    private fhService: FHService, 
+    private dictionaryService: DictionaryService, 
+    private alertFooterService: AlertFooterService,
+    private formService: FeedbackFormService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+    this.feedback = this.formService.componentInstance;
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;

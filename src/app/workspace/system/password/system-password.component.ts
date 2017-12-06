@@ -9,7 +9,7 @@ import { SamPasswordComponent } from '../../../app-components';
 import { IAMService } from 'api-kit';
 import { System } from 'api-kit/iam/interfaces';
 
-import { Validators as $Validators } from '../../shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 
 @Component({
   templateUrl: './system-password.component.html',

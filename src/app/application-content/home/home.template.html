@@ -126,7 +126,7 @@
   <div class="dark blue row">
     <div class="twelve wide column">
       <div class="sam-ui container">
-        <div class="sam-ui three column vertically padded stackable grid">
+        <div class="sam-ui four column vertically padded stackable grid">
           <div class="column center aligned">
             <a [routerLink]="['/help/new']" class="sam-ui medium inverted header">
               <span class="fa-stack fa-2x">
@@ -155,6 +155,16 @@
               </span>
               <br>
               What's Next
+            </a>
+          </div>
+          <div class="column center aligned">
+            <a (click)="feedback.toggleFeedback()" class="sam-ui medium inverted header">
+              <span class="fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-comments fa-stack-1x" style="color: #112e51;"></i>
+              </span>
+              <br>
+              Provide Feedback
             </a>
           </div>
           <!-- <div class="column center aligned">

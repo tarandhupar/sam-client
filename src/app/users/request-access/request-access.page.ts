@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
-import { Validators as $Validators } from "../../authentication/shared/validators";
+import { Validators as $Validators } from "app-utils/validators";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";

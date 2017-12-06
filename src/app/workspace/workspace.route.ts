@@ -1,66 +1,58 @@
 import { Routes, RouterModule } from '@angular/router';
 
+import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { FeatureToggleGuard } from 'application-content/403/feature-toggle.guard';
+import { SecurityGuard } from './system/security.guard';
+
 import { ApplicationRequestsComponent } from './requests/application-requests/application-requests.component';
-import { FSDComponent, FSDGuard } from './fsd';
 import { HelpContentManagementViewComponent } from "./content-management/view/content-management-view.component";
 import { HelpContentManagementEditComponent } from "./content-management/edit/content-management-edit.component";
 import { HelpContentManagementDetailComponent } from "./content-management/detail/content-management-detail.component";
 import { MsgFeedComponent } from "./msg-feed/msg-feed.component";
-import { SystemComponent, SystemGuard, SecurityGuard } from './system';
 import { WorkspacePage } from "./workspace.page";
 
-import { AdminLevelResolve } from "../application-content/403/admin-level.resolve";
-import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
-import { FeatureToggleGuard } from "../application-content/403/feature-toggle.guard";
-
-import FSDRouter from './fsd/fsd.route';
 import SystemRouter from './system/system.route';
 
 export const routes: Routes = [
-  { path: 'workspace',
+  {
+    path: '',
     component: WorkspacePage,
   },
   {
-    path: 'workspace/fsd',
-    component: FSDComponent,
-    canActivate: [ IsLoggedInGuard, FSDGuard ],
-    canActivateChild: [ IsLoggedInGuard, FSDGuard ],
-    children: FSDRouter,
+    path: 'fsd',
+    loadChildren: './fsd/fsd.module#FSDModule',
   },
   {
-    path: 'workspace/system',
-    component: SystemComponent,
-    canActivate: [ IsLoggedInGuard, SystemGuard ],
-    canActivateChild: [ IsLoggedInGuard, SystemGuard ],
-    children: SystemRouter,
+    path: 'system',
+    loadChildren: './system/system.module#SystemModule',
   },
   {
-    path: 'workspace/requests/system/:id',
+    path: 'requests/system/:id',
     component: ApplicationRequestsComponent,
     canActivate: [ IsLoggedInGuard, SecurityGuard ],
   },
   {
-    path: 'workspace/myfeed/:section',
+    path: 'myfeed/:section',
     component: MsgFeedComponent
   },
   {
-    path: 'workspace/myfeed/:section/:subsection',
+    path: 'myfeed/:section/:subsection',
     component: MsgFeedComponent
   },
   {
-    path: 'workspace/content-management/:section',
+    path: 'content-management/:section',
     canActivate:[FeatureToggleGuard],
     data: { featureToggleKey:'cms' },
     component: HelpContentManagementViewComponent
   },
   {
-    path: 'workspace/content-management/:section/edit',
+    path: 'content-management/:section/edit',
     canActivate:[FeatureToggleGuard],
     data: { featureToggleKey:'cms' },
     component: HelpContentManagementEditComponent
   },
   {
-    path: 'workspace/content-management/:section/detail',
+    path: 'content-management/:section/detail',
     canActivate:[FeatureToggleGuard],
     data: { featureToggleKey:'cms' },
     component: HelpContentManagementDetailComponent

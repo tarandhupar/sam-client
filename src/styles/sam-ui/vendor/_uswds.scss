@@ -19,7 +19,7 @@ $input-padding-vertical: 1rem;
 $input-height-exact: (
   ($base-font-size * $input-line-height) +
   ($input-padding-vertical * 2) +
-  (rem($input-border-width * 2))
+  (rem($input-border-width * 2) + .1) // Adding + .1 to fix math (Rounding error)
 );
 
 // truncated to 1 decimal place

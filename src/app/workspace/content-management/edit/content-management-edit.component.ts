@@ -18,13 +18,10 @@ require('aws-sdk/dist/aws-sdk');
   templateUrl: './content-management-edit.template.html',
 })
 export class HelpContentManagementEditComponent {
-
-  @ViewChild('editTab') editTab:SamTabComponent;
-  @ViewChild('publicViewTab') publicViewTab:SamTabComponent;
   @ViewChild('inputFileWrapper') inputFileWrapper:LabelWrapper;
 
   private crumbs: Array<IBreadcrumb> = [
-    { url: '/workspace', breadcrumb: 'Workspace' },
+    { url: '/help', breadcrumb: 'Help Center' },
     { url: '', breadcrumb: '' },
     { breadcrumb: '' }
   ];
@@ -93,7 +90,6 @@ export class HelpContentManagementEditComponent {
   mode:string = '';
   isContentCreated: boolean = false;
   activeTab = 0;
-  hasUnsavedChanges:boolean = true;
 
   sourceVideoDivClass = 'file-input-div';
 

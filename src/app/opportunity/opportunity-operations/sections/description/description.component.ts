@@ -1,12 +1,8 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import { OpportunityService } from "../../../../../api-kit/opportunity/opportunity.service";
-import { v4 as UUID } from 'uuid';
 
 @Component({
-  providers: [OpportunityFormService, OpportunityService],
   selector: 'opp-form-description',
   templateUrl: 'description.template.html'
 })
@@ -16,7 +12,7 @@ export class OpportunityDescriptionComponent implements OnInit {
   @Input() viewModel: OpportunityFormViewModel;
   oppDescForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private service: OpportunityFormService, private oppService: OpportunityService, private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -45,7 +41,7 @@ export class OpportunityDescriptionComponent implements OnInit {
     } else {
       description = '';
     }
-    
+
     this.oppDescForm.patchValue({
       description: description
     }, {

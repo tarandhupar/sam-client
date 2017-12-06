@@ -1,121 +1,115 @@
-<page [breadcrumbs]="crumbs" [section]="'Profile'" [title]="'Manage Subscriptions'">
-  <sidebar>
-    <subscriptions-sidenav [domains] = "userDomains" (filterChange)="onFilterChange($event)"></subscriptions-sidenav>
-  </sidebar>
+<subscriptions-sidenav [domains] = "userDomains" (filterChange)="onFilterChange($event)" *sideNavFilter></subscriptions-sidenav>
 
-  <div class="usa-width-one-whole msg-feed-content">
-    <div class="usa-width-one-whole m_B-2x">
-      <div class="pull-left p_T-3x">
-        Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
-      </div>
-      <div class="pull-right">
-        <sam-sort [(ngModel)]="sortByModel" [options]="msgSortOptions" (ngModelChange)="onSortSelectModelChange()">
-        </sam-sort>&nbsp;&nbsp;
-        <sam-subscription-actions [actions]="actions" (emitAction)="confirmAction($event)"></sam-subscription-actions>
-      </div>
+<div class="usa-width-one-whole msg-feed">
+  <div class="usa-width-one-whole m_B-2x">
+    <div class="pull-left p_T-3x">
+      Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
     </div>
-
-    <!--Subscriptions Content-->
-    <!--div class="usa-width-one-whole msg-feed-items-div" *ngIf="subscriptions.length > 0" -->
-    <div *ngIf="selectedAll && !allMatchingSelected && totalRecords > recordsPerPage" class="usa-width-one-whole">
-      <sam-alert [type]="'info'" [description]="''">
-        All {{recordsPerPage}} subscriptions in this page are selected. <a (click)="selectAllMatching()">Select all {{totalRecords}} subscription records.</a>
-      </sam-alert> 
-    </div>  
-    <div *ngIf="allMatchingSelected && totalRecords > recordsPerPage" class="usa-width-one-whole">
-      <sam-alert [type]="'info'" [description]="''">
-        All {{totalRecords}} subscription records selected.
-      </sam-alert> 
-    </div>      
-  <div class="usa-width-one-whole">
-    <table class="sam-ui striped selectable lightest blue table small" style="border:none">
-      <thead>
-      <tr >
-        <th style="padding:0em 0.5em" scope="col" >  
-          <input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll();"/>
-          <label>&nbsp;</label>
-        </th>
-        <th style="padding:0em 0.5em" scope="col" >Name</th>
-        <th style="padding:0em 0.5em" scope="col" >Type</th>
-        <th style="padding:0em 0.5em" scope="col" >Last Modified</th>
-        <th style="padding:0em 0.5em" scope="col" >Email <br> Frequency</th>
-        <!-- style="padding:0em 0.5em" scope="col" >Show in <br> My Feed</th -->
-        <th style="padding:0em 0.5em" scope="col" ></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let row of subscriptions; let i = index">
-          <td scope="row" style="padding:0em 0.5em; position: relative;"> 
-           <input type="checkbox" [(ngModel)]="selectOptions[i].selected" (ngModelChange)="checkIfAllSelected(selectOptions[i]);"/>
-           <label>&nbsp;</label>
-          </td>
-          <td scope="row" style="width: 25%; padding:0em 0.5em"> 
-             <a [routerLink]="row.uri" [innerText]="shorten(row.title)" [title]="row.title" target="_blank"></a>
-          </td>
-          <td scope="row" style="padding:0em 0.5em" title={{row.type}}>{{shorten(row.type)}}</td> 
-          <td scope="row" style="padding:0em 0.5em">{{(row.modified_date) ? (row.modified_date | date : "MMM dd, yyyy") : ""}}</td> 
-          <td scope="row" style="padding:0em 0.5em">
-            <sam-table-select class="usa-width-one-fourth" [styles]="dropdownStyles" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options" 
-                        [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled" (ngModelChange)='onFrequencyTypeSelect($event,row.id)'></sam-table-select>
-           
-          </td> 
-          <!-- td scope="row" style="width: 10%; text-align: center; padding:0em 0.5em">
-              <sam-checkbox
-                [model]="(row.myFeed === 'Y') ? [row.myFeed] : []"
-                [name]="'MyFeed'"
-                [options]="myFeedCbxConfig.options"
-                (modelChange)="onMyFeedCheck($event,row.id)">
-              </sam-checkbox>
-          </td --> 
-          <td scope="row" style="white-space: nowrap; padding:0em 0.5em">
-            <sam-watch-button [data]="{id: row.id, active: row.active, recordId: row.record_id, title: row.title}" [showModal]="true" (subscriptionChanaged)="handleSubscriptionChange($event)"></sam-watch-button>
-          </td> 
-      </tr>
-      </tbody>
-    </table>
+    <div class="pull-right">
+      <sam-sort [(ngModel)]="sortByModel" [options]="msgSortOptions" (ngModelChange)="onSortSelectModelChange()">
+      </sam-sort>&nbsp;&nbsp;
+      <sam-subscription-actions [actions]="actions" (emitAction)="confirmAction($event)"></sam-subscription-actions>
+    </div>
   </div>
-      <!-- div class="usa-width-one-whole msg-feed-item" *ngFor="let record of recordList">
-        <div class="pull-left" style="line-height: 0.5em;">
-          
-          <div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>
-          
-          <div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>
 
-        </div>
-        <div class="usa-width-two-thirds p_L-2x" *ngIf="feed.type === 'Alert'">
-          <span class="usa-width-one-whole msg-feed-bold">{{feed.title}}</span>
-          <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
-          <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
-        </div>
-        <div class="usa-width-two-thirds p_L-2x p_T-2x" *ngIf="feed.type !== 'Alert'">
-          <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
-          <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
-        </div>
-        <span class="pull-right msg-feed-status m_T-2x p_R-3x" *ngIf="feed.type === 'Request'">{{feed.status}}</span>
-      </div >
-    </div -->
-
-    <div class="usa-width-one-whole" *ngIf="subscriptions.length === 0">
-      No Subscriptions Available
-    </div>
-
-
-    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="subscriptions.length > 0">
-      <sam-pagination (pageChange)="onPageNumChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
-    </div>
-
-
+  <!--Subscriptions Content-->
+  <!--div class="usa-width-one-whole msg-feed-items-div" *ngIf="subscriptions.length > 0" -->
+  <div *ngIf="selectedAll && !allMatchingSelected && totalRecords > recordsPerPage" class="usa-width-one-whole">
+    <sam-alert [type]="'info'" [description]="''">
+      All {{recordsPerPage}} subscriptions in this page are selected. <a (click)="selectAllMatching()">Select all {{totalRecords}} subscription records.</a>
+    </sam-alert>
   </div>
-</page>
-  <sam-modal #bulkUpdateModal
-            [showClose]="false"
-            [closeOnOutsideClick]="true"
-            [closeOnEscape]="true"
-            [type]="'warning'"
-            [title]="modalConfig.title"
-            [description]="modalConfig.description"
-            [submitButtonLabel]="'Unsubscribe'"
-            [cancelButtonLabel]="'Cancel'"
-            (onSubmit)="onBulkUpdateModalSubmit()">
-  </sam-modal>
+  <div *ngIf="allMatchingSelected && totalRecords > recordsPerPage" class="usa-width-one-whole">
+    <sam-alert [type]="'info'" [description]="''">
+      All {{totalRecords}} subscription records selected.
+    </sam-alert>
+  </div>
+<div class="usa-width-one-whole">
+  <table class="sam-ui striped selectable lightest blue table small" style="border:none">
+    <thead>
+    <tr >
+      <th style="padding:0em 0.5em" scope="col" >
+        <input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll();"/>
+        <label>&nbsp;</label>
+      </th>
+      <th style="padding:0em 0.5em" scope="col" >Name</th>
+      <th style="padding:0em 0.5em" scope="col" >Type</th>
+      <th style="padding:0em 0.5em" scope="col" >Last Modified</th>
+      <th style="padding:0em 0.5em" scope="col" >Email <br> Frequency</th>
+      <!-- style="padding:0em 0.5em" scope="col" >Show in <br> My Feed</th -->
+      <th style="padding:0em 0.5em" scope="col" ></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of subscriptions; let i = index">
+        <td scope="row" style="padding:0em 0.5em; position: relative;">
+         <input type="checkbox" [(ngModel)]="selectOptions[i].selected" (ngModelChange)="checkIfAllSelected(selectOptions[i]);"/>
+         <label>&nbsp;</label>
+        </td>
+        <td scope="row" style="width: 25%; padding:0em 0.5em">
+           <a [routerLink]="row.uri" [innerText]="shorten(row.title)" [title]="row.title" target="_blank"></a>
+        </td>
+        <td scope="row" style="padding:0em 0.5em" title={{row.type}}>{{shorten(row.type)}}</td>
+        <td scope="row" style="padding:0em 0.5em">{{(row.modified_date) ? (row.modified_date | date : "MMM dd, yyyy") : ""}}</td>
+        <td scope="row" style="padding:0em 0.5em">
+          <sam-table-select class="usa-width-one-fourth" [styles]="dropdownStyles" [ngModel]="row.frequency" [name]="frequencySelectConfig.name" [options]="frequencySelectConfig.options"
+                      [label]="frequencySelectConfig.label" [disabled]="frequencySelectConfig.disabled" (ngModelChange)='onFrequencyTypeSelect($event,row.id)'></sam-table-select>
 
+        </td>
+        <!-- td scope="row" style="width: 10%; text-align: center; padding:0em 0.5em">
+            <sam-checkbox
+              [model]="(row.myFeed === 'Y') ? [row.myFeed] : []"
+              [name]="'MyFeed'"
+              [options]="myFeedCbxConfig.options"
+              (modelChange)="onMyFeedCheck($event,row.id)">
+            </sam-checkbox>
+        </td -->
+        <td scope="row" style="white-space: nowrap; padding:0em 0.5em">
+          <sam-watch-button [data]="{id: row.id, active: row.active, recordId: row.record_id, title: row.title}" [showModal]="true" (subscriptionChanaged)="handleSubscriptionChange($event)"></sam-watch-button>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+    <!-- div class="usa-width-one-whole msg-feed-item" *ngFor="let record of recordList">
+      <div class="pull-left" style="line-height: 0.5em;">
+
+        <div class="usa-alert m_T-0 alert-image-div msg-feed-icon" *ngIf="feed.type === 'Alert'" [ngClass]="getAlertFeedClass(feed)"></div>
+
+        <div class="msg-feed-icon msg-feed-user-icon" *ngIf="feed.type !== 'Alert'"><i class="fa fa-user"></i></div>
+
+      </div>
+      <div class="usa-width-two-thirds p_L-2x" *ngIf="feed.type === 'Alert'">
+        <span class="usa-width-one-whole msg-feed-bold">{{feed.title}}</span>
+        <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
+        <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
+      </div>
+      <div class="usa-width-two-thirds p_L-2x p_T-2x" *ngIf="feed.type !== 'Alert'">
+        <span class="usa-width-one-whole msg-feed-description">{{feed.description}}</span>
+        <span class="usa-width-one-whole msg-feed-description">{{feed.date}}</span>
+      </div>
+      <span class="pull-right msg-feed-status m_T-2x p_R-3x" *ngIf="feed.type === 'Request'">{{feed.status}}</span>
+    </div >
+  </div -->
+
+  <div class="usa-width-one-whole" *ngIf="subscriptions.length === 0">
+    No Subscriptions Available
+  </div>
+
+
+  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="subscriptions.length > 0">
+    <sam-pagination (pageChange)="onPageNumChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+  </div>
+</div>
+
+<sam-modal #bulkUpdateModal
+          [showClose]="false"
+          [closeOnOutsideClick]="true"
+          [closeOnEscape]="true"
+          [type]="'warning'"
+          [title]="modalConfig.title"
+          [description]="modalConfig.description"
+          [submitButtonLabel]="'Unsubscribe'"
+          [cancelButtonLabel]="'Cancel'"
+          (onSubmit)="onBulkUpdateModalSubmit()">
+</sam-modal>

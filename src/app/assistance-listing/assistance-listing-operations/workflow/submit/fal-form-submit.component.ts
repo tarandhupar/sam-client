@@ -4,6 +4,8 @@ import {AlertFooterService} from "../../../../app-components/alert-footer/alert-
 import {Router} from "@angular/router";
 import {FALFormService} from "../../fal-form.service";
 import {FALAuthGuard} from "../../../components/authguard/authguard.service";
+import {PageConfig} from "../../../../../sam-ui-elements/src/ui-kit/layout/types";
+import {IBreadcrumb} from "../../../../../sam-ui-elements/src/ui-kit/types";
 
 @Component({
   selector: 'fal-form-submit',
@@ -30,21 +32,29 @@ export class FALSubmitComponent {
     type: "error",
     timer: 3000
   };
-
-  public submissionAlertConfig = {
-    id: 'submission-instructions',
-    type: 'warning',
-    title: 'Submission Instructions',
-    description: 'Please enter in a submission comment and click the "Submit to OMB" button to send your submission for OMB Review/Publication.'
+  description = 'Please enter in a submission comment and click the "Submit to OMB" button to send your submission for OMB Review/Publication.';
+  crumbs: Array<IBreadcrumb> = [];
+  private options = {
+    page: <PageConfig>{
+      badge: {
+        attached: 'top right'
+      }
+    }
   };
+
 
   constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: FALAuthGuard) {
   }
 
   ngOnInit() {
+    this.populateData();
+  }
+
+  populateData() {
     this.service.getFAL(this.router.url.split('/')[2]).subscribe(
       data => {
         this.data = data;
+        this.setBreadCrumbs(data.data.title);
         this.authGuard.checkPermissions('submit', data);
         this.createForm();
       },
@@ -60,6 +70,10 @@ export class FALSubmitComponent {
   }
 
   onSubmitOMBClick() {
+    this.saveData();
+  }
+
+  saveData() {
     this.btnDisabled = true;
     this.processing = true;
     this.programId = this.router.url.split('/')[2];
@@ -79,9 +93,7 @@ export class FALSubmitComponent {
   }
 
   onCancelClick() {
-    let url = this.router.url;
-    url = url.replace("submit", "review");
-    this.router.navigateByUrl(url);
+    this.setNavigation();
   }
 
   onTextChange(event) {
@@ -89,5 +101,29 @@ export class FALSubmitComponent {
       this.btnDisabled = false;
     else
       this.btnDisabled = true;
+  }
+  setBreadCrumbs(title) {
+    this.crumbs = [
+      {breadcrumb: 'Workspace', url: '/workspace'},
+      {breadcrumb: 'Assistance Listings', url: 'fal/workspace', urlmock: true},
+      {breadcrumb: title, urlmock: true},
+      {breadcrumb: 'Submit Listing', urlmock: false}
+    ];
+  }
+  breadcrumbHandler(event) {
+    this.breadCrumbNavigation(event);
+  }
+
+  breadCrumbNavigation(event) {
+    if (event === 'Assistance Listings') {
+      this.router.navigateByUrl('fal/workspace')
+    } else {
+      this.setNavigation();
+    }
+  }
+  setNavigation() {
+    let url = this.router.url;
+    url = url.replace("submit", "review");
+    this.router.navigateByUrl(url);
   }
 }

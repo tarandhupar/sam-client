@@ -8,7 +8,6 @@ import { KeysPipe } from './keyspipe.pipe';
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 import { SortArrayOfObjects } from "./sort-array-object.pipe";
 import { FHTitleCasePipe } from "./fhTitleCase.pipe";
-import { FeedsDateTimePipe } from "./feeds-date-time-display.pipe";
 import {SamCurrencyPipe} from "./currency.pipe";
 
 
@@ -18,7 +17,6 @@ import {SamCurrencyPipe} from "./currency.pipe";
   exports: [
     CapitalizePipe,
     DateFormatPipe,
-    FeedsDateTimePipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,
@@ -30,7 +28,6 @@ import {SamCurrencyPipe} from "./currency.pipe";
   declarations: [
     CapitalizePipe,
     DateFormatPipe,
-    FeedsDateTimePipe,
     FilterMultiArrayObjectPipe,
     GroupByPipe,
     KeysPipe,

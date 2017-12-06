@@ -25,9 +25,10 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 //other library
 import * as Cookies from 'js-cookie';
 import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
-let component: SavedSearchWorkspacePage;
-let fixture: ComponentFixture<SavedSearchWorkspacePage>;
+let component;
+let fixture;
 
 let mockSavedSearchService = {
   getAllSavedSearches: (obj: any) => {
@@ -179,7 +180,8 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
   beforeEach(() => {
     TestBed.configureTestingModule({
       schemas: [ NO_ERRORS_SCHEMA ],
-      declarations: [ ],
+      declarations: [
+      ],
       providers: [
         DictionaryService,
         SavedSearchService,
@@ -196,6 +198,7 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
         SamErrorService,
         AlertFooterService,
         FHService,
+        FeedbackFormService,
         {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': ''}])}}
       ],
       imports: [
@@ -236,6 +239,9 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
       expect(component.data[0].data.parameters['organization_id']).toBe("FISH AND WILDLIFE SERVICE");
       expect(component.data[2].data.parameters['duns']).toBe("DUNS NAME");
     });
+  });
+  it('should initialize feedback to form service instance', () => {
+    expect(component.feedback).toEqual(component.formService.componentInstance);
   });
 
 });

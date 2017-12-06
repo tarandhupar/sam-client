@@ -4,6 +4,7 @@ import { ObjectDetailsPage } from "./object-details/object-details.page";
 import { RoleDetailsPage } from "./role-details/role-details.page";
 import { RoleDefinitionPage } from "./role-definition/role-definition.page";
 import { DomainsResolve } from "./domains.resolve";
+import { UserResolve } from "./user.resolve";
 import { ManageRequestPage } from "./manage-request/manage-request";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
 import { RolesDirectoryPage } from "./roles-directory/roles-directory.page";
@@ -14,6 +15,7 @@ import { RMBackDoorComponent } from "./back-door/back-door.component";
 import { ViewRequestPage } from "./view-request/view-request.page";
 import { RequestResponsePage } from "./request-response/request-response.page";
 import { RequestAccessResolve } from "./request-access.resolve";
+import { ProfileComponent } from "../users/profile.component";
 import { MyAccessPage } from "../users/access/my-access.page";
 import { GrantOrEditAccess } from "./grant-or-edit-access/grant-or-edit-access";
 import { RoleCategoriesResolve } from "../users/roles-categories.resolve";
@@ -27,23 +29,33 @@ export const routes: Routes = [{
       path: 'users',
       children: [
         {
-          path: ':id/access',
-          component: MyAccessPage,
-          data: { isMyAccess: false, pageName: 'users/:id/access' },
-          canActivate: [ CheckAccessGuard ],
-        },
-        {
-          path: ':id/edit-access',
+          path: ':id/access/edit-access',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
           data: { grantOrEdit: 'edit', pageName: 'users/:id/edit-access' },
         },
         {
-          path: ':id/assign-roles',
+          path: ':id/access/assign-roles',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
           data: { grantOrEdit: 'grant', pageName: 'users/:id/assign-roles' },
         },
+      ]
+    },
+    {
+      path: 'users/:id/access',
+      component: ProfileComponent,
+      canActivate: [ CheckAccessGuard ],
+      resolve: { user: UserResolve },
+      data: {
+        isMyAccess: false,
+        pageName: 'users/:id/access',
+        breadcrumbs: [
+          { breadcrumb: 'Their Roles' }
+        ]
+      },
+      children: [
+        { path: '', component: MyAccessPage },
       ]
     },
     {

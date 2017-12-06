@@ -33,6 +33,7 @@ export class FeatureToggleGuard implements CanActivateChild, CanActivate {
     if (!toggleKey) {
       throw new Error('Must define a toggle feature key property for this route');
     }
+
     return this.featureToggleService.checkFeatureToggle(toggleKey)
       .map(
         res => {
@@ -67,5 +68,3 @@ export class FeatureToggleGuard implements CanActivateChild, CanActivate {
       );
   }
 }
-
-

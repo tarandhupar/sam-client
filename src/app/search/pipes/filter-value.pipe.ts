@@ -49,17 +49,23 @@ export class FilterParamValue implements PipeTransform {
         break;
       case "relevance": return "Relevance(Asc)";
         break;
-      case "prevPerfYesLocality": return "Yes, in the same Locality"
+      case "prevPerfYesLocality": return "Yes, in the same Locality";
         break;
-      case "prevPerfYesDifferentLocality": return "Yes, but in different Locality"
+      case "prevPerfYesDifferentLocality": return "Yes, but in different Locality";
         break;
-      case "prevPerfNo": return "No, not performed before"
+      case "prevPerfNo": return "No, not performed before";
         break;
-      case "yesNSS": return "Yes"
+      case "yesNSS": return "Yes";
         break;
-      case "dateRange": return "Date Range"
+      case "dateRange": return "Date Range";
         break;
-      case "date": return "Date"
+      case "date": return "Date";
+        break;
+      case "noCBA": return "No";
+        break;
+      case "yesUnbasedCBA": return "Yes";
+        break;
+      case "yesBasedCBA": return "Yes";
         break;
 
 

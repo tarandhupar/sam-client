@@ -1,54 +1,44 @@
-<page class="access-page" [section]="'Profile'" [title]="getPageTitle()" [breadcrumbs]="isMyAccess ? undefined : crumbs">
-  <sidebar>
-    <nav *ngIf="isMyAccess">
-      <ul class="usa-sidenav-list">
-        <li *ngFor="let nav of navLinks">
-          <a *ngIf="!nav.active" [routerLink]="nav.routerLink" [innerText]="nav.text"></a>
-          <a *ngIf="nav.active" class="usa-current" [innerText]="nav.text"></a>
-        </li>
-      </ul>
-    </nav>
-    <div style="padding-left: 1.8rem;" [style.margin-top]="isMyAccess ? '2rem' : '10.8rem'">
-      <ng-container *ngIf="roleOptions?.length">
-        <h4 class="sam-ui header">Roles</h4>
-        <sam-checkbox name='role' [(ngModel)]="selectedRoleIds" [options]="roleOptions" (ngModelChange)="onRoleChange()"></sam-checkbox>
-        <div class="sam-ui divider hidden"></div>
-      </ng-container>
-      <ng-container *ngIf="domainOptions?.length">
-        <h4 class="sam-ui header">Domains</h4>
-        <sam-checkbox name='domains' [(ngModel)]="selectedDomainIds" [options]="domainOptions" (ngModelChange)="onDomainChange()"></sam-checkbox>
-      </ng-container>
-    </div>
+<div style="padding-left: 1.8rem;" [style.padding-top]="isMyAccess ? '0rem' : '8.8rem'" *sideNavFilter>
+  <ng-container *ngIf="roleOptions?.length">
+    <h4 class="sam-ui header">Roles</h4>
+    <sam-checkbox name='role' [(ngModel)]="selectedRoleIds" [options]="roleOptions" (ngModelChange)="onRoleChange()"></sam-checkbox>
+    <div class="sam-ui divider hidden"></div>
+  </ng-container>
+  <ng-container *ngIf="domainOptions?.length">
+    <h4 class="sam-ui header">Domains</h4>
+    <sam-checkbox name='domains' [(ngModel)]="selectedDomainIds" [options]="domainOptions" (ngModelChange)="onDomainChange()"></sam-checkbox>
+  </ng-container>
+</div>
 
-  </sidebar>
-  <div message *ngIf="requests?.length" class="m_B-4x">
-    <div class="usa-alert usa-alert-info" style="width: 100%; margin-top: 0">
-      <div class="usa-alert-body">
-        <h4>
-          You have
-          <a (click)="requests.showDetails = !requests.showDetails">{{requests.length}} pending role request{{requests.length > 1 ? 's' : ''}}</a>
-        </h4>
-        <div *ngIf="requests && requests.showDetails">
-          <div *ngFor = "let request of requests">
-            <div class = "usa-grid-full">
-              <div class = "usa-width-two-thirds">
-                {{request.role ? (request.role.val) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val) : 'Unspecified Domain'}} at the {{request.organization ? (request.organization.val | capitalize) : 'Unspecified Organization'}}
-              </div>
-              <div class = "usa-width-one-third">
-                <div class = "usa-width-one-half">{{request.createdDate | dateFormat: 'MMM DD, YYYY'}}</div>
-                <div class = "usa-width-one-half">
-                  <a class="pull-right" [routerLink]="'/role-management/requests/' + request.id" [queryParams]="{ref: 'access'}">{{request.status.val | capitalize}}</a>
-                </div>
+<div message *ngIf="requests?.length" class="m_B-4x">
+  <div class="usa-alert usa-alert-info" style="width: 100%; margin-top: 0">
+    <div class="usa-alert-body">
+      <h4>
+        You have
+        <a (click)="requests.showDetails = !requests.showDetails">{{requests.length}} pending role request{{requests.length > 1 ? 's' : ''}}</a>
+      </h4>
+      <div *ngIf="requests && requests.showDetails">
+        <div *ngFor = "let request of requests">
+          <div class = "usa-grid-full">
+            <div class = "usa-width-two-thirds">
+              {{request.role ? (request.role.val) : 'Unspecified Role Assocaited'}} for {{request.domain ? (request.domain.val) : 'Unspecified Domain'}} at the {{request.organization ? (request.organization.val | capitalize) : 'Unspecified Organization'}}
+            </div>
+            <div class = "usa-width-one-third">
+              <div class = "usa-width-one-half">{{request.createdDate | dateFormat: 'MMM DD, YYYY'}}</div>
+              <div class = "usa-width-one-half">
+                <a class="pull-right" [routerLink]="'/role-management/requests/' + request.id" [queryParams]="{ref: 'access'}">{{request.status.val | capitalize}}</a>
               </div>
             </div>
-            <p>Comment</p>
-            <p>{{request.requestorMessage}}</p>
           </div>
+          <p>Comment</p>
+          <p>{{request.requestorMessage}}</p>
         </div>
       </div>
     </div>
   </div>
+</div>
 
+<div class="access-page">
   <ng-container *ngIf="result === 'success'">
     <results *ngIf="access?.length"
              [showing]="showing"
@@ -108,8 +98,7 @@
   <ng-container *ngIf="result === 'pending'">
     <div class="text-center" style="margin-top: 3em;"><sam-spinner></sam-spinner></div>
   </ng-container>
-
-</page>
+</div>
 
 <sam-modal #deleteModal title="Delete Access" cancelButtonLabel="Cancel" submitButtonLabel="Delete" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
   <p>Are you sure you want to delete the access for this user?</p>

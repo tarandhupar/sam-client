@@ -1,14 +1,2 @@
-import { SystemCreateComponent } from './system-create.component';
-import {
-  SectionComponents,
-  EditComponent,
-  ReviewComponent,
-} from './tabs';
-
-export { SystemCreateComponent };
-export const SystemCreateComponents = [
-  SectionComponents,
-  EditComponent,
-  ReviewComponent,
-  SystemCreateComponent,
-];
+export { SystemCreateComponent } from './system-create.component';
+export { SystemSectionsModule } from './tabs/system-sections.module';

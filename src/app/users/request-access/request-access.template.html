@@ -31,10 +31,12 @@
           <div style="margin-top: .5em">
             <sam-label-wrapper name="role-select" [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
               <select formControlName="role" id="role-select" (change)="onRoleChange()">
-                <optgroup *ngFor="let group of roleCategories" [attr.label]="group.category">
-                  <option *ngFor="let option of group.options" [value]="option.value">{{option.label}}</option>
-                </optgroup>
-              </select>
+                <option selected value>Select a Role</option>
+              <optgroup *ngFor="let group of roleCategories" [attr.label]="group.category">
+                <option *ngFor="let option of group.options" [value]="option.value">{{option.label}}</option>
+              </optgroup>
+            </select>
+
             </sam-label-wrapper>
           </div>
 

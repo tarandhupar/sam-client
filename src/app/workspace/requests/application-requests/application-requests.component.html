@@ -14,7 +14,6 @@
                      [formControl]="form.get('rejectionReason')"
                      [hint]="comments"
                      [errorMessage]="errors"
-                     [disabled]="!application.rejectReason && !this.states.pending"
                      *ngIf="states.comments"></sam-text-area>
       <sam-label-wrapper [hint]="comments" *ngIf="!states.comments"></sam-label-wrapper>
     </sam-fieldset-wrapper>

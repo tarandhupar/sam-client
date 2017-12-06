@@ -12,6 +12,7 @@ import { OppNoticeTypeFieldService } from './framework/service/notice-type-field
 import { OpportunityFormResolver } from './opportunity-form-resolver.service';
 import { OpportunityFormRoutes } from './opportunity-form.route';
 import { OpportunityHeaderInfoComponent } from './sections/header-information/opp-form-header-info.component';
+import { OpportunityAwardDetailsComponent } from './sections/award-details/opp-form-award-details.component';
 import { OpportunityGeneralInfoComponent } from './sections/general-information/general-information.component';
 import { OpportunityDescriptionComponent } from "./sections/description/description.component";
 import { OpportunityContactInfoComponent } from './sections/contact-information/opp-form-contact-info.component';
@@ -30,6 +31,7 @@ import { OpportunityClassificationComponent } from "./sections/classification/op
   declarations: [
     OpportunityFormComponent,
     OpportunityHeaderInfoComponent,
+    OpportunityAwardDetailsComponent,
     OpportunityGeneralInfoComponent,
     OpportunityDescriptionComponent,
     OpportunityClassificationComponent,

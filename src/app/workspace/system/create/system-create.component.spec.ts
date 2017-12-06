@@ -60,7 +60,12 @@ describe('[IAM] System Account Application', () => {
   });
 
   it('verify "Review" button click', async(() => {
-    let button = fixture.debugElement.query(By.css('.button-review button')).nativeElement;
+    let button;
+
+    component.states.section = component.store.nav.children.length - 1;
+    fixture.detectChanges();
+
+    button = fixture.debugElement.query(By.css('.button-review button')).nativeElement;
 
     spyOn(component, 'review');
     button.click();

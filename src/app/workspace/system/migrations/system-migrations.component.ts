@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
-import { Validators as $Validators } from '../../shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 
 import * as data from './legacy-systems.json';
 

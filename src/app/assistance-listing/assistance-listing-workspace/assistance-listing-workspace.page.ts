@@ -12,6 +12,7 @@ import { AlertFooterService } from "../../app-components/alert-footer/alert-foot
 import {FALAuthGuard} from "../components/authguard/authguard.service";
 import 'rxjs/Rx';
 import {Injectable} from 'angular2/core';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 
 
@@ -35,6 +36,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   private MODIFIED = 'modified';
   private POSTED = 'posted';
 
+  feedback: any;
   showSpinner: boolean = false;
   keyword: string = '';
   index: string = '';
@@ -159,11 +161,13 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   userPermissions:any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService, private fhService: FHService,
-              private falFormService: FALFormService, private alertFooterService: AlertFooterService, private authGuard: FALAuthGuard) {
+              private falFormService: FALFormService, private alertFooterService: AlertFooterService, private authGuard: FALAuthGuard,
+              private formService: FeedbackFormService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+    this.feedback = this.formService.componentInstance;
     let userPermissionsAPI = this.loadUserPermissions();
     this.getUserPermissions()
     this.loadCountPendingRequest(userPermissionsAPI);

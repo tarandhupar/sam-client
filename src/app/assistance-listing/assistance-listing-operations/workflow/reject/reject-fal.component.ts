@@ -5,6 +5,8 @@ import {AlertFooterService} from "../../../../app-components/alert-footer/alert-
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {FALAuthGuard} from "../../../components/authguard/authguard.service";
+import {IBreadcrumb} from "../../../../../sam-ui-elements/src/ui-kit/types";
+import {PageConfig} from "../../../../../sam-ui-elements/src/ui-kit/layout/types";
 
 @Component({
   selector: 'reject-fal',
@@ -35,11 +37,14 @@ export class RejectFALComponent implements OnInit {
     type: "error",
     timer: 3000
   }
-  public rejectAlertConfig = {
-    id: 'reject-fal-warning',
-    type: 'warning',
-    title: 'Confirm Rejection',
-    description: 'Please add a comment as to why you are rejecting the Assistance Listing and click the Reject button.'
+  description = 'Please add a comment as to why you are rejecting the Assistance Listing and click the Reject button.';
+  crumbs: Array<IBreadcrumb> = [];
+  private options = {
+    page: <PageConfig>{
+      badge: {
+        attached: 'top right'
+      }
+    }
   };
 
 
@@ -62,15 +67,16 @@ export class RejectFALComponent implements OnInit {
       this.authGuard.checkPermissions('reject', res);
       this.createForm();
       this.title = res.data.title;
+      this.setBreadCrumbs(this.title);
       if (res && res['_links'] && res['_links']['program:request:reject'] && res['_links']['program:request:reject'].href) {
         let rejectLink = res['_links']['program:request:reject'].href;
         this.rejectProgramId = rejectLink.split('/')[5];
         if (res && res['_links'] && res['_links']['program:request:action:review']) {
           if (res && res['_links'] && res['_links']['program:request:action:review'] && res['_links']['program:request:action:review'].href) {
             let href = res['_links']['program:request:action:review'].href;
-              this.service.getSubmitReason(href.substring(href.lastIndexOf("/") + 1)).subscribe(res => {
-                this.submitReason = res.reason;
-              });
+            this.service.getSubmitReason(href.substring(href.lastIndexOf("/") + 1)).subscribe(res => {
+              this.submitReason = res.reason;
+            });
           }
         }
       }
@@ -79,15 +85,15 @@ export class RejectFALComponent implements OnInit {
   }
 
   onRejectClick() {
-    this.rejectSave(this.rejectProgramId);
+    this.rejectSave();
   }
 
-  rejectSave(id: string) {
+  rejectSave() {
     let data = {"reason": this.rejectALForm.controls['ombComment'].value};
     let workflowRequestType = '/reject';
     this.btnDisabled = true;
     this.processing = true;
-    this.service.falWFRequestTypeProgram(id, data, workflowRequestType).subscribe(api => {
+    this.service.falWFRequestTypeProgram(this.rejectProgramId, data, workflowRequestType).subscribe(api => {
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.successFooterAlertModel)));
         this.router.navigate(['/fal/workspace']);
       },
@@ -100,9 +106,7 @@ export class RejectFALComponent implements OnInit {
   }
 
   onCancelClick() {
-    let url = this.router.url;
-    url = url.replace("reject", "review");
-    this.router.navigateByUrl(url);
+    this.setNavigation();
   }
 
   onTextChange(event) {
@@ -110,6 +114,33 @@ export class RejectFALComponent implements OnInit {
       this.btnDisabled = false;
     else
       this.btnDisabled = true;
+  }
+
+  setBreadCrumbs(title) {
+    this.crumbs = [
+      {breadcrumb: 'Workspace', url: '/workspace'},
+      {breadcrumb: 'Assistance Listings', urlmock: true},
+      {breadcrumb: title, urlmock: true},
+      {breadcrumb: 'Reject Listing', urlmock: false}
+    ];
+  }
+
+  breadcrumbHandler(event) {
+    this.breadCrumbNavigation(event);
+  }
+
+  breadCrumbNavigation(event) {
+    if (event === 'Assistance Listings') {
+      this.router.navigateByUrl('fal/workspace')
+    } else {
+      this.setNavigation();
+    }
+  }
+
+  setNavigation() {
+    let url = this.router.url;
+    url = url.replace("reject", "review");
+    this.router.navigateByUrl(url);
   }
 }
 

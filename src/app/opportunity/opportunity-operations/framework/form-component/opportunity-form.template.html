@@ -37,6 +37,10 @@
       *ngIf="isSection('header-information')"
       [viewModel]="oppFormViewModel"></opp-form-header-information>
 
+    <opp-form-award-details
+      *ngIf="isSection('award')"
+      [viewModel]="oppFormViewModel"></opp-form-award-details>
+
     <opp-form-general-information
       *ngIf="isSection('general-information')"
       [viewModel]="oppFormViewModel"></opp-form-general-information>

@@ -42,4 +42,15 @@ export class WageDeterminationService{
 
     return this.oAPIService.call(apiParam);
   }
+
+  getWageDeterminationToBeRevised(){
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/wd/toberevised',
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }

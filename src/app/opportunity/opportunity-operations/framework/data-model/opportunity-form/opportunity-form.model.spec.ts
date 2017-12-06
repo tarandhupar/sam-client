@@ -6,6 +6,23 @@ describe('src/app/opportunity/opportunity-operations/framework/data-model/opport
   beforeEach(() => {
   });
 
+  it('component is initialized', () => {
+    let _opportunity = {
+      id: "123",
+    };
+    dataModel = new OpportunityFormViewModel(_opportunity);
+    expect(dataModel).toBeDefined();
+    expect(dataModel['_opportunity']).toBeDefined();
+    expect(dataModel['_data']).toBeDefined();
+    expect(dataModel['_opportunityId']).toBeDefined();
+
+    expect(dataModel['oppHeaderInfoViewModel']).toBeDefined();
+    expect(dataModel['oppAwardDetailsViewModel']).toBeDefined();
+    expect(dataModel['oppGeneralInfoViewModel']).toBeDefined();
+    expect(dataModel['oppClassificationViewModel']).toBeDefined();
+    expect(dataModel['oppContactInfoViewModel']).toBeDefined();
+  });
+
   it('get opportunityId returns opportunity id', () => {
     let _opportunity = {
       id: "123",

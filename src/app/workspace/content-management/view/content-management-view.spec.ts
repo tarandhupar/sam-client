@@ -1,8 +1,5 @@
-import {
-  inject,
-  TestBed
-} from '@angular/core/testing';
-import { Router, ActivatedRoute } from '@angular/router';
+import { inject, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -15,18 +12,20 @@ import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { ContentManagementServiceMock } from "api-kit/content-management/content-management.mock";
-// import { AppTemplatesModule } from "../../../app-templates/index";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
+import { AlertFooterService } from '../../../app-components/alert-footer/alert-footer.service';
 
 let activatedRouteStub = {
   snapshot: {
     _lastPathIndex: 0,
+    params: {section:"FAQ-repository"},
+    queryParams: {sort: 'publisheddate'},
   },
-  params: Observable.of({section:"FAQ-repository"})
-
+  params: Observable.of({section:"FAQ-repository"}),
+  queryParams: Observable.of({sort: 'publisheddate'}),
 };
 
-xdescribe('Help content management Page', () => {
+describe('Help content management Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component: HelpContentManagementViewComponent;
   let fixture:any;
@@ -39,12 +38,12 @@ xdescribe('Help content management Page', () => {
         SamAPIKitModule,
         FormsModule,
         RouterTestingModule,
-        // AppTemplatesModule,
         AppComponentsModule,
       ],
       providers: [
         HelpContentManagementViewComponent,
         CapitalizePipe,
+        AlertFooterService,
         {provide: ContentManagementService, useClass: ContentManagementServiceMock},
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ]

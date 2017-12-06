@@ -219,27 +219,6 @@
     </div>
   </div> <br/><br/><br/>
 
-  <div class="usa-grid">
-    <div class="usa-width-one-whole">
-      <h3>Entity Picker Component</h3>
-      <div class="usa-width-one-half">
-        <sam-entity-picker
-          label="Entity Picker (single)"
-          required="true"
-          [(ngModel)]="entitypicker_selections"
-          hint="Pick a single entity">
-
-        </sam-entity-picker>
-      </div>
-      <div class="usa-width-one-half">
-        <h3>Selection Model</h3>
-        <div *ngFor="let selection of entitypicker_selections">{{selection | json}}</div>
-      </div>
-
-
-    </div>
-  </div>
-
  <div class="usa-grid">
     <div class="usa-width-one-half">
       <sam-autocomplete [(ngModel)]="selectedPSC1"
@@ -355,6 +334,28 @@
       {{ multiSelectedNAICS2 | json }}
     </div>
   </div> <br/><br/><br/>
+
+  <div class="usa-grid m_B-5x">
+    <div class="usa-width-one-whole">
+      <h3>Entity Picker Component</h3>
+      <div class="usa-width-one-half">
+        <sam-entity-picker
+          label="Entity Picker (multi-picker)"
+          required="true"
+          [(ngModel)]="entitypicker_selections"
+          hint="Pick entity">
+
+        </sam-entity-picker>
+      </div>
+      <div class="usa-width-one-half">
+        <h3>Selection Model</h3>
+        <div *ngFor="let selection of entitypicker_selections">{{selection | json}}</div>
+      </div>
+
+
+    </div>
+  </div>
+
 
   <div class="usa-grid">
     <div class="usa-width-one-half">

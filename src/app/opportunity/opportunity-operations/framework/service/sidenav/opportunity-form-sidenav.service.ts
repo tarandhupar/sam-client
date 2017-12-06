@@ -10,6 +10,7 @@ export class OpportunitySideNavService {
 
   private sections: string[] = [
     OpportunitySectionNames.HEADER_INFORMATION,
+    OpportunitySectionNames.AWARD_DETAILS,
     OpportunitySectionNames.GENERAL_INFORMATION,
     OpportunitySectionNames.CLASSIFICATION,
     OpportunitySectionNames.DESCRIPTION,
@@ -18,6 +19,7 @@ export class OpportunitySideNavService {
 
   private sectionLabels: any = [
     'Header Information',
+    'Award Details',
     'General Information',
     'Classification',
     'Description',
@@ -45,6 +47,10 @@ export class OpportunitySideNavService {
     },{
       label: this.sectionLabels[4],
       route: "#" + this.sections[4],
+      iconClass: this.pristineIconClass
+    },{
+      label: this.sectionLabels[5],
+      route: "#" + this.sections[5],
       iconClass: this.pristineIconClass
     }]
   };

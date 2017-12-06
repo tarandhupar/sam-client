@@ -59,7 +59,9 @@ export class ReportComponent implements OnInit {
     psc: false,
     descOfReq: false,
     locationCode: false,
-    congressionalDistrictCode: false
+    congressionalDistrictCode: false,
+    rangePsc: false,
+    naics: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -84,6 +86,12 @@ export class ReportComponent implements OnInit {
   agencyIdSBG: any = '';
   officeIdSBG: any = '';
   locationConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    }
+  };
+  pscConfig = {
     keyValueConfig: {
       keyProperty: 'key',
       valueProperty: 'value'
@@ -128,8 +136,16 @@ export class ReportComponent implements OnInit {
   congressionalDistrictCode: any = '';
   locationCode: any = '';
   dateValidatorMsg: string;
-  anomoly: boolean = false;
+  anomaly: boolean = false;
   lasaReport: boolean = false;
+  rangePscFrom;
+  rangePscTo;
+  label = {
+    pscFrom: '',
+    pscTo: '',
+    naics: ''
+  }
+  naics;
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -190,6 +206,15 @@ export class ReportComponent implements OnInit {
           if (this.currentReport[0].prompts.indexOf('congressionalDistrictCode') >= 0) {
             this.usedPrompts.congressionalDistrictCode = true;
           }
+          if (this.currentReport[0].prompts.indexOf('rangePsc') >= 0) {
+            this.usedPrompts.rangePsc = true;
+            this.label.pscFrom = 'From PSC';
+            this.label.pscTo = 'To PSC';
+          }
+          if (this.currentReport[0].prompts.indexOf('naics') >= 0) {
+            this.usedPrompts.naics = true;
+            this.label.naics = 'NAICS Code';
+          }
         },
         err => console.log(err));
   }
@@ -225,8 +250,14 @@ export class ReportComponent implements OnInit {
       this.lasaReport = true;
     }
 
-    if (this.name === 'IDVs whose Orders are over the Ceiling Amount' || 'Potential Vendor Anomaly Report' || 'Unique Vendors Report' || 'Contract Termination for Default-Cause Report' || 'Subcontracting Plan Report' || 'Orders Placed after IDV\'s Last Date to Order Report') {
-      this.anomoly = true;
+    // checks to see if anomaly report
+    if (this.id === '30E9D5A24FC224CB444EA3A73F890870' || 
+        this.id === 'C7501F5C4988E1B55275D48A5E0210B0' || 
+        this.id === 'F23604FF4ED54C074D21AF821AE30708' || 
+        this.id === 'FCB29AE64D9294F7B5CB07AFE163A201' || 
+        this.id === '64E8D76F472295093086EA863D33A490' || 
+        this.id === '8C4B7A8D4BCA80D42EEDC3800C47499F') {
+      this.anomaly = true;
     }
   }      
 
@@ -346,6 +377,7 @@ export class ReportComponent implements OnInit {
     let contractingRegionPasssed = encodeURIComponent(this.contractingRegion);
     this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"08C4877C401950B7A2D182B0B36801EC",tp:"10"},elements:[{type:"text",text:this.dateRangeModel.endDate}]},{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"343002F84DD3741D37B81198047298B1",tp:"10"},elements:[{type:"text",text:this.dateRangeModel.startDate}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"3FCC554F4FE90D3221692D93AE98EBAE",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.officeId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"A009A1AF453DEBD6C1A3C7A6DD3CEE00",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.agencyId}]}]},{type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"C1D7F68B4D09F29E00BE9EB436506CE6",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements:this.departmentId}]}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"E8B36A044628ECFA1B0677899EA10FD7",tp:"10"},elements:[{type:"text",text:contractingRegionPasssed}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"36B0D8F847186CF11E92829BF216055F",tp:"10"},elements:[{type:"text",text: orgCodePassed}]}]}]}
 
+    // checks and adds prompt parameters for specific prompts
     this.checkIncludesBases();
     this.checkIncludesAgencyName();
     this.checkIncludesStateCountry();
@@ -354,6 +386,8 @@ export class ReportComponent implements OnInit {
     this.checkDescOfRequirements()
     this.checkCongressionalDistrictCode();
     this.checkLocationCode();
+    this.checkRangePsc();
+    this.checkNaics();
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -488,7 +522,7 @@ export class ReportComponent implements OnInit {
   checkPSC() {
     if (this.usedPrompts.psc) {
       let pscXML = {};
-      let pscParameter
+      let pscParameter = [];
       if (this.psc && this.psc.key) {
           pscParameter = [{type:"element",name:"at",attributes:{did:"B1F7110C405E965C9C3804B084821825",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"B1F7110C405E965C9C3804B084821825:"+this.psc.key,art:"1"}}];
       }
@@ -529,6 +563,29 @@ export class ReportComponent implements OnInit {
     }
   }
   
+  checkRangePsc() {
+    if (this.usedPrompts.rangePsc) {
+      let rangePscFromXml = {};
+      let rangePscToXml = {};
+      rangePscFromXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"51A89B7F478F4B6AFD6A258A641DD4C2",tp:"10"},elements:[{type:"text",text: this.rangePscFrom['key']}]}
+      rangePscToXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"20FBACF348698BABB6BEBD8AAF49983E",tp:"10"},elements:[{type:"text",text: this.rangePscTo['key']}]}
+      this.promptAnswersXML.elements[0].elements.push(rangePscFromXml);
+      this.promptAnswersXML.elements[0].elements.push(rangePscToXml);
+    }
+  }
+
+  checkNaics() {
+    if (this.usedPrompts.naics) {
+      let naicsXML = {};
+      let naicsParameter = [];
+      if (this.naics && this.naics.key) {
+          naicsParameter = [{type:"element",name:"at",attributes:{did:"16F77F8C4AB4C7984DAD909D0C5CF029",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"16F77F8C4AB4C7984DAD909D0C5CF029:"+this.naics.key,art:"1"}}];
+      }
+      naicsXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"7223463C45D038EF1C7873A66EDAF19F",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: naicsParameter}]}]}
+      this.promptAnswersXML.elements[0].elements.push(naicsXML);
+    }
+  }
+  
   resetParameter(){ 
     this.showReport = false;
     this.agencyPicker = [];
@@ -547,9 +604,12 @@ export class ReportComponent implements OnInit {
     }
     this.dateValidator = false;
     this.psc = '';
+    this.rangePscTo = '';
+    this.rangePscFrom = '';
     this.descOfReq = '';
     this.locationCode = '';
     this.congressionalDistrictCode = ''; 
+    this.naics = '';
   }
 
   updateCountryField(val) {
@@ -560,7 +620,7 @@ export class ReportComponent implements OnInit {
     this.location.state = val;
   }
 
-  test() { 
+  test() {
   }
 
   _keyPress(event: any) {

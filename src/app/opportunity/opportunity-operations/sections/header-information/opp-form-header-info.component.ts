@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
-import {UserAccessService} from "../../../../../api-kit/access/access.service";
-import {UserService} from "../../../../role-management/user.service";
+import { UserAccessService } from "../../../../../api-kit/access/access.service";
+import { UserService } from "../../../../role-management/user.service";
+import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
 
 @Component({
   selector: 'opp-form-header-information',
@@ -16,8 +17,37 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   public oppHeaderInfoForm: FormGroup;
   public oppHeaderInfoViewModel: any;
 
+  public readonly oppTypeConfig = {
+    id: OpportunityFieldNames.OPPORTUNITY_TYPE,
+    label: 'Type',
+    name: OpportunityFieldNames.OPPORTUNITY_TYPE + '-select',
+    required: true,
+    hint: null,
+    options: [
+      // loaded asynchronously
+    ],
+  };
+
+  public readonly titleConfig = {
+    id: OpportunityFieldNames.TITLE,
+    label: 'Title',
+    name: OpportunityFieldNames.TITLE + '-input',
+    required: true,
+    hint: 'Brief title description of services, supplies, or project required by the posting agency. Note: 256 character limit.',
+    maxLength: 256,
+  };
+
+  public readonly idConfig = {
+    id: OpportunityFieldNames.PROCUREMENT_ID,
+    label: 'Procurement ID',
+    name: OpportunityFieldNames.PROCUREMENT_ID + '-input',
+    required: true,
+    hint: 'Agency assigned number for control, tracking, and identification. Please use ONLY alphanumeric and - _ ( ) { } characters (no spaces).',
+    maxLength: null,
+  };
+
   public readonly agencyPickerConfig = {
-    id: 'opp-office',
+    id: OpportunityFieldNames.CONTRACTING_OFFICE,
     label: 'Contracting Office',
     required: true,
     hint: null,
@@ -26,44 +56,17 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     levelLimit: 3,
   };
 
-  public readonly oppTypeConfig = {
-    id: 'opp-type',
-    label: 'Type',
-    name: 'opp-type-select',
-    required: true,
-    hint: null,
-    options: [
-      // loaded asynchronously
-    ],
-  };
 
-  public readonly idConfig = {
-    id: 'opp-id',
-    label: 'Procurement ID',
-    name: 'opp-id-input',
-    required: true,
-    hint: 'Agency assigned number for control, tracking, and identification. Please use ONLY alphanumeric and - _ ( ) { } characters (no spaces).',
-    maxLength: null,
-  };
-
-  public readonly titleConfig = {
-    id: 'opp-title',
-    label: 'Title',
-    name: 'opp-title-input',
-    required: true,
-    hint: 'Brief title description of services, supplies, or project required by the posting agency. Note: 256 character limit.',
-    maxLength: 256,
-  };
-
-  constructor(private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
+  constructor(private formBuilder: FormBuilder,
     private userAccessService: UserAccessService,
     private userService: UserService,
     private router: Router,
     private oppFormService: OpportunityFormService) {
-    Object.freeze(this.agencyPickerConfig);
-    Object.freeze(this.oppTypeConfig);
-    Object.freeze(this.idConfig);
-    Object.freeze(this.titleConfig);
+
+      Object.freeze(this.oppTypeConfig);
+      Object.freeze(this.titleConfig);
+      Object.freeze(this.idConfig);
+      Object.freeze(this.agencyPickerConfig);
   }
 
   ngOnInit() {
@@ -157,7 +160,10 @@ export class OpportunityHeaderInfoComponent implements OnInit {
 
   private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
     let boundCallback = callback.bind(this);
-    control.valueChanges.subscribe(value => {
+    control.valueChanges
+      .debounceTime(10)
+      .distinctUntilChanged()
+      .subscribe(value => {
       boundCallback(value);
     });
     // actions to take after any field is updated

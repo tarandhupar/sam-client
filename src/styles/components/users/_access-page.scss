@@ -13,9 +13,6 @@
 }
 
 .access-page {
-  nav {
-    margin-top: 11rem;
-  }
   .usa-alert {
     min-height: 4.2em;
   }
@@ -28,7 +25,7 @@
     vertical-align: top;
   }
 
-  tr:hover.clickable {
+  tr.clickable:hover {
     background-color: #ececec;
     cursor: pointer;
   }

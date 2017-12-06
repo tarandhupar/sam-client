@@ -10,8 +10,6 @@ export const routes: Routes = [
   { path: 'search',  component: SearchPage },
   { path: 'search/fal/regionalAssistanceLocations', component: SearchPage},
   { path: 'wage-determination/toberevised/dba', component: WageDeterminationRevisedDBAPage },
-  { path: 'wage-determination/toberevised/sca', component: WageDeterminationRevisedSCAPage },
-
 ];
 
   routes.unshift( {path: 'savedsearches/workspace', component: SavedSearchWorkspacePage, canActivate: [SearchAuthGuard] },

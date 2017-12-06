@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
-import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
-import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AutocompleteConfig } from 'sam-ui-elements/src/ui-kit/types';
+import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
+import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
 import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
+import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
 
 @Component({
   selector: 'opp-form-classification',
@@ -32,9 +33,9 @@ export class OpportunityClassificationComponent implements OnInit {
   setAsideType: any;
   setAsideLookUp = [];
   public readonly setAsideConfig = {
-    id: 'opp-setAsideType',
+    id: OpportunityFieldNames.SET_ASIDE_TYPE,
     label: 'Original/Updated Set Aside',
-    name: 'opp-setAsideType-auto',
+    name: OpportunityFieldNames.SET_ASIDE_TYPE + '-auto',
     required: false,
     hint: null,
     options: [
@@ -46,36 +47,38 @@ export class OpportunityClassificationComponent implements OnInit {
   classificationCodeType: any;
   classificationCodeLookUp = [];
   public readonly classificationCodeConfig = {
-    id: 'opp-classificationCode',
+    id: OpportunityFieldNames.PRODUCT_SERVICE_CODE,
     label: 'Product Service Code',
-    name: 'opp-classificationCode-auto',
+    name: OpportunityFieldNames.PRODUCT_SERVICE_CODE + '-auto',
     required: true,
     hint: null,
     options: [
       // loaded asynchronously
     ],
   };
+
   /*primaryNAICSCodeType config*/
   primaryNAICSObj = [];
   naicsCodeLookUp = [];
   primaryNAICSCodeType = {};
   public readonly primaryNAICSCodeConfig = {
-    id: 'opp-primaryNAICSCode',
+    id:  OpportunityFieldNames.PRIMARY_NAICS_CODE,
     label: 'Primary NAICS Code',
-    name: 'opp-primaryNAICSCode-auto',
+    name: OpportunityFieldNames.PRIMARY_NAICS_CODE +  '-auto',
     required: true,
     hint: null,
     options: [
       // loaded asynchronously
     ],
   };
+
   /*SecondaryNAICSCodeTypes Config*/
   secondaryNAICSObj = [];
   secondaryNAICSCodeTypes = [];
   public readonly secondaryNAICSCodeConfig = {
-    id: 'opp-secondaryNAICSCode',
+    id: OpportunityFieldNames.SECONDARY_NAICS_CODE,
     label: 'Additional NAICS Code(s)',
-    name: 'opp-secondaryNAICSCode-auto',
+    name: OpportunityFieldNames.SECONDARY_NAICS_CODE + '-auto',
     hint: null,
     options: [
       // loaded asynchronously
@@ -106,7 +109,7 @@ export class OpportunityClassificationComponent implements OnInit {
     ],
   };
 
-  constructor(private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
+  constructor(private formBuilder: FormBuilder,
               private oppFormService: OpportunityFormService, private noticeTypeFieldService: OppNoticeTypeFieldService) {
 
     Object.freeze(this.setAsideConfig);
@@ -257,7 +260,10 @@ export class OpportunityClassificationComponent implements OnInit {
 
   private linkControlTo(control: AbstractControl, callback: (field: any) => void): void {
     let boundCallback = callback.bind(this);
-    control.valueChanges.subscribe(value => {
+    control.valueChanges
+      .debounceTime(10)
+      .distinctUntilChanged()
+      .subscribe(value => {
       boundCallback(value);
     });
     // actions to take after any field is updated

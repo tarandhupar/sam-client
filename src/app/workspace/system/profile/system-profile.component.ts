@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FHService, IAMService, PeoplePickerService } from 'api-kit';
 import { User } from 'api-kit/iam/api/core/user';
 
-import { Validators as $Validators } from 'app/authentication/shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 import { System, POC } from 'api-kit/iam/intefaces';
 
 @Component({

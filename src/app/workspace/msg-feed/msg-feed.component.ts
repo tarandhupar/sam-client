@@ -89,7 +89,7 @@ export class MsgFeedComponent {
         this.curSubSection = params['subsection']? params['subsection']:'';
         this.crumbs[1].breadcrumb = this.capitalPipe.transform(this.curSection);
         this.msgSortOptions = this.sortOptionsMap[this.curSection.toLowerCase()];
-        this.sortByModel = {type: this.msgSortOptions[0].value, sort: 'asc' };
+        this.sortByModel = {type: this.msgSortOptions[0].value, sort: 'desc' };
         this.filterObj.section = this.curSection;
         this.filterObj.subSection = this.curSubSection;
         this.setTitle(this.curSection, this.curSubSection);

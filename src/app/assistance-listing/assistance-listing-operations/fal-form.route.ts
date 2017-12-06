@@ -5,13 +5,13 @@ import {FALAuthGuard} from "../components/authguard/authguard.service";
 
 export const routes: Routes = [
   {
-    path: 'fal/add',
+    path: 'add',
     component: FALFormComponent,
     canActivate: [FALAuthGuard],
     canDeactivate: [FALAuthGuard]
   },
   {
-    path: 'fal/:id/edit',
+    path: ':id/edit',
     component: FALFormComponent,
     resolve: {
       fal: FALFormResolver,

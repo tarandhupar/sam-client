@@ -221,13 +221,13 @@
 					<div class="sam-ui medium header">
 						Closed Status
 						<div class="sub header">
-							Currently unavailable
+							{{awardData?.transactionInformation?.closedStatus}}
 						</div>
 					</div>
 					<div class="sam-ui medium header">
 						Closed Status Date
 						<div class="sub header">
-							Currently unavailable
+							{{awardData?.transactionInformation?.closedDate | datex:'MMM DD, YYYY'}}
 						</div>
 					</div>
 				</div>
@@ -258,7 +258,7 @@
 					<div class="sam-ui medium header">
 						Closed By
 						<div class="sub header">
-							Currently unavailable
+							{{awardData?.transactionInformation?.closedBy}}
 						</div>
 					</div>
 				</div>
@@ -420,8 +420,8 @@
 				</tr>
 				<tr *ngIf="awardData.templateType == 'IDV'">
 					<td><b>Total Estimated Order Value:</b></td>
-					<td>Currently unavailable</td>
-					<td>Currently unavailable</td>
+					<td>{{awardData?.amountInformation?.totalEstimatedOrderValue | currency:'USD':true:'.2-2'}}</td>
+					<td>N/A</td>
 				</tr>
 			</table>
 			
@@ -522,7 +522,7 @@
 			<div class="sam-ui medium header">
 				CAGE Code
 				<div class="sub header">
-					Currently unavailable
+					{{awardData?.contractorInformation?.cageCode}}
 				</div>
 			</div>
 			<div class="sam-ui medium header">
@@ -699,7 +699,7 @@
 				<div class="sam-ui medium header">
 					Inherently Governmental Functions
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.contractData?.inherentlyGovernmentalDesc}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">
@@ -842,7 +842,7 @@
 				<div class="sam-ui medium header">
 					Additional Reporting
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.legislativeMandates?.additionalReporting}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">
@@ -1157,7 +1157,7 @@
 				<div class="sam-ui medium header">
 					IDV Type of Set Aside
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.competitionInformation?.idvTypeOfSetAsideDesc}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">
@@ -1169,7 +1169,7 @@
 				<div class="sam-ui medium header">
 					Type of Set Aside Source
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.competitionInformation?.typeOfSetAsideSourceDesc}}
 					</div>
 				</div>				
 				<div class="sam-ui medium header">
@@ -1226,7 +1226,7 @@
 				<div class="sam-ui medium header">
 					IDV Number of Offers
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.competitionInformation?.idvNumberOfOffers}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">
@@ -1238,7 +1238,7 @@
 				<div class="sam-ui medium header">
 					Number of Offers Source
 					<div class="sub header">
-						Currently unavailable
+						{{awardData?.competitionInformation?.numberOfOffersSourceDesc}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">

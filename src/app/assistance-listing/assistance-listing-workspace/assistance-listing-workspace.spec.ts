@@ -29,9 +29,10 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 
 //other library
 import * as Cookies from 'js-cookie';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
-let component: FalWorkspacePage;
-let fixture: ComponentFixture<FalWorkspacePage>;
+let component;
+let fixture;
 
 let mockProgramService = {
   runProgram: (param: any) => {
@@ -177,6 +178,7 @@ describe('FalWorkspacePage', () => {
         SamErrorService,
         AlertFooterService,
         FHService,
+        FeedbackFormService,
         {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': ''}])}}
       ],
       imports: [
@@ -209,5 +211,8 @@ describe('FalWorkspacePage', () => {
 
   it('Initialize the component', () => {
     expect(component.statusCheckboxConfig.options.length).toBe(6);
+  });
+  it('should initialize feedback to form service instance', () => {
+    expect(component.feedback).toEqual(component.formService.componentInstance);
   });
 });

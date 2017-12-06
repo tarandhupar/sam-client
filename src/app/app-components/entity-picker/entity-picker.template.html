@@ -2,9 +2,9 @@
 
   <ng-template #myTemplate let-item>
     <p>
-      <strong>{{item.name}}</strong><br/>
-      <span style="font-size: 85%">CAGE: {{item.cageCode}} | DUNS: {{item.duns}}</span><br/>
-      <span style="font-size: 85%">{{item.address}}</span>
+      <strong>{{item.name}}</strong>
+      <span style="font-size: 85%" *ngIf="item.cageCode"><br/>CAGE: {{item.cageCode}} | DUNS: {{item.duns}}</span>
+      <span style="font-size: 85%" *ngIf="item.address"><br/>{{item.address}}</span>
     </p>
   </ng-template>
   <sam-autocomplete-multiselect

@@ -1,10 +1,10 @@
 import any = jasmine.any;
-import {OppClassificationViewModel} from "./classification.model";
+import { OppClassificationViewModel } from "./classification.model";
 
 describe('Classification Section View Model' , () => {
-  
+
   let dataModel : OppClassificationViewModel;
-  
+
   beforeEach(() => {
   });
   //SetAsideType
@@ -25,7 +25,7 @@ describe('Classification Section View Model' , () => {
     dataModel = new OppClassificationViewModel(_data);
     expect(dataModel.classificationCodeType).toEqual("12");
   });
-  
+
   //naicsCodeTypes
   it('get naicsCodeTypes returns saved naicsCodeTypes' , () => {
     let _data = {
@@ -33,7 +33,7 @@ describe('Classification Section View Model' , () => {
         {
           code : [1] ,
           type : 'Primary'
-          
+
         }
       ] ,
     };
@@ -55,7 +55,7 @@ describe('Classification Section View Model' , () => {
     dataModel = new OppClassificationViewModel(_data);
     expect(dataModel.countryType).toEqual("UNITED STATES");
   });
-  
+
   //StateType
   it('get StateType returns saved StateType' , () => {
     let _data = {
@@ -66,7 +66,7 @@ describe('Classification Section View Model' , () => {
     dataModel = new OppClassificationViewModel(_data);
     expect(dataModel.stateType).toEqual("Virginia");
   });
-  
+
   //Zip
   it('get zip returns saved zip' , () => {
     let _data = {
@@ -87,6 +87,6 @@ describe('Classification Section View Model' , () => {
     dataModel = new OppClassificationViewModel(_data);
     expect(dataModel.city).toEqual("Aldie");
   });
-  
+
 });
 

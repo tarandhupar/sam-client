@@ -276,12 +276,12 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 let orgOption = this.orgLevels[idx].options.find((item)=>{
                     return item.value == selection;
                 });
-                // if(this.hasFpds && (orgOption['name'].indexOf('[') < 1)){
-                //     // this.removeDuplicateOrgType(orgOption);
-                //     let fpdsCode = orgOption['fpdsCode'] || orgOption['fpdsOrgId'] || 'N/A';
-                //     let department = orgOption['type'] ? orgOption['type'].charAt(0) : 'N/A';
-                //     orgOption['name'] = orgOption['name'] + ' [' + department + '] [' + fpdsCode +']';
-                // }
+                if(this.hasFpds && (orgOption['name'].indexOf('[') < 1)){
+                    // this.removeDuplicateOrgType(orgOption);
+                    let fpdsCode = orgOption['fpdsCode'] || orgOption['fpdsOrgId'] || 'N/A';
+                    let department = orgOption['type'] ? orgOption['type'].charAt(0) : 'N/A';
+                    orgOption['name'] = orgOption['name'] + ' [' + department + '] [' + fpdsCode +']';
+                }
                 selectedOrgs.push(orgOption);
             }
         }
@@ -324,18 +324,18 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
                 this.selections.push(val);
             }
         } else {
-            // if (this.hasFpds) {
-            //     if(val.length > 1){
-            //         for (let i in val) {
-            //             if (val[i].type === val[val.length-1].type) {
-            //                 console.log('before spliced from advanced', val);
-            //                 val.splice(i, 1);
-            //                 console.log('before spliced from advanced', val);
-            //             }
-            //         }
-            //     }
-
-            // };
+            // removes organization if organization type already exists in selection list
+            if (this.hasFpds) {
+                let comparison = val.slice();
+                comparison.pop();
+                if(comparison && comparison.length > 0){
+                    for (let i in comparison) {
+                        if (comparison[i].type === val[val.length-1].type) {
+                            val.splice(i, 1);
+                        }
+                    }
+                }
+            };
             this.selections = val;
         }
         if(emit){

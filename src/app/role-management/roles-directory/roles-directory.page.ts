@@ -90,7 +90,7 @@ export class RolesDirectoryPage {
     }
     this.domainOptions = domains.map(dom => {
       return {
-        name: dom.id,
+        name: 'domain-'+dom.id,
         label: dom.val,
         value: dom.id,
       };
@@ -103,7 +103,7 @@ export class RolesDirectoryPage {
     }
     this.roleOptions = roles.map(r => {
       return {
-        name: r.id,
+        name: 'role-'+r.id,
         label: r.val,
         value: r.id,
       };

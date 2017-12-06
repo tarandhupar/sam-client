@@ -13,7 +13,7 @@ import { NotificationItem } from "../interfaces";
                         <span *ngSwitchCase="'alert'" class="title">{{ item.title}}</span>
                         <span *ngSwitchCase="'subscription'" class="title">Subscription</span>
                     </ng-container>
-                    <br/><span class="notification-time">{{ item.datetime | feedsDateTimeDsiplay }}</span>
+                    <br/><span class="notification-time">{{ item.datetime | shortDate }}</span>
                 </div>
                 
                 <span class="text-block p_L-1x">

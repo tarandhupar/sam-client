@@ -8,12 +8,11 @@ import { UnauthenticatedPage } from "../401/401.page";
 import { CheckAccessGuard } from "./check-access.guard";
 import { FHAccessGuard } from "./fh-access.guard";
 import { FeatureToggleGuard } from "./feature-toggle.guard";
-
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    routing
+    routing,
   ],
   exports: [
 

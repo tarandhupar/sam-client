@@ -35,6 +35,7 @@ import {SavedSearchService} from "../../api-kit/search/saved-search.service";
 import {SearchModule} from "./search.module";
 import {SamModalComponent} from 'sam-ui-elements/src/ui-kit/components/modal/modal.component';
 import { SamComponentsModule } from 'sam-ui-elements/src/ui-kit/components';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 
 let fixture;
@@ -210,7 +211,8 @@ describe('src/app/search/search.spec.ts', () => {
             return new Http(backend, defaultOptions);
           },
           deps: [MockBackend, BaseRequestOptions],
-        }
+        },
+        FeedbackFormService
       ],
       imports: [
         SamUIKitModule,
@@ -406,7 +408,8 @@ describe('src/app/search/search.spec.ts', () => {
     expect(fixture.componentInstance.showSavedSearches).toBe(true);
   });
 
-
-
+  it('should initialize feedback to form service instance', () => {
+    expect(fixture.componentInstance.feedback).toEqual(fixture.componentInstance.formService.componentInstance);
+  });
 
 });

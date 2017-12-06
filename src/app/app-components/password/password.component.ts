@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
-import { Validators as $Validators } from '../../authentication/shared';
+import { Validators as $Validators } from 'app-utils/validators';
 
 const css = {
   sizes: {

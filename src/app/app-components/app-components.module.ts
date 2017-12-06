@@ -48,6 +48,7 @@ import { SamTableSelectComponent } from './sam-table-select/sam-table-select.com
 import { SamChipsComponent } from './sam-chips/sam-chips.component';
 import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-date-range.component';
 import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-select-date-range-filter.component';
+import { SamFeedbackButtonComponent } from 'app/app-components/sam-feedback-button/sam-feedback-button.component';
 import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
 
 /**
@@ -65,6 +66,7 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamSearchbarComponent,
     SamFeedbackComponent,
     SamFeedbackSidenavComponent,
+    SamFeedbackButtonComponent,
     OrgAddrFormComponent,
     SamSoloAccordian,
     SamStatusBannerComponent,
@@ -113,6 +115,7 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamSearchbarComponent,
     SamFeedbackComponent,
     SamFeedbackSidenavComponent,
+    SamFeedbackButtonComponent,
     OrgAddrFormComponent,
     SamSoloAccordian,
     SamStatusBannerComponent,
@@ -140,8 +143,8 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamSelectDateRangeFilterComponent,
   ],
   providers: [
-    SamFeedbackComponent,
     FeedbackFormService,
+    //SamFeedbackComponent,
     //RMSUserServiceImpl,
   ]
 })

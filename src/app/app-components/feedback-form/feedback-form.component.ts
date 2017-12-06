@@ -3,7 +3,7 @@ import { Router, ActivatedRouteSnapshot, NavigationStart, RouterStateSnapshot } 
 import { FeedbackService, feedbackResItemType } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { Observable, Subscription } from 'rxjs/Rx';
-import { Validators as $Validators } from '../../authentication/shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 import { FormControl, Validators } from '@angular/forms';
 import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { FeedbackFormService } from "./feedback-form.service";
@@ -66,19 +66,19 @@ export class SamFeedbackComponent {
               private iamService: IAMService,
               private zone: NgZone,
               private alertFooterService: AlertFooterService,
-              formService: FeedbackFormService){
-    formService.componentInstance = this;
+              private formService: FeedbackFormService){
+    this.formService.componentInstance = this;
     globals.feedbackFormInstance = this;
     this.createBackdrop();
   }
-
-  canDeactivate(component: SamFeedbackComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
-    if(!navigateAwayObj.formSubmitted && navigateAwayObj.formStarted){
-      return navigateAwayObj.discardFeedbackRes;
+  
+  canDeactivate(){
+    if(!this.formService.formSubmitted && this.formService.formStarted){
+      return false;
     }
-
     return true;
   }
+  
 
   ngOnInit(){
     this.setUpFeedbackQuestions();
@@ -110,7 +110,7 @@ export class SamFeedbackComponent {
 
     this.showFeedback = !this.showFeedback;
     if(this.showFeedback){
-      navigateAwayObj.formStarted = true;
+      this.formService.formStarted = true;
       this.resultInit(0);
       if(document && document.body){
         document.body.appendChild(this.backdropElement);
@@ -120,7 +120,7 @@ export class SamFeedbackComponent {
         window.setTimeout(() => this.feedbackRoot.nativeElement.focus(), 0);
       }
     }else{
-      if(navigateAwayObj.formSubmitted){
+      if(this.formService.formSubmitted){
         this.timer.unsubscribe();
         this.resetAll();
       }
@@ -182,12 +182,12 @@ export class SamFeedbackComponent {
         // Submit the feedback results
         let res = this.generateFeedbackRes();
         this.feedbackService.createFeedback(res).subscribe(data => {});
-        navigateAwayObj.formSubmitted = true;
+        this.formService.formSubmitted = true;
         this.showThanksNote = true;
         this.startCountDown();
       }
     }else{
-      navigateAwayObj.formSubmitted = true;
+      this.formService.formSubmitted = true;
       this.showThanksNote = true;
       this.startCountDown();
     }
@@ -250,12 +250,12 @@ export class SamFeedbackComponent {
   }
 
   onProceedModalConfirm() {
-    navigateAwayObj.discardFeedbackRes = true;
+    this.formService.discardFeedbackRes = true;
     this.proceedModal.closeModal();
   }
 
   onProceedModalClose(){
-    if(!navigateAwayObj.discardFeedbackRes){
+    if(!this.formService.discardFeedbackRes){
       this.nextUrl = "";
     }else{
       this.currentUrl = this.nextUrl;
@@ -278,7 +278,7 @@ export class SamFeedbackComponent {
   isEmailBtnChecked(val){return this.emailRadioBtnValue === val;}
 
   showunsubmittedWarning(){
-    return navigateAwayObj.formStarted && !navigateAwayObj.formSubmitted && !this.showFeedback;
+    return this.formService.formStarted && !this.formService.formSubmitted && !this.showFeedback;
   }
 
   setRatingResult(val, index){
@@ -391,9 +391,9 @@ export class SamFeedbackComponent {
   }
 
   resetNavigateObj(){
-    navigateAwayObj.formStarted = false;
-    navigateAwayObj.formSubmitted = false;
-    navigateAwayObj.discardFeedbackRes = false;
+    this.formService.formStarted = false;
+    this.formService.formSubmitted = false;
+    this.formService.discardFeedbackRes = false;
   }
 
   resetQueOptions(){
@@ -482,6 +482,3 @@ export class SamFeedbackComponent {
   }
 
 }
-
-
-

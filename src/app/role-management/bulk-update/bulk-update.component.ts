@@ -593,7 +593,16 @@ export class BulkUpdateComponent {
       sort: sort,
       order: order,
     };
-    this.userAccessService.getUsersV1(params).subscribe(
+
+    const orgMap = this.orgs.map(o => ({
+        orgKey: o.orgKey,
+        name: o.name,
+        level: o.level,
+        fullParentPath: o.fullParentPath,
+        type: o.type,
+      }));
+
+    this.userAccessService.getUsersV1(params, orgMap).subscribe(
       users => {
         this.areUsersLoading = false;
         if (!users || !users.length) {

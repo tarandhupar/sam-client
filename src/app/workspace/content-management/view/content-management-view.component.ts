@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
+import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
 import { FeatureToggleService } from "api-kit/feature-toggle/feature-toggle.service";
@@ -10,19 +10,19 @@ import { AlertFooterService } from "../../../app-components/alert-footer/alert-f
 import { CMSMapping } from "../content-management-mapping";
 import * as moment  from "moment";
 
+interface SortModel {
+  type: string,
+  sort: 'asc'|'desc'
+};
+
 @Component({
   templateUrl: './content-management-view.template.html',
 })
 export class HelpContentManagementViewComponent {
 
   private crumbs: Array<IBreadcrumb> = [
-    { url: '/workspace', breadcrumb: 'Workspace' },
+    { url: '/help', breadcrumb: 'Help Center' },
     { breadcrumb: '' }
-  ];
-
-  private actions = [
-    {icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}},
-    {icon:"fa fa-times", label:"Delete", name:"Delete", callback: ()=>{}},
   ];
 
   recordsPerPage = 5;
@@ -31,21 +31,17 @@ export class HelpContentManagementViewComponent {
 
   title:string = "";
   curSection:string = "";
-  curSubSection:string = "";
 
   validSections = ['data-dictionary','video-library', 'FAQ-repository'];
 
-  sortByModel = {
-    'FAQ-repository': {type: 'latest update', sort: 'asc' },
-    'data-dictionary': {type: 'alphabetical', sort: 'asc' },
-    'video-library': {type: 'alphabetical', sort: 'asc' },
-  };
+  public sortOptions: OptionsType[] = [
+    { label:'Published Date', name:'Published', value:'publisheddate' },
+    { label:'Alphabetical', name:'Alphabetical', value:'title' },
+    { label:'Relevance', name:'Relevance', value:'relevance' },
+  ];
 
-  sortOptionsMap = {
-    'FAQ-repository': [{label:'Latest Update', name:'Latest Update', value:'lastmodifieddate'}],
-    'data-dictionary': [{label:'Alphabetical', name:'Alphabetical', value:'title'}],
-    'video-library': [{label:'Alphabetical', name:'Alphabetical', value:'title'}],
-  };
+  private sortDefault: SortModel = { type: 'publisheddate', sort: 'asc' };
+  public sortByModel: SortModel = Object.assign({}, this.sortDefault);
 
   //current results num data variables
   curStart = 0;
@@ -86,27 +82,25 @@ export class HelpContentManagementViewComponent {
   ngOnInit(){
     this.setToggleFeature();
     this.loadDomains();
-    this.route.params.subscribe(
+    const params$: Observable<Params> = this.route.params.merge(this.route.queryParams);
+    params$.subscribe(
       params => {
-        if(!this.validateUrlParams(params)) this._router.navigateByUrl('/404');
-        if(params['section'] !== this.curSection){
+        if (params['section']) {
           this.curSection = params['section'];
-          this.curSubSection = params['subsection']? params['subsection']:'';
           this.title = this.getSectionTitle(this.curSection);
           this.crumbs[1].breadcrumb = this.title;
           this.filterObj.section = this.curSection;
-          this.filterObj.subSection = this.curSubSection;
-          this.sortByModel[this.curSection] = {type: this.sortOptionsMap[this.curSection][0].value, sort:'asc'};
+        } else {
           this.loadQueryParamsFromURL(this.route.snapshot.queryParams);
-          this.loadContent(this.filterObj, this.sortByModel[this.curSection], this.curPage);
         }
+        this.loadContent(this.filterObj, this.sortByModel, this.curPage);
       });
   }
 
   setToggleFeature(){
     this.featureToggleService.checkFeatureToggle('cmsBtn').subscribe(
       res => {if(res) this.toggleBtn = res;},
-      error => {// Still hide the button if error occurs}
+      error => {/* Still hide the button if error occurs */}
     )
   }
 
@@ -118,31 +112,34 @@ export class HelpContentManagementViewComponent {
   onFilterChange(filterObj){
     this.filterObj = filterObj;
     this.curPage = 0;
+    if(this.filterObj.section !== this.curSection) {
+      this.sortByModel = Object.assign({}, this.sortDefault);
+    }
     this.updateURL();
-    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
   }
 
   /* update message feeds based on page num changes*/
   onPageNumChange(pageNum){
     this.curPage = pageNum;
     this.updateURL();
-    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, this.sortByModel[this.filterObj.section], this.curPage);
   }
 
-  onSortModelChange(sortModel){
+  onSortModelChange(){
     this.curPage = 0;
     this.updateURL();
-    if(this.filterObj.section === this.curSection) this.loadContent(this.filterObj, sortModel, this.curPage);
   }
 
   onCreateContentItem(){
-    let navigationExtras: NavigationExtras = {queryParams: {}};
-    navigationExtras.queryParams['mode'] = 'create';
-    this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        mode: 'create',
+      }
+    };
+    this._router.navigate([`/workspace/content-management/${this.filterObj.section}/edit`],navigationExtras);
   }
 
   onThumbnailImageError(item){
-    document.getElementById(item.refId).src = "src/assets/img/logo-not-found.png";
+    document.getElementById(item.refId).setAttribute('src', 'src/assets/img/logo-not-found.png');
   }
 
   /* search message feeds with filter, sortby, page number and order*/
@@ -189,52 +186,55 @@ export class HelpContentManagementViewComponent {
   }
 
   updateURL(){
-    let navigationExtras: NavigationExtras = {queryParams: {}};
+    console.log(this.filterObj);
+    let navigationExtras: NavigationExtras = { queryParams: { } };
     if(this.curPage > 0) navigationExtras.queryParams['page'] = this.curPage+1;
     if(this.filterObj.domains.length > 0) navigationExtras.queryParams['domain'] = this.filterObj.domains.join(',');
     if(this.filterObj.status.length > 0) navigationExtras.queryParams['status'] = this.filterObj.status.join(',');
     if(this.filterObj.keyword !== "") navigationExtras.queryParams['q'] = this.filterObj.keyword;
-    if(this.sortByModel[this.curSection]['sort'] !== 'asc') navigationExtras.queryParams['order'] = this.sortByModel[this.curSection]['sort'] ;
-    if(this.sortByModel[this.curSection]['type'] !== this.sortOptionsMap[this.curSection][0].value) navigationExtras.queryParams['sort'] = this.sortByModel[this.curSection]['type'];
+    if(this.sortByModel['sort'] !== 'asc') {
+      navigationExtras.queryParams['order'] = this.sortByModel['sort'] ;
+    }
+    navigationExtras.queryParams['sort'] = this.sortByModel['type'];
     this._router.navigate(['/workspace/content-management/'+this.filterObj.section], navigationExtras);
-
   }
 
   loadQueryParamsFromURL(queryParams){
     if(queryParams['q'])this.filterObj.keyword = queryParams['q'];
     if(queryParams['status'])this.filterObj.status = queryParams['status'].split(',');
     if(queryParams['domains'])this.filterObj.domains = queryParams['domains'].split(',');
-    if(queryParams['sort'])this.sortByModel[this.curSection]['type'] = queryParams['sort'];
-    if(queryParams['order'])this.sortByModel[this.curSection]['sort'] = queryParams['order'];
+    if(queryParams['sort'])this.sortByModel['type'] = queryParams['sort'];
+    if(queryParams['order'])this.sortByModel['sort'] = queryParams['order'];
     if(queryParams['page'])this.curPage = queryParams['page']-1;
   }
 
   getSectionTitle(section){
-    let str_tokens = [];
-    section.split('-').forEach( e => {
-      str_tokens.push(e !== e.toUpperCase()? this.capitalPipe.transform(e):e);
-    });
-    return str_tokens.join(" ");
+    return section.split('-').map(sec => {
+      return sec === sec.toUpperCase() ? sec : this.capitalPipe.transform(sec)
+    }).join(" ");
   }
 
   getThumbnailImage(item){
-    if(item.thumbnailUrl == null) return "src/assets/img/logo-not-found.png";
-    return item.thumbnailUrl;
+    return item.thumbnailUrl || "src/assets/img/logo-not-found.png";
   }
 
   onContentItemAction(action, item){
     switch(action.name){
       case 'Edit':
-        let navigationExtras: NavigationExtras = {queryParams: {}};
-        navigationExtras.queryParams['mode'] = 'edit';
-        navigationExtras.queryParams['id'] = item.contentId;
-        this._router.navigate(['/workspace/content-management/'+this.filterObj.section+'/edit'],navigationExtras);
+        let navigationExtras: NavigationExtras = {
+          queryParams: {
+            mode: 'edit',
+            id: item.contentId,
+          }
+        };
+        this._router.navigate([`/workspace/content-management/${this.filterObj.section}/edit`],navigationExtras);
         break;
       case 'Publish':
         item['status'] = 2;
         this.updateDataContent(item, 'Successfully published '+item.refId, 'Failed to publish '+item.refId);
         break;
-      case 'Delete': case 'Delete Draft':
+      case 'Delete':
+      case 'Delete Draft':
         item['activeStatus'] = false;
         this.updateDataContent(item, 'Successfully deleted '+item.refId, 'Failed to delete '+item.refId);
         break;
@@ -263,18 +263,17 @@ export class HelpContentManagementViewComponent {
   }
 
   getDomainStr(domains){
-    if(domains == null) return 'Not Available';
-    if(domains.length === 0) return 'Not Available';
-    if(this.domainsMapping == null) return 'Not Available';
-    let domainNames = [];
-    domains.forEach(e => {domainNames.push(this.domainsMapping[e])});
-    return domainNames.join(', ');
+    if(!domains || !domains.length || !this.domainsMapping) {
+      return 'Not Available';
+    }
+    return domains.map(d => this.domainsMapping[d]).join(',');
   }
 
   getTagStr(tags){
-    let tagNames = [];
-    tags.forEach(e => {tagNames.push(e.tagKey)});
-    return tagNames.join(',');
+    if (!tags || !tags.length) {
+      return 'Not Available';
+    }
+    return tags.map(t => t.tagKey).join(',');
   }
 
   getDurationText(durationSec){
@@ -282,30 +281,35 @@ export class HelpContentManagementViewComponent {
   }
 
 
-  getAction(item){
-    let actions = [];
-    if(item.status){
-      let status = item.status;
-      switch (status){
-        case 1: //New
-          actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
-          actions.push({icon:"fa fa-times", label:"Delete", name:"Delete", callback: ()=>{}});
-          actions.push({icon:"", label:"Publish", name:"Publish", callback: ()=>{}});
-          break;
-        case 3: //Draft
-          actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
-          actions.push({icon:"fa fa-times", label:"Delete Draft", name:"Delete Draft", callback: ()=>{}});
-          actions.push({icon:"", label:"Publish", name:"Publish", callback: ()=>{}});
-          break;
-        case 2: //Publish
-          if(!item.draftExist) actions.push({icon:"fa fa-pencil", label:"Edit", name:"Edit", callback: ()=>{}});
-          actions.push({icon:"fa fa-times", label:"Archive", name:"Archive", callback: ()=>{}});
-          break;
-        case 4: //Archived
-          actions.push({icon:"", label:"Unarchive", name:"Unarchive", callback: ()=>{}});
-          break;
-      }
+  getAction(item) {
+    if (!item._links) {
+      return [];
     }
+    const editAction = { icon:"fa fa-pencil", label:"Edit", name:"Edit", };
+    const publishAction = { icon:"", label:"Publish", name:"Publish", };
+    const archiveAction = { icon:"", label:"Archive", name:"Archive", };
+    const unarchiveAction = { icon:"", label:"Archive", name:"Archive", };
+    const deleteAction = { icon:"fa fa-times", label:"Delete", name:"Delete", };
+
+    let actions = [];
+    const links = item._links;
+
+    if (links.Unarchive) {
+      actions.push(unarchiveAction);
+    }
+    if (links.Publish) {
+      actions.push(publishAction);
+    }
+    if (links.Edit) {
+      actions.push(editAction);
+    }
+    if (links.Archive) {
+      actions.push(archiveAction);
+    }
+    if (links.Delete) {
+      actions.push(deleteAction);
+    }
+
     return actions;
   }
 

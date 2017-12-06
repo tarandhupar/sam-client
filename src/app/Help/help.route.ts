@@ -10,25 +10,25 @@ import { ReferenceLibraryComponent}  from "./sections/reference-library/referenc
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
 import { TransitionToSamComponent } from "./sections/transition-to-sam/transition-to-sam.component";
-import { SamFeedbackComponent } from '../app-components/feedback-form/feedback-form.component';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 export const routes: Routes = [
   {
     path: '',
     component: HelpPage,
-    canDeactivate:[SamFeedbackComponent],
+    canDeactivate:[FeedbackFormService],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
-      { path: 'overview', component: OverviewComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'transition', component: TransitionToSamComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'about', component: AboutSamComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'new', component: NewToSamComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'accounts', component: AccountsComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'features', component: FeaturesComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'policies', component: PoliciesComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'partners', component: PartnersComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'reference', component: ReferenceLibraryComponent, canDeactivate:[SamFeedbackComponent] },
-      { path: 'award', component: AwardDataComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'overview', component: OverviewComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'transition', component: TransitionToSamComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'about', component: AboutSamComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'new', component: NewToSamComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'accounts', component: AccountsComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'features', component: FeaturesComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'policies', component: PoliciesComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'partners', component: PartnersComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'reference', component: ReferenceLibraryComponent, canDeactivate:[FeedbackFormService] },
+      { path: 'award', component: AwardDataComponent, canDeactivate:[FeedbackFormService] },
     ]
   },
 ];

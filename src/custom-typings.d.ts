@@ -59,12 +59,15 @@ declare var GIT_LOG: string;
 declare var BUILD_DATE: string;
 declare var PINGER_TIME: string;
 declare var TIMEOUT_DURATION: string;
+// AutoComplete records per page info
+declare var AUTOCOMPLETE_RECORD_PER_PAGE: string;
 // Determine which environment is running on
 declare var ENVIRONMENT: string;
 declare var REPORT_MICRO_STRATEGY_ENV: string;
 declare var REPORT_MICRO_STRATEGY_URL: string;
 declare var ENABLE_REPORTING_AREA: string;
 declare var REPORT_MICRO_STRATEGY_SERVER: string;
+
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -85,6 +88,7 @@ interface GlobalEnvironment {
   REPORT_MICRO_STRATEGY_URL;
   ENABLE_REPORTING_AREA;
   REPORT_MICRO_STRATEGY_SERVER;
+  AUTOCOMPLETE_RECORD_PER_PAGE;
 
   SystemJS: SystemJS;
   System: SystemJS;

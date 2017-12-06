@@ -25,9 +25,10 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 import * as Cookies from 'js-cookie';
 import {UserService} from "../../role-management/user.service";
 import {UserAccessService} from "../../../api-kit/access/access.service";
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
-let component: OPPWorkspacePage;
-let fixture: ComponentFixture<OPPWorkspacePage>;
+let component;
+let fixture;
 
 let mockOpportunityService = {
   runOpportunity: (param: any) => {
@@ -118,11 +119,6 @@ let MockDictionaryService = {
               }
           ]
     });
-  },
-  getContractOpportunityDictionary(item){
-    return Observable.of({
-      'procurement_type':[]
-    });
   }
 };
 
@@ -182,6 +178,7 @@ describe('OPPWorkspacePage', () => {
         SamErrorService,
         AlertFooterService,
         FHService,
+        FeedbackFormService,
         {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': ''}])}}
       ],
       imports: [
@@ -240,5 +237,7 @@ describe('OPPWorkspacePage', () => {
   it('Initializes the agency picker', () => {
     expect(component.orgRoots).toContain(100000136);
   });
-
+  it('should initialize feedback to form service instance', () => {
+    expect(component.feedback).toEqual(component.formService.componentInstance);
+  });
 });

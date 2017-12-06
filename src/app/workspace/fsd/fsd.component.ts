@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { IAMService } from 'api-kit';
 
 @Component({
   templateUrl: './fsd.component.html',
-  providers: [
-    IAMService
-  ]
 })
 export class FSDComponent {
   private store = {

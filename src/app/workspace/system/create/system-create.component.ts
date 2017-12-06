@@ -8,9 +8,9 @@ import { SamActionsDropdownComponent } from 'sam-ui-elements/src/ui-kit/componen
 import { SamTabsComponent, SamTabComponent } from 'sam-ui-elements/src/ui-kit/components/tabs';
 import { IAMService } from 'api-kit';
 
-import { Validators as $Validators } from 'authentication/shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 import { CWSApplication, User } from 'api-kit/iam/interfaces';
-import { PageConfig } from 'sam-ui-kit/layout/types';
+import { PageConfig } from 'sam-ui-elements/src/ui-kit/layout/types';
 
 @Component({
   templateUrl: './system-create.component.html',

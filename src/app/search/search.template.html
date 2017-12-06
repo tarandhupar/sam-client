@@ -430,7 +430,11 @@
         buttonText="Clear All"
         (click)='clearAllFilters()'>
       </sam-button>
+
     </div>
+
+    <!-- Feedback Button -->
+    <sam-feedback-button></sam-feedback-button>
 
     <div class ="sam-ui section hidden divider"></div>
 
@@ -444,9 +448,7 @@
         <br>
         <a href="https://www.wdol.gov/rollover-crosswalk2015.pdf" target="Rollover Crosswalk">Rollover crosswalk <i class="fa fa-external-link fa-sm" aria-hidden="true"></i></a>
         <br>
-        <a [routerLink]="['/wage-determination/toberevised/dba']">DBA's to be revised</a>
-        <br>
-        <a [routerLink]="['/wage-determination/toberevised/sca']">SCA's to be revised</a>
+        <a [routerLink]="['/wage-determination/toberevised/dba']">DBAs to be revised</a>
       </sam-alert>
 
       <div *ngIf="!showRegionalOffices && showSavedSearches" class="sam-ui small subtle menu">

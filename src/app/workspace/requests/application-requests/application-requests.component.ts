@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import { IAMService } from 'api-kit';
 import { CWSApplication, User } from 'api-kit/iam/interfaces';
-import { Validators as $Validators } from 'authentication/shared/validators';
+import { Validators as $Validators } from 'app-utils/validators';
 
 @Component({
   templateUrl: './application-requests.component.html',
@@ -152,7 +152,10 @@ export class ApplicationRequestsComponent {
         authorizationDate: [''],
       }),
 
-      rejectionReason: [application.rejectionReason],
+      rejectionReason: [{
+        value: application.rejectionReason,
+        disabled: this.isCommentsDisabled,
+      }],
     });
   }
 
@@ -163,6 +166,14 @@ export class ApplicationRequestsComponent {
 
   setError(message: string) {
     this.store.errors = message || '';
+  }
+
+  updateCommentState() {
+    const control = this.form.get('rejectionReason');
+
+    if(control) {
+      this.isCommentsDisabled ? control.disable() : control.enable();
+    }
   }
 
   get comments(): string {
@@ -192,6 +203,12 @@ export class ApplicationRequestsComponent {
     return this.application;
   }
 
+  get isCommentsDisabled(): boolean {
+    const control = this.form ? this.form.get('rejectionReason') : false,
+          pending = this.states.pending;
+    return (control && !control.value && !pending) ? true : false;
+  }
+
   close() {
     this.router.navigate(
       [(this.states.redirectType == 0) ? '/workspace/myfeed/requests' : '/workspace/system']
@@ -217,6 +234,7 @@ export class ApplicationRequestsComponent {
         this.states.pending = false;
         this.states.comments = false;
 
+        this.updateCommentState();
       }, error => {
         this.setError(error.message);
       });
@@ -238,6 +256,8 @@ export class ApplicationRequestsComponent {
     this.api.iam.cws.application.approve(this.data, application => {
       this.application = application;
       this.states.pending = false;
+
+      this.updateCommentState();
     }, error => {
       this.setError(error.message);
     });

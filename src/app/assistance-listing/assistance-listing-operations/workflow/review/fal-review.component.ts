@@ -239,7 +239,6 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
-        this.router.navigated = false;
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
       }

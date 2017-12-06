@@ -68,3 +68,5 @@ config/webpack.local.js
 .awcache
 
 
+# Sonar properties file
+sonar-project.properties

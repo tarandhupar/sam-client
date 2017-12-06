@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { globals } from '../../globals';
 import { AppState } from 'app/app.service';
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
+
 
 @Component({
   selector: 'home',
@@ -9,6 +11,7 @@ import { AppState } from 'app/app.service';
   templateUrl: 'home.template.html'
 })
 export class HomePage {
+  feedback: any;
   searchSelectConfig = {
     options: globals.searchFilterConfig,
     disabled: false,
@@ -50,11 +53,12 @@ export class HomePage {
   showDetail = false;
 
 
-  constructor(private _router:Router, private state: AppState) {
+  constructor(private _router:Router, private state: AppState,  private formService: FeedbackFormService) {
   }
 
   ngOnInit() {
     this.state.set('isDefaultHeader',false);
+    this.feedback = this.formService.componentInstance;
   }
 
   ngOnDestroy() {
@@ -103,5 +107,4 @@ export class HomePage {
   linkToggle():boolean{
     return globals.showOptional;
   }
-
 }

@@ -65,4 +65,4 @@ export class CMSMapping  {
     }
     return '';
   }
-};
+}
