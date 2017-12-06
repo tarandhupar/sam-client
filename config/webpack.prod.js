@@ -16,7 +16,6 @@ const IgnorePlugin = require('webpack/lib/IgnorePlugin');
 const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var apiConfig;
 try{
@@ -39,6 +38,7 @@ const REPORT_MICRO_STRATEGY_URL = process.env.REPORT_MICRO_STRATEGY_URL || apiCo
 const ENABLE_REPORTING_AREA = process.env.ENABLE_REPORTING_AREA || apiConfig.ENABLE_REPORTING_AREA;
 const GIT_COMMIT_ID = process.env.GIT_SHA || "No Commit Id";
 const REPORT_MICRO_STRATEGY_SERVER = process.env.REPORT_MICRO_STRATEGY_SERVER || apiConfig.REPORT_MICRO_STRATEGY_SERVER;
+const AUTOCOMPLETE_RECORD_PER_PAGE = process.env.AUTOCOMPLETE_RECORD_PER_PAGE || '10';
 
 if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
@@ -121,11 +121,6 @@ module.exports = webpackMerge(commonConfig, {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
-    new BundleAnalyzerPlugin({
-      analyzerMode: "static",
-      defaultSizes: "gzip",
-      openAnalyzer: false,
-    }),
     /**
      * Plugin: WebpackMd5Hash
      * Description: Plugin to replace a standard webpack chunkhash with md5.
@@ -170,7 +165,8 @@ module.exports = webpackMerge(commonConfig, {
       'REPORT_MICRO_STRATEGY_ENV': JSON.stringify(REPORT_MICRO_STRATEGY_ENV),
       'REPORT_MICRO_STRATEGY_URL': JSON.stringify(REPORT_MICRO_STRATEGY_URL),
       'ENABLE_REPORTING_AREA': JSON.stringify(ENABLE_REPORTING_AREA),
-      'REPORT_MICRO_STRATEGY_SERVER': JSON.stringify(REPORT_MICRO_STRATEGY_SERVER)
+      'REPORT_MICRO_STRATEGY_SERVER': JSON.stringify(REPORT_MICRO_STRATEGY_SERVER),
+      'AUTOCOMPLETE_RECORD_PER_PAGE': JSON.stringify(AUTOCOMPLETE_RECORD_PER_PAGE)
     }),
 
     /**

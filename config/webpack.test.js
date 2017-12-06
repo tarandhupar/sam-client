@@ -22,6 +22,7 @@ const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
  * Webpack Constants
  */
 const ENV = 'test';
+const GIT_COMMIT_ID = process.env.GIT_SHA || "No Commit Id";
 
 /**
  * Webpack configuration
@@ -216,6 +217,8 @@ var conf = {
       'HMR': false,
       'API_UMBRELLA_URL': JSON.stringify("dummy"), // we do not test with a real backend, but the url and key must be defined
       'API_UMBRELLA_KEY': JSON.stringify("dummy"),
+      'GIT_LOG': JSON.stringify(GIT_COMMIT_ID),
+      'BUILD_DATE': JSON.stringify(helpers.date()),
       'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true'),
       'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true'),
       'REPORT_MICRO_STRATEGY_ENV': JSON.stringify("dummy"),
