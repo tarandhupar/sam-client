@@ -6,7 +6,6 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { Location } from "@angular/common";
-import { cloneDeep } from 'lodash';
 
 type TabName = 'filters'|'users'|'access'|'confirmation';
 

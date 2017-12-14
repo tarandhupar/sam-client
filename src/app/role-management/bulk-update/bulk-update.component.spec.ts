@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from "@angular/forms";
-import { BulkUpdateComponent } from "./bulk-update.component";
+import { BulkUpdateComponent, SamToggle } from "./bulk-update.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { UserService } from "../user.service";
 import { UserServiceMock } from "../user.service.mock";
@@ -13,15 +13,17 @@ import { PipesModule } from "../../app-pipes/app-pipes.module";
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FHServiceMock } from "../../../api-kit/fh/fh.service.mock";
 import { Router } from "@angular/router";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 
-xdescribe('The Bulk Update Component', () => {
+describe('The Bulk Update Component', () => {
   let component: BulkUpdateComponent;
   let fixture: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        BulkUpdateComponent
+        BulkUpdateComponent,
+        SamToggle,
       ],
       imports: [
         FormsModule,
@@ -35,6 +37,7 @@ xdescribe('The Bulk Update Component', () => {
         { provide: UserAccessService, useValue: UserAccessMock },
         { provide: FHService, useClass: FHServiceMock },
         CapitalizePipe,
+        AlertFooterService,
       ],
     });
 
@@ -63,19 +66,19 @@ xdescribe('The Bulk Update Component', () => {
     component.onNextClick(); // go to review page
     tick();
     fixture.debugElement.injector.get(Router).navigate = () => { };
-    component.onDoneClick();
+    // component.onDoneClick();
     tick();
   }));
 
   it('should format user names', () => {
     let user: any = {firstName: 'James', lastName: 'Bond'};
     let name = component.formatUserName(user);
-    expect(name).toEqual('James Bond - ');
+    expect(name).toEqual('James Bond');
     user = {firstName: 'Timmy!'};
     name = component.formatUserName(user);
-    expect(name).toEqual('Timmy! - ');
+    expect(name).toEqual('Timmy!');
     user = {lastName: 'Timmy!'};
     name = component.formatUserName(user);
-    expect(name).toEqual('Timmy! - ');
+    expect(name).toEqual('Timmy!');
   });
 });

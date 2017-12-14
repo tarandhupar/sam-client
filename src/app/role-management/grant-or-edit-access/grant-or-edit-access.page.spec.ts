@@ -1,16 +1,18 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
-import { SamAPIKitModule } from "../../.";
-import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
+import { SamUIKitModule } from "sam-ui-elements/src/ui-kit/index";
+// import { SamAPIKitModule } from "../../.";
+// import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { GrantOrEditAccess } from "./grant-or-edit-access";
 import { AppComponentsModule } from "../../app-components/app-components.module";
-// import { AppTemplatesModule } from "../../app-templates/index";
+import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
 import { UserService } from "../user.service";
 import { UserServiceMock } from "../user.service.mock";
+import { SamTitleService } from "../../../api-kit/title-service/title.service";
+import { UserService } from "../user.service";
 
-xdescribe('Grant And Edit Access pages', () => {
+describe('Grant And Edit Access pages', () => {
   let fixture;
   let component;
 
@@ -20,6 +22,9 @@ xdescribe('Grant And Edit Access pages', () => {
         GrantOrEditAccess,
       ],
       providers: [
+        UserService,
+        AlertFooterService,
+        SamTitleService,
         { provide: UserService, useClass: UserServiceMock },
       ],
       imports: [
@@ -29,20 +34,20 @@ xdescribe('Grant And Edit Access pages', () => {
         SamUIKitModule,
         AppComponentsModule,
         // AppTemplatesModule,
-        SamAPIKitModule,
+        // SamAPIKitModule,
       ]
     });
 
     fixture = TestBed.createComponent(GrantOrEditAccess);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should compile', () => {
     expect(true).toBe(true);
-	});
+  });
 
-  it('should initialize', fakeAsync(() => {
+  it('should initialize', () => {
     component.ngOnInit();
-    tick();
-  }));
+  });
 });
