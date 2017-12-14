@@ -1,6 +1,5 @@
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { MockBackend } from '@angular/http/testing';
@@ -12,7 +11,7 @@ import { AppComponentsModule } from '../app-components.module';
 
 import { SamUserDirectoryComponent } from './user-directory.component';
 
-import { FHService, FHWrapperService, PeoplePickerService, WrapperService } from 'api-kit';
+import { FHService, PeoplePickerService, WrapperService } from 'api-kit';
 
 const response = Observable.of({
   _embedded: [{
@@ -73,7 +72,6 @@ describe('User Directory Component', () => {
         BaseRequestOptions,
         MockBackend,
         PeoplePickerService,
-        FHWrapperService,
         { provide: WrapperService, useValue: stubs.api },
         { provide: FHService, useValue: stubs.fh },
         { provide: Router, useValue: stubs.router },

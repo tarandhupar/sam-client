@@ -14,8 +14,8 @@
 <form-step
   [ngClass]="'assistance-listing-operations'"
   [crumbs]="crumbs"
-  [pageTitle]="falFormViewModel.title ? falFormViewModel.title : 'Assistance Listing'"
-  [sectionTitle]="falFormViewModel.title ? 'Assistance Listing' : 'Add'"
+  [pageTitle]="falFormViewModel.title ? falFormViewModel.title : 'New Listing'"
+  [sectionTitle]="falFormViewModel.title ? 'Assistance Listing' : 'Workspace'"
   [sideNavSelection]="sidenavSelection"
   [sideNavModel]="sidenavModel"
   [sectionIndex]="currentSection"
@@ -38,6 +38,11 @@
   </div>
 
   <div form-sections>
+    <check-active-assistance-administrator
+      *ngIf="organizationData && falFormViewModel && falFormViewModel._links && falFormViewModel._links['program:notify:coordinator'] &&
+      falFormViewModel.status && falFormViewModel.status.code && (falFormViewModel.status.code === 'draft' || falFormViewModel.status.code === 'draft_review' || falFormViewModel.status.code === 'rejected')"
+      [organization]="organizationData">
+    </check-active-assistance-administrator>
 
     <!-- Tabs -->
     <tabs-fal #tabsFalComponent

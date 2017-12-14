@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
-import { FHWrapperService} from './fhWrapper.service';
 import 'rxjs/add/operator/map';
 import { Observable,ReplaySubject } from 'rxjs';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
@@ -12,7 +11,6 @@ export class FHService {
 
   constructor(
     private oAPIService: WrapperService,
-    private fhAPIService: FHWrapperService,
     private _http: Http,
     private  router: Router,
     private route: ActivatedRoute,

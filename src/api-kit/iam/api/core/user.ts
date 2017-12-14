@@ -16,21 +16,38 @@ const LDAP_MAPPINGS = {
 };
 
 const ROLE_MAPPINGS = {
-  systemAccount: [
-    'system-accounts.management',
-    'system-accounts.migration',
-  ],
+  systemAccount: {
+    matchAll: false,
+    keys: [
+      'system-accounts.admin',
+      'system-accounts.manager',
+      'system-accounts.migration',
+    ],
+  },
 
-  systemApprover: [
-    'security.approver',
-  ],
+  systemAdmin: {
+    matchAll: true,
+    keys: [
+      'system-accounts.admin',
+    ],
+  },
 
-  fsd: [
-    'fsd.profile',
-    'fsd.kba',
-    'fsd.deactivate',
-    'fsd.passreset',
-  ],
+  systemApprover: {
+    matchAll: true,
+    keys: [
+      'security.approver',
+    ],
+  },
+
+  fsd: {
+    matchAll: true,
+    keys: [
+      'fsd.profile',
+      'fsd.kba',
+      'fsd.deactivate',
+      'fsd.passreset',
+    ],
+  },
 };
 
 export class User {
@@ -49,6 +66,7 @@ export class User {
   public lastLogin = moment();
 
   public systemAccount = false;
+  public systemAdmin = false;
   public systemApprover = false;
   public fsd = false;
 
@@ -60,16 +78,17 @@ export class User {
   set(user) {
     let roles = user.gsaRAC,
         role,
+        config,
         mapping,
         setRoles = (() => {
           let role,
               roles;
 
           for(role in ROLE_MAPPINGS) {
-            roles = ROLE_MAPPINGS[role];
+            config = ROLE_MAPPINGS[role];
 
-            if(roles.length) {
-              this[role] = this.contains(this._links, roles);
+            if(config.keys) {
+              this[role] = this.contains(this._links, config.keys, config.matchAll);
             }
           }
         });
@@ -135,21 +154,20 @@ export class User {
     return data;
   }
 
-  contains(haystack: { [key: string]: any }, needles: string[]) {
+  contains(haystack: { [key: string]: any }, needles: Array<string>, matchAll: boolean = true) {
     let needle,
         intNeedle,
-        hasNeedle = true;
+        intMatches = 0;
 
     for(intNeedle = 0; intNeedle < needles.length; intNeedle++) {
       needle = needles[intNeedle];
 
-      if(!haystack[needle]) {
-        hasNeedle = false;
-        break;
+      if(haystack[needle]) {
+        intMatches++;
       }
     }
 
-    return hasNeedle;
+    return matchAll ? (intMatches == needles.length) : (intMatches > 0);
   }
 
   get fullName(): string {

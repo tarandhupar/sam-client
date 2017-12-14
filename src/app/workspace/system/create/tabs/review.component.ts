@@ -96,7 +96,7 @@ export class ReviewComponent {
 
         if(typeof key == 'string' && key.match(/authorizationDate/i)) {
           if(moment(field).isValid()) {
-            field = moment(field).format('MMM D, h:mm a')
+            field = moment(field).format('MMM D, YYYY h:mm a')
           }
         } else if(typeof key == 'string' && key.match(pattern)) {
           if(isArray(field)) {

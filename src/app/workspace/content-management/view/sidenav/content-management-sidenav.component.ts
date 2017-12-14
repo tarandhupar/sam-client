@@ -17,6 +17,8 @@ export class HelpContentManagementSideNavComponent{
     subSection:"",
   };
 
+  @Input() showStatusFilters: boolean = false;
+
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
   sidenavModel = {
@@ -41,7 +43,7 @@ export class HelpContentManagementSideNavComponent{
     label: 'Domains',
   };
 
-  constructor(private msgFeedService: MsgFeedService, private _router: Router, private route: ActivatedRoute){}
+  constructor(private msgFeedService: MsgFeedService){}
 
   ngOnInit(){
     this.loadFilterData();

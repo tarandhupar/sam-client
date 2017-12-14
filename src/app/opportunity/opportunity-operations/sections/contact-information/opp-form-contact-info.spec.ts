@@ -3,6 +3,8 @@ import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testi
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityContactInfoComponent } from './opp-form-contact-info.component';
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
+import { OpportunitySideNavService } from '../../framework/service/sidenav/opportunity-form-sidenav.service';
 
 describe('Opportunity Contact Information Form', () => {
   let comp: OpportunityContactInfoComponent;
@@ -16,6 +18,8 @@ describe('Opportunity Contact Information Form', () => {
         OpportunityContactInfoComponent,
       ],
       providers: [
+        OppNoticeTypeMapService,
+        OpportunitySideNavService
       ],
       imports: [
         SamUIKitModule,

@@ -1,20 +1,20 @@
 <div grid>
-  
+
   <div columns="12" *ngIf="toggleControl.assistanceListings">
-    <workspace-widget 
-      [title]="'Assistance Listings'" 
+    <workspace-widget
+      [title]="'Assistance Listings'"
       [actions]="actions"
-      [shortcut]="{ text: 'Assistance Listings Workspace', routerLink: ['/fal/workspace'] }">
+      [shortcut]="{ text: 'Go to Assistance Listings', routerLink: ['/fal/workspace'] }">
       <assistance-listing-widget></assistance-listing-widget>
     </workspace-widget>
   </div>
   <div columns="12" *ngIf="toggleControl.opportunities">
-      <workspace-widget 
+      <workspace-widget
           [title]="'Contract Opportunities'"
           [actions]="actions"
           [shortcut]="{ text: 'Contract Opportunities Workspace', routerLink: ['/opp/workspace'] }">
           <opp-widget></opp-widget>
       </workspace-widget>
   </div>
-  
+
 </div>

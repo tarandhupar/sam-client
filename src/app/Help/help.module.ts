@@ -15,7 +15,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { TransitionToSamComponent } from './sections/transition-to-sam/transition-to-sam.component';
 import { ImageLibraryComponent } from './image-library/image-library.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -38,7 +38,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PartnersComponent,
     PoliciesComponent,
     ReferenceLibraryComponent,
-    ImageLibraryComponent
+    ImageLibraryComponent,
   ],
   providers: [],
 })

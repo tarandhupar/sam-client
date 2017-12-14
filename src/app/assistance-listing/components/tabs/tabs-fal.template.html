@@ -38,18 +38,6 @@
 
   <div class="sam-ui tabular menu">
 
-    <!-- ==================== Review ==================== -->
-    <a *ngIf="canReview()"
-      (click)="tabClicked(tabItems.review)"
-      class="item"
-      [class.active]="currentRouteConfig == tabItems.review.routeConfig">
-      Authenticated
-    </a>
-    <span *ngIf="!canReview()"
-      class="item disabled">
-      Authenticated
-    </span>
-
     <!-- ==================== Edit ==================== -->
     <!-- Link -->
     <a *ngIf="canEdit() && currentRouteConfig != tabItems.edit.routeConfig"
@@ -66,6 +54,18 @@
     <span *ngIf="!canEdit()"
       class="item disabled">
       Edit
+    </span>
+
+    <!-- ==================== Review ==================== -->
+    <a *ngIf="canReview()"
+       (click)="tabClicked(tabItems.review)"
+       class="item"
+       [class.active]="currentRouteConfig == tabItems.review.routeConfig">
+      Authenticated
+    </a>
+    <span *ngIf="!canReview()"
+          class="item disabled">
+      Authenticated
     </span>
 
     <!-- ==================== Public ==================== -->

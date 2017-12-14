@@ -1,0 +1,14 @@
+<div *ngIf="relatedNoticeForm" [formGroup]="relatedNoticeForm">
+  <sam-autocomplete
+    autofill-oppRelatedNotice
+    [attr.id]="autocompleteId"
+    [allowAny]="autocompleteAllowAny"
+    [config]="{keyValueConfig: autocompleteKeyValueConfig, serviceOptions: {type: baseType}}"
+    [hint]="autocompleteHint"
+    [labelText]="autocompleteLabel"
+    [name]="autocompleteName"
+    [required]="autocompleteRequired"
+    [control]="relatedNoticeControl"
+    [formControl]="relatedNoticeControl">
+  </sam-autocomplete>
+</div>

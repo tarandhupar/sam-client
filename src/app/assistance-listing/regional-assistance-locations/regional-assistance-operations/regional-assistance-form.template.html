@@ -7,48 +7,6 @@
   <div class="sam-ui grid">
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
 
-      <div class="sam-ui info icon message">
-        <em class="icon fa fa-info-circle" aria-hidden="true"></em>
-        <div class="content">
-          Any updates made in this space will not be reflected in the public view.
-        </div>
-      </div>
-
-      <sam-button
-        [buttonDisabled]="buttonDisabled"
-        buttonText="Cancel"
-        (onClick)="onCancelClick($event)">
-      </sam-button>
-      <sam-button
-        [buttonDisabled]="buttonDisabled"
-        *ngIf="isEditForm"
-        buttonText="Delete Location"
-        (onClick)="modal2.openModal($event)">
-      </sam-button>
-      <sam-button
-        [buttonDisabled]="buttonDisabled"
-        [attr.id] = "'submit-regional-assistance-location'"
-        buttonText="Submit"
-        (onClick)="onSubmit()"
-        [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
-      </sam-button>
-      <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
-
-      <div class="sam-ui segment" *ngIf="isEditForm">
-        <div class="sam-ui medium header">
-          Created By {{RaoFormViewModel.createdBy || 'NA'}}
-          <div class="sub header">
-            On {{RaoFormViewModel.createdDate|date: 'MMM d, yyyy h:mm a' || ''}}
-          </div>
-        </div>
-        <div class="sam-ui medium header">
-          Last Modified By {{RaoFormViewModel.modifiedBy || 'NA'}}
-          <div class="sub header">
-            On {{RaoFormViewModel.modifiedDate|date: 'MMM d, yyyy h:mm a' || ''}}
-          </div>
-        </div>
-      </div>
-
       <div class="sam-ui segment">
         <form [formGroup]="raoFormGroup">
 
@@ -74,7 +32,7 @@
           <sam-text
             [control]="raoFormGroup.controls['region']"
             [name]="'region'"
-            [label]="'State/Region:'"
+            [label]="'State/Region'"
             [required]="false"
             formControlName="region">
           </sam-text>
@@ -83,7 +41,7 @@
           <sam-text-area
             [control]="raoFormGroup.controls['pointOfContact']"
             [name]="'poc'"
-            [label]="'Point Of Contact:'"
+            [label]="'Point of Contact:'"
             [required]="true"
             formControlName="pointOfContact">
           </sam-text-area>
@@ -92,7 +50,7 @@
           <sam-text-area
             [control]="raoFormGroup.controls['streetAddress']"
             [name]="'street:'"
-            [label]="'Street:'"
+            [label]="'Street'"
             [required]="true"
             formControlName="streetAddress">
           </sam-text-area>
@@ -101,7 +59,7 @@
           <sam-text
             [control]="raoFormGroup.controls['city']"
             [name]="'city'"
-            [label]="'City:'"
+            [label]="'City'"
             [required]="true"
             formControlName="city">
           </sam-text>
@@ -109,7 +67,7 @@
           <!--State-->
           <sam-select
             [control]="raoFormGroup.controls['state']"
-            [label]="'State:'"
+            [label]="'State'"
             [name]="'state-control'"
             [required]="true"
             [options]="stateDrpDwnOptions"
@@ -120,7 +78,7 @@
           <sam-text
             [control]="raoFormGroup.controls['zip']"
             [name]="'zip'"
-            [label]="'Zip Code:'"
+            [label]="'Zip Code'"
             [required]="true"
             formControlName="zip">
           </sam-text>
@@ -128,7 +86,7 @@
           <!--Country-->
           <sam-select
             [control]="raoFormGroup.controls['country']"
-            [label]="'Country:'"
+            [label]="'Country'"
             [name]="'contry'"
             [required]="false"
             [options]="countryDrpDwnOptions"
@@ -137,7 +95,7 @@
 
           <!--Phone -->
           <sam-phone-entry [control]="raoFormGroup.controls['phone']"
-                           [label]="'Phone:'"
+                           [label]="'Phone'"
                            [prefix]="'phone'"
                            [required]="true"
                            [numbersOnly]="true"
@@ -148,7 +106,7 @@
           <sam-text
             [control]="raoFormGroup.controls['subBranch']"
             [name]="'subBranch'"
-            [label]="'Sub-Branch:'"
+            [label]="'Sub-Branch'"
             [required]="false"
             formControlName="subBranch">
           </sam-text>
@@ -156,7 +114,7 @@
           <!--Division-->
           <sam-select
             [control]="raoFormGroup.controls['division']"
-            [label]="'Division:'"
+            [label]="'Division'"
             [name]="'division'"
             [required]="false"
             [options]="divisionDrpDwnOptions"
@@ -176,15 +134,15 @@
                  (onSubmit)="deleteRAO($event)">
       </sam-modal>
 
-      <sam-button
+      <sam-button buttonType="secondary"
         buttonText="Cancel"
         [buttonDisabled]="buttonDisabled"
         (onClick)="onCancelClick($event)">
       </sam-button>
-      <sam-button
+      <sam-button buttonType="secondary"
         *ngIf="isEditForm"
         [buttonDisabled]="buttonDisabled"
-        buttonText="Delete Location"
+        buttonText="Delete"
         (onClick)="modal2.openModal()">
       </sam-button>
       <sam-button
@@ -194,6 +152,22 @@
         (onClick)="onSubmit()"
         [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
       </sam-button>
+      <br>
+      <br>
+      <div *ngIf="isEditForm">
+        <div class="sam-ui medium header">
+          Created By {{RaoFormViewModel.createdBy || 'NA'}}
+          <div class="sub header">
+            On {{RaoFormViewModel.createdDate|date: 'MMM d, yyyy h:mm a' || ''}}
+          </div>
+        </div>
+        <div class="sam-ui medium header">
+          Last Modified By {{RaoFormViewModel.modifiedBy || 'NA'}}
+          <div class="sub header">
+            On {{RaoFormViewModel.modifiedDate|date: 'MMM d, yyyy h:mm a' || ''}}
+          </div>
+        </div>
+      </div>
       <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
 
     </div>

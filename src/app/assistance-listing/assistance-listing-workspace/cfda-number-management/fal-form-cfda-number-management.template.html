@@ -3,7 +3,7 @@
   [attr.id]="'page-title'"
   [breadcrumbs]="crumbs"
   section="Workspace"
-  title="CFDA Number Configuration Change">
+  title="Edit CFDA Number Assignment">
 
   <div class="sam-ui grid">
     <sam-alert [type]="'error'" [title]="''" *ngIf="isCfdaCodeRestricted">
@@ -48,7 +48,7 @@
           </sam-text>
         </div>
 
-        <sam-button [buttonType]="buttonType"
+        <sam-button [buttonType]="'secondary'"
                     [buttonDisabled]="buttonDisabled"
                     [attr.id]="'cancel-btn'"
                     [buttonText]="'Cancel'"

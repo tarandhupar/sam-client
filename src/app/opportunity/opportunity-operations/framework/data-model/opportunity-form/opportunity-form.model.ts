@@ -20,6 +20,7 @@ export class OpportunityFormViewModel {
   private _opportunityId: string;
   private _opportunity: any;
   private _description: any;
+  private _related: string;
   private _data: any;
   private _additionalInfo: any;
   public _status: OpportunityStatus;
@@ -33,6 +34,7 @@ export class OpportunityFormViewModel {
   constructor(opportunity) {
     this._opportunity = opportunity ? opportunity : {};
     this._description = opportunity ? opportunity.description : null;
+    this._related = opportunity ? opportunity.related : null;
     this._data = (opportunity && opportunity.data) ? opportunity.data : {};
     this._opportunityId = (opportunity && opportunity.id) ? opportunity.id : null;
     this._additionalInfo = (opportunity && opportunity.additionalInfo) ? opportunity.additionalInfo : {sections: []};
@@ -47,6 +49,51 @@ export class OpportunityFormViewModel {
     this.oppContactInfoViewModel = new OppContactInfoViewModel(this._data);
   }
 
+  // todo: switch to string enum
+  // todo: figure out how to handle null/undefined/etc.
+  private getSectionInfo(id: string): SectionInfo {
+    let sectionInfo: SectionInfo = null;
+
+    if (this._additionalInfo && this._additionalInfo.sections && this._additionalInfo.sections.length > 0) {
+      for (let section of this._additionalInfo.sections) {
+        if (section.id === id) {
+          sectionInfo = section;
+          break;
+        }
+      }
+    }
+    return sectionInfo;
+  }
+
+  public getSectionStatus(id: string): string {
+    this.existing = this.getSectionInfo(id);
+    let status = 'pristine'; // all sections are pristine by default
+
+    if (this.existing) {
+      status = this.existing.status;
+    } else if (this.existing === null || this.existing === undefined) {
+      status = 'pristine';
+    }
+
+    return status;
+  }
+
+  // todo: switch to string enum
+  public setSectionStatus(id: string, status: string): void {
+    this.existing = this.getSectionInfo(id);
+
+    if (this.existing) {
+      this.existing.status = status;
+    } else {
+      if (this._additionalInfo!.sections) {
+        this._additionalInfo!.sections.push({
+          id: id,
+          status: status
+        });
+      }
+    }
+  }
+
   get data() {
     return this._data;
   }
@@ -55,7 +102,8 @@ export class OpportunityFormViewModel {
     return {
       data: this._data,
       additionalInfo: this._additionalInfo,
-      description: this._description
+      description: this._description,
+      related: this._related,
     };
   }
 
@@ -80,11 +128,13 @@ export class OpportunityFormViewModel {
   set title(title: string) {
     _.set(this._data, 'title', title);
   }
+
   // Description
   // -------------------------------------------------------
   get description(): any {
     return this._description;
   }
+
   set description(description: any) {
     this._description =  description;
   }
@@ -95,5 +145,14 @@ export class OpportunityFormViewModel {
 
   set status(status: OpportunityStatus) {
     this.status = status;
+  }
+  // Related Notices
+  // -------------------------------------------------------
+  get relatedNotice(): string {
+    return _.get(this, '_related.opportunityId', null);
+  }
+
+  set relatedNotice(noticeId: string) {
+    _.set(this, '_related.opportunityId', noticeId);
   }
 }

@@ -16,7 +16,6 @@ import { get as getProperty } from 'lodash';
   providers: [CapitalizePipe],
 })
 export class MyAccessPage implements OnInit {
-
   sort: any = {type:'org', sort:'asc'};
   sortOptions = [
     { value: 'org', label: 'Organization' },
@@ -250,7 +249,7 @@ export class MyAccessPage implements OnInit {
         org: access.organization.id,
         orgName: access.organization.val,
       };
-      this.router.navigate(["../edit-access"], { queryParams: qp, relativeTo: this.route});
+      this.router.navigate(["../../edit-access"], { queryParams: qp, relativeTo: this.route});
     } catch(err) {
       console.error(err);
     }
@@ -302,7 +301,7 @@ export class MyAccessPage implements OnInit {
     if (this.isMyAccess) {
       return `/role-management/users/${this.userName}/assign-roles`;
     } else {
-      return '../assign-roles';
+      return '../../assign-roles';
     }
   }
 }

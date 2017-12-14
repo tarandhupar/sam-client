@@ -337,12 +337,14 @@
 
   <div class="usa-grid m_B-5x">
     <div class="usa-width-one-whole">
-      <h3>Entity Picker Component</h3>
+      <h3>Entity Picker Component(Multiple)</h3>
       <div class="usa-width-one-half">
         <sam-entity-picker
           label="Entity Picker (multi-picker)"
           required="true"
           [(ngModel)]="entitypicker_selections"
+          [isDefaultOrg]="true"
+          [isAssignableOrg]="true"
           hint="Pick entity">
 
         </sam-entity-picker>
@@ -351,8 +353,25 @@
         <h3>Selection Model</h3>
         <div *ngFor="let selection of entitypicker_selections">{{selection | json}}</div>
       </div>
+    </div>
 
-
+    <div class="usa-width-one-whole m_T-3x m_B-3x">
+      <h3>Entity Picker Component(Single)</h3>
+      <div class="usa-width-one-half">
+        <sam-entity-picker
+          label="Entity Picker (single-picker)"
+          required="true"
+          [(ngModel)]="entitypicker_selection_single"
+          [isDefaultOrg]="true"
+          [isAssignableOrg]="true"
+          hint="Pick entity"
+          [isMultiple]="false">
+        </sam-entity-picker>
+      </div>
+      <div class="usa-width-one-half">
+        <h3>Selection Model</h3>
+        <div>{{entitypicker_selection_single | json}}</div>
+      </div>
     </div>
   </div>
 

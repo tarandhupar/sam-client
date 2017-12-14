@@ -7,7 +7,7 @@ import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 let component: any;
 let fixture: any;
 
-fdescribe('Sam Feedback Button Component', () => {
+describe('Sam Feedback Button Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SamFeedbackButtonComponent ],
@@ -20,7 +20,7 @@ fdescribe('Sam Feedback Button Component', () => {
     fixture = TestBed.createComponent(SamFeedbackButtonComponent);
     component = fixture.componentInstance;
 
-    fixture.detectChanges();    
+    fixture.detectChanges();
   });
 
   it('should compile same feedback button component', function () {

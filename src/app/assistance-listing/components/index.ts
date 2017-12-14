@@ -21,10 +21,10 @@ import {
 } from './fal-error-display/fal-error-display.component';
 import { PipesModule } from '../../app-pipes/app-pipes.module';
 import { AppComponentsModule } from '../../app-components/app-components.module';
-import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
 import { TabsFalComponent } from "./tabs/tabs-fal.component";
 import {FALAuthGuard} from "./authguard/authguard.service";
 import {SamFALTextComponent} from "./fal-text/fal-text.component";
+import {CheckActiveAssistanceAdministratorComponent} from './check-active-assistance-administrator/check-active-assistance-administrator.component';
 
 @NgModule({
   imports: [
@@ -50,8 +50,8 @@ import {SamFALTextComponent} from "./fal-text/fal-text.component";
     FeedsFilterComponent,
     FALErrorDisplayComponent,
     FALErrorDisplayHelperComponent,
-    CustomInlineErrorMessageComponent,
     SamFALTextComponent,
+    CheckActiveAssistanceAdministratorComponent,
     TabsFalComponent
   ],
   exports: [
@@ -69,8 +69,8 @@ import {SamFALTextComponent} from "./fal-text/fal-text.component";
     FALContactInfoTableComponent,
     FeedsFilterComponent,
     FALErrorDisplayComponent,
-    CustomInlineErrorMessageComponent,
     SamFALTextComponent,
+    CheckActiveAssistanceAdministratorComponent,
     TabsFalComponent
   ],
   providers: [

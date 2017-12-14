@@ -147,9 +147,9 @@ export class ApplicationRequestsComponent {
 
       'authorization': this.builder.group({
         uploadAto: [application.uploadAto],
-        authorizationConfirmation: [application.authorizationConfirmation, [Validators.required]],
+        authorizationConfirmation: [application.authorizationConfirmation, [Validators.requiredTrue]],
         authorizingOfficialName: [application.authorizingOfficialName],
-        authorizationDate: [''],
+        authorizationDate: [application.authorizationDate],
       }),
 
       rejectionReason: [{

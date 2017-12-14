@@ -3,10 +3,10 @@
 <div class="sam-ui text container">
   <div class="sam-ui vertically very padded center aligned grid">
     <div class="column">
-      <h3 class="sam-ui light header">
+      <h1 class="sam-ui light header" style="font-size: 2.5rem;">
         In the future, Beta.SAM.gov will be the official U.S. government website
         for people who make, receive, and manage federal awards.
-      </h3>
+      </h1>
     </div>
   </div>
 </div>
@@ -17,21 +17,22 @@
     <div class="twelve wide tablet twelve wide computer column">
       <div class="sam-ui three column stackable grid">
         <div class="sam-ui column center aligned relative">
-          <img class="sam-ui image aligned" src="src/assets/img/home-1.jpg">
+          <img class="sam-ui image aligned" src="src/assets/img/home-1.jpg" alt="Sam.gov welcome video">
           <a style="position: absolute; left: 40%; top: 40%; opacity: .8; font-size: 50px;"
             href="https://youtu.be/5uciZ431AGo"
             target="welcome-SAM-video">
             <i class="fa fa-play-circle-o fa-lg" style="color:white"></i>
+            <span aria-hidden="true" hidden>Play Button</span>
           </a>
           <div style="background-color: #112e51; color: white; position: absolute; right: 10px; left: 10px; bottom: 12px; padding: 8px; font-weight: 600;">
             Welcome to beta.SAM.gov
           </div>
         </div>
         <div class="column center aligned">
-          <img class="sam-ui image" src="src/assets/img/home-2.jpg">
+          <img class="sam-ui image" src="src/assets/img/home-2.jpg" alt="Aviation worker">
         </div>
         <div class="column center aligned">
-          <img class="sam-ui image" src="src/assets/img/home-3.jpg">
+          <img class="sam-ui image" src="src/assets/img/home-3.jpg" alt="Scientist with test tube">
         </div>
       </div>
     </div>
@@ -70,7 +71,7 @@
                 </h2>
                 <p>
                   Different types of award data, or "domains", make up the heart of SAM.
-                  If you are coming from one of our legacy websites, click on the related 
+                  If you are coming from one of our legacy websites, click on the related
                   link below to learn how to use those same features here.
                 </p>
                 <div class="sam-ui two column grid">
@@ -94,7 +95,7 @@
                     </ul>
                   </div>
                   <div class="column">
-                    <ul class="sam-ui bulleted list">      
+                    <ul class="sam-ui bulleted list">
                       <li>
                         <a [routerLink]="['help/award']" fragment="entities">
                           Entity Information (SAM)

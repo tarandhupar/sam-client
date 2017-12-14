@@ -166,7 +166,7 @@ export class GrantOrEditAccess {
   }
 
   getPermittedRoleAndDomains() {
-    this.userAccessService.checkAccess(`users/:id/grant-access`).map(r => r.json()).subscribe(a => {
+    this.userAccessService.checkAccess(`users/:id/assign-roles`).map(r => r.json()).subscribe(a => {
       try {
         this.domainOptionsByRole = {};
         this.roleOptions = a.grantRoles.map(r => {
@@ -278,10 +278,14 @@ export class GrantOrEditAccess {
           )
         } catch (error) {
           console.error(error);
+          let errMsg = "Unable to parse permission data";
+          if(error.status == 401){
+            errMsg = error.message;
+          }
           this.alertFooter.registerFooterAlert({
             type: 'error',
             title: 'Error',
-            description: 'Unable to parse permission data',
+            description: errMsg,
             timer: 3200,
           });
         }

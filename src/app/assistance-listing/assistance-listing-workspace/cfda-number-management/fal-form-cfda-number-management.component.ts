@@ -39,10 +39,9 @@ export class CFDANumberManagementComponent implements OnInit{
   };
   isCfdaCodeRestricted: boolean = false;
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
-    { breadcrumb: 'CFDA Number Management', url: '/fal/workspace/cfda-numbers'},
-    { breadcrumb: 'CFDA Number Configuration Change'}
+    { breadcrumb: 'CFDA Number Assignment', url: '/fal/workspace/cfda-numbers'},
+    { breadcrumb: 'Edit CFDA Number Assignment'}
   ];
 
   public assignmentOptions = [

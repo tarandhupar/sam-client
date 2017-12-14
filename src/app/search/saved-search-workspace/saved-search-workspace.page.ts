@@ -8,7 +8,6 @@ import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service"
 import {FHService} from "../../../api-kit/fh/fh.service";
 import * as _ from 'lodash';
 import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
-import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 @Component({
   moduleId: __filename,
@@ -21,7 +20,6 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
   private LAST_SAVED = 'last_saved';
   private LAST_RAN = 'last_ran';
 
-  feedback: any;
   totalCount: any = 0;
   totalPages: any = 0;
   pageNum = 0;
@@ -258,13 +256,11 @@ export class SavedSearchWorkspacePage implements OnInit, OnDestroy {
               private searchDictionariesService: SearchDictionariesService,
               private fhService: FHService,
               private dictionaryService: DictionaryService,
-              private alertFooterService: AlertFooterService,
-              private formService: FeedbackFormService) {
+              private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-    this.feedback = this.formService.componentInstance;
     
     this.activatedRoute.queryParams.subscribe(
       data => {

@@ -12,7 +12,6 @@ import { SamFooterComponent } from './footer/footer.component';
 import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { SamLoginComponent } from './login/login.component';
-import { LoginService } from './login/login.service';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { SamCountryServiceAutoDirective } from "./location-autocomplete/country-autocomplete/country-autocomplete.component";
 import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autocomplete/state-autocomplete/state-autocomplete.component";
@@ -21,7 +20,6 @@ import { CityServiceImpl, SamCityServiceAutoDirective } from "./location-autocom
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
-import { FeedbackFormService } from "./feedback-form/feedback-form.service";
 import { SamSoloAccordian } from "./solo-accordion/solo-accordian.component";
 import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.component";
 import { SamEditorComponent } from "./editor/editor.component";
@@ -48,8 +46,10 @@ import { SamTableSelectComponent } from './sam-table-select/sam-table-select.com
 import { SamChipsComponent } from './sam-chips/sam-chips.component';
 import { SamTabDateRangeFilterComponent } from './sam-tab-date-range/sam-tab-date-range.component';
 import { SamSelectDateRangeFilterComponent } from './sam-select-date-range/sam-select-date-range-filter.component';
+import { CustomInlineErrorMessageComponent } from "./custom-inline-error-message/custom-inline-error-message.component";
 import { SamFeedbackButtonComponent } from 'app/app-components/sam-feedback-button/sam-feedback-button.component';
 import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
+import { SamUploadComponent } from './sam-upload/upload.component';
 
 /**
  * A module for reusable SAM Web Design components
@@ -78,7 +78,6 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamPasswordComponent,
     SamUserDirectoryComponent,
     SamDateRangeFilterComponent,
-    //SamRMSUsersServiceAutoDirective,
     AgencyPickerV2Component,
     EntityPickerComponent,
     SamSortComponent,
@@ -94,6 +93,8 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamChipsComponent,
     SamTabDateRangeFilterComponent,
     SamSelectDateRangeFilterComponent,
+    CustomInlineErrorMessageComponent,
+    SamUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -141,11 +142,11 @@ import { EntityPickerComponent } from "./entity-picker/entity-picker.component";
     SamChipsComponent,
     SamTabDateRangeFilterComponent,
     SamSelectDateRangeFilterComponent,
+    CustomInlineErrorMessageComponent,
+    SamUploadComponent,
   ],
   providers: [
-    FeedbackFormService,
-    //SamFeedbackComponent,
-    //RMSUserServiceImpl,
+
   ]
 })
 export class AppComponentsModule { }

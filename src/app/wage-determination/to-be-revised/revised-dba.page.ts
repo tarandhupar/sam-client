@@ -4,7 +4,7 @@ import { WageDeterminationService } from "api-kit";
 
 @Component({
     moduleId: __filename,
-    templateUrl: 'revised-dba-template.html'
+    templateUrl: 'revised-dba.template.html'
 })
 
 export class WageDeterminationRevisedDBAPage{
@@ -32,9 +32,13 @@ export class WageDeterminationRevisedDBAPage{
             data => {
                 this.data = data;
                 this.toBeRevisdedDate = this.data.tobeRevised;
-                this.dbaWageDeterminations = this.data['_embedded']['dBAToBeRevisedList'].map(function(obj){
-                    return obj.wdNo
-                });
+                if(this.data['_embedded']){
+                    if(this.data['_embedded']['dBAToBeRevisedList']){
+                        this.dbaWageDeterminations = this.data['_embedded']['dBAToBeRevisedList'].map(function(obj){
+                            return obj.wdNo
+                        });
+                    }
+                }
             },
             error => {
                 console.log('error: ', error);

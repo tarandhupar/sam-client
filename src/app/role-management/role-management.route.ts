@@ -23,19 +23,19 @@ import { RoleCategoriesResolve } from "../users/roles-categories.resolve";
 export const routes: Routes = [{
   path: '',
   //resolve: { domains: DomainsResolve },
-  canActivateChild: [IsLoggedInGuard],
+  // canActivateChild: [IsLoggedInGuard],
   children: [
     {
       path: 'users',
       children: [
         {
-          path: ':id/access/edit-access',
+          path: ':id/edit-access',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
           data: { grantOrEdit: 'edit', pageName: 'users/:id/edit-access' },
         },
         {
-          path: ':id/access/assign-roles',
+          path: ':id/assign-roles',
           component: GrantOrEditAccess,
           canActivate: [ CheckAccessGuard ],
           data: { grantOrEdit: 'grant', pageName: 'users/:id/assign-roles' },

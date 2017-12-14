@@ -10,6 +10,7 @@ import {OpportunityDescriptionComponent} from "./description.component";
 import {Observable} from "rxjs";
 import {OpportunityService} from "../../../../../api-kit/opportunity/opportunity.service";
 import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 let MockFormService = jasmine.createSpyObj('MockFormService', ['getOpportunityDictionary']);
 MockFormService.getOpportunityDictionary.and.returnValue(Observable.of({}));
 
@@ -22,7 +23,8 @@ describe('Opportunities Description Form', () => {
         SideNavComponent
       ],
       providers: [
-        DictionaryService
+        DictionaryService,
+        OppNoticeTypeMapService
       ],
       imports: [
         AppComponentsModule,

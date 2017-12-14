@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {OpportunityService} from "../../../../../../api-kit/opportunity/opportunity.service";
+import { Injectable } from '@angular/core';
 import * as Cookies from 'js-cookie';
-import {DictionaryService} from "../../../../../../api-kit/dictionary/dictionary.service";
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
+import { DictionaryService } from "../../../../../../api-kit/dictionary/dictionary.service";
+import { OpportunityService } from "../../../../../../api-kit/opportunity/opportunity.service";
+
 @Injectable()
 
 export class OpportunityFormService {
@@ -30,5 +31,9 @@ export class OpportunityFormService {
 
   getOpportunityDictionary(type){
     return this.dictionaryService.getContractOpportunityDictionary(type);
+  }
+
+  searchRelatedOpportunities(keyword: string, type: string, size: number) {
+    return this.oppService.searchRelatedOpportunities(keyword, type, size, this.authCookie)
   }
 }

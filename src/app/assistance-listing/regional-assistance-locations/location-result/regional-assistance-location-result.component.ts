@@ -64,11 +64,11 @@ export class RegionalAssistanceLocationResult implements OnInit {
       "disabled": false,
       options: [
         //{label: "Choose An Action", value:"Choose An Action", name:"Choose An Action"},
-        {label: "Update", value:"Update", name:"Update"},
-        {label: "Delete", value:"Delete", name:"Delete"}
+        {label: "Edit", value:"Update", name:"Update", icon:"fa fa-pencil", callback: ()=>{}},
+        {label: "Delete", value:"Delete", name:"Delete", icon:"fa fa-pencil", callback: ()=>{}}
       ]
     },
-    defaultOption: "Choose an Action"
+    defaultOption: "Action"
 
   };
 

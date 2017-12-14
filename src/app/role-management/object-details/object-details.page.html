@@ -31,6 +31,7 @@
           #permission
           labelText="Permissions"
           name="permissions"
+          [id]="'permissions-autocomplete'"
           [options]="permissionOptions"
           [config]="{addOnIconClass:'fa fa-search', keyValueConfig: { valueProperty: 'permissionName', keyProperty: 'id'} }"
           [allowAny]="true"

@@ -29,11 +29,11 @@ export class FeatureToggleGuard implements CanActivateChild, CanActivate {
   }
 
   canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
+    return true;
     let toggleKey = route.data['featureToggleKey'];
     if (!toggleKey) {
       throw new Error('Must define a toggle feature key property for this route');
     }
-
     return this.featureToggleService.checkFeatureToggle(toggleKey)
       .map(
         res => {

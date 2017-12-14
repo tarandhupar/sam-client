@@ -1,11 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PipesModule } from '../../app-pipes/app-pipes.module';
+import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
+import {
+  RelatedNoticeAutocompleteService,
+  RelatedNoticeServiceDirective
+} from '../../../api-kit/autoCompleteWrapper/related-notice/related-notice-autocomplete.service';
 import { AppComponentsModule } from '../../app-components/app-components.module';
-import { TabsOpportunityComponent } from './tabs-opportunity/tabs-opportunity.component';
+import { PipesModule } from '../../app-pipes/app-pipes.module';
 import { OpportunityAuthGuard } from './authgaurd/authguard.service';
+import {
+  OpportunityErrorDisplayComponent,
+  OpportunityErrorDisplayHelperComponent
+} from "./opportunity-error-display/opportunity-error-display.component";
+import { RelatedNoticeComponent } from './related-notice/related-notice.component';
+import { TabsOpportunityComponent } from './tabs-opportunity/tabs-opportunity.component';
+import { OpportunityTypeLabelPipe } from '../pipes/opportunity-type-label.pipe';
 
 @NgModule({
   imports: [
@@ -16,13 +26,21 @@ import { OpportunityAuthGuard } from './authgaurd/authguard.service';
     PipesModule
   ],
   declarations: [
-    TabsOpportunityComponent
+    TabsOpportunityComponent,
+    OpportunityErrorDisplayComponent,
+    OpportunityErrorDisplayHelperComponent,
+    RelatedNoticeComponent,
+    RelatedNoticeServiceDirective
   ],
   exports: [
-    TabsOpportunityComponent
+    TabsOpportunityComponent,
+    OpportunityErrorDisplayComponent,
+    RelatedNoticeComponent,
+    RelatedNoticeServiceDirective,
   ],
   providers: [
-    OpportunityAuthGuard
+    OpportunityAuthGuard,
+    RelatedNoticeAutocompleteService,
   ],
 })
 export class OppComponentsModule {}

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import * as _ from 'lodash';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OppContactInfoViewModel } from '../../framework/data-model/sections/contact-information/contact-information.model';
+import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/notice-type-map.service";
 
 @Component({
   providers: [],
@@ -85,13 +86,15 @@ export class OpportunityContactInfoComponent implements OnInit {
     phone: null,
     fax: null,
   };
+  public noticeType: any;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private noticeTypeMapService: OppNoticeTypeMapService) {
     Object.freeze(this.pocConfig);
     Object.freeze(this.pocFormTemplate);
   }
 
   ngOnInit() {
+    this.noticeType = this.viewModel.oppHeaderInfoViewModel.opportunityType;
     this.oppContactInfoViewModel = this.viewModel.oppContactInfoViewModel;
 
     this.createForm();
@@ -256,5 +259,8 @@ export class OpportunityContactInfoComponent implements OnInit {
 
     console.error('Unknown point of contact name: ', name);
     return null;
+  }
+  private checkFieldRequired(field) {
+    return this.noticeTypeMapService.checkFieldRequired(this.noticeType, field);
   }
 }

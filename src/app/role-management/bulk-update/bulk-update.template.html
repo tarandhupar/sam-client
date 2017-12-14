@@ -16,7 +16,8 @@
   <div [ngSwitch]="currentTab">
     <!-- Filters Tab -->
     <ng-container *ngSwitchCase="'filters'">
-      <span>Use the following filters to identify which users you would like to update.</span>
+      <h2 class="h3 m_T-6x">Selections</h2>
+      <span>Please use the following filters to identify users you would like to update.</span>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Org -->
@@ -27,9 +28,9 @@
               [name]="'bulk-update-org-picker'"
               type="multiple"
               [(ngModel)]="orgs"
+              [defaultDept]="true"
               (ngModelChange)="onOrganizationChange($event)"
               [searchMessage]="errors.org"
-              [defaultDept]="true"
               class="clearfix"
             ></sam-agency-picker-v2>
           </div>
@@ -64,7 +65,8 @@
 
     <!-- User Select Tab -->
     <ng-container *ngSwitchCase="'users'">
-      <h2 class="h3">Filters</h2>
+      <h2 class="h3 m_T-6x">Selections</h2>
+      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
@@ -81,7 +83,7 @@
       </div>
 
       <h2 class="h3">Users</h2>
-      <p>The following users meet your filtering criteria. Select or deselect from this list to customize your selection.</p>
+      <p>Following users meet your selection criteria. Select or deselect users whose permission(s) of role or domain(s) you would like to update</p>
       <div class="clearfix">
         <div class="pull-left">
           <sam-toggle style="display:inline-block" [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'" [name]="select-all"></sam-toggle>
@@ -103,11 +105,12 @@
         </table>
       </div>
       <div class="text-center" *ngIf="areUsersLoading"><sam-spinner></sam-spinner></div>
+      <h2 class="h3">Choose Action</h2>
       <p class="m_T-4x">
         <sam-radio-button [(model)]="mode"
                           [name]="'mode'"
                           [errorMessage]="errors.mode"
-                          [label]="'What change do you want to make to these users?'"
+                          [label]="'Select the bulk action that you want to perform on the users selected'"
                           [options]="modeOptions"
         ></sam-radio-button>
       </p>
@@ -116,7 +119,8 @@
 
     <!-- Access Tab -->
     <ng-container *ngSwitchCase="'access'">
-      <h2 class="h3">Filters</h2>
+      <h2 class="h3 m_T-6x">Selections</h2>
+      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organization</b></div>
@@ -132,6 +136,7 @@
         </div>
       </div>
       <h2 class="h3">Users</h2>
+      <span>Following users are selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div style="max-height: 300px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
@@ -139,7 +144,8 @@
           </div>
         </div>
       </div>
-      <h2 class="h3 m_T-4x">Access</h2>
+      <h2 class="h3 m_T-4x">Role Changes</h2>
+      <span>Update role or domain or permissions for the users selected</span>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Updated Role -->
@@ -171,7 +177,7 @@
               <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
                 <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
                 <div *ngFor="let permission of func.permissions;let i=index" class="checkbox-group">
-                  <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+                  <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked" (ngModelChange)="onPermissionChange(tab, func, permission)">
                   <label [attr.for]="permission+'-cbx-'+i">{{permission.name}}</label>
                 </div>
                 <!--<div *ngFor="let permission of func.permissions">-->
@@ -192,8 +198,8 @@
 
     <!-- Confirmation Tab -->
     <ng-container *ngSwitchCase="'confirmation'">
-      <p>Confirm the information is correct</p>
-      <h2 class="h3">Filters</h2>
+      <h2 class="h3 m_T-6x">Selections</h2>
+      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organizations</b></div>
@@ -210,6 +216,7 @@
       </div>
 
       <h2 class="h3">Users</h2>
+      <span>Following users are selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div style="max-height: 300px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
@@ -219,20 +226,64 @@
       </div>
 
       <ng-container *ngIf="mode === 'update'">
-        <div class="usa-grid-full" *ngIf="isRoleUpdated()">
-          <div class="usa-width-one-fourth"><h4>Updated Role</h4></div>
-          <div class="usa-width-three-fourths">{{getUpdatedRoleName()}}</div>
+        <h2 class="h3">Role Changes</h2>
+        <span>Changes made as part of the update are shown below</span>
+        <div class="usa-grid-full m_T-4x">
+          <h3 class="h4">Role</h3>
+          <div class="usa-width-one-whole" *ngIf="isRoleUpdated();else noRoleChanges">
+
+            <div class="span-group">
+              <span style="display: inline-block"><i class="fa fa-plus m_R-4x updated-color status-icon"></i></span>
+              <span class="status-span">{{getUpdatedRoleName()}}</span>
+            </div>
+            <div class="span-group">
+              <span style="display: inline-block"><i class="fa fa-minus m_R-4x existing-color status-icon"></i></span>
+              <span class="status-span">{{getExistingRoleName()}}</span>
+              <!--<i class="fa fa-minus m_R-4x existing-color status-icon"></i><span>{{getExistingRoleName()}}</span></div>-->
+            </div>
+          </div>
+          <ng-template #noRoleChanges>
+            <span>No changes to the role</span>
+          </ng-template>
         </div>
-        <div class="usa-grid-full" *ngIf="isDomainUpdated()">
-          <div class="usa-width-one-fourth"><h4>Updated Domains</h4></div>
-          <div class="usa-width-three-fourths">{{getUpdatedDomainNames()}}</div>
+        <div class="usa-grid-full m_T-4x">
+          <h3 class="h4">Domains</h3>
+          <ng-container *ngIf="isDomainUpdated();else noDomainChanges">
+            <div class="span-group" *ngFor="let domain of updatedDomains">
+              <i class="fa fa-plus m_R-4x updated-color status-icon"></i>
+              <span class="status-span">{{domain.value}}</span>
+            </div>
+            <div class="span-group" *ngFor="let domain of existingDomains">
+              <i class="fa fa-minus m_R-4x existing-color status-icon"></i>
+              <span class="status-span">{{domain.value}}</span>
+            </div>
+          </ng-container>
+          <ng-template #noDomainChanges>
+            <span>No domains were added or removed</span>
+          </ng-template>
         </div>
-        <h4>Permissions</h4>
-        <div [ngStyle]="staticContentStyle" *ngFor="let domain of domainTabs; let i = index" [style.margin-top]="index !== 0 && '.5em'">
-          <h5>{{domain.name}}</h5>
-          <div class="sam-ui divider"></div>
-          <div *ngFor="let function of domain.functions">
-            <b>{{function.name}}</b>&nbsp;-&nbsp;<span>{{permissionsForFunction(function)}}</span>
+        <div class="usa-grid-full m_T-4x">
+          <h3 class="h4">Permissions</h3>
+          <div class="usa-width-one-whole m_T-3x m_B-2x" *ngFor="let domain of domainTabs; let i = index" [style.margin-top]="index !== 0 && '.5em'">
+            <h3 class="h4 p_B-1x" style="border-bottom: 1px solid lightgray;">{{domain.name}}</h3>
+            <ul class="column-wrappable">
+              <li class="m_B-5x" *ngFor="let function of domain.functions">
+                <span class="p_L-8x m_B-2x bold">{{function.name}}</span>
+                <ng-container *ngIf="isDomainUpdated();else onlyPermissionChange">
+                  <div class="span-group" *ngFor="let permission of permissionsForFunction(function)">
+                    <i class="fa m_R-3x status-icon fa-check default-color"></i>
+                    <span class="status-span">{{permission}}</span>
+                  </div>
+                </ng-container>
+                <ng-template #onlyPermissionChange>
+                  <div class="span-group" *ngFor="let permission of confirmPermissionsForFunction(function)">
+                    <i class="fa m_R-3x status-icon" [ngClass]="getPermissionStatusIconClass(permission)"></i>
+                    <span class="status-span">{{permission.name}}</span>
+                  </div>
+                </ng-template>
+
+              </li>
+            </ul>
           </div>
         </div>
       </ng-container>

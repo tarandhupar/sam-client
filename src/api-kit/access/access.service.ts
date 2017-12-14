@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
 import { UserAccessInterface, UserAccessWrapper } from './access.interface';
-import * as _ from 'lodash';
+import { merge } from 'lodash';
 import { IDomain } from "./domain.interface";
 import { IRole } from "./role.interface";
 import { IPermissions } from "./permissions.interface";
 import { IFunction } from "./function.interface";
 import { Cookie } from "ng2-cookies";
-import { Router } from "@angular/router";
-import {QueryEncoder} from "@angular/http";
+import { ActivatedRoute, Router } from "@angular/router";
+import { QueryEncoder } from "@angular/http";
 
 // In order to support '+' in query params...
 class EmailAddressQueryEncoder extends QueryEncoder {
@@ -32,10 +32,7 @@ export interface UserAccessFilterOptions {
 
 @Injectable()
 export class UserAccessService {
-
-  constructor(private apiService: WrapperService, private router: Router) {
-
-  }
+  constructor(private apiService: WrapperService, private router: Router, private route: ActivatedRoute) {}
 
   callApi(oApiParam: any, convertToJSON: boolean = true, queryEncoder: QueryEncoder = null) {
     this.addAuthHeader(oApiParam);
@@ -44,7 +41,14 @@ export class UserAccessService {
       .catch(res => {
         if (res && res.status === 401) {
           if (!this.router.url.match(/\/workspace/i)) {
-            this.router.navigate(['/signin'], { queryParams: { redirect: this.router.url }});
+            let options = {
+              queryParams: merge({
+                redirect: this.router.url.replace(/\?.+$/, '')
+              }, this.route.snapshot.queryParams)
+            };
+
+            this.router.navigate(['/signin'], options);
+            console.log(options);
           }
         }
         // This seems risky... I don't want to redirect unless I'm sure they are forbidden
@@ -83,7 +87,7 @@ export class UserAccessService {
     };
 
     if (filterOptions) {
-      apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
+      apiOptions.oParam = merge(apiOptions.oParam, filterOptions);
     }
 
     return this.callApi(apiOptions, toJson);
@@ -404,7 +408,7 @@ export class UserAccessService {
     };
 
     if (filterOptions) {
-      apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
+      apiOptions.oParam = merge(apiOptions.oParam, filterOptions);
     }
 
     return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
@@ -445,7 +449,7 @@ export class UserAccessService {
   }
 
   // used to determine whether the logged in user
-  checkAccess(pageName: string) {
+  checkAccess(pageName: string, userId:string = '', requestId:string = '') {
     let apiOptions: any = {
       name: 'rms',
       suffix: '/checkaccess/',
@@ -455,7 +459,12 @@ export class UserAccessService {
       }
     };
 
-    return this.callApi(apiOptions, false);
+    if(pageName.includes('users') && userId != null && userId !== '') {
+      apiOptions.oParam.userId = userId;
+    }
+    if(pageName.includes('requests') && requestId != null && requestId !== '') apiOptions.oParam.requestId = requestId;
+
+    return this.callApi(apiOptions, false, new EmailAddressQueryEncoder());
   }
 
   getDomainCategoriesAndRoles() {
@@ -492,6 +501,17 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
+  findUsers(queryParams = {}) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/users/',
+      method: 'GET',
+      oParam: queryParams
+    };
+
+    return this.callApi(apiOptions);
+  }
+
   getOpenRequests(userId: string){
     let apiOptions: any = {
       name: 'rms',
@@ -505,7 +525,8 @@ export class UserAccessService {
     return this.callApi(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
-  getUserAutoComplete(query : string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE){
+  getUserAutoComplete(query : string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE,
+                      isDefaultOrg: boolean = false, isAssignableOrg: boolean = false){
     let apiOptions: any = {
       name: 'rms',
       suffix: '/autocomplete/',
@@ -514,7 +535,11 @@ export class UserAccessService {
     };
 
     apiOptions.oParam.query = query;
-    apiOptions.oParam.gov = isGov;
+    apiOptions.oParam.isGov = isGov;
+    apiOptions.oParam.isDefaultOrg = isDefaultOrg;
+    apiOptions.oParam.isAssignedOrgs = isAssignableOrg;
+
+
     if(!isGov) {
       apiOptions.oParam.limit = +limit;
       apiOptions.oParam.page = page;

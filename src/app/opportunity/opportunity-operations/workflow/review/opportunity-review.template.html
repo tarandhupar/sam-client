@@ -28,6 +28,19 @@
     </div>
   </sidebar>
 
+  <ng-container message>
+    <sam-status-banner
+      [type]="'warning'"
+      [hidden]="!(checkForErrors() && reviewErrorList) || (opportunity?.status?.code == 'published' || opportunity?.status?.code == 'archived')">
+      <div leading-content>{{statusBannerLeadingText}}</div>
+      <div main-content>
+        <opp-error-display #errorDisplay
+                           (message)="updateBannerText($event)">
+        </opp-error-display>
+      </div>
+    </sam-status-banner>
+  </ng-container>
+
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
@@ -43,6 +56,10 @@
         </sam-alert>
       </div>
     </ng-container>
+
+    <inline-error-message
+      [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))">
+    </inline-error-message>
 
     <!-- Tabs -->
     <tabs-opp
@@ -61,7 +78,7 @@
         <div columns="9"></div>
         <div columns="3" class="right aligned">
         <a *ngIf="canEdit()"
-           (click)="onEditClick(['#header-information'])">
+           (click)="onEditClick(['#header'])">
           Edit Section
           <em class="fa fa-pencil" aria-hidden="true"></em>
         </a>
@@ -77,13 +94,35 @@
               <div class="item" [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
                 <div class="content">
                   <div class="header">
-                    <ng-container *ngIf="opportunity.data?.type && (originalOpportunity?.data?.type || opportunity.parentOpportunityId == null)">{{  numberLabel()}}</ng-container>
+                    <ng-container *ngIf="opportunity.data?.type && (originalOpportunity?.data?.type || opportunity.parentOpportunityId == null)">
+                      <inline-error-message
+                        [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('OPPORTUNITY_TYPE'))">
+                      </inline-error-message>
+                      {{  numberLabel()}}
+                    </ng-container>
                   </div>
                   <div class="description">
+                    <inline-error-message
+                      [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('PROCUREMENT_ID'))">
+                    </inline-error-message>
                     {{ opportunity.data?.solicitationNumber }}
                   </div>
                 </div>
               </div>
+
+              <div class="item"
+                   [attr.id]="generateID(opportunityFields.Related, 'header')"
+                   *ngIf="shouldBeDisplayed(opportunityFields.Related)">
+                <div class="content">
+                  <div class="header">
+                    Related Notice
+                  </div>
+                  <div class="description" *ngIf="relatedNoticeNumber">
+                    {{ relatedNoticeNumber }}
+                  </div>
+                </div>
+              </div>
+
               <div class="item" [attr.id]="generateID(opportunityFields.HierarchyName, 'header')" *ngIf="organization && shouldBeDisplayed(opportunityFields.HierarchyName)">
                 <div class="content">
                   <div class="header" [ngSwitch]='organization.type'>
@@ -92,6 +131,9 @@
                     <ng-container *ngSwitchCase="'OFFICE'">Contracting Office</ng-container>
                   </div>
                   <div class="description">
+                    <inline-error-message
+                      [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('CONTRACTING_OFFICE'))">
+                    </inline-error-message>
                     <ng-container *ngIf="organization.l2Name">
                       {{ organization.l2Name }}
                     </ng-container>
@@ -126,9 +168,21 @@
       <!-- Award Details -->
       <a name="#/opp/{{opportunity.id}}/review#award"></a>
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
-        <h2 class="sam-ui header">
-          Award Details
-          </h2>
+
+        <div grid class="middle aligned">
+          <div columns="9">
+            <h2 class="sam-ui header">Award Details</h2>
+          </div>
+          <div columns="3" class="right aligned">
+            <!-- Edit Link -->
+            <a *ngIf="canEdit()"
+               (click)="onEditClick(['#award'])">
+              Edit Section
+              <em class="fa fa-pencil" aria-hidden="true"></em>
+            </a>
+          </div>
+        </div>
+
         <div class="sam-ui segment">
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
@@ -186,7 +240,7 @@
           <div columns="3" class="right aligned">
             <!-- Edit Link -->
             <a *ngIf="canEdit()"
-               (click)="onEditClick(['#general-information'])">
+               (click)="onEditClick(['#general'])">
               Edit Section
               <em class="fa fa-pencil" aria-hidden="true"></em>
             </a>
@@ -226,6 +280,9 @@
                 [ngSwitch]="opportunity.data?.archive?.type">
               <!-- <sam-label *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></sam-label> -->
               <strong>Archiving Policy: </strong>
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('GENERAL'), getFieldId('ARCHIVE_POLICY'))">
+              </inline-error-message>
               <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
               <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
               <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
@@ -337,7 +394,7 @@
                   </span>
                   <ng-container *ngIf="opportunity.data?.placeOfPerformance?.city && opportunity.data?.placeOfPerformance?.state">,</ng-container>
                   <span [attr.id]="generateID(opportunityFields.POPState, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPState)">
-                    {{opportunity.data?.placeOfPerformance?.state}}
+                    {{getState(opportunity)}}
                   </span>
                   <span [attr.id]="generateID(opportunityFields.POPZip, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPZip)">
                     {{opportunity.data?.placeOfPerformance?.zip}}
@@ -408,7 +465,7 @@
           </div>
           <div columns="3" class="right aligned">
             <a *ngIf="canEdit()"
-              (click)="onEditClick(['#contact-information'])">
+              (click)="onEditClick(['#contact'])">
               Edit Section
               <em class="fa fa-pencil" aria-hidden="true"></em>
             </a>

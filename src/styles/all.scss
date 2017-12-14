@@ -201,6 +201,7 @@ $large: $current-large;
 @import 'components/role-management/role-managment';
 @import 'components/data-service/data-service';
 @import 'components/fh/fh';
+@import 'components/upload';
 
 /*-------------------
      Templates
@@ -386,6 +387,10 @@ select {
   background-color: #f1f1f1;
 }
 
+.h5{
+  font-size: 1.5rem;
+}
+
 .h4{
   font-size: 2rem;
   font-weight: 600;
@@ -393,6 +398,10 @@ select {
 
 .h3{
   font-size: 2.3rem;
+}
+
+.h2 {
+  font-size: 3rem;
 }
 
 .h1{

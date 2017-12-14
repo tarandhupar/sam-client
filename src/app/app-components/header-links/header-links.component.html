@@ -31,7 +31,7 @@
       <!-- Notifications -->
       <a (click)="notificationStartClick()" class="item notification-container" [ngClass]="{'active':showNotifications}">
         <i class="fa fa-bell-o fa-lg" aria-hidden="true"></i>
-        <!--<span class="notification-num">{{ notifications.length > notificationLimit ? "+" : notifications.length }}</span>-->
+        <span class="usa-sr-only">{{ notifications.length > notificationLimit ? "+" : notifications.length }}</span>
       </a>
       <!-- SAM Notifications -->
 

@@ -6,7 +6,7 @@ import { AutocompleteConfig } from "sam-ui-elements/src/ui-kit/types";
 import {
   FiscalYearTableConfig
 } from "../../../components/fiscal-year-table/fiscal-year-table.component";
-import { FALFormErrorService, FieldErrorList } from '../../fal-form-error.service';
+import { FALFormErrorService, FalFieldErrorList } from '../../fal-form-error.service';
 import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 
 @Component({
@@ -20,7 +20,7 @@ export class FALFormOverviewComponent implements OnInit {
   @Output() public showErrors = new EventEmitter();
 
   falOverviewForm: FormGroup;
-  public fpErrors: FieldErrorList;
+  public fpErrors: FalFieldErrorList;
 
   objectiveHint:string = `<p>Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.</p>
                           This section should be a brief, accurate statement of what the program is intended to accomplish or the goals toward which the program is directed. 

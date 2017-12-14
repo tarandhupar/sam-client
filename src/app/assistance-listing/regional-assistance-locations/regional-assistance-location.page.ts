@@ -46,7 +46,6 @@ export class FalRegionalAssistanceLocationsPage implements OnInit, OnDestroy {
   public userPermissions: any;
 
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
     { breadcrumb: 'Regional Assistance Locations'}
   ];

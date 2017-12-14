@@ -7,7 +7,19 @@
   [title]="titleMissingConfig.title"
   [cancelButtonLabel]="titleMissingConfig.closeText"
   [description]="titleMissingConfig.description"
-  (onClose)="onTitleModalClose()">
+  (onClose)="onTypeOrTitleModalClose()">
+</sam-modal>
+
+<sam-modal
+  #typeModal
+  [showClose]="true"
+  [closeOnOutsideClick]="true"
+  [closeOnEscape]="true"
+  [type]="'warning'"
+  [title]="typeMissingConfig.title"
+  [cancelButtonLabel]="typeMissingConfig.closeText"
+  [description]="typeMissingConfig.description"
+  (onClose)="onTypeOrTitleModalClose()">
 </sam-modal>
 
 <form-step
@@ -21,11 +33,22 @@
   [type]="noticeType"
   [typeLabel]="noticeTypeLabel"
   [numberOfSections]="sectionLength"
+  [statusBannerLeadingText]="leadingErrorMsg"
+  statusBannerType="warning"
   [hasErrors]="hasErrors"
   [tabsComponent]="tabsOppComponent"
   (action)="formActionHandler($event)"
   (sideNavOutput)="navHandler($event)"
   (breadcrumbOut)="breadCrumbClick($event)">
+
+  <div status-banner>
+    <opp-error-display *ngIf="!isAdd" #errorDisplay
+                       (message)="updateLeadingMsg($event)"
+                       (onNavigation)="checkNavigation($event)">
+    </opp-error-display>
+  </div>
+
+
   <div form-sections>
     <!-- Tabs -->
     <tabs-opp #tabsOppComponent
@@ -34,25 +57,40 @@
     </tabs-opp>
 
     <opp-form-header-information
-      *ngIf="isSection('header-information')"
-      [viewModel]="oppFormViewModel"></opp-form-header-information>
+      *ngIf="isSection('header')"
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </opp-form-header-information>
 
     <opp-form-award-details
       *ngIf="isSection('award')"
-      [viewModel]="oppFormViewModel"></opp-form-award-details>
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+      </opp-form-award-details>
 
     <opp-form-general-information
-      *ngIf="isSection('general-information')"
-      [viewModel]="oppFormViewModel"></opp-form-general-information>
+      *ngIf="isSection('general')"
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </opp-form-general-information>
 
-    <opp-form-classification *ngIf="isSection('classification')" [viewModel]="oppFormViewModel"></opp-form-classification>
+    <opp-form-classification
+      *ngIf="isSection('classification')"
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </opp-form-classification>
+
     <opp-form-description
       *ngIf="isSection('description')"
-      [viewModel]="oppFormViewModel"></opp-form-description>
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </opp-form-description>
 
     <opp-form-contact-info
-      *ngIf="isSection('contact-information')"
-      [viewModel]="oppFormViewModel"></opp-form-contact-info>
+      *ngIf="isSection('contact')"
+      [viewModel]="oppFormViewModel"
+      (showErrors)="showErrors($event)" #form>
+    </opp-form-contact-info>
   </div>
 
 </form-step>

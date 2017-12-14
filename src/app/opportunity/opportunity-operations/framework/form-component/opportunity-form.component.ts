@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewChildren} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertFooterService } from '../../../../app-components/alert-footer/alert-footer.service';
 import { OpportunityAuthGuard } from '../../../components/authgaurd/authguard.service';
@@ -6,6 +6,10 @@ import { OpportunitySectionNames } from '../data-model/opportunity-form-constant
 import { OpportunityFormViewModel } from '../data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFormService } from '../service/opportunity-form/opportunity-form.service';
 import { OpportunitySideNavService } from '../service/sidenav/opportunity-form-sidenav.service';
+import {OpportunityFormErrorService} from "../../opportunity-form-error.service";
+import {OpportunityErrorDisplayComponent} from "../../../components/opportunity-error-display/opportunity-error-display.component";
+import {FilterMultiArrayObjectPipe} from "../../../../app-pipes/filter-multi-array-object.pipe";
+import { OppNoticeTypeMapService } from '../service/notice-type-map/notice-type-map.service';
 
 @Component({
   moduleId: __filename,
@@ -16,7 +20,16 @@ import { OpportunitySideNavService } from '../service/sidenav/opportunity-form-s
 export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('titleModal') titleModal;
+  @ViewChild('typeModal') typeModal;
   @ViewChild('tabsOppComponent') tabsOppComponent;
+  sections: string[] = [
+    OpportunitySectionNames.HEADER,
+    OpportunitySectionNames.AWARD_DETAILS,
+    OpportunitySectionNames.GENERAL,
+    OpportunitySectionNames.CLASSIFICATION,
+    OpportunitySectionNames.DESCRIPTION,
+    OpportunitySectionNames.CONTACT
+  ];
   hasPermission: boolean = false;
   scrollToTop: boolean = true;
   isAdd: boolean = true;
@@ -29,18 +42,34 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   oppFormViewModel: OpportunityFormViewModel;
   currentSection: number;
   currentFragment: string;
-
+  leadingErrorMsg: string;
+  @ViewChild('errorDisplay') errorDisplayComponent: OpportunityErrorDisplayComponent;
+  @ViewChildren('form') form;
   private routeSubscribe;
   sidenavSelection;
   sidenavModel;
   sectionLength;
-
+  private pristineIconClass = 'pending';
+  private updatedIconClass = 'completed';
+  private invalidIconClass = 'error';
   titleMissingConfig = {
     title: 'No Title Provided',
     description: 'You must provide a title for this draft opportunity in order to proceed.',
     closeText: 'Close'
   };
-
+  typeMissingConfig = {
+    title: 'No Type Provided',
+    description: 'You must provide a type for this draft opportunity in order to proceed.',
+    closeText: 'Close'
+  };
+  sectionLabels: any = [
+    'Header Information',
+    'Award Details',
+    'General Information',
+    'Classification',
+    'Description',
+    'Contact Information'
+  ];
   successFooterAlertModel = {
     title: "Success",
     description: "",
@@ -53,9 +82,9 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     urlmock: true
   }, {breadcrumb: 'Opportunities', urlmock: false}];
 
-  constructor(private service: OpportunityFormService, private route: ActivatedRoute, private router: Router,
+  constructor(private errorService: OpportunityFormErrorService, private service: OpportunityFormService, private route: ActivatedRoute, private router: Router,
               private authGuard: OpportunityAuthGuard, private cdr: ChangeDetectorRef,
-              private alertFooterService: AlertFooterService, private sidenavService: OpportunitySideNavService) {
+              private alertFooterService: AlertFooterService, private sidenavService: OpportunitySideNavService, private noticeTypeMapService: OppNoticeTypeMapService) {
 
     // jump to top of page when changing sections
     this.routeSubscribe = this.router.events.subscribe(event => {
@@ -71,10 +100,10 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
+    this.sidenavService.refreshSideNav();
     this.sidenavModel = this.sidenavService.getSideNavModel();
     this.sectionLength = this.sidenavService.getSections().length;
     this.tabsComponent = this.tabsOppComponent;
-
     if (this.route.snapshot.params['id']) { //edit page
       this.route.data.subscribe((resolver: {opp: {data}}) => {
         this.notice = resolver.opp;
@@ -83,11 +112,18 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.isAdd = false;
         this.hasPermission = this.authGuard.checkPermissions('addoredit', this.notice);
         this.determineSection();
+        this.errorService.viewModel = this.oppFormViewModel;
+        this.errorService.validateAll();
+        this.tabsComponent = this.tabsOppComponent;
+        this.updateSidenavModel();
+        this.disableSideNavItem(this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType);
+        this.showErrors(this.errorService.applicableErrors);
       });
     } else { // add page settings
       this.oppFormViewModel = new OpportunityFormViewModel(null);
       this.hasPermission = this.authGuard.checkPermissions('addoredit', null);
       this.determineSection();
+      this.errorService.viewModel = this.oppFormViewModel;
     }
 
     this.getNoticeType();
@@ -95,6 +131,11 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnDestroy() {
     this.routeSubscribe.unsubscribe();
+  }
+
+  updateLeadingMsg(msg) {
+    this.leadingErrorMsg = msg;
+    this.cdr.detectChanges();
   }
 
   getNoticeType() {
@@ -131,6 +172,13 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
         this.currentFragment = fragment;
         let section = '';
 
+        if(this.checkSkipSection()) {
+          this.currentFragment = OpportunitySectionNames.GENERAL;
+          //
+          this.gotoNextSection();
+          this.navigateSection(this.currentSection);
+        }
+
         if (fragment) {
           for (let s of this.sidenavService.getSections()) {
             if (fragment.indexOf(s) != -1) {
@@ -149,7 +197,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
             }
           }, 1000);
         } else {
-          this.gotoSection(OpportunitySectionNames.HEADER_INFORMATION);
+          this.gotoSection(OpportunitySectionNames.HEADER);
           this.navigateSection(this.currentSection);
           this.sidenavSelection = this.sidenavService.getSectionLabel(0);
         }
@@ -205,6 +253,11 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
 
   private afterSaveAction(api) {
     this.oppFormViewModel.opportunityId = api._body;
+    if(!this.isAdd) {
+      let sectionName = this.sections[this.currentSection];
+      this.updateSidenavIcon(sectionName);
+      this.showErrors(this.errorService.applicableErrors);
+    }
   }
 
   onCancelClick() {
@@ -220,12 +273,28 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.currentSection + 1 < this.sectionLength) {
       ++this.currentSection;
     }
+    if(this.checkSkipSection()) {
+      this.gotoNextSection();
+    }
   }
 
   gotoPreviousSection() {
     if (this.currentSection - 1 >= 0) {
       --this.currentSection;
     }
+    if(this.checkSkipSection()) {
+      this.gotoPreviousSection();
+    }
+  }
+
+  private disableSideNavItem(type) {
+    let type = this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType;
+    this.noticeTypeMapService.toggleSectionsDisabledProperty(type);
+  }
+
+  checkSkipSection() {
+    let type = this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType;
+    return this.noticeTypeMapService.checkSectionIsDisabled(type, this.sections[this.currentSection]);
   }
 
   breadCrumbClick(event) {
@@ -238,7 +307,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     this.saveForm('SideNav', obj);
   }
 
-  onTitleModalClose() {
+  onTypeOrTitleModalClose() {
     this.sidenavSelection = "";
     this.cdr.detectChanges();
     this.sidenavSelection = this.sidenavService.getSectionLabel(0);
@@ -268,7 +337,10 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
   saveForm(actionType, navObj?: any) {
     if (!this.oppFormViewModel.title) {
       this.titleModal.openModal();
-    } else {
+    } else if (!this.oppFormViewModel.oppHeaderInfoViewModel.opportunityType){
+      this.typeModal.openModal();
+    }else {
+      this.oppFormViewModel.setSectionStatus(this.sections[this.currentSection], 'updated');
     this.service.saveContractOpportunity(this.oppFormViewModel.opportunityId, this.oppFormViewModel.dataAndAdditionalInfo)
       .subscribe(api => {
           this.afterSaveAction(api);
@@ -304,6 +376,55 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
       } else {
         this.scrollToTop = false;
         this.navigateSection(this.currentSection + 1);
+      }
+    }
+  }
+
+  public showErrors(errors) {
+    // todo: don't hardcode status names
+    let pristineSections = this.sections.filter(section => {
+      return this.oppFormViewModel.getSectionStatus(section) === 'pristine';
+    });
+
+    if (!this.isAdd) {
+      // todo: remove setTimeout
+      setTimeout(() => {this.errorDisplayComponent.formatErrors(errors, pristineSections);});
+    }
+
+    this.hasErrors = OpportunityFormErrorService.hasErrors(this.errorService.errors);
+    this.updateSidenavModel();
+  }
+
+  private updateSidenavIcon(sectionName: string) {
+    let hasError = OpportunityFormErrorService.hasErrors(OpportunityFormErrorService.findErrorById(this.errorService.errors, sectionName));
+    let status = this.oppFormViewModel.getSectionStatus(sectionName);
+    let iconClass = this.pristineIconClass;
+    if (status === 'updated') {
+      if (hasError) {
+        iconClass = this.invalidIconClass;
+      } else {
+        iconClass = this.updatedIconClass;
+      }
+    } else if (status === 'pristine') {
+      iconClass = this.pristineIconClass;
+    }
+
+    let filter = new FilterMultiArrayObjectPipe();
+    let section = filter.transform([this.sectionLabels[this.sections.indexOf(sectionName)]], this.sidenavModel.children, 'label', true, 'children')[0];
+    section['iconClass'] = iconClass;
+  }
+
+  private updateSidenavModel() {
+    for (let sectionName of this.sections) {
+      this.updateSidenavIcon(sectionName);
+    }
+  }
+
+  public checkNavigation(target) {
+    if (target.url === this.router.url) {
+      let field = document.getElementById(target.fieldId);
+      if (field) {
+        field.scrollIntoView();
       }
     }
   }

@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AutocompleteConfig } from 'sam-ui-elements/src/ui-kit/types';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
-import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
 
 @Component({
@@ -110,7 +110,7 @@ export class OpportunityClassificationComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder,
-              private oppFormService: OpportunityFormService, private noticeTypeFieldService: OppNoticeTypeFieldService) {
+              private oppFormService: OpportunityFormService, private noticeTypeMapService: OppNoticeTypeMapService) {
 
     Object.freeze(this.setAsideConfig);
     Object.freeze(this.classificationCodeConfig);
@@ -132,11 +132,11 @@ export class OpportunityClassificationComponent implements OnInit {
   }
 
   private checkFieldDisplayOption(field) {
-    return this.noticeTypeFieldService.checkFieldVisibility(this.noticeType, field);
+    return this.noticeTypeMapService.checkFieldVisibility(this.noticeType, field);
   }
 
   private checkFieldRequired(field) {
-    return this.noticeTypeFieldService.checkFieldRequired(this.noticeType, field);
+    return this.noticeTypeMapService.checkFieldRequired(this.noticeType, field);
   }
 
   private createForm(): void {
@@ -261,8 +261,6 @@ export class OpportunityClassificationComponent implements OnInit {
   private linkControlTo(control: AbstractControl, callback: (field: any) => void): void {
     let boundCallback = callback.bind(this);
     control.valueChanges
-      .debounceTime(10)
-      .distinctUntilChanged()
       .subscribe(value => {
       boundCallback(value);
     });

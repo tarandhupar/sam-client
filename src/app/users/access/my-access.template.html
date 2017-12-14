@@ -70,8 +70,8 @@
               <div *ngFor="let domain of roleOrg.domain">{{domain.val}}</div>
             </td>
             <td>
-              <i *ngIf="isRowEditable(roleOrg)" style="text-align: center; display: inline-block; margin-left: 0; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-pencil"></i>
-              <i *ngIf="isRowDeletable(roleOrg)" style="text-align: center; display: inline-block; margin-left: .5em; margin-right: 0; height: 30px; min-width: 30px;" class="fa fa-trash" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
+              <i *ngIf="isRowEditable(roleOrg)" class="fa fa-pencil first-action-icon"></i>
+              <i *ngIf="isRowDeletable(roleOrg)" class="fa fa-trash access-action-icon" (click)="onDeleteClick($event, roleOrg.organization.id, roleOrg.role.id, roleOrg.domain, $index)"></i>
             </td>
           </tr>
         </tbody>
@@ -87,7 +87,7 @@
       <div class="user-access">
         <div class="p_T-6x text-center" style="min-height: 300px;">
           <span *ngIf="isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canRequest" [routerLink]="['../request-access']" >Request Access</a></span>
-          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../assign-roles']" >Assign Role</a></span>
+          <span *ngIf="!isMyAccess"><em>No roles are assigned to user.</em>&nbsp;<a class="sam-ui primary small button" *ngIf="canGrant" [routerLink]="['../../assign-roles']" >Assign Role</a></span>
         </div>
       </div>
     </ng-container>

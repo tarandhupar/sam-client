@@ -7,7 +7,6 @@ export { DictionaryService } from './dictionary/dictionary.service';
 export { EntityService } from './entity/entity.service';
 export { ExclusionService } from './exclusion/exclusion.service';
 export { FHService } from './fh/fh.service';
-export { FHWrapperService } from './fh/fhWrapper.service';
 export { HistoricalIndexService } from './historical-index/historical-index.service';
 export { IAMService } from './iam/iam.service';
 export { OpportunityService } from './opportunity/opportunity.service';

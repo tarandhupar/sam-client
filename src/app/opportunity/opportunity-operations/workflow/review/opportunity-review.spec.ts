@@ -24,15 +24,31 @@ import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.se
 import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
 import {OpportunityFields} from "../../../opportunity.fields";
+import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
 
 let comp: OpportunityReviewComponent;
 let fixture: ComponentFixture<OpportunityReviewComponent>;
 
 let MockActivatedRoute = {
   params: Observable.of({id:"213ji321hu3jk123"}),
-  snapshot:{
-    _routeConfig:{}
+  snapshot: {
+    params: {
+      id: jasmine.createSpy('id')
+    },
+    url: {
+      path: jasmine.createSpy('path')
+    },
+    _routeConfig: {
+      path: jasmine.createSpy('path')
+    }
+  },
+  data: {
+    subscribe: jasmine.createSpy('subscribe')
+  },
+  fragment: {
+    subscribe: jasmine.createSpy('subscribe')
   }
+
 };
 
 let MockOpportunityService = {
@@ -308,6 +324,7 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
         MockBackend,
         AlertFooterService,
         SidenavHelper,
+        OpportunityFormErrorService,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -384,17 +401,10 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
 
     // Check intent to bundle
     let itbExpected = {};
-    itbExpected[OpportunityFields.AwardAmount] = false;
     itbExpected[OpportunityFields.AwardDate] = false;
-    itbExpected[OpportunityFields.LineItemNumber] = false;
-    itbExpected[OpportunityFields.AwardedName] = false;
-    itbExpected[OpportunityFields.AwardedDUNS] = false;
-    itbExpected[OpportunityFields.AwardedAddress] = false;
-    itbExpected[OpportunityFields.Contractor] = false;
-
-    itbExpected[OpportunityFields.StatutoryAuthority] = false;
     itbExpected[OpportunityFields.JustificationAuthority] = false;
     itbExpected[OpportunityFields.ModificationNumber] = false;
+    itbExpected[OpportunityFields.SpecialLegislation] = false;
 
     setDisplaySpy(mockAPIDataType('i'));
     for (let field in itbExpected) {

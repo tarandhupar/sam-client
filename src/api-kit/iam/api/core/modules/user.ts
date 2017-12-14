@@ -398,7 +398,7 @@ export const user = {
       return this.states.system;
     } else {
       const user = new User(User.getCache() || {});
-      return this.isSignedIn() && user.systemAccount ? true : false;
+      return this.isSignedIn() && (user.systemAccount || user.systemAdmin) ? true : false;
     }
   },
 

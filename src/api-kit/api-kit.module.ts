@@ -19,7 +19,6 @@ import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
 import { AACRequestService } from "./aac-request/aac-request.service";
-import { FHWrapperService } from "./fh/fhWrapper.service";
 import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import { UserSessionService } from "./user-session/user-session.service";
 import { FileExtractsService } from "./file-extracts/file-extracts.service";
@@ -49,6 +48,7 @@ import { SamNaicsServiceDirective } from './autoCompleteWrapper/naics-autocomple
 import { NaicsServiceImpl } from './autoCompleteWrapper/naics-autocomplete.service';
 import { FeatureToggleService } from "./feature-toggle/feature-toggle.service";
 import {EntityPickerAutoCompleteDirective} from "./autoCompleteWrapper/entity-picker-autocomplete/entityPickerAutoCompleteWrapper.service";
+import { S3Service } from './s3/s3.service';
 
 /**
  * A module for reusable SAM Web Design components
@@ -110,7 +110,6 @@ import {EntityPickerAutoCompleteDirective} from "./autoCompleteWrapper/entity-pi
     FeedbackService,
     //{ provide: FeedbackService, useClass: FeedbackServiceMock },
     AACRequestService,
-    FHWrapperService,
     UserSessionService,
     FileExtractsService,
     PeoplePickerService,
@@ -129,6 +128,7 @@ import {EntityPickerAutoCompleteDirective} from "./autoCompleteWrapper/entity-pi
     PscService,
     NaicsServiceImpl,
     NaicsService,
+    S3Service,
   ]
 })
 export class SamAPIKitModule { }

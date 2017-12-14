@@ -26,14 +26,14 @@ describe('opportunity-form.service.ts', () => {
 
   it('getSectionIndex returns section index based on fragment', () => {
     sideNavService = new OpportunitySideNavService();
-    let sectionIndex = sideNavService.getSectionIndex('header-information');
+    let sectionIndex = sideNavService.getSectionIndex('header');
     expect(sectionIndex).toEqual(0);
   });
 
   it('getFragment returns fragment based on index', () => {
     sideNavService = new OpportunitySideNavService();
     let fragment = sideNavService.getFragment(0);
-    expect(fragment).toEqual('header-information');
+    expect(fragment).toEqual('header');
   });
 
   it('getSideNavModel returns defined sidenav model', () => {
@@ -41,6 +41,20 @@ describe('opportunity-form.service.ts', () => {
     let sidenavModel = sideNavService.getSideNavModel();
     expect(sidenavModel.children.length).toBeGreaterThan(0);
     expect(sidenavModel.label).toBeDefined();
+  });
+
+  it('disableSideNavItem disables sidenavitem based on fragment', () => {
+    sideNavService = new OpportunitySideNavService();
+    sideNavService.disableSideNavItem('classification');
+    let model = sideNavService.getSideNavModel();
+    expect(model.children[3].disabled).toEqual(true);
+  });
+
+  it('enableSideNavItem enables sidenavitem based on fragment', () => {
+    sideNavService = new OpportunitySideNavService();
+    sideNavService.enableSideNavItem('classification');
+    let model = sideNavService.getSideNavModel();
+    expect(model.children[3].disabled).toEqual(false);
   });
 
 });

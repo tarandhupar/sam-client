@@ -62,7 +62,7 @@
              [closeOnEscape]="true"
              [type]="'info'"
              [title]="'Revise -  Assistance Listing'"
-             [description]="'A draft revision for this published program will be utilized for editing. Please click ok to edit a draft of this AL.'"
+             [description]="'A draft revision for this published program will be utilized for editing. Please click ok to edit a draft of this Assistance Listing.'"
              [submitButtonLabel]="'Ok'"
              [cancelButtonLabel]="'Cancel'"
              (onSubmit)="onEditModalSubmit($event)">
@@ -91,6 +91,22 @@
       </sam-alert>
     </ng-container>
 
+  </ng-container>
+
+  <inline-error-message
+    [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))">
+  </inline-error-message>
+
+  <!-- Pending Request Button -->
+  <ng-container *ngIf="programRequest">
+    <a class="sam-ui primary button right labeled icon"
+       [routerLink]="['/fal/change-request/', programRequest.id, 'action']">
+      <em aria-hidden="true" class="icon fa fa-arrow-circle-right"></em>
+      {{ programRequest.requestType?.value | requestLabel }}
+    </a>
+  </ng-container>
+
+  <ng-container>
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
         <sam-alert
@@ -115,19 +131,11 @@
       </div>
     </ng-container>
 
-  </ng-container>
-
-  <inline-error-message
-    [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))">
-  </inline-error-message>
-
-  <!-- Pending Request Button -->
-  <ng-container *ngIf="programRequest">
-    <a class="sam-ui primary button right labeled icon"
-       [routerLink]="['/fal/change-request/', programRequest.id, 'action']">
-      <em aria-hidden="true" class="icon fa fa-arrow-circle-right"></em>
-      {{ programRequest.requestType?.value | requestLabel }}
-    </a>
+    <check-active-assistance-administrator
+      *ngIf="federalHierarchy && program._links && program._links['program:notify:coordinator'] &&
+      program.status && program.status.code && (program.status.code === 'draft' || program.status.code === 'draft_review' || program.status.code === 'rejected')"
+      [organization]="federalHierarchy">
+    </check-active-assistance-administrator>
   </ng-container>
 
   <!-- Tabs -->

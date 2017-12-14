@@ -13,7 +13,8 @@ export type WatchlistType = {
   recordId?: string,
   uri? :string,
   myFeed? :string,
-  title? :string
+  title? :string,
+  interestedVendor ?: boolean
 } 
 
 @Injectable()

@@ -21,13 +21,13 @@ export interface CWSApplication {
   uploadAto: string;                      // PDF Upload
   authorizationConfirmation: boolean;
   authorizingOfficialName: string;
-  authorizationDate: Date|string;
-  submittedDate?: Date|string;
-  lastUpdate?: Date|string;
+  authorizationDate: Date|string|number;
+  lastUpdate?: Date|string|number;
   submittedBy?: string;
+  submittedDate?: Date|string|number;
   securityApprover: string;
-  securityApproved_Date: Date|string;
-  dateOfRejection: Date|string;
+  securityApproved_Date: Date|string|number;
+  dateOfRejection: Date|string|number;
   rejectedBy: string;
   rejectionReason: string;
   applicationStatus?: string;

@@ -15,10 +15,10 @@
       </button>
       <button *ngIf="selectConfig.options.length === 1" class="pull-right" (click)="createOrg()">Create {{selectConfig.options[0].label}}</button>
     </div>
-    <h2 align="center">Search Federal Hierarchy Administrative Pages</h2>
+    <h1 class="h2" align="center">Search Federal Hierarchy Administrative Pages</h1>
     <div class="usa-width-one-whole">
       <div class="usa-offset-one-third usa-width-one-third relative">
-        <input class="usa-offset-one-whole" (keyup.enter)="newFhTextSearch()" [(ngModel)]="searchText">
+        <input aria-label="search federal hierarchy" class="usa-offset-one-whole" (keyup.enter)="newFhTextSearch()" [(ngModel)]="searchText">
         <i class="fa fa-search" (click)="newFhTextSearch()"></i>
       </div>
     </div>

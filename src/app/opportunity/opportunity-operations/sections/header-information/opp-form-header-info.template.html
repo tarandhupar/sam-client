@@ -18,6 +18,13 @@
   </div>
 
   <div class="sam-ui segment">
+    <opp-related-notice
+      [baseType]="oppHeaderInfoForm.get('opportunityType').value"
+      [formControl]="oppHeaderInfoForm.get('relatedNotice')">
+    </opp-related-notice>
+  </div>
+
+  <div class="sam-ui segment">
     <sam-text
       [attr.id]="titleConfig.id"
       [control]="oppHeaderInfoForm.get('title')"

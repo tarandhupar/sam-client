@@ -9,7 +9,7 @@ describe('Award Details Section View Model', () => {
 
   it('component is initialized', () => {
     let _data = {
-      number: '568'
+      award : { number: '568' }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     expect(dataModel).toBeDefined();
@@ -18,7 +18,9 @@ describe('Award Details Section View Model', () => {
 
   it('get awardNumber returns saved number', () => {
     let _data = {
-      number: '568'
+      award : {
+        number: '568'
+      }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     expect(dataModel.awardNumber).toEqual("568");
@@ -26,7 +28,7 @@ describe('Award Details Section View Model', () => {
 
   it('set awardNumber returns new number', () => {
     let _data = {
-      number: '123'
+      award : { number: '123' }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     dataModel.awardNumber = "678";
@@ -35,7 +37,9 @@ describe('Award Details Section View Model', () => {
 
   it('get amount returns saved dollar amount value', () => {
     let _data = {
-      amount: 568
+      award : {
+        amount: 568
+      }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     expect(dataModel.amount).toEqual(568);
@@ -43,7 +47,7 @@ describe('Award Details Section View Model', () => {
 
   it('set amount returns new dollar amount value', () => {
     let _data = {
-      amount: 123
+      award : { amount: 123 }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     dataModel.amount = 678;
@@ -52,7 +56,9 @@ describe('Award Details Section View Model', () => {
 
   it('get lineItemNumber returns saved line item number', () => {
     let _data = {
-      lineItemNumber: 568
+      award : {
+        lineItemNumber: 568
+      }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     expect(dataModel.lineItemNumber).toEqual(568);
@@ -60,7 +66,7 @@ describe('Award Details Section View Model', () => {
 
   it('set lineItemNumber returns new line item number', () => {
     let _data = {
-      lineItemNumber: '123'
+      award : { lineItemNumber: '123' }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     dataModel.lineItemNumber = '678';
@@ -69,7 +75,9 @@ describe('Award Details Section View Model', () => {
 
   it('get deliveryOrderNumber returns saved order number', () => {
     let _data = {
-      deliveryOrderNumber: '568'
+      award : {
+        deliveryOrderNumber: '568'
+      }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     expect(dataModel.deliveryOrderNumber).toEqual("568");
@@ -77,7 +85,7 @@ describe('Award Details Section View Model', () => {
 
   it('set deliveryOrderNumber returns new order number', () => {
     let _data = {
-      deliveryOrderNumber: '123'
+      award : { deliveryOrderNumber: '123' }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     dataModel.deliveryOrderNumber = "678";
@@ -86,8 +94,10 @@ describe('Award Details Section View Model', () => {
 
   it('get awardeeDuns returns saved duns number', () => {
     let _data = {
-      awardee : {
-        duns: '123'
+      award : {
+        awardee : {
+          duns: '123'
+        }
       }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
@@ -96,8 +106,10 @@ describe('Award Details Section View Model', () => {
 
   it('set awardeeDuns returns new duns number', () => {
     let _data = {
-      awardee : {
-        duns: '123'
+      award : {
+        awardee: {
+          duns: '123'
+        }
       }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
@@ -107,8 +119,10 @@ describe('Award Details Section View Model', () => {
 
   it('get awardeeName returns saved name', () => {
     let _data = {
-      awardee : {
-        name: 'test'
+      award : {
+        awardee: {
+          name: 'test'
+        }
       }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
@@ -117,12 +131,35 @@ describe('Award Details Section View Model', () => {
 
   it('set awardeeName returns new name', () => {
     let _data = {
-      awardee : {
-        name: 'test'
+      award : {
+        awardee: {
+          name: 'test'
+        }
       }
     };
     dataModel = new OppAwardDetailsViewModel(_data);
     dataModel.awardeeName = "test2";
     expect(dataModel.awardeeName).toEqual("test2");
+  });
+
+  it('get awardDate returns saved Date', () => {
+    let _data = {
+      award : {
+        date: '12-10-2009'
+      }
+    };
+    dataModel = new OppAwardDetailsViewModel(_data);
+    expect(dataModel.awardDate).toEqual("12-10-2009");
+  });
+
+  it('set awardDate returns new Date', () => {
+    let _data = {
+      award : {
+        date: '12-10-2009'
+      }
+    };
+    dataModel = new OppAwardDetailsViewModel(_data);
+    dataModel.awardDate = "12-10-2009";
+    expect(dataModel.awardDate).toEqual("12-10-2009");
   });
 });

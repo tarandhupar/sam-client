@@ -1,16 +1,29 @@
 import {Injectable} from "@angular/core";
 import {
-  Http ,
-  Headers ,
-  RequestOptions ,
-  Request ,
-  RequestMethod ,
-  Response ,
-  URLSearchParams ,
-  QueryEncoder
-} from "@angular/http";
+  Http,
+  Headers,
+  RequestOptions,
+  Request,
+  RequestMethod,
+  Response,
+  URLSearchParams,
+  QueryEncoder,
+  RequestOptionsArgs,
+  ResponseContentType
+} from '@angular/http';
 import "rxjs/add/operator/map";
 import {Observable} from "rxjs";
+
+export interface ApiParameters {
+  name: string;
+  method?: string; // defaults to 'GET', possible options: 'POST'|'post'|'PUT'|'put'|'PATCH'|'patch'|'DELETE'|'delete'|'GET'|'get',
+  headers?: {[key:string]: string };
+  oParam?: {[key:string]: string };
+  body?: any;
+  prefix?: string;
+  suffix?: string;
+  responseType?: ResponseContentType;
+}
 
 @Injectable()
 export class WrapperService {
@@ -52,11 +65,11 @@ export class WrapperService {
         'fileExtracts':'/fileextractservices/v1/api/listfiles',
         'userPicker':'/picker/v2/users',
         'iam': '/iam/auth/v4',
-		'watchlist':'/watchlistservice/v1/api/recorddetail',
+		    'watchlist':'/watchlistservice/v1/api/recorddetail',
         'subscriptions':'/watchlistservice/v1/api/subscriptions',
         'myFeeds':'/feeds/v1',
         'gettoggeServices':'/feature/v1/',
-        'helpContent':'/content/v1',
+        'cms':'/content/v1',
     };
 
   constructor(private _http: Http){}
@@ -64,16 +77,9 @@ export class WrapperService {
   /**
     * common function to perform an API CALL
     *
-    * @param Object oApiParam {
-    *          name: '',
-    *          suffix: '',
-    *          oParam: {},
-    *          body: {},
-    *          method: '' (GET|POST|PUT...)
-    *      }
     * @returns Observable
     */
-  call(oApiParam: any, convertToJSON: boolean = true, queryEncoder: QueryEncoder = null) {
+  call(oApiParam: ApiParameters, convertToJSON: boolean = true, queryEncoder: QueryEncoder = null) {
     let method: string = oApiParam.method;
     let oHeader = new Headers({});
     let oURLSearchParams = new URLSearchParams();
@@ -97,8 +103,8 @@ export class WrapperService {
     }
 
     var baseUrl = API_UMBRELLA_URL;
-    //TODO: Implement Post DATA to request
-    let jsonOption = {
+
+    let jsonOption: RequestOptionsArgs = {
         "search": oURLSearchParams,
         "method": RequestMethod.Get,
         "headers": oHeader,
@@ -130,9 +136,6 @@ export class WrapperService {
 
     return this._http
       .request(oRequest)
-      .catch(error => {
-        return Observable.throw(error);
-      })
       .map((res: Response) => { return (convertToJSON) ? res.json() : res; } );
   }
 }

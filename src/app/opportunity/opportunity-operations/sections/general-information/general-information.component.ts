@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
-import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
+import {OpportunityFieldNames, OpportunitySectionNames} from '../../framework/data-model/opportunity-form-constants';
+import {OpportunityFormErrorService} from "../../opportunity-form-error.service";
 
 @Component({
   selector: 'opp-form-general-information',
@@ -11,6 +12,7 @@ import { OpportunityFieldNames } from '../../framework/data-model/opportunity-fo
 
 export class OpportunityGeneralInfoComponent implements OnInit {
   @Input() public viewModel: OpportunityFormViewModel;
+  @Output() public showErrors = new EventEmitter();
   public generalInfoForm: FormGroup;
   public oppGeneralInfoViewModel: any;
 
@@ -50,7 +52,9 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private errorService: OpportunityFormErrorService,
+              private cdr: ChangeDetectorRef,
+              private formBuilder: FormBuilder,
               private oppFormService: OpportunityFormService) {
     Object.freeze(this.archiveTypeConfig);
     Object.freeze(this.archiveDateConfig);
@@ -78,6 +82,16 @@ export class OpportunityGeneralInfoComponent implements OnInit {
       vendorsCDIvl: null,
       vendorsViewIvl: null
     });
+    this.cdr.detectChanges();
+    if (this.viewModel.getSectionStatus(OpportunitySectionNames.GENERAL) === 'updated') {
+      this.generalInfoForm.markAsPristine({onlySelf: true});
+      this.generalInfoForm.get('archiveType').markAsDirty({onlySelf: true});
+      this.generalInfoForm.get('archiveType').updateValueAndValidity();
+      this.generalInfoForm.get('vendorsCDIvl').markAsDirty({onlySelf: true});
+      this.generalInfoForm.get('vendorsCDIvl').updateValueAndValidity();
+      this.generalInfoForm.get('vendorsViewIvl').markAsDirty({onlySelf: true});
+      this.generalInfoForm.get('vendorsViewIvl').updateValueAndValidity();
+    }
   }
 
   loadArchiveTypeOptions() {
@@ -129,11 +143,12 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     }, {
       emitEvent: false
     });
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
 
   subscribeToChanges() {
     this.linkControlTo(this.generalInfoForm.get('archiveType'), this.saveArchiveType);
-    this.linkControlTo(this.generalInfoForm.get('archiveDate'), this.saveArchiveDate);
     this.linkControlTo(this.generalInfoForm.get('vendorsCDIvl'), this.saveVendorsCDIvl);
     this.linkControlTo(this.generalInfoForm.get('vendorsViewIvl'), this.saveVendorsViewIvl);
   }
@@ -151,17 +166,63 @@ export class OpportunityGeneralInfoComponent implements OnInit {
 
   private saveArchiveType(type) {
     this.oppGeneralInfoViewModel.archiveType = type;
-  }
-
-  private saveArchiveDate(archiveDate) {
-    this.oppGeneralInfoViewModel.archiveDate = archiveDate;
+    this.cdr.detectChanges();
+    this.updateArchiveTypeError();
   }
 
   private saveVendorsCDIvl(vendorOption) {
     this.oppGeneralInfoViewModel.vendorCDIvl = vendorOption;
+    this.cdr.detectChanges();
+    this.updateIvlAddError();
   }
 
   private saveVendorsViewIvl(vendorOption) {
     this.oppGeneralInfoViewModel.vendorViewIvl = vendorOption;
+    this.cdr.detectChanges();
+    this.updateIvlViewError();
+  }
+  public updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateArchiveTypeError();
+    this.updateIvlAddError();
+    this.updateIvlViewError();
+  }
+  private updateArchiveTypeError() {
+    this.generalInfoForm.get('archiveType').clearValidators();
+    this.generalInfoForm.get('archiveType').setValidators((control) => {
+      return control.errors
+    });
+    this.generalInfoForm.get('archiveType').setErrors(this.errorService.validateArchiveType().errors);
+    this.markAndUpdateFieldStat('archiveType');
+    this.emitErrorEvent();
+  }
+
+
+  private updateIvlAddError() {
+    this.generalInfoForm.get('vendorsCDIvl').clearValidators();
+    this.generalInfoForm.get('vendorsCDIvl').setValidators((control) => {
+      return control.errors
+    });
+    this.generalInfoForm.get('vendorsCDIvl').setErrors(this.errorService.validateIvlAdd().errors);
+    this.markAndUpdateFieldStat('vendorsCDIvl');
+    this.emitErrorEvent();
+  }
+
+  private updateIvlViewError() {
+    this.generalInfoForm.get('vendorsViewIvl').clearValidators();
+    this.generalInfoForm.get('vendorsViewIvl').setValidators((control) => {
+      return control.errors
+    });
+    this.generalInfoForm.get('vendorsViewIvl').setErrors(this.errorService.validateIvlView().errors);
+    this.markAndUpdateFieldStat('vendorsViewIvl');
+    this.emitErrorEvent();
+  }
+
+  private markAndUpdateFieldStat(fieldName) {
+    this.generalInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
+  }
+
+  private emitErrorEvent() {
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 }

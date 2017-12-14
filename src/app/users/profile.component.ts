@@ -27,11 +27,11 @@ export class ProfileComponent {
     },
 
     nav: [
-      { text: 'Personal Details',      routerLink: ['details'],       routerLinkActive: 'usa-current' },
-      { text: 'Reset Password',        routerLink: ['password'],      routerLinkActive: 'usa-current' },
-      { text: 'My Roles',              routerLink: ['access'],        routerLinkActive: 'usa-current' },
-      { text: 'Role Migrations',       routerLink: ['migrations'],    routerLinkActive: 'usa-current' },
-      { text: 'Manage Subscriptions',  routerLink: ['subscriptions'], routerLinkActive: 'usa-current' },
+      { text: 'Account Details',  routerLink: ['details'],       routerLinkActive: 'usa-current' },
+      { text: 'Reset Password',   routerLink: ['password'],      routerLinkActive: 'usa-current' },
+      { text: 'My Roles',         routerLink: ['access'],        routerLinkActive: 'usa-current' },
+      { text: 'Role Migrations',  routerLink: ['migrations'],    routerLinkActive: 'usa-current' },
+      { text: 'Following',        routerLink: ['subscriptions'], routerLinkActive: 'usa-current' },
     ],
   };
 
@@ -55,7 +55,7 @@ export class ProfileComponent {
         if(!isEnabled) {
           let i;
           for(i = this.store.nav.length - 1; i >= 0; i--) {
-            if(this.store.nav[i].text == "Manage Subscriptions") {
+            if(this.store.nav[i].text == "Following") {
               this.store.nav.splice(i, 1); break;
             }
           }
@@ -101,7 +101,7 @@ export class ProfileComponent {
       data['title'] = user.fullname;
 
       if(data['breadcrumbs'] && data['breadcrumbs'].length) {
-        data['breadcrumbs'][0]['breadcrumb'] = `${user.fullname}'s Roles`;
+        data['breadcrumbs'][0]['breadcrumb'] = `${user.fullname}`;
       }
     }
 
@@ -112,7 +112,15 @@ export class ProfileComponent {
     if(data['breadcrumbs'] === false) {
       this.breadcrumbs = [];
     } else {
-      this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
+      if(data['isMyAccess']){
+        this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
+      }else{
+        this.breadcrumbs = [
+          { breadcrumb: 'Workspace', url: '/workspace' },
+          { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
+        ];
+        this.breadcrumbs =  this.breadcrumbs.concat(data['breadcrumbs']);
+      }
     }
 
     data['alert'] = data['alert'] || {};

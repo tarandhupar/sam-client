@@ -5,7 +5,8 @@ import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
 import { OpportunityClassificationComponent } from "./opp-form-classification.component";
 import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
+import { OpportunitySideNavService } from '../../framework/service/sidenav/opportunity-form-sidenav.service';
 
 
 describe('Opp Classification Form', () => {
@@ -20,7 +21,8 @@ describe('Opp Classification Form', () => {
       ],
       providers: [
         { provide: OpportunityFormService, useValue: MockFormService },
-        OppNoticeTypeFieldService
+        OppNoticeTypeMapService,
+        OpportunitySideNavService
       ],
       imports: [
         SamUIKitModule,

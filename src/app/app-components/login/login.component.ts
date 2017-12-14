@@ -91,7 +91,7 @@ export class SamLoginComponent {
       this.store.redirect.params.queryParams['redirect'] = this.router.url;
     }
 
-    if(this.api.iam.user.isSignedIn() && ENV !== 'test') {
+    if(this.api.iam.user.isSignedIn() && ENV !== 'test' && !this.api.iam.getParam('debug')) {
     	this.router.navigate([this.store.redirect.route], this.store.redirect.params);
     }
 

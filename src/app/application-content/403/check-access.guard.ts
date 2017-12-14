@@ -34,10 +34,13 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
 
   canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
     let pageName = route.data['pageName'];
+    let userId = route.params['id'];
+    let requestId = route.params['requestId'];
+
     if (!pageName) {
       throw new Error('Must define a pageName data property for this route');
     }
-    return this.accessService.checkAccess(pageName)
+    return this.accessService.checkAccess(pageName, userId, requestId)
       .map(res => {
         adminLevel.showAllDepartments = false;
         if (res.status >= 200 && res.status < 300) {
@@ -80,6 +83,9 @@ export class CheckAccessGuard implements CanActivateChild, CanActivate {
           return Observable.of(false);
         } else if (status === 403) {
           this.router.navigate(['/403']);
+          return Observable.of(false);
+        } else if (status === 404) {
+          this.router.navigate(['/404']);
           return Observable.of(false);
         } else {
           this.alertFooter.registerFooterAlert({

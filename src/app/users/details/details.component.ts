@@ -29,17 +29,7 @@ export class DetailsComponent {
     iam: null
   };
 
-  private configs = {
-    carrier: {
-      keyValueConfig: {
-        keyProperty: 'key',
-        valueProperty: 'value'
-      }
-    }
-  };
-
   private store = {
-    title: 'Personal Details',
     labels: {
       personalPhone: {
         label: 'Mobile Phone',

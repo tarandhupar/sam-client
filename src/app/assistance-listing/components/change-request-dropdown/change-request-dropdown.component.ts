@@ -66,7 +66,7 @@ export class FALChangeRequestDropdownComponent implements OnChanges, OnInit {
         permissionCode: "INITIATE_CANCEL_AGENCY_CR",
         value: "agency_request",
         label: "Agency Change",
-        index: 3
+        index: 5
       },
       {
         permissionCode: "INITIATE_CANCEL_UNARCHIVE_CR",
@@ -78,7 +78,7 @@ export class FALChangeRequestDropdownComponent implements OnChanges, OnInit {
         permissionCode: "INITIATE_CANCEL_NUMBER_CR",
         value: "program_number_request",
         label: "Number Change",
-        index: 5
+        index: 3
       }
     ],
     action: {

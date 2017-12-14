@@ -3,13 +3,14 @@ import {Observable} from 'rxjs';
 import {Injectable, Input} from '@angular/core';
 import {OpportunityFormViewModel} from '../../opportunity-operations/framework/data-model/opportunity-form/opportunity-form.model';
 import {OpportunityFormService} from '../../opportunity-operations/framework/service/opportunity-form/opportunity-form.service';
+import { OppNoticeTypeMapService } from '../../opportunity-operations/framework/service/notice-type-map/notice-type-map.service';
 
 @Injectable()
 export class OpportunityAuthGuard implements CanActivate {
   @Input() viewModel: OpportunityFormViewModel;
   _oppLinks: any; //store getPermissions() permissions
 
-  constructor(private router: Router, private opportunityFormService: OpportunityFormService) {
+  constructor(private router: Router, private opportunityFormService: OpportunityFormService, private noticeTypeMapService:OppNoticeTypeMapService) {
   }
 
   canActivate() {
@@ -44,18 +45,22 @@ export class OpportunityAuthGuard implements CanActivate {
     this.viewModel = new OpportunityFormViewModel(opportunity);
     let isRestricted: boolean = true;
     let restrictedUrl: string = 'accessrestricted';
+    let fragment = '';
 
     switch (screen) {
       case 'addoredit':
         let url;
+        fragment = this.router.url.split('#')[1];
+
         //add case
         if (this.router.url.indexOf('/add') >= 0) {
           if (this._oppLinks != null && this._oppLinks._links != null && this._oppLinks._links['opportunity:create'] != null && !this.viewModel.title) {
             isRestricted = false;
-            url = '/opp/add'.concat('#header-information');
+            url = '/opp/add'.concat('#header');
             this.router.navigateByUrl(url);
           }
-        } else { //edit
+        }
+        else { //edit
           if (opportunity._links != null && opportunity._links['opportunity:edit'] != null && this.viewModel.title != null) {
             if (this.viewModel.status.code == 'draft') {
               isRestricted = false;

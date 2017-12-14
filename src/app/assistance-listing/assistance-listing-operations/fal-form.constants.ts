@@ -150,3 +150,9 @@ export const FALSectionFieldsBiMap = (function() {
     fieldSections
   };
 })();
+
+export class FALIAMUserRoles {
+  static readonly ASSISTANCE_ADMINISTRATOR = 'Assistance Administrator';
+}
+
+export const FALIAMDomain = "Assistance Listing";

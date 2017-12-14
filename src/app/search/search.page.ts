@@ -15,7 +15,6 @@ import {SavedSearchService} from "../../api-kit/search/saved-search.service";
 
 // Animation
 import { trigger, state, style, animate, transition } from '@angular/core';
-import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 @Component({
   moduleId: __filename,
@@ -77,7 +76,6 @@ export class SearchPage implements OnInit {
   dateFilterIndex = 0;
   dateRadSelection = "date";
   builtDateModel;
-  feedback: any;
 
   // date filter configs
   disableCfdaFilter = true;
@@ -617,8 +615,7 @@ export class SearchPage implements OnInit {
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
               private changeDetectorRef: ChangeDetectorRef,
-              private dictionaryService: DictionaryService,
-              private formService: FeedbackFormService) {
+              private dictionaryService: DictionaryService) {
   }
 
   ngOnInit() {
@@ -637,7 +634,6 @@ export class SearchPage implements OnInit {
       })
     }
 
-    this.feedback = this.formService.componentInstance;
 
     if (window.location.pathname.localeCompare("/search/fal/regionalAssistanceLocations") === 0) {
       this.showRegionalOffices = true;

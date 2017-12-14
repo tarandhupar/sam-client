@@ -63,9 +63,9 @@ export class FilterParamValue implements PipeTransform {
         break;
       case "noCBA": return "No";
         break;
-      case "yesUnbasedCBA": return "Yes";
+      case "yesUnbasedCBA": return "Yes, not based on CBA";
         break;
-      case "yesBasedCBA": return "Yes";
+      case "yesBasedCBA": return "Yes, based on CBA";
         break;
 
 

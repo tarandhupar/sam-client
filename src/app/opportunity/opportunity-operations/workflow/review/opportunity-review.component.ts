@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Response} from '@angular/http';
@@ -7,7 +7,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
-import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
+import { OpportunityTypeLabelPipe } from '../../../pipes/opportunity-type-label.pipe';
 import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
 import {forEach} from "@angular/router/src/utils/collection";
 import { Subscription } from "rxjs/Subscription";
@@ -22,7 +22,11 @@ import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
 import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
 import {MenuItem} from "sam-ui-elements/src/ui-kit/components/sidenav";
 import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
-import {OpportunitySectionNames} from "../../framework/data-model/opportunity-form-constants";
+import {OpportunitySectionNames, OpportunityFieldNames} from "../../framework/data-model/opportunity-form-constants";
+import {OppFieldError, OppFieldErrorList, OpportunityFormErrorService} from "../../opportunity-form-error.service";
+import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import {OpportunityErrorDisplayComponent} from "../../../components/opportunity-error-display/opportunity-error-display.component";
+import {FALFormErrorService} from "../../../../assistance-listing/assistance-listing-operations/fal-form-error.service";
 
 @Component({
   moduleId: __filename,
@@ -83,8 +87,12 @@ export class OpportunityReviewComponent implements OnInit {
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
   packagesWarning : any = false;
+  @Input() viewModel: OpportunityFormViewModel;
+  @ViewChild('errorDisplay') errorDisplayComponent: OpportunityErrorDisplayComponent;
+  reviewErrorList: OppFieldErrorList;
   originalOpportunity: any;
   opportunity: any;
+  public relatedNoticeNumber: string;
   processedHistory: any;
   procurementType: any;
   historyByProcurementType: any;
@@ -153,6 +161,7 @@ export class OpportunityReviewComponent implements OnInit {
   private pristineIconClass = 'pending';
   private updatedIconClass = 'completed';
   private invalidIconClass = 'error';
+  private statusBannerLeadingText;
 
   sectionLabels: any = [
     'Header Information',
@@ -164,6 +173,15 @@ export class OpportunityReviewComponent implements OnInit {
     'Contact Information',
     'History',
     'Interested Vendors List'
+  ];
+
+  sections: string[] = [
+    OpportunitySectionNames.HEADER,
+    OpportunitySectionNames.AWARD_DETAILS,
+    OpportunitySectionNames.GENERAL,
+    OpportunitySectionNames.CLASSIFICATION,
+    OpportunitySectionNames.DESCRIPTION,
+    OpportunitySectionNames.CONTACT,
   ];
 
   sideNavSelection;
@@ -280,7 +298,8 @@ export class OpportunityReviewComponent implements OnInit {
     private fhService:FHService,
     private dictionaryService: DictionaryService,
     private entityService: EntityService,
-    private location: Location) {
+    private location: Location,
+    private errorService: OpportunityFormErrorService) {
 
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
@@ -349,7 +368,32 @@ export class OpportunityReviewComponent implements OnInit {
       // Adds page title as the last item in breadcrumbs
       let pageTitleObj = { breadcrumb: this.opportunity.data.title }
       this.crumbs.push(pageTitleObj);
+
+      // Run validations
+      this.viewModel = new OpportunityFormViewModel(this.opportunity);
+      this.errorService.viewModel = this.viewModel;
+      this.errorService.validateAll()
+      this.reviewErrorList = this.errorService.applicableErrors;
+      let pristineSections = this.sections.filter(section => {
+        return this.viewModel.getSectionStatus(section) === 'pristine';
+      });
+
+      if (this.checkForErrors()) {
+        // todo: remove setTimeout
+        setTimeout(() => {this.errorDisplayComponent.formatErrors(this.reviewErrorList, pristineSections);});
+      }
+      //this.showHideButtons(this.opportunity);
+      this.makeSideNav();
+
       this.setAlerts();
+
+      if (this.opportunity.related && this.opportunity.related.opportunityId) {
+        this.opportunityService.getContractOpportunityById(this.opportunity.related.opportunityId).subscribe(res => {
+          this.relatedNoticeNumber = res.data.solicitationNumber || null;
+        }, _ => {
+          this.relatedNoticeNumber = this.opportunity.related.opportunityId;
+        });
+      }
     }, err => {
       this.router.navigate(['/404']);
     });
@@ -358,19 +402,15 @@ export class OpportunityReviewComponent implements OnInit {
   }
 
   private setupSideNavMenus(){
-    this.updateSidenavIcons(this.sectionLabels[0]);
+    this.updateSidenavIcons(OpportunitySectionNames.HEADER, this.sectionLabels[0]);
     if(this.shouldBeDisplayed(this.opportunityFields.Award)) {
-      this.updateSidenavIcons(this.sectionLabels[1]);
+      this.updateSidenavIcons(OpportunitySectionNames.AWARD_DETAILS, this.sectionLabels[1]);
     }
-    this.updateSidenavIcons(this.sectionLabels[2]);
-    this.updateSidenavIcons(this.sectionLabels[3]);
-    this.updateSidenavIcons(this.sectionLabels[4]);
-    this.updateSidenavIcons(this.sectionLabels[5]);
-    this.updateSidenavIcons(this.sectionLabels[6]);
-    this.updateSidenavIcons(this.sectionLabels[7]);
-    if(this.showIvls) {
-      this.updateSidenavIcons(this.sectionLabels[8]);
-    }
+    this.updateSidenavIcons(OpportunitySectionNames.GENERAL, this.sectionLabels[2]);
+    this.updateSidenavIcons(OpportunitySectionNames.CLASSIFICATION, this.sectionLabels[3]);
+    this.updateSidenavIcons(OpportunitySectionNames.DESCRIPTION, this.sectionLabels[4]);
+    this.updateSidenavIcons(OpportunitySectionNames.PACKAGES, this.sectionLabels[5]);
+    this.updateSidenavIcons(OpportunitySectionNames.CONTACT, this.sectionLabels[6]);
     this.sidenavModel.children = [];
   }
 
@@ -693,7 +733,6 @@ export class OpportunityReviewComponent implements OnInit {
     return historySubject;
   }
 
-
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
     combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
@@ -888,11 +927,21 @@ export class OpportunityReviewComponent implements OnInit {
     }
   }
 
-  private updateSidenavIcons(sectionLabel: string) {
+  private updateSidenavIcons(sectionName: string, sectionLabel: string) {
+    let hasError = FALFormErrorService.hasErrors(FALFormErrorService.findErrorById(this.errorService.errors, sectionName));
+    let status = this.viewModel.getSectionStatus(sectionName);
+    let iconClass = this.pristineIconClass;
+    if (status === 'updated' || this.opportunity.status.code === 'rejected') {
+      if (hasError) {
+        iconClass = this.invalidIconClass;
+      } else {
+        iconClass = this.updatedIconClass;
+      }
+    }
+
     let filter = new FilterMultiArrayObjectPipe();
     let section = filter.transform([sectionLabel], this.sideNavModel.children, 'label', true, 'children')[0];
-
-    section['iconClass'] = (this.opportunity.status.code === 'draft' || this.opportunity.status.code === 'draft_review' || this.opportunity.status.code === 'rejected') ? this.pristineIconClass : null;
+    section['iconClass'] = (this.opportunity.status.code === 'draft' || this.opportunity.status.code === 'draft_review' || this.opportunity.status.code === 'rejected') ? iconClass : null;
   }
 
   // different alerts are shown depending on the opportunity status
@@ -950,4 +999,90 @@ export class OpportunityReviewComponent implements OnInit {
     }
   }
 
+  private makeSideNav() {
+    this.route.fragment.subscribe((fragment: string) => {
+      for (let item of this.sidenavModel.children) {
+        if (item.route === fragment) {
+          this.sideNavSelection = item.label;
+          break;
+        }
+      }
+    });
+  }
+  checkForErrors(){
+    if(!this.errorService.viewModel) {
+      return false;
+    }
+
+    let pristineSections = this.sections.filter(section => {
+      return this.viewModel.getSectionStatus(section) === 'pristine';
+    });
+
+    return OpportunityFormErrorService.hasErrors(this.errorService.applicableErrors) || pristineSections.length > 0;
+  }
+
+  getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, suffix: string = null, atLeastOneEntryError: boolean = false, errorId: string = null){
+
+    let errObj : (OppFieldError | OppFieldErrorList) = OpportunityFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
+    let message = '';
+
+    if(errObj) {
+
+      if(!row && errObj['errors']) {
+        message = this.generateErrorMessage(errObj);
+      }
+      else if(row && errObj['errorList']) {
+        let rowErrorObj: any;
+
+        if(atLeastOneEntryError) {
+          rowErrorObj = FALFormErrorService.findErrorById(<OppFieldErrorList> errObj, fieldId);
+        }
+        else {
+          rowErrorObj = FALFormErrorService.findErrorById(<OppFieldErrorList> errObj, fieldId + suffix);
+
+          if (errorId !== null) {
+
+            if(rowErrorObj && rowErrorObj.errors && rowErrorObj.errors[errorId])
+              message = rowErrorObj.errors[errorId]['message'];
+          }
+        }
+
+        if(rowErrorObj && errorId == null)
+          message = this.generateErrorMessage(rowErrorObj);
+      }
+    }
+
+    return message;
+  }
+
+  generateErrorMessage(fieldErrors){
+    let message = [];
+    for(let key of Object.keys(fieldErrors['errors'])) {
+      message.push(fieldErrors['errors'][key]['message']);
+    }
+    return message.join('<br/>');
+  }
+  updateBannerText(msg){
+    this.statusBannerLeadingText = msg;
+  }
+
+  getFieldId(field) {
+    return OpportunityFieldNames[field];
+  }
+
+  getSectionId(section){
+    return OpportunitySectionNames[section];
+  }
+  getState(opportunity) {
+    let state;
+    if (opportunity && this.opportunity.data && opportunity.data.placeOfPerformance && opportunity.data.placeOfPerformance.state) {
+      state = opportunity.data.placeOfPerformance.state;
+      if (state === '1') {
+        state = 'Non-U.S.'
+      } else {
+        state = state;
+      }
+    }
+    return state;
+  }
 }

@@ -1,10 +1,5 @@
-import { Component, ChangeDetectorRef, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild, SimpleChanges } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { FHService, IAMService } from "api-kit";
+import { Component, ChangeDetectorRef, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit } from "@angular/core";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR,AbstractControl } from '@angular/forms';
-import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
-import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
-import adminLevel from "app/role-management/admin-level";
 import * as _ from 'lodash';
 
 @Component({
@@ -41,13 +36,25 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor{
    * Sets the label wrapper error message manually
    */
   @Input() searchMessage: string = '';
-
+  /**
+   * Sets whether to show a multi autocomplete entity picker or single autocomplete entity picker
+   */
+  @Input() isMultiple: boolean = true;
+  /**
+   * Sets whether to limit to the default org that the user belongs to
+   */
+  @Input() isDefaultOrg: boolean = false;
+  /**
+   * Sets whether to show the entity/orgs that the user can assign based on the user's role
+   */
+  @Input() isAssignableOrg: boolean = false;
 
   private _disabled: boolean = false;
 
   selections = [];
   serviceOptions = {};
   multipleACConfig = {keyProperty: 'key',valueProperty: 'name', categoryProperty: 'detail'};
+  singleACConfig = {keyValueConfig: {keyProperty: 'key', valueProperty: 'name'}};
 
   constructor(private cdr:ChangeDetectorRef) {}
 

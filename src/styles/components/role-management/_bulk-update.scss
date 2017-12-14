@@ -43,4 +43,36 @@
   sam-agency-picker-v2 .sam-ui.menu{
     margin-top: 0px;
   }
+
+  .existing-color{
+    color: $red;
+  }
+
+  .updated-color{
+    color: $green;
+  }
+
+  .default-color{
+    color: $color-gray-light;
+  }
+
+  .status-icon{
+    padding-top: 2px;
+    font-size: 140%;
+    display: inline-block;
+    max-width: 18px;
+  }
+
+  .span-group{
+    position: relative;
+    display: block;
+    padding: 3px 0px;
+    //padding-right: 1.4em;
+  }
+
+  .status-span{
+    display: inline-block;
+    line-height: 1.73em;
+    vertical-align: text-bottom;
+  }
 }

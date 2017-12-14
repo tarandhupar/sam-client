@@ -1,16 +1,16 @@
-import { Component, ChangeDetectorRef, OnInit, Input, Output, ViewChildren, ViewChild, EventEmitter,QueryList } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, FormControl,Validators } from "@angular/forms";
-import { FALFormViewModel } from "../../fal-form.model";
-import { FALFormService } from "../../fal-form.service";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { LocationService } from 'api-kit/location/location.service';
+import * as _ from 'lodash';
+import { Observable } from "rxjs";
 import { v4 as UUID } from 'uuid';
+import { SamPOCEntryComponent } from "../../../../app-components/poc-entry";
 
 import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
 import { FALFormErrorService } from '../../fal-form-error.service';
-import { FALSectionNames, FALFieldNames } from '../../fal-form.constants';
-import * as _ from 'lodash';
-import { SamPOCEntryComponent } from "../../../../app-components/poc-entry";
-import { Observable } from "rxjs";
+import { FALSectionNames } from '../../fal-form.constants';
+import { FALFormViewModel } from "../../fal-form.model";
+import { FALFormService } from "../../fal-form.service";
 
 @Component({
   providers: [FALFormService],
@@ -136,10 +136,6 @@ export class FALFormContactInfoComponent implements OnInit {
   ngOnInit() {
     this.createForm();
 
-    this.falContactInfoForm.valueChanges.subscribe(data => {
-      this.saveData();
-    });
-
     if (!this.viewModel.isNew) {
       this.getData();
     }
@@ -179,6 +175,10 @@ export class FALFormContactInfoComponent implements OnInit {
         this.falContactInfoForm.get('contacts').markAsDirty({onlySelf: true});
         this.falContactInfoForm.get('contacts').updateValueAndValidity();
       }
+
+      this.falContactInfoForm.valueChanges.subscribe(data => {
+        this.saveData();
+      });
     });
   }
 

@@ -4,7 +4,6 @@ import { globals } from '../../app/globals.ts';
 import { Location } from '@angular/common';
 import { SamFeedbackComponent } from "../app-components/feedback-form/feedback-form.component";
 import { globals as feedbackGlobal } from "../app-components/feedback-form/feedback-form.globals";
-import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 
 @Component({
@@ -25,8 +24,7 @@ export class HelpPage {
 
   constructor(
     private router: Router,
-    private location:Location,
-    feedbackFormService: FeedbackFormService) {
+    private location:Location) {
     this.feedback = feedbackGlobal.feedbackFormInstance;
   }
 
@@ -35,12 +33,14 @@ export class HelpPage {
       value => {
         if(!(value instanceof  NavigationCancel)){
           let val = <NavigationCancel>value;
-          this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
-          this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
-
-          let section = this.currentUrl.substr(this.baseUrl.length);
-          section = section.length === 0? 'overview':section;
-          this.currentSection = section;
+          if(val.url){
+            this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
+            this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
+  
+            let section = this.currentUrl.substr(this.baseUrl.length);
+            section = section.length === 0? 'overview':section;
+            this.currentSection = section;
+          } 
         }else{
           this.currentSection = this.location.path(false).substr(this.baseUrl.length);
         }

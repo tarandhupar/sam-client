@@ -1,12 +1,8 @@
 export class OpportunitySectionNames {
-  static readonly HEADER_INFORMATION = 'header-information';
   static readonly AWARD_DETAILS = 'award';
-  static readonly GENERAL_INFORMATION = 'general-information';
   static readonly CLASSIFICATION = 'classification';
   static readonly DESCRIPTION = 'description';
   static readonly PACKAGES = 'packages';
-  static readonly CONTACT_INFORMATION = 'contact-information';
-
   static readonly HEADER = 'header';
   static readonly GENERAL = 'general';
   static readonly CONTACT = 'contact';
@@ -20,14 +16,16 @@ export class OpportunityFieldNames {
   static readonly OPPORTUNITY_TYPE = 'opp-type';
   static readonly PROCUREMENT_ID = 'opp-procurement-id';
   static readonly CONTRACTING_OFFICE = 'opp-contracting-office';
+  static readonly RELATED_NOTICE = 'opp-related-notice';
 
   //Award Details
+  static readonly AWARD_DATE = 'opp-award-date';
   static readonly AWARD_NUMBER = 'opp-award-number';
-  static readonly AMOUNT = 'opp-amount';
-  static readonly LINE_ITEM_NUMBER = 'opp-line-item-number';
   static readonly DELIVERY_ORDER_NUMBER = 'opp-delivery-order-number';
   static readonly AWARDEE_DUNS = 'opp-awardee-duns-number';
   static readonly AWARDEE_NAME = 'opp-awardee-name';
+  static readonly AMOUNT = 'opp-amount';
+  static readonly LINE_ITEM_NUMBER = 'opp-line-item-number';
 
   //General Information
   static readonly ARCHIVE_POLICY = 'opp-archive-policy';
@@ -40,8 +38,13 @@ export class OpportunityFieldNames {
   static readonly PRODUCT_SERVICE_CODE = 'opp-classification-product-service-code';
   static readonly PRIMARY_NAICS_CODE = 'opp-primary-naics-code';
   static readonly SECONDARY_NAICS_CODE = 'opp-secondary-naics-code';
-}
 
+  //description
+  static readonly DESCRIPTION = 'opp-description';
+
+  //contact-information
+  static readonly PRIMARY_CONTACT = 'opp-primary-contact';
+}
 
 export class OpportunityNoticeTypes {
 
@@ -74,9 +77,39 @@ export const OppNoticeTypeDbMap = {
   ['l'] : OpportunityNoticeTypes.FAIR_OPPORTUNITY_LIMITED_SOURCES_JUSTIFICATION
 };
 
+export const OpportunitySectionFieldsBiMap = (function() {
+  let sectionFields = {
+    [OpportunitySectionNames.HEADER]: [
+      OpportunityFieldNames.TITLE,
+      OpportunityFieldNames.CONTRACTING_OFFICE,
+      OpportunityFieldNames.PROCUREMENT_ID,
+      OpportunityFieldNames.OPPORTUNITY_TYPE
+    ],
+    [OpportunitySectionNames.GENERAL]: [
+      OpportunityFieldNames.ARCHIVE_POLICY,
+      OpportunityFieldNames.ARCHIVE_DATE,
+      OpportunityFieldNames.VENDORS_CD_IVL,
+      OpportunityFieldNames.VENDORS_V_IVL
+    ]
+  };
+
+  let fieldSections = {};
+
+  Object.keys(sectionFields).forEach((section) => {
+    sectionFields[section].forEach((field) => {
+      fieldSections[field] = section;
+    });
+  });
+
+  return {
+    sectionFields,
+    fieldSections
+  };
+})();
 
 export const OppNoticeTypeFieldsMap = {
   [OpportunityNoticeTypes.COMBINED_SYNOPSIS_SOLICITATION]: {
+    [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
     [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
     [OpportunityFieldNames.AMOUNT] : {required: false, display: true},
     [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: true},
@@ -90,17 +123,77 @@ export const OppNoticeTypeFieldsMap = {
   },
   [OpportunityNoticeTypes.SPECIAL_NOTICE] : {
     [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
-    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true}
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.AWARD_DATE] : {required: false, display: true},
+    [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.AMOUNT] : {required: false, display: true},
+    [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: true},
+    [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: true},
   },
   [OpportunityNoticeTypes.SALE_OF_SURPLUS_PROPERTY] : {
     [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true}
   },
   [OpportunityNoticeTypes.SOLICITATION]: {
+    [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
     [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
     [OpportunityFieldNames.AMOUNT] : {required: false, display: true},
     [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: true},
     [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: false},
+  },
+  [OpportunityNoticeTypes.AWARD_NOTICE]: {
+    [OpportunityFieldNames.AWARD_DATE] : {required: true, display: true},
+    [OpportunityFieldNames.AWARD_NUMBER] : {required: true, display: true},
+    [OpportunityFieldNames.AMOUNT] : {required: true, display: true},
+    [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: true},
+    [OpportunityFieldNames.AWARDEE_NAME] : {required: true, display: true},
+    [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.DESCRIPTION] : {required: false, display: true},
+    [OpportunityFieldNames.PRIMARY_CONTACT] : {required: false, display: true},
+  }
+};
+
+export const OppNoticeTypeSectionMap = {
+  [OpportunityNoticeTypes.PRESOLICITATION]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.COMBINED_SYNOPSIS_SOLICITATION]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
+  },
+  [OpportunityNoticeTypes.SOURCES_SOUGHT]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.MODIFICATION_AMENDMENT_CANCEL]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.SALE_OF_SURPLUS_PROPERTY]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.SPECIAL_NOTICE]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
+  },
+  [OpportunityNoticeTypes.FOREIGN_GOVERNMENT_STANDARD]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.SOLICITATION]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
+  },
+  [OpportunityNoticeTypes.AWARD_NOTICE]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
+  },
+  [OpportunityNoticeTypes.JUSTIFICATION_AND_APPROVAL]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.INTENT_TO_BUNDLE_REQUIREMENTS]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+  },
+  [OpportunityNoticeTypes.FAIR_OPPORTUNITY_LIMITED_SOURCES_JUSTIFICATION]: {
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
   }
 };

@@ -33,6 +33,7 @@
 
   <div class="usa-width-one-whole m_B-1x">
     <sam-checkbox
+      *ngIf="showStatusFilters"
       [(model)]="filterOption.status"
       [name]="statusCbxConfig.name"
       [options]="statusCbxConfig.options"

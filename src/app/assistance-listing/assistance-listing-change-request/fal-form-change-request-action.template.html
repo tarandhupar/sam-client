@@ -118,13 +118,13 @@
 
             <ng-container *ngIf="isPermissionType('cancel') || isPermissionType('approve_reject')">
               <sam-text-area *ngIf="isPermissionType('cancel')"
-                             [label]="'Comment'"
+                             [label]="'Reason'"
                              [name]="'comment-input'"
                              [control]="falChangeRequestActionForm.controls['comment']"
                              formControlName="comment">
               </sam-text-area>
               <sam-text-area *ngIf="!isPermissionType('cancel')"
-                              [label]="'Comment*'"
+                              [label]="'Reason'"
                               [name]="'comment-input'"
                               [control]="falChangeRequestActionForm.controls['comment']"
                               [required]="true"

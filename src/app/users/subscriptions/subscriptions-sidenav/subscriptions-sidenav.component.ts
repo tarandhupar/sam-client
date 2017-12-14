@@ -19,6 +19,14 @@ export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
 
   @Output() filterChange:EventEmitter<any> = new EventEmitter<any>();
 
+  navLinks = [
+    { text: 'Account Details', routerLink: ['/profile/details'] },
+    { text: 'Reset Password', routerLink: ['/profile/password'] },
+    { text: 'My Roles', routerLink: ['/profile/access'] },
+    { text: 'Role Migrations', routerLink: ['/profile/migrations'] },
+    { text: 'Followings', active: true },
+  ];
+
   filterOption = {
     keyword:"",
     feedType:[],
@@ -59,7 +67,7 @@ export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
   };
 
   sidenavModel = {
-    "label": "Subscriptions",
+    "label": "Followings",
     "children": []
   };
 
@@ -104,7 +112,7 @@ export class SubscriptionsSideNavComponent implements OnInit, OnChanges{
     console.log("Domains : " + JSON.stringify(this.domains));
     Observable.of(this.domains).subscribe(res => {
       this.domainsCbxConfig.options = [];
-      res.forEach(domain => {this.domainsCbxConfig.options.push({value: domain, label: domain, name: domain});});
+      res.forEach(domain => {this.domainsCbxConfig.options.push({value: domain.id, label: domain.desc, name: domain.desc});});
       console.log("Domains Combo: " + JSON.stringify(this.domainsCbxConfig.options));
     });
   }

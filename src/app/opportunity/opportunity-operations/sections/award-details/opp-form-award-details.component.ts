@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
-import { OppNoticeTypeFieldService } from '../../framework/service/notice-type-field-map/notice-type-field-map.service';
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 
 @Component({
   selector: 'opp-form-award-details',
@@ -15,28 +15,20 @@ export class OpportunityAwardDetailsComponent implements OnInit {
   public oppAwardDetailsForm: FormGroup;
   public noticeType: any;
 
+  public readonly awardDateConfig = {
+    id: OpportunityFieldNames.AWARD_DATE,
+    label: 'Contract Award Date',
+    name: OpportunityFieldNames.AWARD_DATE + '-input',
+    hint: 'Agency assigned number for control tracking and identification. Please use ONLY alphanumeric and - _ ( ) { } characters [no spaces].',
+    defaultValidations: true
+  };
+
   public readonly awardNumberConfig = {
     id: OpportunityFieldNames.AWARD_NUMBER,
     label: 'Contract Award Number',
     name: OpportunityFieldNames.AWARD_NUMBER + '-input',
     required: true,
     hint: 'Agency assigned number for control tracking and identification. Please use ONLY alphanumeric and - _ ( ) { } characters [no spaces].',
-  };
-
-  public readonly amountConfig = {
-    id: OpportunityFieldNames.AMOUNT,
-    label: 'Total Estimate Contract Dollar Value',
-    name: OpportunityFieldNames.AMOUNT + '-input',
-    required: true,
-    hint: 'The dollar value of this contract plus options, and qualifying text (e.g. not to exceed $250,000). Note: This information will be displayed exactly as entered, format text and dollar amounts appropriately.',
-  };
-
-  public readonly lineItemNumberConfig = {
-    id: OpportunityFieldNames.LINE_ITEM_NUMBER,
-    label: 'Contract Award Line Item Number',
-    name: OpportunityFieldNames.LINE_ITEM_NUMBER + '-input',
-    required: true,
-    hint: 'When appropriate, list the contractor’s appropriate line item number. Please use ONLY alphanumeric and - _ ( ) characters [no spaces].',
   };
 
   public readonly deliveryOrderNumberConfig = {
@@ -63,7 +55,24 @@ export class OpportunityAwardDetailsComponent implements OnInit {
     hint: '',
   };
 
-  constructor(private formBuilder: FormBuilder, private noticeTypeFieldService: OppNoticeTypeFieldService) {
+  public readonly amountConfig = {
+    id: OpportunityFieldNames.AMOUNT,
+    label: 'Total Estimate Contract Dollar Value',
+    name: OpportunityFieldNames.AMOUNT + '-input',
+    required: true,
+    hint: 'The dollar value of this contract plus options, and qualifying text (e.g. not to exceed $250,000). Note: This information will be displayed exactly as entered, format text and dollar amounts appropriately.',
+  };
+
+  public readonly lineItemNumberConfig = {
+    id: OpportunityFieldNames.LINE_ITEM_NUMBER,
+    label: 'Contract Award Line Item Number',
+    name: OpportunityFieldNames.LINE_ITEM_NUMBER + '-input',
+    required: true,
+    hint: 'When appropriate, list the contractor’s appropriate line item number. Please use ONLY alphanumeric and - _ ( ) characters [no spaces].',
+  };
+
+  constructor(private formBuilder: FormBuilder, private noticeTypeMapService: OppNoticeTypeMapService) {
+    Object.freeze(this.awardDateConfig);
     Object.freeze(this.awardNumberConfig);
     Object.freeze(this.amountConfig);
     Object.freeze(this.lineItemNumberConfig);
@@ -84,48 +93,52 @@ export class OpportunityAwardDetailsComponent implements OnInit {
 
   private createForm(): void {
     this.oppAwardDetailsForm = this.formBuilder.group({
+      awardDate: '',
       awardNumber: '',
-      amount: '',
-      lineItemNumber: '',
       deliveryOrderNumber: '',
       awardeeDuns: '',
-      awardeeName: ''
+      awardeeName: '',
+      amount: '',
+      lineItemNumber: ''
     });
   }
 
   private updateForm(): void {
     this.oppAwardDetailsForm.patchValue({
+      awardDate: this.oppAwardDetailsViewModel.awardDate,
       awardNumber: this.oppAwardDetailsViewModel.awardNumber,
-      amount: this.oppAwardDetailsViewModel.amount,
-      lineItemNumber: this.oppAwardDetailsViewModel.lineItemNumber,
       deliveryOrderNumber: this.oppAwardDetailsViewModel.deliveryOrderNumber,
       awardeeDuns: this.oppAwardDetailsViewModel.awardeeDuns,
-      awardeeName: this.oppAwardDetailsViewModel.awardeeName
+      awardeeName: this.oppAwardDetailsViewModel.awardeeName,
+      amount: this.oppAwardDetailsViewModel.amount,
+      lineItemNumber: this.oppAwardDetailsViewModel.lineItemNumber
     }, {
       emitEvent: false,
     });
   }
 
   private subscribeToChanges(): void {
+    this.linkControlTo(this.oppAwardDetailsForm.get('awardDate'), this.saveAwardDate);
     this.linkControlTo(this.oppAwardDetailsForm.get('awardNumber'), this.saveAwardNumber);
-    this.linkControlTo(this.oppAwardDetailsForm.get('amount'), this.saveAmount);
-    this.linkControlTo(this.oppAwardDetailsForm.get('lineItemNumber'), this.saveLineItemNumber);
     this.linkControlTo(this.oppAwardDetailsForm.get('deliveryOrderNumber'), this.saveDeliveryOrderNumber);
     this.linkControlTo(this.oppAwardDetailsForm.get('awardeeDuns'), this.saveAwardeeDuns);
     this.linkControlTo(this.oppAwardDetailsForm.get('awardeeName'), this.saveAwardeeName);
+    this.linkControlTo(this.oppAwardDetailsForm.get('amount'), this.saveAmount);
+    this.linkControlTo(this.oppAwardDetailsForm.get('lineItemNumber'), this.saveLineItemNumber);
   }
 
   private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
     let boundCallback = callback.bind(this);
     control.valueChanges
-      .debounceTime(10)
-      .distinctUntilChanged()
       .subscribe(value => {
         boundCallback(value);
     });
     // actions to take after any field is updated
   }
 
+  private saveAwardDate(date) {
+    this.oppAwardDetailsViewModel.awardDate = date;
+  }
   private saveAwardNumber(number) {
     this.oppAwardDetailsViewModel.awardNumber = number;
   }
@@ -151,10 +164,10 @@ export class OpportunityAwardDetailsComponent implements OnInit {
   }
 
   private checkFieldDisplayOption(field) {
-    return this.noticeTypeFieldService.checkFieldVisibility(this.noticeType, field);
+    return this.noticeTypeMapService.checkFieldVisibility(this.noticeType, field);
   }
 
   private checkFieldRequired(field) {
-    return this.noticeTypeFieldService.checkFieldRequired(this.noticeType, field);
+    return this.noticeTypeMapService.checkFieldRequired(this.noticeType, field);
   }
 }

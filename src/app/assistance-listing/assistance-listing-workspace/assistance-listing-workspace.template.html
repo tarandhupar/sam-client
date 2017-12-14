@@ -17,12 +17,12 @@
       </li>
       <li *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']">
         <a id="manage-fal-sidetab"routerLink="/fal/myRegionalAssistanceLocations">
-          Manage Assistance Locations
+          Regional Assistance Locations
         </a>
       </li>
       <li>
         <a id="cfda-number-management-sidetab" *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
-          CFDA Number Management
+          CFDA Number Assignment
         </a>
       </li>
       <li *ngIf="userPermissions && userPermissions._links &&  userPermissions._links['program:template:download']">
@@ -87,7 +87,7 @@
 
       <!-- Change Request Filter -->
       <ng-container  *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:request:access']">
-        <h4 class="sam-ui header">Change Request Pending</h4>
+        <h4 class="sam-ui header">Request Pending</h4>
         <sam-checkbox
           [(model)]="requestTypeCheckboxModel"
           (modelChange)="requestTypeModelChanged()"
@@ -141,7 +141,7 @@
   <!-- Main Content Section -->
   <sam-button *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:create']"
               [buttonType]="'default'"
-              [buttonText]="'Add Assistance Listing' "
+              [buttonText]="'Add Listing' "
               [buttonClass]="'sam-ui button dark blue'"
               (onClick)="addAssistanceListingClick()">
   </sam-button>

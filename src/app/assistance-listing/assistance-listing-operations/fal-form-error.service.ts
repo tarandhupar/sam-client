@@ -7,30 +7,30 @@ import { ReplaySubject, Subject } from "rxjs";
 import { FALFormService } from "./fal-form.service";
 import * as moment from 'moment/moment';
 
-export interface FieldError {
+export interface FalFieldError {
   id?: string,
   label?: string,
   errors: ValidationErrors | null
 }
 
-export interface FieldErrorList {
+export interface FalFieldErrorList {
   id?: string,
   label?: string,
-  errorList: (FieldError | FieldErrorList)[]
+  errorList: (FalFieldError | FalFieldErrorList)[]
 }
 
-export function isFieldError(arg: any): arg is FieldError {
+export function isFalFieldError(arg: any): arg is FalFieldError {
   return arg && arg.errors !== undefined;
 }
 
-export function isFieldErrorList(arg: any): arg is FieldErrorList {
+export function isFalFieldErrorList(arg: any): arg is FalFieldErrorList {
   return arg && arg.errorList !== undefined;
 }
 
 @Injectable()
 export class FALFormErrorService {
   private _viewModel: FALFormViewModel;
-  private _errors: FieldErrorList;
+  private _errors: FalFieldErrorList;
 
   private _fieldValidatorFnMap = {
     // Header Information
@@ -88,7 +88,7 @@ export class FALFormErrorService {
   };
 
   constructor(private falFormService: FALFormService) {
-    let initSectionError = (id, label): FieldErrorList => {
+    let initSectionError = (id, label): FalFieldErrorList => {
       return { id, label, errorList: [] };
     };
 
@@ -115,25 +115,24 @@ export class FALFormErrorService {
     this._viewModel = viewModel;
   }
 
-  get errors(): FieldErrorList {
+  get errors(): FalFieldErrorList {
     return this._errors;
   }
 
-  get applicableErrors(): FieldErrorList {
+  get applicableErrors(): FalFieldErrorList {
     let applicable = _.cloneDeep(this._errors);
     if(applicable && applicable.errorList) {
       applicable.errorList = applicable.errorList.filter((section) => {
         return this._viewModel.getSectionStatus(section.id) === 'updated';
       });
     }
-
     return applicable;
   }
 
-  public static hasErrors(errorObj: (FieldError | FieldErrorList)): boolean {
-    if (isFieldError(errorObj)) {
+  public static hasErrors(errorObj: (FalFieldError | FalFieldErrorList)): boolean {
+    if (isFalFieldError(errorObj)) {
       return errorObj.errors != null;
-    } else if (isFieldErrorList(errorObj)) {
+    } else if (isFalFieldErrorList(errorObj)) {
       for (let error of errorObj.errorList) {
         if (FALFormErrorService.hasErrors(error)) {
           return true;
@@ -191,7 +190,7 @@ export class FALFormErrorService {
     return response;
   }
 
-  public static findErrorById(fieldErrorList: FieldErrorList, id: string): (FieldError | FieldErrorList | null) {
+  public static findErrorById(fieldErrorList: FalFieldErrorList, id: string): (FalFieldError | FalFieldErrorList | null) {
     if(fieldErrorList && fieldErrorList.errorList.length > 0) {
       for (let error of fieldErrorList.errorList) {
         if (error.id && error.id === id) {
@@ -203,7 +202,7 @@ export class FALFormErrorService {
     return null;
   }
 
-  public static findSectionErrorById(fieldErrorList: any, sectionId: string, fieldId: string = null): (FieldError | FieldErrorList | null) {
+  public static findSectionErrorById(fieldErrorList: any, sectionId: string, fieldId: string = null): (FalFieldError | FalFieldErrorList | null) {
     if(fieldErrorList && fieldErrorList.errorList && fieldErrorList.errorList.length > 0) {
       for (let error of fieldErrorList.errorList) {
         if (error.id && error.id === sectionId) {
@@ -220,14 +219,14 @@ export class FALFormErrorService {
     return null;
   }
 
-  private setOrUpdateError(fieldErrorList: FieldErrorList, error: (FieldError | FieldErrorList)): void {
+  private setOrUpdateError(fieldErrorList: FalFieldErrorList, error: (FalFieldError | FalFieldErrorList)): void {
     let existing = FALFormErrorService.findErrorById(fieldErrorList, error.id);
 
     if (existing) {
-      if (isFieldError(error) && isFieldError(existing)) {
+      if (isFalFieldError(error) && isFalFieldError(existing)) {
         existing.errors = error.errors;
       }
-      else if (isFieldErrorList(error) && isFieldErrorList(existing)) {
+      else if (isFalFieldErrorList(error) && isFalFieldErrorList(existing)) {
         existing.errorList = error.errorList;
       } else {
         console.log('Error: Found incompatible error types for ', error, ' and ', existing);
@@ -270,13 +269,13 @@ export class FALFormErrorService {
   // Header Information Section
   // --------------------------------------------------------------------------
 
-  public validateHeaderTitle(): FieldError {
+  public validateHeaderTitle(): FalFieldError {
     let titleErrors = {
       id: FALFieldNames.TITLE,
       errors: this.validateRequired('Title', this._viewModel.title)
     };
 
-    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FalFieldErrorList;
     this.setOrUpdateError(headerErrors, titleErrors);
 
     return titleErrors;
@@ -395,19 +394,19 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FalFieldErrorList;
     this.setOrUpdateError(headerErrors, falNoErrors);
 
     return falNoErrors;
   }
 
-  public validateFederalAgency(): FieldError {
+  public validateFederalAgency(): FalFieldError {
     let agencyErrors = {
       id: FALFieldNames.FEDERAL_AGENCY,
       errors: this.validateRequired('Federal Agency', this._viewModel.organizationId)
     };
 
-    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FieldErrorList;
+    let headerErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.HEADER) as FalFieldErrorList;
     this.setOrUpdateError(headerErrors, agencyErrors);
 
     return agencyErrors;
@@ -415,44 +414,44 @@ export class FALFormErrorService {
 
   // Overview Section
   // --------------------------------------------------------------------------
-  public validateObjective(): FieldError {
+  public validateObjective(): FalFieldError {
     let objectiveErrors = {
       id: FALFieldNames.OBJECTIVE,
       errors: this.validateRequired('Objectives', this._viewModel.objective)
     };
 
-    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
+    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FalFieldErrorList;
     this.setOrUpdateError(overviewErrors, objectiveErrors);
 
     return objectiveErrors;
   }
 
-  public validateSubjectTerms(): FieldError {
+  public validateSubjectTerms(): FalFieldError {
     let subjectTermsErrors = {
       id: FALFieldNames.SUBJECT_TERMS,
       errors: this.validateRequired('Subject Terms', this._viewModel.subjectTerms)
     };
 
-    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
+    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FalFieldErrorList;
     this.setOrUpdateError(overviewErrors, subjectTermsErrors);
 
     return subjectTermsErrors;
   }
 
-  public validateFunctionalCodes(): FieldError {
+  public validateFunctionalCodes(): FalFieldError {
     let functionalCodesErrors = {
       id: FALFieldNames.FUNCTIONAL_CODES,
       errors: this.validateRequired('Functional Codes', this._viewModel.functionalCodes)
     };
 
-    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
+    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FalFieldErrorList;
     this.setOrUpdateError(overviewErrors, functionalCodesErrors);
 
     return functionalCodesErrors;
   }
 
-  public validateFundedProjects(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateFundedProjects(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.projects && this._viewModel.projects.list && this._viewModel.projects.isApplicable) {
       let projects = this._viewModel.projects;
@@ -495,7 +494,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FieldErrorList;
+    let overviewErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OVERVIEW) as FalFieldErrorList;
     this.setOrUpdateError(overviewErrors, fundedProjectErrors);
 
     if (errors.length > 0) {
@@ -507,8 +506,8 @@ export class FALFormErrorService {
 
   // Authorization
   // --------------------------------------------------------------------------
-  public validateAuthList(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateAuthList(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.authList && this._viewModel.authList.length > 0) {
       let authList = this._viewModel.authList;
@@ -551,7 +550,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.AUTHORIZATION) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.AUTHORIZATION) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, authListErrors);
 
     if (errors.length > 0) {
@@ -597,8 +596,8 @@ export class FALFormErrorService {
 
   // Financial Obligations
   // --------------------------------------------------------------------------
-  public validateObligationList(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateObligationList(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
     if (this._viewModel.obligations && this._viewModel.obligations.length > 0) {
       let obligations = this._viewModel.obligations;
       let orderedObligList = this.rearrangeObligationList(obligations);
@@ -630,7 +629,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OBLIGATIONS) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OBLIGATIONS) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, obligListErrors);
 
     if (errors.length > 0) {
@@ -671,8 +670,8 @@ export class FALFormErrorService {
 
   // Other Financial Info Section
   // --------------------------------------------------------------------------
-  public validateProgramAccomplishments(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateProgramAccomplishments(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.accomplishments && this._viewModel.accomplishments.list && this._viewModel.accomplishments.isApplicable) {
       let accomplishments = this._viewModel.accomplishments;
@@ -726,7 +725,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FalFieldErrorList;
     this.setOrUpdateError(financialInfoErrors, programAccomplishmentsErrors);
 
     if (errors.length > 0) {
@@ -736,8 +735,8 @@ export class FALFormErrorService {
     }
   }
 
-  public validateAccountIdentification(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateAccountIdentification(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.accounts && this._viewModel.accounts.length > 0) {
       for (let i = 0; i < this._viewModel.accounts.length; i++) {
@@ -776,7 +775,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FalFieldErrorList;
     this.setOrUpdateError(financialInfoErrors, accountIdentificationErrors);
 
     if (errors.length > 0) {
@@ -786,8 +785,8 @@ export class FALFormErrorService {
     }
   }
 
-  public validateTafsCodes(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateTafsCodes(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.tafs && this._viewModel.tafs.length > 0) {
       for (let i = 0; i < this._viewModel.tafs.length; i++) {
@@ -855,7 +854,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FieldErrorList;
+    let financialInfoErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.OTHER_FINANCIAL_INFO) as FalFieldErrorList;
     this.setOrUpdateError(financialInfoErrors, tafsErrors);
 
     if (errors.length > 0) {
@@ -867,7 +866,7 @@ export class FALFormErrorService {
 
   // Criteria Section
   // --------------------------------------------------------------------------
-  validateCriteriaDocumentation(): FieldError {
+  validateCriteriaDocumentation(): FalFieldError {
     let isApplicable = this._viewModel.documentation.isApplicable;
     let documentation = this._viewModel.documentation.description;
 
@@ -876,25 +875,25 @@ export class FALFormErrorService {
       errors: this.validateConditionalRequired('Credentials and Documentation', isApplicable, documentation)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, documentationErrors);
 
     return documentationErrors;
   }
 
-  public validateApplicantList(): FieldError {
+  public validateApplicantList(): FalFieldError {
     let appListDisplayErrors = {
       id: FALFieldNames.APPLICANT_LIST,
       errors: this.validateRequired('Applicant Eligibility', this._viewModel.appListDisplay)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, appListDisplayErrors);
 
     return appListDisplayErrors;
   }
 
-  public validateBeneficiaryList(): FieldError {
+  public validateBeneficiaryList(): FalFieldError {
     let errors: ValidationErrors = null;
     if (!this.viewModel.isSameAsApplicant) {
       errors = this.validateRequired('Beneficiary Eligibility', this._viewModel.benListDisplay);
@@ -905,25 +904,25 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, benListDisplayErrors);
 
     return benListDisplayErrors;
   }
 
-  validateLengthTimeDesc(): FieldError {
+  validateLengthTimeDesc(): FalFieldError {
     let lengthTimeDescErrors = {
       id: FALFieldNames.LENGTH_TIME_DESC,
       errors: this.validateRequired('Length and Time Phasing of Assistance', this._viewModel.lengthTimeDesc)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, lengthTimeDescErrors);
 
     return lengthTimeDescErrors;
   }
 
-  public validateAwardedType(): FieldError {
+  public validateAwardedType(): FalFieldError {
     let errors: ValidationErrors = null;
     if ((this._viewModel.awardedType.length > 0 && this._viewModel.awardedType === 'na')) {
       errors = this.requiredFieldError('Assistance awarded and/or released');
@@ -934,37 +933,37 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, awardedTypeErrors);
 
     return awardedTypeErrors;
   }
 
-  public validateAssistanceUsageList(): FieldError {
+  public validateAssistanceUsageList(): FalFieldError {
     let assListDisplayErrors = {
       id: FALFieldNames.ASS_USAGE_LIST,
       errors: this.validateRequired('Use of Assistance', this._viewModel.assListDisplay)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, assListDisplayErrors);
 
     return assListDisplayErrors;
   }
 
-  validateAssUsageDesc(): FieldError {
+  validateAssUsageDesc(): FalFieldError {
     let assUsageDescErrors = {
       id: FALFieldNames.ASS_USAGE_DESC,
       errors: this.validateRequired('Use of Assistance Description', this._viewModel.assUsageDesc)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, assUsageDescErrors);
 
     return assUsageDescErrors;
   }
 
-  validateCriteriaUsageRes(): FieldError {
+  validateCriteriaUsageRes(): FalFieldError {
     let isApplicable = this._viewModel.usageRes.isApplicable;
     let usageRestrictions = this._viewModel.usageRes.description;
 
@@ -973,13 +972,13 @@ export class FALFormErrorService {
       errors: this.validateConditionalRequired('Use Restrictions', isApplicable, usageRestrictions)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, usageResErrors);
 
     return usageResErrors;
   }
 
-  validateCriteriaUseDisFunds(): FieldError {
+  validateCriteriaUseDisFunds(): FalFieldError {
     let isApplicable = this._viewModel.useDisFunds.isApplicable;
     let discretionaryFunds = this._viewModel.useDisFunds.description;
 
@@ -988,13 +987,13 @@ export class FALFormErrorService {
       errors: this.validateConditionalRequired('Discretionary Funds', isApplicable, discretionaryFunds)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, useDisFundsErrors);
 
     return useDisFundsErrors;
   }
 
-  validateCriteriaUseLoanTerms(): FieldError {
+  validateCriteriaUseLoanTerms(): FalFieldError {
     let isApplicable = this._viewModel.useLoanTerms.isApplicable;
     let loanTerms = this._viewModel.useLoanTerms.description;
 
@@ -1003,7 +1002,7 @@ export class FALFormErrorService {
       errors: this.validateConditionalRequired('Loan Types of Assistance', isApplicable, loanTerms)
     };
 
-    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FieldErrorList;
+    let criteriaErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CRITERIA_INFO) as FalFieldErrorList;
     this.setOrUpdateError(criteriaErrors, useLoanTermsErrors);
 
     return useLoanTermsErrors;
@@ -1011,20 +1010,20 @@ export class FALFormErrorService {
 
   // Applying for Assistance Section
   // --------------------------------------------------------------------------
-  public validateDeadlinesFlag(): FieldError {
+  public validateDeadlinesFlag(): FalFieldError {
     let fieldErrors = {
       id: FALFieldNames.DEADLINES,
       errors: this.validateRequired('Deadlines', this._viewModel.deadlineFlag)
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateDeadlineList():(FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateDeadlineList():(FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
 
     if (this._viewModel.deadlineList.length > 0 && this._viewModel.deadlineFlag == 'yes') {
       let deadlineList = this._viewModel.deadlineList;
@@ -1091,7 +1090,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, deadlineListErrors);
 
     if (errors.length > 0) {
@@ -1101,7 +1100,7 @@ export class FALFormErrorService {
     }
   }
 
-  public validatePreAppCoordAddInfo(): FieldError {
+  public validatePreAppCoordAddInfo(): FalFieldError {
     let errors: ValidationErrors = null;
 
     if (this._viewModel.preAppCoordReports.length > 0) {
@@ -1117,13 +1116,13 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateSelCritDescription(): FieldError {
+  public validateSelCritDescription(): FalFieldError {
     let errors: ValidationErrors = null;
 
     if (this._viewModel.selCriteriaIsApp) {
@@ -1135,25 +1134,25 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateAwardProcDescription(): FieldError {
+  public validateAwardProcDescription(): FalFieldError {
     let fieldErrors = {
       id: FALFieldNames.AWARD_PROCEDURE_DESCRIPTION,
       errors: this.validateRequired('Award Procedure', this._viewModel.awardProcDesc)
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateApprovalInterval(): FieldError {
+  public validateApprovalInterval(): FalFieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.approvalInterval == 'na') {
       errors = this.requiredFieldError('Date Range for Approval/Disapproval');
@@ -1164,13 +1163,13 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateAppealInterval(): FieldError {
+  public validateAppealInterval(): FalFieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.appealInterval == 'na') {
       errors = this.requiredFieldError('Appeals');
@@ -1181,13 +1180,13 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateRenewalInterval(): FieldError {
+  public validateRenewalInterval(): FalFieldError {
     let errors: ValidationErrors = null;
     if (this._viewModel.renewalInterval == 'na') {
       errors = this.requiredFieldError('Renewals');
@@ -1198,7 +1197,7 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.APPLYING_FOR_ASSISTANCE) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -1206,8 +1205,8 @@ export class FALFormErrorService {
 
   // Compliance Requirement
   // --------------------------------------------------------------------------
-  public validateComplianceReports(): (FieldErrorList | null) {
-    let errors: FieldError[] = [];
+  public validateComplianceReports(): (FalFieldErrorList | null) {
+    let errors: FalFieldError[] = [];
     if (this._viewModel.complianceReports) {
       let counter = 0;
       for (let report of this._viewModel.complianceReports) {
@@ -1253,7 +1252,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     if (errors.length > 0) {
@@ -1263,7 +1262,7 @@ export class FALFormErrorService {
     }
   }
 
-  public validateComplianceAudits(): FieldError {
+  public validateComplianceAudits(): FalFieldError {
     let errors: ValidationErrors = null;
 
     if ((this._viewModel.audit && this._viewModel.audit.isApplicable && !this._viewModel.audit.description) || this._viewModel.audit == null) {
@@ -1275,13 +1274,13 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
   }
 
-  public validateAdditionDocumentation(): FieldError {
+  public validateAdditionDocumentation(): FalFieldError {
     let errors: ValidationErrors = null;
 
     if ((this._viewModel.documents && this._viewModel.documents.isApplicable && !this._viewModel.documents.description) || this._viewModel.documents == null) {
@@ -1293,7 +1292,7 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.COMPLIANCE_REQUIREMENTS) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, fieldErrors);
 
     return fieldErrors;
@@ -1301,8 +1300,8 @@ export class FALFormErrorService {
 
   // Contact Information
   // --------------------------------------------------------------------------
-  public validateContactList(): (FieldErrorList | null){
-    let errors: FieldError[] = [];
+  public validateContactList(): (FalFieldErrorList | null){
+    let errors: FalFieldError[] = [];
 
     if(this._viewModel.contacts && this._viewModel.contacts.headquarters && this._viewModel.contacts.headquarters.length > 0) {
       let contacts = this._viewModel.contacts.headquarters;
@@ -1341,7 +1340,7 @@ export class FALFormErrorService {
       errorList: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FalFieldErrorList;
     this.setOrUpdateError(sectionErrors, contactListErrors);
 
     if (errors.length > 0) {
@@ -1432,7 +1431,7 @@ export class FALFormErrorService {
 
   }
 
-  public validateContactWebsite(): FieldError {
+  public validateContactWebsite(): FalFieldError {
     let errors: ValidationErrors = null;
 
     if(this._viewModel.website) {
@@ -1451,7 +1450,7 @@ export class FALFormErrorService {
       errors: errors
     };
 
-    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FieldErrorList;
+    let sectionErrors = FALFormErrorService.findErrorById(this._errors, FALSectionNames.CONTACT_INFORMATION) as FalFieldErrorList;
 
     this.setOrUpdateError(sectionErrors, fieldErrors);
 

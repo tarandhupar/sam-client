@@ -47,10 +47,11 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   globalLinksUrl: string;
   formNavigationFlag: boolean = false;
   modelBtnsNavigationFlag: boolean = false;
-  crumbs: Array<IBreadcrumb> = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
-    breadcrumb: 'My Workspace',
-    urlmock: true
-  }, {breadcrumb: 'Assistance Workspace', urlmock: true}];
+  crumbs: Array<IBreadcrumb> = [
+    {
+      breadcrumb: 'Workspace',
+      urlmock: true
+    }, {breadcrumb: 'Assistance Listings', urlmock: true}];
   successFooterAlertModel = {
     title: "Success",
     description: "",
@@ -80,7 +81,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   fal: any;
   hasPermission: boolean = false;
   closeModelFlag: boolean = false;
-
+  organizationData: any;
 
   sectionLabels: any = [
     'Header Information',
@@ -187,6 +188,9 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         );
       });
+
+      //check existing active assistance administrator whether exist
+      this.checkActiveAssistanceAdministratorByOrgId(this.falFormViewModel.organizationId);
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
       this.hasPermission = this.authGuard.checkPermissions('addoredit', null);
@@ -217,6 +221,27 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  getOrganizationName(orgId: any) {
+    if (orgId != null) {
+      //set organization name
+      this.service.getOrganization(orgId)
+        .subscribe(data => {
+          if (data && data['_embedded'] && data['_embedded'][0] && data['_embedded'][0]['org']) {
+            this.organizationData = data['_embedded'][0]['org'];
+          }
+        }, error => {
+          console.error('error retrieving organization', error);
+        });
+    }
+  }
+
+  checkActiveAssistanceAdministratorByOrgId(orgId: any) {
+    if (this.falFormViewModel._links && this.falFormViewModel._links['program:notify:coordinator'] &&
+      this.falFormViewModel.status && this.falFormViewModel.status.code &&
+      (this.falFormViewModel.status.code === 'draft' || this.falFormViewModel.status.code === 'draft_review' || this.falFormViewModel.status.code === 'rejected')) {
+      this.getOrganizationName(orgId);
+    }
+  }
 
   isSection(sectionName: string) {
     return this.currentSection == this.sections.indexOf(sectionName);
@@ -429,7 +454,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
       return this.falFormViewModel.getSectionStatus(section) === 'pristine';
     });
 
-    if (!this.isAdd && (pristineSections.length > 0 || FALFormErrorService.hasErrors(errors))) {
+    if (!this.isAdd) {
       // todo: remove setTimeout
       setTimeout(() => {this.errorDisplayComponent.formatErrors(errors, pristineSections);});
     }
@@ -446,13 +471,13 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
   breadCrumbClick(event) {
     this.updateTitle();
     let actionType = event;
-    if (actionType === 'My Workspace') {
+    if (actionType === 'Workspace') {
       this.formNavigationFlag = true;
       this.formsDirtyCheck('Workspace');
       this.globalLinksUrl = '/workspace';
 
     }
-    if (actionType === 'Assistance Workspace') {
+    if (actionType === 'Assistance Listings') {
       this.formNavigationFlag = true;
       this.formsDirtyCheck('falWorkspace');
       this.globalLinksUrl = 'fal/workspace';
@@ -738,7 +763,7 @@ export class FALFormComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.falFormViewModel.programId) {
       this.crumbs.push({breadcrumb: this.falFormViewModel.title, urlmock: false});
     } else {
-      this.crumbs.push({breadcrumb: 'New Assistance Listing', urlmock: false});
+      this.crumbs.push({breadcrumb: 'New Listing', urlmock: false});
     }
   }
   canDeactivate() {

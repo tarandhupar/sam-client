@@ -12,13 +12,13 @@ import { ToggleService } from "../../../api-kit/toggle/toggle.service";
   selector: 'sam-watch-button',
   template: `<button *ngIf="enableSubscription" style="border:none; background-color:Transparent; color:#0071bc" [disabled]="disabled" (click)="confirmUnsubscribe()" type="button" onMouseOver="this.style.background-color='Transparent'">
    <span *ngIf="!subscribed">
-    <span class="fa-stack crossed-out" aria-hidden="true" title="Subscribe">
+    <span class="fa-stack crossed-out" aria-hidden="true" title="Follow">
       <i class="fa fa-newspaper-o fa-stack-1x"></i>
-    </span>Subscribe</span>
+    </span>Follow</span>
    <span *ngIf="subscribed">
-    <span class="fa-stack" aria-hidden="true" title="Unsubscribe">
+    <span class="fa-stack" aria-hidden="true" title="Unfollow">
       <i class="fa fa-newspaper-o fa-stack-1x"></i>
-    </span>Unsubscribe</span>    
+    </span>Unfollow</span>    
   </button>
   <!--Unsubscribe Modal-->
   <sam-modal #unsubscribeModal
@@ -115,9 +115,9 @@ export class SamWatchComponent implements OnInit{
   confirmUnsubscribe(){
     if(this.showModal && this.watchlist.id()) {
       if(this.watchlist.title() !== '') {
-        this.modalConfig.description = 'Are you sure you wish to unsubscribe from: ' + this.watchlist.title() + '?';
+        this.modalConfig.description = 'Are you sure you wish to unfollow from: ' + this.watchlist.title() + '?';
       } else {
-        this.modalConfig.description = 'Are you sure you wish to unsubscribe from this record?';
+        this.modalConfig.description = 'Are you sure you wish to unfollow from this record?';
       }
       this.unsubscribeModal.openModal();
 

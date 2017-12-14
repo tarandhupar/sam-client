@@ -109,7 +109,7 @@ export class SamFeedbackComponent {
     }
 
     this.showFeedback = !this.showFeedback;
-    if(this.showFeedback){
+    if(this.showFeedback){ 
       this.formService.formStarted = true;
       this.resultInit(0);
       if(document && document.body){

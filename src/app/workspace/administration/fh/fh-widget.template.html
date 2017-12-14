@@ -2,8 +2,8 @@
   <h4 class="sam-ui header">
     Find an Organization
   </h4>
-  <input placeholder="Find an Organization" 
-    (keyup.enter)="searchFH()" 
+  <input aria-label="Find an Organization" placeholder="Find an Organization"
+    (keyup.enter)="searchFH()"
     [(ngModel)]="searchText" >
 
   <h4 class="sam-ui header">
@@ -13,14 +13,14 @@
     <div class="column">
       <div class="sam-ui divided selection list">
         <a class="item">
-          <div class="sam-ui horizontal mini label" 
+          <div class="sam-ui horizontal mini label"
             [class.blue]="createdTotal !== 0">
             {{ createdTotal }}
           </div>
           Created
         </a>
         <a class="item">
-          <div class="sam-ui horizontal mini label" 
+          <div class="sam-ui horizontal mini label"
             [class.blue]="expiredTotal !== 0">
             {{ expiredTotal }}
           </div>
@@ -46,7 +46,7 @@
   <h4 class="sam-ui header">
     Find an Organization
   </h4>
-  <input placeholder="Find an Organization" 
-    (keyup.enter)="searchFH()" 
+  <input placeholder="Find an Organization"
+    (keyup.enter)="searchFH()"
     [(ngModel)]="searchText">
 </ng-container>

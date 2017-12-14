@@ -68,7 +68,6 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
   divisionDrpDwnOptions = [{label: "None Selected", value: 'na'}];
 
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
     { breadcrumb: 'Regional Assistance Locations', url: '/fal/myRegionalAssistanceLocations'}
   ];

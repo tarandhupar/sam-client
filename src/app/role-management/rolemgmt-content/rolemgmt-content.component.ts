@@ -111,7 +111,7 @@ export class RoleMgmtContent implements OnInit{
 
   formatDate(dateString) {
     if (dateString != '' && dateString != null) {
-      return moment(dateString).format('MMM DD, YYYY');
+      return moment(dateString.split(' ')[0]).format('MMM DD, YYYY');
     } else {
       return '--';
     }

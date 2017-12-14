@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {WrapperService} from '../wrapper/wrapper.service'
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs';
+import { WrapperService } from '../wrapper/wrapper.service'
 
 @Injectable()
 export class OpportunityService {
@@ -216,6 +216,22 @@ export class OpportunityService {
         'type': type,
         'page': page,
         'sort': sort,
+      },
+      method: 'GET'
+    };
+    return this.oAPIService.call(apiParam);
+  }
+
+  searchRelatedOpportunities(keyword: string, type: string, size: number, cookie: string) {
+    let apiParam = {
+      name: 'contractOpportunity',
+      suffix: '/opportunities/relatedopportunities/' + type,
+      oParam: {
+        'keyword': keyword,
+        'size': size,
+      },
+      headers: {
+        'X-Auth-Token': cookie,
       },
       method: 'GET'
     };

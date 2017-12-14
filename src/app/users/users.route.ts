@@ -60,11 +60,11 @@ export const routes: Routes = [
     canActivateChild: [ IsLoggedInGuard ],
     children: [
       { path: '', redirectTo: 'details', pathMatch: 'full'  },
-      { path: 'details', component: DetailsComponent, data: getRouteData(null, 'Personal Details', alert) },
+      { path: 'details', component: DetailsComponent, data: getRouteData(null, 'Account Details', alert) },
       { path: 'password', component: ResetComponent, data: getRouteData(null, 'Reset Password', alert) },
       { path: 'access', component: MyAccessPage, data: getRouteData({ isMyAccess: true, pageName: 'profile/access' }, 'My Roles') },
       { path: 'migrations', component: MigrationsComponent, data: getRouteData(null, 'Role Migrations') },
-      { path: 'subscriptions', component: SubscriptionsComponent, data: getRouteData({ pageName: 'profile/subscriptions' }, 'Manage Subscriptions') }
+      { path: 'subscriptions', component: SubscriptionsComponent, data: getRouteData({ pageName: 'profile/subscriptions' }, 'Following') }
     ],
   },
   {

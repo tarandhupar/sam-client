@@ -69,8 +69,8 @@
     <div class="usa-width-one-fourth m_T-5x p_T-2x" *ngIf="!isCurrentPath('requests/sent')">
       <ul class="usa-unstyled-list">
         <li class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options">
-          <label class="m_T-0 request-count pull-right m_R-2x" *ngIf="hasActiveItem(option)">{{option.count}}</label>
-          <label class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">0</label>
+          <span class="m_T-0 request-count pull-right m_R-2x" *ngIf="hasActiveItem(option)">{{option.count}}</span>
+          <span class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">0</span>
         </li>
       </ul>
     </div>

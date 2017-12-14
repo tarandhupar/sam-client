@@ -14,6 +14,7 @@ import { ContentManagementService } from "api-kit/content-management/content-man
 import { ContentManagementServiceMock } from "api-kit/content-management/content-management.mock";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { AlertFooterService } from '../../../app-components/alert-footer/alert-footer.service';
+import { FeedbackFormService } from '../../../app-components/feedback-form/feedback-form.service';
 
 let activatedRouteStub = {
   snapshot: {
@@ -32,7 +33,10 @@ describe('Help content management Page', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations:[HelpContentManagementViewComponent,HelpContentManagementSideNavComponent],
+      declarations:[
+        HelpContentManagementViewComponent,
+        HelpContentManagementSideNavComponent
+      ],
       imports:[
         SamUIKitModule,
         SamAPIKitModule,
@@ -41,6 +45,7 @@ describe('Help content management Page', () => {
         AppComponentsModule,
       ],
       providers: [
+        FeedbackFormService,
         HelpContentManagementViewComponent,
         CapitalizePipe,
         AlertFooterService,
@@ -52,9 +57,9 @@ describe('Help content management Page', () => {
     component = fixture.componentInstance;
   });
 
-  it('should compile without error', inject([ HelpContentManagementViewComponent ], () => {
+  it('should compile without error', () => {
     fixture.detectChanges();
     expect(true).toBe(true);
-  }));
+  });
 
 });

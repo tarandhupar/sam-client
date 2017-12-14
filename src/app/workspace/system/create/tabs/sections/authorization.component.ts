@@ -91,7 +91,7 @@ export class AuthorizationComponent extends Section {
         control.patchValue(moment());
       }
 
-      date = moment(control.value).format('MMM D, h:mm a');
+      date = moment(control.value).format('MMM D, YYYY h:mm a');
     }
 
     return date;

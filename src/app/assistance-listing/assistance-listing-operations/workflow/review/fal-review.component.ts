@@ -22,7 +22,7 @@ import { FALErrorDisplayComponent } from '../../../components/fal-error-display/
 import { ActionHistoryPipe } from "../../../pipes/action-history.pipe";
 import { HistoricalIndexLabelPipe } from "../../../pipes/historical-index-label.pipe";
 import { RequestLabelPipe } from "../../../pipes/request-label.pipe";
-import { FALFormErrorService, FieldError, FieldErrorList } from "../../fal-form-error.service";
+import { FALFormErrorService, FalFieldError, FalFieldErrorList } from "../../fal-form-error.service";
 import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
@@ -91,7 +91,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
   };
   roleFalg: boolean = false;
   qParams: any;
-  reviewErrorList: FieldErrorList;
+  reviewErrorList: FalFieldErrorList;
   @ViewChild('errorDisplay') errorDisplayComponent: FALErrorDisplayComponent;
   items = [];
   @ViewChild('deleteModal') deleteModal;
@@ -106,9 +106,8 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     defaultOption: "Make a Request"
   };
   crumbs: Array<IBreadcrumb> = [
-    {breadcrumb: 'Home', url: '/'},
     {breadcrumb: 'My Workspace', urlmock: true},
-    {breadcrumb: 'Assistance Workspace', urlmock: true}
+    {breadcrumb: 'Assistance Listings', urlmock: true}
   ];
 
   private apiSubjectSub: Subscription;
@@ -468,7 +467,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   getErrorMessage(sectionId: string, fieldId: string, row: boolean = false, suffix: string = null, atLeastOneEntryError: boolean = false, errorId: string = null){
 
-    let errObj : (FieldError | FieldErrorList) = FALFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
+    let errObj : (FalFieldError | FalFieldErrorList) = FALFormErrorService.findSectionErrorById(this.reviewErrorList, sectionId, fieldId);
     let message = '';
 
     if(errObj) {
@@ -480,10 +479,10 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         let rowErrorObj: any;
 
         if(atLeastOneEntryError) {
-          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId);
+          rowErrorObj = FALFormErrorService.findErrorById(<FalFieldErrorList> errObj, fieldId);
         }
         else {
-          rowErrorObj = FALFormErrorService.findErrorById(<FieldErrorList> errObj, fieldId + suffix);
+          rowErrorObj = FALFormErrorService.findErrorById(<FalFieldErrorList> errObj, fieldId + suffix);
 
           if (errorId !== null) {
 
@@ -1123,10 +1122,10 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     }
   }
   breadcrumbHandler(event) {
-    if(event === 'My Workspace') {
+    if(event === 'Workspace') {
       this.router.navigateByUrl('/workspace');
     }
-    if(event === 'Assistance Workspace') {
+    if(event === 'Assistance Listings') {
       this.router.navigateByUrl('/fal/workspace');
     }
   }
@@ -1260,7 +1259,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
               for (let msYear of missingYears) {
                 obj = {};
                 obj['year'] = msYear;
-                obj['estimate'] = null
+                obj['estimate'] = null;
                 values.push(obj);
               }
             }
@@ -1280,6 +1279,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
 
   private massageOldObligationsValues(obligationValues) {
     let values = [];
+    let updatedValues = [];
     if(obligationValues && obligationValues.length > 0){
       values = this.sortPrevPublishedValues(obligationValues);
       let counter = 0;
@@ -1311,9 +1311,25 @@ export class FALReviewComponent implements OnInit, OnDestroy {
           this.trimFYOptions.bFY = value['year'].toString().substring(2);;
           this.totalsByYear['totalbFY'] = this.totalsByYear['totalbFY'] + estimateBFY;
         }
+        let obj = {};
+        obj['year'] = value['year'];
+        if(value['flag'] && value['flag'] !== null) {
+          if (value['flag'] === 'nsi') {
+            obj['flag'] = value['flag'];
+          } else if (value['flag'] === 'ena') {
+            obj['flag'] = value['flag']
+          }
+        } else {
+          if (((value['actual'] !== null && value['actual'] >= 0) && (value['estimate'] !== null && value['estimate'] >= 0)) || (value['actual'] !== null && value['actual'] >= 0)) {
+            obj['actual'] = value['actual'].toString();
+          } else if (value['estimate'] !== null && value['estimate'] >= 0) {
+            obj['estimate'] = value['estimate'].toString();
+          }
+        }
+        updatedValues.push(obj);
       }
     }
-    return values;
+    return updatedValues;
   }
 
   private missingFiscalYear(fisacalYears, yearsArray) {

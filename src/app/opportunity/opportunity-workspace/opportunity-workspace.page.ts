@@ -2,8 +2,6 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import * as Cookies from 'js-cookie';
 import * as _ from 'lodash';
-import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Observable} from "rxjs/Observable";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 import {OpportunityService} from "../../../api-kit/opportunity/opportunity.service";
@@ -11,12 +9,11 @@ import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service"
 import {FHService} from "../../../api-kit/fh/fh.service";
 import {UserService} from "../../role-management/user.service";
 import {UserAccessService} from "../../../api-kit/access/access.service";
-import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity-workspace.template.html',
-  providers: []
+  providers: [UserService]
 })
 
 export class OPPWorkspacePage implements OnInit, OnDestroy {
@@ -29,7 +26,6 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   private START_DAY = '00:00:00';
   private END_DAY = '23:59:59';
 
-  feedback: any;
   showSpinner: boolean = false;
   keyword: string = '';
   organizationId: string = '';
@@ -170,13 +166,11 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     private userAccessService: UserAccessService, 
     private fhService: FHService, 
     private dictionaryService: DictionaryService, 
-    private alertFooterService: AlertFooterService,
-    private formService: FeedbackFormService) {
+    private alertFooterService: AlertFooterService) {
   }
 
   ngOnInit() {
     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-    this.feedback = this.formService.componentInstance;
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : 0;
@@ -189,7 +183,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         this.internalDateModel = data['dateFrom'] && data['dateTo'] ? {'startDate': data['dateFrom'], 'endDate': data['dateTo']} : {};
         this.dateFilterModel = data['dateTab'] ? this.formatDateModel(data) : {};
         this.dateRadio = data['radSelection'] ? decodeURI(data['radSelection']) : 'date';
-        
+
         this.dateFilterIndex = data['dateTab'] && this.dateTypeOptions ? _.indexOf(this.dateTypeOptions, decodeURI(data['dateTab'])) : 0;
         this.updateDateFilterConfig(this.dateFilterIndex);
         this.runOpportunity();
@@ -206,7 +200,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
   updateDateFilterConfig(index){
     this.dateRangeConfig[index].dateFilterConfig.radSelection = this.dateRadio;
     if(this.selectDateFilter){
-      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);      
+      this.selectDateFilter.setCurrentDateOption(this.dateRangeConfig[index]);
     }
   }
 
@@ -299,7 +293,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
      // setting dateFilterIndex
     if(event){
       if(event.index){
-        this.dateFilterIndex = event.index;     
+        this.dateFilterIndex = event.index;
       }
     }else{
       this.dateFilterIndex = 0;
@@ -332,7 +326,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
         'endDate': model.date
       }
     }
-    
+
   }
   formatDateRange(model, appendTime){
     if(!_.isEmpty(model)){
@@ -385,7 +379,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     this.showSpinner = true;
 
     let dateTab = this.dateTypeOptions[this.dateFilterIndex]
-    //Response date format expects time stamp from back end    
+    //Response date format expects time stamp from back end
     let appendTime = dateTab === this.RESPONSE && this.internalDateModel && !_.isEmpty(this.internalDateModel);
     let dateObj = this.formatDateWrapper(appendTime);
 

@@ -43,6 +43,7 @@ export class FALFormChangeRequestComponent implements OnInit {
   pageReady: boolean = false;
   program: any;
   currentOrganization: any;
+  newOrganization: any; // for agency_request: looking for existing assistance administrator
   cookieValue: string;
   public permissions: any;
   programNumber: any;
@@ -59,12 +60,7 @@ export class FALFormChangeRequestComponent implements OnInit {
     type: "success",
     timer: 3000
   };
-  crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
-    { breadcrumb: 'My Workspace', url: '/workspace' },
-    { breadcrumb: 'Assistance Workspace', url: '/fal/workspace'},
-    { breadcrumb: 'Change Request'}
-  ];
+  crumbs: Array<IBreadcrumb> = [];
   agencyPickerConfig = {
     id: 'change-request-organization',
     label: 'New Agency',
@@ -114,10 +110,31 @@ export class FALFormChangeRequestComponent implements OnInit {
         }else{
           this.loadPermission();
         }
+        if(this.requestType === 'archive_request') {
+          this.assignbreadcrumb("Archive Listing");
+        }
+        if(this.requestType=== 'title_request'){
+          this.assignbreadcrumb("Title Change");
+        }
+        if(this.requestType=== 'agency_request'){
+          this.assignbreadcrumb("Agency Change");
+        }
+        if(this.requestType=== 'program_number_request'){
+          this.assignbreadcrumb("CFDA Number Change");
+        }
+        if(this.requestType=== 'unarchive_request'){
+          this.assignbreadcrumb("Unarchive Listing");
+        }
       });
     });
   }
-
+  private assignbreadcrumb(type: string ){
+    this.crumbs = [];
+    this.crumbs.push(
+      { breadcrumb: 'Workspace', url: '/workspace' },
+      { breadcrumb: 'Assistance Listing', url: '/fal/workspace'},
+      { breadcrumb: type} );
+  }
   private loadPermission() {
     this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS', this.program.data.organizationId).subscribe(res => {
       this.permissions = res;
@@ -133,7 +150,6 @@ export class FALFormChangeRequestComponent implements OnInit {
         (this.requestType === 'agency_request' && (this.permissions['INITIATE_CANCEL_AGENCY_CR'] || this.permissions['APPROVE_REJECT_AGENCY_CR'])) ||
         (this.requestType === 'title_request' && (this.permissions['INITIATE_CANCEL_TITLE_CR'] || this.permissions['APPROVE_REJECT_TITLE_CR']))
       ) {
-        this.pageReady = true;
         this.createForm(this.requestType);
         this.setTitle(this.requestType);
       } else { //implement the rest of request types
@@ -145,29 +161,31 @@ export class FALFormChangeRequestComponent implements OnInit {
   }
 
   createForm(type: string) {
-    if (type == 'archive_request') {
-      this.falChangeRequestForm = this.fb.group({
-        activeAwards: [[], [falCustomValidatorsComponent.checkboxRequired]],
-        comment: ''
-      });
-    } else if (type == 'unarchive_request') {
-      this.falChangeRequestForm = this.fb.group({
-        comment: ''
-      });
-    }else if (type == 'program_number_request') {
-      this.falChangeRequestForm = this.fb.group({
-        programNumber: ['', falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh), falCustomValidatorsComponent.isProgramNumberUnique(this.programService, this.cfdaCode, this.activatedRoute.snapshot.params['id'], this.cookieValue, null)],
-        comment: ''
-      });
-    } else if (type == 'title_request') {
-      this.falChangeRequestForm = this.fb.group({
-        newTitle:['',falCustomValidatorsComponent.checkForDifferentTitle(this.program.data.title)],
-        comment: ''
-      });
-    }else if (type == 'agency_request') {
-      this.pageReady = false;
-      this.fhService.getOrganizationById(this.program.data.organizationId, false, false).subscribe(res =>{
-        this.currentOrganization = res['_embedded'][0]['org'];
+    this.fhService.getOrganizationById(this.program.data.organizationId, false, false).subscribe(res =>{
+      this.currentOrganization = res['_embedded'][0]['org'];
+      this.pageReady = true;
+
+      if (type == 'archive_request') {
+        this.falChangeRequestForm = this.fb.group({
+          activeAwards: [[], [falCustomValidatorsComponent.checkboxRequired]],
+          comment: ''
+        });
+      } else if (type == 'unarchive_request') {
+        this.falChangeRequestForm = this.fb.group({
+          comment: ''
+        });
+      }else if (type == 'program_number_request') {
+        this.falChangeRequestForm = this.fb.group({
+          programNumber: ['', falCustomValidatorsComponent.isProgramNumberInTheRange(this.programNumberLow, this.programNumberHigh), falCustomValidatorsComponent.isProgramNumberUnique(this.programService, this.cfdaCode, this.activatedRoute.snapshot.params['id'], this.cookieValue, null)],
+          comment: ''
+        });
+      } else if (type == 'title_request') {
+        this.falChangeRequestForm = this.fb.group({
+          newTitle:['',falCustomValidatorsComponent.checkForDifferentTitle(this.program.data.title)],
+          comment: ''
+        });
+      } else if (type == 'agency_request') {
+        this.pageReady = false;
         this.programService.getPermissions(this.cookieValue, 'ORG_ID', this.program.data.organizationId).subscribe(res => {
           this.userOrganization = res['ORG_ID'];
           this.falChangeRequestForm = this.fb.group({
@@ -177,54 +195,54 @@ export class FALFormChangeRequestComponent implements OnInit {
           this.pageReady = true;
           this.subscribeToChanges();
         });
-      });
-    }
+      }
+    });
   }
 
   setTitle(type: string) {
     if (type === 'archive_request') {
       if (this.permissions['APPROVE_REJECT_ARCHIVE_CR']) {
-        this.pageTitle = "Archive an Assistance Listing";
-        this.submitButtonText = "Archive Listing";
+        this.pageTitle = "Archive Listing";
+        this.submitButtonText = "Submit";
         this.permissionType = ChangeRequestPermissionType.ACTION;
       } else if (this.permissions['INITIATE_CANCEL_ARCHIVE_CR']) {
-        this.pageTitle = "Assistance Listing Archive Request";
+        this.pageTitle = "Archive Listing";
         this.submitButtonText = "Submit Request";
         this.permissionType = ChangeRequestPermissionType.REQUEST;
       }
     } else if (type === 'unarchive_request') {
       if (this.permissions['APPROVE_REJECT_UNARCHIVE_CR']) {
-        this.pageTitle = "Unarchive an Assistance Listing";
-        this.submitButtonText = "Unarchive Listing";
+        this.pageTitle = "Unarchive Listing";
+        this.submitButtonText = "Submit";
         this.permissionType = ChangeRequestPermissionType.ACTION;
       } else if (this.permissions['INITIATE_CANCEL_UNARCHIVE_CR']) {
-        this.pageTitle = "Assistance Listing Unarchive Request";
+        this.pageTitle = "Unarchive Listing";
         this.submitButtonText = "Submit Request";
         this.permissionType = ChangeRequestPermissionType.REQUEST;
       }
     }else if (type === 'program_number_request') {
       if (this.permissions['APPROVE_REJECT_NUMBER_CR']) {
         this.pageTitle = "CFDA Number Change";
-        this.submitButtonText = "Change CFDA Number";
+        this.submitButtonText = "Submit";
         this.permissionType = ChangeRequestPermissionType.ACTION;
       } else if (this.permissions['INITIATE_CANCEL_NUMBER_CR']) {
-        this.pageTitle = "CFDA Number Change Request";
+        this.pageTitle = "CFDA Number Change";
         this.submitButtonText = "Submit Request";
         this.permissionType = ChangeRequestPermissionType.REQUEST;
       }
     } else if (type === 'title_request') {
       if (this.permissions['APPROVE_REJECT_TITLE_CR']) {
-        this.pageTitle = "Assistance Listing Title Change";
-        this.submitButtonText = "Change Title";
+        this.pageTitle = "Title Change";
+        this.submitButtonText = "Submit";
         this.permissionType = ChangeRequestPermissionType.ACTION;
       } else if (this.permissions['INITIATE_CANCEL_TITLE_CR']) {
-        this.pageTitle = "Assistance Listing Title Change Request";
+        this.pageTitle = "Title Change";
         this.submitButtonText = "Submit Request";
         this.permissionType = ChangeRequestPermissionType.REQUEST;
       }
     }else if (type === 'agency_request') {
-      this.pageTitle = "Assistance Listing Agency Change Request";
-      this.submitButtonText = "Submit Request";
+      this.pageTitle = "Agency Change";
+      this.submitButtonText = "Submit";
       this.permissionType = ChangeRequestPermissionType.REQUEST;
     }
   }
@@ -296,6 +314,7 @@ export class FALFormChangeRequestComponent implements OnInit {
     var orgId = null;
     if(typeof org === 'object' && org !== null) {
       orgId = org.orgKey;
+      this.newOrganization = org;
     } else {
       orgId = org;
     }
@@ -329,6 +348,14 @@ export class FALFormChangeRequestComponent implements OnInit {
       }
     }
     return preparedData;
+  }
+
+  public isChangeRequestPermissionType(type: string): boolean {
+    if(type == 'request') {
+      return this.permissionType == ChangeRequestPermissionType.REQUEST;
+    } else if(type == 'action') {
+      return this.permissionType == ChangeRequestPermissionType.ACTION;
+    }
   }
 
   private validateRequestType(type: string) {

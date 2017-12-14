@@ -62,20 +62,20 @@
       <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:create']"
         class="item"
         [routerLink]="['/fal/add']">
-        <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
-        Create a New Listing
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
+        Add a New Listing
       </a>
       <a *ngIf="userPermissions && userPermissions._links && userPermissions._links['program:regional:offices:create']"
         class="item"
         [routerLink]="['/fal/myRegionalAssistanceLocations']">
         <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
-        Manage Assistance Locations
+        Regional Assistance Locations
       </a>
       <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'"
         class="item"
         [routerLink]="['/fal/workspace/cfda-numbers']">
         <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
-        Manage CFDA Numbers
+        CFDA Number Assignment
       </a>
     </div>
   </div>

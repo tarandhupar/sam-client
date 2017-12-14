@@ -6,6 +6,7 @@ import { WatchlistService } from "api-kit/watchlist/watchlist.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { SamActionInterface } from "sam-ui-elements/src/ui-kit/components/actions";
 import { Watchlist } from '../../app-components/watchlist/watchlist.model';
+import { WatchlistType } from "api-kit/watchlist/watchlist.service";
 import {AlertFooterService} from "../../app-components/alert-footer/alert-footer.service";
 
 @Component({
@@ -14,6 +15,7 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 export class SubscriptionsComponent {
 
   @ViewChild('bulkUpdateModal') bulkUpdateModal;
+  @ViewChild('unsubscribeModal') unsubscribeModal;
   modalConfig = {title:'Confirm Action', description:''};
 
   fieldName = 'active';
@@ -21,11 +23,12 @@ export class SubscriptionsComponent {
 
   private crumbs: Array<IBreadcrumb> = [
     { url: '/profile', breadcrumb: 'Profile' },
-    { breadcrumb: 'Manage Subscriptions' }
+    { breadcrumb: 'Followings' }
   ];
  
   recordsPerPage = 10;
   dropdownStyles = {border:'0px', outline:'0px', "background-color": 'transparent', "min-width": '120px'};
+  dropdownStylesActions = {border:'0px', outline:'0px', "background-color": 'transparent', "min-width": '170px'};
 
   sortByModel = {type: 'date', sort: 'desc' };
   msgSortOptions = [{label:'Last Modified', name:'Last Modified', value:'date'}, {label:'Name', name:'Name', value:'name'}, {label:'Type', name:'Type', value:'type'}];
@@ -58,7 +61,7 @@ export class SubscriptionsComponent {
       { label: 'Weekly', name: 'weekly'},
       { label: 'None', name: 'none'}]
     },
-    { label: "Unsubscribe",
+    { label: "Unfollow",
       name: "unsubscribe"
     },
   ];
@@ -92,17 +95,19 @@ export class SubscriptionsComponent {
 
   successFooterAlertModel = {
     title: "Success",
-    description: "Unubscribe Successful.",
+    description: "Unfollow Successful.",
     type: "success",
     timer: 3000
   }
 
   errorFooterAlertModel = {
     title: "Error",
-    description: "Error in Unubscribe.",
+    description: "Error in Unfollow.",
     type: "error",
     timer: 3000
   }
+
+  follow:WatchlistType = {};
 
   constructor(private route:ActivatedRoute, private _router:Router, private subscriptionsService:SubscriptionsService, private watchlistService:WatchlistService, private capitalPipe: CapitalizePipe, private alertFooterService: AlertFooterService){}
 
@@ -140,8 +145,8 @@ export class SubscriptionsComponent {
       if(data) {
         this.selectOptions = [];
         data['recordList'].forEach((d) => {
-           if(d.modified_date) {
-             d.modified_date = new Date(d.modified_date);
+           if(d.modifiedDate) {
+             d.modifiedDate = new Date(d.modifiedDate);
            }
            d.active = 'Y';
            if(!d.title) {
@@ -151,11 +156,44 @@ export class SubscriptionsComponent {
            obj.selected = false;
            obj.id = d.id;
            this.selectOptions.push(obj);
+
+           let acts = [];
+           //d.interestedVendor = true;
+           //let acts = [{label: "Action", name: "action", value: "-1"}];
+           //let acts = [{label: "Action", name: "action", value: "-1"}, {label: "Interested Vendor", name: "action", value: "Interested Vendor"}];
+           if(d.isInterestedVendor) {
+             d.currStatus = "Interested Vendor";
+             acts.push({label: "Interested Vendor", name: "action", value: "Interested Vendor"});
+           } else {
+             d.currStatus = "Following";
+             acts.push({label: "Following", name: "action", value: "Following"});
+            // acts.push({label: "Follow", name: "action", value: "Follow"});
+           }
+           if(d.actions) {
+             let actionsArr = d.actions.split(',');
+             if(actionsArr) {
+              actionsArr.forEach((a) => {
+                let opt:any = {};
+                opt.label = a;
+                opt.name = a;
+                opt.value = a;
+                acts.push(opt);
+              });
+              d.actions = acts;
+             }
+           }
          });
         this.subscriptions = data['recordList'];
         this.totalRecords = data['totalRecords'];
         let resDomains = data['userDomains'];
-        this.userDomains = resDomains; //(resDomains) ? resDomains.split(",") : [];
+        this.userDomains = [];
+        Object.keys(resDomains).forEach((key) => {
+            let  result:any = {};
+            result.id = key;
+            result.desc = resDomains[key];
+            this.userDomains.push(result);
+        });
+       // this.userDomains = resDomains; //(resDomains) ? resDomains.split(",") : [];
         this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
         this.updateRecordsText();
 
@@ -258,10 +296,10 @@ export class SubscriptionsComponent {
     return ret;
   }
 
-  handleSubscriptionChange(watchlist) {
+  /*handleSubscriptionChange(watchlist) {
     this.registerFooteralert(true, "You are now unsubscribed from: " + watchlist.recordId());
     this.loadSubscriptions(this.filterObj, this.sortByModel,  this.curPage);
-  }
+  }*/
 
   /* Get css classes*/
   getOrderByClass(){return "fa-sort-amount-" + this.orderByOptions[this.orderByIndex];}
@@ -316,10 +354,51 @@ export class SubscriptionsComponent {
          this.performBulkUpdate();
          return;
         } else {
-          this.modalConfig.description = 'Are you sure you wish to unsubscribe? This will update ' + recordsToUpdate + ' records.';
+          this.modalConfig.description = 'Are you sure you wish to unfollow? This will update ' + recordsToUpdate + ' records.';
         }
         this.bulkUpdateModal.openModal();
       }
+  }
+
+  confirmOption(event, id) {
+    let active;
+    let evl;
+    if(event === 'Unfollow') {
+      active = 'N';
+      evl = false;
+    } else if(event === 'Interested Vendor') {
+      evl = true;
+    } else if(event === 'Follow') {
+      evl = false;
+    } else {
+      return;
+    }
+
+    this.follow = {};
+    this.follow.id = id;
+    this.follow.active = active;
+    this.follow.interestedVendor  = evl;
+    this.modalConfig.description = 'Are you sure you wish to change to ' + event + '?';
+    this.unsubscribeModal.openModal();
+  }
+
+  onUnsubscribeModalSubmit() {
+    this.unsubscribeModal.closeModal();
+    this.saveSubscription();
+  }
+
+  saveSubscription() {
+      //Save subscription
+      this.watchlistService.updateWatchlist(this.follow).subscribe(resWatch => {
+      let updatedWatchlist = Watchlist.FromResponse(resWatch);
+      console.log("Successfully changed Subscription Action.");
+      this.registerFooteralert(true, "Following updated for record: " + updatedWatchlist.recordId());
+      this.loadSubscriptions(this.filterObj, this.sortByModel,  this.curPage); 
+     },
+     e => {
+       this.registerFooteralert(false , "Error updating Following"); 
+       console.log("Error updating subscription " + e);
+      } ); 
   }
 
   onBulkUpdateModalSubmit() {
@@ -333,7 +412,7 @@ export class SubscriptionsComponent {
       let recordsUpdated = res.recordsUpdated;
       console.log("Successfully updated " + recordsUpdated);
       if(this.fieldName === 'active') {
-        this.registerFooteralert(true, recordsUpdated + " records unsubscribed." );
+        this.registerFooteralert(true, recordsUpdated + " records unfollowed." );
       } else {
         this.registerFooteralert(true, recordsUpdated + " records updated." );
       }

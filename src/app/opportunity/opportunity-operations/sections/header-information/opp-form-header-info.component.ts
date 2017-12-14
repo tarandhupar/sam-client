@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
@@ -6,14 +6,19 @@ import { OpportunityFormService } from "../../framework/service/opportunity-form
 import { UserAccessService } from "../../../../../api-kit/access/access.service";
 import { UserService } from "../../../../role-management/user.service";
 import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
+import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
+import { OpportunitySectionNames } from "../../framework/data-model/opportunity-form-constants";
+import { OpportunityFormErrorService } from "../../opportunity-form-error.service";
 
 @Component({
+  providers: [UserService],
   selector: 'opp-form-header-information',
   templateUrl: 'opp-form-header-info.template.html'
 })
 
 export class OpportunityHeaderInfoComponent implements OnInit {
   @Input() public viewModel: OpportunityFormViewModel;
+  @Output() public showErrors = new EventEmitter();
   public oppHeaderInfoForm: FormGroup;
   public oppHeaderInfoViewModel: any;
 
@@ -55,13 +60,15 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     orgRoots: [],
     levelLimit: 3,
   };
+  noticeTypes = ['o', 'p', 'k', 'r', 'g', 's', 'a'];
 
-
-  constructor(private formBuilder: FormBuilder,
+  constructor(private errorService: OpportunityFormErrorService, private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef,
     private userAccessService: UserAccessService,
     private userService: UserService,
     private router: Router,
-    private oppFormService: OpportunityFormService) {
+    private oppFormService: OpportunityFormService,
+    private oppNoticeTypeMapService: OppNoticeTypeMapService) {
 
       Object.freeze(this.oppTypeConfig);
       Object.freeze(this.titleConfig);
@@ -109,16 +116,28 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   private createForm(): void {
     this.oppHeaderInfoForm = this.formBuilder.group({
       opportunityType: null,
+      relatedNotice: null,
       title: '',
       procurementId: '',
       office: null,
     });
+    this.cdr.detectChanges();
+    if (this.viewModel.getSectionStatus(OpportunitySectionNames.HEADER) === 'updated') {
+      this.oppHeaderInfoForm.markAsPristine({onlySelf: true});
+      this.oppHeaderInfoForm.get('title').markAsDirty({onlySelf: true});
+      this.oppHeaderInfoForm.get('title').updateValueAndValidity();
+      this.oppHeaderInfoForm.get('procurementId').markAsDirty({onlySelf: true});
+      this.oppHeaderInfoForm.get('procurementId').updateValueAndValidity();
+      this.oppHeaderInfoForm.get('office').markAsDirty({onlySelf: true});
+      this.oppHeaderInfoForm.get('office').updateValueAndValidity();
+    }
   }
 
   private updateForm(): void {
     this.oppHeaderInfoForm.patchValue({
       opportunityType: this.oppHeaderInfoViewModel.opportunityType,
       title: this.viewModel.title,
+      relatedNotice: this.viewModel.relatedNotice,
       procurementId: this.oppHeaderInfoViewModel.procurementId,
       office: this.oppHeaderInfoViewModel.office,
     }, {
@@ -131,13 +150,15 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     } else {
       this.initFHDropdown();
     }
+    this.cdr.detectChanges();
+    this.updateErrors();
   }
 
   private loadTypeOptions() {
     this.oppFormService.getOpportunityDictionary('procurement_type').subscribe((dict) => {
       if (dict['procurement_type'] && dict['procurement_type'].length > 0) {
         for (let type of dict['procurement_type']) {
-          if (type.code == 'o' || type.code == 'p' || type.code == 'k' || type.code == 'r' || type.code == 'g' || type.code == 's') {
+          if (type.code && this.noticeTypes.indexOf(type.code) !== -1) {
             this.oppTypeConfig.options.push({
               value: type.elementId,
               label: type.value,
@@ -156,6 +177,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     this.linkControlTo(this.oppHeaderInfoForm.get('opportunityType'), this.saveOpportunityType);
     this.linkControlTo(this.oppHeaderInfoForm.get('procurementId'), this.saveProcurementId);
     this.linkControlTo(this.oppHeaderInfoForm.get('title'), this.saveTitle);
+    this.linkControlTo(this.oppHeaderInfoForm.get('relatedNotice'), this.saveRelatedNotice);
   }
 
   private linkControlTo(control: AbstractControl, callback: (value: any) => void): void {
@@ -169,23 +191,93 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     // actions to take after any field is updated
   }
 
-  private saveOffice(office) {
-    if(typeof office === 'object' && office !== null) {
-      this.oppHeaderInfoViewModel.office = office.orgKey;
-    } else {
-      this.oppHeaderInfoViewModel.office = office;
+  private saveOffice(federalAgency) {
+    if(federalAgency) {
+      let orgId = '';
+      if (typeof federalAgency === 'object')
+        orgId = federalAgency.orgKey;
+      else {
+        orgId = federalAgency;
+      }
+      this.oppHeaderInfoViewModel.office = orgId;
     }
+    else {
+      this.oppHeaderInfoViewModel.office = null;
+    }
+
+    this.cdr.detectChanges();
+    this.updateFederalAgencyError();
   }
 
   private saveOpportunityType(type) {
     this.oppHeaderInfoViewModel.opportunityType = type;
+    this.disableSideNavItem(type);
   }
 
   private saveProcurementId(id) {
     this.oppHeaderInfoViewModel.procurementId = id;
+    this.cdr.detectChanges();
+    this.updateProcurementIdError();
   }
 
   private saveTitle(title) {
     this.viewModel.title = title;
+    this.cdr.detectChanges();
+    this.updateTitleError();
+  }
+
+  public updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateTitleError();
+    this.updateFederalAgencyError();
+    this.updateProcurementIdError();
+  }
+
+  private updateTitleError() {
+    this.oppHeaderInfoForm.get('title').clearValidators();
+    this.oppHeaderInfoForm.get('title').setValidators((control) => {
+      return control.errors
+    });
+    this.oppHeaderInfoForm.get('title').setErrors(this.errorService.validateHeaderTitle().errors);
+    this.markAndUpdateFieldStat('title');
+
+    this.emitErrorEvent();
+  }
+
+  private updateFederalAgencyError() {
+    this.oppHeaderInfoForm.get('office').clearValidators();
+    this.oppHeaderInfoForm.get('office').setValidators((control) => {
+      return control.errors
+    });
+    this.oppHeaderInfoForm.get('office').setErrors(this.errorService.validateFederalAgency().errors);
+    this.markAndUpdateFieldStat('office');
+    this.emitErrorEvent();
+  }
+
+
+  private updateProcurementIdError() {
+    this.oppHeaderInfoForm.get('procurementId').clearValidators();
+    this.oppHeaderInfoForm.get('procurementId').setValidators((control) => {
+      return control.errors
+    });
+    this.oppHeaderInfoForm.get('procurementId').setErrors(this.errorService.validateProcurementId().errors);
+    this.markAndUpdateFieldStat('procurementId');
+    this.emitErrorEvent();
+  }
+
+  private markAndUpdateFieldStat(fieldName) {
+    this.oppHeaderInfoForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
+  }
+
+  private emitErrorEvent() {
+    this.showErrors.emit(this.errorService.applicableErrors);
+  }
+
+  private saveRelatedNotice(notice: string) {
+   this.viewModel.relatedNotice = notice;
+  }
+
+  private disableSideNavItem(type) {
+    this.oppNoticeTypeMapService.toggleSectionsDisabledProperty(type);
   }
 }

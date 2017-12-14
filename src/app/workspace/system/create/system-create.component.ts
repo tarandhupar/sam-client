@@ -115,6 +115,13 @@ export class SystemCreateComponent {
         this.api.iam.cws.application.get(this.application.uid, application => {
           this.application = merge({}, this.application, application);
 
+          // Reset authorization confirmation when not submitted
+          if(this.application.applicationStatus.match(/(draft)/i)) {
+            this.application.authorizationConfirmation = false;
+            this.application.authorizingOfficialName = '';
+            this.application.authorizationDate = null;
+          }
+
           this.initForm();
           this.updateStatus();
         }, () => {
@@ -193,9 +200,9 @@ export class SystemCreateComponent {
 
       'authorization': this.builder.group({
         uploadAto: [application.uploadAto],
-        authorizationConfirmation: [application.authorizationConfirmation, [Validators.required]],
+        authorizationConfirmation: [application.authorizationConfirmation, [Validators.requiredTrue]],
         authorizingOfficialName: [application.authorizingOfficialName],
-        authorizationDate: [''],
+        authorizationDate: [application.authorizationDate],
       }),
     });
   }

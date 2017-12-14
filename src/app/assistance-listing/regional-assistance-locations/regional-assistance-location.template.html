@@ -15,12 +15,12 @@
       </li>
       <li>
         <a class="usa-current">
-          Manage Assistance Locations
+          Regional Assistance Locations
         </a>
       </li>
       <li>
         <a *ngIf="permissions.ORG_LEVELS?.level && permissions.ORG_LEVELS?.level === 'all'" routerLink="/fal/workspace/cfda-numbers">
-          CFDA Number Management
+          CFDA Number Assignment
         </a>
       </li>
     </ul>
@@ -51,7 +51,7 @@
   <sam-button *ngIf="userPermissions && userPermissions._links && this.userPermissions._links['program:regional:offices:create']"
               [attr.id] = "'create-new-btn'"
               [buttonType]="'default'"
-              [buttonText]="'Create New' "
+              [buttonText]="'Add Location' "
               [buttonClass]="'sam-ui button dark blue'"
               (onClick)="createNewLocation()">
   </sam-button>

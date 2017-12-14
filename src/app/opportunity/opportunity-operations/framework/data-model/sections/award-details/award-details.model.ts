@@ -7,6 +7,13 @@ export class OppAwardDetailsViewModel {
   constructor(data) {
     this._data = data;
   }
+  get awardDate(): string {
+    return _.get(this._data, 'award.date', null);
+  }
+
+  set awardDate(date: string) {
+    _.set(this._data, 'award.date', date);
+  }
 
   get awardNumber(): string {
     return _.get(this._data, 'award.number', null);

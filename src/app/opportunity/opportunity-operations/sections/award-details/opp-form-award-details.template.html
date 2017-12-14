@@ -3,6 +3,17 @@
 </h2>
 
 <form [formGroup]="oppAwardDetailsForm">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('AWARD_DATE')">
+  <sam-date
+    [attr.id]="awardDateConfig.id"
+    [label]="awardDateConfig.label"
+    [name]="awardDateConfig.name"
+    [control]="oppAwardDetailsForm.get('awardDate')"
+    [formControl]="oppAwardDetailsForm.get('awardDate')"
+    [required]="checkFieldRequired('AWARD_DATE')"
+    [defaultValidations]="awardDateConfig.defaultValidations"></sam-date>
+  </div>
+
   <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('AWARD_NUMBER')">
     <sam-text
       [attr.id]="awardNumberConfig.id"
@@ -12,30 +23,6 @@
       [label]="awardNumberConfig.label"
       [name]="awardNumberConfig.name"
       [required]="checkFieldRequired('AWARD_NUMBER')">
-    </sam-text>
-  </div>
-
-  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('AMOUNT')">
-    <sam-number
-      [attr.id]="amountConfig.id"
-      [control]="oppAwardDetailsForm.get('amount')"
-      [formControl]="oppAwardDetailsForm.get('amount')"
-      [hint]="amountConfig.hint"
-      [label]="amountConfig.label"
-      [name]="amountConfig.name"
-      [required]="checkFieldRequired('AMOUNT')">
-    </sam-number>
-  </div>
-
-  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('LINE_ITEM_NUMBER')">
-    <sam-text
-      [attr.id]="lineItemNumberConfig.id"
-      [control]="oppAwardDetailsForm.get('lineItemNumber')"
-      [formControl]="oppAwardDetailsForm.get('lineItemNumber')"
-      [hint]="lineItemNumberConfig.hint"
-      [label]="lineItemNumberConfig.label"
-      [name]="lineItemNumberConfig.name"
-      [required]="checkFieldRequired('LINE_ITEM_NUMBER')">
     </sam-text>
   </div>
 
@@ -72,6 +59,30 @@
       [label]="awardeeNameConfig.label"
       [name]="awardeeNameConfig.name"
       [required]="checkFieldRequired('AWARDEE_NAME')">
+    </sam-text>
+  </div>
+
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('AMOUNT')">
+    <sam-number
+      [attr.id]="amountConfig.id"
+      [control]="oppAwardDetailsForm.get('amount')"
+      [formControl]="oppAwardDetailsForm.get('amount')"
+      [hint]="amountConfig.hint"
+      [label]="amountConfig.label"
+      [name]="amountConfig.name"
+      [required]="checkFieldRequired('AMOUNT')">
+    </sam-number>
+  </div>
+
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('LINE_ITEM_NUMBER')">
+    <sam-text
+      [attr.id]="lineItemNumberConfig.id"
+      [control]="oppAwardDetailsForm.get('lineItemNumber')"
+      [formControl]="oppAwardDetailsForm.get('lineItemNumber')"
+      [hint]="lineItemNumberConfig.hint"
+      [label]="lineItemNumberConfig.label"
+      [name]="lineItemNumberConfig.name"
+      [required]="checkFieldRequired('LINE_ITEM_NUMBER')">
     </sam-text>
   </div>
 

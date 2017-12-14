@@ -16,7 +16,7 @@ import { FHService, IAMService } from 'api-kit';
 import { FHServiceMock } from 'api-kit/fh/fh.service.mock';
 import { getMockUser } from 'api-kit/iam/api/core/modules/mocks';
 
-describe('[IAM] Sign Up (Main)', () => {
+xdescribe('[IAM] Sign Up (Main)', () => {
   let component: RegisterMainComponent;
   let fixture: ComponentFixture<RegisterMainComponent>;
 

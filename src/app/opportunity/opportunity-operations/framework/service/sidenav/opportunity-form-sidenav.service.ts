@@ -6,15 +6,15 @@ import { OpportunitySectionNames } from '../../data-model/opportunity-form-const
 
 export class OpportunitySideNavService {
 
-  private pristineIconClass = '';
+  private pristineIconClass = 'pending';
 
   private sections: string[] = [
-    OpportunitySectionNames.HEADER_INFORMATION,
+    OpportunitySectionNames.HEADER,
     OpportunitySectionNames.AWARD_DETAILS,
-    OpportunitySectionNames.GENERAL_INFORMATION,
+    OpportunitySectionNames.GENERAL,
     OpportunitySectionNames.CLASSIFICATION,
     OpportunitySectionNames.DESCRIPTION,
-    OpportunitySectionNames.CONTACT_INFORMATION,
+    OpportunitySectionNames.CONTACT,
   ];
 
   private sectionLabels: any = [
@@ -75,5 +75,21 @@ export class OpportunitySideNavService {
 
   getSideNavModel() {
     return this.sidenavModel;
+  }
+
+  disableSideNavItem(fragment) {
+    let index = this.getSectionIndex(fragment);
+    this.sidenavModel.children[index].disabled = true;
+  }
+
+  enableSideNavItem(fragment) {
+    let index = this.getSectionIndex(fragment);
+    this.sidenavModel.children[index].disabled = false;
+  }
+
+  refreshSideNav(){
+    for (let section of this.sidenavModel.children){
+      section.iconClass = "pending";
+    }
   }
 }

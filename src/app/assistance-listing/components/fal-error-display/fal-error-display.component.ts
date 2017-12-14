@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core'
 import {
-  FieldError, FieldErrorList,
-  isFieldError, isFieldErrorList, FALFormErrorService
+  FalFieldError, FalFieldErrorList,
+  isFalFieldError, isFalFieldErrorList, FALFormErrorService
 } from '../../assistance-listing-operations/fal-form-error.service';
 import {
   FALSectionFieldsBiMap, FALFieldNames,
@@ -22,14 +22,14 @@ import { ValidationErrors } from '../../../app-utils/types';
 })
 export class FALErrorDisplayComponent implements OnChanges {
   @Input()
-  public validationErrors: (FieldError | FieldErrorList) = null;
+  public validationErrors: (FalFieldError | FalFieldErrorList) = null;
   @Output() message = new EventEmitter();
   @Output() onNavigation = new EventEmitter();
 
   public numErrors: number = 0;
   public numPristine: number = 0;
 
-  public formatErrors(validationErrors: FieldError | FieldErrorList, pristineSections: any[]): void {
+  public formatErrors(validationErrors: FalFieldError | FalFieldErrorList, pristineSections: any[]): void {
     this.validationErrors = validationErrors;
     this.numErrors = 0;
     this.numPristine = pristineSections.length;
@@ -38,16 +38,16 @@ export class FALErrorDisplayComponent implements OnChanges {
   }
 
   // do any required processing here (recursive traversal)
-  private processErrors(validationErrors: FieldError | FieldErrorList): void {
+  private processErrors(validationErrors: FalFieldError | FalFieldErrorList): void {
     // base case
-    if (isFieldError(validationErrors)) {
+    if (isFalFieldError(validationErrors)) {
       if (validationErrors.errors) {
         this.numErrors += Object.keys(validationErrors.errors).length;
       }
     }
 
     // recursive case
-    else if (isFieldErrorList(validationErrors)) {
+    else if (isFalFieldErrorList(validationErrors)) {
       for (let error of validationErrors.errorList) {
         this.processErrors(error);
       }
@@ -81,7 +81,7 @@ export class FALErrorDisplayComponent implements OnChanges {
     }
   }
 
-  public hasErrors(errors: (FieldError | FieldErrorList)): boolean {
+  public hasErrors(errors: (FalFieldError | FalFieldErrorList)): boolean {
     return FALFormErrorService.hasErrors(errors);
   }
 }
@@ -115,7 +115,7 @@ export class FALErrorDisplayComponent implements OnChanges {
 })
 export class FALErrorDisplayHelperComponent {
   @Input()
-  public validationErrors: (FieldError | FieldErrorList) = null;
+  public validationErrors: (FalFieldError | FalFieldErrorList) = null;
   @Output()
   public onNavigation = new EventEmitter();
 
@@ -123,16 +123,16 @@ export class FALErrorDisplayHelperComponent {
 
   // todo: handle this as part of preprocess
   public isLeaf(node: any): boolean {
-    return isFieldError(node);
+    return isFalFieldError(node);
   }
 
   // todo: handle this as part of preprocess
   public isBranch(node: any): boolean {
-    return isFieldErrorList(node);
+    return isFalFieldErrorList(node);
   }
 
   // todo: handle this as part of preprocess ??
-  public hasErrors(node: (FieldError | FieldErrorList)): boolean {
+  public hasErrors(node: (FalFieldError | FalFieldErrorList)): boolean {
     return FALFormErrorService.hasErrors(node);
   }
 

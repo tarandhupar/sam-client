@@ -5,6 +5,7 @@ export enum OpportunityFields {
   Solicitation = <any>'solicitation-number',
   HierarchyName = <any>'hierarchy-level',
   Location = <any>'location',
+  Related = <any>'related-notice',
 
     // IVL Summary
   IVL = <any>'ivl-summary',

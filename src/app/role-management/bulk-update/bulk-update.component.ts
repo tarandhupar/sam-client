@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { Location } from "@angular/common";
+import { cloneDeep } from 'lodash';
 
 type TabName = 'filters'|'users'|'access'|'confirmation';
 
@@ -63,7 +64,7 @@ export class SamToggle implements ControlValueAccessor {
 export class BulkUpdateComponent {
   test: boolean = false;
   sideNavSections: Array<string> = [
-    'Define Users', 'Validate Users', 'Update Users', 'Confirm'
+    'Select Role', 'Select Users', 'Update Role', 'Confirm Update'
   ];
 
   tabs: Array<TabName> = ['filters', 'users', 'access', 'confirmation'];
@@ -99,8 +100,8 @@ export class BulkUpdateComponent {
   showDeselect: boolean = true;
   mode: 'update'|'remove'|undefined = 'update';
   modeOptions = [
-    { label: 'Update Access', value: 'update' },
-    { label: 'Remove Access', value: 'remove' },
+    { label: 'Update Access', value: 'update', name: 'update' },
+    { label: 'Remove Access', value: 'remove', name: 'remove' },
   ];
   users = [];
   areUsersLoading = false;
@@ -135,7 +136,7 @@ export class BulkUpdateComponent {
   }
 
   getDomains() {
-    this.userAccessService.checkAccess(`users/:id/grant-access`).map(r => r.json()).subscribe(
+    this.userAccessService.checkAccess(`access/bulk-update`).map(r => r.json()).subscribe(
       (a: any) => {
         try {
           this.domainOptionsByRole = {};
@@ -266,7 +267,11 @@ export class BulkUpdateComponent {
   }
 
   permissionsForFunction(func) {
-    return func.permissions.filter(p => p.checked).map(p => p.name).join(',');
+    return func.permissions.filter(p => p.checked).map(p => p.name);
+  }
+
+  confirmPermissionsForFunction(func){
+    return func.permissions.filter(p => p.checked || (!p.checked && p.status));
   }
 
   clearFilterErrors() {
@@ -421,7 +426,7 @@ export class BulkUpdateComponent {
                 )
               };
             }
-          )
+          );
         } catch (error) {
           console.error(error);
           this.footerAlerts.registerFooterAlert({
@@ -537,6 +542,28 @@ export class BulkUpdateComponent {
 
   onOrganizationChange(org) {
 
+  }
+
+  getPermissionStatusIconClass(permissionItem) {
+    if(permissionItem.status == null) return 'fa-check default-color';
+    let res = '';
+    switch(permissionItem.status){
+      case 'add' :
+        res = 'fa-plus updated-color';
+        break;
+      case 'remove':
+        res = 'fa-minus existing-color';
+        break;
+    }
+    return res;
+  }
+
+  onPermissionChange(domain, functionItem, permission){
+    if(permission.status){
+      delete permission['status'];
+    }else{
+      permission['status'] = permission.checked?'add':'remove';
+    }
   }
 
   getOrganizationNames() {

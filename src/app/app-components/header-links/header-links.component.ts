@@ -149,8 +149,9 @@ export class SamHeaderLinksComponent {
   ngOnInit() {
     this.checkSession();
     this.loginService.loginEvent$.subscribe(() => {this.onLinkClick("login")});
-    this.msgFeedService.getNotificationFeeds('3,4,5', this.filterObj, {sort:'reqDate', type:'asc'}, 1, this.requestLimit).subscribe(data => {
+    this.msgFeedService.getNotificationFeeds('3,4,5', this.filterObj, {sort:'desc', type:'reqDate'}, 1, this.requestLimit).subscribe(data => {
       try{
+        this.notifications = [];
         data['notificationFeeds'].forEach( feed => {
           let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
           switch(feed['feedtypeId']){
@@ -175,8 +176,9 @@ export class SamHeaderLinksComponent {
     this.api.iam.checkSession(user => {
       this.states.isSignedIn = true;
       this.user = user;
-      this.msgFeedService.getRequestsFeed('1,2', this.filterObj, {sort:'reqDate', type:'asc'}, 1, this.requestLimit).subscribe(data => {
+      this.msgFeedService.getRequestsFeed('1,2', this.filterObj, {sort:'desc', type:'reqDate'}, 1, this.requestLimit).subscribe(data => {
         try{
+          this.requests = [];
           data['requestFeeds'].forEach( feed => {
             let feedMsg = feed['feeds'].replace(/<b>|<\/b>/g, '');
             let requestStrIndex = feedMsg.indexOf('request');

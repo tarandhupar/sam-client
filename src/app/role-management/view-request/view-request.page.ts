@@ -91,7 +91,7 @@ export class ViewRequestPage implements OnInit {
       this.comments = req.comments.map(com => {
         return {
           username: com.createdBy,
-          datetime: com.createdDate,
+          datetime: com.createdDate.split(' ')[0],
           text: com.content,
           extra: com.systemGeneratedComment,
         };
@@ -104,7 +104,7 @@ export class ViewRequestPage implements OnInit {
     if (req.createdDate) {
       const nodeCreated: HistoryNodeType = {
         id: 'created',
-        date: this.shortDate.transform(req.createdDate),
+        date: this.shortDate.transform(req.createdDate.split(' ')[0]),
         description: '<em>Status: Pending</em>',
       };
       this.historyNodes = [nodeCreated];
@@ -112,7 +112,7 @@ export class ViewRequestPage implements OnInit {
       if (req.updatedDate) {
         const nodeUpdated: HistoryNodeType = {
           id: 'updated',
-          date: this.shortDate.transform(req.updatedDate),
+          date: this.shortDate.transform(req.updatedDate.split(' ')[0]),
           description: `<em>Status: ${statusString}</em>`
         };
         this.historyNodes.unshift(nodeUpdated);
@@ -201,4 +201,8 @@ export class ViewRequestPage implements OnInit {
       });
   }
 
+  getLatestDate(){
+    let dateStr = this.request.updatedDate || this.request.createdDate;
+    return dateStr.split(' ')[0];
+  }
 }

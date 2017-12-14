@@ -33,7 +33,7 @@ export class OppGeneralInfoViewModel {
   }
 
   get vendorCDIvl(){
-    if(this._data.permissions && this._data.permissions.ivl) {
+    if(this._data.permissions && this._data.permissions.ivl && this._data.permissions.ivl.create && this._data.permissions.ivl.update && this._data.permissions.ivl.delete) {
       if(this._data.permissions.ivl.create == true && this._data.permissions.ivl.update == true && this._data.permissions.ivl.delete == true) {
         return 'yes';
       }
@@ -54,7 +54,7 @@ export class OppGeneralInfoViewModel {
   }
 
   get vendorViewIvl() {
-    if(this._data.permissions && this._data.permissions.ivl) {
+    if(this._data.permissions && this._data.permissions.ivl && this._data.permissions.ivl.read) {
       if(this._data.permissions.ivl.read == true) {
         return 'yes';
       }

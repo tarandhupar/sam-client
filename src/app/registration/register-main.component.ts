@@ -28,22 +28,13 @@ export class RegisterMainComponent {
 
   public userForm: FormGroup;
 
-  private configs = {
-    carrier: {
-      keyValueConfig: {
-        keyProperty: 'key',
-        valueProperty: 'value'
-      }
-    }
-  };
-
   public store = {
     questions: [],
     indexes: {},
     levels: ['department', 'agency', 'office'],
     labels: {
       personalPhone: {
-        label: 'Mobile Phone',
+        label: 'Mobile Business Phone',
         hint: `
           When you sign in each time, you will need to receive a one time password. This password will automatically
           be sent to your email address. To receive one time passwords as text messages instead, you must provide a

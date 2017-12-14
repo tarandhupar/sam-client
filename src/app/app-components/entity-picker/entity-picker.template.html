@@ -7,17 +7,38 @@
       <span style="font-size: 85%" *ngIf="item.address"><br/>{{item.address}}</span>
     </p>
   </ng-template>
+
+  <ng-container *ngIf="isMultiple; else singleEntityPicker">
+
   <sam-autocomplete-multiselect
     entitypicker-autofill
-    [name]="name+'picker'"
-    [id]="name+'picker'"
+    [name]="name"
+    [id]="name"
     [ngModel]="selections"
     (ngModelChange)="onSelection($event)"
     [keyValueConfig]="multipleACConfig"
     [serviceOptions]="serviceOptions"
     [displayCategory]="false"
     [itemTemplate]="myTemplate"
+    [isDefaultOrg]="isDefaultOrg"
+    [isAssignableOrg]="isAssignableOrg"
     [required]="required">
   </sam-autocomplete-multiselect>
+  </ng-container>
+
+  <ng-template #singleEntityPicker>
+    <sam-autocomplete
+      [(ngModel)]="selections"
+      (ngModelChange)="onSelection($event)"
+      entitypicker-autofill
+      [config]="singleACConfig"
+      [name]="name"
+      [id]="name"
+      [isDefaultOrg]="isDefaultOrg"
+      [isAssignableOrg]="isAssignableOrg"
+      [itemTemplate]="myTemplate">
+    </sam-autocomplete>
+  </ng-template>
+
 
 </sam-label-wrapper>

@@ -15,11 +15,14 @@ class RouterStub {
 }
 
 describe('Reports Page', () => {
+  let fixture;
+  let comp;
   // provide our implementations or mocks to the dependency injector
-  beforeEach(() => TestBed.configureTestingModule({
+  beforeEach(() => {TestBed.configureTestingModule({
+    imports: [RouterTestingModule],
+    declarations: [ReportsPage],
     providers: [
-      ReportsPage,
-      { provide: Router, useClass: RouterStub },
+      //{ provide: Router, useClass: RouterStub },
       { provide: IAMService, useValue: {
           iam: {
             user: {
@@ -29,10 +32,12 @@ describe('Reports Page', () => {
           }
         }
       }
-    ]
-  }));
+    ]});
+    fixture = TestBed.createComponent(ReportsPage);
+    comp = fixture.componentInstance;
+  });
 
-  it('should compile without error', inject([ ReportsPage ], () => {
+  it('should compile without error', () => {
     expect(true).toBe(true);
-  }));
+  });
 });

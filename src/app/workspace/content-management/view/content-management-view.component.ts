@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
 import { ContentManagementService } from "api-kit/content-management/content-management.service";
@@ -9,11 +9,12 @@ import { Observable } from 'rxjs';
 import { AlertFooterService } from "../../../app-components/alert-footer/alert-footer.service";
 import { CMSMapping } from "../content-management-mapping";
 import * as moment  from "moment";
+import { get } from 'lodash';
 
 interface SortModel {
-  type: string,
-  sort: 'asc'|'desc'
-};
+  type: string;
+  sort: 'asc'|'desc';
+}
 
 @Component({
   templateUrl: './content-management-view.template.html',
@@ -31,16 +32,19 @@ export class HelpContentManagementViewComponent {
 
   title:string = "";
   curSection:string = "";
-
   validSections = ['data-dictionary','video-library', 'FAQ-repository'];
 
   public sortOptions: OptionsType[] = [
-    { label:'Published Date', name:'Published', value:'publisheddate' },
+    { label:'Latest Update', name:'Updated', value:'lastmodifieddate' },
     { label:'Alphabetical', name:'Alphabetical', value:'title' },
-    { label:'Relevance', name:'Relevance', value:'relevance' },
+    // Relevance removed while we figure out the algorithm to determine relevance
+    // { label:'Relevance', name:'Relevance', value:'relevance' },
   ];
 
-  private sortDefault: SortModel = { type: 'publisheddate', sort: 'asc' };
+  private sortDefault: SortModel = { type: 'lastmodifieddate', sort: 'desc' };
+  // we need to remember the last sort so that we can detect whether the most recent change was a 'type' change or
+  // 'sort' change
+  private lastSort: SortModel = Object.assign({}, this.sortDefault);
   public sortByModel: SortModel = Object.assign({}, this.sortDefault);
 
   //current results num data variables
@@ -70,6 +74,7 @@ export class HelpContentManagementViewComponent {
 
   cmsMapping = new CMSMapping();
   domainsMapping;
+  showCreateButton: boolean = false;
 
   constructor(private route:ActivatedRoute,
               private _router:Router,
@@ -124,7 +129,18 @@ export class HelpContentManagementViewComponent {
     this.updateURL();
   }
 
-  onSortModelChange(){
+  onSortModelChange() {
+    let typeHasChanged: boolean = this.lastSort.type !== this.sortByModel.type;
+    this.lastSort = Object.assign(this.sortByModel);
+
+    if (typeHasChanged) {
+      // default sort order to asc except for date fields, in which we show the most recent first
+      if (this.sortByModel.type === 'lastmodifieddate') {
+        this.sortByModel = Object.assign({}, this.sortByModel, { sort: 'desc'});
+      } else {
+        this.sortByModel = Object.assign({}, this.sortByModel, { sort: 'asc'});
+      }
+    }
     this.curPage = 0;
     this.updateURL();
   }
@@ -148,7 +164,7 @@ export class HelpContentManagementViewComponent {
     this.contents = [];
     this.contentManagementService.getContent(filterObj, sort, page+1, this.recordsPerPage).subscribe(
       data => {
-        try{
+        try {
           // show the last page if the page is out of boundary
           this.totalRecords = data._embedded.contentDataWrapperList[0]['totalRecords'];
           this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
@@ -157,11 +173,22 @@ export class HelpContentManagementViewComponent {
             this.loadContent(filterObj, sort, this.curPage);
           }else{
             this.contents = data._embedded.contentDataWrapperList[0]['contentDataList'];
+            this.contents = this.contents.map(item => {
+              return {...item, actions: this.getActions(item) };
+            });
             this.updateRecordsText();
-            if(this.contents.length == 0) this.noContentsInfo = "No Content Available";
+            if(this.contents.length == 0) {
+              this.noContentsInfo = "No Content Available";
+            }
           }
 
-        }catch (err){
+          if (get(data, '_links.create')) {
+            this.showCreateButton = true;
+          } else {
+            this.showCreateButton = false;
+          }
+
+        } catch (err){
           console.log(err);
           this.noContentsInfo = "No Content Available";
         }
@@ -186,7 +213,6 @@ export class HelpContentManagementViewComponent {
   }
 
   updateURL(){
-    console.log(this.filterObj);
     let navigationExtras: NavigationExtras = { queryParams: { } };
     if(this.curPage > 0) navigationExtras.queryParams['page'] = this.curPage+1;
     if(this.filterObj.domains.length > 0) navigationExtras.queryParams['domain'] = this.filterObj.domains.join(',');
@@ -266,7 +292,7 @@ export class HelpContentManagementViewComponent {
     if(!domains || !domains.length || !this.domainsMapping) {
       return 'Not Available';
     }
-    return domains.map(d => this.domainsMapping[d]).join(',');
+    return domains.map(d => this.domainsMapping[d]).join(', ');
   }
 
   getTagStr(tags){
@@ -281,15 +307,15 @@ export class HelpContentManagementViewComponent {
   }
 
 
-  getAction(item) {
+  getActions(item) {
     if (!item._links) {
       return [];
     }
-    const editAction = { icon:"fa fa-pencil", label:"Edit", name:"Edit", };
-    const publishAction = { icon:"", label:"Publish", name:"Publish", };
-    const archiveAction = { icon:"", label:"Archive", name:"Archive", };
-    const unarchiveAction = { icon:"", label:"Archive", name:"Archive", };
-    const deleteAction = { icon:"fa fa-times", label:"Delete", name:"Delete", };
+    const editAction = { icon:"fa fa-pencil", label:"Edit", name:"Edit"};
+    const publishAction = { icon:"", label:"Publish", name:"Publish"};
+    const archiveAction = { icon:"", label:"Archive", name:"Archive"};
+    const unarchiveAction = { icon:"", label:"Unarchive", name:"Unarchive"};
+    const deleteAction = { icon:"fa fa-times", label:"Delete", name:"Delete"};
 
     let actions = [];
     const links = item._links;
@@ -309,8 +335,11 @@ export class HelpContentManagementViewComponent {
     if (links.Delete) {
       actions.push(deleteAction);
     }
-
     return actions;
+  }
+
+  hasActions(item) {
+    return item.actions && item.actions.length;
   }
 
   showAlertMessage(type,message){

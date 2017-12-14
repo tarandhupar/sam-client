@@ -74,15 +74,17 @@
         </div>
 
         <div class="grey-wrapper">
-          <sam-upload name="additional-documentation" [required]="true" label="Additional documentation"
-                      hint="If you need to provide addition documentation, please provide here."
-                      [(ngModel)]="file"
-          ></sam-upload>
+          <sam-label-wrapper name="additional-documentation"
+                             label="Additional documentation"
+                             hint="If you need to provide addition documentation, please provide here."
+                             [required]="true">
+            <sam-upload #upload name="additional-documentation" [(ngModel)]="file"></sam-upload>
+          </sam-label-wrapper>
         </div>
 
         <p class="clearfix" style="margin-top: 1em">
           <sam-button class="pull-right" buttonType="primary" buttonText="Submit" (click)="onSubmitClick()">Submit</sam-button>
-          <sam-button class="pull-right" buttonType="tertiary" buttonText="Cancel">Cancel</sam-button>
+          <sam-button class="pull-right" buttonType="tertiary" buttonText="Cancel" (click)="onCancelClick(upload)">Cancel</sam-button>
         </p>
       </div>
       <div columns="3">

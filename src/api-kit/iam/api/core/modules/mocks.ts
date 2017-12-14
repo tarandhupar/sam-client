@@ -46,12 +46,20 @@ export function getMockUser(): IUser {
         href: '/comp/iam/auth/v4/session'
       },
 
-      'system-accounts.management': {
+      'system-accounts.manager': {
         href: '/comp/iam/cws/api/system-accounts',
       },
 
       'system-accounts.migration': {
         href: '/comp/iam/import/system-accounts',
+      },
+
+      'system-accounts.admin': {
+        href: '/comp/iam/cws/api/system-accounts',
+      },
+
+      'security.approver': {
+        href: '/comp/iam/cws/api/system-accounts',
       },
 
       'fsd.profile': {
@@ -79,7 +87,7 @@ export function getMockUser(): IUser {
 
 export function getMockCWSApplication(index: number|string = 1): CWSApplication {
   const types = ['Gov','Non-Gov'];
-  const today = moment().toISOString();
+  const today = moment().valueOf();
 
   return {
     uid: index,
@@ -106,17 +114,17 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
     securityOfficialEmail: '',
     uploadAto: '',
     authorizationConfirmation: true,
-    authorizingOfficialName: '',
-    authorizationDate: '',
-    submittedDate: today,
+    authorizingOfficialName: 'John Doe',
+    authorizationDate: today,
     lastUpdate: today,
     submittedBy: '',
+    submittedDate: today,
     securityApprover: '',
     securityApproved_Date: '',
     dateOfRejection: '',
     rejectedBy: '',
     rejectionReason: '',
-    applicationStatus: 'Pending Approval',
+    applicationStatus: 'Draft',
   };
 }
 

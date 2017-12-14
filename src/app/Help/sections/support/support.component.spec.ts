@@ -3,8 +3,10 @@ import { SupportComponent } from './support.component';
 import { SamUIKitModule } from '../../../../sam-ui-elements/src/ui-kit/index';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { SamUploadComponent } from './upload.component';
+import { SamUploadComponent } from '../../../app-components/sam-upload/upload.component';
 import { HttpModule } from '@angular/http';
+import { S3Service } from '../../../../api-kit/s3/s3.service';
+import { WrapperService } from '../../../../api-kit';
 
 describe("Customer Support Page", ()=>{
   let component: SupportComponent;
@@ -21,6 +23,10 @@ describe("Customer Support Page", ()=>{
       declarations: [
         SupportComponent,
         SamUploadComponent,
+      ],
+      providers: [
+        S3Service,
+        WrapperService,
       ]
     });
 

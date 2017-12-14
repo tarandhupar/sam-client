@@ -3,7 +3,7 @@
   theme="inside"
   [breadcrumbs]="crumbs"
   section="Workspace"
-  title="CFDA Number Management">
+  title="CFDA Number Assignment">
 
   <!-- Sidebar section -->
   <sidebar [wide] = "true">
@@ -16,12 +16,12 @@
       </li>
       <li>
         <a routerLink="/fal/myRegionalAssistanceLocations">
-          Manage Assistance Locations
+          Regional Assistance Locations
         </a>
       </li>
       <li>
         <a class="usa-current">
-          CFDA Number Management
+          CFDA Number Assignment
         </a>
       </li>
     </ul>
@@ -59,7 +59,8 @@
           </div>
           <div class="four wide column">
             <sam-button [buttonType]="buttonType"
-                        [buttonText]="'Edit'"
+                        [buttonSize]="'small'"
+                        [buttonText]="'Edit Number Assignment'"
                         [buttonClass]="'usa-button-primary edit-btn'"
                         (onClick)="onEditClick(row.organizationId)">
             </sam-button>

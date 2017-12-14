@@ -15,6 +15,8 @@ import { FilesizePipe } from './pipes/filesize.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
+import {OpportunityFormErrorService} from "./opportunity-operations/opportunity-form-error.service";
+import {UserService} from "../role-management/user.service";
 
 @NgModule({
   imports: [
@@ -45,5 +47,10 @@ import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
     OpportunityResult,
     OpportunityReviewComponent
   ],
+  providers: [
+    OpportunityFormErrorService,
+    UserService,
+    OpportunityTypeLabelPipe
+  ]
 })
 export class OpportunityModule { }

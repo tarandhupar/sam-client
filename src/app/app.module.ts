@@ -33,8 +33,6 @@ import { AlertFooterService } from './app-components/alert-footer/alert-footer.s
 import { LoginService } from './app-components/login/login.service';
 import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 import { SupportComponent } from './Help/sections/support/support.component';
-import { SamUploadComponent } from './Help/sections/support/upload.component';
-
 import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
 import { UserService } from 'role-management/user.service';
 
@@ -60,7 +58,6 @@ const APP_PROVIDERS = [
     App,
     PageNotFoundErrorPage,
     SupportComponent,
-    SamUploadComponent,
   ],
   imports: [
     // Angular Modules

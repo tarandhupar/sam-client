@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 // Load the implementations that should be tested
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { SamFooterComponent } from './footer.component';
+import { SamAPIKitModule } from 'api-kit';
 
 describe('The Sam Footer component', () => {
   let component: SamFooterComponent;
@@ -12,7 +13,7 @@ describe('The Sam Footer component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SamFooterComponent ],
-      imports: [ SamUIKitModule, RouterTestingModule ]
+      imports: [ SamUIKitModule, RouterTestingModule, SamAPIKitModule ]
     });
 
     fixture = TestBed.createComponent(SamFooterComponent);

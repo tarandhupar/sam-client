@@ -28,7 +28,7 @@
           <div class="usa-form-control" [innerText]="user.email"></div>
         </div>
         <div class="usa-form-group">
-          <label>Mobile Phone:</label>
+          <label>Mobile Business Phone:</label>
           <div class="usa-form-control" [innerText]="personalPhone"></div>
         </div>
         <div class="usa-form-group">
@@ -64,7 +64,7 @@
                      name="otp-preference"
                      [checked]="user.OTPPreference == 'sms'"
                      (change)="user.OTPPreference = (user.OTPPreference == 'sms') ? 'email' : 'sms'">
-                <label for="otp-preference">Use mobile phone as my default OTP option</label>
+                <label for="otp-preference">Use mobile business phone as my default OTP option</label>
             </li>
             <li>
               <input type="checkbox"

@@ -30,14 +30,14 @@
     <sam-accordion [expandIndex]="promptsAccordian" [bordered]="true" #samAccordionValue class="report__prompts">
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form #reportForm="ngForm">
-          <div class="display-block usa-width-two-thirds">
+          <div class="display-block">
             <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [label]="dateRangeLabel" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
               [control]="dateRange?.control" [required]="'Required'" name='dateRange'>
             </sam-date-range>
             <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">{{dateValidatorMsg}}</p>
           </div>
           <div class="display-block">
-            <div class="usa-width-one-half">
+            <div>
               <sam-autocomplete *ngIf="usedPrompts && usedPrompts.psc" [(ngModel)]="psc" pscpicker-autofill [activeVal]="'ALL'" [labelText]="'PSC Code'"
                 [config]="pscConfig" [name]="'pscpicker'" [id]="'pscpicker'" [required]="true">
               </sam-autocomplete>
@@ -94,6 +94,14 @@
                 <sam-autocomplete country *ngIf="usedPrompts && usedPrompts.country" [allowAny]="false" [(ngModel)]="location.country" name="country"
                   [labelText]="'Vendor Country Code'" [config]="locationConfig" (enterEvent)="updateCountryField($event)">
                 </sam-autocomplete>
+              </div>
+              <!-- To be replaced later -->
+              <sam-text *ngIf="usedPrompts && usedPrompts.onlyAgency" [(ngModel)]="onlyAgency" [name]="'onlyAgency'"
+                [label]="'Sub-Tier'" [required]="true">
+              </sam-text><br/>
+              <div *ngIf="usedPrompts && usedPrompts.fundedBy">
+                <sam-checkbox [(ngModel)]="fundedBy" [name]="'Funded By'"[label]="label.fundedBy" [options]="fundedByOptions" (modelChange)="changeFundedBy($evt)"></sam-checkbox>
+                <p>If not checked, the report will show the awards awarded by this Sub-Tier.</p>
               </div>
             </div>
           </div>

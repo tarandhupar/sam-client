@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { DictionaryService } from "api-kit";
 
-import { FALFormErrorService, FieldError } from '../../fal-form-error.service';
+import { FALFormErrorService, FalFieldError } from '../../fal-form-error.service';
 import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 import { FALFormViewModel } from "../../fal-form.model";
 import { FALFormService } from "../../fal-form.service";
@@ -554,7 +554,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       let fcontrol =  this.reportsComp.validationGroup.get(id);
       let wrapperControl = this.reportsComp.compTextarea._results[id.substr(id.length - 1)];
       if(reportErrors) {
-        let currentErrors = FALFormErrorService.findErrorById(reportErrors, FALFieldNames.COMPLIANCE_REPORTS + '-' + id) as FieldError;
+        let currentErrors = FALFormErrorService.findErrorById(reportErrors, FALFieldNames.COMPLIANCE_REPORTS + '-' + id) as FalFieldError;
         if(currentErrors) {
           if (this.viewModel.getSectionStatus(FALSectionNames.COMPLIANCE_REQUIREMENTS) === 'updated') {
             fcontrol.markAsDirty();

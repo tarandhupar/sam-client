@@ -5,7 +5,6 @@ import {
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
 import { ValidationErrors } from "../../../app-utils/types";
-import { FieldErrorList } from '../../assistance-listing-operations/fal-form-error.service';
 
 
 /** Interfaces **/

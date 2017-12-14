@@ -31,7 +31,7 @@
           <i>{{request.updatedBy}}</i>
         </div>
         <div style="width: 15em; text-align: center">
-          <i>{{(request.updatedDate || request.createdDate) | shortDate}}</i>
+          <i>{{ getLatestDate() | shortDate}}</i>
         </div>
       </div>
     </div>
@@ -45,10 +45,10 @@
     </div>
   </div>
 
-  <h3 class="h4">Comments</h3>
+  <h2 class="h4">Comments</h2>
   <rm-comments [comments]="comments" [postCB]="post" [newCommentsEnabled]="areNewCommentsEnabled()"></rm-comments>
 
-  <h3 class="h4">Request History</h3>
+  <h2 class="h4">Request History</h2>
   <sam-history *ngIf="historyNodes.length" [data]="historyNodes" [currentId]="latestNodeId"></sam-history>
   <div style="min-height: 2em;">&nbsp;</div>
 </form-only>

@@ -61,7 +61,9 @@ export class ReportComponent implements OnInit {
     locationCode: false,
     congressionalDistrictCode: false,
     rangePsc: false,
-    naics: false
+    naics: false,
+    onlyAgency: false,
+    fundedBy: false
   };
   officeId: any = '';
   agencyId: any = '';
@@ -143,9 +145,15 @@ export class ReportComponent implements OnInit {
   label = {
     pscFrom: '',
     pscTo: '',
-    naics: ''
+    naics: '',
+    fundedBy: ''
   }
   naics;
+  fundedByOptions: OptionsType[] = [
+    { name: 'fundingAgency', label: 'Click here to show the awards funded by the selected Sub-Tier. ', value: 'fundedBy'}
+  ]
+  onlyAgency = '';
+  fundedBy;
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -215,6 +223,13 @@ export class ReportComponent implements OnInit {
             this.usedPrompts.naics = true;
             this.label.naics = 'NAICS Code';
           }
+          if (this.currentReport[0].prompts.indexOf('onlyAgency') >= 0) {
+            this.usedPrompts.onlyAgency = true;
+          }
+          if (this.currentReport[0].prompts.indexOf('fundedBy') >= 0) {
+            this.usedPrompts.fundedBy = true;
+            this.label.fundedBy = 'Funded By:'
+          }
         },
         err => console.log(err));
   }
@@ -226,19 +241,19 @@ export class ReportComponent implements OnInit {
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
       });
 
-    // Data range lavel for 'Inherently Governmental Functions Actions and Dollars Report'
+    // Data range label for 'Inherently Governmental Functions Actions and Dollars Report'
     if (this.id === 'BE206C4B4A24C65846C6A686B576860F') {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on Procurement Awards. Procurement Awards started accepting data for "Inherently Governmental Functions" with a "Date Signed" on or later than March 1, 2012.'
     } else if (this.id === 'A733895D42D56A54679F95B20133D3C9') {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  This report is available starting from August 4, 2006.'
+    // Date range label for 'Small Business Competitiveness Demonstration Report
+    } else if (this.id === '65E6AD4B4192089B061D52BB09180083') {
+      this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  \nThe entire FY 2011 can be selected in the Report Criteria. However, no records will be displayed with a "Date Signed" after January 31, 2011.'
     }
 
     if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
        this.localEnv = true;
     }
-    // if (REPORT_MICRO_STRATEGY_ENV==='dev') {
-    //   this.devIframe = true;
-    // }
     
     // Sets state prompt name based on specific report
     if (this.id === '48EC50F946E3011C5DE470A6FEA8C1FD') {
@@ -289,7 +304,10 @@ export class ReportComponent implements OnInit {
     } else if (this.name === "Local Area Set Aside Report" && moment(this.dateRangeModel.startDate).isBefore("2006-08-04")) {
       this.dateValidator = true;
       this.dateValidatorMsg = "This report is available starting from August 4, 2006";
-    } else if (duration.years() >= this.REPORTMAXRANGE) {
+    } else if (this.name === "Funding Report" && !this.onlyAgency) {
+      this.dateValidator = true;
+      this.dateValidatorMsg = "Sub-Tier is a required field.";
+    }else if (duration.years() >= this.REPORTMAXRANGE) {
       this.dateValidatorMsg = "A Date Range can not exceed 12 years.  Please refine your date criteria."
       this.dateValidator = true;
     } else {
@@ -344,12 +362,19 @@ export class ReportComponent implements OnInit {
 
   hitUrl(evt, docId) {
     let vm = this;
+    let project = 'SAM_IAE';
+    // Change project for Unique Vendors Report
+    if (this.id === 'F23604FF4ED54C074D21AF821AE30708') {
+      project = 'SAM_NSF';
+    }
     if (this.name === "Small Business Goaling Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLSBG()+"&v="+Date.now());
     } else if (this.name === "Contract Detail Report") {
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLCD()+"&v="+Date.now());
+    } else if (this.name === "Funding Report") {
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXMLFundingReport()+"&v="+Date.now());
     } else {
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project=SAM_IAE&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
+      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl(REPORT_MICRO_STRATEGY_URL+REPORT_MICRO_STRATEGY_SERVER+'&Project='+project+'&Port=8443&evt='+evt+'&src=mstrWeb.'+evt+'&currentViewMedia=1&visMode=0'+docId+'&iPlanetDirectoryPro='+Cookies.get('iPlanetDirectoryPro')+'&promptsAnswerXML='+this.generateXML()+"&v="+Date.now());
     }
   }
 
@@ -388,6 +413,7 @@ export class ReportComponent implements OnInit {
     this.checkLocationCode();
     this.checkRangePsc();
     this.checkNaics();
+    this.checkOnlyAgency();
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -417,6 +443,12 @@ export class ReportComponent implements OnInit {
 
   generateXMLCD() {
     this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"484D22974FA28152B5B0D3B11CA84E51",tp:"10"},elements:[{type:"text",text:this.piid.toUpperCase()}]},{type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"A56EAC9141786FE504C64892852F6F35",tp:"10"},elements:[{type:"text",text:this.piid.toUpperCase()}]}]}]};
+    return xmljs.json2xml(this.promptAnswersXML);
+  }
+
+  generateXMLFundingReport() {
+    this.promptAnswersXML = {elements:[{type:"element",name:"rsl",elements:[{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"08C4877C401950B7A2D182B0B36801EC",tp:"10"},elements:[{type:"text",text:this.dateRangeModel.endDate}]},{type:"element",name:"pa",attributes:{pt:"5",pin:"0",did:"343002F84DD3741D37B81198047298B1",tp:"10"},elements:[{type:"text",text:this.dateRangeModel.startDate}]}]}]}
+    this.checkOnlyAgency();
     return xmljs.json2xml(this.promptAnswersXML);
   }
 
@@ -567,8 +599,16 @@ export class ReportComponent implements OnInit {
     if (this.usedPrompts.rangePsc) {
       let rangePscFromXml = {};
       let rangePscToXml = {};
-      rangePscFromXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"51A89B7F478F4B6AFD6A258A641DD4C2",tp:"10"},elements:[{type:"text",text: this.rangePscFrom['key']}]}
-      rangePscToXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"20FBACF348698BABB6BEBD8AAF49983E",tp:"10"},elements:[{type:"text",text: this.rangePscTo['key']}]}
+      let pscFrom = '';
+      let pscTo = '';
+      if (this.rangePscFrom && this.rangePscFrom.key) {
+        pscFrom = this.rangePscFrom['key'];
+      }
+      if (this.rangePscTo && this.rangePscTo.key) {
+        pscFrom = this.rangePscTo['key'];
+      }
+      rangePscFromXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"51A89B7F478F4B6AFD6A258A641DD4C2",tp:"10"},elements:[{type:"text",text: pscFrom}]}
+      rangePscToXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"20FBACF348698BABB6BEBD8AAF49983E",tp:"10"},elements:[{type:"text",text: pscTo}]}
       this.promptAnswersXML.elements[0].elements.push(rangePscFromXml);
       this.promptAnswersXML.elements[0].elements.push(rangePscToXml);
     }
@@ -583,6 +623,24 @@ export class ReportComponent implements OnInit {
       }
       naicsXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:"7223463C45D038EF1C7873A66EDAF19F",tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: naicsParameter}]}]}
       this.promptAnswersXML.elements[0].elements.push(naicsXML);
+    }
+  }
+
+  checkOnlyAgency() {
+    if (this.usedPrompts.onlyAgency) {
+      let onlyAgencyXML = {};
+      let onlyAgencyParameter = [];
+      let agencyPromptId = "E94D16164CA1A4F28F840790CCF8C501"
+      let agencyPromptAnswerId = "A1FE94BE483FD8D534B145B794EC4166";
+      if (this.fundedBy[0] === "fundedBy") {
+        agencyPromptAnswerId = "4A57DB844892C977DB333B939EBA1B87";
+        agencyPromptId = "2594DA9941865F5BE75172BCAB5097CC"
+      }
+      if (this.onlyAgency) {
+          onlyAgencyParameter = [{type:"element",name:"at",attributes:{did:agencyPromptAnswerId,tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:agencyPromptAnswerId+":"+this.onlyAgency,art:"1"}}];
+      }
+      onlyAgencyXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:agencyPromptId,tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: onlyAgencyParameter}]}]}
+      this.promptAnswersXML.elements[0].elements.push(onlyAgencyXML);
     }
   }
   
@@ -622,6 +680,17 @@ export class ReportComponent implements OnInit {
 
   test() {
   }
+
+  changeFundedBy($evt) {
+    if (this.fundedBy[0] === "fundedBy") {
+      this.id = 'A6ADD0BA4D183EEBC0C37D96153917A5';
+      this.expid = '00808D974CD1D4001CA99CA7CCA9A354';
+    } else {
+      this.id = '8E6A40424FBD5B80A248D2B20E15983C';
+      this.expid = '61FEA7214AE0C06854BCD4BBDA916A27';
+    }
+  }
+
 
   _keyPress(event: any) {
     const pattern = /[0-9\+\-\ ]/;

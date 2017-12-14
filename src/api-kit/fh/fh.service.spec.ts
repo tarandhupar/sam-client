@@ -3,7 +3,6 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Http, Response, BaseRequestOptions, ResponseOptions } from '@angular/http';
 import { FHService } from './fh.service';
-import { FHWrapperService } from './fhWrapper.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { Observable } from 'rxjs/Observable';
 
@@ -15,7 +14,6 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       imports: [RouterTestingModule],
       providers: [
         FHService,
-        FHWrapperService,
         WrapperService,
         BaseRequestOptions,
         MockBackend,
@@ -59,7 +57,7 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getFHOrganizationById', inject([FHService], (testService: FHService) => {
     testService.getFHOrganizationById("aaa",true).subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
@@ -70,21 +68,21 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getOrganizationsByIds', inject([FHService], (testService: FHService) => {
     testService.getOrganizationsByIds("aaa,bbb").subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getOrganizationDetail', inject([FHService], (testService: FHService) => {
     testService.getOrganizationDetail("aaa").subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getOrganizationLogo', inject([FHService], (testService: FHService) => {
     let ob = Observable.of({
       "_embedded":[{
@@ -94,7 +92,7 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
           },
         },
         "org":{
-          
+
         },
       }]
     });
@@ -111,21 +109,21 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getDepartmentsByStatus', inject([FHService], (testService: FHService) => {
     testService.getDepartmentsByStatus("all").subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getDepartmentAdminLanding', inject([FHService], (testService: FHService) => {
     testService.getDepartmentAdminLanding("all").subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to search', inject([FHService], (testService: FHService) => {
     testService.search({
       keyword: "aaa",
@@ -143,14 +141,14 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to updateOrganization', inject([FHService], (testService: FHService) => {
     testService.updateOrganization("aaaa",true).subscribe((res: Response) => {
       expect(res["_body"]).toBeDefined();
       expect(JSON.parse(res['_body'])['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to createOrganization', inject([FHService], (testService: FHService) => {
     testService.createOrganization({
       id:"aaa",
@@ -160,7 +158,7 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to fhSearch', inject([FHService], (testService: FHService) => {
     testService.fhSearch("aaaa", 1, 10, "all", 2, ["aaa"], true, "bbb", true).subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
@@ -181,28 +179,28 @@ describe('src/api-kit/fh/fh.service.spec.ts', () => {
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getSearchFilterTypes', inject([FHService], (testService: FHService) => {
     testService.getSearchFilterTypes().subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to getFHWidgetInfo', inject([FHService], (testService: FHService) => {
     testService.getFHWidgetInfo("aaa","bbb").subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should return response when subscribed to requestAAC', inject([FHService], (testService: FHService) => {
     testService.requestAAC("aaa",true).subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
   }));
-  
+
   it('Federal Hierarchy Service: should addAuthHeader()', inject([FHService], (testService: FHService) => {
     document.cookie = "iPlanetDirectoryPro=aaaa; expires=Thu, 18 Dec 2222 12:00:00 UTC; path=/";
     let options = {};

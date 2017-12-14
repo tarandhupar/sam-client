@@ -165,6 +165,7 @@ export class UIKitDemoPage {
   agv2_selections2;
 
   entitypicker_selections;
+  entitypicker_selection_single;
 
   samDateRangeAdvModel;
   samDateRangeAdvModel2;

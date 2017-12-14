@@ -13,11 +13,12 @@ import { FALFormChangeRequestActionComponent } from "./assistance-listing-change
 import { FALPublishComponent } from "./assistance-listing-operations/workflow/publish/fal-publish.component";
 import { CfdaNumbersPage } from "./assistance-listing-workspace/cfda-numbers/cfda-numbers.page";
 import { CFDANumberManagementComponent } from "./assistance-listing-workspace/cfda-number-management/fal-form-cfda-number-management.component";
+import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 
 export const routes: Routes = [
       { path: '', component: ProgramPage },
-      { path: ':id/view', component: ProgramPage },
-      { path: 'workspace', component: FalWorkspacePage, canActivate: [FALAuthGuard]},
+      { path: ':id/view', component: ProgramPage, canDeactivate:[FeedbackFormService] },
+      { path: 'workspace', component: FalWorkspacePage, canActivate: [FALAuthGuard], canDeactivate:[FeedbackFormService]},
       { path: ':id/submit', component: FALSubmitComponent, canActivate: [FALAuthGuard] },
       { path: ':id/reject', component: RejectFALComponent, canActivate: [FALAuthGuard] },
       { path: ':id/review', component: FALReviewComponent, canActivate: [FALAuthGuard] },

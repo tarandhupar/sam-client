@@ -16,6 +16,7 @@ import { OpportunitySideNavService } from '../service/sidenav/opportunity-form-s
 import { OpportunityFormViewModel } from '../data-model/opportunity-form/opportunity-form.model';
 import { OpportunityHeaderInfoComponent } from '../../sections/header-information/opp-form-header-info.component';
 import { OpportunitySectionNames } from '../data-model/opportunity-form-constants';
+import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
 
 //let MockFormService = jasmine.createSpyObj('MockFormService', []);
 let MockAuthGaurd = jasmine.createSpyObj('MockAuthGaurd', ['canActivate', 'checkPermissions']);
@@ -69,6 +70,7 @@ describe('Opportunity Form Component', () => {
         OpportunitySideNavService,
         DictionaryService,
         AlertFooterService,
+        OpportunityFormErrorService,
         { provide: ActivatedRoute, useValue: MockActivatedRoute },
         { provide: OpportunityAuthGuard, useValue: MockAuthGaurd }
       ],
@@ -93,19 +95,19 @@ describe('Opportunity Form Component', () => {
     expect(comp).toBeDefined();
   });
 
-  it('gotoSection should return header-information', () => {
-    comp.gotoSection(OpportunitySectionNames.HEADER_INFORMATION);
+  it('gotoSection should return header', () => {
+    comp.gotoSection(OpportunitySectionNames.HEADER);
     expect(comp.currentSection).toEqual(0);
   });
 
   it('isSection should return true', () => {
     comp.currentSection = 0;
-    expect(comp.isSection(OpportunitySectionNames.HEADER_INFORMATION)).toBe(true);
+    expect(comp.isSection(OpportunitySectionNames.HEADER)).toBe(true);
   });
 
   it('isSection should return false', () => {
     comp.currentSection = 1;
-    expect(comp.isSection(OpportunitySectionNames.HEADER_INFORMATION)).toBe(false);
+    expect(comp.isSection(OpportunitySectionNames.HEADER)).toBe(false);
   });
 
   it('formActionHandler calls function onSaveExitClick', () => {

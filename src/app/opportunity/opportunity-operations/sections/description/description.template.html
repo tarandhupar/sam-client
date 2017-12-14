@@ -9,7 +9,7 @@
       [control]="oppDescForm.controls['description']"
       [name]="'title-input'"
       [label]="' '"
-      [required]="true"
+      [required]="checkFieldRequired('DESCRIPTION')"
       [attr.id]="'title-opp-create'"
       formControlName="description">
     </sam-text-area>

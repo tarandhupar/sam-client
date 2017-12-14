@@ -82,14 +82,14 @@ export class TabsFalComponent implements OnInit{
       "disabled": false,
     },
     permissions: null,
-    defaultOption: "Make a Request"
+    defaultOption: ""
   };
 
   programRequest: any;
 
   private tabItems: any = {
-    review: { label: "Authenticated", routeConfig: "fal/:id/review"},
     edit: { label: "Edit", routeConfig: "fal/:id/edit"},
+    review: { label: "Authenticated", routeConfig: "fal/:id/review"},
     public: { label: "Public", routeConfig: "fal/:id/view"},
   };
 
@@ -103,7 +103,9 @@ export class TabsFalComponent implements OnInit{
   }
 
   ngOnInit(){
+    let mainRoute = 'fal/';
     this.currentRouteConfig = this.route.snapshot['_routeConfig'].path;
+    this.currentRouteConfig = mainRoute.concat(this.currentRouteConfig);
 
     let cookie = Cookies.get('iPlanetDirectoryPro');
 
@@ -131,6 +133,20 @@ export class TabsFalComponent implements OnInit{
               this.programRequest = res[0];
             }
           });
+        }
+        if (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true &&
+          this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true &&
+          this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true &&
+          this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true &&
+          this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true &&
+          this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true &&
+          this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true &&
+          this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true &&
+          this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true &&
+          this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true) {
+          this.changeRequestDropdown.defaultOption = 'Action';
+        } else {
+          this.changeRequestDropdown.defaultOption = 'Requests';
         }
       });
     }

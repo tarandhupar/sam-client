@@ -288,6 +288,10 @@ const application = {
         auth = getAuthHeaders(),
         params = transforms.outake(data);
 
+    params.authorizationConfirmation = false;
+    params.authorizingOfficialName = '';
+    params.authorizationDate = null;
+
     if(logger(data)) {
       $success(transforms.intake(data));
       return;

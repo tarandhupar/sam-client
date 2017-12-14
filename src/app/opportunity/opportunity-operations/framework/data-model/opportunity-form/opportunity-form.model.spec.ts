@@ -117,4 +117,29 @@ describe('src/app/opportunity/opportunity-operations/framework/data-model/opport
       body: "test description"
     }]);
   });
+
+  it('get related notice returns notice id', () => {
+    let _opportunity = {
+      related: {
+        opportunityId: '1'
+      }
+    };
+
+    dataModel = new OpportunityFormViewModel(_opportunity);
+    expect(dataModel.relatedNotice).toEqual('1');
+
+    let _emptyOpportunity = {};
+    dataModel = new OpportunityFormViewModel(_emptyOpportunity);
+    expect(dataModel.relatedNotice).toEqual(null);
+  });
+
+  it('set related notice updates notice id', () => {
+    let _opportunity = {};
+
+    dataModel = new OpportunityFormViewModel(_opportunity);
+    dataModel.relatedNotice = '2';
+    expect(dataModel.relatedNotice).toEqual('2');
+    dataModel.relatedNotice = '3';
+    expect(dataModel.relatedNotice).toEqual('3');
+  });
 });

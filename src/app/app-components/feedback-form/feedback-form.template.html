@@ -50,17 +50,17 @@
 
               <!--TextBox Question-->
               <div class="feedback-question-textarea m_T-2x usa-grid-full" *ngIf="checkQType('textarea',qItem)">
-                <textarea class="usa-width-one-whole m_L-7x" name="text" rows="3" placeholder="Leave us a comment" (change)="onTextAreaChange(i)" [(ngModel)]="textAreaModel"></textarea>
+                <textarea aria-label="Comment input" class="usa-width-one-whole m_L-7x" name="text" rows="3" placeholder="Leave us a comment" (change)="onTextAreaChange(i)" [(ngModel)]="textAreaModel"></textarea>
               </div>
 
               <!--Radio Email Question-->
               <div class="feedback-question-fin m_T-2x m_B-2x usa-grid" *ngIf="checkQType('radio-text',qItem) && !showThanksNote">
                 <div class="usa-width-one-third">
                   <div class="usa-offset-one-fourth usa-width-three-fourths m_B-2x">
-                    <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes', i)" [checked]="isEmailBtnChecked('Yes')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes', i)">Yes</label>
+                    <input aria-label="email yes" class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes', i)" [checked]="isEmailBtnChecked('Yes')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes', i)">Yes</label>
                   </div>
                   <div class="usa-offset-one-fourth usa-width-three-fourths">
-                    <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No', i)" [checked]="isEmailBtnChecked('No')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No', i)">No</label>
+                    <input aria-label="email no" class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No', i)" [checked]="isEmailBtnChecked('No')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No', i)">No</label>
                   </div>
                 </div>
 

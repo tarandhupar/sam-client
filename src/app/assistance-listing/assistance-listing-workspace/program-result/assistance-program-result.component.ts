@@ -31,7 +31,7 @@ export class AssistanceProgramResult implements OnInit {
       "name": "fal-change-request",
       "disabled": false,
     },
-    defaultOption: "Make a Request"
+    defaultOption: ""
   };
 
   public organizationName: string = "";
@@ -50,6 +50,14 @@ export class AssistanceProgramResult implements OnInit {
     }
     this.showHideStatusText = this.showhideStatus ? "inline" : "none";
     this.toggleBgColor();
+
+
+    if(this.permissions.APPROVE_REJECT_AGENCY_CR == true || this.permissions.APPROVE_REJECT_ARCHIVE_CR == true ){
+      this.changeRequestDropdown.defaultOption = 'Requests';
+    } else if(this.permissions.APPROVE_REJECT_AGENCY_CR == true){
+      this.changeRequestDropdown.defaultOption = 'Action';
+    }
+
     if (this.permissions != null && (this.permissions.APPROVE_REJECT_AGENCY_CR == true ||
       this.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
       this.permissions.APPROVE_REJECT_NUMBER_CR == true ||
@@ -62,6 +70,20 @@ export class AssistanceProgramResult implements OnInit {
       this.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true) && (this.data.additionalProperty && this.data.additionalProperty.requestType && this.data.additionalProperty.requestId)){
       this.requestTypeValue = this.data.additionalProperty.requestType;
       this.requestId = this.data.additionalProperty.requestId;
+    }
+    if (this.permissions != null && (this.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.permissions.APPROVE_REJECT_ARCHIVE_CR == true &&
+        this.permissions.APPROVE_REJECT_NUMBER_CR == true &&
+        this.permissions.APPROVE_REJECT_TITLE_CR == true &&
+        this.permissions.APPROVE_REJECT_UNARCHIVE_CR == true &&
+        this.permissions.INITIATE_CANCEL_AGENCY_CR == true &&
+        this.permissions.INITIATE_CANCEL_ARCHIVE_CR == true &&
+        this.permissions.INITIATE_CANCEL_NUMBER_CR == true &&
+        this.permissions.INITIATE_CANCEL_TITLE_CR == true &&
+        this.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
+        this.changeRequestDropdown.defaultOption = 'Action';
+    } else {
+        this.changeRequestDropdown.defaultOption = 'Requests';
     }
   }
 

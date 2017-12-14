@@ -6,7 +6,7 @@ import { DpmtSelectConfig, AgencySelectConfig, OfficeSelectConfig } from './conf
 import { LabelWrapper } from "sam-ui-elements/src/ui-kit/wrappers/label-wrapper";
 import { FHTitleCasePipe } from "../../app-pipes/fhTitleCase.pipe";
 import adminLevel from "app/role-management/admin-level";
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'sam-agency-picker-v2',
@@ -121,13 +121,13 @@ export class AgencyPickerV2Component implements OnInit, ControlValueAccessor {
 
     reset(){
         this.orgLevels = [
-            _.cloneDeep(DpmtSelectConfig),
-            _.cloneDeep(AgencySelectConfig),
-            _.cloneDeep(OfficeSelectConfig),
-            _.cloneDeep(OfficeSelectConfig),
-            _.cloneDeep(OfficeSelectConfig),
-            _.cloneDeep(OfficeSelectConfig),
-            _.cloneDeep(OfficeSelectConfig)
+            cloneDeep(DpmtSelectConfig),
+            cloneDeep(AgencySelectConfig),
+            cloneDeep(OfficeSelectConfig),
+            cloneDeep(OfficeSelectConfig),
+            cloneDeep(OfficeSelectConfig),
+            cloneDeep(OfficeSelectConfig),
+            cloneDeep(OfficeSelectConfig)
         ];
         if(this.limit){
             this.orgLevels.length = this.limit;

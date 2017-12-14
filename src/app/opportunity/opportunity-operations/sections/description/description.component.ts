@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/notice-type-map.service";
 
 @Component({
   selector: 'opp-form-description',
@@ -11,11 +12,13 @@ export class OpportunityDescriptionComponent implements OnInit {
 
   @Input() viewModel: OpportunityFormViewModel;
   oppDescForm: FormGroup;
+  public noticeType: any;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private noticeTypeMapService: OppNoticeTypeMapService) {
   }
 
   ngOnInit() {
+    this.noticeType = this.viewModel.oppHeaderInfoViewModel.opportunityType;
     this.createForm();
     if (!this.viewModel.isNew) {
       this.updateForm();
@@ -57,5 +60,8 @@ export class OpportunityDescriptionComponent implements OnInit {
       })
     }
     this.viewModel.description = desc.length > 0 ? desc : null;
+  }
+  private checkFieldRequired(field) {
+    return this.noticeTypeMapService.checkFieldRequired(this.noticeType, field);
   }
 }
