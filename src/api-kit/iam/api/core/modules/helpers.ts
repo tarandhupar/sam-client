@@ -35,7 +35,6 @@ export function exceptionHandler(response) {
     response = isObject(response.response) ? response.response : response;
 
     if(response.message) {
-      // If `response` is the body
       body = response;
     } else {
       body = response.body || {};

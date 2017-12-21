@@ -1,30 +1,31 @@
+import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
 import { MockBackend } from '@angular/http/testing';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { By }              from '@angular/platform-browser';
-import {ActivatedRoute, RouterStateSnapshot} from '@angular/router';
-import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { OpportunityService, FHService } from 'api-kit';
+import { FHService, OpportunityService } from 'api-kit';
 
 import { Observable } from 'rxjs';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
-import {OpportunityReviewComponent} from "./opportunity-review.component";
-import {PipesModule} from "../../../../app-pipes/app-pipes.module";
-import {AppComponentsModule} from "../../../../app-components/app-components.module";
-import {OppComponentsModule} from "../../../components/index";
-import {OpportunityTypeLabelPipe} from "../../../pipes/opportunity-type-label.pipe";
-import {TimezoneLabelPipe} from "../../../pipes/timezone-label.pipe";
-import {FixHTMLPipe} from "../../../pipes/fix-html.pipe";
-import {FilesizePipe} from "../../../pipes/filesize.pipe";
-import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
-import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
-import {AlertFooterService} from "../../../../app-components/alert-footer/alert-footer.service";
-import {OpportunityFields} from "../../../opportunity.fields";
+import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.service";
+import { AlertFooterService } from "../../../../app-components/alert-footer/alert-footer.service";
+import { AppComponentsModule } from "../../../../app-components/app-components.module";
+import { PipesModule } from "../../../../app-pipes/app-pipes.module";
+import { SidenavHelper } from "../../../../app-utils/sidenav-helper";
+import { OppComponentsModule } from "../../../components/index";
+import { OpportunityFields } from "../../../opportunity.fields";
+import { FilesizePipe } from "../../../pipes/filesize.pipe";
+import { FixHTMLPipe } from "../../../pipes/fix-html.pipe";
+import { OpportunityTypeLabelPipe } from "../../../pipes/opportunity-type-label.pipe";
+import { TimezoneLabelPipe } from "../../../pipes/timezone-label.pipe";
 import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
+import { OpportunityReviewComponent } from "./opportunity-review.component";
+import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/notice-type-map.service";
+import {OpportunitySideNavService} from "../../framework/service/sidenav/opportunity-form-sidenav.service";
 
 let comp: OpportunityReviewComponent;
 let fixture: ComponentFixture<OpportunityReviewComponent>;
@@ -325,6 +326,8 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
         AlertFooterService,
         SidenavHelper,
         OpportunityFormErrorService,
+        OppNoticeTypeMapService,
+        OpportunitySideNavService,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -350,6 +353,7 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
 
     fixture = TestBed.createComponent(OpportunityReviewComponent);
     comp = fixture.componentInstance; // Opportunity Component test instance
+    comp.authToken = 'erwerwer';
     fixture.detectChanges();
   });
 
@@ -361,6 +365,10 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
   };
 
   it('OpportunityReviewPage: Should init & load data', () => {
+    comp.authToken = 'erwerwer';
+    fixture.detectChanges();
+    expect(comp).toBeDefined();
+    expect(comp.authToken).toBeDefined();
     expect(comp.opportunity).toBeDefined();
     expect(comp.organization).toBeDefined();
     expect(comp.attachments).toBeDefined();
@@ -386,9 +394,10 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
     jaExpected[OpportunityFields.AwardedDUNS] = false;
     jaExpected[OpportunityFields.AwardedAddress] = false;
     jaExpected[OpportunityFields.Contractor] = false;
-
+    jaExpected[OpportunityFields.StatutoryAuthority] = false;
     jaExpected[OpportunityFields.JustificationAuthority] = false;
-    jaExpected[OpportunityFields.OrderNumber] = false;
+    jaExpected[OpportunityFields.ModificationNumber] = false;
+    jaExpected[OpportunityFields.OriginalSetAside] = false;
 
     setDisplaySpy(mockAPIDataType('j'));
     for(let field in jaExpected) {
@@ -401,10 +410,15 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
 
     // Check intent to bundle
     let itbExpected = {};
-    itbExpected[OpportunityFields.AwardDate] = false;
     itbExpected[OpportunityFields.JustificationAuthority] = false;
     itbExpected[OpportunityFields.ModificationNumber] = false;
-    itbExpected[OpportunityFields.SpecialLegislation] = false;
+    itbExpected[OpportunityFields.AwardAmount] = false;
+    itbExpected[OpportunityFields.LineItemNumber] = false;
+    itbExpected[OpportunityFields.AwardedName] = false;
+    itbExpected[OpportunityFields.AwardedDUNS] = false;
+    itbExpected[OpportunityFields.AwardedAddress] = false;
+    itbExpected[OpportunityFields.POP] = false;
+    itbExpected[OpportunityFields.OriginalSetAside] = false;
 
     setDisplaySpy(mockAPIDataType('i'));
     for (let field in itbExpected) {

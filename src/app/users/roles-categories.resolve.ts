@@ -1,5 +1,6 @@
 import { Resolve, ActivatedRouteSnapshot } from "@angular/router";
 import { UserAccessService } from "../../api-kit/access/access.service";
+import { UserAccessMock } from "../../api-kit/access/access.service.mock";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";

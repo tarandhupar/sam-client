@@ -1,5 +1,5 @@
 <h2 class="sam-ui header">
-  Description
+  {{descriptionLabel}}
 </h2>
 
 <form [formGroup]="oppDescForm">
@@ -11,6 +11,7 @@
       [label]="' '"
       [required]="checkFieldRequired('DESCRIPTION')"
       [attr.id]="'title-opp-create'"
+      [maxlength]="65535"
       formControlName="description">
     </sam-text-area>
   </div>

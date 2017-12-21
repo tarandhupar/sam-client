@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 
 import { SamLoginComponent } from 'app-components';
 import { PageNotFoundErrorPage } from 'application-content/404';

@@ -34,6 +34,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
   private MODIFIED = 'modified';
   private POSTED = 'posted';
+  private START_DAY = '00:00:00';
+  private END_DAY = '23:59:59';
 
   showSpinner: boolean = false;
   keyword: string = '';
@@ -243,33 +245,45 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
      this.workspaceRefresh();
    }
 
-   formatDateWrapper(){
+  formatDateWrapper(appendTime: boolean){
      if(!_.isEmpty(this.dateFilterModel)){
        if(this.dateFilterModel.hasOwnProperty('date') && this.dateFilterModel.date){
-         return this.formatDate(this.dateFilterModel);
+         return this.formatDate(this.dateFilterModel, appendTime);
        }else if(this.dateFilterModel.hasOwnProperty('dateRange') && this.dateFilterModel.dateRange){
-         return this.formatDateRange(this.dateFilterModel);
+         return this.formatDateRange(this.dateFilterModel, appendTime);
        }
      }
    }
 
-   formatDate(model){
-     if(!_.isEmpty(model)){
-       return {
-         'startDate': model.date,
-         'endDate': model.date
-       }
-     }
+  formatDate(model, appendTime){
+    if(!_.isEmpty(model)){
+      if(appendTime){
+        return {
+          'startDate': model.date + ' ' + this.START_DAY,
+          'endDate': model.date + ' ' + this.END_DAY
+        }
+      }
+      return {
+        'startDate': model.date,
+        'endDate': model.date
+      }
+    }
 
-   }
-   formatDateRange(model){
-     if(!_.isEmpty(model)){
-       return {
-         'startDate': model.dateRange.startDate,
-         'endDate': model.dateRange.endDate
-       }
-     }
-   }
+  }
+  formatDateRange(model, appendTime){
+    if(!_.isEmpty(model)){
+      if(appendTime){
+        return {
+          'startDate': model.dateRange.startDate + ' ' + this.START_DAY,
+          'endDate': model.dateRange.endDate + ' ' + this.END_DAY
+        }
+      }
+      return {
+        'startDate': model.dateRange.startDate,
+        'endDate': model.dateRange.endDate
+      }
+    }
+  }
 
    formatDateModel(data){
      if(data.radSelection === 'date'){
@@ -313,7 +327,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   runProgram() {
     this.showSpinner = true;
     let dateTab = this.dateTypeOptions[this.dateFilterIndex];
-    let dateObj = this.formatDateWrapper();
+    let appendTime = true;
+    let dateObj = this.formatDateWrapper(appendTime);
 
     // make api call
     this.runProgSub = this.programService.runProgram({
@@ -782,30 +797,6 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       queryParams: qsobj
     };
     this.router.navigate(['/fal/workspace/'], navigationExtras);
-  }
-
-  downloadFile() {
-    let file;
-    let url;
-    this.getTemplateSub = this.programService.getTemplate(this.cookieValue).subscribe(data => {
-        file = new Blob([data.blob()]);
-        if (window.navigator.msSaveOrOpenBlob) { // for IE and Edge
-          window.navigator.msSaveBlob(file , 'Assistance_Listing_Template.doc');
-        } else {
-          let link = document.createElement("a");
-          link.id = 'downloadlink';
-          url = URL.createObjectURL(file);
-          link.download = 'Assistance_Listing_Template.doc';
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          URL.revokeObjectURL(url);
-          document.body.removeChild(link);
-        }
-
-      } ,
-      error => console.log("Error downloading the file.") ,
-      () => console.log('Completed file download.'));
   }
 
   dateTypeChangeHandler(evt){

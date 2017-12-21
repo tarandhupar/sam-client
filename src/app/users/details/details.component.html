@@ -51,6 +51,7 @@
                            [hint]="store.labels.personalPhone.hint"
                            [numbersOnly]="true"
                            [formControl]="detailsForm.get('personalPhone')"
+                           prefix="mobile"
                            phoneNumberTemplate="(___)___-____"></sam-phone-entry>
           <sam-autocomplete labelText="Mobile Carrier"
                             [options]="api.iam.carriers"
@@ -87,7 +88,7 @@
                [showClose]="true"
                [hidden]="!alerts.business.show"
                (dismiss)="dismiss('business')"></sam-alert>
-    <sam-editor [label]="states.isGov ? 'Organization Information' : 'Business Information'"
+    <sam-editor [label]="states.isGov ? 'Organization Information' : 'Entity Information'"
                 [showInputView]="states.edit.business"
                 (action)="handleAction($event,'business')"
                 #businessEditor
@@ -109,6 +110,14 @@
           <label>Activity Access Code:</label>
           <div class="usa-form-control" [innerText]="hierarchy.aac"></div>
         </div>
+        <div class="usa-form-group" *ngIf="!states.isGov">
+          <label>Entity:</label>
+          <div class="usa-form-control">
+            <div [innerText]="entity.name"></div>
+            <div *ngIf="entity.cageCode && entity.duns">CAGE: {{ entity.cageCode }} | DUNS: {{ entity.duns }}</div>
+            <div [innerText]="entity.address"></div>
+          </div>
+        </div>
         <div class="usa-form-group">
           <label>Business Phone:</label>
           <div class="usa-form-control" [innerText]="phone"></div>
@@ -126,8 +135,20 @@
                              (organization)="setAAC($event)"
                              #agencyPicker>
           </sam-agency-picker>
+          <sam-entity-picker *ngIf="!states.isGov"
+                              name="entity"
+                              [formControl]="$entity"
+                              [hint]="store.labels.entity.hint"
+                              [placeholder]="store.labels.entity.placeholder"
+                              [label]="' '"
+                              [isMultiple]="false">
+          </sam-entity-picker>
 
-          <sam-phone-entry [model]="user.workPhone" [numbersOnly]="true" label="Business Phone" (emitter)="updatePhoneNumber($event)"></sam-phone-entry>
+          <sam-phone-entry [model]="user.workPhone"
+                           [numbersOnly]="true"
+                           label="Business Phone"
+                           prefix="work"
+                           (emitter)="updatePhoneNumber($event)"></sam-phone-entry>
       </div>
     </sam-editor>
   </section>

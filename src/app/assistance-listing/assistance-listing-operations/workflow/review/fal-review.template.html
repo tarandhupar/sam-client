@@ -1287,10 +1287,12 @@
             [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('OTHER_AUDIT_REQUIREMENTS'))">
           </inline-error-message>
 
-          <p id="program-postaward-audit">
-            {{program.data?.compliance?.audit?.description}}
-          </p>
-
+          <ng-container *ngIf="program.data?.compliance?.audit?.isApplicable">
+              <p id="program-postaward-audit">
+                  {{program.data?.compliance?.audit?.description}}
+              </p>
+          </ng-container>
+          
           <div class="sam-ui hidden divider"></div>
 
           <!-- Records -->
@@ -1318,9 +1320,16 @@
               [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('ADDITIONAL_DOCUMENTATION'))">
             </inline-error-message>
 
-            <span id="program-postaward-documents">
-              {{program.data?.compliance?.documents?.description}}
-            </span>
+            <ng-container *ngIf="program.data?.compliance?.documents?.isApplicable">
+                <span id="program-postaward-documents">
+                    {{program.data?.compliance?.documents?.description}}
+                </span>
+            </ng-container>
+            <ng-container *ngIf="!program.data?.compliance?.documents?.isApplicable">
+                <p id="program-postaward-documents">
+                    <em>Not Applicable</em>
+                </p>
+            </ng-container>
           </p>
 
           <div class="sam-ui hidden divider"></div>

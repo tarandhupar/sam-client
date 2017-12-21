@@ -15,7 +15,7 @@
 
       <form class="usa-form form-login" autocomplete="off" [formGroup]="form" (ngSubmit)="login()">
         <fieldset formGroupName="1">
-          <div class="usa-input-error-message" *ngIf="hasError()">{{ getError() }}</div>
+          <div class="usa-input-error-message">{{ getError() }}</div>
 
           <div [ngClass]="{ 'usa-input-error': hasError('username') }">
             <label for="signin-username">Email</label>

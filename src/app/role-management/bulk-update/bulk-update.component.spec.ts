@@ -53,6 +53,7 @@ describe('The Bulk Update Component', () => {
 
   it('should bulk update some things', fakeAsync(() => {
     component.ngOnInit();
+    component.mode = 'update';
     tick();
     component.onDomainChange(1);
     tick();
@@ -66,7 +67,7 @@ describe('The Bulk Update Component', () => {
     component.onNextClick(); // go to review page
     tick();
     fixture.debugElement.injector.get(Router).navigate = () => { };
-    // component.onDoneClick();
+    component.onDoneClick();
     tick();
   }));
 
@@ -80,5 +81,25 @@ describe('The Bulk Update Component', () => {
     user = {lastName: 'Timmy!'};
     name = component.formatUserName(user);
     expect(name).toEqual('Timmy!');
+  });
+
+  it('should return correct class name for confirm page icons', () => {
+    expect('fa-check default-color').toBe(component.getPermissionStatusIconClass({}));
+    expect('fa-plus updated-color').toBe(component.getPermissionStatusIconClass({status:'add'}));
+    expect('fa-minus existing-color').toBe(component.getPermissionStatusIconClass({status:'remove'}));
+    expect('fa-minus existing-color').toBe(component.getPermissionStatusIconClass({status:'remove'}));
+  });
+
+  it('should add correct status to permission for onPermissionChange', () => {
+    let permissionUnChecked = {checked:false};
+    component.onPermissionChange({},{},permissionUnChecked);
+    expect(permissionUnChecked).toEqual({checked:false, status:'remove'});
+    component.onPermissionChange({},{},permissionUnChecked);
+    expect(permissionUnChecked).toEqual({checked:false});
+  });
+
+  it('should be able to do a user search for bulk update', () => {
+    component.doUserSearch();
+    expect(component.users).toEqual([]);
   });
 });

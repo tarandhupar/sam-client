@@ -173,6 +173,10 @@ export class BulkUpdateComponent {
     return !this.arraysEqual(this.existingDomains, this.updatedDomains);
   }
 
+  isTabActive(index){
+    return this.activeTab === index;
+  }
+
   // this function assumes there are no duplicate items in either array
   arraysEqual(a1, a2) {
     if (a1.length !== a2.length) {

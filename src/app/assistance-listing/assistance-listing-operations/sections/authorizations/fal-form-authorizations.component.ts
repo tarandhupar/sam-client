@@ -188,10 +188,7 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
     }
     if(event.type == 'remove'){
       this.removeAuth(event.index, event.parentIndex);
-     if(this.displayAuthInfo.length === 0) {
-        this.authSubForm.falAuthSubForm.markAsDirty({onlySelf: true})
-      }
-
+        this.authSubForm.falAuthSubForm.markAsDirty({onlySelf: true});
       setTimeout(() => {
         this.updateErrors();
       });
@@ -205,11 +202,11 @@ export class FALAuthorizationsComponent implements OnInit, AfterViewInit {
   editAuth(index: number, parentIndex: number = null){
     let controlIndex: number;
     if(parentIndex !== null) {
-      this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[parentIndex].children[index].label;
+      this.authSubForm.subFormLabel = this.displayAuthInfo[parentIndex].children[index].label ? 'Edit - ' + this.displayAuthInfo[parentIndex].children[index].label : 'Edit';
       controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
     }
     else {
-      this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[index].label;
+      this.authSubForm.subFormLabel = this.displayAuthInfo[index].label ? 'Edit - ' + this.displayAuthInfo[index].label : 'Edit';
       controlIndex = this.displayAuthInfo[index].index;
     }
 

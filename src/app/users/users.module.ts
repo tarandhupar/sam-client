@@ -32,7 +32,7 @@ import { MigrationsComponent } from './migrations/migrations.component';
 import { ResetComponent } from './reset/reset.component';
 
 import { GrantOrEditAccess } from '../role-management/grant-or-edit-access/grant-or-edit-access';
-import { IsLoggedInGuard } from '../application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from '../app-services/is-logged-in.guard';
 
 import { ProfilePageService } from './profile-page.service';
 import { UserService } from 'role-management/user.service';

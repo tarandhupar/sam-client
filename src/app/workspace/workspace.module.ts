@@ -14,12 +14,11 @@ import { AppTemplatesModule } from 'app-templates';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { SystemSectionsModule } from './system/create';
 
-import { AlertFooterService } from 'app-components/alert-footer/alert-footer.service';
 import { FeatureToggleService } from 'api-kit/feature-toggle/feature-toggle.service';
 import { UserService } from 'role-management/user.service';
 
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
-import { FeatureToggleGuard } from 'application-content/403/feature-toggle.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
+import { FeatureToggleGuard } from 'app-services/feature-toggle.guard';
 import { SecurityGuard } from './system/security.guard';
 
 import { WorkspacePage } from './workspace.page';
@@ -39,7 +38,8 @@ import {
 import {
   OppWidgetComponent,
   OppPieChartComponent,
-  AssistanceListingWidgetComponent
+  AssistanceListingWidgetComponent,
+  CbaWidgetComponent
 } from './data-entry';
 
 import { MsgFeedComponent } from './msg-feed/msg-feed.component';
@@ -53,6 +53,8 @@ import { HelpContentManagementDetailComponent } from './content-management/detai
 import { ApplicationRequestsComponent } from './requests/application-requests/application-requests.component';
 
 import { DragDropDirective } from './content-management/edit/drag-drop.directive';
+import { FhWidgetService } from './administration/fh/fh-widget.service';
+import { CmAccessGuard } from '../app-services/cm-access.guard';
 
 @NgModule({
   imports: [
@@ -89,6 +91,7 @@ import { DragDropDirective } from './content-management/edit/drag-drop.directive
     OppWidgetComponent,
     OppPieChartComponent,
     AssistanceListingWidgetComponent,
+    CbaWidgetComponent,
 
     /**
      * Requests
@@ -118,7 +121,6 @@ import { DragDropDirective } from './content-management/edit/drag-drop.directive
     /**
      * Services
      */
-    AlertFooterService,
     FeatureToggleService,
     UserService,
 
@@ -128,6 +130,8 @@ import { DragDropDirective } from './content-management/edit/drag-drop.directive
     IsLoggedInGuard,
     FeatureToggleGuard,
     SecurityGuard,
+    FhWidgetService,
+    CmAccessGuard,
   ],
 })
 export class WorkspaceModule { }

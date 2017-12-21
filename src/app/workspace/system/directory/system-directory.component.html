@@ -3,24 +3,37 @@
     <a>Download <span class="fa fa-download"></span><span class="fa fa-ellipsis-h"></span></a>
   </div>
 
-  <sam-alert class="alert-primary" [type]="alert.type" [title]="alert.title" [showClose]="true" *ngIf="alert.message" message>
+  <sam-alert class="alert-primary" [type]="alert.type" [title]="alert.title" [showClose]="true" *ngIf="alert.title || alert.message" message>
     <div [innerHTML]="alert.message"></div>
   </sam-alert>
 
+  <!--=================-->
+  <!-- Side Navigation -->
+  <!--=================-->
   <sidebar>
       <sam-text label="Keyword" name="search-keyword" [(ngModel)]="search.keyword" (ngModelChange)="fetch()"></sam-text>
-      <sam-text label="Administrator / Manager" name="search-user" [(ngModel)]="search.user" (ngModelChange)="fetch()"></sam-text>
+      <sam-autocomplete [config]="store.configs.user"
+                        [(ngModel)]="search.user"
+                        [allowAny]="true"
+                        (ngModelChange)="fetch()"
+                        labelText="Administrator / Manager"
+                        id="search-user"
+                        name="search-user"
+                        peoplepicker-autofill></sam-autocomplete>
 
       <sam-checkbox label="Domains" name="filter-domains" [options]="options.domains" [(ngModel)]="filter.domains" (ngModelChange)="fetch()"></sam-checkbox>
-      <sam-checkbox label="Status" name="filter-status" [options]="options.statuses" [(ngModel)]="filter.statuses" (ngModelChange)="fetch()"></sam-checkbox>
+      <sam-checkbox label="Status" name="filter-status" [options]="options.statuses" [(ngModel)]="filter.status" (ngModelChange)="fetch()"></sam-checkbox>
   </sidebar>
+  <!--==============-->
+  <!-- Main Content -->
+  <!--==============-->
   <div>
     <results [totalElements]="store.records.length"
              [currentPage]="states.page.current"
              [totalPages]="states.page.total"
              [showing]="states.page.count"
              (pageChange)="onPage($event)">
-      <sam-sort [options]="options.sort" [(ngModel)]="sort" (ngModelChange)="fetch()"></sam-sort>
+      <sam-sort [options]="options.sort" [(ngModel)]="order" (ngModelChange)="fetch()"></sam-sort>
 
       <system-listing [account]="account"
                       (onDelete)="axe($event)"
@@ -36,7 +49,7 @@
       <div class="text-right">
         <sam-button buttonType="primary" buttonText="New Account" (onClick)="router.navigate(['/workspace/system/new'])"></sam-button>
       </div>
-      <sam-alert type="info" title="You currently do not have any system accounts or applications"></sam-alert>
+      <sam-alert type="info" title="You currently do not have any system accounts or applications" *ngIf="!isError"></sam-alert>
     </div>
   </div>
 </page>

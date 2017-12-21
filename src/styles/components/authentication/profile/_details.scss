@@ -17,6 +17,16 @@
     }
   }
 
+  .sam-editor-wrapper {
+    > sam-label-wrapper {
+      > div {
+        > label:nth-child(1) {
+          margin-bottom: 1em;
+        }
+      }
+    }
+  }
+
   section {
     position: relative;
     margin-bottom: 4rem;
@@ -49,7 +59,6 @@
   .usa-form-group {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    margin-left: 1em;
 
     label {
       display: inline-block;
@@ -57,6 +66,12 @@
       margin-top: 0em;
       font-weight: 700;
       float: left;
+    }
+
+    &.kba {
+      label {
+        font-weight: normal !important;
+      }
     }
 
     .usa-form-control {

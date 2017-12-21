@@ -1,7 +1,7 @@
-import {Component, OnInit} from "@angular/core";
-import {Router, Route, ActivatedRoute, NavigationExtras} from "@angular/router";
-import {FHService} from "api-kit/fh/fh.service";
-import { IAMService } from "api-kit";
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, NavigationExtras} from '@angular/router';
+import { FHService } from 'api-kit/fh/fh.service';
+import { FHAdminType, FhWidgetService } from './fh-widget.service';
 
 @Component({
   selector: 'fh-widget',
@@ -9,61 +9,86 @@ import { IAMService } from "api-kit";
 })
 export class FHWidgetComponent implements OnInit {
 
-
-  fhRadioModel: any = '90 completed';
+  fhRadioModel: any = 'recent';
   fhRadioConfig = {
     options: [
-      {value: '90 completed', label: 'Last 90 days', name: 'Last 90 days'},
-      {value: '0 scheduled', label: 'Scheduled', name: 'Scheduled'},
+      {value: 'recent', label: 'Last 90 days', name: 'Last 90 days'},
+      {value: 'scheduled', label: 'Scheduled', name: 'Scheduled'},
     ],
     name: 'radio-component',
     errorMessage: '',
     hint: ''
   };
 
-  searchText = "";
+  searchText = '';
   createdTotal = 0;
   expiredTotal = 0;
 
   widgetPermission = 'none';
-  loadData:boolean = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private fhService: FHService,
-    private iamService: IAMService
+    private fhWidgetService: FhWidgetService,
   ) {
 
   }
 
   ngOnInit() {
-    this.iamService.iam.checkSession(
-      (user) => {
-        let deptOrgKey = user.departmentID && user.departmentID !== "" ? user.departmentID : "";
-        this.getFHCounts();
-      });
+    this.fhWidgetService.fetchRecent().subscribe(res => {
+      this.updatePermissions(res);
+      this.updateCounts(res);
+    });
   }
 
-
-  searchFH(){
-    //direct to search fh landing page with search text as query param
-    let navigationExtras: NavigationExtras = {
-      queryParams: {keyword: this.searchText, status:['allActive']}
-    };
-    this.router.navigate(["/federal-hierarchy"],navigationExtras);
-  }
-
-  getFHCounts(){
-    this.fhService.getFHWidgetInfo(this.fhRadioModel.split(' ')[1],this.fhRadioModel.split(' ')[0]).subscribe( data => {
-      if(Object.keys(data['_links']).length > 1){
-        this.createdTotal = data['startCount'];
-        this.expiredTotal = data['endCount'];
-        this.widgetPermission = 'all';
-      } else{
+  updatePermissions(res) {
+    const adminType: FHAdminType = this.fhWidgetService.getAdminType(res);
+    switch (adminType) {
+      case FHAdminType.NonAdmin:
+        this.widgetPermission = 'none';
+        break;
+      case FHAdminType.OfficeAdmin:
         this.widgetPermission = 'partial';
+        break;
+      case FHAdminType.SuperAdmin:
+        this.widgetPermission = 'all';
+        break;
+      default:
+        console.error('Unexpected admin type');
+    }
+  }
+
+  searchFH() {
+    // direct to search fh landing page with search text as query param
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        keyword: this.searchText,
+        status: ['allActive'],
       }
-    }, error => {this.widgetPermission = 'none'});
+    };
+    this.router.navigate(['/federal-hierarchy'], navigationExtras);
+  }
+
+  fetchCounts() {
+    if (this.fhRadioModel === 'recent') {
+      this.fhWidgetService.fetchRecent().subscribe(res => {
+        this.updatePermissions(res);
+        this.updateCounts(res);
+      });
+    } else if (this.fhRadioModel === '') {
+      this.fhWidgetService.fetchScheduled().subscribe(res => {
+        this.updatePermissions(res);
+        this.updateCounts(res);
+      });
+    }
+  }
+
+  updateCounts(data) {
+    if (Object.keys(data['_links']).length > 1) {
+      this.createdTotal = data['startCount'];
+      this.expiredTotal = data['endCount'];
+    }
   }
 
 

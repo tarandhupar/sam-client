@@ -7,6 +7,7 @@
         <sam-name-entry [model]="user" legend="Your Name" #nameEntry></sam-name-entry>
 
         <sam-phone-entry formControlName="personalPhone"
+                         prefix="mobile"
                          [label]="store.labels.personalPhone.label"
                          [hint]="store.labels.personalPhone.hint"
                          [numbersOnly]="true"
@@ -37,27 +38,49 @@
           </li>
         </ul>
       </fieldset>
+
       <fieldset class="phone">
         <legend>Business Phone</legend>
-        <sam-phone-entry formControlName="workPhone" [control]="userForm.get('workPhone')" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></sam-phone-entry>
+        <sam-phone-entry formControlName="workPhone"
+                         prefix="work"
+                         [control]="userForm.get('workPhone')"
+                         [label]="' '"
+                         [numbersOnly]="true"
+                         [required]="true"
+                         #phoneEntry></sam-phone-entry>
       </fieldset>
-      <fieldset class="office" *ngIf="states.isGov">
-        <legend>Office</legend>
-        <sam-agency-picker *ngIf="states.isGov"
-                           [advancedMode]="true"
-                           [multimode]="false"
-                           [orgRoot]="user.departmentID"
-                           [orgId]="userForm.controls.officeID.value"
-                           [label]="'Select the office you work for:'"
-                           (orgFullPath)="setHierarchy($event)"
-                           #agencyPicker>
-        </sam-agency-picker>
+
+      <fieldset class="office">
+        <div *ngIf="states.isGov; else entityTemplate">
+          <legend>Office</legend>
+          <sam-agency-picker [advancedMode]="true"
+                             [multimode]="false"
+                             [orgRoot]="user.departmentID"
+                             [orgId]="userForm.controls.officeID.value"
+                             [label]="'Select the office you work for:'"
+                             [searchMessage]="errors('officeID')"
+                             (orgFullPath)="setHierarchy($event)"
+                             #agencyPicker>
+          </sam-agency-picker>
+        </div>
+        <ng-template #entityTemplate>
+          <legend>Entity</legend>
+          <sam-entity-picker name="entity"
+                             [formControl]="entity"
+                             [hint]="store.labels.entity.hint"
+                             [placeholder]="store.labels.entity.placeholder"
+                             [label]="' '"
+                             [isMultiple]="false">
+          </sam-entity-picker>
+        </ng-template>
       </fieldset>
+
       <fieldset class="password">
         <sam-password [password]="userForm.controls.userPassword"
                       [phrases]="[user.firstName, user.middleName, user.lastName, user.email, user.fullName]"
                       #passwordComponent></sam-password>
       </fieldset>
+
       <fieldset class="kba">
         <legend>Security Questions</legend>
         <span>Select 3 unique questions and provide an answer for each question. Answers must be at least 8 characters long.</span>
@@ -70,6 +93,7 @@
           </sam-kba-entry>
         </div>
       </fieldset>
+
       <div class="usa-button-controls">
         <div class="usa-button-wrapper">
           <button type="button" class="usa-button-outline" (click)="cancel()">Cancel</button>

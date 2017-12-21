@@ -8,6 +8,7 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { WageDeterminationRevisedDBAPage } from 'app/wage-determination/to-be-revised/revised-dba.page';
+import { CbaPage } from 'app/wage-determination/cba/wd-cba.page';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { WageDeterminationRevisedDBAPage } from 'app/wage-determination/to-be-re
   declarations: [
     WageDeterminationPage,
     WageDeterminationDocumentPage,
-    WageDeterminationRevisedDBAPage
+    WageDeterminationRevisedDBAPage,
+    CbaPage,
   ],
 })
 export class WageDeterminationModule { }

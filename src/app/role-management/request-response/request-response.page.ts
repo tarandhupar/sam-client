@@ -105,7 +105,7 @@ export class RequestResponsePage {
   }
 
   getPermittedRoleAndDomains() {
-    this.userAccessService.checkAccess(`users/:id/grant-access`).map(r => r.json()).subscribe((a: any) => {
+    this.userAccessService.checkAccess(`requests/:id`,'',this.route.snapshot.data['request']).map(r => r.json()).subscribe((a: any) => {
       try {
         this.domainOptionsByRole = {};
         this.roleOptions = a.grantRoles.map(r => {

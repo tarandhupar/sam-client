@@ -6,13 +6,17 @@ import { OpportunityFormViewModel } from '../../framework/data-model/opportunity
 import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
 import { OpportunityGeneralInfoComponent } from './general-information.component';
 import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
+import {OppGeneralInfoViewModel} from "../../framework/data-model/sections/general-information/general-information.model";
+import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/notice-type-map.service";
+import {OpportunitySideNavService} from "../../framework/service/sidenav/opportunity-form-sidenav.service";
 
 describe('Opportunity General Info Form', () => {
-
+  let dataModel: OppGeneralInfoViewModel;
   let comp: OpportunityGeneralInfoComponent;
   let fixture: ComponentFixture<OpportunityGeneralInfoComponent>;
   let MockFormService = jasmine.createSpyObj('MockFormService', ['getOpportunityDictionary']);
-
+  let originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       schemas: [ NO_ERRORS_SCHEMA ],
@@ -21,7 +25,9 @@ describe('Opportunity General Info Form', () => {
       ],
       providers: [
         { provide: OpportunityFormService, useValue: MockFormService },
-        OpportunityFormErrorService
+        OpportunityFormErrorService,
+        OppNoticeTypeMapService,
+        OpportunitySideNavService
       ],
       imports: [
         SamUIKitModule,
@@ -106,9 +112,41 @@ describe('Opportunity General Info Form', () => {
   }));
 
   xit('should save vendor CD Read permission', fakeAsync(() => {
+    let _data = {
+      permissions: {
+        ivl: {
+          read: false
+        }
+      }
+    };
+    dataModel = new OppGeneralInfoViewModel(_data);
+    fixture.detectChanges();
+    let errorSpy = spyOn(comp, 'updateIvlViewError');
     let option = 'no';
     comp['saveVendorsViewIvl'](option);
-    expect(comp.oppGeneralInfoViewModel.vendorViewIvl).toEqual(option);
+    expect(comp.oppGeneralInfoViewModel.vendorViewIvl).toEqual(false);
+    fixture.detectChanges();
+    expect(errorSpy).toHaveBeenCalled();
+  }));
+
+  it('should save saveAddiReportingTypes isSelected true', fakeAsync(() => {
+    let data = [{
+      code: 'isRecoveryRelated',
+      name: 'Recovery and Reinvestment Act'
+    }];
+    comp['saveAddiReportingTypes'](data);
+    expect(comp.oppGeneralInfoViewModel.addiReportingTypes).toEqual([{
+      code: 'isRecoveryRelated',
+      isSelected: true
+    }]);
+  }));
+  it('should save saveAddiReportingTypes isSelected false', fakeAsync(() => {
+    let data = [];
+    comp['saveAddiReportingTypes'](data);
+    expect(comp.oppGeneralInfoViewModel.addiReportingTypes).toEqual([{
+      code: 'isRecoveryRelated',
+      isSelected: false
+    }]);
   }));
 
 });

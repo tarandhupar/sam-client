@@ -1,18 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AutocompleteConfig } from 'sam-ui-elements/src/ui-kit/types';
+import { OpportunityFieldNames, OpportunitySectionNames } from '../../framework/data-model/opportunity-form-constants';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
-import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
 import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
-import { OpportunityFieldNames } from '../../framework/data-model/opportunity-form-constants';
+import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
+import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
 
 @Component({
   selector: 'opp-form-classification',
   templateUrl: 'opp-form-classification.template.html'
 })
 
-export class OpportunityClassificationComponent implements OnInit {
+export class OpportunityClassificationComponent implements OnInit, AfterViewInit {
   @Input() public viewModel: OpportunityFormViewModel;
+  @Output() public showErrors = new EventEmitter();
   public oppClassificationForm: FormGroup;
   public oppClassificationViewModel: any;
   public noticeType: any;
@@ -110,7 +112,10 @@ export class OpportunityClassificationComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder,
-              private oppFormService: OpportunityFormService, private noticeTypeMapService: OppNoticeTypeMapService) {
+              private oppFormService: OpportunityFormService,
+              private oppErrorService: OpportunityFormErrorService,
+              private noticeTypeMapService: OppNoticeTypeMapService,
+              private cdr: ChangeDetectorRef) {
 
     Object.freeze(this.setAsideConfig);
     Object.freeze(this.classificationCodeConfig);
@@ -125,8 +130,12 @@ export class OpportunityClassificationComponent implements OnInit {
     this.oppClassificationViewModel = this.viewModel.oppClassificationViewModel;
     this.createForm();
     this.loadTypeOptions();
+  }
+
+  ngAfterViewInit(): void {
     if (!this.viewModel.isNew) {
       this.updateForm();
+      this.cdr.detectChanges();
     }
     this.subscribeToChanges();
   }
@@ -150,6 +159,16 @@ export class OpportunityClassificationComponent implements OnInit {
       zip: null,
       city: null,
     });
+
+    if (this.viewModel.getSectionStatus(OpportunitySectionNames.CLASSIFICATION) === 'updated') {
+      this.oppClassificationForm.markAsPristine({onlySelf: true});
+      Object.keys(this.oppClassificationForm.controls)
+        .map(key => this.oppClassificationForm.controls[key])
+        .forEach(control => {
+          control.markAsDirty({onlySelf: true});
+          control.updateValueAndValidity();
+        });
+    }
   }
 
   private loadTypeOptions() {
@@ -245,6 +264,7 @@ export class OpportunityClassificationComponent implements OnInit {
     }, {
       emitEvent: false,
     });
+    this.updateErrors();
   }
 
   private subscribeToChanges(): void {
@@ -281,6 +301,7 @@ export class OpportunityClassificationComponent implements OnInit {
       code = type.code;
     }
     this.oppClassificationViewModel.classificationCodeType = code;
+    this.updateClassificationCodeTypeError();
   }
 
   private savePrimaryNAICSCodeType(type) {
@@ -292,6 +313,7 @@ export class OpportunityClassificationComponent implements OnInit {
     }
     let naicsCodeTypes = this.primaryNAICSObj.concat(this.secondaryNAICSObj);
     this.oppClassificationViewModel.naicsCodeTypes = (naicsCodeTypes && naicsCodeTypes.length > 0) ? naicsCodeTypes : null;
+    this.updatePrimaryNAICSCodeTypeError();
   }
 
   private saveSecondaryNAICSCodeType(types) {
@@ -327,10 +349,43 @@ export class OpportunityClassificationComponent implements OnInit {
 
   private saveZip(value) {
     this.oppClassificationViewModel.zip = value ? value : null;
+    this.updateZipError();
   }
 
   private saveCity(value) {
     this.oppClassificationViewModel.city = value ? value : null;
   }
 
+  private updateErrors() {
+    this.updateClassificationCodeTypeError();
+    this.updatePrimaryNAICSCodeTypeError();
+    this.updateZipError();
+  }
+
+  private updateControlErrors(control: AbstractControl,  errors) {
+    control.clearValidators();
+    control.setValidators(control => control.errors);
+    control.setErrors(errors);
+    control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    this.emitErrorEvent();
+  }
+
+  private updateClassificationCodeTypeError() {
+    let classificationCodeTypeControl = this.oppClassificationForm.get('classificationCodeType');
+    this.updateControlErrors(classificationCodeTypeControl, this.oppErrorService.validateClassificationCodeType().errors);
+  }
+
+  private updatePrimaryNAICSCodeTypeError() {
+    let primaryNAICSCodeTypeControl = this.oppClassificationForm.get('primaryNAICSCodeType');
+    this.updateControlErrors(primaryNAICSCodeTypeControl, this.oppErrorService.validatePrimaryNAICSCodeType().errors);
+  }
+
+  private updateZipError() {
+    let zipControl = this.oppClassificationForm.get('zip');
+    this.updateControlErrors(zipControl, this.oppErrorService.validateZip().errors);
+  }
+
+  private emitErrorEvent() {
+    this.showErrors.emit(this.oppErrorService.applicableErrors);
+  }
 }

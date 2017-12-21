@@ -112,14 +112,15 @@ export class ProfileComponent {
     if(data['breadcrumbs'] === false) {
       this.breadcrumbs = [];
     } else {
-      if(data['isMyAccess']){
-        this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
-      }else{
+      if(data['isMyAccess']) {
         this.breadcrumbs = [
-          { breadcrumb: 'Workspace', url: '/workspace' },
+          { breadcrumb: 'Profile', url: '/profile' },
           { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
         ];
+
         this.breadcrumbs =  this.breadcrumbs.concat(data['breadcrumbs']);
+      } else {
+        this.breadcrumbs = this.store.breadcrumbs.concat(data['breadcrumbs']);
       }
     }
 

@@ -29,7 +29,7 @@ import { UsersModule } from "../users/users.module";
 import { UserService } from "./user.service";
 import { IAMService } from "../../api-kit/iam/iam.service";
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { IsLoggedInGuard } from "application-content/403/is-logged-in.guard";
+import { IsLoggedInGuard } from "app-services/is-logged-in.guard";
 
 @NgModule({
   imports: [

@@ -70,7 +70,6 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
     type: "error"
   };
   crumbs: Array<IBreadcrumb> = [
-    { breadcrumb:'Home', url:'/',},
     { breadcrumb: 'Workspace', url: '/workspace' },
     { breadcrumb: 'Contract Opportunities'}
   ];
@@ -159,13 +158,13 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
 
   constructor(
-    private activatedRoute: ActivatedRoute, 
-    private router: Router, 
-    private opportunityService: OpportunityService, 
-    private userService: UserService, 
-    private userAccessService: UserAccessService, 
-    private fhService: FHService, 
-    private dictionaryService: DictionaryService, 
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private opportunityService: OpportunityService,
+    private userService: UserService,
+    private userAccessService: UserAccessService,
+    private fhService: FHService,
+    private dictionaryService: DictionaryService,
     private alertFooterService: AlertFooterService) {
   }
 

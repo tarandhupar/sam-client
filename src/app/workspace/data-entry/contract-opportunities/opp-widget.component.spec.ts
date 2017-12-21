@@ -151,7 +151,7 @@ import {
             ]
           }
         });
-  
+
       fixture = TestBed.createComponent(OppWidgetComponent);
       component = fixture.componentInstance;
       Cookies.set('iPlanetDirectoryPro', 'FBO_AA')
@@ -172,7 +172,6 @@ import {
                 }
             }
         });
-        expect(component.pieChart).toBeTruthy();
         expect(component.oppCounts.active).toBe(2702);
         expect(component.oppCounts.draft).toBe(173);
         expect(component.oppCounts.archived).toBe(16132);

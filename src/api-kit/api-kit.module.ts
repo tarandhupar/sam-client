@@ -14,7 +14,6 @@ import { WageDeterminationService } from './wage-determination/wage-determinatio
 import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper,SuggestionsServiceDirective } from './autoCompleteWrapper/autoCompleteWrapper.service';
-import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
@@ -102,7 +101,6 @@ import { S3Service } from './s3/s3.service';
     WrapperService,
     SuggestionsService,
     AutoCompleteWrapper,
-    UserDirService,
     UserAccessService,
     // { provide: UserAccessService, useValue: UserAccessMock },
     WageDeterminationService,

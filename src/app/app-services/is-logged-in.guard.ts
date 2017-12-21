@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, NavigationExtras, Router, RouterStateSnapshot } from '@angular/router';
 import { Cookie } from 'ng2-cookies';
-import { UserService } from '../../role-management/user.service';
-import { IAMService } from 'api-kit';
+import { UserService } from '../role-management/user.service';
+import { IAMService } from 'api-kit/index';
 
 import { merge } from 'lodash';
 

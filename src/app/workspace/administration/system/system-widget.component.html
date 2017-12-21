@@ -4,7 +4,7 @@
     <div class="sam-ui selection relaxed list">
       <a *ngFor="let status of summary | keys"
          [routerLink]="['system']"
-         [queryParams]="{ status: status.key.toLowerCase() }"
+         [queryParams]="{ status: keys[status.key] }"
          class="item"
          queryParamsHandling="merge">
         <span class="icon fa fa-chevron-right" aria-hidden="true"></span>

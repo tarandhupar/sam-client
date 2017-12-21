@@ -34,7 +34,7 @@
     </li>
   </ul -->
 
-    <select [(ngModel)]="selectedAction" (ngModelChange)="chooseAction()">
+    <select [(ngModel)]="selectedAction" (ngModelChange)="chooseAction()" aria-label="Subsctription Actions">
         <!-- WORKING -->
        <option value="" selected hidden>Actions</option>        
         <!-- NOT WORKING -->

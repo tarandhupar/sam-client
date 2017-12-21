@@ -18,6 +18,8 @@ export class OpportunityContactInfoComponent implements OnInit {
   public primaryPOC: FormControl;
   public secondaryPOC: FormControl;
 
+  public mode: string;
+
   // possible states of poc forms
   public states = {
     START: 'start',
@@ -200,11 +202,13 @@ export class OpportunityContactInfoComponent implements OnInit {
       case 'add':
         control.setValue(_.cloneDeep(this.pocFormTemplate), {emitEvent: false});
         state.set(this.states.ADD);
+        this.mode = 'Add';
         break;
 
       case 'edit':
         control.setValue(control.value);
         state.set(this.states.EDIT);
+        this.mode = 'Edit';
         break;
 
       case 'load':

@@ -154,6 +154,28 @@ export class ReportComponent implements OnInit {
   ]
   onlyAgency = '';
   fundedBy;
+  agOnlySelection;
+  agOnlyConfig = {
+    keyValueConfig:{keyProperty: 'key',valueProperty: 'name'},
+    serviceOptions:{
+      hasFpds: true,
+      exclusive:true,
+      depth:2
+    }
+  };
+
+  agOnlyAddSelection(val){
+    let comparison = [val].slice();
+    comparison.pop();
+    if(comparison && comparison.length > 0){
+        for (let i in comparison) {
+            if (comparison[i].type === val[val.length-1].type) {
+                val.splice(i, 1);
+            }
+        }
+    }
+    this.agOnlySelection = val;
+  }
 
   constructor(
     private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
@@ -248,7 +270,7 @@ export class ReportComponent implements OnInit {
       this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  This report is available starting from August 4, 2006.'
     // Date range label for 'Small Business Competitiveness Demonstration Report
     } else if (this.id === '65E6AD4B4192089B061D52BB09180083') {
-      this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  \nThe entire FY 2011 can be selected in the Report Criteria. However, no records will be displayed with a "Date Signed" after January 31, 2011.'
+      this.dateRangeLabel = '"From Date" and "To Date" correspond to the "Date Signed" on the FPDS-NG documents.  <br/>The entire FY 2011 can be selected in the Report Criteria. However, no records will be displayed with a "Date Signed" after January 31, 2011.'
     }
 
     if (API_UMBRELLA_URL && API_UMBRELLA_URL.indexOf("reisys") != -1) {
@@ -304,7 +326,7 @@ export class ReportComponent implements OnInit {
     } else if (this.name === "Local Area Set Aside Report" && moment(this.dateRangeModel.startDate).isBefore("2006-08-04")) {
       this.dateValidator = true;
       this.dateValidatorMsg = "This report is available starting from August 4, 2006";
-    } else if (this.name === "Funding Report" && !this.onlyAgency) {
+    } else if (this.name === "Funding Report" && !this.agOnlySelection) {
       this.dateValidator = true;
       this.dateValidatorMsg = "Sub-Tier is a required field.";
     }else if (duration.years() >= this.REPORTMAXRANGE) {
@@ -386,15 +408,15 @@ export class ReportComponent implements OnInit {
       for (let i in this.agencyPicker) {
         if (this.agencyPicker[i] && this.agencyPicker[i].type === 'DEPARTMENT') {
           let department: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
-          this.departmentId = [{type:"element",name:"at",attributes:{did:"092E3409421A8C76CCE01CB6E423BE3B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"092E3409421A8C76CCE01CB6E423BE3B:"+department,art:"1"}}];
+          this.departmentId = [{type:"element",name:"at",attributes:{did:"092E3409421A8C76CCE01CB6E423BE3B",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"092E3409421A8C76CCE01CB6E423BE3B:"+department,art:"1",disp_n:department}}];
         }
         if (this.agencyPicker[i] && this.agencyPicker[i].type === 'AGENCY') {
           let agency: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
-          this.agencyId = [{type:"element",name:"at",attributes:{did:"A1FE94BE483FD8D534B145B794EC4166",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"A1FE94BE483FD8D534B145B794EC4166:"+agency,art:"1"}}];
+          this.agencyId = [{type:"element",name:"at",attributes:{did:"A1FE94BE483FD8D534B145B794EC4166",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"A1FE94BE483FD8D534B145B794EC4166:"+agency,art:"1",disp_n:agency}}];
         }
         if (this.agencyPicker[i] && this.agencyPicker[i].type === 'OFFICE') {
           let office: string = this.agencyPicker[i].fpdsCode || this.agencyPicker[i].fpdsOrgId;
-          this.officeId = [{type:"element",name:"at",attributes:{did:"C556EB554CED80B514C5DFBC01CEFC5F",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C556EB554CED80B514C5DFBC01CEFC5F:"+office,art:"1"}}];;
+          this.officeId = [{type:"element",name:"at",attributes:{did:"C556EB554CED80B514C5DFBC01CEFC5F",tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:"C556EB554CED80B514C5DFBC01CEFC5F:"+office,art:"1",disp_n:office}}];;
         }
       }
     }
@@ -636,8 +658,8 @@ export class ReportComponent implements OnInit {
         agencyPromptAnswerId = "4A57DB844892C977DB333B939EBA1B87";
         agencyPromptId = "2594DA9941865F5BE75172BCAB5097CC"
       }
-      if (this.onlyAgency) {
-          onlyAgencyParameter = [{type:"element",name:"at",attributes:{did:agencyPromptAnswerId,tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:agencyPromptAnswerId+":"+this.onlyAgency,art:"1"}}];
+      if (this.agOnlySelection) {
+          onlyAgencyParameter = [{type:"element",name:"at",attributes:{did:agencyPromptAnswerId,tp:"12"}},{type:"element",name:"e",attributes:{emt:"1",ei:agencyPromptAnswerId+":"+this.agOnlySelection['code'],art:"1",disp_n:this.agOnlySelection['code']}}];
       }
       onlyAgencyXML = {type:"element",name:"pa",attributes:{pt:"7",pin:"0",did:agencyPromptId,tp:"10"},elements:[{type:"element",name:"mi",elements:[{type:"element",name:"es",elements: onlyAgencyParameter}]}]}
       this.promptAnswersXML.elements[0].elements.push(onlyAgencyXML);
@@ -653,6 +675,8 @@ export class ReportComponent implements OnInit {
     this.agencyName = '';
     this.location.country = '';
     this.location.state = '';
+    this.agOnlySelection = null;
+    this.fundedBy = null;
     // Doesn't have dateRange
     if (this.name != 'Contract Detail Report') {
       this.dateRange.control.reset({

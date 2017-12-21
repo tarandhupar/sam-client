@@ -28,7 +28,7 @@ export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
     // }
 
     this.existingVal = val;
-    return this.accessService.getUserAutoComplete(val, false, this.pageNum, AUTOCOMPLETE_RECORD_PER_PAGE, this.isDefaultOrg, this.isAssignableOrg).map(res => {
+    return this.accessService.getEntityAutoComplete(val, false, this.pageNum, AUTOCOMPLETE_RECORD_PER_PAGE, this.isDefaultOrg, this.isAssignableOrg).map(res => {
       if(res != null && res.length > 0) {
         const list = res.map((val)=>{
           let obj = val;

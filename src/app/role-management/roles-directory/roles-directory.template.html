@@ -22,14 +22,27 @@
 
       <div class="sam-ui divider"></div>
 
-      <h3 class="h4">Organization</h3>
+      <h3 class="h4">{{isGov?'Organization':'Entity'}}</h3>
       <sam-agency-picker-v2
+        *ngIf="isGov; else nonFedPicker"
         #picker
         type="single"
         [defaultDept]="true"
         ngModel
         (ngModelChange)="onOrganizationChange($event)">
       </sam-agency-picker-v2>
+
+      <ng-template #nonFedPicker>
+        <sam-entity-picker
+          ngModel
+          (ngModelChange)="onOrganizationChange($event)"
+          [isDefaultOrg]="true"
+          [isAssignableOrg]="true"
+          [isDefaultOrgPrePopulated]="false"
+          [isMultiple]="false">
+
+        </sam-entity-picker>
+      </ng-template>
 
       <div class="sam-ui divider"></div>
 

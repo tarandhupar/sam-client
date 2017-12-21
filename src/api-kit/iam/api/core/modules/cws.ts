@@ -10,7 +10,7 @@ import {
 } from './helpers';
 
 import { getMockCWSApplication, getMockCWSComments, getMockCWSSummary } from './mocks';
-import { CWSApplication } from '../../../interfaces';
+import { CWSApplication, CWSFilter } from '../../../interfaces';
 
 const transforms = {
   intake(data: CWSApplication) {
@@ -134,28 +134,29 @@ const application = {
       });
   },
 
-  getAll($success: Function = () => {}, $error: Function = () => {}) {
-    let endpoint = utilities.getUrl(config.cws.application.get.replace(/\/\{id\}/, '')),
-        auth = getAuthHeaders(),
+  getAll(params: CWSFilter, $success: Function = () => {}, $error: Function = () => {}) {
+    let endpoint = utilities.getUrl(config.cws.application.filter),
+        // auth = getAuthHeaders(),
         mock = [
           transforms.intake(getMockCWSApplication(1)),
           transforms.intake(getMockCWSApplication(2)),
           transforms.intake(getMockCWSApplication(3)),
         ];
 
-    if(isDebug()) {
-      $success(mock);
-      return;
-    }
+    // if(isDebug()) {
+    //   $success(mock);
+    //   return;
+    // }
 
-    if(!auth) {
-      $error({ message: 'Please sign in' });
-      return;
-    }
+    // if(!auth) {
+    //   $error({ message: 'Please sign in' });
+    //   return;
+    // }
 
     request
       .get(endpoint)
-      .set(auth)
+      // .set(auth)
+      .query(params)
       .ok(response => (response.status == 200))
       .then(response => {
         let applications = response.body || [];

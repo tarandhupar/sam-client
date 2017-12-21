@@ -9,7 +9,7 @@
             questions correctly before your account is temporarily locked.
           </span>
 
-          <div *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submittedCount && answer.invalid }">
+          <div class="forgot-content" *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submittedCount && answer.invalid }">
             <span class="usa-input-error-message" *ngIf="states.submittedCount && answer.invalid" role="alert">
               <span>Enter a valid answer</span>
             </span>

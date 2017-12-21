@@ -33,3 +33,13 @@ export interface CWSApplication {
   applicationStatus?: string;
   statuses?: string|(string|number)[];
 };
+
+export interface CWSFilter {
+  keyword?: string;
+  admin?: string;
+  contractOpportunities?: boolean;
+  contractData?: boolean;
+  entityInformation?: boolean;
+  status?: string[];
+  dir?: string;
+};

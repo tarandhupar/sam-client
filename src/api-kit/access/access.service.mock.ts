@@ -149,5 +149,11 @@ export let UserAccessMock = {
       "createdDate": "2017-07-07T08:10:15.677",
       "createdBy": "job@gsa.gov",
     }).delay(2);
-  }
+  },
+
+  putAccess(){return Observable.of({});},
+
+  deleteAccess(){return Observable.of({});},
+
+  getUsersV1(){return Observable.of({});}
 };

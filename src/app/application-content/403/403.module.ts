@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routing } from './403.route';
 import { ForbiddenPage } from "./403.page";
-import { IsLoggedInGuard } from "./is-logged-in.guard";
+import { IsLoggedInGuard } from "../../app-services/is-logged-in.guard";
 import { UnauthenticatedPage } from "../401/401.page";
-import { CheckAccessGuard } from "./check-access.guard";
-import { FHAccessGuard } from "./fh-access.guard";
-import { FeatureToggleGuard } from "./feature-toggle.guard";
+import { RmAccessGuard } from "../../app-services/rm-access.guard";
+import { FHAccessGuard } from "../../app-services/fh-access.guard";
+import { FeatureToggleGuard } from "../../app-services/feature-toggle.guard";
 @NgModule({
   imports: [
     CommonModule,
@@ -23,7 +23,7 @@ import { FeatureToggleGuard } from "./feature-toggle.guard";
   ],
   providers: [
     IsLoggedInGuard,
-    CheckAccessGuard,
+    RmAccessGuard,
     FHAccessGuard,
     FeatureToggleGuard,
   ],

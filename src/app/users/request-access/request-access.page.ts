@@ -7,6 +7,7 @@ import { AlertFooterService } from "../../app-components/alert-footer/alert-foot
 import { UserService } from "../../role-management/user.service";
 import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
+import adminLevel from "../../role-management/admin-level";
 
 function arrayIsRequired(c: FormControl) {
   if (!c.value || !c.value.length) {
@@ -40,6 +41,7 @@ export class RequestAccessPage {
   ];
 
   submitInProgress: boolean = false;
+  isGov: boolean = true;
 
   constructor(
     fb: FormBuilder,
@@ -63,6 +65,7 @@ export class RequestAccessPage {
   ngOnInit() {
     this.user = this.userService.getUser();
     this.userName = this.user.uid;
+    this.isGov = adminLevel.isGov;
     this.roleCategories = this.route.snapshot.data['roleCategories'].map(
       cat => {
         let options = cat.roles.map(role => {
@@ -135,7 +138,7 @@ export class RequestAccessPage {
       domainIds: val.domains.map(d => +d.key),
       requestorMessage: val.comment,
       roleId: val.role,
-      organization : { id:val.org.orgKey, val:val.org.name}
+      organization : { id:this.isGov?val.org.orgKey:val.org.cageCode, val:val.org.name}
     };
 
     this.submitInProgress = true;

@@ -7,9 +7,9 @@ import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 import { AACRequestGuard } from "./AAC-request/AAC-request.guard.ts";
 import { OrgMovePage } from "./move-org/move-org.component";
 import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
-import { FHAccessGuard } from "../application-content/403/fh-access.guard";
-import { IsLoggedInGuard } from "../application-content/403/is-logged-in.guard";
-import { FeatureToggleGuard } from "../application-content/403/feature-toggle.guard";
+import { FHAccessGuard } from "../app-services/fh-access.guard";
+import { IsLoggedInGuard } from "../app-services/is-logged-in.guard";
+import { FeatureToggleGuard } from "../app-services/feature-toggle.guard";
 
 export const routes: Routes = [
   {

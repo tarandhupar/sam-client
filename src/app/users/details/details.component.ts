@@ -1,17 +1,18 @@
 import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { cloneDeep, indexOf, isNumber, merge } from 'lodash';
 
-import { FHService, IAMService } from 'api-kit';
+import { EntityService, FHService, IAMService } from 'api-kit';
 import { KBA, User } from 'api-kit/iam/interfaces';
 
 @Component({
   templateUrl: './details.component.html',
   providers: [
+    EntityService,
     FHService,
-    IAMService
+    IAMService,
   ]
 })
 export class DetailsComponent {
@@ -25,10 +26,12 @@ export class DetailsComponent {
 
   private differ;
   private api = {
+    entity: null,
     fh: null,
     iam: null
   };
 
+  private subscriptions = {};
   private store = {
     labels: {
       personalPhone: {
@@ -37,7 +40,16 @@ export class DetailsComponent {
           To receive one time passwords as text messages, you must provide a mobile phone number and carrier.
           <div><em>* Standard Text Messaging Rates May Apply</em></div>
         `,
-      }
+      },
+
+      entity: {
+        label: 'Entity',
+        hint: `
+          To be assigned additional roles and permissions for an organization, you must be associated with an entity.
+          Enter an Entity ID (DUNS or CAGE) or Entity Name to find your entity.
+        `,
+        placeholder: 'Search by CAGE code or DUNS or legal business name',
+      },
     },
 
     levels: ['department', 'agency', 'office'],
@@ -85,6 +97,7 @@ export class DetailsComponent {
     departmentID: '',
     agencyID: '',
     officeID: '',
+    businessName: '',
 
     workPhone: '',
     personalPhone: '',
@@ -153,10 +166,19 @@ export class DetailsComponent {
   // Organization Names
   private hierarchy = {
     department: '',
-    agency:     '',
-    office:     '',
+    agency: '',
+    office: '',
     aac: ''
   };
+
+  private entity = {
+    name: '',
+    cageCode: '',
+    duns: '',
+    address: '',
+  };
+
+  private $entity = new FormControl('');
 
   public detailsForm: FormGroup;
 
@@ -165,12 +187,14 @@ export class DetailsComponent {
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
+    private _entity: EntityService,
     private _fh: FHService,
     private _iam: IAMService) {
       this.differ = differs.find({}).create(null);
 
-      this.api.iam = _iam.iam;
+      this.api.entity = _entity;
       this.api.fh = _fh;
+      this.api.iam = _iam.iam;
     }
 
   ngOnInit() {
@@ -180,8 +204,17 @@ export class DetailsComponent {
     });
   }
 
+  ngOnDestroy() {
+    // Unsubscribe all subscriptions
+    Object.keys(this.subscriptions).map(key => {
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
+      }
+    });
+  }
+
   ngAfterViewInit() {
-    this.route.queryParams.subscribe(qparams => {
+    this.subscriptions['queryParams'] = this.route.queryParams.subscribe(qparams => {
       if(qparams['edit']) {
         if(this[`${qparams['edit']}Editor`]) {
           this[`${qparams['edit']}Editor`].showInputView = true;
@@ -196,14 +229,14 @@ export class DetailsComponent {
 
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        if(this.detailsForm && this.detailsForm.controls[diff.key]) {
+        if(this.detailsForm && this.detailsForm.get(diff.key)) {
           key = diff.key.toString().match(/(middleName|initials)/) ? 'initials' : diff.key;
 
           if(key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
             return;
           }
 
-          this.detailsForm.controls[key].setValue(diff.currentValue);
+          this.detailsForm.get(key).setValue(diff.currentValue);
           this.user[key] = diff.currentValue;
         }
       });
@@ -250,14 +283,39 @@ export class DetailsComponent {
   }
 
   updateSelectedOffice() {
+    if(ENV && ENV == 'test') {
+      return;
+    }
+
     if(this.states.isGov) {
       this.selected = [this.user.officeID || this.user.agencyID || this.user.departmentID];
 
-       this.api.fh
+       this.subscriptions['fh'] = this.api.fh
         .getOrganizationById(this.selected)
         .subscribe(data => {
           this.setOrganizationNames(data);
         });
+    } else {
+      const control = this.detailsForm.get('businessName');
+
+      if(control.value) {
+        this.subscriptions['entity'] = this.api.entity
+        .findByCageCode(control.value)
+        .subscribe(entity => {
+          this.entity.name = entity.legalBusinessName;
+          this.entity.cageCode = entity.cageCode;
+          this.entity.duns = entity.duns;
+          this.entity.address = entity.address;
+
+          this.$entity.patchValue(merge({
+            key: entity.cageCode,
+            name: entity.legalBusinessName,
+            detail: `CAGE: ${entity.cageCode} | DUNS: ${entity.duns}`,
+          }, entity));
+
+          this.$entity.disable();
+        });
+      }
     }
   }
 
@@ -270,7 +328,7 @@ export class DetailsComponent {
   }
 
   initForm() {
-    const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+    let orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
 
     this.selected = [orgID];
 
@@ -285,6 +343,7 @@ export class DetailsComponent {
 
       workPhone:     [this.user.workPhone],
       officeID:      [orgID],
+      businessName:  [this.user.businessName],
 
       kbaAnswerList: this.builder.array(
         this.user.kbaAnswerList.length ? [
@@ -298,7 +357,7 @@ export class DetailsComponent {
       emailNotification: [this.user.emailNotification]
     });
 
-    this.detailsForm.get('personalPhone').valueChanges.subscribe(value => {
+    this.subscriptions['personalPhone'] = this.detailsForm.get('personalPhone').valueChanges.subscribe(value => {
         const control = this.detailsForm.get('carrier'),
               validation = value ? [Validators.required] : null;
 
@@ -306,7 +365,21 @@ export class DetailsComponent {
         control.updateValueAndValidity();
     });
 
+    if(this.api.iam.isDebug() && !this.api.iam.getParam('gov')) {
+      orgID = '';
+    }
+
     this.states.isGov = orgID.length ? true : false;
+
+    if(!this.states.isGov) {
+      if(this.user.businessName) {
+        this.updateSelectedOffice();
+      } else {
+        this.subscriptions['entity'] = this.$entity.valueChanges.subscribe(entity => {
+          this.detailsForm.get('businessName').setValue(entity.key);
+        });
+      }
+    }
   }
 
   loadUser(cb) {
@@ -314,6 +387,7 @@ export class DetailsComponent {
       user.workPhone = this.sanitizePhone(user.workPhone);
       user.workPhone = (user.workPhone.length < 11 ? '1' : '' ) + user.workPhone;
       user.personalphone = this.sanitizePhone(user.personalPhone, false);
+      user.businessName = (user.businessName || '').trim();
 
       this.user = merge({
         middleName: user.initials,
@@ -379,7 +453,7 @@ export class DetailsComponent {
           });
         }),
 
-        getMockUser = ((promise) => {
+        getMockUser = (promise => {
           let intQuestion;
 
           this.api.iam.user.get(user => {
@@ -540,11 +614,11 @@ export class DetailsComponent {
       }
     });
 
-    this.detailsForm.controls['officeID'].setValue(
+    this.detailsForm.get('officeID').setValue(
        this.user.officeID || this.user.agencyID || this.user.departmentID
     );
 
-    this.selected = [this.detailsForm.controls['officeID']];
+    this.selected = [this.detailsForm.get('officeID')];
   }
 
   setAAC(organization) {
@@ -571,7 +645,7 @@ export class DetailsComponent {
     const questions = this.store.questions,
           mappings = this.store.indexes;
 
-    return questions[mappings[questionID]].question;
+    return (questions[mappings[questionID]] || { question: ''}).question || '';
   }
 
   changeQuestion(questionID, $index) {
@@ -655,7 +729,7 @@ export class DetailsComponent {
    * Editables
    */
   isValid(keys: Array<String>) {
-    let controls = this.detailsForm.controls,
+    let form = this.detailsForm,
         entries = this.kbaEntries.toArray(),
         valid = true,
         key,
@@ -669,13 +743,15 @@ export class DetailsComponent {
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
 
-      if(key !== 'kbaAnswerList') {
-        controls[key].markAsDirty();
-      }
+      if(form.get(key)) {
+        if(key !== 'kbaAnswerList') {
+          form.get(key).markAsDirty();
+        }
 
-      if(controls[key].invalid) {
-        valid = false;
-        return valid
+        if(form.get(key).invalid) {
+          valid = false;
+          return valid
+        }
       }
     }
 
@@ -683,7 +759,7 @@ export class DetailsComponent {
   }
 
   saveGroup(keys: Array<String>, $success, $error) {
-    let controls = this.detailsForm.controls,
+    let form = this.detailsForm,
         userData = {
           fullName: this.name
         },
@@ -697,7 +773,7 @@ export class DetailsComponent {
 
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
-      controlValue = controls[key] ? controls[key].value : this.user[key];
+      controlValue = form.get(key) ? form.get(key).value : this.user[key];
 
       if(controlValue.toString().length || key.match(/^(initials|suffix)$/)) {
         userData[key] = controlValue;
@@ -718,7 +794,7 @@ export class DetailsComponent {
           break;
 
         case 'kbaAnswerList':
-          if(controls[key].dirty) {
+          if(form.get(key).dirty) {
             userData[key] = controlValue.map((item, intItem) => {
               item.answer = item.answer.trim();
               this.user.kbaAnswerList[intItem] = item;
@@ -747,10 +823,10 @@ export class DetailsComponent {
   }
 
   save(groupKey) {
-    let controls = this.detailsForm.controls,
+    let form = this.detailsForm,
         mappings = {
           'identity': 'firstName|initials|lastName|suffix|personalPhone|carrier|OTPPreference|emailNotification',
-          'business': 'departmentID|agencyID|officeID|workPhone',
+          'business': 'departmentID|agencyID|officeID|businessName|workPhone',
           'kba': 'kbaAnswerList'
         },
 
@@ -760,7 +836,7 @@ export class DetailsComponent {
     this.dismiss(groupKey);
     this.states.submitted = true;
 
-    if(this.agencyPicker){
+    if(this.agencyPicker) {
       this.agencyPicker.setOrganizationFromBrowse();
     }
 
@@ -769,10 +845,10 @@ export class DetailsComponent {
 
       this.saveGroup(keys, () => {
         this.states.edit[groupKey] = false;
+        this.states.loading = false;
+
         this.syncCache();
 
-        // this.states.editable[groupKey] = false;
-        this.states.loading = false;
         // Trick Header to Update State
         this.router.navigate(['/profile']);
       }, (error) => {

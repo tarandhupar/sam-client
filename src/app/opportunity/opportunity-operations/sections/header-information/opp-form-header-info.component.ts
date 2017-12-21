@@ -43,9 +43,9 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   };
 
   public readonly idConfig = {
-    id: OpportunityFieldNames.PROCUREMENT_ID,
-    label: 'Procurement ID',
-    name: OpportunityFieldNames.PROCUREMENT_ID + '-input',
+    id: OpportunityFieldNames.NOTICE_NUMBER,
+    label: 'Notice Number',
+    name: OpportunityFieldNames.NOTICE_NUMBER + '-input',
     required: true,
     hint: 'Agency assigned number for control, tracking, and identification. Please use ONLY alphanumeric and - _ ( ) { } characters (no spaces).',
     maxLength: null,
@@ -60,7 +60,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     orgRoots: [],
     levelLimit: 3,
   };
-  noticeTypes = ['o', 'p', 'k', 'r', 'g', 's', 'a'];
+  noticeTypes = ['o', 'p', 'k', 'r', 'g', 's', 'a', 'i', 'j'];
 
   constructor(private errorService: OpportunityFormErrorService, private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
@@ -118,7 +118,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
       opportunityType: null,
       relatedNotice: null,
       title: '',
-      procurementId: '',
+      noticeNumber: '',
       office: null,
     });
     this.cdr.detectChanges();
@@ -126,8 +126,8 @@ export class OpportunityHeaderInfoComponent implements OnInit {
       this.oppHeaderInfoForm.markAsPristine({onlySelf: true});
       this.oppHeaderInfoForm.get('title').markAsDirty({onlySelf: true});
       this.oppHeaderInfoForm.get('title').updateValueAndValidity();
-      this.oppHeaderInfoForm.get('procurementId').markAsDirty({onlySelf: true});
-      this.oppHeaderInfoForm.get('procurementId').updateValueAndValidity();
+      this.oppHeaderInfoForm.get('noticeNumber').markAsDirty({onlySelf: true});
+      this.oppHeaderInfoForm.get('noticeNumber').updateValueAndValidity();
       this.oppHeaderInfoForm.get('office').markAsDirty({onlySelf: true});
       this.oppHeaderInfoForm.get('office').updateValueAndValidity();
     }
@@ -138,7 +138,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
       opportunityType: this.oppHeaderInfoViewModel.opportunityType,
       title: this.viewModel.title,
       relatedNotice: this.viewModel.relatedNotice,
-      procurementId: this.oppHeaderInfoViewModel.procurementId,
+      noticeNumber: this.oppHeaderInfoViewModel.noticeNumber,
       office: this.oppHeaderInfoViewModel.office,
     }, {
         emitEvent: false,
@@ -175,7 +175,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   private subscribeToChanges(): void {
     this.linkControlTo(this.oppHeaderInfoForm.get('office'), this.saveOffice);
     this.linkControlTo(this.oppHeaderInfoForm.get('opportunityType'), this.saveOpportunityType);
-    this.linkControlTo(this.oppHeaderInfoForm.get('procurementId'), this.saveProcurementId);
+    this.linkControlTo(this.oppHeaderInfoForm.get('noticeNumber'), this.saveNoticeNumber);
     this.linkControlTo(this.oppHeaderInfoForm.get('title'), this.saveTitle);
     this.linkControlTo(this.oppHeaderInfoForm.get('relatedNotice'), this.saveRelatedNotice);
   }
@@ -214,8 +214,8 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     this.disableSideNavItem(type);
   }
 
-  private saveProcurementId(id) {
-    this.oppHeaderInfoViewModel.procurementId = id;
+  private saveNoticeNumber(id) {
+    this.oppHeaderInfoViewModel.noticeNumber = id;
     this.cdr.detectChanges();
     this.updateProcurementIdError();
   }
@@ -256,12 +256,12 @@ export class OpportunityHeaderInfoComponent implements OnInit {
 
 
   private updateProcurementIdError() {
-    this.oppHeaderInfoForm.get('procurementId').clearValidators();
-    this.oppHeaderInfoForm.get('procurementId').setValidators((control) => {
+    this.oppHeaderInfoForm.get('noticeNumber').clearValidators();
+    this.oppHeaderInfoForm.get('noticeNumber').setValidators((control) => {
       return control.errors
     });
-    this.oppHeaderInfoForm.get('procurementId').setErrors(this.errorService.validateProcurementId().errors);
-    this.markAndUpdateFieldStat('procurementId');
+    this.oppHeaderInfoForm.get('noticeNumber').setErrors(this.errorService.validateNoticeNumber().errors);
+    this.markAndUpdateFieldStat('noticeNumber');
     this.emitErrorEvent();
   }
 

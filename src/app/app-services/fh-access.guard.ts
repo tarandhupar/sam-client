@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable } from "rxjs";
-import { FeatureToggleService } from "../../../api-kit/feature-toggle/feature-toggle.service";
-import { AlertFooterService } from "../../app-components/alert-footer/alert-footer.service";
+import { FHService } from "api-kit/fh/fh.service";
+import { AlertFooterService } from "../app-components/alert-footer/alert-footer.service";
 
 /*
- Usage: Add the FeatureToggleGuard to the route, when feature toggle for the page is needed. It will make feature toggle api call to decide whether hide the page for current environment or not.
- Please define the 'featureToggleKey' in the routes to enable this guard, in order to use that for checking feature toggle result from api
+ Usage: Add the FHAccessGuard to the route. Need OrgId as route params defined, and use this guard to protect the route:
  export const routes: Routes = [{
  path: 'profile',
- canActivate: [ FeatureToggleGuard ],
+ canActivate: [ FHAccessGuard ],
  }]
 
  */
 @Injectable()
-export class FeatureToggleGuard implements CanActivateChild, CanActivate {
+export class FHAccessGuard implements CanActivateChild, CanActivate {
 
   constructor(
-    private featureToggleService: FeatureToggleService,
+    private accessService: FHService,
     private router: Router,
     private alertFooter: AlertFooterService
   ) {
@@ -29,15 +28,12 @@ export class FeatureToggleGuard implements CanActivateChild, CanActivate {
   }
 
   canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
-    return true;
-    let toggleKey = route.data['featureToggleKey'];
-    if (!toggleKey) {
-      throw new Error('Must define a toggle feature key property for this route');
-    }
-    return this.featureToggleService.checkFeatureToggle(toggleKey)
+
+    let orgId = route.parent.params['orgId'];
+    return this.accessService.getAccess(orgId, false)
       .map(
         res => {
-          return res;
+          return true;
         }
       )
       .catch(
@@ -68,3 +64,5 @@ export class FeatureToggleGuard implements CanActivateChild, CanActivate {
       );
   }
 }
+
+

@@ -45,21 +45,21 @@ describe('Header Information Section View Model', () => {
   });
 
   //Procurment Id
-  it('get procurementId returns saved procurementId', () => {
+  it('get noticeNumber returns saved noticeNumber', () => {
     let _data = {
       solicitationNumber: 'test1'
     };
     dataModel = new OppHeaderInfoViewModel(_data);
-    expect(dataModel.procurementId).toEqual("test1");
+    expect(dataModel.noticeNumber).toEqual("test1");
   });
 
-  it('set procurementId returns new procurementId', () => {
+  it('set noticeNumber returns new noticeNumber', () => {
     let _data = {
       solicitationNumber: 'test'
     };
     dataModel = new OppHeaderInfoViewModel(_data);
-    dataModel.procurementId = "test2";
-    expect(dataModel.procurementId).toEqual("test2");
+    dataModel.noticeNumber = "test2";
+    expect(dataModel.noticeNumber).toEqual("test2");
   });
 
 });

@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { SamActionInterface } from "sam-ui-elements/src/ui-kit/components/actions";
 import { get as getProp } from 'lodash';
 import { AgencyPickerV2Component } from "../../app-components/agency-picker-v2/agency-picker-v2.component";
+import adminLevel from "../admin-level";
 
 @Component({
   templateUrl: './roles-directory.template.html',
@@ -56,6 +57,7 @@ export class RolesDirectoryPage {
   dummySearchValue; //autocomplete makes me do this
   searchStatus: 'success'|'error'|'pending' = 'pending';
   errorMessage: string;
+  isGov:boolean = true;
 
   @ViewChild('picker') agencyPicker: AgencyPickerV2Component;
   @ViewChild('userPicker') userAutoComplete: SamAutocompleteComponent;
@@ -71,12 +73,13 @@ export class RolesDirectoryPage {
   }
 
   ngOnInit() {
+    this.isGov = adminLevel.isGov;
     this.initializeAutoComplete();
   }
 
   onClearAllClick() {
     this.selectedOrganization = null;
-    this.agencyPicker.clearAdvanced();
+    if(this.isGov) this.agencyPicker.clearAdvanced();
     this.userAutoComplete.clearInput();
     this.userSearchValue = null;
     this.selectedDomainIds = [];
@@ -233,8 +236,9 @@ export class RolesDirectoryPage {
   }
 
   onOrganizationChange(org) {
-    if (org && org.orgKey) {
-      this.selectedOrganization = org.orgKey;
+    if (org) {
+      if(this.isGov && org.orgKey) this.selectedOrganization = org.orgKey;
+      if(!this.isGov && org.cageCode) this.selectedOrganization = org.cageCode;
     } else {
       this.selectedOrganization = undefined;
     }

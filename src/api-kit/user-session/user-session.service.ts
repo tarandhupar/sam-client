@@ -57,7 +57,11 @@ export class UserSessionService {
       this.idleState = 'Gone idle!';
       this.isIdle = true;
       this.idle.clearInterrupts();
-      sessionModalCB();
+      // Check whether the iPlanetDiretoryPro cookie is still there or not
+      // if the cookie is not there, don't call the callback function to show the modal window
+      if(Cookies.get('iPlanetDirectoryPro')){
+        sessionModalCB();
+      }
     });
     this.onInterrupt = this.idle.onInterrupt.subscribe(() => {
       // Reset idle time

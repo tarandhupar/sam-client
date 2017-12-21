@@ -48,7 +48,6 @@ export class UserAccessService {
             };
 
             this.router.navigate(['/signin'], options);
-            console.log(options);
           }
         }
         // This seems risky... I don't want to redirect unless I'm sure they are forbidden
@@ -544,6 +543,39 @@ export class UserAccessService {
       apiOptions.oParam.limit = +limit;
       apiOptions.oParam.page = page;
     }
+    return this.callApi(apiOptions);
+  }
+
+  getEntityAutoComplete(query : string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE,
+                      isDefaultOrg: boolean = false, isAssignableOrg: boolean = false){
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/autocomplete/entity',
+      method: 'GET',
+      oParam: {}
+    };
+
+    apiOptions.oParam.query = query;
+    apiOptions.oParam.isGov = isGov;
+    apiOptions.oParam.isDefaultOrg = isDefaultOrg;
+    apiOptions.oParam.isAssignedOrgs = isAssignableOrg;
+
+
+    if(!isGov) {
+      apiOptions.oParam.limit = +limit;
+      apiOptions.oParam.page = page;
+    }
+    return isDefaultOrg? this.callApi(apiOptions): this.apiService.call(apiOptions);
+  }
+
+  getEntityById(entityId){
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/autocomplete/entity/' + entityId,
+      method: 'GET',
+      oParam: {}
+    };
+
     return this.callApi(apiOptions);
   }
 

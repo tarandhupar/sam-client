@@ -63,12 +63,13 @@ export default {
 
   cws: {
     application: {
-      get:      '/cws/v1/applications/{id}',
-      create:   '/cws/v1/applications/submit',
-      update:   '/cws/v1/applications/{id}',
-      delete:   '/cws/v1/applications/{id}',
-      approve:  '/cws/v1/applications/approve',
-      reject:   '/cws/v1/applications/reject',
+      get:     '/cws/v1/applications/{id}',
+      filter:  '/cws/v1/applications/filter',
+      create:  '/cws/v1/applications/submit',
+      update:  '/cws/v1/applications/{id}',
+      delete:  '/cws/v1/applications/{id}',
+      approve: '/cws/v1/applications/approve',
+      reject:  '/cws/v1/applications/reject',
       comment: {
         get: '/cws/v1/applications/{id}',
       },

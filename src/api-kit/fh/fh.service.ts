@@ -279,7 +279,7 @@ export class FHService {
   }
 
 
-  fhSearch(q:string, pageNum, pageSize, status, levels, orgType, isCode = false, parent = null, isDefaultDept = false){
+  fhSearch(q:string, pageNum, pageSize, status, levels, orgType, isCode = false, parent = null, isDefaultDept = false, depth=0, exclusive = null){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search',
@@ -304,6 +304,12 @@ export class FHService {
     }
     if(isDefaultDept) {
       apiOptions.oParam['defaultDept'] = 'true';
+    }
+    if(depth!==0) {
+      apiOptions.oParam['depth'] = depth;
+    }
+    if(exclusive!==null){
+      apiOptions.oParam['exclusive'] = exclusive;
     }
     return this.callApi(apiOptions, true);
   }
@@ -353,7 +359,7 @@ export class FHService {
     return this.callApi(apiOptions,true);
   }
 
-  getFHWidgetInfo(type, day){
+  getFHWidgetInfo(type: 'completed'|'scheduled', day){
     let apiOptions: any = {
       name: 'fhDetail',
       suffix: '/FHWidget',

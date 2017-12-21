@@ -57,7 +57,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
   }
 
   fetch(val: string, pageEnd: boolean, serviceOptions: any): Observable<any> {
-    if (val.length >= 2) {
+    if (val.length >= 0) {
       return this.getData(val, serviceOptions.index).map(o => o);
     } else {
       return Observable.of([]);

@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/notice-type-map.service";
+import {OpportunitySectionNames} from '../../framework/data-model/opportunity-form-constants';
+import {OpportunityFormErrorService} from "../../opportunity-form-error.service";
 
 @Component({
   selector: 'opp-form-description',
@@ -11,10 +13,13 @@ import {OppNoticeTypeMapService} from "../../framework/service/notice-type-map/n
 export class OpportunityDescriptionComponent implements OnInit {
 
   @Input() viewModel: OpportunityFormViewModel;
+  @Output() showErrors: EventEmitter<any> = new EventEmitter<any>();
+
   oppDescForm: FormGroup;
   public noticeType: any;
+  descriptionLabel: string;
 
-  constructor(private fb: FormBuilder, private noticeTypeMapService: OppNoticeTypeMapService) {
+  constructor(private fb: FormBuilder, private noticeTypeMapService: OppNoticeTypeMapService, private errorService: OpportunityFormErrorService) {
   }
 
   ngOnInit() {
@@ -23,16 +28,28 @@ export class OpportunityDescriptionComponent implements OnInit {
     if (!this.viewModel.isNew) {
       this.updateForm();
     }
-    this.oppDescForm.valueChanges.subscribe(data => {
-        this.updateViewModel(data)
+    this.oppDescForm.valueChanges.debounceTime(10)
+      .distinctUntilChanged().subscribe(data => {
+        this.updateViewModel(data);
+        this.updateDescriptionError();
       }
     );
   }
 
   createForm(){
+    if (this.noticeType === 'i') {
+      this.descriptionLabel = 'Description of Benefits';
+    } else {
+      this.descriptionLabel = 'Description';
+    }
     this.oppDescForm = this.fb.group({
       description: null
     });
+    if (this.viewModel.getSectionStatus(OpportunitySectionNames.DESCRIPTION) === 'updated') {
+      this.oppDescForm.markAsPristine({onlySelf: true});
+      this.oppDescForm.get('description').markAsDirty({onlySelf: true});
+      this.oppDescForm.get('description').updateValueAndValidity();
+    }
   }
 
   updateForm(){
@@ -50,6 +67,8 @@ export class OpportunityDescriptionComponent implements OnInit {
     }, {
       emitEvent: false
     });
+
+    this.updateErrors();
   }
 
   updateViewModel(data) {
@@ -63,5 +82,28 @@ export class OpportunityDescriptionComponent implements OnInit {
   }
   private checkFieldRequired(field) {
     return this.noticeTypeMapService.checkFieldRequired(this.noticeType, field);
+  }
+
+  public updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+    this.updateDescriptionError();
+  }
+
+  private updateDescriptionError() {
+    this.oppDescForm.get('description').clearValidators();
+    this.oppDescForm.get('description').setValidators((control) => {
+      return control.errors
+    });
+    this.oppDescForm.get('description').setErrors(this.errorService.validateDesc().errors);
+    this.markAndUpdateFieldStat('description');
+    this.emitErrorEvent();
+  }
+
+  private markAndUpdateFieldStat(fieldName) {
+    this.oppDescForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
+  }
+
+  private emitErrorEvent() {
+    this.showErrors.emit(this.errorService.applicableErrors);
   }
 }

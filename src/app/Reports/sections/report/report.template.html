@@ -31,7 +31,7 @@
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form #reportForm="ngForm">
           <div class="display-block">
-            <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [label]="dateRangeLabel" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
+            <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [hint]="dateRangeLabel" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
               [control]="dateRange?.control" [required]="'Required'" name='dateRange'>
             </sam-date-range>
             <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">{{dateValidatorMsg}}</p>
@@ -96,9 +96,22 @@
                 </sam-autocomplete>
               </div>
               <!-- To be replaced later -->
-              <sam-text *ngIf="usedPrompts && usedPrompts.onlyAgency" [(ngModel)]="onlyAgency" [name]="'onlyAgency'"
+              <!--sam-text *ngIf="usedPrompts && usedPrompts.onlyAgency" [(ngModel)]="onlyAgency" [name]="'onlyAgency'"
                 [label]="'Sub-Tier'" [required]="true">
-              </sam-text><br/>
+              </sam-text-->
+              <sam-autocomplete
+                *ngIf="usedPrompts && usedPrompts.onlyAgency"
+                agencypicker-autofill
+                labelText="Sub-Tier"
+                [required]="true"
+                [name]="'picker'"
+                [id]="'picker'"
+                [ngModel]="agOnlySelection"
+                (ngModelChange)="agOnlyAddSelection($event)"
+                [config]="agOnlyConfig"
+                [attr.class]="'agOnlyPicker'">
+              </sam-autocomplete>
+              <br/>
               <div *ngIf="usedPrompts && usedPrompts.fundedBy">
                 <sam-checkbox [(ngModel)]="fundedBy" [name]="'Funded By'"[label]="label.fundedBy" [options]="fundedByOptions" (modelChange)="changeFundedBy($evt)"></sam-checkbox>
                 <p>If not checked, the report will show the awards awarded by this Sub-Tier.</p>
@@ -106,13 +119,13 @@
             </div>
           </div>
           <div class="display-block report__promptBtns">
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Clear'" [buttonType]="btnType" (click)="resetParameter()">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Clear'" [buttonType]="'tertiary'" (click)="resetParameter()">
             </sam-button>
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType" (click)="validate('execute')">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="'primary'" (click)="validate('execute')">
             </sam-button>
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'PDF Export'" [buttonType]="btnType" (click)="validate('export')">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'PDF Export'" [buttonType]="'tertiary'" (click)="validate('export')">
             </sam-button>
-            <sam-button *ngIf="localEnv" [buttonId]="'defaultBtn'" [buttonText]="'TEST'" [buttonType]="btnType" (click)="test()">
+            <sam-button *ngIf="localEnv" [buttonId]="'defaultBtn'" [buttonText]="'TEST'" [buttonType]="'tertiary'" (click)="test()">
             </sam-button>
           </div>
         </form>

@@ -8,12 +8,15 @@ import { Location } from "@angular/common";
 import { Observable } from "rxjs/Observable";
 import { ShortDatePipe } from "sam-ui-elements/src/ui-kit/pipes/short-date/short-date.pipe";
 import { Comment } from "sam-ui-elements/src/ui-kit/components/comments/interfaces";
+import adminLevel from "../admin-level";
 
 @Component({
   templateUrl: 'view-request.template.html',
   providers: [ShortDatePipe]
 })
 export class ViewRequestPage implements OnInit {
+  isGov: boolean = true;
+  entityDetail: any = {};
   request: any;
   rawRequest: any;
   errors = { comment: '' };
@@ -53,9 +56,11 @@ export class ViewRequestPage implements OnInit {
   }
 
   ngOnInit() {
+    this.isGov = adminLevel.isGov;
     let req = this.route.snapshot.data['request'];
     this.rawRequest = req;
     this.parseRequest(req);
+    if (!this.isGov) this.getRequestEntity(req.organization.id);
   }
 
   canCancel() {
@@ -204,5 +209,29 @@ export class ViewRequestPage implements OnInit {
   getLatestDate(){
     let dateStr = this.request.updatedDate || this.request.createdDate;
     return dateStr.split(' ')[0];
+  }
+
+  getRequestEntity(cageCode) {
+    this.userAccessService.getEntityById(cageCode).subscribe(
+      res => {
+        try {
+          if (res && res.length > 0) this.entityDetail = res[0];
+        } catch (err) {
+          this.showAlertFooterWithDesc('Entity Service parsing error.');
+        }
+      },
+      error => {
+        this.showAlertFooterWithDesc('Entity Service encountered some problem, please try again later');
+      }
+    );
+  }
+
+  showAlertFooterWithDesc(desc) {
+    this.alertFooter.registerFooterAlert({
+      title: 'Error',
+      description: desc,
+      type: 'error',
+      timer: 3200
+    });
   }
 }

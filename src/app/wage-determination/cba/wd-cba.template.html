@@ -1,0 +1,231 @@
+<div class="usa-grid wage-determination-page">
+        
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <div sam-sticky limit=1200 container="wage-determination-page">
+      <!--Logo-->
+      <img src="src/assets/img/logo-not-found.png" class="sidenav-logo" alt="Logo Not Available" width="140px">
+      <ul class="usa-sidenav-list">
+        <a class="usa-current">CBA</a>
+        <ul class="usa-sidenav-sub_list">
+          <a (click)="navHandler('overview')">Overview</a>
+          <a (click)="navHandler('agreement')">Agreement</a>
+          <hr>
+        </ul>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="usa-width-three-fourths">
+
+    <section id="wage-determination" *ngIf="data">
+
+      <div class="sam-ui hidden divider"></div>
+
+      <!-- Page Title: Service Contract Act -->
+      <ng-container>
+        <h1 class="sam-ui header" id="overview">
+          Collective Bargaining Agreement # {{data.cbaNumber}}
+        </h1>
+      </ng-container>
+
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Tabs for logged in users -->
+      <div *ngIf="isGovUser" class="sam-ui tabular menu">
+        <!-- Clicking this should go to the revise page in the future -->
+        <span class="item disabled">Revise</span> 
+        <span class="item active">Public</span>
+      </div>
+      
+      <!-- Intro Content -->
+      <div class="sam-ui padded raised segment">
+        <div class="sam-ui attached grid">
+          <div class="column">
+            <div class="sam-ui relaxed divided list">
+              <div class="item" id="cba-revision-number">
+                <div class="content">
+                  <div class="header">Revision #</div>
+                  <div class="description">{{data.revisionNumber}}</div>
+                </div>
+              </div>
+              <div class="item" id="cba-date">
+                <div class="content">
+                  <ng-container>
+                    <div class="header">
+                      Published Date
+                    </div>
+                  </ng-container>
+                  <div class="description">
+                    {{data.publishedDate | date: 'shortDate'}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sam-ui hidden divider"></div>
+
+      <!-- Locations -->
+      <ng-container *ngIf = "data.cbaLocation && data.cbaLocation != null && data.cbaLocation.length > 0">
+        <section id="cba-location">
+        <h2 class="sam-ui header">Location</h2>
+        <ng-container *ngFor="let location of data.cbaLocation; let i = index; let isLast=last">
+
+          <div [attr.id]="'cba-state-' + i">
+            <div class="sam-ui medium header">
+              State
+              <div *ngIf="location.state && location.state.length > 0" class="sub header">{{location.state}}</div>
+            </div>
+          </div>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <div [attr.id]="'cba-counties-' + i">
+            <div class="sam-ui medium header">
+              County
+              <div *ngIf="location.county && location.county.length > 0" class="sub header">{{location.county}}</div>
+            </div>
+          </div>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <div [attr.id]="'cba-cities-' + i">
+              <div class="sam-ui medium header">
+                City
+                <div *ngIf="location.city && location.city.length > 0" class="sub header">{{location.city}}</div>
+              </div>
+            </div>
+
+            <div class="sam-ui hidden divider"></div>
+
+          <div [attr.id]="'cba-zip-' + i">
+              <div class="sam-ui medium header">
+                Zip Code
+                <div *ngIf="location.zipCode && location.zipCode.length > 0" class="sub header">{{location.zipCode}}</div>
+              </div>
+            </div>
+
+          <div class="sam-ui divider" [ngClass]="{'hidden': isLast}"></div>
+
+        </ng-container>
+        </section>
+      </ng-container>
+
+      <div class="sam-ui hidden section divider"></div>
+
+
+      <!-- Print Link -->
+      <div class="sam-ui two column vertically padded grid" id="agreement">
+        <div class="column">
+          <h2 class="sam-ui header">Agreement</h2>
+        </div>
+        <!-- hiding this until printer friendly functionality is working -->
+        <div *ngIf="false" class="column">
+          <a target="blank" class="sam-ui right floated mini dark blue button" tabindex="0" [routerLink]="['']">
+            <em class="icon fa fa-print" aria-hidden="true"></em>
+            Printer Friendly
+          </a>
+        </div>
+      </div>
+
+      <!-- Agreement Section -->
+      <div class="sam-ui padded raised segment">
+        <div class="sam-ui attached grid">
+          <div class="column">
+            <div class="sam-ui relaxed divided list">
+              <div class="item" id="cba-revision-number1">
+                <div>
+                  <b>CBA No. :</b>
+                  <span *ngIf="data.cbaNumber && data.cbaNumber.length > 0">{{data.cbaNumber}}</span>
+                  <br><br>
+                  <b>Revision No. :</b>
+                  <span>{{data.revisionNumber}}</span>
+                  <br><br>
+                  <b>Date of Last Revision :</b>
+                  <span *ngIf="data.modifiedOn && data.modifiedOn.length > 0">{{data.modifiedOn | date: 'shortDate'}}</span>
+                  <br><br>
+                </div>
+              </div>
+              <div class="item" id="cba-revision-number2">
+                <div>
+                  <ng-container *ngFor="let location of data.cbaLocation; let i = index; let isLast=last">
+                    <div class="sam-ui two column grid">
+                      <div class="column">
+                        <b>State:</b>
+                        <span *ngIf="location.state && location.state.length > 0">{{location.state}}</span>
+                        <br><br>
+                      
+                        <b>City:</b>
+                        <span *ngIf="location.city && location.city.length > 0">{{location.city}}</span>
+                        <br><br>
+                      </div>
+                      <div class="column">
+                        <b>County:</b>
+                        <span *ngIf="location.county && location.county.length > 0">{{location.county}}</span>
+                        <br><br>
+                      
+                        <b>Zip Code:</b>
+                        <span *ngIf="location.zipCode && location.zipCode.length > 0">{{location.zipCode}}</span>
+                        <br><br>
+                      </div>
+                  </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="item" id="cba-revision-number2">
+                <div>
+                  <div>Employed on</div>
+                  <br>
+                  <b>Contracting Activity:</b>
+                  <span *ngIf="data.organizationName && data.organizationName.length > 0">{{data.organizationName}}</span>
+                  <br><br>
+                  <div>Contract for</div>
+                  <br>
+                  <b>Contract Services:</b>
+                  <span *ngIf="data.contractServices && data.contractServices.length > 0">{{data.contractServices}}</span>
+                  <br>
+                </div>
+              </div>
+              <div class="item" id="cba-revision-number2">
+                  <div class="content">
+                    <div>Collective Bargaining Agreement between</div>
+                    <br>
+                    <b>Contractor:</b>
+                    <span *ngIf="data.contractorName && data.contractorName.length > 0">{{data.contractorName}}</span>
+                    <b>and Union:</b>
+                    <span *ngIf="data.contractorUnion && data.contractorUnion.length > 0">{{data.contractorUnion}}</span>
+                    <span *ngIf="data.localUnionNumber && data.localUnionNumber.length > 0">(local {{data.localUnionNumber}})</span>
+                    <br><br>
+                    <div>
+                      effective  {{data.effectiveStartDate | date: 'shortDate'}} through {{data.effectiveEndDate | date: 'shortDate'}}
+                    </div>
+                    <br>
+                    <div *ngIf="data.amendmentDate && data.amendmentDate.length > 0">
+                        amended on {{data.amendmentDate | date: 'shortDate'}}
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <section *ngIf="!data">
+      <br>
+      <br>
+      <span>No record data found.</span>
+    </section>
+
+    <div class="sam-ui hidden section divider"></div>
+
+  </div>
+  
+</div>
+  

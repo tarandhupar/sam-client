@@ -61,7 +61,7 @@ export class MyAccessPage implements OnInit {
 
   getPendingRequests() {
     this.userAccessService.getOpenRequests(this.userName).subscribe(reqs => {
-      this.requests = reqs.userAccessRequestList;
+      if(reqs) this.requests = reqs.userAccessRequestList;
     });
   }
 

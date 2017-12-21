@@ -17,6 +17,7 @@ import { OpportunityFormViewModel } from '../data-model/opportunity-form/opportu
 import { OpportunityHeaderInfoComponent } from '../../sections/header-information/opp-form-header-info.component';
 import { OpportunitySectionNames } from '../data-model/opportunity-form-constants';
 import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
+import {OppNoticeTypeMapService} from "../service/notice-type-map/notice-type-map.service";
 
 //let MockFormService = jasmine.createSpyObj('MockFormService', []);
 let MockAuthGaurd = jasmine.createSpyObj('MockAuthGaurd', ['canActivate', 'checkPermissions']);
@@ -71,6 +72,7 @@ describe('Opportunity Form Component', () => {
         DictionaryService,
         AlertFooterService,
         OpportunityFormErrorService,
+        OppNoticeTypeMapService,
         { provide: ActivatedRoute, useValue: MockActivatedRoute },
         { provide: OpportunityAuthGuard, useValue: MockAuthGaurd }
       ],

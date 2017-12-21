@@ -1,1 +1,4 @@
-export default { showAllDepartments: false };
+export default {
+  showAllDepartments: false,
+  isGov: true
+};

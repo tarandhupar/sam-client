@@ -77,7 +77,8 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
     timer: 5000
   };
 
-  crumbs = [{url: '/', breadcrumb: 'Home', urlmock: false}, {
+  crumbs = [
+    {
     breadcrumb: 'Workspace',
     urlmock: true
   }, {breadcrumb: 'Opportunities', urlmock: false}];
@@ -173,7 +174,7 @@ export class OpportunityFormComponent implements OnInit, OnDestroy, AfterViewIni
         let section = '';
 
         if(this.checkSkipSection()) {
-          this.currentFragment = OpportunitySectionNames.GENERAL;
+          //this.currentFragment = OpportunitySectionNames.GENERAL;
           //
           this.gotoNextSection();
           this.navigateSection(this.currentSection);

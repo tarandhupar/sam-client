@@ -396,7 +396,7 @@ export class FALAssistanceComponent implements OnInit {
   }
 
   listBuilderActionHandler(event) {
-    if ((event === 'delete' && this.deadlineModel && this.deadlineModel.length === 0) || event === 'add-cancel' || event === 'editSubmit')
+    if (event === 'delete' || event === 'add-cancel' || event === 'editSubmit')
       this.falAssistanceForm.get('deadlines').markAsDirty({onlySelf: true});
   }
 

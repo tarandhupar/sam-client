@@ -4,7 +4,7 @@
       <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)">
         <fieldset>
           <h2>Sign Up</h2>
-          <span>Hello! Please sign up below to create your account here.</span>
+          <span>Hello! Please sign up below to create your account.</span>
 
           <div [ngClass]="{ 'usa-input-error': states.submitted && (email.invalid || states.error) }">
             <label for="email">Email</label>
@@ -16,8 +16,6 @@
                    id="email"
                    name="email"
                    autocomplete="off"
-                   readonly="readonly"
-                   onfocus="this.removeAttribute('readonly');"
                    [formControl]="email"/>
           </div>
 

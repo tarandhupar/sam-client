@@ -10,7 +10,7 @@ import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 import { FSDRouter } from './fsd.route';
 import { FSDGuard } from './fsd.guard';
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 
 import { FSDComponent } from './fsd.component';
 import { FSDUserComponent } from './fsd-user/fsd-user.component';

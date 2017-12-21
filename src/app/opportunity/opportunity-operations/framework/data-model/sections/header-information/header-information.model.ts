@@ -24,11 +24,11 @@ export class OppHeaderInfoViewModel {
     _.set(this._data, 'type', type);
   }
 
-  get procurementId(): string {
+  get noticeNumber(): string {
     return _.get(this._data, 'solicitationNumber', null);
   }
 
-  set procurementId(id: string) {
+  set noticeNumber(id: string) {
     _.set(this._data, 'solicitationNumber', id);
   }
 }

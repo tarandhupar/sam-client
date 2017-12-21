@@ -34,7 +34,7 @@ export class MsgFeedService{
     return this.callApi(apiOptions).map(data => {
       let domainMap = {};
       data._embedded['domainList'].forEach( e => {
-        if(e.isActive)domainMap[e.id] = e.domainName;
+        if(e.isActiveFed)domainMap[e.id] = e.domainName;
       });
       Cookie.set('domains',JSON.stringify(domainMap));
       return domainMap;

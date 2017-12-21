@@ -76,7 +76,14 @@ export class SamLoginComponent {
     let params = this.route.snapshot.queryParams,
         key;
 
+    // Error Message Delegation
+    if(!this.standalone && params['error']) {
+      this.errors.push(params['error']);
+    }
+
     this.store.redirect.params.queryParams = merge({}, this.store.redirect.params.queryParams, params);
+
+    delete this.store.redirect.params.queryParams['error'];
 
     if(params['redirect'] !== undefined && params['redirect'].length) {
       this.store.redirect.override = true;

@@ -9,14 +9,23 @@ export class DataEntryComponent {
 
   @Input() toggleControl:any;
 
-  actions: Array<any> = [
-    {
-      label: 'Help',
-      icon: 'fa fa-question-circle',
-      callback: () => { this.router.navigate(['/help/award'], { fragment: 'assistanceListings'});}
-    }
-  ];
+  actions: any = {};
 
   constructor(private router: Router) {}
 
+  setHelpNavigation(fragment) {
+    let obj = this.makeObj(fragment);
+    this.actions[fragment] = [obj];
+    return this.actions[fragment];
+  }
+
+  makeObj(fragment) {
+    let obj = {
+      label: 'Help',
+      icon: 'fa fa-question-circle',
+      callback: () => { this.router.navigate(['/help/award'], { fragment: fragment}); }
+    };
+
+    return obj;
+  }
 }

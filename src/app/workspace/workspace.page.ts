@@ -1,5 +1,5 @@
-import  { Component } from "@angular/core";
-import  { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
+import { Component } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FHService, IAMService } from 'api-kit';
 
 @Component ( {
@@ -9,24 +9,29 @@ export class WorkspacePage  {
 
   public showWelcome:boolean = true;
   public dataEntryWidgetControl:any =  {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
-  public administrationWidgetControl:any =  {profile:true,fh:true,rm:false,aacRequest:true,alerts:true,analytics:true};
+  public administrationWidgetControl: any =  {
+    fsd: false,
+    fh: false,
+    rm: false,
+    system: false,
+  };
 
   public userProfile = 'r-IAE-ad';
   public userMapping:any =  {1:'f-ng-na',2:'f-g-na',3:'r-ng-na',4:'r-g-na',5:'r-g-ad',6:'r-IAE-ad'};
   public userAccessTokens:any = [];
-  
+
   public user = null;
-  
+
   private api = {
     fh: null,
     iam: null,
   };
-  
+
   private store = {
     primary: '',
     secondary: 'Sub-tier Agency'
   };
-  
+
   private shortcuts = {
     reset: {
       text: 'Reset Your Password',
@@ -37,23 +42,23 @@ export class WorkspacePage  {
       routerLink: ['/profile']
     }
   };
-  
+
   public states = {
     public: false,
     federal: false
   };
-  
+
   actions: Array<any> = [
-    { 
-      label: 'Help', 
-      icon: 'fa fa-question-circle', 
+    {
+      label: 'Help',
+      icon: 'fa fa-question-circle',
       callback: () => { this.router.navigate(['/help/accounts']);}
     }
   ];
-  
-  constructor(private router: Router, 
+
+  constructor(private router: Router,
               private route: ActivatedRoute,
-              private _fh: FHService, 
+              private _fh: FHService,
               private _iam: IAMService) {
                 this.api.iam = _iam.iam;
                 this.api.fh = _fh;
@@ -72,13 +77,13 @@ export class WorkspacePage  {
       this.setAdministrationWidgetControl();
     });
   }
-  
+
   initSession() {
     this.api.iam.checkSession((user) => {
       this.user = user;
       this.states.public = !(this.user.gov || this.user.entity);
       this.states.federal = this.user.gov;
-      
+
       if(this.states.federal) {
         const orgID = (this.user.agencyID || this.user.departmentID).toString();
 
@@ -91,7 +96,7 @@ export class WorkspacePage  {
            });
         }
       }
-      
+
     });
   }
 
@@ -138,13 +143,13 @@ export class WorkspacePage  {
     this.showWelcome = false;
   }
 
-  isDisplayDataEntry():boolean {
-    let display = false;
+  isDisplayDataEntry(): boolean {
+    // Check if any value is truthy
+    return Object.values(this.dataEntryWidgetControl).some(v => v);
+  }
 
-    Object.keys(this.dataEntryWidgetControl).forEach(key => {
-      if(this.dataEntryWidgetControl[key]) display = true;
-    });
-
-    return display;
+  anyAdminWidget() {
+    // Check if any value is truthy
+    return Object.values(this.administrationWidgetControl).some(v => v);
   }
 }

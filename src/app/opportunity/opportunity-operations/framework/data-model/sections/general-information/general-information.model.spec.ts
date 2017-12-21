@@ -34,17 +34,17 @@ describe('General Information Section View Model', () => {
   it('get archive date returns saved archive date', () => {
     let _data = {
       archive: {
-        date: "abc"
+        date: "2006-06-05T03:45"
       }
     };
     dataModel = new OppGeneralInfoViewModel(_data);
-    expect(dataModel.archiveDate).toEqual("abc");
+    expect(dataModel.archiveDate).toEqual("2006-06-05");
   });
 
   it('set archive date returns new archive date', () => {
     let _data = {
       archive: {
-        date: "abc"
+        date: "2006-06-05T03:45"
       }
     };
     dataModel = new OppGeneralInfoViewModel(_data);
@@ -74,15 +74,14 @@ describe('General Information Section View Model', () => {
     let _data = {
       permissions: {
         ivl: {
-          create: true,
-          update: true,
-          delete: true
+          create: false,
+          update: false,
+          delete: false
         }
       }
     };
     dataModel = new OppGeneralInfoViewModel(_data);
     dataModel.vendorCDIvl = "no";
-    expect(dataModel.vendorCDIvl).toEqual("no");
     expect(_data.permissions.ivl.create).toEqual(false);
     expect(_data.permissions.ivl.delete).toEqual(false);
     expect(_data.permissions.ivl.update).toEqual(false);
@@ -106,14 +105,75 @@ describe('General Information Section View Model', () => {
     let _data = {
       permissions: {
         ivl: {
-          read: true
+          read: false
         }
       }
     };
     dataModel = new OppGeneralInfoViewModel(_data);
     dataModel.vendorViewIvl = "no";
-    expect(dataModel.vendorViewIvl).toEqual("no");
     expect(_data.permissions.ivl.read).toEqual(false);
+  });
+
+  //Additional Reporting
+  it('get addiReportingTypes returns saved addiReportingTypes isSelected True', () => {
+    let _data = {
+      flags: [{
+        code:  'isRecoveryRelated',
+        isSelected: true
+      }]
+    };
+    dataModel = new OppGeneralInfoViewModel(_data);
+    expect(dataModel.addiReportingTypes).toEqual([{
+      code:  'isRecoveryRelated',
+      isSelected: true
+    }]);
+    expect(_data.flags[0].isSelected).toEqual(true);
+  });
+
+  it('set addiReportingTypes returns new addiReportingTypes isSelected True', () => {
+    let _data = {
+      flags: [{
+        code:  'isRecoveryRelated',
+        isSelected: true
+      }]
+    };
+    dataModel = new OppGeneralInfoViewModel(_data);
+    dataModel.addiReportingTypes = _data.flags;
+    expect(dataModel.addiReportingTypes).toEqual([{
+      code:  'isRecoveryRelated',
+      isSelected: true
+    }]);
+    expect(_data.flags[0].isSelected).toEqual(true);
+  });
+  it('get addiReportingTypes returns saved addiReportingTypes isSelected False', () => {
+    let _data = {
+      flags: [{
+        code:  'isRecoveryRelated',
+        isSelected: false
+      }]
+    };
+    dataModel = new OppGeneralInfoViewModel(_data);
+    expect(dataModel.addiReportingTypes).toEqual([{
+      code:  'isRecoveryRelated',
+      isSelected: false
+    }]);
+    expect(_data.flags[0].isSelected).toEqual(false);
+  });
+
+  it('set addiReportingTypes returns new addiReportingTypes isSelected False', () => {
+    let _data = {
+      flags: [{
+        code:  'isRecoveryRelated',
+        isSelected: false
+      }]
+    };
+    dataModel = new OppGeneralInfoViewModel(_data);
+    dataModel.addiReportingTypes = _data.flags;
+    expect(dataModel.addiReportingTypes).toEqual([{
+      code:  'isRecoveryRelated',
+      isSelected: false
+    }]);
+    expect(_data.flags[0].isSelected).toEqual(false);
   });
 
 });

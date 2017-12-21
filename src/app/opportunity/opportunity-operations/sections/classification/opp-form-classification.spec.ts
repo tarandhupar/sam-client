@@ -2,17 +2,24 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit/index';
-import { OpportunityClassificationComponent } from "./opp-form-classification.component";
-import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
 import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
 import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
+import { OpportunityFormService } from "../../framework/service/opportunity-form/opportunity-form.service";
 import { OpportunitySideNavService } from '../../framework/service/sidenav/opportunity-form-sidenav.service';
+import { OpportunityClassificationComponent } from "./opp-form-classification.component";
+import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
 
 
 describe('Opp Classification Form', () => {
   let comp: OpportunityClassificationComponent;
   let fixture: ComponentFixture<OpportunityClassificationComponent>;
   let MockFormService = jasmine.createSpyObj('MockFormService', ['getOpportunityDictionary']);
+  let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateClassificationCodeType', 'validatePrimaryNAICSCodeType', 'validateZip', 'applicableErrors']);
+  MockFormService.getOpportunityDictionary.and.returnValue(Observable.of({}));
+  MockErrorService.validateClassificationCodeType.and.returnValue({errors: null});
+  MockErrorService.validatePrimaryNAICSCodeType.and.returnValue({errors: null});
+  MockErrorService.validateZip.and.returnValue({errors: null});
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       schemas: [ NO_ERRORS_SCHEMA ],
@@ -21,6 +28,7 @@ describe('Opp Classification Form', () => {
       ],
       providers: [
         { provide: OpportunityFormService, useValue: MockFormService },
+        { provide: OpportunityFormErrorService, useValue: MockErrorService },
         OppNoticeTypeMapService,
         OpportunitySideNavService
       ],
@@ -33,7 +41,8 @@ describe('Opp Classification Form', () => {
     fixture = TestBed.createComponent(OpportunityClassificationComponent);
     comp = fixture.componentInstance;
     comp.viewModel = new OpportunityFormViewModel({});
-    comp.oppClassificationViewModel = comp.viewModel.oppClassificationViewModel
+    comp.oppClassificationViewModel = comp.viewModel.oppClassificationViewModel;
+    fixture.detectChanges();
   });
   it('should exist', () => {
     spyOn(comp, 'loadTypeOptions').and.stub();
@@ -113,6 +122,7 @@ describe('Opp Classification Form', () => {
     let type = {code: '1', name: 'Test'};
     comp['saveClassificationCodeType'](type);
     expect(comp.oppClassificationViewModel.classificationCodeType).toEqual('1');
+    tick();
   }));
   it('should save saveSecondaryNAICSCodeType', fakeAsync(() => {
     let types = [{code: '1', name: 'Test'}];
@@ -123,6 +133,7 @@ describe('Opp Classification Form', () => {
     let type = {code: '1', name: 'Test'};
     comp['savePrimaryNAICSCodeType'](type);
     expect(comp.oppClassificationViewModel.naicsCodeTypes).toEqual([{code: ['1'], type: 'Primary'}]);
+    tick();
   }));
   it('should save save saveCountryType', fakeAsync(() => {
     let type = {code: '1', name: 'Test'};
@@ -133,5 +144,10 @@ describe('Opp Classification Form', () => {
     let type = {code: '1', name: 'Test'};
     comp['saveStateType'](type);
     expect(comp.oppClassificationViewModel.stateType).toEqual('1');
+  }));
+  it('should save save zip', fakeAsync(() => {
+    let zip = '123';
+    comp['saveZip'](zip);
+    expect(comp.oppClassificationViewModel.zip).toEqual('123');
   }));
 });

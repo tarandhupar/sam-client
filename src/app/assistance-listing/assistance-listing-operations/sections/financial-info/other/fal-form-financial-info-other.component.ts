@@ -356,7 +356,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
 
   acctIdentificationActionHandler(event) {
     let formArray = <FormArray>this.otherFinancialInfoForm.get('accountIdentification');
-    if ((event === 'delete' && this.acctIdentifcationModel && this.acctIdentifcationModel.length === 0) || event === 'add-cancel' || event === 'editSubmit') {
+    if (event === 'delete' || event === 'add-cancel' || event === 'editSubmit') {
       formArray.markAsDirty();
       this.updateErrors();
     }
@@ -376,7 +376,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit, AfterViewInit
   }
   tafsActionHandler(event){
     let formArray= <FormArray>this.otherFinancialInfoForm.get('tafs');
-    if((event === 'delete' && this.tafsModel && this.tafsModel.length === 0) || event === 'add-cancel' || event === 'editSubmit'){
+    if (event === 'delete' || event === 'add-cancel' || event === 'editSubmit') {
       formArray.markAsDirty();
       this.updateErrors();
     }

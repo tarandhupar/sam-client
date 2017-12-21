@@ -136,4 +136,12 @@ export class ContentManagementService{
     return this.oAPIService.call(oApiParam);
   }
 
+  checkAccess() {
+    const params = {
+      name: 'cms',
+      suffix: '/data/checkaccess',
+    };
+    this.addAuthHeader(params);
+    return this.oAPIService.call(params, false);
+  }
 }

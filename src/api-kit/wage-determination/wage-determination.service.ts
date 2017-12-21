@@ -43,6 +43,16 @@ export class WageDeterminationService{
     return this.oAPIService.call(apiParam);
   }
 
+  getCBAByReferenceNumber(referenceNumber: string){
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/cba/' + referenceNumber,
+      oParam: {},
+      method: 'GET'
+    };
+    return this.oAPIService.call(apiParam);
+  }
+
   getWageDeterminationToBeRevised(){
     let apiParam = {
       name: 'wageDetermination',

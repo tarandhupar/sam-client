@@ -18,7 +18,7 @@
         <div class="eight wide column">
           <!-- Orgs -->
           <sam-agency-picker-v2
-            *ngIf="!isAdmin"
+            *ngIf="isGov; else nonFedPicker"
             formControlName="org"
             [label]="'Organization'"
             [name]="'request-access-org-picker'"
@@ -27,6 +27,17 @@
             [defaultDept]="!isSuperAdmin"
             class="clearfix"
           ></sam-agency-picker-v2>
+
+          <ng-template #nonFedPicker>
+            <sam-entity-picker
+              formControlName="org"
+              [label]="'Entity'"
+              [name]="'request-access-entity-picker'"
+              [isMultiple]="false"
+              [searchMessage]="errors.org">
+
+            </sam-entity-picker>
+          </ng-template>
           <!-- Role -->
           <div style="margin-top: .5em">
             <sam-label-wrapper name="role-select" [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">

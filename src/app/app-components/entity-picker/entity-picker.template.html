@@ -1,4 +1,4 @@
-<sam-label-wrapper [name]="labelName" [errorMessage]="searchMessage" [label]="label" [hint]="hint">
+<sam-label-wrapper [name]="name" [errorMessage]="searchMessage" [label]="label" [hint]="hint">
 
   <ng-template #myTemplate let-item>
     <p>
@@ -28,15 +28,16 @@
 
   <ng-template #singleEntityPicker>
     <sam-autocomplete
+      entitypicker-autofill
       [(ngModel)]="selections"
       (ngModelChange)="onSelection($event)"
-      entitypicker-autofill
       [config]="singleACConfig"
       [name]="name"
       [id]="name"
       [isDefaultOrg]="isDefaultOrg"
       [isAssignableOrg]="isAssignableOrg"
-      [itemTemplate]="myTemplate">
+      [itemTemplate]="myTemplate"
+      [disabled]="_disabled">
     </sam-autocomplete>
   </ng-template>
 

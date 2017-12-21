@@ -8,6 +8,7 @@
       [attr.id]="archiveTypeConfig.id"
       [control]="generalInfoForm.get('archiveType')"
       [formControl]="generalInfoForm.get('archiveType')"
+      (ngModelChange) = "toggleArchiveType($event)"
       [hint]="archiveTypeConfig.hint"
       [label]="archiveTypeConfig.label"
       [name]="archiveTypeConfig.name"
@@ -17,14 +18,37 @@
   </div>
 
   <div class="sam-ui segment" *ngIf="(generalInfoForm.get('archiveType').value == 'manual' || generalInfoForm.get('archiveType').value == 'autocustom') && generalInfoForm.get('archiveType').value !== ''">
-   <sam-date-time
+    <sam-date
       [attr.id]="archiveDateConfig.id"
       [control]="generalInfoForm.get('archiveDate')"
       [formControl]="generalInfoForm.get('archiveDate')"
       [label]="archiveDateConfig.label"
       [name]="archiveDateConfig.name"
+      [defaultValidations]="false"
+      [required]="true">
+    </sam-date>
+    <sam-time
+      [attr.id]="archiveTimeConfig.id"
+      [control]="generalInfoForm.get('archiveTime')"
+      [formControl]="generalInfoForm.get('archiveTime')"
+      [name]="archiveTimeConfig.name"
       [useFormService]="false">
-    </sam-date-time>
+    </sam-time>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-autocomplete-multiselect
+      [options]="addiReportingConfig.options"
+      [name]="addiReportingConfig.name"
+      formControlName="addiReportingTypes"
+      [control]="generalInfoForm.get('addiReportingTypes')"
+      [keyValueConfig]="addiAutocompleteConfig.keyValueConfig"
+      [required]="addiReportingConfig.required"
+      [attr.id]="addiReportingConfig.id"
+      [label]="addiReportingConfig.label"
+      [hint]="addiReportingConfig.hint"
+      [placeholder]="addiReportingConfig.placeholder">
+    </sam-autocomplete-multiselect>
   </div>
 
   <div class="sam-ui segment">

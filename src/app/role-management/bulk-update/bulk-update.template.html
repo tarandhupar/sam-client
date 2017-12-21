@@ -17,7 +17,7 @@
     <!-- Filters Tab -->
     <ng-container *ngSwitchCase="'filters'">
       <h2 class="h3 m_T-6x">Selections</h2>
-      <span>Please use the following filters to identify users you would like to update.</span>
+      <span class="italic-span">Please use the following filters to identify users you would like to update.</span>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Org -->
@@ -33,7 +33,7 @@
               [searchMessage]="errors.org"
               class="clearfix"
             ></sam-agency-picker-v2>
-          </div>
+          </div>     
 
 
           <!-- Existing Role -->
@@ -66,10 +66,10 @@
     <!-- User Select Tab -->
     <ng-container *ngSwitchCase="'users'">
       <h2 class="h3 m_T-6x">Selections</h2>
-      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
+      <span class="italic-span">Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
-          <div class="usa-width-one-sixth"><b>Organization</b></div>
+          <div class="usa-width-one-sixth"><b>Organizations</b></div>
           <div class="usa-width-five-sixths">{{getOrganizationNames()}}</div>
         </div>
         <div class="usa-grid-full">
@@ -83,7 +83,7 @@
       </div>
 
       <h2 class="h3">Users</h2>
-      <p>Following users meet your selection criteria. Select or deselect users whose permission(s) of role or domain(s) you would like to update</p>
+      <p class="italic-span">Following users meet your selection criteria. Select or deselect users whose permission(s) of role or domain(s) you would like to update</p>
       <div class="clearfix">
         <div class="pull-left">
           <sam-toggle style="display:inline-block" [ngModel]="showDeselect" (click)="toggleSelectAll()" [label]="'Select All'" [name]="select-all"></sam-toggle>
@@ -120,10 +120,10 @@
     <!-- Access Tab -->
     <ng-container *ngSwitchCase="'access'">
       <h2 class="h3 m_T-6x">Selections</h2>
-      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
+      <span class="italic-span">Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
-          <div class="usa-width-one-sixth"><b>Organization</b></div>
+          <div class="usa-width-one-sixth"><b>Organizations</b></div>
           <div class="usa-width-five-sixths">{{getOrganizationNames()}}</div>
         </div>
         <div class="usa-grid-full">
@@ -136,16 +136,16 @@
         </div>
       </div>
       <h2 class="h3">Users</h2>
-      <span>Following users are selected for the update</span>
+      <span class="italic-span">Following users are selected for the update</span>
       <div [ngStyle]="staticContentStyle">
-        <div style="max-height: 300px; overflow-y: auto; position: relative;">
+        <div style="max-height: 250px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
             {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
           </div>
         </div>
       </div>
       <h2 class="h3 m_T-4x">Role Changes</h2>
-      <span>Update role or domain or permissions for the users selected</span>
+      <span class="italic-span">Update role or domain or permissions for the users selected</span>
       <div class="usa-grid-full">
         <div class="usa-width-one-half">
           <!-- Updated Role -->
@@ -171,8 +171,8 @@
       </div>
       <div *ngIf="updatedDomains?.length">
         <span>Permissions</span>
-        <sam-tabs [active]="activeTab">
-          <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
+        <sam-tabs>
+          <sam-tab [active]="isTabActive(i)" [tabTitle]="tab.name" *ngFor="let tab of domainTabs; let i = index">
             <ul class="column-wrappable">
               <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
                 <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
@@ -190,7 +190,7 @@
         </sam-tabs>
       </div>
       <h2 class="h3">Comments</h2>
-
+      <span class="italic-span">Please provide reasoning for the update</span>  
       <!-- Optional Message -->
       <sam-text-area name="comments" [(ngModel)]="comments" [errorMessage]="accessErrors.comments"></sam-text-area>
 
@@ -199,7 +199,7 @@
     <!-- Confirmation Tab -->
     <ng-container *ngSwitchCase="'confirmation'">
       <h2 class="h3 m_T-6x">Selections</h2>
-      <span>Following selections identify the role, domain(s) and organization(s) selected for the update</span>
+      <span class="italic-span">Following selections identify the role, domain(s) and organization(s) selected for the update</span>
       <div [ngStyle]="staticContentStyle">
         <div class="usa-grid-full">
           <div class="usa-width-one-sixth"><b>Organizations</b></div>
@@ -216,9 +216,9 @@
       </div>
 
       <h2 class="h3">Users</h2>
-      <span>Following users are selected for the update</span>
+      <span class="italic-span">Following users are selected for the update</span>
       <div [ngStyle]="staticContentStyle">
-        <div style="max-height: 300px; overflow-y: auto; position: relative;">
+        <div style="max-height: 250px; overflow-y: auto; position: relative;">
           <div class="column" style="padding-bottom: 0; padding-top: 0" *ngFor="let user of getSelectedUsers()">
             {{formatUserName(user)}}<i *ngIf="user.email">&nbsp;-&nbsp;{{user.email}}</i>
           </div>
@@ -227,7 +227,7 @@
 
       <ng-container *ngIf="mode === 'update'">
         <h2 class="h3">Role Changes</h2>
-        <span>Changes made as part of the update are shown below</span>
+        <span class="italic-span">Changes made as part of the update are shown below</span>
         <div class="usa-grid-full m_T-4x">
           <h3 class="h4">Role</h3>
           <div class="usa-width-one-whole" *ngIf="isRoleUpdated();else noRoleChanges">

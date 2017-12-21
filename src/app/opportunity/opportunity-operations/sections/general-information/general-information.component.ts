@@ -1,9 +1,11 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
+import { SamDateComponent } from 'sam-ui-elements/src/ui-kit/form-controls/date'
+import { AutocompleteConfig } from "../../../../../sam-ui-elements/src/ui-kit/types";
+import { OpportunityFieldNames, OpportunitySectionNames } from '../../framework/data-model/opportunity-form-constants';
 import { OpportunityFormViewModel } from '../../framework/data-model/opportunity-form/opportunity-form.model';
 import { OpportunityFormService } from '../../framework/service/opportunity-form/opportunity-form.service';
-import {OpportunityFieldNames, OpportunitySectionNames} from '../../framework/data-model/opportunity-form-constants';
-import {OpportunityFormErrorService} from "../../opportunity-form-error.service";
+import { OpportunityFormErrorService } from "../../opportunity-form-error.service";
 
 @Component({
   selector: 'opp-form-general-information',
@@ -29,7 +31,12 @@ export class OpportunityGeneralInfoComponent implements OnInit {
   public readonly archiveDateConfig = {
     id: OpportunityFieldNames.ARCHIVE_DATE,
     label: 'Archiving Specific Date',
-    name: OpportunityFieldNames.ARCHIVE_DATE + '-date'
+    name: OpportunityFieldNames.ARCHIVE_DATE + '-date',
+    required: false,
+  };
+  public readonly archiveTimeConfig = {
+    id: OpportunityFieldNames.ARCHIVE_TIME,
+    name: OpportunityFieldNames.ARCHIVE_TIME + '-time'
   };
 
   public readonly vendorsCDIvlConfig = {
@@ -52,6 +59,27 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     ]
   };
 
+  /*Additional Reporting Types Config*/
+  addiReportingObj = [];
+  addiReportingTypes = [];
+  public readonly addiReportingConfig = {
+    id: OpportunityFieldNames.ADDITIONAL_REPORTING,
+    label: 'Additional Reporting',
+    name: OpportunityFieldNames.ADDITIONAL_REPORTING + '-multilist',
+    hint: null,
+    required: false,
+    options: [{
+      code: 'isRecoveryRelated',
+      name: 'Recovery and Reinvestment Act'
+    }],
+    placeholder: 'None'
+  };
+  addiAutocompleteConfig: AutocompleteConfig = {
+    keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
+    placeholder: 'None Selected',
+  };
+
+
   constructor(private errorService: OpportunityFormErrorService,
               private cdr: ChangeDetectorRef,
               private formBuilder: FormBuilder,
@@ -60,6 +88,7 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     Object.freeze(this.archiveDateConfig);
     Object.freeze(this.vendorsCDIvlConfig);
     Object.freeze(this.vendorsVIvlConfig);
+    Object.freeze(this.addiReportingConfig);
   }
 
   ngOnInit() {
@@ -79,14 +108,18 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     this.generalInfoForm = this.formBuilder.group({
       archiveType: null,
       archiveDate: null,
+      archiveTime: null,
       vendorsCDIvl: null,
-      vendorsViewIvl: null
+      vendorsViewIvl: null,
+      addiReportingTypes: null
     });
     this.cdr.detectChanges();
     if (this.viewModel.getSectionStatus(OpportunitySectionNames.GENERAL) === 'updated') {
       this.generalInfoForm.markAsPristine({onlySelf: true});
       this.generalInfoForm.get('archiveType').markAsDirty({onlySelf: true});
       this.generalInfoForm.get('archiveType').updateValueAndValidity();
+      this.generalInfoForm.get('archiveDate').markAsDirty({onlySelf: true});
+      this.generalInfoForm.get('archiveDate').updateValueAndValidity();
       this.generalInfoForm.get('vendorsCDIvl').markAsDirty({onlySelf: true});
       this.generalInfoForm.get('vendorsCDIvl').updateValueAndValidity();
       this.generalInfoForm.get('vendorsViewIvl').markAsDirty({onlySelf: true});
@@ -135,11 +168,16 @@ export class OpportunityGeneralInfoComponent implements OnInit {
   }
 
   updateForm() {
+    let addiReportingObj = [];
+    addiReportingObj = this.populateMultiList(this.oppGeneralInfoViewModel.addiReportingTypes);
+    console.log(addiReportingObj,'addiReportingObj');
     this.generalInfoForm.patchValue({
       archiveType: this.oppGeneralInfoViewModel.archiveType,
       archiveDate: this.oppGeneralInfoViewModel.archiveDate,
+      archiveTime: this.oppGeneralInfoViewModel.archiveTime,
       vendorsCDIvl: this.oppGeneralInfoViewModel.vendorCDIvl,
-      vendorsViewIvl: this.oppGeneralInfoViewModel.vendorViewIvl
+      vendorsViewIvl: this.oppGeneralInfoViewModel.vendorViewIvl,
+      addiReportingTypes: addiReportingObj && addiReportingObj.length > 0 ? addiReportingObj : null,
     }, {
       emitEvent: false
     });
@@ -147,10 +185,25 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     this.updateErrors();
   }
 
+  public populateMultiList(data) {
+    let types = [];
+    if (data && data.length > 0) {
+      for (let item of data) {
+        if (item && item.isSelected === true) {
+          types.push({code: item.code, name: 'Recovery and Reinvestment Act'});
+        }
+      }
+    }
+    return types;
+  }
+
   subscribeToChanges() {
     this.linkControlTo(this.generalInfoForm.get('archiveType'), this.saveArchiveType);
+    this.linkControlTo(this.generalInfoForm.get('archiveDate'), this.saveArchiveDate);
+    this.linkControlTo(this.generalInfoForm.get('archiveTime'), this.saveArchiveTime);
     this.linkControlTo(this.generalInfoForm.get('vendorsCDIvl'), this.saveVendorsCDIvl);
     this.linkControlTo(this.generalInfoForm.get('vendorsViewIvl'), this.saveVendorsViewIvl);
+    this.linkControlTo(this.generalInfoForm.get('addiReportingTypes'), this.saveAddiReportingTypes);
   }
 
   private linkControlTo(control: AbstractControl, callback: (field: any) => void): void {
@@ -170,6 +223,18 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     this.updateArchiveTypeError();
   }
 
+  private saveArchiveDate(date) {
+    this.oppGeneralInfoViewModel.archiveDate = date;
+    this.cdr.detectChanges();
+    this.updateArchiveDateError();
+  }
+
+  private saveArchiveTime(date) {
+    this.oppGeneralInfoViewModel.archiveTime = date;
+    this.cdr.detectChanges();
+  }
+
+
   private saveVendorsCDIvl(vendorOption) {
     this.oppGeneralInfoViewModel.vendorCDIvl = vendorOption;
     this.cdr.detectChanges();
@@ -181,9 +246,27 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     this.cdr.detectChanges();
     this.updateIvlViewError();
   }
+
+  private saveAddiReportingTypes(addiReportingOptions) {
+    let flags = [];
+    let code = null;
+    if(addiReportingOptions && addiReportingOptions.length > 0) {
+      for (let addiReportingOption of addiReportingOptions) {
+        code = addiReportingOption.code;
+        if (code !== null) {
+          flags.push({code: code, isSelected: true});
+        }
+      }
+    } else {
+      flags.push({code: 'isRecoveryRelated', isSelected: false});
+    }
+    this.oppGeneralInfoViewModel.addiReportingTypes = flags;
+  }
+
   public updateErrors() {
     this.errorService.viewModel = this.viewModel;
     this.updateArchiveTypeError();
+    this.updateArchiveDateError();
     this.updateIvlAddError();
     this.updateIvlViewError();
   }
@@ -194,6 +277,17 @@ export class OpportunityGeneralInfoComponent implements OnInit {
     });
     this.generalInfoForm.get('archiveType').setErrors(this.errorService.validateArchiveType().errors);
     this.markAndUpdateFieldStat('archiveType');
+    this.emitErrorEvent();
+    this.updateArchiveDateError();
+  }
+
+  private updateArchiveDateError() {
+    this.generalInfoForm.get('archiveDate').clearValidators();
+    this.generalInfoForm.get('archiveDate').setValidators((control) => {
+      return control.errors
+    });
+    this.generalInfoForm.get('archiveDate').setErrors(this.errorService.validateArchiveDate().errors);
+    this.markAndUpdateFieldStat('archiveDate');
     this.emitErrorEvent();
   }
 
@@ -224,5 +318,17 @@ export class OpportunityGeneralInfoComponent implements OnInit {
 
   private emitErrorEvent() {
     this.showErrors.emit(this.errorService.applicableErrors);
+  }
+
+  public toggleArchiveType(value){
+    if(value == "manual"){
+      this.generalInfoForm.get('archiveDate').setValue(null);
+      this.generalInfoForm.get('archiveTime').setValue(null);
+
+    }else if(value == "autocustom"){
+      this.generalInfoForm.get('archiveDate').setValue(null);
+      this.generalInfoForm.get('archiveTime').setValue(null);
+
+    }
   }
 }

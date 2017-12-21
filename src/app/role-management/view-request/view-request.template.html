@@ -10,9 +10,19 @@
         <div>
           <b>User:&nbsp;</b>{{request.user}}
         </div>
-        <div style="margin-top: .5em;">
+        <div style="margin-top: .5em;" *ngIf="isGov; else entityInfo">
           <b>Organization:&nbsp;</b>{{request.organization | capitalize}}
         </div>
+        <ng-template #entityInfo>
+          <div style="margin-top: .5em;">
+            <div style="display:inline-block; vertical-align: top"><b>Entity:&nbsp;</b></div>
+            <div style="display:inline-block; padding-top: .2px">
+              {{request.organization | capitalize}}<br/>
+              CAGE:&nbsp; {{entityDetail?.cageCode}} | DUNS:&nbsp; {{entityDetail?.duns}}<br/>
+              {{entityDetail?.address}}<br/>
+            </div>
+          </div>
+        </ng-template>
         <div style="margin-top: .5em;">
           <b>Role:&nbsp;</b>{{request.role}}
         </div>

@@ -8,13 +8,14 @@ import { Cookie } from "ng2-cookies";
 import { UserService } from "../../role-management/user.service";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { FeatureToggleService } from "../../../api-kit/feature-toggle/feature-toggle.service";
+import { FHAdminType, FhWidgetService } from './fh/fh-widget.service';
 
 @Component({
   selector: 'workspace-administration',
   templateUrl: 'administration.template.html'
 })
 export class AdministrationComponent {
-  private shortcuts = {
+  public shortcuts = {
     reset: {
       text: 'Reset Your Password',
       routerLink: ['/profile/password']
@@ -46,19 +47,7 @@ export class AdministrationComponent {
   };
   public widgetResult: any;
 
-  @Input() toggleControl = {
-    aacRequest: true,
-    fh: false,
-    fsd: false,
-    profile: true,
-    rm: false,
-    system: false,
-    opp: true
-  };
-
-  callback = () => {
-    console.log("Help!");
-  }
+  @Input() toggleControl: any;
 
   actions: Array<any> = [
     {
@@ -68,13 +57,14 @@ export class AdministrationComponent {
     }
   ];
 
-  constructor(private _router:Router,
-              private route:ActivatedRoute,
-              private api:IAMService,
+  constructor(private _router: Router,
+              private route: ActivatedRoute,
+              private api: IAMService,
               private alertService: SystemAlertsService,
               private userService: UserService,
               private userAccessService: UserAccessService,
-              private featureToggleService: FeatureToggleService
+              private featureToggleService: FeatureToggleService,
+              private fhWidetService: FhWidgetService,
   ) {}
 
   ngOnInit() {
@@ -93,13 +83,14 @@ export class AdministrationComponent {
         err => {
           // don't show the widget on errors, or 401 or 405
         });
-      this.featureToggleService.checkFeatureToggle('fh').subscribe(
-        res => {
-          if (res) this.toggleControl.fh = true;
-        },
-        err => {}
-      )
     }
+
+    this.fhWidetService.fetchRecent().subscribe(res => {
+      const adminType: FHAdminType = this.fhWidetService.getAdminType(res);
+      if (adminType === FHAdminType.SuperAdmin || adminType === FHAdminType.OfficeAdmin) {
+        this.toggleControl.fh = true;
+      }
+    });
   }
 
   resetHelpDetails() {

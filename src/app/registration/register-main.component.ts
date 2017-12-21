@@ -1,6 +1,6 @@
 import { Component, DoCheck, ElementRef, forwardRef, Input, KeyValueDiffers, KeyValueDiffer, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { cloneDeep, isArray, isNumber, merge } from 'lodash';
 
@@ -28,6 +28,7 @@ export class RegisterMainComponent {
 
   public userForm: FormGroup;
 
+  private subscriptions = {};
   public store = {
     questions: [],
     indexes: {},
@@ -41,7 +42,16 @@ export class RegisterMainComponent {
           mobile phone number and carrier.
           <div><em>* Standard Text Messaging Rates May Apply.</em></div>
         `
-      }
+      },
+
+      entity: {
+        label: 'Entity',
+        hint: `
+          To be assigned additional roles and permissions for an organization, you must be associated with an entity.
+          Enter an Entity ID (DUNS or CAGE) or Entity Name to find your entity.
+        `,
+        placeholder: 'Search by CAGE code or DUNS or legal business name',
+      },
     }
   };
 
@@ -76,6 +86,7 @@ export class RegisterMainComponent {
     departmentID: '',
     agencyID: '',
     officeID: '',
+    businessName: '',
 
     kbaAnswerList: [
       <KBA>{ questionId: '', answer: '' },
@@ -88,6 +99,8 @@ export class RegisterMainComponent {
     OTPPreference: 'email',
     emailNotification: false,
   };
+
+  private entity = new FormControl('');
 
   constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private differs: KeyValueDiffers, private api: IAMService) {
     this.differ = differs.find({} ).create(null);
@@ -103,46 +116,16 @@ export class RegisterMainComponent {
     }
 
     this.initSession(() => {
-      const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+      this.initForm()
+    });
+  }
 
-      this.userForm = this.builder.group({
-        title:             [this.user.title],
-        firstName:         [this.user.firstName, Validators.required],
-        middleName:        [this.user.initials],
-        lastName:          [this.user.lastName, Validators.required],
-        suffix:            [this.user.suffix],
-        personalPhone:     [this.user.personalPhone],
-        carrier:           [this.user.carrier, this.user.personalPhone ? Validators.required : null],
-
-        workPhone:         [this.user.workPhone],
-        officeID:          [orgID],
-
-        kbaAnswerList:     this.builder.array([
-          this.initKBAGroup(0),
-          this.initKBAGroup(1),
-          this.initKBAGroup(2)
-        ]),
-
-        userPassword:      ['', Validators.required],
-        accountClaimed:    [true],
-        OTPPreference:     [this.user.OTPPreference],
-        emailNotification: [this.user.emailNotification],
-      });
-
-      this.userForm.get('personalPhone').valueChanges.subscribe(value => {
-        const control = this.userForm.get('carrier'),
-              validation = value ? [Validators.required] : null;
-
-        control.setValidators(validation);
-        control.updateValueAndValidity();
-      });
-
-      if(this.states.isGov) {
-        this.userForm.controls['officeID'].setValidators([Validators.required]);
+  ngOnDestroy() {
+    // Unsubscribe all subscriptions
+    Object.keys(this.subscriptions).map(key => {
+      if(this.subscriptions[key]) {
+        this.subscriptions[key].unsubscribe();
       }
-
-      // Set the model for components using the model system
-      this.user = merge({}, this.user, this.userForm.value);
     });
   }
 
@@ -151,12 +134,12 @@ export class RegisterMainComponent {
 
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        if(this.userForm.controls[diff.key]) {
+        if(this.userForm.get(diff.key)) {
           if(diff.key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
             return;
           }
 
-          this.userForm.controls[diff.key].setValue(diff.currentValue);
+          this.userForm.get(diff.key).setValue(diff.currentValue);
         }
       });
     }
@@ -218,7 +201,7 @@ export class RegisterMainComponent {
   }
 
   initMockSession(cb) {
-    this.states.isGov = true;
+    this.states.isGov = this.api.iam.getParam('gov');
 
     this.api.iam.user.get(user => {
       user.personalPhone = (user.personalPhone || '').replace(/[^0-9]/g, '');
@@ -233,6 +216,7 @@ export class RegisterMainComponent {
 
       if(ENV && ENV == 'test') {
         this.states.isGov = false;
+
         delete this.user['departmentID'];
         delete this.user['agencyID'];
         delete this.user['officeID'];
@@ -245,6 +229,54 @@ export class RegisterMainComponent {
         cb();
       });
     });
+  }
+
+  initForm() {
+    const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+
+    this.userForm = this.builder.group({
+      title:             [this.user.title],
+      firstName:         [this.user.firstName, Validators.required],
+      middleName:        [this.user.initials],
+      lastName:          [this.user.lastName, Validators.required],
+      suffix:            [this.user.suffix],
+      personalPhone:     [this.user.personalPhone],
+      carrier:           [this.user.carrier, this.user.personalPhone ? Validators.required : null],
+
+      workPhone:         [this.user.workPhone],
+      businessName:      [this.user.businessName],
+      officeID:          [orgID],
+
+      kbaAnswerList:     this.builder.array([
+        this.initKBAGroup(0),
+        this.initKBAGroup(1),
+        this.initKBAGroup(2)
+      ]),
+
+      userPassword:      ['', Validators.required],
+      accountClaimed:    [true],
+      OTPPreference:     [this.user.OTPPreference],
+      emailNotification: [this.user.emailNotification],
+    });
+
+    this.subscriptions['personalPhone'] = this.userForm.get('personalPhone').valueChanges.subscribe(value => {
+      const control = this.userForm.get('carrier'),
+            validation = value ? [Validators.required] : null;
+
+      control.setValidators(validation);
+      control.updateValueAndValidity();
+    });
+
+    if(this.states.isGov) {
+      this.userForm.get('officeID').setValidators([Validators.required]);
+    } else {
+      this.subscriptions['entity'] = this.entity.valueChanges.subscribe(entity => {
+        this.userForm.get('businessName').setValue(entity.key);
+      });
+    }
+
+    // Set the model for components using the model system
+    this.user = merge({}, this.user, this.userForm.value);
   }
 
   processKBAQuestions() {
@@ -300,7 +332,7 @@ export class RegisterMainComponent {
       }
     });
 
-    this.userForm.controls['officeID'].setValue(
+    this.userForm.get('officeID').setValue(
       this.user.officeID || this.user.agencyID || this.user.departmentID
     );
   }
@@ -342,6 +374,13 @@ export class RegisterMainComponent {
       case 'carrier':
         if(this.states.submitted && control.hasError('required')) {
           errors = 'Carrier is required if mobile phone is entered.';
+        }
+
+        break;
+
+      case 'officeID':
+        if(this.states.submitted && !control.value) {
+          errors = 'Office is required';
         }
 
         break;

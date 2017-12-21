@@ -9,6 +9,8 @@ import { SamTitleService } from "../../../api-kit/title-service/title.service";
 import { Location } from "@angular/common";
 import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
 import { isArray } from 'lodash';
+import adminLevel from "../../role-management/admin-level";
+import { Observable } from "rxjs";
 
 function arrayIsRequired(c: FormControl) {
   if (!c.value || !c.value.length) {
@@ -47,6 +49,10 @@ export class GrantOrEditAccess {
   existingAccess = {};
   submitEnabled: boolean = true;
   requestId: string;
+  isGov: boolean = true;
+  isDefaultEntityPrepopulate: boolean = false;
+  isEditEntity: boolean = false;
+  entitySelections = [];
 
   constructor(
     private fb: FormBuilder,
@@ -63,8 +69,17 @@ export class GrantOrEditAccess {
 
   ngOnInit() {
     this.grantOrEdit = this.route.snapshot.data['grantOrEdit'];
-
-    let defaultOrg = this.route.snapshot.queryParams['org'] || this.userService.getUser().departmentID || '';
+    this.isGov = adminLevel.isGov;
+    let defaultOrg = [];
+    if(this.isGov){
+      defaultOrg = this.route.snapshot.queryParams['org'] || this.userService.getUser().departmentID || '';
+    }else{
+      if(this.route.snapshot.queryParams['org']){
+        defaultOrg = this.route.snapshot.queryParams['org'];
+      }else{
+        this.isDefaultEntityPrepopulate = true;
+      }
+    }
 
     if (!isArray(defaultOrg)) {
       // convert to array, remove empty elements
@@ -74,6 +89,8 @@ export class GrantOrEditAccess {
     if (this.isGrant() && !defaultOrg) {
       this.errorMessage = 'Unable to determine your department id';
     }
+
+    if(!this.isGov && this.route.snapshot.queryParams['org']) this.getEntityData(defaultOrg);
 
     this.form = this.fb.group({
       org: [defaultOrg, Validators.required],
@@ -166,7 +183,7 @@ export class GrantOrEditAccess {
   }
 
   getPermittedRoleAndDomains() {
-    this.userAccessService.checkAccess(`users/:id/assign-roles`).map(r => r.json()).subscribe(a => {
+    this.userAccessService.checkAccess(`users/:id/assign-roles`,this.route.snapshot.params['id'],'').map(r => r.json()).subscribe(a => {
       try {
         this.domainOptionsByRole = {};
         this.roleOptions = a.grantRoles.map(r => {
@@ -330,6 +347,29 @@ export class GrantOrEditAccess {
     });
   }
 
+  getEntityData(orgs){
+    let entityObservable = orgs.map(e => { return this.userAccessService.getEntityById(e);});
+
+    Observable.forkJoin(entityObservable).subscribe(res=>{
+      if(res && res.length > 0){
+        res.forEach(entity => {
+          try{
+            let obj = entity[0];
+            obj['key'] = obj['cageCode'];
+            obj['name'] = obj['legalBusinessName'];
+            obj['detail'] = 'CAGE: ' + obj['cageCode'] + ' | DUNS: '+ obj['duns'];
+            this.entitySelections.push(obj);
+          }catch(error){
+            console.error("Cannot Parse Entity Reponse:");
+            console.error(error);
+          }
+          
+        });
+      }
+      
+    });
+  }
+
   getDomainData(dom) {
     if (!dom) {
       return [];
@@ -374,7 +414,7 @@ export class GrantOrEditAccess {
     let domains = this.getDomainData(this.domainTabs);
     let val = this.form.value;
 
-    let orgs = (!val.org || !val.org.length) ? [] : val.org.map(o => ''+o.orgKey);
+    let orgs = (!val.org || !val.org.length) ? [] : val.org.map(o => this.isGov?''+o.orgKey:''+o.cageCode);
     const orgMap = (!val.org || !val.org.length) ? [] : val.org.map(o => ({
       orgKey: o.orgKey,
       name: o.name,

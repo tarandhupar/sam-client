@@ -106,7 +106,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
     defaultOption: "Make a Request"
   };
   crumbs: Array<IBreadcrumb> = [
-    {breadcrumb: 'My Workspace', urlmock: true},
+    {breadcrumb: 'Workspace', urlmock: true},
     {breadcrumb: 'Assistance Listings', urlmock: true}
   ];
 
@@ -749,6 +749,20 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         let actionHistoryPipe = new ActionHistoryPipe(historyResponse);
         actionHistoryPipe.transform(res).subscribe(history => {
           this.publicHistoryIsVisible = false;
+
+          for ( var i = 0; i < history.array.length; i++ ) {
+            if(history.array[i].url !=null && history.array[i].url != undefined) {
+              let pathArray = history.array[i].url.split("/");
+              let id = pathArray[2];
+              let curarray = this.currentUrl.split("/");
+              if(curarray[4] != null && curarray[4] != undefined) {
+                let curid = curarray[4];
+                if (id === curid) {
+                  history.array[i].url = "";
+                }
+              }
+            }
+          }
           this.actionHistoryAndNote = history.array;
         });
       }

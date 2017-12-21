@@ -23,21 +23,45 @@ export class OppGeneralInfoViewModel {
   get archiveDate() {
     let archiveDate = '';
     if(this._data.archive && this._data.archive.date)
-      archiveDate = this._data.archive.date;
+      archiveDate = this._data.archive.date.substr(0, this._data.archive.date.indexOf('T'));
 
     return archiveDate;
   }
 
   set archiveDate(archiveDate){
-    _.set(this._data, 'archive.date', archiveDate);
+    let time = this.archiveTime;
+    if (time == ''){
+      time = '00:00'
+    }
+    let dateTime = archiveDate + 'T' + time;
+    _.set(this._data, 'archive.date', dateTime);
+  }
+
+  get archiveTime() {
+    let archiveDate = '';
+    if(this._data.archive && this._data.archive.date)
+      archiveDate = this._data.archive.date.substr(this._data.archive.date.indexOf('T'), this._data.archive.date.length);
+
+    return archiveDate;
+  }
+
+  set archiveTime(archiveTime){
+    let date = this.archiveDate;
+    if (date == ''){
+      date = '0000-00-00'
+    }
+    let dateTime = date + 'T' + archiveTime;
+    _.set(this._data, 'archive.date', dateTime);
   }
 
   get vendorCDIvl(){
-    if(this._data.permissions && this._data.permissions.ivl && this._data.permissions.ivl.create && this._data.permissions.ivl.update && this._data.permissions.ivl.delete) {
-      if(this._data.permissions.ivl.create == true && this._data.permissions.ivl.update == true && this._data.permissions.ivl.delete == true) {
+    if(this._data.permissions && this._data.permissions.ivl) {
+      if(this._data.permissions.ivl.create === true && this._data.permissions.ivl.update === true && this._data.permissions.ivl.delete === true) {
         return 'yes';
       }
-      return 'no';
+      if(this._data.permissions.ivl.create === false && this._data.permissions.ivl.update === false && this._data.permissions.ivl.delete === false) {
+        return 'no';
+      }
     }
 
     return null;
@@ -54,11 +78,13 @@ export class OppGeneralInfoViewModel {
   }
 
   get vendorViewIvl() {
-    if(this._data.permissions && this._data.permissions.ivl && this._data.permissions.ivl.read) {
-      if(this._data.permissions.ivl.read == true) {
+    if(this._data.permissions && this._data.permissions.ivl) {
+      if(this._data.permissions.ivl.read === true) {
         return 'yes';
       }
-      return 'no';
+      if(this._data.permissions.ivl.read === false) {
+        return 'no';
+      }
     }
 
     return null;
@@ -71,5 +97,13 @@ export class OppGeneralInfoViewModel {
     }
 
     _.set(this._data, 'permissions.ivl.read', flag);
+  }
+
+  get addiReportingTypes() {
+    return _.get(this._data, 'flags', null);
+  }
+
+  set addiReportingTypes(addiReportingOption) {
+    _.set(this._data, 'flags', addiReportingOption);
   }
 }

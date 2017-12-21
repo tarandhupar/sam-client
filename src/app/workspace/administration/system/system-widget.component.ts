@@ -16,6 +16,13 @@ export class SystemWidgetComponent {
     Cancelled: '-',
   };
 
+  private keys = {
+    Pending: 'pending approval',
+    approved: 'approved',
+    rejected: 'rejected',
+    cancelled: 'cancelled',
+  };
+
   constructor(private api: IAMService) {}
 
   ngOnInit() {

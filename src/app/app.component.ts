@@ -106,7 +106,7 @@ export class App{
       });
     /**
      * LEAVE COMMENTED OUT
-     * 
+     *
      * Once we finish implementing the business rules,
      * this will send API errors to the alert footer service
      * and they will all be managed from here.

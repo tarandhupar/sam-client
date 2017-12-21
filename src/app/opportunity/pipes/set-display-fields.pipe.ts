@@ -79,17 +79,23 @@ export class SetDisplayFields implements PipeTransform {
         displayField[OpportunityFields.AwardedDUNS] = false;
         displayField[OpportunityFields.AwardedAddress] = false;
         displayField[OpportunityFields.Contractor] = false;
-
+        displayField[OpportunityFields.StatutoryAuthority] = false;
         displayField[OpportunityFields.JustificationAuthority] = false;
-        displayField[OpportunityFields.OrderNumber] = false;
+        displayField[OpportunityFields.ModificationNumber] = false;
+        displayField[OpportunityFields.OriginalSetAside] = false;
         break;
 
       // Type i is a superset of l, using case fallthrough
       case 'i': // Intent to Bundle Requirements (DoD-Funded)
-        displayField[OpportunityFields.AwardDate] = false;
         displayField[OpportunityFields.JustificationAuthority] = false;
         displayField[OpportunityFields.ModificationNumber] = false;
-        displayField[OpportunityFields.SpecialLegislation] = false;
+        displayField[OpportunityFields.AwardAmount] = false;
+        displayField[OpportunityFields.LineItemNumber] = false;
+        displayField[OpportunityFields.AwardedName] = false;
+        displayField[OpportunityFields.AwardedDUNS] = false;
+        displayField[OpportunityFields.AwardedAddress] = false;
+        displayField[OpportunityFields.POP] = false;
+        displayField[OpportunityFields.OriginalSetAside] = false;
         break;
 
       case 'l': // Fair Opportunity / Limited Sources Justification

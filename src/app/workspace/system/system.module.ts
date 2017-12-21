@@ -12,7 +12,7 @@ import { SystemSectionsModule } from './create/tabs/system-sections.module';
 
 import { SystemRouter } from './system.route';
 import { SystemGuard } from './system.guard';
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 
 import {
   SystemComponent,

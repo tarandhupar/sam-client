@@ -2,10 +2,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IBreadcrumb } from 'sam-ui-elements/src/ui-kit/types';
 
-import { IsLoggedInGuard } from '../application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from '../app-services/is-logged-in.guard';
 import { RequestAccessPage } from './request-access/request-access.page';
 import { RoleCategoriesResolve } from './roles-categories.resolve';
-import { CheckAccessGuard } from '../application-content/403/check-access.guard';
+import { RmAccessGuard } from '../app-services/rm-access.guard';
 
 import { DetailsComponent } from './details/details.component';
 import { MigrationsComponent } from './migrations/migrations.component';
@@ -70,9 +70,9 @@ export const routes: Routes = [
   {
     path: 'request-access',
     component: RequestAccessPage,
-    data: { pageName: 'profile/request-access'},
+    data: { pageName: 'profile/request-access' },
     resolve: { roleCategories: RoleCategoriesResolve },
-    canActivate: [ IsLoggedInGuard, CheckAccessGuard ]
+    canActivate: [ IsLoggedInGuard, RmAccessGuard ]
   },
 ];
 

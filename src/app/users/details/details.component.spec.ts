@@ -18,7 +18,7 @@ describe('[IAM] User Profile - Details', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -50,21 +50,25 @@ describe('[IAM] User Profile - Details', () => {
 
     component.ngOnInit();
     fixture.detectChanges();
-  });
+  }));
 
-  xit('verify data-binding for email notification setting', () => {
+  it('verify data-binding for email notification setting', () => {
     let checkbox;
 
-    fixture.debugElement.query(By.css('#identity sam-editor .usa-additional_text')).nativeElement.click();
+    component.states.edit.identity = true;
+
     fixture.detectChanges();
+
     checkbox = fixture.debugElement.query(By.css('#email-notification')).nativeElement;
 
     checkbox.click();
     fixture.detectChanges();
+
     expect(component.user.emailNotification).toBe(true);
 
     checkbox.click();
     fixture.detectChanges();
+
     expect(component.user.emailNotification).toBe(false);
   });
 
@@ -105,22 +109,50 @@ describe('[IAM] User Profile - Details', () => {
   });
 
   it('verify dynamic validator when mobile phone has input', fakeAsync(() => {
-    let controls = {
-          personalPhone: component.detailsForm.get('personalPhone'),
-          carrier: component.detailsForm.get('carrier'),
-        };
+    const form = component.detailsForm;
+    let phoneInput;
 
-    fixture.detectChanges();
     fixture.whenStable().then(() => {
-      controls.personalPhone.setValue('12345678901');
-      tick();
+      form.get('carrier').patchValue('');
+      form.get('personalPhone').patchValue('12345678901');
 
-      expect(controls.carrier.invalid).toBeTruthy();
+      fixture.detectChanges();
+      tick(600);
 
-      controls.personalPhone.setValue('');
-      tick();
+      expect(form.get('carrier').invalid).toBeTruthy();
 
-      expect(controls.carrier.invalid).toBeFalsy();
+      form.get('personalPhone').patchValue('');
+
+      fixture.detectChanges();
+      tick(600);
+
+      expect(form.get('carrier').valid).toBeTruthy();
     });
   }));
+
+  it('verify entity-picker is rendered if no entity set', () => {
+    const form = component.detailsForm;
+
+    component.states.isGov = true;
+    component.states.edit.business = true;
+
+    form.get('businessName').patchValue('');
+
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('sam-entity-picker'))).toBeDefined();
+  });
+
+  it('verify entity-picker is not rendered when entity is already set', () => {
+    const form = component.detailsForm;
+
+    component.states.isGov = true;
+    component.states.edit.business = true;
+
+    form.get('businessName').patchValue('7DKH0');
+
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('sam-entity-picker'))).toBeNull();
+  });
 });

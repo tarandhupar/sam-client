@@ -1,8 +1,8 @@
 <h2 class="sam-ui header">
   Classification
 </h2>
-<form [formGroup]="oppClassificationForm">
-  <div class="sam-ui segment">
+<form *ngIf="oppClassificationForm" [formGroup]="oppClassificationForm">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('SET_ASIDE_TYPE')">
     <sam-autocomplete [options]="setAsideConfig.options"
                       [attr.id]="setAsideConfig.id"
                       [name]="setAsideConfig.name"
@@ -36,7 +36,7 @@
     ></sam-autocomplete>
   </div>
   <!--  Once Location Component is ready need to remove country, state, city and Zip controls-->
-  <div class="sam-ui segment">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('SECONDARY_NAICS_CODE')">
     <sam-autocomplete-multiselect
       [options]="secondaryNAICSCodeConfig.options"
       [name]="secondaryNAICSCodeConfig.name"
@@ -47,7 +47,7 @@
       [attr.id]="secondaryNAICSCodeConfig.id">
     </sam-autocomplete-multiselect>
   </div>
-  <div class="sam-ui segment"><span class="classification-location">Place Of Performance Location</span><br>
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PLACE_PERFORMNCE_LOCATION')"><span class="classification-location">Place Of Performance Location</span><br>
     <sam-autocomplete [options]="countryConfig.options"
                       [attr.id]="countryConfig.id"
                       [name]="countryConfig.name"
@@ -62,6 +62,7 @@
       name="zip"
       [control]="oppClassificationForm.get('zip')"
       formControlName="zip"
+      [attr.id]="'opp-zip'"
     ></sam-number>
     <br>
     <sam-text

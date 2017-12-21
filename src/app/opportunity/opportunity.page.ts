@@ -296,7 +296,7 @@ export class OpportunityPage implements OnInit {
 
   private loadParentOpportunity(opportunityAPI: Observable<any>|ReplaySubject<any>){
     let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
-    
+
     let parentOpportunityStream = opportunityAPI.switchMap(api => {
       if (api.parent != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
@@ -358,7 +358,7 @@ export class OpportunityPage implements OnInit {
     let ivlSubject = new ReplaySubject(1);
     let ivlStream = opportunityAPI.switchMap(opportunity => {
       if (opportunity._links && opportunity._links.ivl != null) {
-        let sort = ((this.ivlSort.sort == 'desc') ? '-' : '') + this.ivlSort.type; 
+        let sort = ((this.ivlSort.sort == 'desc') ? '-' : '') + this.ivlSort.type;
         return this.opportunityService.getOpportunityIVLs(this.authToken, opportunity.opportunityId, this.keyword, this.pageNum, this.showPerPage, sort)
       .switchMap(ivls => {
         if(ivls != null && ivls.hasOwnProperty('_embedded') && ivls.hasOwnProperty('page')) {
@@ -634,6 +634,20 @@ export class OpportunityPage implements OnInit {
         } else {
           let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
           let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi, this.qParams);
+
+          for ( var i = 0; i < pipedHistory.processedHistory.length; i++ ) {
+            if(pipedHistory.processedHistory[i].url !=null && pipedHistory.processedHistory[i].url != undefined) {
+              let pathArray = pipedHistory.processedHistory[i].url.split("/");
+              let id = pathArray[2];
+              let curarray = document.location.href.split("/");
+              if(curarray[4] != null && curarray[4] != undefined) {
+                let curid = curarray[4];
+                if (id === curid) {
+                  pipedHistory.processedHistory[i].url = "";
+                }
+              }
+            }
+          }
           this.processedHistory = pipedHistory.processedHistory;
           if (pipedHistory.showRevisionMessage){
             this.showRevisionMessage = pipedHistory.showRevisionMessage;

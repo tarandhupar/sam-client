@@ -103,7 +103,7 @@
                   </div>
                   <div class="description">
                     <inline-error-message
-                      [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('PROCUREMENT_ID'))">
+                      [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('NOTICE_NUMBER'))">
                     </inline-error-message>
                     {{ opportunity.data?.solicitationNumber }}
                   </div>
@@ -286,6 +286,9 @@
               <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
               <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
               <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('GENERAL'), getFieldId('ARCHIVE_DATE'))">
+              </inline-error-message>
             </li>
             <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
               <strong>Update/Amendment Archive Date: </strong>
@@ -293,8 +296,8 @@
             </li>
             <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
               <strong>Original Archive Date: </strong>
-              <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ originalOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
-              <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ opportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+              <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ parentArchiveDate() | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+              <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ archiveDate() | dateFormat: 'MMM DD, YYYY' }}</ng-container>
             </li>
             <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
               <strong>J&A Statutory Authority: </strong>
@@ -312,9 +315,14 @@
             </li>
             <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.SpecialLegislation)">
               <strong>Special Legislation: </strong>
-              <ng-container *ngIf="opportunity?.data?.isRecoveryRelated == true">
-                Recovery and Reinvestment Act
-              </ng-container>
+              <ul *ngIf="opportunity.data?.flags && opportunity.data?.flags.length > 0">
+                <ng-container *ngFor = "let flag of opportunity.data?.flags">
+                  <li *ngIf="flag.isSelected===true">
+                   Recovery and Reinvestment Act
+                  </li>
+                  <div *ngIf ="flag.isSelected===false">None</div>
+                </ng-container>
+              </ul>
             </li>
           </ul>
         <div class="sam-ui hidden section divider"></div>
@@ -363,7 +371,10 @@
                 </ng-container>
               </li>
               <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.ClassificationCode)">
-                <strong>Classification Code: </strong>
+                <strong>Product Service Code: </strong>
+                <inline-error-message
+                  [message]="getErrorMessage(getSectionId('CLASSIFICATION'), getFieldId('PRODUCT_SERVICE_CODE'))">
+                </inline-error-message>
                 <ng-container *ngIf="opportunity.data?.classificationCode && dictionariesUpdated === true">
                   <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:findDictionary('classification_code'):'elementId':false:''">
                     {{ element.value }}
@@ -372,6 +383,9 @@
               </li>
               <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
                 <strong>NAICS Code(s): </strong>
+                <inline-error-message
+                  [message]="getErrorMessage(getSectionId('CLASSIFICATION'), getFieldId('PRIMARY_NAICS_CODE'))">
+                </inline-error-message>
                 <ng-container *ngIf="opportunity.data?.naics && opportunity.data?.naics[0] != null && dictionariesUpdated === true">
                   <ul>
                     <ng-container *ngFor = "let naics of opportunity.data?.naics">
@@ -396,6 +410,9 @@
                   <span [attr.id]="generateID(opportunityFields.POPState, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPState)">
                     {{getState(opportunity)}}
                   </span>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('CLASSIFICATION'), getFieldId('ZIP'))">
+                  </inline-error-message>
                   <span [attr.id]="generateID(opportunityFields.POPZip, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPZip)">
                     {{opportunity.data?.placeOfPerformance?.zip}}
                   </span>
@@ -434,6 +451,9 @@
             <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
             <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
           </h3>
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('DESCRIPTION'), getFieldId('DESCRIPTION'))">
+          </inline-error-message>
           <div [innerHTML]="opportunity.description[0]?.body | fixhtml"></div>
           <div class="sam-ui hidden section divider"></div>
         </div>
@@ -478,67 +498,75 @@
               <h3 class="sam-ui dividing header">
                 Primary Point of Contact
               </h3>
-              <ul class="usa-unstyled-list"  *ngIf="opportunity.data?.pointOfContact != null && opportunity.data?.pointOfContact.length > 0">
+              <div *ngIf="opportunity?.data?.pointOfContact != null && opportunity?.data?.pointOfContact.length > 0">
+              <div *ngFor="let contact of opportunity.data.pointOfContact">
+              <ul class="usa-unstyled-list"  *ngIf="contact && contact?.type == 'primary'">
                 <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
-                    *ngIf="opportunity.data?.pointOfContact[0]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
-                  <strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong>
+                    *ngIf="contact?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
+                  <strong>{{contact.fullName}}</strong>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-primary')"
-                    *ngIf="opportunity.data?.pointOfContact[0]?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
+                    *ngIf="contact?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
                   <!--TODO: fix capitalize pipe-->
-                  <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+                  <em [innerHTML]="contact.title"></em>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-primary')"
-                    *ngIf="opportunity.data?.pointOfContact[0]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
+                    *ngIf="contact?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
                   <em class="fa fa-envelope-o" aria-hidden="true"></em> &nbsp;
-                  <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
-                    {{opportunity.data?.pointOfContact[0].email}}
+                  <a href="mailto:{{contact?.email}}">
+                    {{contact.email}}
                   </a>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-primary')"
-                    *ngIf="opportunity.data?.pointOfContact[0]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
+                    *ngIf="contact?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
                   <em class="fa fa-phone" aria-hidden="true"></em> &nbsp;
-                  {{opportunity.data?.pointOfContact[0].phone}}
+                  {{contact.phone}}
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-primary')"
-                    *ngIf="opportunity.data?.pointOfContact[0]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
+                    *ngIf="contact?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
                   <em class="fa fa-fax" aria-hidden="true"></em> &nbsp;
-                  {{opportunity.data?.pointOfContact[0].fax}}
+                  {{contact.fax}}
                 </li>
               </ul>
+              </div>
+              </div>
             </div>
             <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
               <h3 class="sam-ui dividing header">
                 Secondary Point of Contact
               </h3>
-              <ul class="usa-unstyled-list" *ngIf="opportunity.data?.pointOfContact != null && opportunity.data?.pointOfContact.length > 1">
+              <div *ngIf="opportunity?.data?.pointOfContact != null && opportunity?.data?.pointOfContact.length > 0">
+                <div *ngFor="let contact of opportunity.data.pointOfContact">
+              <ul class="usa-unstyled-list" *ngIf="contact && contact.type == 'secondary'">
                 <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
-                    *ngIf="opportunity.data?.pointOfContact[1]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
-                  <strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong>
+                    *ngIf="contact?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
+                  <strong>{{contact.fullName}}</strong>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-secondary')"
-                    *ngIf="opportunity.data?.pointOfContact[1]?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
+                    *ngIf="contact?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
                   <!--TODO: fix capitalize pipe-->
-                  <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
+                  <em [innerHTML]="contact.title"></em>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-secondary')"
-                    *ngIf="opportunity.data?.pointOfContact[1]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
+                    *ngIf="contact?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
                   <em class="fa fa-envelope-o" aria-hidden="true"></em> &nbsp;
-                  <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
-                    {{opportunity.data?.pointOfContact[1].email}}
+                  <a href="mailto:{{contact.email}}">
+                    {{contact.email}}
                   </a>
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
-                    *ngIf="opportunity.data?.pointOfContact[1]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
+                    *ngIf="contact?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
                   <em class="fa fa-phone" aria-hidden="true"></em> &nbsp;
-                  {{opportunity.data?.pointOfContact[1].phone}}
+                  {{contact.phone}}
                 </li>
                 <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-secondary')"
-                    *ngIf="opportunity.data?.pointOfContact[1]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
+                    *ngIf="contact?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
                   <em class="fa fa-fax" aria-hidden="true"></em> &nbsp;
-                  {{opportunity.data?.pointOfContact[1].fax}}
+                  {{contact.fax}}
                 </li>
               </ul>
+            </div>
+              </div>
             </div>
           </div>
           <div class="sam-ui hidden section divider"></div>

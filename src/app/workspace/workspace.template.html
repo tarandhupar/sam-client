@@ -107,7 +107,7 @@
   <div class="sam-ui hidden divider"></div>
 
   <!--Administration section for workspace-->
-  <h2 id="administration" class="sam-ui header">Administration</h2>
+  <h2 id="administration" class="sam-ui header" *ngIf="anyAdminWidget()">Administration</h2>
   <workspace-administration
     [toggleControl]="administrationWidgetControl">
   </workspace-administration>

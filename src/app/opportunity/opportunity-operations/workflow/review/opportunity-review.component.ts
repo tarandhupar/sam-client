@@ -1,32 +1,28 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import { Response} from '@angular/http';
-import { OpportunityService, FHService, EntityService } from 'api-kit';
-import { ReplaySubject, Observable } from 'rxjs';
-import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
-import { trigger, state, style, transition, animate } from '@angular/core';
-import * as _ from 'lodash';
-import { OpportunityTypeLabelPipe } from '../../../pipes/opportunity-type-label.pipe';
-import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
-import {forEach} from "@angular/router/src/utils/collection";
-import { Subscription } from "rxjs/Subscription";
+import { animate, Component, Input, OnInit, state, style, transition, trigger, ViewChild } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, NavigationExtras, Router } from '@angular/router';
+import { EntityService, FHService, OpportunityService } from 'api-kit';
 import * as Cookies from 'js-cookie';
-import {OpportunityFields} from "../../../opportunity.fields";
-import {DateFormatPipe} from "../../../../app-pipes/date-format.pipe";
-import {FilesizePipe} from "../../../pipes/filesize.pipe";
-import {ProcessOpportunityHistoryPipe} from "../../../pipes/process-opportunity-history.pipe";
-import {SetDisplayFields} from "../../../pipes/set-display-fields.pipe";
-import {GetResourceTypeInfo} from "../../../pipes/get-resource-type-info.pipe";
-import {SidenavHelper} from "../../../../app-utils/sidenav-helper";
-import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
-import {MenuItem} from "sam-ui-elements/src/ui-kit/components/sidenav";
-import {IBreadcrumb} from "sam-ui-elements/src/ui-kit/types";
-import {OpportunitySectionNames, OpportunityFieldNames} from "../../framework/data-model/opportunity-form-constants";
-import {OppFieldError, OppFieldErrorList, OpportunityFormErrorService} from "../../opportunity-form-error.service";
-import {OpportunityFormViewModel} from "../../framework/data-model/opportunity-form/opportunity-form.model";
-import {OpportunityErrorDisplayComponent} from "../../../components/opportunity-error-display/opportunity-error-display.component";
-import {FALFormErrorService} from "../../../../assistance-listing/assistance-listing-operations/fal-form-error.service";
+import * as _ from 'lodash';
+import { Observable, ReplaySubject } from 'rxjs';
+import { Subscription } from "rxjs/Subscription";
+import { MenuItem } from "sam-ui-elements/src/ui-kit/components/sidenav";
+import { SidenavService } from 'sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service';
+import { IBreadcrumb } from "sam-ui-elements/src/ui-kit/types";
+import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.service";
+import { DateFormatPipe } from "../../../../app-pipes/date-format.pipe";
+import { FilterMultiArrayObjectPipe } from '../../../../app-pipes/filter-multi-array-object.pipe';
+import { SidenavHelper } from "../../../../app-utils/sidenav-helper";
+import { FALFormErrorService } from "../../../../assistance-listing/assistance-listing-operations/fal-form-error.service";
+import { OpportunityErrorDisplayComponent } from "../../../components/opportunity-error-display/opportunity-error-display.component";
+import { OpportunityFields } from "../../../opportunity.fields";
+import { FilesizePipe } from "../../../pipes/filesize.pipe";
+import { GetResourceTypeInfo } from "../../../pipes/get-resource-type-info.pipe";
+import { ProcessOpportunityHistoryPipe } from "../../../pipes/process-opportunity-history.pipe";
+import { SetDisplayFields } from "../../../pipes/set-display-fields.pipe";
+import { OpportunityFieldNames, OpportunitySectionNames } from "../../framework/data-model/opportunity-form-constants";
+import { OpportunityFormViewModel } from "../../framework/data-model/opportunity-form/opportunity-form.model";
+import { OppFieldError, OppFieldErrorList, OpportunityFormErrorService } from "../../opportunity-form-error.service";
 
 @Component({
   moduleId: __filename,
@@ -152,8 +148,7 @@ export class OpportunityReviewComponent implements OnInit {
   authToken: string;
 
   crumbs: Array<IBreadcrumb> = [
-    {breadcrumb: 'Home', url: '/'},
-    {breadcrumb: 'My Workspace', urlmock: true},
+    {breadcrumb: 'Workspace', urlmock: true},
     {breadcrumb: 'Contract Opportunity Workspace', urlmock: true}
   ];
 
@@ -316,7 +311,6 @@ export class OpportunityReviewComponent implements OnInit {
 
   ngOnInit() {
     this.authToken = Cookies.get('iPlanetDirectoryPro');
-
     if(this.authToken == undefined) {
       this.router.navigate(['accessrestricted']);
     }
@@ -720,6 +714,20 @@ export class OpportunityReviewComponent implements OnInit {
       } else {
         let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
         let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi, this.qParams);
+
+        for ( var i = 0; i < pipedHistory.processedHistory.length; i++ ) {
+          if(pipedHistory.processedHistory[i].url !=null && pipedHistory.processedHistory[i].url != undefined) {
+            let pathArray = pipedHistory.processedHistory[i].url.split("/");
+            let id = pathArray[2];
+            let curarray = this.currentUrl.split("/");
+            if(curarray[4] != null && curarray[4] != undefined) {
+              let curid = curarray[4];
+              if (id === curid) {
+                pipedHistory.processedHistory[i].url = "";
+              }
+            }
+          }
+        }
         this.processedHistory = pipedHistory.processedHistory;
         if (pipedHistory.showRevisionMessage){
           this.showRevisionMessage = pipedHistory.showRevisionMessage;
@@ -870,7 +878,7 @@ export class OpportunityReviewComponent implements OnInit {
     if (this.opportunity.data.type === 'k' || (this.opportunity.data.type === 'm' && (this.originalOpportunity !=null && this.originalOpportunity.data.type === 'k'))){
       return "Solicitation Number";
     } else {
-      return "Procurement ID";
+      return "Notice Number";
     }
   }
 
@@ -919,7 +927,7 @@ export class OpportunityReviewComponent implements OnInit {
   }
 
   breadcrumbHandler(event) {
-    if(event === 'My Workspace') {
+    if(event === 'Workspace') {
       this.router.navigateByUrl('/workspace');
     }
     if(event === 'Contract Opportunity Workspace') {
@@ -1084,5 +1092,14 @@ export class OpportunityReviewComponent implements OnInit {
       }
     }
     return state;
+  }
+  parentArchiveDate(){
+    if( this.originalOpportunity.data && this.originalOpportunity.data.archive && this.originalOpportunity.data.archive.date)
+      return this.originalOpportunity.data.archive.date.substr(0,this.originalOpportunity.data.archive.date.indexOf('T'));
+  }
+
+  archiveDate(){
+    if( this.opportunity.data && this.opportunity.data.archive && this.opportunity.data.archive.date)
+      return this.opportunity.data.archive.date.substr(0,this.opportunity.data.archive.date.indexOf('T'));
   }
 }

@@ -1,7 +1,7 @@
 import { RouterModule } from '@angular/router';
 
 import { FSDGuard } from './fsd.guard';
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 
 import { FSDComponent } from './fsd.component';
 import { FSDUserComponent } from './fsd-user/fsd-user.component';

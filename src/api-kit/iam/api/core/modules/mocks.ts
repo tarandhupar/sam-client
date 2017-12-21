@@ -29,6 +29,8 @@ export function getMockUser(): IUser {
     workPhone: '12401234568',
     carrier: 'AT&T',
 
+    businessName: '7DKH0',
+
     departmentID: 100006688,
     agencyID: 100141921,
     officeID: 100170334,

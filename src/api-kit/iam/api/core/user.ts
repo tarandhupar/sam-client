@@ -1,4 +1,4 @@
-import { clone, indexOf, merge } from 'lodash';
+import { clone, indexOf, isBoolean, merge } from 'lodash';
 import { config, isDebug } from './modules/helpers';
 
 import * as Cookies from 'js-cookie';
@@ -60,6 +60,7 @@ export class User {
   public workPhone = '';
   public personalPhone = '';
   public OTPPreference = 'email';
+  public isGov;
   public _links = {};
 
   public status = 'Active';
@@ -195,7 +196,8 @@ export class User {
   }
 
   get gov(): boolean {
-    return (this['officeID'] || this['agencyID'] || this['departmentID'] || '').toString().length ? true : false;
+    const orgID = (this['officeID'] || this['agencyID'] || this['departmentID'] || '').toString();
+    return isBoolean(this.isGov) ? this.isGov : orgID.length > 0;
   }
 
   get entity(): boolean {
@@ -208,7 +210,7 @@ export class User {
   }
 
   static updateCache(data: { [key: string]: any }) {
-    data = merge(Cookies.getJSON('IAMSession') || {}, data || {});
+    data = merge({}, Cookies.getJSON('IAMSession') || {}, data || {});
     Cookies.set('IAMSession', data, config.cookies());
   }
 }

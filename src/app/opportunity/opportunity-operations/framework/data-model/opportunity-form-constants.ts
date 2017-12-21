@@ -14,7 +14,7 @@ export class OpportunityFieldNames {
   //Header Information
   static readonly TITLE = 'opp-title';
   static readonly OPPORTUNITY_TYPE = 'opp-type';
-  static readonly PROCUREMENT_ID = 'opp-procurement-id';
+  static readonly NOTICE_NUMBER = 'opp-notice-number';
   static readonly CONTRACTING_OFFICE = 'opp-contracting-office';
   static readonly RELATED_NOTICE = 'opp-related-notice';
 
@@ -30,14 +30,18 @@ export class OpportunityFieldNames {
   //General Information
   static readonly ARCHIVE_POLICY = 'opp-archive-policy';
   static readonly ARCHIVE_DATE = 'opp-archive-date';
+  static readonly ARCHIVE_TIME = 'opp-archive-time';
   static readonly VENDORS_CD_IVL = 'opp-vendor-cd-ivl';
   static readonly VENDORS_V_IVL = 'opp-vendor-v-ivl';
+  static readonly ADDITIONAL_REPORTING = 'opp-additional-reporting';
 
   //classification
   static readonly SET_ASIDE_TYPE = 'opp-set-aside-type';
   static readonly PRODUCT_SERVICE_CODE = 'opp-classification-product-service-code';
   static readonly PRIMARY_NAICS_CODE = 'opp-primary-naics-code';
   static readonly SECONDARY_NAICS_CODE = 'opp-secondary-naics-code';
+  static readonly PLACE_PERFORMNCE_LOCATION = 'opp-place-performance-location';
+  static readonly ZIP = 'opp-zip';
 
   //description
   static readonly DESCRIPTION = 'opp-description';
@@ -82,7 +86,7 @@ export const OpportunitySectionFieldsBiMap = (function() {
     [OpportunitySectionNames.HEADER]: [
       OpportunityFieldNames.TITLE,
       OpportunityFieldNames.CONTRACTING_OFFICE,
-      OpportunityFieldNames.PROCUREMENT_ID,
+      OpportunityFieldNames.NOTICE_NUMBER,
       OpportunityFieldNames.OPPORTUNITY_TYPE
     ],
     [OpportunitySectionNames.GENERAL]: [
@@ -90,7 +94,17 @@ export const OpportunitySectionFieldsBiMap = (function() {
       OpportunityFieldNames.ARCHIVE_DATE,
       OpportunityFieldNames.VENDORS_CD_IVL,
       OpportunityFieldNames.VENDORS_V_IVL
-    ]
+    ],
+    [OpportunitySectionNames.CLASSIFICATION]: [
+      OpportunityFieldNames.SET_ASIDE_TYPE,
+      OpportunityFieldNames.PRODUCT_SERVICE_CODE,
+      OpportunityFieldNames.PRIMARY_NAICS_CODE,
+      OpportunityFieldNames.SECONDARY_NAICS_CODE,
+      OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION,
+      OpportunityFieldNames.ZIP,
+    ],
+    [OpportunitySectionNames.DESCRIPTION]: [
+      OpportunityFieldNames.DESCRIPTION],
   };
 
   let fieldSections = {};
@@ -108,6 +122,9 @@ export const OpportunitySectionFieldsBiMap = (function() {
 })();
 
 export const OppNoticeTypeFieldsMap = {
+  [OpportunityNoticeTypes.PRESOLICITATION]: {
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE]: {required: false, display: true},
+  },
   [OpportunityNoticeTypes.COMBINED_SYNOPSIS_SOLICITATION]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
     [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
@@ -133,7 +150,7 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: true},
   },
   [OpportunityNoticeTypes.SALE_OF_SURPLUS_PROPERTY] : {
-    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true}
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
   },
   [OpportunityNoticeTypes.SOLICITATION]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
@@ -156,6 +173,35 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
     [OpportunityFieldNames.DESCRIPTION] : {required: false, display: true},
     [OpportunityFieldNames.PRIMARY_CONTACT] : {required: false, display: true},
+  },
+  [OpportunityNoticeTypes.INTENT_TO_BUNDLE_REQUIREMENTS]: {
+    [OpportunityFieldNames.AWARD_DATE] : {required: false, display: true},
+    [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.AMOUNT] : {required: false, display: false},
+    [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: false},
+    [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: false},
+    [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: false},
+    [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.SET_ASIDE_TYPE] : {required: false, display: false},
+    [OpportunityFieldNames.SECONDARY_NAICS_CODE] : {required: false, display: false},
+    [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: false},
+  },
+  [OpportunityNoticeTypes.JUSTIFICATION_AND_APPROVAL]: {
+    [OpportunityFieldNames.AWARD_DATE] : {required: false, display: true},
+    [OpportunityFieldNames.AWARD_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: true},
+    [OpportunityFieldNames.AMOUNT] : {required: false, display: false},
+    [OpportunityFieldNames.LINE_ITEM_NUMBER] : {required: false, display: false},
+    [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: false},
+    [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: false},
+    [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.SET_ASIDE_TYPE] : {required: false, display: false},
+    [OpportunityFieldNames.SECONDARY_NAICS_CODE] : {required: false, display: false},
+    [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: false},
+    [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: true},
   }
 };
 
@@ -188,10 +234,10 @@ export const OppNoticeTypeSectionMap = {
     [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
   },
   [OpportunityNoticeTypes.JUSTIFICATION_AND_APPROVAL]: {
-    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
   },
   [OpportunityNoticeTypes.INTENT_TO_BUNDLE_REQUIREMENTS]: {
-    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}
+    [OpportunitySectionNames.AWARD_DETAILS]: {disabled: false}
   },
   [OpportunityNoticeTypes.FAIR_OPPORTUNITY_LIMITED_SOURCES_JUSTIFICATION]: {
     [OpportunitySectionNames.AWARD_DETAILS]: {disabled: true}

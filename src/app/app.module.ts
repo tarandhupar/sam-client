@@ -33,7 +33,7 @@ import { AlertFooterService } from './app-components/alert-footer/alert-footer.s
 import { LoginService } from './app-components/login/login.service';
 import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 import { SupportComponent } from './Help/sections/support/support.component';
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 import { UserService } from 'role-management/user.service';
 
 

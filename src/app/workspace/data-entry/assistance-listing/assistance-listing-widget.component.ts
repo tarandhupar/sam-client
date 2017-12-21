@@ -88,4 +88,27 @@ export class AssistanceListingWidgetComponent {
       }
     }
   }
+  downloadFile() {
+    let file;
+    let url;
+    this.getTemplateSub = this.api.getTemplate(this.cookieValue).subscribe(data => {
+        file = new Blob([data.blob()]);
+        if (window.navigator.msSaveOrOpenBlob) { // for IE and Edge
+          window.navigator.msSaveBlob(file , 'Assistance_Listing_Template.doc');
+        } else {
+          let link = document.createElement("a");
+          link.id = 'downloadlink';
+          url = URL.createObjectURL(file);
+          link.download = 'Assistance_Listing_Template.doc';
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+        }
+
+      } ,
+      error => console.log("Error downloading the file.") ,
+      () => console.log('Completed file download.'));
+  }
 }

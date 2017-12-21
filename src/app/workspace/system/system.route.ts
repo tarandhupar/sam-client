@@ -1,6 +1,6 @@
 import { RouterModule } from '@angular/router';
 
-import { IsLoggedInGuard } from 'application-content/403/is-logged-in.guard';
+import { IsLoggedInGuard } from 'app-services/is-logged-in.guard';
 import { SystemGuard } from './system.guard';
 
 import {

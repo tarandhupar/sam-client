@@ -64,6 +64,9 @@ export class SamFALTextComponent implements ControlValueAccessor {
    */
   @Output() onBlur:EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  invalidKeys = ["e",","];
+  keyCodes = [8,9,16,17,46];
+
   onChange: any = () => {
     this.wrapper.formatErrors(this.control);
   };
@@ -102,6 +105,18 @@ export class SamFALTextComponent implements ControlValueAccessor {
     this.control.statusChanges.subscribe(this.onChange);
 
     this.wrapper.formatErrors(this.control);
+  }
+
+  keyDownHandler(event) {
+    if (this.invalidKeys.indexOf(event.key) !== -1) {
+      event.preventDefault();
+    }
+    if (this.keyCodes.indexOf(event.keyCode) !== -1 || event.key && event.key.match(/[0-9]/ig)) {
+      return true;
+    }
+    if (this.invalidKeys.indexOf(event.key) !== -1 || ((event.ctrlKey === false) && event.key && event.key.match(/[a-z]/ig))) {
+     return false;
+    }
   }
 
   onInputChange(value) {

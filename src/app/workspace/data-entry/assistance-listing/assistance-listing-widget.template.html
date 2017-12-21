@@ -77,6 +77,13 @@
         <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
         CFDA Number Assignment
       </a>
+      <a *ngIf="userPermissions && userPermissions._links &&  userPermissions._links['program:template:download']"
+         class="item"
+         (click)="downloadFile()">
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
+        Download Assistance Listing Template
+        <em class="icon fa fa-file-word-o" aria-hidden="true"></em>
+      </a>
     </div>
   </div>
 </div>
