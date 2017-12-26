@@ -12,9 +12,10 @@ export default {
     };
   },
 
+  carriers:  carriers,
+
   session:   '/auth/v3/session',
   timeout:   '/auth/v4/session/getTimeLeft',
-  carriers:  carriers,
 
   user:      '/auth/v4/session/user',
   mergeWith: '/users/v3/mergeWith/{email}',
@@ -52,7 +53,6 @@ export default {
 
   fsd: {
     user:       '/auth/v4/fsd/users/{id}',
-    users:      '/auth/v4/fsd/users',
     kba:        '/kba/fsd/qa/{id}',
     deactivate: '/my-details/api/fsd/{id}/deactivate',
     reset: {
@@ -62,9 +62,13 @@ export default {
   },
 
   cws: {
+    applications: {
+      get:    '/cws/v1/applications',
+      filter: '/cws/v1/applications/filter',
+    },
+
     application: {
       get:     '/cws/v1/applications/{id}',
-      filter:  '/cws/v1/applications/filter',
       create:  '/cws/v1/applications/submit',
       update:  '/cws/v1/applications/{id}',
       delete:  '/cws/v1/applications/{id}',
@@ -80,10 +84,10 @@ export default {
 
   system: {
     account: {
-      get:    '/cws/api/system-accounts/{id}',
-      create: '/cws/api/system-accounts',
-      update: '/cws/api/system-accounts/{id}',
-      reset:  '/cws/api/system-account-passwords/{id}',
+      get:        '/cws/api/system-accounts/{id}',
+      create:     '/cws/api/system-accounts',
+      update:     '/cws/api/system-accounts/{id}',
+      reset:      '/cws/api/system-account-passwords/{id}',
       deactivate: '/cws/api/system-accounts/{id}/deactivate',
       import: {
         history: '/import/system-accounts/roles/{id}',

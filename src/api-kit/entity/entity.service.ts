@@ -22,7 +22,7 @@ export class EntityService {
   findByCageCode(cageCode: string) {
     let options = {
       name: 'rms',
-      suffix: `/autocomplete/entity/${cageCode}`,
+      suffix: `/entity/${cageCode}`,
       method: 'GET',
       oParam: {}
     };

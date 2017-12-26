@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ApiParameters, WrapperService } from '../wrapper/wrapper.service';
 import 'rxjs/add/operator/map';
 import { Cookie } from 'ng2-cookies';
-import { set, cloneDeep } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Http } from '@angular/http';
 
@@ -19,9 +18,12 @@ export class S3Service {
     if (!iPlanetCookie) {
       return options;
     }
-    let ret = cloneDeep(options);
-    set(ret, 'headers.X-Auth-Token', iPlanetCookie);
-    return ret;
+    const headers = {
+      headers: {
+        'X-Auth-Token': iPlanetCookie
+      }
+    };
+    return Object.assign({}, options, headers);
   }
 
   _callUrlService(path: string, method: 'PUT'|'DELETE') {

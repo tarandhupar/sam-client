@@ -102,6 +102,73 @@ const comment = {
   }
 };
 
+const applications = {
+  get($success: Function = () => {}, $error: Function = () => {}) {
+    let endpoint = utilities.getUrl(config.cws.applications.get),
+        auth = getAuthHeaders(),
+        mock = [
+          transforms.intake(getMockCWSApplication(1)),
+          transforms.intake(getMockCWSApplication(2)),
+          transforms.intake(getMockCWSApplication(3)),
+        ];
+
+    if(isDebug()) {
+      $success(mock);
+      return;
+    }
+
+    if(!auth) {
+      $error({ message: 'Please sign in' });
+      return;
+    }
+
+    request
+      .get(endpoint)
+      .set(auth)
+      .ok(response => (response.status == 200))
+      .then(response => {
+        let applications = response.body || [];
+        applications = applications.map(application => transforms.intake(application));
+        $success(applications);
+      }, response => {
+        $error(exceptionHandler(response));
+      });
+  },
+
+  filter(params: CWSFilter, $success: Function = () => {}, $error: Function = () => {}) {
+    let endpoint = utilities.getUrl(config.cws.applications.filter),
+        auth = getAuthHeaders() ? getAuthHeaders() : {},
+        mock = [
+          transforms.intake(getMockCWSApplication(1)),
+          transforms.intake(getMockCWSApplication(2)),
+          transforms.intake(getMockCWSApplication(3)),
+        ];
+
+//    if(isDebug()) {
+//       $success(mock);
+//       return;
+//     }
+//
+//     if(!auth) {
+//       $error({ message: 'Please sign in' });
+//       return;
+//     }
+
+    request
+      .get(endpoint)
+      .set(auth)
+      .query(params)
+      .ok(response => (response.status == 200))
+      .then(response => {
+        let applications = response.body || [];
+        applications = applications.map(application => transforms.intake(application));
+        $success(applications);
+      }, response => {
+        $error(exceptionHandler(response));
+      });
+  },
+};
+
 const application = {
   get(id: string, $success: Function = () => {}, $error: Function = () => {}) {
     let endpoint = utilities.getUrl(config.cws.application.get, { id: id }),
@@ -129,39 +196,6 @@ const application = {
       .ok(response => (response.status == 200))
       .then(response => {
         !response.body ? $error(exceptionHandler(response)) : $success(transforms.intake(response.body));
-      }, response => {
-        $error(exceptionHandler(response));
-      });
-  },
-
-  getAll(params: CWSFilter, $success: Function = () => {}, $error: Function = () => {}) {
-    let endpoint = utilities.getUrl(config.cws.application.filter),
-        // auth = getAuthHeaders(),
-        mock = [
-          transforms.intake(getMockCWSApplication(1)),
-          transforms.intake(getMockCWSApplication(2)),
-          transforms.intake(getMockCWSApplication(3)),
-        ];
-
-    // if(isDebug()) {
-    //   $success(mock);
-    //   return;
-    // }
-
-    // if(!auth) {
-    //   $error({ message: 'Please sign in' });
-    //   return;
-    // }
-
-    request
-      .get(endpoint)
-      // .set(auth)
-      .query(params)
-      .ok(response => (response.status == 200))
-      .then(response => {
-        let applications = response.body || [];
-        applications = applications.map(application => transforms.intake(application));
-        $success(applications);
       }, response => {
         $error(exceptionHandler(response));
       });
@@ -319,6 +353,7 @@ const application = {
 
 
 export const cws = {
+  applications,
   application,
 
   status($success: Function = () => {}, $error: Function = () => {}) {

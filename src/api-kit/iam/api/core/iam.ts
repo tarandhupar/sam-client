@@ -161,6 +161,9 @@ class IAM {
 
           case 3:
             if(data.tokenId) {
+              // Remove any dangling IAM cookies (if any)
+              clearSession();
+
               Cookies.set('iPlanetDirectoryPro', data.tokenId, config.cookies());
 
               // Verifying Cookie Set
@@ -168,19 +171,21 @@ class IAM {
                 // Verify user info before proceeding with success
                 this.checkSession(() => {
                   $success(data);
+                  this.resetLogin();
                 }, response => {
                   $error(exceptionHandler(response));
+                  this.resetLogin();
                 });
-
               } else {
-                this.removeSession();
                 $error({ message: cookieError });
+                this.removeSession();
+                this.resetLogin();
               }
             } else {
               $error({ message: 'There was an issue with getting your session token from the server' });
+              this.resetLogin();
             }
 
-            this.resetLogin();
             return;
         }
 
@@ -226,7 +231,10 @@ class IAM {
         .set(auth)
         .end((error, response) => {
           clearSession();
-          error ? $error() : $success();
+
+          setTimeout(() => {
+            error ? $error() : $success();
+          }, 100);
         });
     } else {
       $success();

@@ -1,1 +1,0 @@
-export { SamWatchComponent } from './watchlist.component';

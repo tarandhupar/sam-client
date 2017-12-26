@@ -106,27 +106,6 @@ export const fsd = {
     }
   },
 
-  users($success, $error) {
-    let endpoint = utilities.getUrl(config.fsd.users),
-        auth = getAuthHeaders();
-
-    $success = ($success || function(response) {});
-    $error = ($error || function(error) {});
-
-    if(auth) {
-      request
-        .get(endpoint)
-        .set(auth)
-        .then((response) => {
-          $success(response.body);
-        }, (response) => {
-          $error(exceptionHandler(response));
-        });
-    } else {
-      $error({ message: 'Please sign in' });
-    }
-  },
-
   kba(id, $success, $error) {
     let endpoint = utilities.getUrl(config.fsd.kba, { id: id }),
         auth = getAuthHeaders();
