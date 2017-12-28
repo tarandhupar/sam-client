@@ -1,0 +1,31 @@
+<div class="usa-grid-full" *ngIf="data" [ngClass]="'assistance-listing-operations'">
+  <page
+    (breadcrumbOut)="breadcrumbHandler($event)"
+    theme="inside"
+    [breadcrumbs]="crumbs"
+    section="WORKSPACE"
+    [title]="'Submit Listing'"
+    [badge]="data.status.value"
+    [caption]="description"
+    [options]="options.page">
+  <form [formGroup]="falSubmitForm">
+    <br>
+    <div class="sam-ui segment">
+    <h2>{{title}}</h2>
+  <sam-text-area [label]="'Submission Comment'"
+                 [name]="'submission-comment'"
+                 [required]="true"
+                 formControlName="reason"
+                 [control]="falSubmitForm.controls['reason']"
+                 (inputEventChange)="onTextChange($event)">
+  </sam-text-area>
+    </div>
+    <div class="text-align-right">
+      <sam-button [buttonDisabled]="processing === true" buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Submit to OMB" (onClick)="onSubmitOMBClick($event)"
+                  [buttonDisabled]="btnDisabled"></sam-button>
+      <ng-container *ngIf="processing === true">Processing Request...</ng-container>
+    </div>
+  </form>
+  </page>
+</div>

@@ -1,0 +1,1342 @@
+<div class="usa-grid-full awards">
+
+<!--Sidebar-->
+	<div class="usa-width-one-fourth">
+		<h1>&nbsp;</h1>
+		<aside>
+			<!--Side Navigation-->
+			<div class="side-nav-position" sam-sticky limit=1200 container="awards">
+				<img src="">
+				<nav>
+					<ul class="usa-sidenav-list">
+						<li><a href="{{currentUrl}}#general-information">General Information</a></li>
+						<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+						<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+	</div>
+	
+	<div class="usa-width-three-fourths">
+		<ng-container *ngIf="awardData">
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<h1 class="sam-ui header">
+				{{awardData.contractorInformation.vendorName}}
+			</h1>
+			
+			<h2 class="sam-ui lighter header">
+				{{awardData.documentInformation.id.procurementIdentifier}} ({{awardData.documentInformation.id.modificationNumber}})
+			</h2>
+			
+			<!-- Intro Content -->
+			<div class="sam-ui padded raised segment">
+				
+				<div class="sam-ui top right attached mini label">
+					Contract Data
+				</div>
+				
+				<div class="sam-ui two column attached grid">
+					<div class="column">
+						<div class="sam-ui relaxed divided list">
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Address
+									</div>
+									<div class="description">
+										<ng-container *ngIf="awardData?.contractorInformation?.address?.city">
+											{{awardData?.contractorInformation?.address?.city}},
+										</ng-container>
+										<ng-container *ngIf="awardData.contractorInformation.address.state">
+											{{awardData.contractorInformation.address.state}}, 
+										</ng-container>
+										{{awardData.contractorInformation.address.zip | zipCode}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										DUNS
+									</div>
+									<div class="description">
+										{{ awardData.contractorInformation.duns }}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Global Vendor
+									</div>
+									<div class="description">
+										{{awardData.contractorInformation.globalVendorName}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Global DUNS
+									</div>
+									<div class="description">
+										{{awardData.contractorInformation.globalDuns}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Contracting Agency
+									</div>
+									<div class="description">
+										{{awardData.purchaserInformation.contractingOfficeAgencyName}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Contracting Office
+									</div>
+									<div class="description">
+										{{awardData.purchaserInformation.contractingOfficeName}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="sam-ui relaxed divided list">
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Action Obligation (current)
+									</div>
+									<div class="description">
+										{{awardData.amountInformation.actionObligation | currency:'USD':true:'.2-2'}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										<ng-container *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO'">
+											Award Type
+										</ng-container>
+										<ng-container *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">
+											IDV Type
+										</ng-container>
+									</div>
+									<div class="description">
+										{{awardData.transactionInformation.type}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Referenced IDV
+									</div>
+									<div class="description">
+										{{awardData.documentInformation.referenceId.referenceProcurementIdentifier}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Date Signed
+									</div>
+									<div class="description">
+										{{awardData.dateInformation.dateSigned | datex:'MMM DD, YYYY'}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										NAICS Code
+									</div>
+									<div class="description">
+										{{awardData.productServiceInformation.naicsCode}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Product Service Code
+									</div>
+									<div class="description">
+										{{awardData.productServiceInformation.productOrServiceCode}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- General Information -->
+			<h2 class="sam-ui header" id="general-information">
+				General Information
+			</h2>
+			
+			<!-- Transaction Information -->
+			<h3 class="sam-ui dividing header" id="transactionInforation">
+				Transaction Information
+			</h3>
+			
+			<div class="sam-ui two column grid">
+				<div class="column">
+					<div class="sam-ui medium header">
+						<ng-container *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO'">
+							Award Type
+						</ng-container>
+						<ng-container *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">
+							IDV Type
+						</ng-container>
+						<div class="sub header">
+							{{awardData.transactionInformation.type}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Prepared Date
+						<div class="sub header">
+							{{awardData.transactionInformation.preparedDate | datex:'MMM DD, YYYY'}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Prepared User
+						<div class="sub header">
+							{{awardData.transactionInformation.preparedUser}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Closed Status
+						<div class="sub header">
+							{{awardData?.transactionInformation?.closedStatus}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Closed Status Date
+						<div class="sub header">
+							{{awardData?.transactionInformation?.closedDate | datex:'MMM DD, YYYY'}}
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="sam-ui medium header">
+						<ng-container *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO'">
+							Award Status
+						</ng-container>
+						<ng-container *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">
+							IDV Status
+						</ng-container>
+						<div class="sub header">
+							{{awardData.transactionInformation.status}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Last Modified Date
+						<div class="sub header">
+							{{awardData.transactionInformation.lastModifiedDate | datex:'MMM DD, YYYY'}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Last Modified User
+						<div class="sub header">
+							{{awardData.transactionInformation.lastModifiedUser}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Closed By
+						<div class="sub header">
+							{{awardData?.transactionInformation?.closedBy}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Document Information -->
+			<h3 class="sam-ui dividing header" id="documentInformation">
+				Document Information
+			</h3>
+			<table class="sam-ui celled table">
+				<thead>
+					<th scope="col"></th>
+					<th scope="col"><b>Agency</b></th>
+					<th scope="col"><b>Procurement Identifier</b></th>
+					<th scope="col"><b>Modification Number</b></th>
+					<th scope="col" *ngIf="awardData.templateType == 'AWARD'"><b>Transaction Number</b></th>
+				</thead>
+				<tr>
+					<td *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO'"><b>Award ID:</b></td>
+					<td *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'"><b>IDV ID:</b></td>
+					<td>{{awardData.documentInformation.id.agencyCode}}</td>
+					<td>{{awardData.documentInformation.id.procurementIdentifier}}</td>
+					<td>{{awardData.documentInformation.id.modificationNumber}}</td>
+					<td *ngIf="awardData.templateType == 'AWARD'">{{awardData.documentInformation.id.transactionNumber}}</td>
+				</tr>
+				<tr>
+					<td><b>Referenced IDV ID:</b></td>
+					<td>{{awardData.documentInformation.referenceId.referenceAgencyCode}}</td>
+					<td>{{awardData.documentInformation.referenceId.referenceProcurementIdentifier}}</td>
+					<td>{{awardData.documentInformation.referenceId.referenceModificationNumber}}</td>
+					<td *ngIf="awardData.templateType == 'AWARD'">{{awardData.documentInformation.referenceId.referenceTransactionNumber}}</td>
+				</tr>
+			</table>
+			
+			<div class="sam-ui medium header">
+				Reason For Modification
+				<div class="sub header">
+					{{awardData.documentInformation.reasonForModification}}
+				</div>
+			</div>
+			
+			<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				<div class="sam-ui medium header">
+					Solicitation ID
+					<div class="sub header">
+						{{awardData.documentInformation.solicitationId}}
+					</div>
+				</div>
+			</div>
+			
+			<table class="sam-ui celled table">
+				<thead>
+					<th scope="col"></th>
+					<th scope="col"><b>Agency Identifier</b></th>
+					<th scope="col"><b>Main Account</b></th>
+					<th scope="col"><b>Sub Account</b></th>
+				</thead>
+				<tr>
+					<td><b>Treasury Account Symbol:</b></td>
+					<td>{{awardData.documentInformation.treasuryAccountSymbol.agencyIdentifier}}</td>
+					<td>{{awardData.documentInformation.treasuryAccountSymbol.mainAccount}}</td>
+					<td>{{awardData.documentInformation.treasuryAccountSymbol.subAccount}}</td>
+				</tr>
+			</table>
+			
+			<div class="sam-ui medium header">
+				Initiative
+				<div class="sub header">
+					{{awardData.documentInformation.initiative}}
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Dates -->
+			<h3 class="sam-ui dividing header" id="dates">Dates</h3>
+			<div class="sam-ui medium header">
+				Date Signed
+				<div class="sub header">
+					{{awardData.dateInformation.dateSigned | datex:'MMM DD, YYYY'}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Effective Date
+				<div class="sub header">
+					{{awardData.dateInformation.dateEffective | datex:'MMM DD, YYYY'}}
+				</div>
+			</div>
+			<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTO' || awardData.templateType == 'OTI' || awardData.templateType == 'AWARD'">
+				<div class="sam-ui medium header">
+					Completion Date
+					<div class="sub header">
+						{{awardData.dateInformation.dateCompletion | datex:'MMM DD, YYYY'}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Estimated Ultimate Completion Date
+					<div class="sub header">
+						{{awardData.dateInformation.dateUltimateCompletion | datex:'MMM DD, YYYY'}}
+					</div>
+				</div>
+			</div>
+			<div *ngIf="awardData.templateType == 'IDV'">
+				<div class="sam-ui medium header">
+					Last Date to Order
+					<div class="sub header">
+						{{awardData.dateInformation.dateLastToOrder | datex:'MMM DD, YYYY'}}
+					</div>
+				</div>
+			</div>
+			<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTO' || awardData.templateType == 'OTI'">
+				<div class="sam-ui medium header">
+					Fiscal Year
+					<div class="sub header">
+						{{awardData.dateInformation.fiscalYear}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<!-- Financial Information -->
+			<h2 id="financial-information">Financial Information</h2>
+			
+			<!-- Amounts -->
+			<h3 class="sam-ui dividing header" id="amounts">Amounts</h3>
+			<table class="sam-ui celled table">
+				<thead>
+					<th scope="col"></th>
+					<th scope="col"><b>Current</b></th>
+					<th scope="col"><b>Total</b></th>
+				</thead>
+				<tr>
+					<td><b>Action Obligation:</b></td>
+					<td>{{awardData.amountInformation.actionObligation | currency:'USD':true:'.2-2'}}</td>
+					<td>{{awardData.amountInformation.totalActionObligation | currency:'USD':true:'.2-2'}}</td>
+				</tr>
+				<tr *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO' || awardData.templateType == 'OTI'">
+					<td><b>Base and Exercised Options Value:</b></td>
+					<td>{{awardData.amountInformation.baseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
+					<td>{{awardData.amountInformation.totalBaseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
+				</tr>
+				<tr>
+					<td><b>Base and All Options Value (Total Contract Value):</b></td>
+					<td>{{awardData.amountInformation.baseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
+					<td>{{awardData.amountInformation.totalBaseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
+				</tr>
+				<tr *ngIf="awardData.templateType == 'AWARD'">
+					<td><b>Fee Paid for Use of IDV:</b></td>
+					<td>{{awardData.amountInformation.feePaidForUseIDV | currency:'USD':true:'.2-2'}}</td>
+					<td>N/A</td>
+				</tr>
+				<tr *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTO' || awardData.templateType == 'OTI'">
+					<td><b>Non-Governmental Dollars:</b></td>
+					<td>{{awardData.amountInformation.nonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+					<td>{{awardData.amountInformation.totalNonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+				</tr>
+				<tr *ngIf="awardData.templateType == 'IDV'">
+					<td><b>Total Estimated Order Value:</b></td>
+					<td>{{awardData?.amountInformation?.totalEstimatedOrderValue | currency:'USD':true:'.2-2'}}</td>
+					<td>N/A</td>
+				</tr>
+			</table>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Purchaser Information -->
+			<h3 class="sam-ui dividing header" id="purchaserInformation">
+				Purchaser Information
+			</h3>
+			<div class="sam-ui medium header">
+				Contracting Office Agency Name
+				<div class="sub header">
+					{{awardData.purchaserInformation.contractingOfficeAgencyName}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Contracting Office Agency ID
+				<div class="sub header">
+					{{awardData.purchaserInformation.contractingOfficeAgencyID}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Contracting Office Name
+				<div class="sub header">
+					{{awardData.purchaserInformation.contractingOfficeName}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Contracting Office ID
+				<div class="sub header">
+					{{awardData.purchaserInformation.contractingOfficeID}}
+				</div>
+			</div>
+			
+			<div class="sam-ui medium header" id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				Foreign Funding
+				<div class="sub header">
+					{{awardData.purchaserInformation.foreignFunding}}
+				</div>
+			</div>
+			
+			<ng-container *ngIf="awardData.templateType != 'OTI'">
+				<div class="sam-ui medium header">
+					Funding Agency Name
+					<div class="sub header">
+						{{awardData.purchaserInformation.fundingAgencyName}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Funding Agency ID
+					<div class="sub header">
+						{{awardData.purchaserInformation.fundingAgencyID}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Funding Office Name
+					<div class="sub header">
+						{{awardData.purchaserInformation.fundingOfficeName}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Funding Office ID
+					<div class="sub header">
+						{{awardData.purchaserInformation.fundingOfficeID}}
+					</div>
+				</div>
+			</ng-container>
+			
+			<ng-container *ngIf="awardData.templateType == 'AWARD'">
+				<div class="sam-ui medium header">
+					Reason for Inter-Agency Contracting
+					<div class="sub header">
+						{{awardData.purchaserInformation.reasonForPurchase}}
+					</div>
+				</div>
+			</ng-container>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Contractor Information -->
+			<h3 class="sam-ui dividing header" id="contractorInformation">
+				Contractor Information
+			</h3>
+			<ng-container *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				<div class="sam-ui medium header">
+					SAM Exception
+					<div class="sub header">
+						{{awardData.contractorInformation.samException}}
+					</div>
+				</div>
+			</ng-container>
+			<div class="sam-ui medium header">
+				DUNS Number
+				<div class="sub header">
+					{{awardData.contractorInformation.duns}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				CAGE Code
+				<div class="sub header">
+					{{awardData?.contractorInformation?.cageCode}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Vendor Name
+				<div class="sub header">
+					{{awardData.contractorInformation.vendorName}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Doing Business as Name
+				<div class="sub header">
+					{{awardData.contractorInformation.dBan}}
+				</div>
+			</div>
+			
+			<ng-container *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				<div class="sam-ui medium header">
+					Contractor Name from Contract
+					<div class="sub header">
+						{{awardData.contractorInformation.contractorName}}
+					</div>
+				</div>
+			</ng-container>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<awardsAddress [address]="awardData.contractorInformation.address"></awardsAddress>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<div class="sam-ui medium header">
+				Congressional District
+				<div class="sub header">
+					{{awardData.contractorInformation.address.congDistrict}}
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<div class="sam-ui medium header">
+				Phone
+				<div class="sub header">
+					{{awardData.contractorInformation.address.phoneNumber | phone}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Fax
+				<div class="sub header">
+					{{awardData.contractorInformation.address.faxNumber | phone}}
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<!-- Business Information -->
+			<h2 class="sam-ui header" id="business-information">
+				Business Information
+			</h2>
+			
+			<!-- Business Category -->
+			<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				<h3 class="sam-ui dividing header" id="businessCategory">
+					Business Category
+				</h3>
+				<div class="sam-ui medium header">
+					Organization Type
+					<div class="sub header">
+						{{awardData.businessCategory.organizationType}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Number of Employees
+					<div class="sub header">
+						{{awardData.businessCategory.numberOfEmployees | number}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					State of Incorporation
+					<div class="sub header">
+						{{awardData.businessCategory.stateOfIncorporation}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Country of Incorporation
+					<div class="sub header">
+						{{countryOfIncorporation}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Annual Revenue
+					<div class="sub header">
+						{{awardData.businessCategory.annualRevenue | currency:'USD':true:'.2-2'}}
+					</div>
+				</div>
+				<div *ngIf="awardData.businessCategory.businessTypes | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Business Types
+						<div class="sub header">
+							{{awardData.businessCategory.businessTypes | busCategories}}
+						</div>
+					</div>
+				</div>
+				<div *ngIf="awardData.businessCategory.socioEconomicData | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Socioeconomic Data
+						<div class="sub header">
+							{{awardData.businessCategory.socioEconomicData | busCategories}}
+						</div>
+					</div>
+				</div>
+				<div *ngIf="awardData.businessCategory.lineOfBusiness | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Line of Business
+						<div class="sub header">
+							{{awardData.businessCategory.lineOfBusiness | busCategories}}
+						</div>
+					</div>
+				</div>
+				<div *ngIf="awardData.businessCategory.relationShipWithFedGovernment | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Relationship with Federal Government
+						<div class="sub header">
+							{{awardData.businessCategory.relationShipWithFedGovernment | busCategories}}
+						</div>
+					</div>
+				</div>
+				<ng-container *ngIf="awardData.businessCategory.otherGovernmentalEntities | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Other Governmental Entities
+						<div class="sub header">
+							{{awardData.businessCategory.otherGovernmentalEntities | busCategories}}
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="awardData.businessCategory.organizationFactors | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Organizational Factors
+						<div class="sub header">
+							{{awardData.businessCategory.organizationFactors | busCategories}}
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="awardData.businessCategory.educationalEntities | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Educational Entities
+						<div class="sub header">
+							{{awardData.businessCategory.educationalEntities | busCategories}}
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="awardData.businessCategory.certifications | busCategories">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Certifications
+						<div class="sub header">
+							{{awardData.businessCategory.certifications | busCategories}}
+						</div>
+					</div>
+				</ng-container>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<!-- Contract Data -->
+				<h3 class="sam-ui dividing header" id="contractData">
+					Contract Data
+				</h3>
+				<div class="sam-ui medium header">
+					Inherently Governmental Functions
+					<div class="sub header">
+						{{awardData?.contractData?.inherentlyGovernmentalDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Type of Contract
+					<div class="sub header">
+						{{awardData.contractData.typeOfContract}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Multiyear Contract
+					<div class="sub header">
+						{{awardData.contractData.multiyearContract}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Major Program
+					<div class="sub header">
+						{{awardData.contractData.majorProgramCode}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					National Interest Action
+					<div class="sub header">
+						{{awardData.contractData.nationalInterestCode}}
+					</div>
+				</div>
+				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
+					<div class="sam-ui medium header">
+						Type of IDC
+						<div class="sub header">
+							{{awardData.contractData.typeOfIdcDesc}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Multiple or Single Award
+						<div class="sub header">
+							{{awardData.contractData.multipleOrSingleAwardIdc}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Program Acronym
+						<div class="sub header">
+							{{awardData.contractData.programAcronym}}
+						</div>
+					</div>
+				</div>
+				<div *ngIf="awardData.templateType == 'AWARD' || 'IDV'">
+					<div class="sam-ui medium header">
+						Cost or Pricing Data
+						<div class="sub header">
+							{{awardData.contractData.costOrPricingData}}
+						</div>
+					</div>
+				</div>
+				
+				<div *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						Purchase Card Used as Payment Method
+						<div class="sub header">
+							{{awardData.contractData.purchaseCardPaymentMethod}}
+						</div>
+					</div>
+				</div>
+				
+				<div class="sam-ui medium header">
+					Undefinitized Action
+					<div class="sub header">
+						{{awardData.contractData.undefinitizedActionDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Performance Based Service Acquisition
+					<div class="sub header">
+						{{awardData.contractData.performBasedServiceAcquisition}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Contingency Humanitarian Peacekeeping Operation
+					<div class="sub header">
+						{{awardData.contractData.contingencyOpsDesc}}
+					</div>
+				</div>
+				<div *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						Contract Financing
+						<div class="sub header">
+							{{awardData.contractData.contractFinancing}}
+						</div>
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Cost Accounting Standards Clause
+					<div class="sub header">
+						{{awardData.contractData.costAccountStandards}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Consolidated Contract
+					<div class="sub header">
+						{{awardData.contractData.consolidatedContract}}
+					</div>
+				</div>
+				<div *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						Number of Actions
+						<div class="sub header">
+							{{awardData.contractData.numberOfActions}}
+						</div>
+					</div>
+				</div>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<!-- Legislative Mandates -->
+				<h3 id="legislativeMandates">Legislative Mandates</h3>
+				<div class="sam-ui medium header">
+					Clinger-Cohen Act
+					<div class="sub header">
+						{{awardData.legislativeMandates.clingerCohenAct}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Labor Standards
+					<div class="sub header">
+						{{awardData.legislativeMandates.laborStandards}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Materials, Supplies, Articles, and Equip
+					<div class="sub header">
+						{{awardData.legislativeMandates.materialsSuppliesArticlesEquip}}
+					</div>
+				</div> 
+				<div class="sam-ui medium header">
+					Construction Wage Rate Requirements
+					<div class="sub header">
+						{{awardData.legislativeMandates.contructionWageRateRequirements}}
+					</div>
+				</div> 
+				<div class="sam-ui medium header">
+					Additional Reporting
+					<div class="sub header">
+						{{awardData?.legislativeMandates?.additionalReporting}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Interagency Contracting Authority
+					<div class="sub header">
+						{{awardData.legislativeMandates.interAgencyContractingAuthority}}
+					</div>
+				</div> 
+				<div class="sam-ui medium header">
+					Other Interagency Contracting Statutory Authority
+					<div class="sub header">
+						{{awardData.legislativeMandates.otherInterAgencyContractingStatutoryAuthority}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Contract Marketing Data -->
+			<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
+				<h3 id="contractMarketingData">Contract Marketing Data</h3>
+				<div class="sam-ui medium header">
+					Website URL
+					<div class="sub header">
+						{{awardData.contractMarketingData.websiteURL}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Who can use
+					<div class="sub header">
+						{{awardData.contractMarketingData.whoCanUse}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					FIPS 95 Codes/Other Text
+					<div class="sub header">
+						{{awardData.contractMarketingData.fips95}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Email Contact
+					<div class="sub header">
+						{{awardData.contractMarketingData.emailContact}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Individual Order/Call Limit
+					<div class="sub header">
+						{{awardData.contractMarketingData.maxOrderLimit | currency:'USD':true:'.2-2'}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Fee for Use of Service
+					<div class="sub header">
+						{{feeForUseOfService}}
+					</div>
+				</div> 
+				<div class="sam-ui medium header">
+					Ordering Procedure
+					<div class="sub header">
+						{{awardData.contractMarketingData.orderingProcedure}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Principal Place of Performance -->
+			<div id="award-type" *ngIf="awardData.templateType != 'IDV'">
+				<h3 class="sam-ui dividing header" id="principalPlaceOfPerformance">
+					Principal Place of Performance
+				</h3>
+				<div class="sam-ui medium header">
+					Location
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceLocation}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					City
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCity}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					County
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCounty}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					State
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceState}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Zip Code (+4)
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Country
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Congressional District
+					<div class="sub header">
+						{{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCongDistrict}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Product or Service Information -->
+			<h3 class="sam-ui dividing header" id="ProductOrServiceInformation">
+				Product or Service Information
+			</h3>
+			
+			<div class="sam-ui medium header">
+				Product/Service Code
+				<div class="sub header">
+					{{awardData.productServiceInformation.productOrServiceCode}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Description
+				<div class="sub header">
+					{{awardData.productServiceInformation.productOrServiceDescription}}
+				</div>
+			</div>
+
+			<div id="award-type" *ngIf="awardData.templateType == 'OTI' || awardData.templateType == 'OTA' || awardData.templateType == 'OTO'">
+				<div class="sam-ui medium header">
+					Description of Requirement
+					<div class="sub header">
+						{{awardData.productServiceInformation.descriptionOfRequirement}}
+					</div>
+				</div>
+			</div>
+			
+			<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<div class="sam-ui medium header">
+					Principal NAICS Code
+					<div class="sub header">
+						{{awardData.productServiceInformation.naicsCode}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Description
+					<div class="sub header">
+						{{awardData.productServiceInformation.naicsDescription}}
+					</div>
+				</div>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<div class="sam-ui medium header">
+					Bundled Contract
+					<div class="sub header">
+						{{awardData.productServiceInformation.contractBundlingDesc}}
+					</div>
+				</div>
+
+				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						DOD Acquisition Program
+						<div class="sub header">
+							{{awardData.productServiceInformation.dodAcquisitionProgram}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Description
+						<div class="sub header">
+							{{awardData.productServiceInformation.dodAcquisitionProgramDesc}}
+						</div>
+						
+					</div>						
+					<div class="sam-ui hidden divider"></div>
+					
+					<div class="sam-ui medium header">
+						Country of Product or Service Origin
+						<div class="sub header">
+							{{awardData.productServiceInformation.countryOfProductOrServiceOrigin}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Place of Manufacture
+						<div class="sub header">
+							{{awardData.productServiceInformation.placeOfManufacture}}
+						</div>
+					</div>
+				</div>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<div class="sam-ui medium header">
+					Domestic or Foreign Entity
+					<div class="sub header">
+						{{awardData.productServiceInformation.domesticOrForeignEntity}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Recovered Materials/Sustainability
+					<div class="sub header">
+						{{awardData.productServiceInformation.recoveredMaterialsSustainability}}
+					</div>
+				</div>
+				
+				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						InfoTech Commercial Item Category
+						<div class="sub header">
+							{{awardData.productServiceInformation.itCommercialItemCatDesc}}
+						</div>
+					</div>
+				</div>
+				
+				<div class="sam-ui medium header">
+					Claimant Program Code
+					<div class="sub header">
+						{{awardData.productServiceInformation.claimantProgramCode}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Description
+					<div class="sub header">
+						{{awardData.productServiceInformation.claimantProgramDescription}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Sea Transportation
+					<div class="sub header">
+						{{awardData.productServiceInformation.seaTransportation}}
+					</div>
+				</div>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<div class="sam-ui medium header">
+					GFP Provided Under This Action
+					<div class="sub header">
+						{{awardData.productServiceInformation.gfpProvided}}
+					</div>
+				</div>
+				
+				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						Use of EPA Designated Products
+						<div class="sub header">
+							{{awardData.productServiceInformation.useOfEpaProductsDesc}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Description of Requirement
+						<div class="sub header">
+							{{awardData.productServiceInformation.descriptionOfRequirement}}
+						</div>
+					</div>
+				</div>
+				
+				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
+					<div class="sam-ui medium header">
+						Description of Contract Requirement
+						<div class="sub header">
+							{{awardData.productServiceInformation.descriptionOfRequirement}}
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Competition Information -->
+			<h3 class="sam-ui dividing header" id="competitionInformation">
+				Competition Information
+			</h3>
+			
+			<div id="award-type" *ngIf="awardData.templateType != 'OTI'">
+				<div class="sam-ui medium header">
+					Extent Competed for Referenced IDV
+					<div class="sub header">
+						{{awardData.competitionInformation.idvExtentCompetedDesc}}
+					</div>
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Extent Competed
+				<div class="sub header">
+					{{awardData.competitionInformation.extentCompetedDescription}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				Solicitation Procedures
+				<div class="sub header">
+					{{awardData.competitionInformation.solicitationProcedures}}
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				
+				<div class="sam-ui medium header">
+					IDV Type of Set Aside
+					<div class="sub header">
+						{{awardData?.competitionInformation?.idvTypeOfSetAsideDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Type of Set Aside
+					<div class="sub header">
+						{{awardData.competitionInformation.typeOfSetAsideDescription}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Type of Set Aside Source
+					<div class="sub header">
+						{{awardData?.competitionInformation?.typeOfSetAsideSourceDesc}}
+					</div>
+				</div>				
+				<div class="sam-ui medium header">
+					Evaluated Preference
+					<div class="sub header">
+						{{awardData.competitionInformation.evaluatedPrefDescription}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					SBIR/STTR
+					<div class="sub header">
+						{{awardData.competitionInformation.sbbirSttr}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Fair Opportunity/Limited Sources
+					<div class="sub header">
+						{{awardData.competitionInformation.fairOpportunityDescription}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Other than Full and Open Competition
+					<div class="sub header">
+						{{awardData.competitionInformation.otherThanFullOpenCompetition}}
+					</div>
+				</div>
+				
+				<div class="sam-ui hidden divider"></div>
+				
+				<div class="sam-ui medium header">
+					Local Area Set Aside
+					<div class="sub header">
+						{{awardData.competitionInformation.localAreaSetAside}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					FedBizOpps
+					<div class="sub header">
+						{{awardData.competitionInformation.fedBizOppsDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					A76 Action
+					<div class="sub header">
+						{{awardData.competitionInformation.a76Desc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Commercial Item Acquisition Procedures
+					<div class="sub header">
+						{{awardData.competitionInformation.commercialItemAcquistnDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					IDV Number of Offers
+					<div class="sub header">
+						{{awardData?.competitionInformation?.idvNumberOfOffers}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Number of Offers Received
+					<div class="sub header">
+						{{awardData.competitionInformation.numberOfOffersReceived}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Number of Offers Source
+					<div class="sub header">
+						{{awardData?.competitionInformation?.numberOfOffersSourceDesc}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Small Business Competitiveness Demonstration Program
+					<div class="sub header">
+						{{awardData.competitionInformation.smallBusCompDemonstrationProgram}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Commercial Item Test Program
+					<div class="sub header">
+						{{awardData.competitionInformation.commercialItemTestProgram}}
+					</div>
+				</div>
+				
+				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui hidden divider"></div>
+					<div class="sam-ui medium header">
+						Pre Award FBO Synopsis
+						<div class="sub header">
+							{{awardData.competitionInformation.preAwardSynopsisDesc}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						SBA/OFPP Synopsis Waiver Pilot
+						<div class="sub header">
+							{{awardData.competitionInformation.sbaOfppSynopsisWaiverPilot}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Alternative Advertising
+						<div class="sub header">
+							{{awardData.competitionInformation.alternativeAdvertising}}
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div id="award-type" *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTO' || awardData.templateType == 'OTI'">
+				<div class="sam-ui hidden divider"></div>
+				<div class="sam-ui medium header">
+					Nontraditional Government Contractor Participation
+					<div class="sub header">
+						{{awardData.competitionInformation.nontraditionalGovContParticipation}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Type of Agreement
+					<div class="sub header">
+						{{awardData.competitionInformation.typeOfAgreement}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Preference Programs/Other Data -->
+			<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+				<h3 class="sam-ui dividing header" id="preferenceProgramsOtherData">
+					Preference Programs/Other Data
+				</h3>
+				<div class="sam-ui medium header">
+					Contracting Officer's Business Size Selection
+					<div class="sub header">
+						{{awardData.preferencePrograms.contractingOfficerBusSizeDetermination}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Subcontract Plan
+					<div class="sub header">
+						{{awardData.preferencePrograms.subcontractPlanDesc}}
+					</div>
+				</div>
+				<ng-container *ngIf="awardData.templateType == 'AWARD'">
+					<div class="sam-ui medium header">
+						Price Evaluation Percent Difference
+						<div class="sub header">
+							{{awardData.preferencePrograms.priceEvaluationPercentDifference | percent}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Reason Not Awarded To Small Disadvantaged Business
+						<div class="sub header">
+							{{awardData.preferencePrograms.reasonNotAwardedToSmallDisadvantagedBusiness}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Reason Not Awarded To Small Business
+						<div class="sub header">
+							{{awardData.preferencePrograms.reasonNotAwardedToSmallBusiness}}
+						</div>
+					</div>
+				</ng-container>
+			</div>
+			
+			<div class="sam-ui hidden section divider"></div>
+					
+		</ng-container>
+	</div>
+</div>

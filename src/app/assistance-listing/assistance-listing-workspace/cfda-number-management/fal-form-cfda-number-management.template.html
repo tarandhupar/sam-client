@@ -1,0 +1,69 @@
+<page *ngIf="pageReady"
+  theme="inside"
+  [attr.id]="'page-title'"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Edit CFDA Number Assignment">
+
+  <div class="sam-ui grid">
+    <sam-alert [type]="'error'" [title]="''" *ngIf="isCfdaCodeRestricted">
+      Your CFDA agency identifier is shared with other organizations and cannot be changed manually. If you need to adjust the number range for your organization please contact the Federal Service Desk for assistance.
+    </sam-alert>
+    <div class="twelve wide mobile eleven wide tablet seven wide computer column">
+      <div id="page-data" class="sam-ui segment" *ngIf="organization">
+        <div class="sam-ui medium header">
+          Organization
+          <div class="sub header">{{organization.name}}</div>
+        </div>
+      </div>
+      <div class="sam-ui hidden divider"></div>
+
+      <form [formGroup]="cfdaNumberConfigForm">
+        <div class="sam-ui segment">
+          <sam-radio-button *ngIf="cfdaNumberConfigForm.get('assignment').value != null"
+                            [name]="'assignment-radio-buttons'"
+                            [options]="assignmentOptions"
+                            [label]="'Assignment Type'"
+                            [formControlName]="'assignment'"
+                            [required] = "true"
+                            [control]="cfdaNumberConfigForm.get('assignment')">
+          </sam-radio-button>
+          <sam-alert [type]="'error'" [title]="'High Number should be greater than Low Number'" *ngIf="numberAlertShow">
+          </sam-alert>
+
+          <sam-text [control]="cfdaNumberConfigForm.controls['lowNumber']"
+                    [name]="'low-number-input'"
+                    [label]="'Low Number*'"
+                    [required]="true"
+                    [maxlength]="3"
+                    formControlName="lowNumber">
+          </sam-text>
+
+          <sam-text [control]="cfdaNumberConfigForm.controls['highNumber']"
+                    [name]="'high-number-input'"
+                    [label]="'High Number*'"
+                    [required]="true"
+                    [maxlength]="3"
+                    formControlName="highNumber">
+          </sam-text>
+        </div>
+
+        <sam-button [buttonType]="'secondary'"
+                    [buttonDisabled]="buttonDisabled"
+                    [attr.id]="'cancel-btn'"
+                    [buttonText]="'Cancel'"
+                    [buttonClass]="'usa-button-primary usa-search-submit'"
+                    (onClick)="cancelCFDANumberConfigChange()">
+        </sam-button>
+        <sam-button [buttonType]="buttonType"
+                    [buttonDisabled]="buttonDisabled || isCfdaCodeRestricted"
+                    [attr.id]="'submit-btn'"
+                    [buttonText]="'Submit'"
+                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                    (onClick)="submitCFDANumberConfigChange()">
+        </sam-button>
+        <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
+      </form>
+    </div>
+  </div>
+</page>

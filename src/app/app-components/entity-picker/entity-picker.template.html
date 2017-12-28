@@ -1,0 +1,45 @@
+<sam-label-wrapper [name]="name" [errorMessage]="searchMessage" [label]="label" [hint]="hint">
+
+  <ng-template #myTemplate let-item>
+    <p>
+      <strong>{{item.name}}</strong>
+      <span style="font-size: 85%" *ngIf="item.cageCode"><br/>CAGE: {{item.cageCode}} | DUNS: {{item.duns}}</span>
+      <span style="font-size: 85%" *ngIf="item.address"><br/>{{item.address}}</span>
+    </p>
+  </ng-template>
+
+  <ng-container *ngIf="isMultiple; else singleEntityPicker">
+
+  <sam-autocomplete-multiselect
+    entitypicker-autofill
+    [name]="name"
+    [id]="name"
+    [ngModel]="selections"
+    (ngModelChange)="onSelection($event)"
+    [keyValueConfig]="multipleACConfig"
+    [serviceOptions]="serviceOptions"
+    [displayCategory]="false"
+    [itemTemplate]="myTemplate"
+    [isDefaultOrg]="isDefaultOrg"
+    [isAssignableOrg]="isAssignableOrg"
+    [required]="required">
+  </sam-autocomplete-multiselect>
+  </ng-container>
+
+  <ng-template #singleEntityPicker>
+    <sam-autocomplete
+      entitypicker-autofill
+      [(ngModel)]="selections"
+      (ngModelChange)="onSelection($event)"
+      [config]="singleACConfig"
+      [name]="name"
+      [id]="name"
+      [isDefaultOrg]="isDefaultOrg"
+      [isAssignableOrg]="isAssignableOrg"
+      [itemTemplate]="myTemplate"
+      [disabled]="_disabled">
+    </sam-autocomplete>
+  </ng-template>
+
+
+</sam-label-wrapper>

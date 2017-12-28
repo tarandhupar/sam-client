@@ -1,0 +1,95 @@
+<sam-label-wrapper #formulaMatchingLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint"
+              [required]="required">
+
+  <div *ngIf="formulaMatchingGroup" [formGroup]="formulaMatchingGroup">
+    <ul class="usa-unstyled-list">
+      <li *ngFor="let option of formulaMatchingOptions; let i = index">
+        <input [attr.id]="option.name" type="checkbox"
+               (change)="onCheckChanged(option.value, $event.target.checked)" [checked]="isChecked(option.value)">
+        <label [attr.for]="option.name">{{option.label}}</label>
+        <div class="m_L-5x">
+          <sam-radio-button *ngIf="i === 1"
+                          [name]="name + '-matching-radio-buttons'"
+                          [options]="matchingRequirementsOptions"
+                          [hidden]="model.checkbox.indexOf('matching') === -1"
+                          [formControlName]="'matchingRequirements'"
+          ></sam-radio-button>
+        </div>
+      </li>
+    </ul>
+
+    <ng-container *ngIf="model.checkbox">
+      <div [hidden]="model.checkbox.indexOf('cfr') === -1">Formula Requirements</div>
+
+      <sam-text [label]="'Title'"
+               [name]="name + '-title'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'title'"
+      ></sam-text>
+
+      <sam-text [label]="'Chapter'"
+               [name]="name + '-chapter'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'chapter'"
+      ></sam-text>
+
+      <sam-text [label]="'Part'"
+               [name]="name + '-part'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'part'"
+      ></sam-text>
+
+      <sam-text [label]="'Subpart'"
+               [name]="name + '-subpart'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'subpart'"
+      ></sam-text>
+
+      <sam-text [label]="'Public Law'"
+               [name]="name + '-public-law'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'publicLaw'"
+      ></sam-text>
+
+      <sam-text-area [label]="'Additional Info'"
+                   [name]="name + '-additional-info'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('cfr') === -1"
+                   [formControlName]="'additionalInfo'"
+      ></sam-text-area>
+
+      <sam-select [label]="'Matching Requirements'"
+                 [hint]="'Select the Percentage Below'"
+                 [name]="name + '-matching-requirements-percentage'"
+                 [options]="matchingPercentageOptions"
+                 [required]="false"
+                 [hidden]="model.checkbox.indexOf('matching') === -1"
+                 [formControlName]="'matchingPercentage'"
+      ></sam-select>
+
+      <sam-text-area [hint]="'Describe'"
+                   [name]="name + '-matching-requirements-description'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('matching') === -1"
+                   [formControlName]="'matchingDescription'"
+      ></sam-text-area>
+
+      <sam-text-area [label]="'Maintenance of Effort Requirements and Total Allocations'"
+                   [hint]="'Please enter description below:'"
+                   [name]="name + '-moe'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('moe') === -1"
+                   [formControlName]="'moeRequirements'"
+      ></sam-text-area>
+    </ng-container>
+  </div>
+
+</sam-label-wrapper>

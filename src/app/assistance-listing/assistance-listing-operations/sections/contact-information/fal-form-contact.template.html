@@ -1,0 +1,87 @@
+<h2 class="sam-ui header">
+  Contact Information
+</h2>
+
+<form [formGroup]="falContactInfoForm">
+
+  <div class="sam-ui segment">
+    <h4>Information Contacts</h4>
+
+    <sam-checkbox
+      [control]="falContactInfoForm.controls['useRegionalOffice']"
+      [label]="'Regional or Local Location'"
+      [name]="'regional_local_office'"
+      [options]="checkboxConfig.options"
+      formControlName="useRegionalOffice"></sam-checkbox>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text-area [control]="falContactInfoForm.controls['additionalInfo']"
+                 [name]="'addInfo-input'"
+                 [label]="'Additional Information'"
+                 [hint]= "contactadditionalInforamtionHint"
+                 [attr.id]="'additional-contact-info'"
+                 formControlName="additionalInfo"></sam-text-area>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-label-wrapper label="Headquarters Office" [attr.id]="'fal-contact-list'" [required]="true">
+    </sam-label-wrapper>
+
+    <sam-listbuilder
+      #contactLB
+      [attr.id]="'contact-information-list'"
+      [max]="2"
+      [hint]="headquartersOfficeHint"
+      addEntryText="Add Contact"
+      [hideDefaultBtns]="true"
+      [deleteModalFlag]="true"
+      [deleteModalConfig]="{
+        title:'Delete Contact',
+        type:'warning',
+        description:'Please confirm that you want to delete contact.'
+      }"
+      [control]="falContactInfoForm.get('contacts')"
+      [formArrayInput]="falContactInfoForm.get('contacts').controls"
+      [formGroupTemplate]="contactsSubform"
+      (formArrayChange)="contactsFormArrayChange($event)"
+      (action)="lbActionHandler($event)">
+      <ng-template #display let-item>
+        <ng-container *ngIf="item.get('poc').errors">
+          <span class='usa-input-error-message'><sup>*</sup>This contact information has some errors.</span>
+        </ng-container>
+        <p>
+          <ng-container *ngIf="item.value.poc.title">{{item.value.poc.title}} </ng-container>{{item.value.poc.fullName}}<br/>
+          <ng-container *ngIf="item.value.poc.streetAddress">{{item.value.poc.streetAddress}}<br/></ng-container>
+          <ng-container *ngIf="item.value.poc.email">Email: {{item.value.poc.email}}<br/></ng-container>
+          <ng-container *ngIf="item.value.poc.phone">Phone: {{item.value.poc.phone}}<br/></ng-container>
+        </p>
+      </ng-template>
+      <ng-template #edit let-item let-index="index">
+        <form [formGroup]="item">
+          <sam-poc-entry #poc
+            [name]="'fal-contact-information-entry-' + index"
+            [mode]="mode"
+            formControlName="poc"
+            [manualList]="true"
+            [listBuilder]="contactLB"
+            [valueFormat]="'{fullName}, {email}'"
+            [pocOptions]="contactDrpDwnOptions"
+            [nameOptions]="contactNameOptions"
+            [emailOptions]="contactEmailOptions"></sam-poc-entry>
+        </form>
+      </ng-template>
+    </sam-listbuilder>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text
+      [control]="falContactInfoForm.controls['website']"
+      [hint]="websiteHint"
+      [attr.id]="'fal-contact-website'"
+      [name]="'website-input'"
+      [label]="'Website'"
+      formControlName="website">
+    </sam-text>
+  </div>
+</form>

@@ -1,0 +1,141 @@
+<div [class.usa-grid-full]="router.url!=='/help/overview'" class="p_B-6x help-content relative">
+
+  <sam-breadcrumbs *ngIf="false" [crumbs]="crumbs"></sam-breadcrumbs>
+
+  <aside class="usa-width-one-fourth" *ngIf="router.url!=='/help/overview'">
+    <div sam-sticky limit=1200 container="help-content">
+
+      <div class="sam-ui hidden divider"></div>
+
+      <ul class="usa-sidenav-list">
+        <li>
+          <a  [ngClass]="getSectionClass('overview')"
+              (click)="changeSection('overview')"
+              [routerLink]="['/help/overview']">
+              Help Center Home
+          </a>
+        </li>
+        <li>
+          <a  [ngClass]="getSectionClass('new') || getSubSectionClass('about') || getSubSectionClass('transition') || getSectionClass('transition')"
+              (click)="changeSection('new')"
+              [routerLink]="['/help/new']">
+              New to Beta.SAM.gov
+          </a>
+          <ul class="usa-sidenav-sub_list"
+              *ngIf="isCurrentSection('new') || isCurrentSection('transition') || isCurrentSection('about') || isCurrentSection('transition') ">
+            <li>
+              <a  #about
+                  [ngClass]="getSubSectionClass('about')"
+                  (click)="changeSubSection('about', about)"
+                  [routerLink]="['/help/about']">
+                  About Us
+              </a>
+            </li>
+            <li>
+              <a  #transition
+                  [ngClass]="getSubSectionClass('transition')"
+                  (click)="changeSubSection('transition', transition)"
+                  [routerLink]="['/help/transition']">
+                  What's Next
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a  [ngClass]="getSectionClass('features')"
+              (click)="changeSection('features')"
+              [routerLink]="['/help/features']">
+              Features
+          </a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">
+            <li>
+              <a  #search
+                  [ngClass]="getSubSectionClass('search')"
+                  (click)="changeSubSection('search',search)"
+                  href="{{currentUrl}}#search">
+                  Search
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a  [ngClass]="getSectionClass('award')"
+              (click)="changeSection('award')"
+              [routerLink]="['/help/award']">
+              Award Data
+          </a>
+          <ul class="usa-sidenav-sub_list"
+              *ngIf="isCurrentSection('award')">
+            <li><a #assistanceListings [ngClass]="getSubSectionClass('assistanceListings')" (click)="changeSubSection('assistanceListings',assistanceListings)" href="{{currentUrl}}#assistanceListings">Assistance Listings</a></li>
+            <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Contract Opportunities</a></li>
+            <li><a #awards [ngClass]="getSubSectionClass('awards')" (click)="changeSubSection('awards',awards)" href="{{currentUrl}}#awards">Contract Awards</a></li>
+            <li><a #entities [ngClass]="getSubSectionClass('entities')" (click)="changeSubSection('entities',entities)" href="{{currentUrl}}#entities">Entity Registrations</a></li>
+            <li><a #exclusions [ngClass]="getSubSectionClass('exclusions')" (click)="changeSubSection('exclusions',exclusions)" href="{{currentUrl}}#exclusions">Entity Exclusions</a></li>
+            <li><a #federalHierarchy [ngClass]="getSubSectionClass('federalHierarchy')" (click)="changeSubSection('federalHierarchy',federalHierarchy)" href="{{currentUrl}}#federalHierarchy">Federal Hierarchy</a></li>
+            <li><a #wageDeterminations [ngClass]="getSubSectionClass('wageDeterminations')" (click)="changeSubSection('wageDeterminations',wageDeterminations)" href="{{currentUrl}}#wageDeterminations">Wage Determinations</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">User Accounts</a>
+        </li>
+        <li>
+          <a  [ngClass]="getSectionClass('policies')"
+              (click)="changeSection('policies')"
+              [routerLink]="['/help/policies']">
+              Policies
+          </a>
+          <ul class="usa-sidenav-sub_list"
+              *ngIf="isCurrentSection('policies')">
+            <li>
+              <a #OMB
+                [ngClass]="getSubSectionClass('OMB')"
+                (click)="changeSubSection('OMB',OMB)"
+                href="{{currentUrl}}#OMB">
+                Paperwork Reduction Act Statement
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('partners')" (click)="changeSection('partners')" [routerLink]="['/help/partners']">Our Partners</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('partners')">
+            <li><a #featuredPartners [ngClass]="getSubSectionClass('featuredPartners')" (click)="changeSubSection('featuredPartners',featuredPartners)" href="{{currentUrl}}#featuredPartners">Featured Partners</a></li>
+            <li><a #additionalPartners [ngClass]="getSubSectionClass('additionalPartners')" (click)="changeSubSection('additionalPartners',additionalPartners)" href="{{currentUrl}}#additionalPartners">Additional Partners</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">External Resources</a>
+        </li>
+
+        <!-- BEGIN CMS Links -->
+        <li>
+          <a routerLink="/workspace/content-management/data-dictionary">Data Dictionary</a>
+        </li>
+        <li>
+          <a routerLink="/workspace/content-management/FAQ-repository">FAQ Repository</a>
+        </li>
+        <li>
+          <a routerLink="/workspace/content-management/video-library">Video Library</a>
+        </li>
+        <!-- END CMS Links -->
+
+        <li>
+          <div class="usa-width-one-whole p_T-2x"><button class="usa-button-primary-alt relative p_L-2x" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
+          <span class="usa-width-one-whole p_T-1x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
+          <div class="usa-width-one-whole text-align-center" *ngIf="feedback?.showunsubmittedWarning()">
+            <sam-alert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></sam-alert>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+    &nbsp;
+  </aside>
+
+  <div [class.usa-width-three-fourths]="router.url!=='/help/overview'">
+    <div [class.usa-width-one-whole]="router.url!=='/help/overview'">
+      <!--Content for Sections-->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

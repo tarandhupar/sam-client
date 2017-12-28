@@ -1,0 +1,151 @@
+
+<!-- Help Topics -->
+<div class="sam-ui container">
+  <div class="sam-ui padded four column stackable grid">
+    <div class="row" style="background: url(src/assets/img/help-main.jpg); background-size: cover;">
+      <div class="column">
+        <!-- Hidding until we have URL's for the links below -->
+        <div class="sam-ui segment" style="visibility: hidden;">
+          <h3>Top Help Topics</h3>
+          <div class="sam-ui list">
+            <div class="item">
+              <a href="">Frequentely Asked Questions</a>
+            </div>
+            <div class="item">
+              <a href="">User Guides</a>
+            </div>
+            <div class="item">
+              <a href="">Demostration Videos</a>
+            </div>
+            <div class="item">
+              <a href="">Lorem Ipsum</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- About SAM.gov -->
+<div class="sam-ui container">
+  <div class="sam-ui vertically very padded stackable doubling grid">
+    <div class="row">
+      <div class="column">
+        <h2>Help Center</h2>
+        <h3>The new beta.SAM.gov has integrated all ten systems under one unified system.</h3>
+      </div>
+    </div>
+    <div class="stretched five column row">
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <img class="icon" src="src/assets/img/sam-icons/new-darkgray.png" style="width: 40px">
+          <a [routerLink]="['/help/new']">New to beta.SAM.gov</a>
+          <p>
+            New to the site? Learn who uses SAM and what you can do here.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <img class="icon" src="src/assets/img/sam-icons/roadmap-darkgray.png" style="width: 50px">
+          <a [routerLink]="['/help/transition']">What's Next</a>
+          <p>
+            Learn what's currently available on our site and what new features 
+            will be coming soon.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <img class="icon" src="src/assets/img/sam-icons/user-darkgray.png" style="width: 50px">
+          <a [routerLink]="['/help/accounts']">User Accounts</a>
+          <p>
+            Access information on how to sign up, update registration, and other ways to manage your user account.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <img class="icon" src="src/assets/img/sam-icons/resources-darkgray.png" style="width: 56px">
+          <a [routerLink]="['/help/reference']">External Resources</a>
+          <p>
+            Link to other websites related to federal procurement and assistance 
+            processes.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <img class="icon" src="src/assets/fonts/font-awesome/fallback/fa-comments.png" style="width: 56px">
+          <a (click)="feedback.toggleFeedback()">
+            Provide Feedback
+          </a>
+          <p>
+            Help improve the site by letting us know what you think.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Blue Row  -->
+<div class="sam-ui vertically very padded grid">
+  <div class="light blue row">
+    <div class="sam-ui container">
+      <div class="sam-ui padded stackable grid">
+        <div class="two column row">
+          <div class="column background" style="background-image: url('src/assets/img/sam-icons/puzzle-white.png'); background-size: 140px; background-position: right; background-repeat: no-repeat;">
+            <div class="sam-ui basic segment">
+              <h2>What can I do at beta.SAM.gov?</h2>
+              <p>
+                Search across GSA, view reports, perform data entry, and access 
+                a wide variety of usuful resources. Federal government users 
+                have access to additional features that support their jobs.
+              </p>
+              <a [routerLink]="['/help/features']" class="sam-ui inverted button right labeled icon">
+                <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
+                Learn more about beta.SAM.gov features 
+              </a>
+            </div>
+          </div>
+          <div class="column background" style="background-image: url('src/assets/img/sam-icons/reporting-white.png'); background-size: 140px; background-position: right; background-repeat: no-repeat;">
+            <div class="sam-ui basic segment">
+              <h2>Award Data</h2>
+              <p>
+                Beta.SAM.gov provides access to data that enables you to conduct 
+                searches across data sets, run reports, and download data 
+                extracts for deeper analysis.
+              </p>
+              <a [routerLink]="['/help/award']" class="sam-ui inverted button right labeled icon">
+                <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
+                Learn more about our data sets
+              </a>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Row -->
+<div class="sam-ui vertically very padded stackable grid container">
+  <div class="two column row">
+    <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/fsd_logo.jpg" alt="Federal Service Desk Logo">
+      <p>
+        The Federal Service Desk provides help with U.S. Government contracts and grants systems. 
+        <a target="blank" href="https://fsd.gov">Visit Federal Service Desk</a>
+      </p>
+    </div>
+    <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/interact.png" alt="Interact Logo">
+      <p>
+        GSA Interact is a collaborative community for connecting, communicating, learning and engaging across GSA topics. 
+        <a target="blank" href="https://interact.gsa.gov/">Visit GSA Interact</a>
+      </p>
+    </div>
+  </div>
+</div>

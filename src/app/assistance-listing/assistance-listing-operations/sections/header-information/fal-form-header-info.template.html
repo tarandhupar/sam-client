@@ -1,0 +1,91 @@
+<h2 class="sam-ui header">
+  Header Information
+</h2>
+
+<form [formGroup]="falHeaderInfoForm">
+
+  <div class="sam-ui segment" *ngIf="!viewModel.isRevision">
+    <sam-text
+      [maxlength]="144"
+      [hint]="titleHint"
+      [control]="falHeaderInfoForm.controls['title']"
+      [name]="'title-input'"
+      [label]="'Title'"
+      [required]="true"
+      [attr.id]="'title-al-create'"
+      formControlName="title">
+    </sam-text>
+  </div>
+
+  <div class="sam-ui segment" *ngIf="viewModel.isRevision">
+    Title: {{ viewModel.title }}
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text
+      [hint]="popularNameHint"
+      [control]="falHeaderInfoForm.controls['alternativeNames']"
+      [name]="'alternative-names-input'"
+      [label]="'Popular Name'"
+      [attr.id]="'popular-name'"
+      formControlName="alternativeNames">
+    </sam-text>
+  </div>
+
+  <div class="sam-ui segment" *ngIf="!viewModel.isRevision && orgLevels && toggleAgencyPicker">
+    <sam-agency-picker-v2
+      [control]="falHeaderInfoForm.controls['federalAgency']"
+      [label]="'Federal Agency'"
+      [hint]="'List the administering department or independent agency.
+      For Cabinet-level departments, the National Foundation on the Arts and
+      the Humanities, Environmental Protection Agency, and the Federal
+      Emergency Management Agency, the primary organizational subunit name
+      should precede the departmental name.'"
+      [required]="true"
+      [attr.id]="'fal-header-fed-agency'"
+      [orgRoots]="orgRoot"
+      type="single"
+      [editOnFlag]="false"
+      formControlName="federalAgency">
+    </sam-agency-picker-v2>
+
+  </div>
+
+  <div *ngIf="(organizationData && (viewModel.isRevision || !toggleAgencyPicker))" class="sam-ui segment">
+    {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
+  </div>
+
+  <div *ngIf="!viewModel.isRevision" class="sam-ui segment" [hidden]="autoProgNoGeneration || viewModel.organizationId == null">
+    <sam-fal-text
+                [maxlength]="3"
+                [hint]="'Provide a unique three digit CFDA number (for example, enter 244 for CFDA number 10.244)'"
+                [control]="falHeaderInfoForm.controls['programNumber']"
+                [name]="'programNumber-input'"
+                [label]="'CFDA Number'"
+                [required]="true"
+                [cfdaCode]="falNoPrefix"
+                [pending]="falHeaderInfoForm.controls['programNumber'].pending"
+                [attr.id]="'fal-header-falNo'"
+                formControlName="programNumber">
+    </sam-fal-text>
+  </div>
+
+  <div *ngIf="viewModel.isRevision" class="sam-ui segment">
+    CFDA Number: {{ viewModel.programNumber }}
+  </div>
+
+  <div class="sam-ui clearing segment">
+    <sam-autocomplete-multiselect
+      autofill-falProgram
+      [name]="'relatedProgramSearch'"
+      formControlName="relatedPrograms"
+      [control]="falHeaderInfoForm.controls['relatedPrograms']"
+      [keyValueConfig]="relProAutocompleteConfig.keyValueConfig"
+      [serviceOptions]="{index:'RP'}"
+      [label]="'Related Federal Assistance Listing'"
+      [attr.id]="'related-fal'"
+      [hint]="relatedFalHint">
+    </sam-autocomplete-multiselect>
+  </div>
+
+</form>

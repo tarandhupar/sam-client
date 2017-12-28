@@ -1,0 +1,85 @@
+<h2 class="sam-ui header">
+  Classification
+</h2>
+<form *ngIf="oppClassificationForm" [formGroup]="oppClassificationForm">
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('SET_ASIDE_TYPE')">
+    <sam-autocomplete [options]="setAsideConfig.options"
+                      [attr.id]="setAsideConfig.id"
+                      [name]="setAsideConfig.name"
+                      formControlName="setAsideType"
+                      [config]="autocompleteConfig"
+                      [required]="setAsideConfig.required"
+                      [labelText]="setAsideConfig.label"
+                      [control]="oppClassificationForm.get('setAsideType')"
+    ></sam-autocomplete>
+  </div>
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PRODUCT_SERVICE_CODE')">
+    <sam-autocomplete [options]="classificationCodeConfig.options"
+                      [attr.id]="classificationCodeConfig.id"
+                      [name]="classificationCodeConfig.name"
+                      formControlName="classificationCodeType"
+                      [config]="autocompleteConfig"
+                      [required]="checkFieldRequired('PRODUCT_SERVICE_CODE')"
+                      [labelText]="classificationCodeConfig.label"
+                      [control]="oppClassificationForm.get('classificationCodeType')"
+    ></sam-autocomplete>
+  </div>
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PRIMARY_NAICS_CODE')">
+    <sam-autocomplete [options]="primaryNAICSCodeConfig.options"
+                      [attr.id]="primaryNAICSCodeConfig.id"
+                      [name]="primaryNAICSCodeConfig.name"
+                      formControlName="primaryNAICSCodeType"
+                      [config]="autocompleteConfig"
+                      [required]="checkFieldRequired('PRIMARY_NAICS_CODE')"
+                      [labelText]="primaryNAICSCodeConfig.label"
+                      [control]="oppClassificationForm.get('primaryNAICSCodeType')"
+    ></sam-autocomplete>
+  </div>
+  <!--  Once Location Component is ready need to remove country, state, city and Zip controls-->
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('SECONDARY_NAICS_CODE')">
+    <sam-autocomplete-multiselect
+      [options]="secondaryNAICSCodeConfig.options"
+      [name]="secondaryNAICSCodeConfig.name"
+      formControlName="secondaryNAICSCodeType"
+      [control]="oppClassificationForm.controls['secondaryNAICSCodeType']"
+      [keyValueConfig]="secondaryNAICSAutocompleteConfig.keyValueConfig"
+      [label]="secondaryNAICSCodeConfig.label"
+      [attr.id]="secondaryNAICSCodeConfig.id">
+    </sam-autocomplete-multiselect>
+  </div>
+  <div class="sam-ui segment" [hidden]="!checkFieldDisplayOption('PLACE_PERFORMNCE_LOCATION')"><span class="classification-location">Place Of Performance Location</span><br>
+    <sam-autocomplete [options]="countryConfig.options"
+                      [attr.id]="countryConfig.id"
+                      [name]="countryConfig.name"
+                      formControlName="countryType"
+                      [config]="autocompleteConfig"
+                      [labelText]="countryConfig.label"
+                      [control]="oppClassificationForm.get('countryType')"
+    ></sam-autocomplete>
+   <div><br></div>
+    <sam-number
+      label="Zip Code"
+      name="zip"
+      [control]="oppClassificationForm.get('zip')"
+      formControlName="zip"
+      [attr.id]="'opp-zip'"
+    ></sam-number>
+    <br>
+    <sam-text
+      city
+      label="City"
+      name="city"
+      [control]="oppClassificationForm.get('city')"
+      formControlName="city"
+    ></sam-text>
+    <br>
+    <sam-autocomplete [options]="stateConfig.options"
+                      [attr.id]="stateConfig.id"
+                      [name]="stateConfig.name"
+                      formControlName="stateType"
+                      [config]="autocompleteConfig"
+                      [labelText]="stateConfig.label"
+                      [control]="oppClassificationForm.get('stateType')"
+    ></sam-autocomplete>
+  </div>
+</form>

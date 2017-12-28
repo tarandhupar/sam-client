@@ -1,0 +1,45 @@
+<sam-modal #deleteModal
+          [showClose]="true"
+          [closeOnOutsideClick]="true"
+          [closeOnEscape]="true"
+          [type]="'warning'"
+          [title]="'Remove Contact'"
+          [description]="description"
+          [submitButtonLabel]="'Ok'"
+          [cancelButtonLabel]="'Cancel'"
+          (onSubmit)="onDeleteModalSubmit()">
+</sam-modal>
+<table class="sam-ui table celled" [class.hide]="contactsInfo.length == 0">
+  <thead>
+  <th scope="col">Contacts</th>
+  <th scope="col">Actions</th>
+  </thead>
+  <tbody>
+  <tr *ngFor="let contact of contactsInfo; let i=index">
+    <td>
+      <span class='usa-input-error-message' *ngIf="subFormErrorIndex[i]"><sup>*</sup>This contact information has some errors.</span>
+      {{contact.title}} {{contact.fullName}} <br/>
+      {{contact.streetAddress}} <br/>
+      {{contact.city}} {{contact.state}} {{contact.zip}} <br/>
+      Email: {{contact.email}} <br/>
+      Phone: {{contact.phone}} <br/>
+    </td>
+    <td>
+      <ng-container *ngIf="hideContactsForm">
+        <a class="fal-table-edit" (click)="editContact(i)" >Edit</a>
+        <em class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editContact(i)"></em>
+        <a class="fal-table-delete" (click)="removeContact(i)">Remove</a>
+        <em class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeContact(i)"></em>
+      </ng-container>
+
+      <ng-container *ngIf="!hideContactsForm">
+        <span class="fal-table-edit disabled">Edit</span>
+        <em class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></em>
+        <span class="fal-table-delete disabled">Remove</span>
+        <em class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></em>
+      </ng-container>
+
+    </td>
+  </tr>
+  </tbody>
+</table>

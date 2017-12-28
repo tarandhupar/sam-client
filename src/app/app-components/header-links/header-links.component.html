@@ -1,0 +1,100 @@
+<nav class="sam-ui attached lighter grey borderless menu" aria-label="Main navigation">
+  <div class="sam-ui container">
+    <a [routerLink]="['']" class="item" tabindex="0">
+      <img style="width:200px;" src="src/assets/img/sam-logo.png"  alt="beta.sam.gov Logo">
+    </a>
+    <div class="right menu">
+      <!-- Menu -->
+      <a tabindex="0" class="item" title="menu" [ngClass]="{'active':links.menu}" (keyup.enter)="onLinkClick('menu')" (click)="onLinkClick('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+        <span class="usa-sr-only">menu option</span>
+      </a>
+      <!-- Search -->
+      <a tabindex="0" class="item" [ngClass]="{'active':links.search}" (keyup.enter)="onLinkClick('search')" (click)="onLinkClick('search')">
+        <i class="fa fa-lg fa-search" aria-hidden="true"></i>
+        <span class="usa-sr-only">Search</span>
+      </a>
+
+      <!-- Requests -->
+      <a tabindex="0" (keyup.enter)="requestStartClick()" (click)="requestStartClick()" class="item notification-container" [ngClass]="{'active':showRequests}" *ngIf="states.isSignedIn">
+        <i class="fa fa-list-alt fa-lg" aria-hidden="true"></i>
+        <span class="notification-num">{{ requests.length > requestLimit ? "+" : requests.length }}</span>
+      </a>
+      <!-- SAM Requests -->
+
+      <sam-notifications [@fadeInOut]="'in'"
+                         sam-click-outside (clickOutside)="onRequestOutsideClick()"
+                         *ngIf="showRequests"
+                         [notifications]="requests"
+                         (action)="showRequests = false;startRequestOutsideClick = false;_router.navigate(['/workspace/myfeed/requests']);"></sam-notifications>
+
+      <!-- Notifications -->
+      <a tabindex="0" (keyup.enter)="notificationStartClick()" (click)="notificationStartClick()" class="item notification-container" [ngClass]="{'active':showNotifications}">
+        <i class="fa fa-bell-o fa-lg" aria-hidden="true"></i>
+        <span class="usa-sr-only">{{ notifications.length > notificationLimit ? "+" : notifications.length }}</span>
+      </a>
+      <!-- SAM Notifications -->
+
+      <sam-notifications [@fadeInOut]="'in'"
+                         sam-click-outside (clickOutside)="onNotificationOutsideClick()"
+                         *ngIf="showNotifications"
+                         [notifications]="notifications"
+                         (action)="showNotifications = false;startNotificationOutsideClick = false;_router.navigate(['/workspace/myfeed/notifications']);"></sam-notifications>
+
+      <!-- Profile -->
+      <a tabindex="0" class="item" title="menu" [ngClass]="{'active': links.profile}" (keyup.enter)="onLinkClick('profile')" (click)="onLinkClick('profile')" *ngIf="states.isSignedIn">
+        <i class="fa fa-lg fa-user-circle" aria-hidden="true"></i>
+        <span class="usa-sr-only">Profile</span>
+      </a>
+      <!-- Sign In -->
+      <a tabindex="0" class="item" [ngClass]="{'active':links.login}" (keyup.enter)="onLinkClick('login')" (click)="onLinkClick('login')" *ngIf="!states.isSignedIn">Sign in</a>
+      <!-- Sign Up -->
+      <a tabindex="0" class="item" [hidden]="states.isSignedIn" routerLink="/signup" *ngIf="!states.isSignedIn">Sign up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Content -->
+<div [@flyInOut]="'in'" *ngIf="showDropdown" sam-click-outside (clickOutside)="onClickOutside()">
+  <div [@flyInOut]="'in'" *ngIf="links.menu" class="sam-ui inverted attached menu">
+    <div class="sam-ui labeled icon right inverted menu">
+      <ng-container *ngFor="let item of dropdowns.menu; let i = index">
+        <a tabindex="0" class="item" [attr.id]="item.linkId" *ngIf="itemToggle(item)" (keyup.enter)="onDropdownItemClick(item)" (click)="onDropdownItemClick(item)">
+          <i class="icon fa" [ngClass]="item.linkClass"></i>
+          {{item.linkTitle}}
+        </a>
+      </ng-container>
+    </div>
+  </div>
+
+  <div [@flyInOut]="'in'" *ngIf="links.search" class="sam-ui padded grid">
+    <div class="dark grey row">
+      <div class="sam-ui text container">
+        <div class="sam-ui very padded grid">
+          <div class="column">
+            <ng-content select="[search-bar]"></ng-content>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [@flyInOut]="'in'" class="sam-ui inverted attached menu" *ngIf="links.profile">
+    <div class="sam-ui labeled icon right inverted menu">
+      <ng-container *ngFor="let item of dropdowns.profile; let i = index">
+        <a tabindex="0" class="item" [attr.id]="item.linkId" *ngIf="itemToggle(item)" (keyup.enter)="onDropdownItemClick(item)" (click)="onDropdownItemClick(item)">
+          <i class="icon fa" [ngClass]="item.linkClass"></i>
+          {{item.linkTitle}}
+        </a>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="panel-login" *ngIf="links.login">
+    <div class="sam-ui container" *ngIf="links.login">
+      <div [@flyInOut]="'in'"  *ngIf="links.login">
+        <sam-login [standalone]="true"></sam-login>
+      </div>
+    </div>
+  </div>
+</div>

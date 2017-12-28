@@ -1,0 +1,126 @@
+<div class="msg-feed-sidenav">
+  <ul class="usa-sidenav-list m_B-4x border-top-black border-bottom-black">
+    <li class="relative" *ngIf="isCurrentSection('requests')">
+      <a [ngClass]="getCurrentTabClass('requests')" (click)="onSectionTabClick('requests')">Requests</a>
+      <!--<span class="request-total-count" *ngIf="!isCurrentPath('requests/sent') && !isCurrentPath('requests/received')">{{recievedCount}}</span>-->
+    </li>
+    <ul class="usa-sidenav-list border-top-black sublist" *ngIf="isCurrentSection('requests')">
+      <li class="relative"><a [ngClass]="getCurrentTabClass('requests/sent')" (click)="onSectionTabClick('requests/sent')">Sent</a>
+      <li class="relative"><a [ngClass]="getCurrentTabClass('requests/received')" (click)="onSectionTabClick('requests/received')">Received</a>
+        <span class="request-total-count">{{recievedCount}}</span></li>
+    </ul>
+    <li *ngIf="isCurrentSection('notifications')">
+      <a [ngClass]="getCurrentTabClass('notifications')" (click)="onSectionTabClick('notifications')">Notifications</a>
+    </li>
+    <ul class="usa-sidenav-list border-top-black sublist" *ngIf="isCurrentSection('notifications')">
+      <li *ngIf="isSignedIn"><a [ngClass]="getCurrentTabClass('notifications/subscriptions')" (click)="onSectionTabClick('notifications/subscriptions')">Subscriptions</a></li>
+      <!--<li><a [ngClass]="getCurrentTabClass('notifications/announcements')" (click)="onSectionTabClick('notifications/announcements')">Announcements</a></li>-->
+      <li><a [ngClass]="getCurrentTabClass('notifications/alerts')" (click)="onSectionTabClick('notifications/alerts')">Alerts</a></li>
+    </ul>
+  </ul>
+
+  <div class="usa-width-one-whole m_B-4x">
+    <!--<legend>Search {{getSearchText()}}</legend>-->
+    <label for="search-keyword" style="font-weight: bold">Search {{getSearchText()}}</label>
+    <input id="search-keyword" placeholder="Find {{getSearchText()}}" (keyup.enter)="msgFilterOptionChange()" [(ngModel)]="filterOption.keyword">
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="!isCurrentPath('requests/sent') && isCurrentSection('requests')">
+    <sam-autocomplete-multiselect
+      hint=""
+      label="Search Requestor"
+      name="search-requester"
+      peoplepicker-autofill
+      [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
+      [(ngModel)]="filterOption.requester">
+    </sam-autocomplete-multiselect>
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="!isCurrentPath('requests/sent') && isCurrentSection('requests')">
+    <sam-autocomplete-multiselect
+      hint=""
+      label="Search Approver"
+      name="search-approver"
+      peoplepicker-autofill
+      [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig"
+      [(ngModel)]="filterOption.approver">
+    </sam-autocomplete-multiselect>
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="isCurrentSection('requests')">
+    <legend class="m_B-0">Organization</legend>
+    <sam-agency-picker-v2
+      [(ngModel)]="filterOption.orgs"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-agency-picker-v2>
+  </div>
+
+  <div class="usa-width-one-whole m_B-4x" *ngIf="requestTypeCbxConfig.options.length > 0 && isCurrentSection('requests')">
+    <div class="usa-width-three-fourths">
+      <sam-checkbox
+        [(ngModel)]="filterOption.requestType"
+        [name]="requestTypeCbxConfig.name"
+        [options]="requestTypeCbxConfig.options"
+        [label]="requestTypeCbxConfig.label"
+        [hasSelectAll]="requestTypeCbxConfig.hasSelectAll"
+        (ngModelChange)="msgFilterOptionChange()">
+      </sam-checkbox>
+    </div>
+    <div class="usa-width-one-fourth m_T-5x p_T-2x" *ngIf="!isCurrentPath('requests/sent')">
+      <ul class="usa-unstyled-list">
+        <li class="usa-width-one-whole" *ngFor="let option of requestTypeCbxConfig.options">
+          <span class="m_T-0 request-count pull-right m_R-2x" *ngIf="hasActiveItem(option)">{{option.count}}</span>
+          <span class="m_T-0 request-count-empty pull-right m_R-2x" *ngIf="!hasActiveItem(option)">0</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="m_B-4x" *ngIf="statusCbxConfig.options.length > 0">
+    <sam-checkbox
+      [(ngModel)]="filterOption.status"
+      [name]="statusCbxConfig.name"
+      [options]="statusCbxConfig.options"
+      [label]="statusCbxConfig.label"
+      [hasSelectAll]="statusCbxConfig.hasSelectAll"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="m_B-4x" *ngIf="alertTypeCbxConfig.options.length > 0">
+    <sam-checkbox
+      [(ngModel)]="filterOption.alertType"
+      [name]="alertTypeCbxConfig.name"
+      [options]="alertTypeCbxConfig.options"
+      [label]="alertTypeCbxConfig.label"
+      [hasSelectAll]="alertTypeCbxConfig.hasSelectAll"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="m_B-4x" *ngIf="alertStatusCbxConfig.options.length > 0">
+    <sam-checkbox
+      [(ngModel)]="filterOption.alertStatus"
+      [name]="alertStatusCbxConfig.name"
+      [options]="alertStatusCbxConfig.options"
+      [label]="alertStatusCbxConfig.label"
+      [hasSelectAll]="alertStatusCbxConfig.hasSelectAll"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="m_B-4x" *ngIf="domainsCbxConfig.options.length > 0">
+    <sam-checkbox
+      [(ngModel)]="filterOption.domains"
+      [name]="domainsCbxConfig.name"
+      [options]="domainsCbxConfig.options"
+      [label]="domainsCbxConfig.label"
+      [hasSelectAll]="domainsCbxConfig.hasSelectAll"
+      (ngModelChange)="msgFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="usa-width-one-whole">
+    <span class="pull-right"><a (click)="resetFilter()">Clear Filters</a></span>
+  </div>
+</div>

@@ -1,0 +1,166 @@
+<page
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="Roles Directory"
+  class="roles-directory"
+>
+
+  <sidebar>
+    <div class="sam-ui segment">
+      <sam-autocomplete
+        #userPicker
+        [id]="'user-picker'"
+        [ngModelOptions]="{standalone: true}"
+        [allowAny]="true"
+        [(ngModel)]="dummySearchValue"
+        [labelText]="'Search'"
+        [config]="userConfig"
+        (enterEvent)="onUserChange($event)"
+        [httpRequest]="request"
+      ></sam-autocomplete>
+
+      <div class="sam-ui divider"></div>
+
+      <h3 class="h4">{{isGov?'Organization':'Entity'}}</h3>
+      <sam-agency-picker-v2
+        *ngIf="isGov; else nonFedPicker"
+        #picker
+        type="single"
+        [defaultDept]="true"
+        ngModel
+        (ngModelChange)="onOrganizationChange($event)">
+      </sam-agency-picker-v2>
+
+      <ng-template #nonFedPicker>
+        <sam-entity-picker
+          ngModel
+          (ngModelChange)="onOrganizationChange($event)"
+          [isDefaultOrg]="true"
+          [isAssignableOrg]="true"
+          [isDefaultOrgPrePopulated]="false"
+          [isMultiple]="false">
+
+        </sam-entity-picker>
+      </ng-template>
+
+      <div class="sam-ui divider"></div>
+
+      <ng-container *ngIf="roleOptions && roleOptions.length">
+        <h3 class="h4">Roles</h3>
+        <div style="max-height: 20em; overflow-y: auto; padding-left: 4px; position: relative; overflow-x: hidden;">
+          <sam-checkbox
+            [name]="'role-select'"
+            [options]="roleOptions"
+            [(ngModel)]="selectedRoleIds"
+            (ngModelChange)="onSelectRole($event)">
+          </sam-checkbox>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="domainOptions && domainOptions.length">
+        <div class="sam-ui divider"></div>
+        <h3 class="h4">Domains</h3>
+        <div style="max-height: 320px; overflow-y: auto; padding-left: 4px; position: relative;">
+          <sam-checkbox
+            [name]="'domain-select'"
+            [options]="domainOptions"
+            [(ngModel)]="selectedDomainIds"
+            (ngModelChange)="onSelectDomain($event)">
+          </sam-checkbox>
+        </div>
+      </ng-container>
+
+      <div class="sam-ui hidden divider"></div>
+
+      <a class="sam-ui dark blue button" (click)="onClearAllClick()">
+        Clear all
+      </a>
+
+    </div>
+    <div class="sam-ui hidden section divider"></div>
+  </sidebar>
+
+  <!-- Page results -->
+  <results *ngIf="searchStatus === 'success' && users && users.length"
+    [totalElements]="totalResults"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)">
+
+    <sam-sort [(ngModel)]="sort"
+                [options]="sortOptions"
+                (ngModelChange)="doSearch()"
+    ></sam-sort>
+    <div result-actions style="display: inline-block">
+      <sam-actions-dropdown [actions]="actions" (emitAction)="onBulkUpdate()" [buttonType]="'primary'"></sam-actions-dropdown>
+    </div>
+
+    <div class="user-role" *ngFor="let user of users" style="background-color: white; border: 1px solid lightgray">
+      <div *ngIf="userHasActions(user)" class="action-bar clearfix" style="border-bottom: 1px solid lightgray">
+        <!-- TODO: figure out why i can't replace that [actions] statement with a function call. It creates an infinite loop if I do. -->
+        <sam-actions-dropdown class="pull-right" [actions]="user?.user?._links?.grant_access ? viewAndGrantAction : viewOnlyAction" (emitAction)="onUserAction($event, user)"></sam-actions-dropdown>
+      </div>
+      <div style="padding: 1em">
+        <div class="sam-ui divided items">
+          <div class="item">
+            <!-- User Icon and name -->
+            <div class="sam-ui image" style="background-color: transparent;">
+              <img style="width: 50px; opacity: .5;" src="src/assets/img/sam-icons/user-darkgray.png" [attr.alt]="fullName(user.user)+' img'">
+            </div>
+            <div class="content">
+              <h2 class="h3" *ngIf="fullName(user.user)">
+                {{fullName(user.user)}}
+              </h2>
+              <div class="description" *ngIf="user?.user?.email">
+                <div class="sam-ui medium header">
+                  <div class="sub header">
+                    {{user.user.email}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- If no organization list -->
+        <p *ngIf="!user.tiers || !user.tiers.length">
+          No roles assigned for this user
+        </p>
+        <p *ngIf="user?.tiers?.length">
+          <!-- Organization list (if exists) -->
+          <ng-container *ngFor="let tier of user.tiers">
+            <div class="sam-ui medium header">
+              <strong [ngClass]="tier.name === 'Unavailable' && 'text-lighter'">{{tier.name === 'Unavailable' ? 'Org type unavailable' : tier.name}}</strong>
+              <div class="sub header">
+                    <span *ngFor="let org of tier.organizations; let i = index">
+                      <ng-container *ngIf="i !== 0">,&nbsp;</ng-container>
+                      <ng-container *ngIf="!org.isSelected">
+                        {{formatOrgName(org)}}
+                      </ng-container>
+                      <span *ngIf="org.isSelected" [style.background]="org.isSelected ? '#fdb81e' : ''">
+                        {{formatOrgName(org)}}
+                      </span>
+                    </span>
+              </div>
+            </div>
+          </ng-container>
+        </p>
+      </div>
+    </div>
+
+  </results>
+
+  <!-- No results -->
+  <p *ngIf="searchStatus === 'success' && !(users && users.length)">
+    No results found for selected criteria
+  </p>
+
+  <ng-container *ngIf="searchStatus === 'error'">
+    <sam-alert type="error" [title]="'Error'" [description]="errorMessage"></sam-alert>
+  </ng-container>
+
+  <ng-container *ngIf="searchStatus === 'pending'">
+    <div class="text-center" style="margin-top: 3em;"><sam-spinner></sam-spinner></div>
+  </ng-container>
+
+</page>

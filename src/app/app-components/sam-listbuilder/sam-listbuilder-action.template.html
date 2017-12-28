@@ -1,0 +1,9 @@
+<span sam-click-outside (clickOutside)="clickOutside($event)">
+    <a [ngClass]="{'disabled':disable}" (click)="toggleDropdown()">Actions <i class="fa fa-caret-down"></i></a>
+    <ul *ngIf="dropdownState && !disable">
+        <li><a (click)="actionHandler('edit')">Edit <i class="fa fa-pencil"></i></a></li>
+        <li><a (click)="actionHandler('delete')">Delete <i class="fa fa-times"></i></a></li>
+        <li *ngIf="sortable && !firstOfList"><a (click)="actionHandler('moveup')">Move Up <i class="fa fa-arrow-up"></i></a></li>
+        <li *ngIf="sortable && !endOfList"><a (click)="actionHandler('movedown')">Move Down <i class="fa fa-arrow-down"></i></a></li>
+    </ul>
+</span>

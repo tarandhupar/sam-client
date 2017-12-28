@@ -1,0 +1,45 @@
+<div class="role-sidenav">
+  <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+  <div class = "m_T-5em ">
+    <div class = "pull-left filter-color">
+      <h3 class="filters-title">Filters</h3>
+    </div>
+    <div class = "pull-right filter-icon filter-color">
+      <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
+    </div>
+    <div class = "def-filter">
+      <sam-accordion [expandIndex]="0">
+        <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
+          <sam-radio-button (modelChange) = "ChangeRoute($event)"
+            [(model)]="path"
+            [options]="radioConfig.options"
+            [label]="radioConfig.label"
+            [name]="radioConfig.name"
+            >
+          </sam-radio-button>
+        </sam-accordion-section>
+      </sam-accordion>
+
+      <sam-accordion [expandIndex]="0">
+        <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
+          <sam-checkbox (modelChange)="activeFilter($event)"
+            [(model)]="checkboxModel"
+            [name]="'Domains-Checkbox-Filter'"
+            [options]="filters.domains.options"
+            [label]="filters.domains.label"
+            [hasSelectAll]="'Yes'"
+            >
+          </sam-checkbox>
+        </sam-accordion-section>
+      </sam-accordion>
+      <div class = "tx-pad">
+        <sam-label-wrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
+          <input id="new-domain-input" type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
+          <label for="new-domain-input" class="hide">Add New Domain</label>
+        </sam-label-wrapper>
+        <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
+      </div>
+
+    </div>
+  </div>
+</div>

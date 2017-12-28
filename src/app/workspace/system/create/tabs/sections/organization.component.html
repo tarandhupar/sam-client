@@ -1,0 +1,34 @@
+<div [formGroup]="form">
+  <div class="sam-ui segment">
+    <sam-agency-picker [label]="label('organization')"
+                       [hint]="hint('organization')"
+                       [required]="true"
+                       [advancedMode]="true"
+                       [multimode]="false"
+                       [orgRoot]="user.departmentID"
+                       [initial]="selected"
+                       [searchMessage]="errors('organization')"
+                       [formControl]="organization"
+                       (orgFullPath)="setHierarchy($event)"
+                       *ngIf="user">
+    </sam-agency-picker>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-autocomplete-multiselect [label]="label('systemAdmins')"
+                                  [hint]="hint('systemAdmins')"
+                                  [keyValueConfig]="configs.systemAdmins"
+                                  name="system-admins"
+                                  formControlName="systemAdmins"
+                                  peoplepicker-autofill></sam-autocomplete-multiselect>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-autocomplete-multiselect [label]="label('systemManagers')"
+                                  [hint]="hint('systemManagers')"
+                                  [keyValueConfig]="configs.systemManagers"
+                                  name="system-managers"
+                                  formControlName="systemManagers"
+                                  peoplepicker-autofill></sam-autocomplete-multiselect>
+  </div>
+</div>

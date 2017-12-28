@@ -1,0 +1,18 @@
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="beneficiaryConfig.label"
+                              [name]="beneficiaryConfig.name"
+                              [placeholder]="beneficiaryConfig.placeholder"
+                              [options]="beneficiaryOptions"
+                              [keyValueConfig]="beneficiaryConfig.config.keyValueConfig"
+                              [ngModel]="selectedBeneficiaryOptions"
+                              (ngModelChange)="beneficiaryChanged($event)">
+</sam-autocomplete-multiselect>
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="applicantConfig.label"
+                              [name]="applicantConfig.name"
+                              [placeholder]="applicantConfig.placeholder"
+                              [options]="applicantOptions"
+                              [keyValueConfig]="applicantConfig.config.keyValueConfig"
+                              [ngModel]="selectedApplicantOptions"
+                              (ngModelChange)="applicantChanged($event)">
+</sam-autocomplete-multiselect>

@@ -1,0 +1,1534 @@
+
+<!--Delete Modal-->
+<sam-modal #deleteModal
+           [showClose]="true"
+           [closeOnOutsideClick]="true"
+           [closeOnEscape]="true"
+           [type]="'warning'"
+           [title]="modalConfig.title"
+           [description]="modalConfig.description"
+           [submitButtonLabel]="'Ok'"
+           [cancelButtonLabel]="'Cancel'"
+           (onSubmit)="onDeleteModalSubmit()">
+</sam-modal>
+
+
+<page
+  (breadcrumbOut)="breadcrumbHandler($event)"
+  *ngIf="program"
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Assistance Listings"
+  [title]="program?.data?.title">
+
+  <sidebar>
+    <div sam-sticky limit=1200 container="page-content">
+      <!-- Logo -->
+      <ng-container
+        *ngIf="program && logoUrl && !errorOrganization">
+        <img
+          class="sidenav-logo"
+          id="program-logo"
+          [src]="logoUrl"
+          [alt]="logoInfo"
+          [title]="logoInfo"
+          width="160px">
+      </ng-container>
+
+      <!-- Logo not availabe-->
+      <ng-container
+        *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
+        <img
+          src="src/assets/img/logo-not-available.png"
+          class="sidenav-logo"
+          alt="Logo Not Available"
+          width="160px">
+      </ng-container>
+
+      <!--Side Navigation-->
+      <sam-sidenav
+        type="step"
+        (data)="navHandler($event)"
+        [labelLookup]="sideNavSelection"
+        [model]="sideNavModel">
+      </sam-sidenav>
+    </div>
+  </sidebar>
+
+  <!--Edit Modal-->
+  <sam-modal #editModal
+             [showClose]="true"
+             [closeOnOutsideClick]="true"
+             [closeOnEscape]="true"
+             [type]="'info'"
+             [title]="'Revise -  Assistance Listing'"
+             [description]="'A draft revision for this published program will be utilized for editing. Please click ok to edit a draft of this Assistance Listing.'"
+             [submitButtonLabel]="'Ok'"
+             [cancelButtonLabel]="'Cancel'"
+             (onSubmit)="onEditModalSubmit($event)">
+  </sam-modal>
+
+  <ng-container message>
+
+    <sam-status-banner
+      [type]="'warning'"
+      [hidden]="!(checkForErrors() && reviewErrorList) || (program?.status?.code == 'published' || program?.status?.code == 'archived' || program?.status?.code == 'pending')">
+      <div leading-content>{{statusBannerLeadingText}}</div>
+      <div main-content>
+        <fal-error-display #errorDisplay
+          (message)="updateBannerText($event)">
+        </fal-error-display>
+      </div>
+    </sam-status-banner>
+
+    <!-- Alerts -->
+    <ng-container
+      *ngIf="programID && latestRevision && this.program.status.code === 'published' && (programID !== latestRevision.id)">
+      <sam-alert [type]="'info'" [title]="''">
+        Note: This is a previously published revision for this Assistance Listing.
+        To view the most recent published revision, please click
+        <a [routerLink]="['/fal', latestRevision.id, 'review']">here</a>.
+      </sam-alert>
+    </ng-container>
+
+  </ng-container>
+
+  <inline-error-message
+    [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('TITLE'))">
+  </inline-error-message>
+
+  <!-- Pending Request Button -->
+  <ng-container *ngIf="programRequest">
+    <a class="sam-ui primary button right labeled icon"
+       [routerLink]="['/fal/change-request/', programRequest.id, 'action']">
+      <em aria-hidden="true" class="icon fa fa-arrow-circle-right"></em>
+      {{ programRequest.requestType?.value | requestLabel }}
+    </a>
+  </ng-container>
+
+  <ng-container>
+    <ng-container *ngIf="alerts && alerts.length > 0">
+      <div *ngFor="let alert of alerts; let i = index">
+        <sam-alert
+          [attr.id]="'program-alert-' + i"
+          labelname="alerts[i].labelname"
+          [type]="alerts[i].config.type"
+          [title]="alerts[i].config.title">
+          <div [innerHTML]="alerts[i].config.description"></div>
+          <ng-container *ngIf="alert.labelname === 'published-fal-alert'">
+            <ng-container
+              *ngIf="program._links && (program._links['program:revise'] || program._links['program:update'])">
+              Click <a class="fal-table-edit" (click)="onEditClick(['#header-information'])">here</a> to edit a draft of
+              the Assistance Listing.
+            </ng-container>
+            <ng-container
+              *ngIf="latestUnpublishedRevision?.content?.status && latestUnpublishedRevision?.content?.program_id && program?.status?.code == 'published' && programID && latestRevision && (programID == latestRevision.id)">
+                Note: An unpublished {{latestUnpublishedRevision.content.status | status | lowercase}} revision exists for this listing, please click
+                <a [routerLink]="['/fal', latestUnpublishedRevision?.content?.program_id, 'review']">here</a> to view it.
+            </ng-container>
+          </ng-container>
+        </sam-alert>
+      </div>
+    </ng-container>
+
+    <check-active-assistance-administrator
+      *ngIf="federalHierarchy && program._links && program._links['program:notify:coordinator'] &&
+      program.status && program.status.code && (program.status.code === 'draft' || program.status.code === 'draft_review' || program.status.code === 'rejected')"
+      [organization]="federalHierarchy">
+    </check-active-assistance-administrator>
+  </ng-container>
+
+  <!-- Tabs -->
+  <tabs-fal
+    [data]="program"
+    (tabClick)="tabsClicked($event)">
+  </tabs-fal>
+
+  <!-- Intro segment -->
+  <section id="program-information">
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="header-information">Header Information</h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#header-information'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+      <div class="sam-ui grid">
+        <div class="column">
+
+          <div class="sam-ui relaxed divided list">
+
+            <div *ngIf="errorOrganization" class="item">
+              <div class="content">
+                <div class="header">
+                  Organization ID: {{program.data.organizationId}}
+                </div>
+                <div class="description">
+                  <strong>NOTE:</strong>
+                  Complete Federal Hierarchy information is currently unavailable.
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null"
+                 id="program-alternative-names" class="item">
+              <div class="content">
+                <div class="header">
+                  Popular Name
+                </div>
+                <div class="description">
+                  {{program.data.alternativeNames[0]}}
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="federalHierarchy" id="program-fh-information" class="item">
+              <div class="content">
+                <div class="header">
+                  {{federalHierarchy.type | formatFederalHierarchyType}}
+                </div>
+                <div class="description">
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('HEADER'),  getFieldId('FEDERAL_AGENCY'))">
+                  </inline-error-message>
+                  {{ federalHierarchy.name || federalHierarchy.agencyName }}
+                </div>
+              </div>
+            </div>
+
+            <div id="program-number" class="item">
+              <div class="content">
+                <div class="header">
+                  CFDA Number
+                </div>
+                <div class="description">
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('HEADER'), getFieldId('FALNO'))">
+                  </inline-error-message>
+                  {{program.data?.programNumber}}
+                </div>
+              </div>
+            </div>
+
+            <div id="related-programs" class="item">
+              <div class="content">
+                <div class="header">
+                  Related Federal Assistance
+                </div>
+                <div class="description">
+                  <ng-container
+                    *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
+                    <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
+                      <a [attr.id]="'program-related-' + i" [routerLink]="['/fal', item.id,'review']"
+                         [queryParams]="qParams" (click)="toTheTop()">
+                        {{item.programNumber}}
+                      </a>{{isLast ? '' : ', '}}
+                    </ng-container>
+                  </ng-container>
+                  <span id="program-related-na"
+                        *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">
+                    Not Applicable.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" *ngIf="program.data?.programNumber">
+              <a target="_blank" class="field" id="grants-dot-gov-link"
+                 href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
+                View available opportunities on Grants.gov related to this Assistance Listing
+                <em aria-hidden="true" class="fa fa-external-link fa-sm"></em>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Section -->
+  <section id="program-overview">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="overview">Overview</h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#overview'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+
+      <div grid>
+        <div columns="12">
+          <!-- Objectives -->
+          <h3 class="sam-ui dividing header">Objectives</h3>
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('OBJECTIVE'))">
+          </inline-error-message>
+
+          <p id="program-objective">
+            {{program.data?.objective}}
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Examples of Funded Projects -->
+          <h3 class="sam-ui dividing header">Examples of Funded Projects</h3>
+          <div [ngSwitch]="program.data?.projects?.isApplicable">
+            <ng-container *ngSwitchCase="true">
+              <ng-container *ngFor="let item of program.data?.projects?.list?.sort(yearSort); let i = index">
+                <p [attr.id]="'program-project-example-' + i"
+                   *ngIf="!item.fiscalYear || (item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1)">
+
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNDED_PROJECTS'), true, i)">
+                  </inline-error-message>
+
+                  <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
+                </p>
+              </ng-container>
+            </ng-container>
+            <p id="program-project-example-na" *ngSwitchDefault>
+              Not Applicable
+            </p>
+          </div>
+
+          <!-- Assistance Listing Description -->
+          <ng-container
+            *ngIf="program.data?.description && program.data?.description != ''">
+            <div class="sam-ui hidden divider"></div>
+            <h3 class="sam-ui dividing header">Assistance Listing Description</h3>
+            {{ program.data?.description }}
+          </ng-container>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Functional Codes -->
+          <h3 class="sam-ui dividing header ">
+            <em class="icon fa fa-lock" aria-hidden="true"></em>
+            <div class="content">
+              Functional Codes
+            </div>
+          </h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('FUNCTIONAL_CODES'))">
+          </inline-error-message>
+
+          <ng-container *ngIf="dictionariesUpdated === true && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
+            <ng-container
+              *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaryService.dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
+                <span [attr.id]="'program-functional-code-' + i">
+                  {{ item.displayValue }}<br>
+                </span>
+            </ng-container>
+            <div class="sam-ui hidden divider"></div>
+          </ng-container>
+
+          <!-- Subject Terms -->
+          <h3 class="sam-ui dividing header ">
+            <em class="icon fa fa-lock" aria-hidden="true"></em>
+            <div class="content">
+              Subject Terms
+            </div>
+          </h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OVERVIEW'), getFieldId('SUBJECT_TERMS'))">
+          </inline-error-message>
+
+          <ng-container *ngIf="dictionariesUpdated === true && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
+            <ng-container
+              *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaryService.dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
+                <span class="field" [attr.id]="'program-subject-terms-' + i">
+                  {{ item.value }}<br>
+                </span>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Authorizations -->
+  <section id="program-authorizations">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="authorizations">Authorizations</h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#authorization'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+      <div grid>
+        <div columns="12">
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, 0, true)">
+          </inline-error-message>
+
+          <div *ngFor="let item of authorizationIdsGrouped; let i = index">
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('AUTHORIZATION'), getFieldId('AUTHORIZATION_LIST'), true, i)">
+            </inline-error-message>
+            <p [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
+          </div>
+
+          <p *ngIf="program.data?.authorizations?.description && program.data?.authorizations?.description != ''">
+            {{ program.data?.authorizations?.description }}
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!--Financials-->
+  <section id="program-financials">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="financial-information">
+          Financial Information
+        </h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#financial-information-obligations'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+
+      <div grid class="vertically padded">
+        <div columns="12">
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, 0, true)">
+          </inline-error-message>
+
+          <table
+            class="sam-ui table celled lightest blue"
+            *ngIf="values && dictionariesUpdated === true && program.data?.financial?.obligations && program.data?.financial?.obligations?.length > 0">
+            <thead>
+            <tr>
+              <th scope="col" id="obligations">Obligations</th>
+              <th scope="col" id="previous-fy">
+                FY {{ trimFYOptions.pFY }}
+              </th>
+              <th scope="col" id="current-fy">
+                FY {{ trimFYOptions.cFY }} (est.)
+              </th>
+              <th scope="col" id="next-fy">
+                FY {{ trimFYOptions.bFY }} (est.)
+              </th>
+            </tr>
+            </thead>
+            <tbody *ngIf="obligations">
+            <ng-container
+              *ngFor="let item of obligations; let i=index">
+              <tr>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OBLIGATIONS'), getFieldId('OBLIGATION_LIST'), true, i, false, 'missingAssistanceType')"
+                    *ngIf="!item.assistanceType">
+                  </inline-error-message>
+                  <ng-container
+                    *ngIf="item.assistanceType">
+                    {{ getAssistanceType(item.assistanceType) }}
+                  </ng-container>
+                  <ng-container
+                    *ngIf="item.description">
+                     {{(item.assistanceType ? ' - ' : '') + item.description}}
+                  </ng-container>
+                </td>
+                <td>
+                  <ng-container *ngIf="(item.values[0]?.flag && item.values[0]?.flag.length === 0) || !item.values[0]?.flag">
+                    <span *ngIf="(item.values[0]?.estimate != null || item.values[0]?.actual != null)">$</span>{{ (((item.values[0]?.actual && item.values[0]?.estimate) || item.values[0]?.actual) ? item.values[0]?.actual : item.values[0]?.estimate) | samCurrency:'USD':true:'1.2-2'}}
+                  </ng-container>
+                  <ng-container *ngIf="item.values[0]?.flag == 'nsi'">
+                    Not Separately Identifiable
+                  </ng-container>
+                  <ng-container *ngIf="item.values[0]?.flag == 'ena'">
+                    Not available
+                  </ng-container>
+                </td>
+                <td>
+                  <ng-container *ngIf="(item.values[1]?.flag && item.values[1]?.flag.length === 0) || !item.values[1]?.flag">
+                    <span *ngIf="item.values[1]?.estimate != null">$</span>{{ item.values[1]?.estimate | samCurrency:'USD':true:'1.2-2'}}
+                  </ng-container>
+                  <ng-container *ngIf="item.values[1]?.flag == 'nsi'">
+                    Not Separately Identifiable
+                  </ng-container>
+                  <ng-container *ngIf="item.values[1]?.flag == 'ena'">
+                    Not available
+                  </ng-container>
+                </td>
+                <td>
+                  <ng-container *ngIf="(item.values[2]?.flag && item.values[2]?.flag.length === 0) || !item.values[2]?.flag">
+                    <span *ngIf="item.values[2]?.estimate != null">$</span>{{ item.values[2]?.estimate | samCurrency:'USD':true:'1.2-2'}}
+                  </ng-container>
+                  <ng-container *ngIf="item.values[2]?.flag == 'nsi'">
+                    Not Separately Identifiable
+                  </ng-container>
+                  <ng-container *ngIf="item.values[2]?.flag == 'ena'">
+                    Not available
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td>Total</td>
+              <td>${{totalsByYear.totalpFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
+              <td>${{totalsByYear.totalcFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
+              <td>${{totalsByYear.totalbFY.toString() | samCurrency:'USD':true:'1.2-2'}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Range and Average of Financial Assistance -->
+          <h3 class="sam-ui dividing header">
+            Range and Average of Financial Assistance
+          </h3>
+
+          <p id="program-financial-additional-info"
+             *ngIf="(program.data?.financial?.description) && (program.data?.financial?.description != '')">
+            {{program.data.financial?.description}}
+          </p>
+
+          <p id="program-financial-additional-info"
+             *ngIf="!(program.data?.financial?.description) || (program.data?.financial?.description == '')">
+            No Data Available.
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Accomplishments -->
+          <h3 class="sam-ui dividing header">Accomplishments</h3>
+
+          <div [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
+            <ng-container *ngSwitchCase="true">
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, 0, true)">
+              </inline-error-message>
+              <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list?.sort(yearSort); let i = index">
+                <inline-error-message
+                  [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('PROGRAM_ACCOMPLISHMENTS'), true, i)"
+                  *ngIf="(item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1) || !item.fiscalYear">
+                </inline-error-message>
+                <p [attr.id]="'program-accomplishments-' + i"
+                   *ngIf="item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
+                  <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
+                </p>
+              </ng-container>
+            </ng-container>
+
+            <p *ngSwitchDefault>Not Applicable.</p>
+          </div>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Account Identification -->
+          <h3 class="sam-ui dividing header">Account Identification</h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('ACCOUNT_IDENTIFICATION'), true, 0, true)">
+          </inline-error-message>
+
+          <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('ACCOUNT_IDENTIFICATION'), true, i)">
+            </inline-error-message>
+            <span [attr.id]="'program-account-identification-' + i"
+                  *ngIf="account.description">
+              {{account.code}}-{{account.description}}
+            </span>
+            <span [attr.id]="'program-account-identification-' + i"
+                  *ngIf="!account.description">
+              {{account.code}}
+            </span>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- TAFS Codes -->
+          <h3 class="sam-ui dividing header ">
+            <em aria-hidden="true" class="icon fa fa-lock"></em>
+            <div class="content">
+              TAFS Codes
+            </div>
+          </h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, 0, true)">
+          </inline-error-message>
+
+          <table
+            class="sam-ui table celled lightest blue"
+            *ngIf="dictionariesUpdated === true && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
+            <thead>
+            <tr>
+              <th scope="col">Treasury Dept. Code</th>
+              <th scope="col">Treasury Account Main Code</th>
+              <th scope="col">TAFS Sub Account</th>
+              <th scope="col">Allocation Transfer Agency</th>
+              <th scope="col">FY 1</th>
+              <th scope="col">FY 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container
+              *ngFor="let tafs of program.data.financial.treasury.tafs; let i=index">
+              <tr>
+                <!-- Table tafs data -->
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidDepartmentCode')">
+                  </inline-error-message>
+                  {{ tafs.departmentCode }}
+                </td>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidAccountCode')">
+                  </inline-error-message>
+                  {{ tafs.accountCode }}
+                </td>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidSubAccountCode')">
+                  </inline-error-message>
+                  {{ tafs.subAccountCode }}
+                </td>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidTransferAgency')">
+                  </inline-error-message>
+                  {{ tafs.allocationTransferAgency }}
+                </td>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidFY1')">
+                  </inline-error-message>
+                  {{ tafs.fy1 }}
+                </td>
+                <td>
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('OTHER_FINANCIAL_INFO'), getFieldId('TAFS_CODES'), true, i, false, 'invalidFY2')">
+                  </inline-error-message>
+                  {{ tafs.fy2 }}
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!--Criteria for Applying-->
+  <section id="program-application-criteria">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="criteria-for-applying">
+          Criteria for Applying
+        </h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#criteria-information'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="sam-ui segment">
+
+      <div grid>
+        <div columns="12">
+          <!-- Types of Assistance -->
+          <h3 class="sam-ui dividing header">Types of Assistance</h3>
+
+          <p *ngIf="dictionariesUpdated === true && assistanceTypes">
+            <ng-container
+              *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaryService.dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
+              <span [attr.id]="'program-assistance-type-' + i">
+                {{ item.displayValue }}{{isLast ? '' : ', '}}
+              </span>
+            </ng-container>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Credentials and Documentation -->
+          <h3 class="sam-ui dividing header">Credentials and Documentation</h3>
+
+          <p>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('DOCUMENTATION'))">
+            </inline-error-message>
+
+            <ng-container
+              *ngIf="program.data?.eligibility?.documentation?.description && program.data?.eligibility?.documentation?.isApplicable == true">
+
+              <span id="program-elegibility-documentation">
+                {{program.data.eligibility?.documentation?.description}}
+              </span>
+
+              <ng-container *ngIf="program.data.compliance?.CFR200Requirements?.questions">
+                <ng-container
+                  *ngFor="let item of program.data.compliance?.CFR200Requirements?.questions">
+                  <!-- OMBCircularA87 is subpartC-->
+                  <ng-container *ngIf="item.code === 'subpartC'">
+                    <span *ngIf="item.isSelected == true" id="program-elegibility-question-a87">
+                      2 CFR 200, Subpart E - Cost Principles applies to this program.
+                    </span>
+                    <!-- flag can be both 'no' or null -->
+                    <span *ngIf="item.isSelected == false" id="program-elegibility-question-a87">
+                      This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
+                    </span>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Applicant Eligibility -->
+          <h3 class="sam-ui dividing header">Applicant Eligibility</h3>
+
+          <div class="sam-ui lightest blue segment"
+               *ngIf="program.data && dictionariesUpdated === true">
+            <h4 class="sam-ui header">Designations</h4>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('APPLICANT_LIST'))">
+            </inline-error-message>
+            <ng-container
+              *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaryService.dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
+              <span [attr.id]="'program-applicant-designation-' + i">
+                {{ item.value }}{{isLast ? '' : ', '}}
+              </span>
+            </ng-container>
+          </div>
+
+          <p>
+            <span id="program-applicant-eligibility">
+              {{program.data?.eligibility?.applicant?.description}}
+            </span>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Beneficiary Eligibility -->
+          <h3 class="sam-ui dividing header">Beneficiary Eligibility</h3>
+
+          <div class="sam-ui lightest blue segment"
+               *ngIf="program.data && dictionariesUpdated === true">
+            <h4 class="sam-ui header">Designations</h4>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('BENEFICIARY_LIST'))">
+            </inline-error-message>
+            <ng-container
+              *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaryService.dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
+              <span [attr.id]="'program-beneficiary-designation-' + i">
+                {{ item.value }}{{isLast ? '' : ', '}}
+              </span>
+            </ng-container>
+            <span *ngIf="program.data?.eligibility?.beneficiary?.isSameAsApplicant==true"
+                  [attr.id]="'program-beneficiary-designation-sameasapplicant'">
+                  Beneficiary eligibility is the same as applicant eligibility.
+            </span>
+          </div>
+
+          <p>
+            <span id="program-beneficiary-eligibility">
+              {{program.data?.eligibility?.beneficiary?.description}}
+            </span>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Length and Time Phasing of Assistance -->
+          <h3 class="sam-ui dividing header">
+            Length and Time Phasing of Assistance
+          </h3>
+          <p>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('LENGTH_TIME_DESC'))">
+            </inline-error-message>
+            <span id="program-assistance-lengthtime">
+              {{program.data?.eligibility?.limitation?.description}}
+            </span>
+
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('AWARDED_TYPE'))">
+            </inline-error-message>
+            <ng-container *ngIf="program.data?.eligibility?.limitation as limitation">
+              <span id="program-assistance-method" *ngIf="limitation?.awarded as awarded">
+                Method of awarding/releasing assistance:
+                <span *ngIf="awarded !== 'other'; else otherAwarded">
+                  {{awarded === 'lump' ? 'lump sum' : awarded}}
+                </span>
+                <ng-template #otherAwarded>
+                  {{limitation.awardedDescription}}
+                </ng-template>
+              </span>
+            </ng-container>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Use of Assistance -->
+          <h3 class="sam-ui dividing header">Use of Assistance</h3>
+
+          <div class="sam-ui lightest blue segment"
+               *ngIf="program.data && dictionariesUpdated === true">
+            <h4 class="sam-ui header">Designations</h4>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('ASS_USAGE_LIST'))">
+            </inline-error-message>
+
+            <ng-container
+              *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaryService.dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+              <span [attr.id]="'program-usage-designation-' + i">
+                {{ item.value }}{{isLast ? '' : ', '}}
+              </span>
+            </ng-container>
+          </div>
+
+          <p>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('ASS_USAGE_DESC'))">
+            </inline-error-message>
+            <span id="program-usage-assistance-usage"
+                  *ngIf="program.data?.eligibility?.assistanceUsage?.description">
+              {{ program.data?.eligibility?.assistanceUsage?.description }}
+            </span>
+
+            <span id="program-usage-rules"
+                  *ngIf="program.data?.eligibility?.usage?.rules?.description">
+              {{ program.data?.eligibility?.usage?.rules?.description }}
+            </span>
+
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('USAGE_RESTRICTIONS'))">
+            </inline-error-message>
+            <span id="program-usage-restrictions"
+                  *ngIf="program.data.eligibility?.usage?.restrictions?.description && program.data.eligibility?.usage?.restrictions?.isApplicable == true">
+              {{ program.data.eligibility?.usage?.restrictions?.description }}
+            </span>
+
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('USE_DIS_FUNDS'))">
+            </inline-error-message>
+            <span id="program-usage-discretionary-fund"
+                  *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description && program.data.eligibility?.usage?.discretionaryFund?.isApplicable == true">
+              {{ program.data.eligibility?.usage?.discretionaryFund?.description }}
+            </span>
+
+            <inline-error-message [message]="getErrorMessage(getSectionId('CRITERIA_INFO'), getFieldId('USE_LOAN_TERMS'))"></inline-error-message>
+            <span id="program-usage-loan-terms"
+                  *ngIf="program.data.eligibility?.usage?.loanTerms?.description && program.data.eligibility?.usage?.loanTerms?.isApplicable == true">
+              {{ program.data.eligibility?.usage?.loanTerms?.description }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!--Applying for Assistance-->
+  <section id="program-application-information">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="applying-for-assistance">
+          Applying for Assistance
+        </h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#applying-for-assistance'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="sam-ui segment">
+
+      <div grid>
+        <div columns="12">
+          <!-- Deadlines -->
+          <h3 class="sam-ui dividing header">Deadlines</h3>
+
+          <div [ngSwitch]="program.data?.assistance?.deadlines?.flag">
+            <ng-container *ngSwitchCase="'yes'">
+              <!-- repeat over all deadlines. -->
+              <span *ngFor="let deadline of program.data?.assistance?.deadlines?.list; let i = index">
+                <span [attr.id]="'program-deadline-dates-' + i">
+                  <inline-error-message
+                    [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('DEADLINES_LIST'), true, i)">
+                  </inline-error-message>
+                  <ng-container *ngIf="deadline.start">
+                    {{deadline.start | dateFormat: 'MMM DD, YYYY'}}
+                  </ng-container>
+                  <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
+                  <ng-container *ngIf="deadline.end">
+                    {{deadline.end | dateFormat: 'MMM DD, YYYY'}}
+                  </ng-container>
+                  {{deadline.description}}
+                </span>
+              </span>
+            </ng-container>
+
+            <p id="program-deadline-contact" *ngSwitchCase="'contact'">
+              Contact the headquarters or regional office, as appropriate for
+              application deadlines
+            </p>
+
+            <p id="program-deadline-na" *ngSwitchDefault>
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('DEADLINES'))">
+              </inline-error-message>
+            </p>
+
+            <p>
+              {{program.data?.assistance?.deadlines?.description}}
+            </p>
+          </div>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Preapplication Coordination -->
+          <h3 class="sam-ui dividing header">Preapplication Coordination</h3>
+
+          <ng-container
+            [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
+            <p *ngSwitchCase="true">
+
+              Preapplication coordination is required.
+
+              <!-- Environmental statements-->
+              <ng-container
+                *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+                <ng-container
+                  *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                  <span [attr.id]="'program-preapplication-coordination-environmental-report-' + i"
+                        *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372' && entry.otherRequired == false">
+                    An environmental impact is required for this program.
+                  </span>
+                </ng-container>
+
+                <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0"
+                      id="program-preapplication-coorindation-environmental-na">
+                  Environmental impact information is not required for this program.
+                </span>
+
+              </ng-container>
+
+              <!-- Executive Order  -->
+              <ng-container
+                *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+                <ng-container
+                  *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                  <ng-container *ngIf="entry.reportCode === 'ExecutiveOrder12372'">
+                    <span *ngIf="entry.isSelected == true"
+                          id="program-preapplication-coordination-executive-order">
+                      This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                      An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                      information on the process the State requires to be followed in applying for assistance, if the State has selected the program for review.
+                    </span>
+
+                    <span *ngIf="entry.isSelected == false"
+                          id="program-preapplication-coordination-executive-order">
+                      This program is excluded from coverage under E.O. 12372.
+                    </span>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!containsExecutiveOrder()">
+                  <span id="program-preapplication-coordination-executive-order">
+                    This program is excluded from coverage under E.O. 12372.
+                  </span>
+                </ng-container>
+              </ng-container>
+
+              <!-- additional content-->
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('PREAPPCOORD_ADDITIONAL_INFO'))">
+              </inline-error-message>
+
+              <span id="program-preapplication-coordination">
+                {{program.data.assistance?.preApplicationCoordination?.description}}
+              </span>
+            </p>
+
+            <p id="program-preapplication-coordination" *ngSwitchDefault>
+              Preapplication coordination is not applicable.
+            </p>
+          </ng-container>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Application Procedures -->
+          <h3 class="sam-ui dividing header">Application Procedures</h3>
+
+          <ng-container
+            *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+            <ng-container *ngIf="item.code === 'subpartE'">
+              <p *ngIf="item.isSelected == true" id="program-application-procedures-a102">
+                2 CFR 200, Uniform Administrative Requirements, Cost Principles, and
+                Audit Requirements for Federal Awards applies to this program.
+              </p>
+              <p *ngIf="item.isSelected == false" id="program-application-procedures-a102">
+                This program is excluded from coverage under 2 CFR 200, Uniform
+                Administrative Requirements, Cost Principles, and Audit
+                Requirements for Federal Awards.
+              </p>
+            </ng-container>
+          </ng-container>
+
+          <!-- additional content-->
+          <div id="program-application-procedures">
+            <p *ngIf="program.data?.assistance?.applicationProcedure?.isApplicable">
+              Funding opportunities notices for this listing will be posted on
+              <a href="https://www.grants.gov" target="_blank">Grants.gov</a>.
+            </p>
+            <p>{{program.data?.assistance?.applicationProcedure?.description}}</p>
+          </div>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Criteria for Selecting Proposals -->
+          <h3 class="sam-ui dividing header">Criteria for Selecting Proposals</h3>
+
+          <ng-container [ngSwitch]="program.data?.assistance?.selectionCriteria?.isApplicable">
+            <p id="program-selection-criteria" *ngSwitchCase="true">
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('SELECTION_CRITERIA_DESCRIPTION'))">
+              </inline-error-message>
+              {{program.data?.assistance?.selectionCriteria?.description}}
+            </p>
+            <p id="program-selection-criteria" *ngSwitchDefault>
+              Not Applicable
+            </p>
+          </ng-container>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Award Procedure -->
+          <h3 class="sam-ui dividing header">Award Procedure</h3>
+
+          <p id="program-award-procedure">
+            <inline-error-message [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('AWARD_PROCEDURE_DESCRIPTION'))"></inline-error-message>
+            {{program.data?.assistance?.awardProcedure?.description}}
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Date Range for Approval/Disapproval -->
+          <h3 class="sam-ui dividing header">Date Range for Approval/Disapproval</h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('APPROVAL_INTERVAL'))">
+          </inline-error-message>
+
+          <p id="program-application-approval-interval"
+             [ngSwitch]="program.data?.assistance?.approval?.interval">
+            <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+            <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+            <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+            <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+            <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+            <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+            <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+            <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+            <ng-container *ngSwitchCase="'9'">Other.</ng-container>
+            <span id="program-application-approval">
+              {{program.data?.assistance?.approval?.description}}
+            </span>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Renewals -->
+          <h3 class="sam-ui dividing header">Renewals</h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('RENEWAL_INTERVAL'))">
+          </inline-error-message>
+
+          <p id="program-application-renewal-interval"
+             [ngSwitch]="program.data?.assistance?.renewal?.interval">
+            <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+            <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+            <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+            <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+            <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+            <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+            <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+            <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+            <ng-container *ngSwitchCase="'9'">Other.</ng-container>
+            <span id="program-application-renewal">
+              {{program.data?.assistance?.renewal?.description}}
+            </span>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Appeals -->
+          <h3 class="sam-ui dividing header">Appeals</h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('APPLYING_FOR_ASSISTANCE'), getFieldId('APPEAL_INTERVAL'))">
+          </inline-error-message>
+
+          <p id="program-application-appeal-interval"
+             [ngSwitch]="program.data?.assistance?.appeal?.interval">
+            <ng-container *ngSwitchCase="'1'">From 1 to 15 days.</ng-container>
+            <ng-container *ngSwitchCase="'2'">From 15 to 30 days.</ng-container>
+            <ng-container *ngSwitchCase="'3'">From 30 to 60 days.</ng-container>
+            <ng-container *ngSwitchCase="'4'">From 60 to 90 days.</ng-container>
+            <ng-container *ngSwitchCase="'5'">From 90 to 120 days.</ng-container>
+            <ng-container *ngSwitchCase="'6'">From 120 to 180 days.</ng-container>
+            <ng-container *ngSwitchCase="'7'">&gt; 180 Days.</ng-container>
+            <ng-container *ngSwitchCase="'8'">Not Applicable.</ng-container>
+            <ng-container *ngSwitchCase="'9'">Other.</ng-container>
+            <span id="program-application-appeal">
+              {{program.data?.assistance?.appeal?.description}}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!--Compliance requirements-->
+  <section id="program-compliance-requirements">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="compliance-requirements">
+          Compliance Requirements
+        </h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#compliance-requirements'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+
+      <div grid>
+        <div columns="12">
+
+          <!-- Policy Requirements -->
+          <h3 class="sam-ui dividing header">Policy Requirements</h3>
+
+          <ng-container
+            *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length > 0">
+            <p>
+              The following 2CFR policy requirements apply to this assistance listing:
+            </p>
+
+            <ng-container
+              *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
+              <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+                <p [attr.id]="'program-policy-requirement-' + item.code">
+                  <ng-container
+                    *ngIf="item.isSelected == true && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] |
+                    filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  </ng-container>
+                </p>
+              </ng-container>
+            </ng-container>
+
+            <ng-container
+              *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
+              <p><em>Not Applicable</em></p>
+            </ng-container>
+
+            <div class="sam-ui hidden divider"></div>
+
+            <p>
+              The following 2CFR policy requirements are excluded from coverage under
+              this assistance listing:
+            </p>
+
+            <ng-container
+              *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
+              <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+                <p [attr.id]="'program-policy-requirement-' + item.code">
+                  <ng-container
+                    *ngIf="item.isSelected == false && dictionariesUpdated === true && ([item.code] | filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] |
+                    filterMultiArrayObject:dictionaryService.dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  </ng-container>
+                </p>
+              </ng-container>
+            </ng-container>
+
+            <p *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
+              <em>Not Applicable</em>
+            </p>
+          </ng-container>
+
+          <p class="field" *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length == 0">
+            <em>Not Applicable</em>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Reports -->
+          <h3 class="sam-ui dividing header">Reports</h3>
+
+          <p id="program-postaward-reports"
+             *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length > 0">
+            <ng-container *ngFor="let item of program.data?.compliance?.reports; let i = index">
+              <inline-error-message
+                [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('COMPLIANCE_REPORTS'), true, '-textarea' + i)">
+              </inline-error-message>
+              <span *ngIf="item.isSelected == true" [attr.id]="'program-postaward-reports-' + item.code">
+                {{item.description}}
+              </span>
+            </ng-container>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Audits -->
+          <h3 class="sam-ui dividing header">Audits</h3>
+
+          <p>
+            <ng-container
+              *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+              <ng-container *ngIf="item.code === 'subpartF'">
+                <span *ngIf="item.isSelected == true" id="program-postaward-audit-a133">
+                  In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
+                  nonfederal entities that expend financial assistance of $750,000 or more in Federal
+                  awards will have a single or a program-specific audit conducted for that year. Non-Federal
+                  entities that expend less than $750,000 a year in Federal awards are exempt from Federal
+                  audit requirements for that year, except as noted in 2 CFR 200.503
+                </span>
+
+                <span *ngIf="item.isSelected == false" id="program-postaward-audit-a133">
+                  This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
+                </span>
+              </ng-container>
+            </ng-container>
+          </p>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('OTHER_AUDIT_REQUIREMENTS'))">
+          </inline-error-message>
+
+          <ng-container *ngIf="program.data?.compliance?.audit?.isApplicable">
+              <p id="program-postaward-audit">
+                  {{program.data?.compliance?.audit?.description}}
+              </p>
+          </ng-container>
+          
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Records -->
+          <h3 class="sam-ui dividing header">Records</h3>
+
+          <p id="program-postaward-records"
+             *ngIf="(program.data?.compliance?.records?.description) && (program.data?.compliance?.records.description != '')">
+            {{program.data?.compliance?.records?.description}}
+          </p>
+
+          <p id="program-postaward-records"
+             *ngIf="!(program.data?.compliance?.records?.description) || (program.data?.compliance?.records?.description == '')">
+            No Data Available.
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Regulations, Guidelines, and Literature -->
+          <h3 class="sam-ui dividing header">
+            Regulations, Guidelines, and Literature
+          </h3>
+
+          <p>
+            <inline-error-message
+              [message]="getErrorMessage(getSectionId('COMPLIANCE_REQUIREMENTS'), getFieldId('ADDITIONAL_DOCUMENTATION'))">
+            </inline-error-message>
+
+            <ng-container *ngIf="program.data?.compliance?.documents?.isApplicable">
+                <span id="program-postaward-documents">
+                    {{program.data?.compliance?.documents?.description}}
+                </span>
+            </ng-container>
+            <ng-container *ngIf="!program.data?.compliance?.documents?.isApplicable">
+                <p id="program-postaward-documents">
+                    <em>Not Applicable</em>
+                </p>
+            </ng-container>
+          </p>
+
+          <div class="sam-ui hidden divider"></div>
+
+          <!-- Formula and Matching Requirements -->
+          <h3 class="sam-ui dividing header">Formula and Matching Requirements</h3>
+
+          <!-- statutory formula-->
+          <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formula">
+            <div id="program-assistance-formula" *ngSwitchCase="true">
+              Statutory Formula: Title {{program.data?.compliance?.formulaAndMatching?.formula?.title}} Chapter
+              {{program.data?.compliance?.formulaAndMatching?.formula?.chapter}}
+              Part {{program.data?.compliance?.formulaAndMatching?.formula?.part}} Subpart
+              {{program.data?.compliance?.formulaAndMatching?.formula?.subPart}} Public Law
+              {{program.data?.compliance?.formulaAndMatching?.formula?.publicLaw}}
+              {{program.data?.compliance?.formulaAndMatching?.formula?.description}}
+            </div>
+
+            <div id="program-assistance-formula" *ngSwitchCase="false">
+              Statuary formula is not applicable to this assistance listing.
+            </div>
+          </ng-container>
+
+          <!-- matching requirements -->
+          <ng-container
+            [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
+            <div id="program-assistance-matching" *ngSwitchCase="true">
+              Matching Requirements:
+              <ng-container
+                *ngIf="dictionariesUpdated === true && ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'').length > 0">
+                Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] |
+                filterMultiArrayObject:dictionaryService.dictionaries.match_percent:'element_id':false:'')[0].value }}
+              </ng-container>
+              {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
+
+              <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
+                <p *ngSwitchCase="'mandatory'">
+                  Matching requirements are mandatory.
+                </p>
+                <p *ngSwitchCase="'voluntary'">
+                  Matching requirements are voluntary.
+                </p>
+                <p *ngSwitchCase="'voluntary_percent'">
+                  Matching requirements are voluntary and part of the rating criteria.
+                </p>
+              </ng-container>
+            </div>
+
+            <div id="program-assistance-matching" *ngSwitchCase="false">
+              Matching requirements are not applicable to this assistance listing.
+            </div>
+          </ng-container>
+
+          <!-- moe-->
+          <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.moe">
+            <div id="program-assistance-moe" *ngSwitchCase="true">
+              This program has MOE requirements, see funding agency for further details. Additional Information:
+              {{program.data?.compliance?.formulaAndMatching?.moe?.description}}
+            </div>
+
+            <div id="program-assistance-moe" *ngSwitchCase="false">
+              MOE requirements are not applicable to this assistance listing.
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!--Contact information-->
+  <section id="program-contact-information">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <div grid class="middle aligned">
+      <div columns="9">
+        <h2 class="sam-ui header" id="contact-information">Contact Information</h2>
+      </div>
+      <div columns="3" class="right aligned">
+        <!-- Edit Button -->
+        <a *ngIf="canEdit()"
+           (click)="onEditClick(['#contact-information'])">
+          Edit Section
+          <em class="fa fa-pencil" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+
+    <div class="sam-ui segment">
+
+      <div grid>
+        <div columns="12">
+
+          <h3 class="sam-ui dividing header">Regional or Local Location:</h3>
+
+          <span id="program-contacts-local"
+                *ngIf="program.data?.contacts?.local?.flag == 'appendix'">
+            <a [routerLink]="['/search/fal/regionalAssistanceLocations']"
+               [queryParams]="{ organizationId: federalHierarchy?.orgKey }">
+              See Regional Assistance Locations.
+            </a>
+            {{program.data.contacts['local']?.description }}
+          </span>
+
+          <span id="program-contacts-local"
+                *ngIf="program.data?.contacts?.local?.flag == 'none'">
+            None. {{program.data.contacts['local']?.description }}
+          </span>
+
+          <h3 class="sam-ui dividing header">Headquarters Office:</h3>
+
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, 0, true)">
+          </inline-error-message>
+
+          <div *ngFor="let item of items; let i = index">
+            <inline-error-message [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_LIST'), true, i)">
+            </inline-error-message>
+            <sam-poc [attr.id]="'program-contacts-poc-' + i" [data]="item"></sam-poc>
+          </div>
+
+          <strong>Website: </strong>
+          <inline-error-message
+            [message]="getErrorMessage(getSectionId('CONTACT_INFORMATION'), getFieldId('CONTACT_WEBSITE'))">
+          </inline-error-message>
+
+          <ng-container *ngIf="!program.data?.website || program.data?.website == null ">
+            No Data Available
+          </ng-container>
+          <ng-container *ngIf="program.data?.website">
+            {{program.data.website}}
+          </ng-container>
+
+          <div *ngIf="toggleButton" class="sam-ui section divider"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!--History Section-->
+  <section #historySection id="program-history">
+
+    <div class="sam-ui hidden divider"></div>
+
+    <h2 class="sam-ui header" id="history">
+      {{actionHistoryAndNote && !publicHistoryIsVisible ? "Action History" : "History"}}
+    </h2>
+
+    <div class="sam-ui segment">
+      <sam-checkbox
+        *ngIf="actionHistoryAndNote"
+        label="Public History"
+        [(model)]="checkboxModel"
+        [name]="checkboxConfig.name"
+        [options]="checkboxConfig.options"
+        (modelChange)="showHidePublicHistory($event)">
+      </sam-checkbox>
+
+      <div class="sam-ui info message"
+           *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
+        <div class="header">
+          <em class="fa fa-id-badge" aria-hidden="true"></em>
+          This history is only visible to managers of this listing
+        </div>
+      </div>
+
+      <div class="sam-ui message"
+           *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
+        <strong>Created By: </strong>
+        {{actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter ?
+        actionHistoryAndNote[actionHistoryAndNote.length-1]?.submitter : "Not Available" }}
+
+        <strong> On: </strong>
+        {{actionHistoryAndNote[actionHistoryAndNote.length-1]?.date ?
+        actionHistoryAndNote[actionHistoryAndNote.length-1]?.date : "Not Available" }}
+      </div>
+
+      <div class="sam-ui message"
+           *ngIf="actionHistoryAndNote && !publicHistoryIsVisible">
+        <strong>Last Modified By: </strong>
+        {{actionHistoryAndNote[0]?.submitter ? actionHistoryAndNote[0]?.submitter : "Not Available" }}
+        <strong>On: </strong>
+        {{actionHistoryAndNote[0]?.date ? actionHistoryAndNote[0]?.date : "Not Available" }}
+      </div>
+
+      <ng-container *ngIf="publicHistoryIsVisible">
+        <sam-history [data]="history"></sam-history>
+      </ng-container>
+
+      <sam-history
+        *ngIf="!publicHistoryIsVisible"
+        [data]="actionHistoryAndNote">
+      </sam-history>
+    </div>
+
+  </section>
+
+</page>

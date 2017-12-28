@@ -1,0 +1,12 @@
+<section class="org-create-page usa-grid relative">
+  <div class="usa-width-one-fourth p_T-4x">
+    <span *ngIf="hierarchyPath.length === 0">&nbsp;</span>
+    <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
+      <a (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="i !== hierarchyPath.length - 1"> > </span>
+    </span>
+  </div>
+  <div class="usa-width-two-thirds p_B-6x" *ngIf="loadData">
+    <create-org-form [orgFormConfig]="orgFormConfig" (onCancelClick)="location.back()"></create-org-form>
+  </div>
+
+</section>

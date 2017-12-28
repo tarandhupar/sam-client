@@ -1,0 +1,83 @@
+<div class="sam-ui hidden divider"></div>
+<span class="usa-input-error-message" *ngIf="obligationsInfo.length == 0 && toggleAttleatOneEntryError"><sup>*</sup>You must add at least one obligation.</span>
+<sam-button [buttonId]="'obligations-add-btn'" buttonType="secondary" buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
+           [class.hide]="hideAddButton"></sam-button>
+<div [formGroup]="falObligationSubForm" [class.hide]="!hideAddButton">
+<div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
+  <div class="fal-label-margin">
+    <h4 class="sam-ui dividing header">{{mode}} Obligation</h4>
+  </div>
+  <div *ngFor="let obligation of falObligationSubForm.controls.obligations.controls; let i=index">
+    <div [formGroupName]="i" *ngIf="obligationIndex == i">
+      <div class="sam-ui hidden divider"></div>
+      <div class="fal-label-margin">Select if applicable</div>
+      <sam-checkbox
+        [control]="falObligationSubForm.controls['isRecoveryAct']"
+        [name]="recReinveCheckboxConfig.name"
+        [options]="recReinveCheckboxConfig.options"
+        class="form-control" formControlName="isRecoveryAct">
+      </sam-checkbox>
+      <div class="sam-ui hidden divider"></div>
+        <sam-autocomplete [options]="options"
+                          [attr.id]="'fal-obligation-asst-type-autocomplete'"
+                          id="fal-obligation-asst-type-autocomplete-comp"
+                          [name]="autoAssistanceType"
+                          formControlName="assistanceType"
+                          [config]="autocompleteConfig"
+                          [categories]="acCategories"
+                          [required]="true"
+                          [labelText]="'Assistance Type'"
+                          [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'"
+                          [control]="falObligationSubForm.controls['obligations']['controls'][i]['controls']['assistanceType']"
+                          ></sam-autocomplete>
+      <div class="sam-ui hidden divider"></div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="pastFiscalYearConfig.options"
+          [label]="'Past Fiscal Year - ' + prevFY"
+          [hint]="pastFiscalYearConfig.hint"
+          [name]="pastFiscalYearConfig.name"
+          [id]="pastFiscalYearConfig.id"
+          [errorMessage]="pastFiscalYearConfig.errorMessage"
+          [formControlName]="'pFY'">
+        </samTextRadioButton>
+      </div>
+      <div class="sam-ui hidden divider"></div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="currentFiscalYearConfig.options"
+          [label]="'Current Fiscal Year - '+ currentFY"
+          [hint]="currentFiscalYearConfig.hint"
+          [name]="currentFiscalYearConfig.name"
+          [id]="currentFiscalYearConfig.id"
+          [errorMessage]="currentFiscalYearConfig.errorMessage" formControlName="cFY">
+        </samTextRadioButton>
+      </div>
+      <div class="sam-ui hidden divider"></div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="budgetFiscalYearConfig.options"
+          [label]="'Budget Fiscal Year - ' + nextFY"
+          [hint]="budgetFiscalYearConfig.hint"
+          [name]="budgetFiscalYearConfig.name"
+          [id]="budgetFiscalYearConfig.id"
+          [errorMessage]="budgetFiscalYearConfig.errorMessage" formControlName="bFY">
+        </samTextRadioButton>
+      </div>
+      <div class="sam-ui hidden divider"></div>
+      <sam-text-area
+        [name]="textareaConfig.name"
+        [label]="textareaConfig.label"
+        formControlName="description">
+      </sam-text-area>
+      <div class="sam-ui hidden divider"></div>
+      <div class="pull-center">
+        <sam-button [buttonId]="'obligations-cancel-btn'" buttonType="tertiary" buttonText="Cancel" (onClick)="onObligationCancelClick(i)"></sam-button>
+        <sam-button [buttonId]="'obligations-confirm-btn'" buttonType="secondary" [buttonText]="mode === 'Add' ? 'Add' : 'Update'"
+                   (onClick)="onObligationConfirmClick(i)"></sam-button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>

@@ -1,0 +1,23 @@
+<h4 class="sam-ui header">Date</h4>
+<div class="sam-ui secondary pointing menu">
+  <a *ngFor="let config of tabConfig; let i = index" (click)="selectTab(i)" class="item" [ngClass]="getColorClass(i)">
+    {{tabConfig[i].title}}
+  </a>
+</div>
+<ng-container *ngFor="let config of tabConfig; let i = index">
+  <sam-date-range-filter *ngIf="selectedIndex == i"
+  [ngModel]="dateFilterModel[i]"
+  (ngModelChange)="changeHandler($event)"
+  [radioSelection]="tabConfig[i]?.dateFilterConfig?.radSelection ? tabConfig[i]?.dateFilterConfig?.radSelection : null"
+  [dateRadioOptions]="tabConfig[i]?.dateFilterConfig?.options ? tabConfig[i]?.dateFilterConfig?.options : null"
+  [rangeType]="tabConfig[i]?.dateFilterConfig?.rangeType ? tabConfig[i]?.dateFilterConfig?.rangeType : null"
+  [class]="'falDateFilter'">
+  </sam-date-range-filter>
+</ng-container>
+
+
+<sam-button (onClick)='clearDateFilter()' [buttonText]="'Clear'" buttonType="tertiary"></sam-button>
+<!--filter button-->
+<sam-button buttonType="secondary" [buttonDisabled]="(filterDisabled? true : false)"
+            (onClick)='filterByDate()'
+            [buttonText]="'Filter'"></sam-button>

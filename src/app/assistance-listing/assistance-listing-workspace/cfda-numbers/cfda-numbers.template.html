@@ -1,0 +1,84 @@
+<page
+  *ngIf="processedCfdaNumbers"
+  theme="inside"
+  [breadcrumbs]="crumbs"
+  section="Workspace"
+  title="CFDA Number Assignment">
+
+  <!-- Sidebar section -->
+  <sidebar [wide] = "true">
+    <!--&lt;!&ndash; Navigation &ndash;&gt;-->
+    <ul class="usa-sidenav-list">
+      <li>
+        <a routerLink="/fal/workspace">
+          Assistance Listings
+        </a>
+      </li>
+      <li>
+        <a routerLink="/fal/myRegionalAssistanceLocations">
+          Regional Assistance Locations
+        </a>
+      </li>
+      <li>
+        <a class="usa-current">
+          CFDA Number Assignment
+        </a>
+      </li>
+    </ul>
+    <div class="sam-ui segment">
+      <sam-agency-picker-v2
+        *ngIf="orgLevels && toggleAgencyPicker"
+        type="single"
+        [ngModel]="selectedOrganization"
+        (ngModelChange)="onOrganizationChange($event)"
+        [orgRoots]="orgRoot">
+      </sam-agency-picker-v2>
+    </div>
+
+  </sidebar>
+
+  <!-- Page results -->
+  <results
+    *ngIf="processedCfdaNumbers"
+    [totalElements]="organizations.length"
+    [showing]="showPerPage"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage+1"
+    (pageChange)="pageChange($event)">
+
+    <!-- Results -->
+    <div class="sam-ui segment">
+      <ng-container *ngFor="let row of processedCfdaNumbers">
+        <div class="sam-ui section divider"></div>
+        <div class="sam-ui grid">
+          <div class="eight wide column">
+            <div><strong>{{ row.agencyName | capitalize }}</strong></div>
+            <div><em>{{ row.agencyType | formatFederalHierarchyType}}</em></div>
+            <div> Low Number: {{ row.programNumberLow }}</div>
+            <div> High Number: {{ row.programNumberHigh }}</div>
+          </div>
+          <div class="four wide column">
+            <sam-button [buttonType]="buttonType"
+                        [buttonSize]="'small'"
+                        [buttonText]="'Edit Number Assignment'"
+                        [buttonClass]="'usa-button-primary edit-btn'"
+                        (onClick)="onEditClick(row.organizationId)">
+            </sam-button>
+            <div>Assignment Type: {{ row.programNumberAuto == false ? 'Manual' : 'Automatic'}}</div>
+            <div>Modified Date: {{ row.modifiedDate }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <p *ngIf="cfdaNumbersApi.length==0">
+        There are no requests under the selected criteria.
+      </p>
+
+    </div>
+  </results>
+
+  <p *ngIf="cfdaNumbersApi.length==0">
+    There are no results under the selected criteria.
+  </p>
+
+</page>

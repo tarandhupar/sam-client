@@ -1,0 +1,18 @@
+<ng-container>
+		<div>
+			<a [routerLink]="['/exclusions', uniqueIdentifier]" [queryParams]="qParams">
+			{{crossReference?.identityInfo?.companyName}}</a>
+			<br />
+			<strong>Cross Reference Type: </strong>{{crossReference?.crossReferenceType}}
+			<br />
+			<strong>Excluding Agency: </strong>{{crossReference?.excludingAgencyName}}
+			<br />
+			<strong>Exclusion Type: </strong>{{crossReference?.exclusionType}}
+			<br />
+			<strong>Active Date: </strong>{{crossReference?.activateDate | date: 'MMM dd, y'}}
+			<br />
+			<strong>Termination Date: </strong>{{crossReference?.terminationDate != 'Indefinite' ? (crossReference?.terminationDate | date: 'MMM dd, y') : crossReference?.terminationDate}}
+			<br />
+			<br />
+		</div>
+</ng-container>

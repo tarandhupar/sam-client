@@ -1,0 +1,166 @@
+<div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
+  <section class="usa-grid-full">
+    <div class="sam-ui hidden divider"></div>
+    Back to:
+    <a routerLink="/reports/overview" routerLinkActive="Active">Dynamic Reports</a>
+    <br>
+    <h2 class="m_T-2x">{{name}}&nbsp;&nbsp;&nbsp;&nbsp;
+      <span *ngIf="anomaly" style="color: red">ANOMALY</span>
+    </h2>
+    <sam-accordion>
+      <sam-accordion-section [name]="'Description'" [headerText]="'Description'">
+        <div *ngIf="data" [id]="id">
+          <div *ngIf="id">
+            <ul class="p_L-0x ul-css">
+              <li *ngFor="let report of data?.reports | repfil: id">
+                <b>
+                  <a href="{{report?.name}}"></a>
+                </b>
+                <ul class="p_L-0x ul-css">
+                  <li>
+                    <p class="p_L-0x">{{report?.desc}}</p>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </sam-accordion-section>
+    </sam-accordion>
+    <sam-accordion [expandIndex]="promptsAccordian" [bordered]="true" #samAccordionValue class="report__prompts">
+      <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
+        <form #reportForm="ngForm">
+          <div class="display-block">
+            <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [hint]="dateRangeLabel" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
+              [control]="dateRange?.control" [required]="'Required'" name='dateRange'>
+            </sam-date-range>
+            <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">{{dateValidatorMsg}}</p>
+          </div>
+          <div class="display-block">
+            <div>
+              <sam-autocomplete *ngIf="usedPrompts && usedPrompts.psc" [(ngModel)]="psc" pscpicker-autofill [activeVal]="'ALL'" [labelText]="'PSC Code'"
+                [config]="pscConfig" [name]="'pscpicker'" [id]="'pscpicker'" [required]="true">
+              </sam-autocomplete>
+              <div *ngIf="usedPrompts && usedPrompts.rangePsc">
+                <sam-autocomplete [(ngModel)]="rangePscFrom" pscpicker-autofill [activeVal]="'ALL'" [labelText]="label.pscFrom" [config]="pscConfig"
+                  [name]="'pscpicker'">
+                </sam-autocomplete>
+                <sam-autocomplete [(ngModel)]="rangePscTo" pscpicker-autofill [activeVal]="'ALL'" [labelText]="label.pscTo" [config]="pscConfig"
+                  [name]="'pscpicker'">
+                </sam-autocomplete>
+              </div>
+              <p *ngIf="pscValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">PSC Code is a required field.</p>
+              <sam-autocomplete *ngIf="usedPrompts && usedPrompts.naics" [(ngModel)]="naics" naicspicker-autofill [labelText]="label.naics" [config]="pscConfig"
+              [name]="'naicspicker'">
+            </sam-autocomplete>
+              <sam-text *ngIf="usedPrompts && usedPrompts.locationCode && !lasaReport" [(ngModel)]="locationCode" [name]="'locationCode'"
+                [label]="'Location'">
+              </sam-text>
+              <sam-autocomplete state *ngIf="usedPrompts && usedPrompts.state && !lasaReport" [(ngModel)]="location.state" name="state"
+                [config]="autocompleteStateConfig" [labelText]="stateLabel" (enterEvent)="updateStateField($event)">
+              </sam-autocomplete>
+              <sam-autocomplete country *ngIf="usedPrompts && usedPrompts.country && !lasaReport" [allowAny]="false" [(ngModel)]="location.country"
+                name="country" [labelText]="'Vendor Country Code'" [config]="locationConfig" (enterEvent)="updateCountryField($event)">
+              </sam-autocomplete>
+              <sam-text *ngIf="usedPrompts && usedPrompts.descOfReq" [(ngModel)]="descOfReq" [label]="'Description of Requirement'" [name]="'descOfReq'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts && usedPrompts.agencyName" [(ngModel)]="agencyName" [name]="'agencyName'" [label]="'Vendor Name'">
+              </sam-text>
+              <sam-agency-picker-v2 *ngIf="usedPrompts && usedPrompts.fHierarchy" name="agency-picker" [(ngModel)]="agencyPicker" [hasFpds]="hasFpds"
+                [activeOnly]="false">
+              </sam-agency-picker-v2>
+              <sam-text *ngIf="usedPrompts && usedPrompts.orgId" [(ngModel)]="orgCode" [name]="'orgCode'" [label]="'Organization'">
+              </sam-text>
+              <sam-text *ngIf="usedPrompts && usedPrompts.piid" [(ngModel)]="piid" [name]="'piid'" [label]="'PIID'">
+              </sam-text>
+              <sam-select *ngIf="usedPrompts && usedPrompts.contractingRegion" name="contractingRegion" [(ngModel)]="contractingRegion"
+                [options]="contractingRegionOptions" [label]="'Contracting Office Region'" (switchStatusChange)="contractingRegionChange($event)">
+              </sam-select>
+              <sam-text *ngIf="usedPrompts && usedPrompts.fiscalYear" [(ngModel)]="fiscalYear" [name]="'fiscalYear'" [label]="'Fiscal Year'"
+                [maxlength]="4" (keypress)="_keyPress($event)">
+              </sam-text>
+              <sam-select *ngIf="usedPrompts && usedPrompts.includesBases" class="includesBases" [(ngModel)]="includesBases" name="includesBases"
+                [options]="basesOptions" [label]="'Includes'" (switchStatusChange)="includesBasesStatusChange($event)">
+              </sam-select>
+              <div *ngIf="lasaReport">
+                <sam-text *ngIf="usedPrompts && usedPrompts.congressionalDistrictCode" [(ngModel)]="congressionalDistrictCode" [name]="'congressionalDistrictCode'"
+                  [label]="'Congressional District Code'">
+                </sam-text>
+                <sam-text *ngIf="usedPrompts && usedPrompts.locationCode" [(ngModel)]="locationCode" [name]="'locationCode'" [label]="'Location'">
+                </sam-text>
+                <sam-autocomplete state *ngIf="usedPrompts && usedPrompts.state" [(ngModel)]="location.state" name="state" [config]="autocompleteStateConfig"
+                  [labelText]="stateLabel" (enterEvent)="updateStateField($event)">
+                </sam-autocomplete>
+                <sam-autocomplete country *ngIf="usedPrompts && usedPrompts.country" [allowAny]="false" [(ngModel)]="location.country" name="country"
+                  [labelText]="'Vendor Country Code'" [config]="locationConfig" (enterEvent)="updateCountryField($event)">
+                </sam-autocomplete>
+              </div>
+              <!-- To be replaced later -->
+              <!--sam-text *ngIf="usedPrompts && usedPrompts.onlyAgency" [(ngModel)]="onlyAgency" [name]="'onlyAgency'"
+                [label]="'Sub-Tier'" [required]="true">
+              </sam-text-->
+              <sam-autocomplete
+                *ngIf="usedPrompts && usedPrompts.onlyAgency"
+                agencypicker-autofill
+                labelText="Sub-Tier"
+                [required]="true"
+                [name]="'picker'"
+                [id]="'picker'"
+                [ngModel]="agOnlySelection"
+                (ngModelChange)="agOnlyAddSelection($event)"
+                [config]="agOnlyConfig"
+                [attr.class]="'agOnlyPicker'">
+              </sam-autocomplete>
+              <br/>
+              <div *ngIf="usedPrompts && usedPrompts.fundedBy">
+                <sam-checkbox [(ngModel)]="fundedBy" [name]="'Funded By'"[label]="label.fundedBy" [options]="fundedByOptions" (modelChange)="changeFundedBy($evt)"></sam-checkbox>
+                <p>If not checked, the report will show the awards awarded by this Sub-Tier.</p>
+              </div>
+            </div>
+          </div>
+          <div class="display-block report__promptBtns">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Clear'" [buttonType]="'tertiary'" (click)="resetParameter()">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="'primary'" (click)="validate('execute')">
+            </sam-button>
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'PDF Export'" [buttonType]="'tertiary'" (click)="validate('export')">
+            </sam-button>
+            <sam-button *ngIf="localEnv" [buttonId]="'defaultBtn'" [buttonText]="'TEST'" [buttonType]="'tertiary'" (click)="test()">
+            </sam-button>
+          </div>
+        </form>
+      </sam-accordion-section>
+    </sam-accordion>
+    <br>
+    <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
+    <div class="usa-width-one-whole">
+      <sam-alert style="margin-top: 0" class="full-width" [type]="'info'" [description]="'DoD report data that are funded by DoD are delayed 90 days for non DoD users.'">
+        <br/>
+        <br/>The maximum number of rows allowed is 150,000. For better results, please further limit your report search criteria
+        by reducing the date range or providing more specific information where applicable.
+      </sam-alert>
+    </div>
+    <br>
+    <br>
+    <sam-accordion>
+      <sam-accordion-section [name]="'Appendix'" [headerText]="'Appendix'">
+        <div *ngIf="data" [id]="id">
+          <div *ngIf="id">
+            <ul class="p_L-0x ul-css">
+              <li *ngFor="let report of data.reports | repfil: id">
+                <b>
+                  <a href="{{report?.name}}"></a>
+                </b>
+                <div class="p_L-0x ul-css">
+                  <div *ngFor="let item of report?.appendix" style="margin-bottom:1em">
+                    <p class="p_L-0x">{{item}}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </sam-accordion-section>
+    </sam-accordion>
+  </section>
+</div>

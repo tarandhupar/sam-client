@@ -1,0 +1,209 @@
+<h2 class="sam-ui header">
+  Applying for Assistance
+</h2>
+
+<form [formGroup]="falAssistanceForm">
+
+  <div formGroupName="deadlines" class="sam-ui segment">
+
+    <sam-radio-button
+      *ngIf="falAssistanceForm.get('deadlines').get('flag')"
+      [label]="'Deadlines'"
+      [name]="'deadlineFlag-radio-buttons'"
+      [options]="deadlinesFlagOptions"
+      [required]="true"
+      [hint]="deadlineHint"
+      formControlName="flag"
+      [attr.id] = "'fal-appForAssist-deadline'"
+      [control]="falAssistanceForm.get('deadlines').get('flag')">
+    </sam-radio-button>
+
+    <div id="fal-appForAssist-deadline-list" [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
+
+      <sam-listbuilder #lb
+        [formArrayInput]="falAssistanceForm.get('deadlines.list').controls"
+        [formGroupTemplate]="deadlineSubform"
+        (formArrayChange)="fmArrayChange($event)"
+        addEntryText="Add Deadline"
+        [deleteModalFlag]="true"
+        [deleteModalConfig]="{
+          title:'Delete Deadline',
+          type:'warning',
+          description:'Please confirm that you want to delete deadline.'
+        }"
+        (action)="listBuilderActionHandler($event)">
+
+        <ng-template #display let-item>
+          <ng-container *ngIf="!item.valid">
+            <span class='usa-input-error-message'>
+              <sup>*</sup>This deadline information has some errors
+            </span>
+          </ng-container>
+          {{formatAssistInfo(item.value)}}
+        </ng-template>
+
+        <ng-template #edit let-item>
+          <form [formGroup]="item">
+
+            <sam-date-range
+              [fromRequired]="true"
+              [control]="item.get('dateRange')"
+              [defaultValidations]="false"
+              name="deadline-date-range"
+              formControlName="dateRange">
+            </sam-date-range>
+
+            <sam-text-area
+              [attr.id]="'optional-desc-deadline'"
+              [name]="'list-desc'"
+              [label]="'Describe this Deadline'"
+              formControlName="description"
+              [hint]= "'Optionally provide a description for this deadline'">
+            </sam-text-area>
+          </form>
+        </ng-template>
+      </sam-listbuilder>
+      <div><br></div>
+      <sam-text-area
+        [label]="'Other Deadline Information'"
+        [name]="'deadlines-description'"
+        [attr.id]="'other-deadlines-description'"
+        formControlName="description">
+      </sam-text-area>
+
+    </div>
+  </div>
+
+  <div formGroupName="preApplicationCoordination" class="sam-ui segment">
+    <sam-checkbox [label]="'Pre-Application Coordination'"
+                 [name]="'preAppCord-checkbox'"
+                 [hint]="'Select all that apply'"
+                 [options]="preAppCordOptions"
+                 (ngModelChange)="isRequired($event)"
+                 [attr.id] = "'fal-appForAssist-pac-checkbox'"
+                 formControlName="reports"
+    ></sam-checkbox>
+
+    <sam-text-area [label]="'Additional Information'"
+                 [name]="'preAppCord-description'"
+                 [attr.id]="'fal-appForAssist-pac-addInfo'"
+                 [control]="falAssistanceForm.get('preApplicationCoordination').get('description')"
+                 formControlName="description"
+                 [requiredFlag]="flag"
+                 [class.hide]="falAssistanceForm.value.preApplicationCoordination.reports.length == 0"
+    ></sam-text-area>
+  </div>
+
+  <div formGroupName="applicationProcedure" class="sam-ui segment">
+
+    <sam-checkbox [label]="'Application Procedures'"
+                 [name]="'appProc-checkbox'"
+                 [hint]="appProcedureHint"
+                 [attr.id]="'app-procedure-hint'"
+                 [options]="appProcOptions"
+                 formControlName="isApplicable"
+    ></sam-checkbox>
+
+    <sam-text-area [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
+                 [name]="'appProc-description'"
+                 [attr.id]="'app-procedure-hint-textarea'"
+                 formControlName="description"
+                 [hint]= "'List all steps in the application process.'"
+    ></sam-text-area>
+
+  </div>
+
+  <div formGroupName="selectionCriteria" class="sam-ui segment">
+
+    <sam-checkbox [label]="'Criteria for Selecting Proposals'"
+                  [name]="'selectionCriteria-checkbox'"
+                  [hint]="'Select if applicable.'"
+                  [options]="selectionCriteriaOptions"
+                  [attr.id]="'selection-criteria-checkbox'"
+                  formControlName="isApplicable"
+    ></sam-checkbox>
+
+    <sam-text-area *ngIf="falAssistanceForm.get('selectionCriteria').get('description')"
+                   [label]="'Please describe.'"
+                   [name]="'selectionCriteria-description'"
+                   [attr.id]="'fal-appForAssist-sc-description'"
+                   [requiredFlag]="falAssistanceForm.value.selectionCriteria.isApplicable[0] == true"
+                   formControlName="description"
+                   [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
+                   [control]="falAssistanceForm.get('selectionCriteria').get('description')"
+    ></sam-text-area>
+  </div>
+
+  <div formGroupName="awardProcedure" class="sam-ui segment">
+    <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
+                   [label]="'Award Procedure'"
+                   [hint]="awardProcedureHint"
+                   [attr.id]="'fal-appForAssist-ap-description'"
+                   [name]="'awardProcedure-description'"
+                   [required]="true"
+                   formControlName="description"
+                   [control]="falAssistanceForm.get('awardProcedure').get('description')"
+    ></sam-text-area>
+  </div>
+
+  <div formGroupName="approval" class="sam-ui segment">
+    <sam-select *ngIf="falAssistanceForm.get('approval').get('interval')"
+                [label]="'Date Range for Approval/Disapproval'"
+                [hint]="approvalHint"
+                [name]="'approval-input'"
+                [attr.id]="'fal-appForAssist-approval-interval'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('approval').get('interval')"
+    ></sam-select>
+
+    <sam-text-area [label]="'Other Approval Information'"
+                   [attr.id]="'other-approval-info'"
+                 [hint]="'Provide an additional information if appropriate.'"
+                 [name]="'approval-description'"
+                 formControlName="description"
+    ></sam-text-area>
+  </div>
+
+  <div formGroupName="renewal" class="sam-ui segment">
+    <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
+                [label]="'Renewals'"
+                [hint]="renewalHint"
+                [attr.id]="'fal-appForAssist-renewal-interval'"
+                [name]="'renewal-input'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('renewal').get('interval')"
+    ></sam-select>
+
+    <sam-text-area [label]="'Other Renewal Information'"
+                 [hint]="'Describe renewal or extension procedures.'"
+                 [attr.id]="'other-renewal-info'"
+                 [name]="'renewal-description'"
+                 formControlName="description"
+    ></sam-text-area>
+  </div>
+
+  <div formGroupName="appeal" class="sam-ui segment">
+    <sam-select *ngIf="falAssistanceForm.get('appeal').get('interval')"
+                [label]="'Appeals'"
+                [hint]="appealsHint"
+                [name]="'appeals-input'"
+                [attr.id]="'fal-appForAssist-appeal-interval'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('appeal').get('interval')"
+    ></sam-select>
+    <sam-text-area [label]="'Other Appeals Information'"
+                 [attr.id]="'other-appeal-info'"
+                 [hint]="'Describe appeal, rework, or other options for applications that are not approved.'"
+                 [name]="'appeals-description'"
+                 formControlName="description"
+    ></sam-text-area>
+  </div>
+
+</form>
+

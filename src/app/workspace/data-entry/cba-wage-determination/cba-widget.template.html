@@ -1,0 +1,41 @@
+<ng-container *ngIf="permissions">
+<div grid class="equal width relaxed" >
+  <div class="column">
+    <div class="sam-ui divided selection list">
+      <a
+        class="item"
+        [routerLink]="['/cba/add']">
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
+        Create a New CBA
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <div [ngSwitch]="isLinkActive">
+    <div class="sam-ui divided selection list" *ngSwitchCase="false">
+      <a class="item"
+      (click)="toggleClass(true)">
+        <em class="icon fa fa-chevron-right" aria-hidden="true"></em>
+        Revise an existing CBA
+      </a>
+    </div>
+    <div class="sam-ui divided selection list" *ngSwitchCase="true">
+      <a class="item"
+         (click)="toggleClass(false)">
+        <em class="icon fa fa-chevron-down" aria-hidden="true"></em>
+        Revise an existing CBA
+      </a>
+      <form>
+        <div style="padding-left:40px;">
+        <sam-text
+          [attr.id]="'cba-no'"
+          [name]="'cba-no-text'"
+          [required]="true"></sam-text>
+        <sam-button [buttonId]="'revise-cba-no'" [buttonText]="'Revise CBA'" [buttonType]="submit"></sam-button>
+        </div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+</ng-container>

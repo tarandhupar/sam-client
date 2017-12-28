@@ -1,0 +1,36 @@
+<h2 class="sam-ui header">
+  Authorizations
+</h2>
+
+<form [formGroup]="falAuthForm">
+
+  <div class="sam-ui segment">
+    <sam-label-wrapper label="Authorization" [attr.id]="'fal-authorization-authList'" [hint]="description" [required]="true">
+
+      <authInfoTable
+        [hideAddButton]="hideAddButton"
+        [displayAuthInfo]="displayAuthInfo"
+        [subFormErrorIndex]="subFormErrorIndex"
+        (authTableActionHandler)="authActionHandler($event)" #authTable>
+      </authInfoTable>
+
+      <authSubform [hideAddButton]="hideAddButton"
+                   [toggleAtLeastOneEntryError]="toggleAtLeastOneEntryError"
+                   (authActionHandler)="authActionHandler($event)"
+                   #authSubForm>
+      </authSubform>
+
+    </sam-label-wrapper>
+  </div>
+
+  <div class="sam-ui segment">
+    <sam-text-area
+      [control]="falAuthForm.controls['description']"
+      [name]="'description-input'"
+      [label]="'Description'"
+      [attr.id]="'auth-description'"
+      formControlName="description">
+    </sam-text-area>
+  </div>
+
+</form>

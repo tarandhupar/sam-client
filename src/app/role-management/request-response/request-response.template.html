@@ -1,0 +1,117 @@
+<form-only class="grant-access"
+           theme="inside"
+           section="Workspace"
+           [title]="pageTitle()">
+
+  <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+    <hr>
+    <h3>Request Details</h3>
+    <div [ngStyle]="{'border-radius': '3px','background-color': 'white','border': '1px solid lightgray','padding': '.5em'}">
+      <div class="usa-grid-full">
+        <div class="usa-width-one-sixth"><b>User</b></div>
+        <div class="usa-width-one-third overflow-ellipsis" [attr.title]="request.requestorName">{{request.requestorName}}&nbsp;</div>
+        <div class="usa-width-one-fourth"><b>Supervisor Name</b></div>
+        <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorName">{{request.supervisorName}}&nbsp;</div>
+      </div>
+      <div class="usa-grid-full">
+        <div class="usa-width-one-sixth"><b>Status</b></div>
+        <div class="usa-width-one-third">{{request.status}}&nbsp;</div>
+        <div class="usa-width-one-fourth"><b>Supervisor Email</b></div>
+        <div class="usa-width-one-fourth overflow-ellipsis" [attr.title]="request.supervisorEmail">{{request.supervisorEmail}}&nbsp;</div>
+      </div>
+    </div>
+    <p style="margin-top: .5em">All fields are required</p>
+    <div class="sam-ui grid">
+      <div class="column eight wide">
+        <!-- Orgs -->
+        <div [hidden]="!editingOrg">
+          <sam-agency-picker-v2
+            formControlName="org"
+            [label]="'Organization'"
+            type="single"
+            [searchMessage]="errors.org"
+            [defaultDept]="!isSuperAdmin"
+            class="clearfix"
+            (ngModelChange)="onOrganizationChange($event)"
+          ></sam-agency-picker-v2>
+        </div>
+        <div [hidden]="editingOrg" style="margin-top: .5em">
+          <label style="display: inline">Organization:&nbsp;</label>
+          <span>{{orgName()}}</span>
+          <a class="pull-right" (click)="onClickEditOrg()">Edit&nbsp;<i class="fa fa-pencil"></i></a>
+        </div>
+
+        <!-- Role -->
+        <div style="margin-top: .5em">
+          <sam-label-wrapper [label]="'Role'" [errorMessage]="errors.role" style="margin-top: 2em">
+            <select formControlName="role" (ngModelChange)="onRoleChange($event)">
+              <option *ngFor="let role of roleOptions" [value]="role.value">{{role.label}}</option>
+            </select>
+          </sam-label-wrapper>
+        </div>
+
+        <!-- Domain -->
+        <div style="margin-top: .5em">
+          <!--<sam-autocomplete-multiselect (ngModelChange)="onDomainChange($event)" formControlName="domains" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getDomainOptions()"></sam-autocomplete-multiselect>-->
+          <sam-select formControlName="domain" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="getDomainOptions()" [errorMessage]="errors.domain"></sam-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions -->
+    <div style="margin-bottom: 0; margin-top: 1em">
+      <label>Permissions</label>
+      <ul class="column-wrappable" style="margin-top: .1em">
+        <li *ngFor="let func of functions" style="margin-bottom: 16px;">
+          <label style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</label>
+          <div *ngFor="let permission of func.permissions">
+            <input [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission-input" [(ngModel)]="permission.checked">
+            <label class="permission-label" >{{permission.name}}</label>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Requestor Comments -->
+    <ng-container *ngIf="request.comments && request.comments.length">
+    <label>Requestor Comments</label>
+    <div class="usa-grid-full p_B-4x" *ngFor="let comment of request.comments">
+      <div class="usa-width-one-fourth overflow-ellipsis">
+        <b [attr.title]="comment.userName">
+        <span *ngIf="comment.userName">{{comment.userName}}</span>
+        <span *ngIf="!comment.userName"><i>User Name Unavailable</i></span>
+        </b>
+        </div>
+        <div class="usa-width-three-fourths">
+          {{comment.text}}
+        <div>
+          <span class="text-lighter">{{comment.date | dateFormat : 'LLL'}}</span>
+        </div>
+      </div>
+    </div>
+    </ng-container>
+
+    <!-- My Comments -->
+    <label>Comments</label>
+    <div class="sam-ui grid" *ngIf="false">
+      <div row>
+        <div columns="10"><b>{{comment.userName}}</b> - {{comment.text}}</div>
+        <div columns="2">{{comment.date | timeago}}</div>
+      </div>
+    </div>
+    <sam-text-area label='' formControlName="comment" name="comment" [errorMessage]="errors.comment"></sam-text-area>
+
+    <sam-alert type="error" title="Error" [description]="errorMessage" *ngIf="errorMessage"></sam-alert>
+
+    <!-- Cancel / Confirm -->
+    <div class="pull-right clearfix m_T-4x m_B-4x">
+      <button (click)="location.back()" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
+      <button type="button" class="usa-button usa-button-secondary m_R-0" (click)="onRejectClick()">Reject</button>
+      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">Done</button>
+    </div>
+  </form>
+
+</form-only>
+<sam-modal #rejectModal title="Reject Access" cancelButtonLabel="Cancel" submitButtonLabel="Reject" (onSubmit)="onRejectConfirm()" [closeOnOutsideClick]="false" type="error">
+  <p>Are you sure you want to reject the access for this user?</p>
+</sam-modal>

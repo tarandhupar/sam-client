@@ -1,0 +1,82 @@
+.bulk-update-page {
+  label, textarea, input, select {
+    max-width: inherit;
+  }
+
+  sam-agency-picker-v2 {
+    a.item {
+      padding-top: .2em !important;
+    }
+  }
+
+  sam-label-wrapper label {
+    margin-top: 0;
+  }
+
+  [type="checkbox"]:disabled:checked + label::before {
+    background-image: url('#{$image-path}/correct8.png');
+    background-position: 50%;
+    background-repeat: no-repeat;
+  }
+
+  table tbody tr:hover {
+    cursor: pointer;
+    background-color: #E9E9E9;
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid black;
+  }
+
+  tr td {
+    padding: .5em;
+  }
+
+  .usa-sidenav-list {
+    pointer-events: none;
+  }
+
+  sam-autocomplete-multiselect .sam-autocomplete-multiselect-input{
+    background-color: $color-white;
+  }
+
+  sam-agency-picker-v2 .sam-ui.menu{
+    margin-top: 0px;
+  }
+
+  .existing-color{
+    color: $red;
+  }
+
+  .updated-color{
+    color: $green;
+  }
+
+  .default-color{
+    color: $color-gray-light;
+  }
+
+  .status-icon{
+    padding-top: 2px;
+    font-size: 140%;
+    display: inline-block;
+    max-width: 18px;
+  }
+
+  .span-group{
+    position: relative;
+    display: block;
+    padding: 3px 0px;
+    //padding-right: 1.4em;
+  }
+
+  .status-span{
+    display: inline-block;
+    line-height: 1.73em;
+    vertical-align: text-bottom;
+  }
+
+  .italic-span{
+    font-style: italic
+  }
+}

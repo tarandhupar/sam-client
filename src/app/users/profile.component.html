@@ -1,0 +1,16 @@
+<page class="usa-grid-full usa-authentication usa-profile" section="Profile" [title]="store.title" [breadcrumbs]="breadcrumbs">
+  <sidebar>
+    <sam-sidenav type="step" [model]="store.nav" [labelLookup]="states.active" (path)="onNavigate($event)" *ngIf="states.sidenav"></sam-sidenav>
+    <side-nav-filter></side-nav-filter>
+  </sidebar>
+
+  <div class="occupy-page">
+  <sam-alert class="usa-alert-main" type="info" [title]="store.alert.title" message *ngIf="store.alert.content">
+    <div [innerHTML]="store.alert.content"></div>
+  </sam-alert>
+
+  <section class="usa-profile" [ngClass]="[activeRouteClass]">
+     <router-outlet></router-outlet>
+  </section>
+  </div>
+</page>

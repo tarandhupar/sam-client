@@ -571,7 +571,7 @@ export class UserAccessService {
   getEntityById(entityId){
     let apiOptions: any = {
       name: 'rms',
-      suffix: '/autocomplete/entity/' + entityId,
+      suffix: '/entity/' + entityId,
       method: 'GET',
       oParam: {}
     };

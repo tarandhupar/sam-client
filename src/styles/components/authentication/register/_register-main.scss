@@ -1,0 +1,71 @@
+.usa-register-main {
+  sam-alert {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  form {
+    max-width: 100%;
+    .usa-button-controls {
+      margin-top: 4rem;
+      text-align: center;
+    }
+  }
+
+  legend {
+    font-weight: 700;
+  }
+
+  sam-label-wrapper {
+    > div {
+      margin-top: 1em;
+    }
+  }
+
+  fieldset {
+    margin-top: 2em;
+
+    &.name,
+    &.phone,
+    &.office {
+      width: 46rem;
+    }
+
+    &.phone,
+    &.office {
+      sam-label-wrapper:nth-child(1) {
+        > div {
+          margin-top: 0rem;
+        }
+      }
+    }
+
+    &.name {
+      margin-top: 0rem;
+
+      fieldset {
+        sam-label-wrapper:nth-child(1) {
+          > div {
+            margin-top: 1.5rem;
+          }
+        }
+      }
+
+      .usa-unstyled-list {
+        li:last-child {
+          label {
+            margin-bottom: 0em;
+          }
+        }
+      }
+    }
+  }
+
+  sam-autocomplete + .usa-unstyled-list {
+    margin-top: 1em;
+  }
+
+  .usa-button-wrapper {
+    clear: both;
+  }
+}

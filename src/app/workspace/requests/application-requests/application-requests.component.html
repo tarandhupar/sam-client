@@ -1,0 +1,42 @@
+<page class="usa-requests-application" [breadcrumbs]="store.breadcrumbs" [section]="store.section" [title]="store.title" theme="inside">
+  <sam-alert type="error" *ngIf="store.errors" [title]="store.errors" [showClose]="true"></sam-alert>
+
+  <div class="content" *ngIf="form">
+    <a [routerLink]="['/workspace/system/new', application.uid]" queryParamsHandling="merge" *ngIf="!states.pending">
+      Go to System Account Profile
+      <span class="fa fa-angle-right"></span>
+    </a>
+
+    <review class="review" [form]="form" [editable]="false"></review>
+
+    <sam-fieldset-wrapper class="comments" label="Comments">
+      <sam-text-area name="request-comment"
+                     [formControl]="form.get('rejectionReason')"
+                     [hint]="comments"
+                     [errorMessage]="errors"
+                     *ngIf="states.comments"></sam-text-area>
+      <sam-label-wrapper [hint]="comments" *ngIf="!states.comments"></sam-label-wrapper>
+    </sam-fieldset-wrapper>
+
+    <div class="usa-button-controls">
+      <div *ngIf="states.pending">
+        <sam-button buttonType="tertiary" buttonSize="small" buttonText="Close" class="button-close" (onClick)="close()" *ngIf="states.comments"></sam-button>
+        <sam-button buttonType="secondary" buttonSize="small" buttonText="Reject" class="button-reject" (onClick)="reject()"></sam-button>
+        <sam-button buttonType="primary" buttonSize="small" buttonText="Approve" class="button-approve" (onClick)="approve()"></sam-button>
+      </div>
+      <div *ngIf="!states.pending">
+        <!-- <sam-button buttonType="secondary" buttonSize="small" buttonText="Cancel" class="button-cancel" (onClick)="cancel()"></sam-button> -->
+        <sam-button buttonType="primary" buttonSize="small" buttonText="Close" class="button-close" (onClick)="close()"></sam-button>
+      </div>
+    </div>
+  </div>
+
+  <sam-modal #confirmModal
+             type="warning"
+             title="Are you sure you want to cancel your system account request?"
+             [showClose]="true"
+             submitButtonLabel="Yes"
+             cancelButtonLabel="No"
+             (onSubmit)="deactivate()"
+             *ngIf="user && user.systemAccount"></sam-modal>
+</page>

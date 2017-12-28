@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, UrlSegment } from '@angular/router';
 import { IBreadcrumb } from '../../types';
 
@@ -24,8 +24,14 @@ export class SamBreadcrumbsComponent {
      * property.
      */
     @Input() rootCrumb: IBreadcrumb = undefined;
-
+    /**
+     * (deprecated) Emits when crumb action occurs
+     */
     @Output() public crumbActionHandler = new EventEmitter();
+    /**
+     * Emits when crumb action occurs
+     */
+    @Output() public crumbAction = new EventEmitter();
 
     private _routeSubscription: any;
     private count = 0;
@@ -76,7 +82,7 @@ export class SamBreadcrumbsComponent {
       let crumb: IBreadcrumb;
       if (route.root === route) {
         crumb = {
-          breadcrumb: this.rootCrumb.breadcrumb,          
+          breadcrumb: this.rootCrumb.breadcrumb,
           url: this.rootCrumb.url,
         };
         crumbs.push(crumb);
@@ -112,5 +118,6 @@ export class SamBreadcrumbsComponent {
     }
     public crumbHandler(crumb: string) {
       this.crumbActionHandler.emit(crumb);
+      this.crumbAction.emit(crumb);
     }
 }

@@ -1,0 +1,117 @@
+
+<div style="background: url(src/assets/img/help-main.png); background-size: cover;">
+  <div class="sam-ui container">
+    <div class="sam-ui vertically padded three column stackable grid">
+      <div class="row">
+        <div class="column">
+          <div class="sam-ui padded raised segment" *ngIf="user">
+            <h1 class="sam-ui header">
+              My Workspace
+            </h1>
+            <div class="sam-ui relaxed divided list">
+              <div class="item">
+                <div class="content">
+                  <div class="header">{{user.fullName}}</div>
+                  <div class="description">
+                    <a [href]="'mailto:' + user.email">{{user.email}}</a>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="content">
+                  <div *ngIf="!states.public" class="header">
+                    {{store.primary}}
+                  </div>
+                  <div *ngIf="states.federal" class="description">
+                    <em>{{store.secondary}}</em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<page theme="inside">
+
+  <!--Welcome section for workspace-->
+  <ng-container *ngIf="showWelcome">
+    <h2 class="sam-ui header">Welcome to workspace!</h2>
+    <p>Here are things you can do to completely set up your workspace:</p>
+    <ol class="sam-ui list">
+      <li>Completely setting up your Profile.</li>
+      <li>Request additional roles and permissions</li>
+      <li>Set up a Saved Search or Report</li>
+      <li>Access our Federal Hierarchy Feature</li>
+    </ol>
+    <a (click)="closeWelcomeSection()">
+      <em class="fa fa-times-circle"></em> Close
+    </a>
+  </ng-container>
+
+  <!-- Shortcuts -->
+  <div class="sam-ui segment">
+    <h2 class="sam-ui header" style="font-size: 2.3rem">Shortcuts</h2>
+    <div class="sam-ui equal width column stackable grid">
+      <div class="column center aligned">
+        <a [routerLink]="['/workspace/myfeed/requests']"
+          class="sam-ui medium" style="position: relative;">
+          <!-- <div class="floating sam-ui circular red label">
+            0
+          </div>   -->
+          <em class="fa fa-list-alt fa-4x"></em>
+          <br>
+          Requests
+        </a>
+      </div>
+      <div class="column center aligned">
+        <a [routerLink]="['/workspace/myfeed/notifications']"
+          class="sam-ui medium">
+          <em class="fa fa-bell-o fa-4x"></em>
+          <br>
+          Notifications
+        </a>
+      </div>
+      <div class="column center aligned">
+        <a [routerLink]="['/savedsearches/workspace']"
+          class="sam-ui medium">
+          <span class="fa-stack fa-2x">
+            <em class="fa fa-cloud fa-stack-2x"></em>
+            <em class="fa fa-search fa-stack-1x fa-inverse"></em>
+          </span>
+          <br>
+          Saved Searches
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <workspace-widget title="Profile"
+    [actions]="actions"
+    [shortcut]="states.public ? shortcuts.reset : shortcuts.profile">
+    <profile-widget *ngIf="user" [user]="user"></profile-widget>
+  </workspace-widget>
+
+  <div class="sam-ui hidden divider"></div>
+
+  <!--Data Entry section for workspace-->
+  <h2 id="data-entry" class="sam-ui header" *ngIf="isDisplayDataEntry()">Data Entry</h2>
+  <workspace-data-entry
+    [toggleControl]="dataEntryWidgetControl"
+    *ngIf="isDisplayDataEntry()">
+  </workspace-data-entry>
+
+  <div class="sam-ui hidden divider"></div>
+
+  <!--Administration section for workspace-->
+  <h2 id="administration" class="sam-ui header" *ngIf="anyAdminWidget()">Administration</h2>
+  <workspace-administration
+    [toggleControl]="administrationWidgetControl">
+  </workspace-administration>
+
+  <div class="sam-ui hidden divider"></div>
+
+</page>

@@ -1,0 +1,37 @@
+<a *ngIf="displayDropdown"
+  sam-click-outside
+  (clickOutside)="openDropdown = false"
+  class="sam-ui item fal-change-request"
+  (click)="!disabled ? openDropdown = !openDropdown : openDropdown"
+  [ngClass]="{'disabled': disabled}"
+  style="font-weight: 600;" >
+  {{defaultOption}}
+  <em class="dropdown icon fa fa-caret-down" aria-hidden="true"></em>
+</a>
+<a *ngIf="!displayDropdown"
+  class="sam-ui item disabled"
+  style="font-weight: 600;" >
+  {{defaultOption}}
+  <em class="dropdown icon fa fa-caret-down" aria-hidden="true"></em>
+</a>
+<div [@dropdown]="'in'" *ngIf="openDropdown" class="workspace-dropdown">
+  <ng-container *ngFor="let option of renderOptions">
+    <ng-container *ngIf="!option.disabled">
+      <a href="javascript:void(0);"
+        (click)="onSelect(option.value)">
+        {{option.label}}
+      </a>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!-- <ng-container *ngIf="displayDropdown">
+  <sam-select
+    [hint]="hint"
+    [name]="name"
+    [disabled]="disabled"
+    [options]="renderOptions"
+    [(model)]="defaultOption"
+    (modelChange)="onSelect($event)">
+  </sam-select>
+</ng-container> -->

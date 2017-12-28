@@ -1,0 +1,67 @@
+<sam-label-wrapper
+  [label]="label"
+  required="true"
+  [hint]="hint"
+  [errorMessage]="searchMessage"
+  sam-click-outside
+  (clickOutside)="checkForFocus($event)"
+  sam-tab-outside
+  (tabOutside)="checkForFocus($event)">
+
+  <div class="sam-ui secondary pointing large menu" *ngIf="!advancedMode && !orgRoot">
+    <a class="item active" (click)="selectorToggle = false" [ngClass]="{'active': !selectorToggle}" (keyup.enter)="selectorToggle = false" tabindex="0">
+      Simple
+    </a>
+    <a class="item" (click)="selectorToggle = true" [ngClass]="{'active': selectorToggle}" (keyup.enter)="selectorToggle = true" tabindex="0">
+      Advanced
+    </a>
+  </div>
+
+  <div class="usa-agency-picker-dropdown-area">
+    <div class="usa-agency-picker-search-area" *ngIf="!orgRoot && !selectorToggle">
+      <div class="usa-agency-picker-search-input-wrapper">
+        <input (focus)="setTouched()" title="search text box" type="text" class="usa-agency-picker-search-input" (blur)="autocompleteBlur($event)" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+        <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()" tabindex="0" (keyup.enter)="onResetClick()"></i></span>
+      </div>
+      <ul (blur)="autocompleteBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
+        <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
+        <li *ngFor="let result of autoComplete; let i = index;" (mouseover)='autocompleteMouseover(i)' [ngClass]="i === autocompleteIndex?'autocomplete-selected':''" (mousedown)="autocompleteSelection(result)">{{result.name}}</li>
+      </ul>
+      <div class="usa-agency-picker-icon-area">
+        <a (click)="setOrganizationFromSearch()" aria-label="Set Organization From Search Link" class="usa-agency-picker-submit-text">
+          <em class="usa-agency-picker-icon fa fa-plus" aria-hidden="true"></em>
+        </a>
+      </div>
+    </div>
+    <div class="usa-width-one usa-agency-picker-browse-area" *ngIf="selectorToggle || orgRoot">
+      <div class='fh-form-alt'>
+        <div *ngFor="let orgLevel of orgLevels; let idx = index;">
+          <div *ngIf="orgLevel['show']">
+            <sam-select (click)="setTouched()" [(ngModel)]="orgLevel.selectedOrg" [name]="orgLevel.name" [options]="orgLevel.options" [label]="orgLevel.label" (ngModelChange)="loadChildOrganizations(idx)" ></sam-select>
+          </div>
+        </div>
+        <button class="sam-ui tiny positive button" type="button" (click)="setOrganizationFromBrowse()" (keyup.enter)="setOrganizationFromBrowse()" tabindex="0">Add</button>
+        <button class="sam-ui tiny button" type="button" (click)="resetBrowse()" (keyup.enter)="resetBrowse()" tabindex="0">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sam-ui divider"></div>
+
+  <div class="sam-ui medium header">Selected</div>
+  <p *ngIf="selectedOrganizations.length == 0">
+    <em>None selected</em>
+  </p>
+  <ul class="sam-ui list">
+    <li *ngFor="let org of selectedOrganizations">
+      <span class="sam-ui mini label"
+            (click)="removeOrg(org.value)"
+            tabindex="0"
+            (keyup.enter)="removeOrg(org.value)">
+        {{org.name}} <em class="icon close fa fa-times" aria-hidden="true"></em>
+      </span>
+    </li>
+  </ul>
+
+
+</sam-label-wrapper>

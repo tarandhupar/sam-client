@@ -1,0 +1,25 @@
+<page class="usa-grid-full usa-workspace usa-fsd" [section]="store.section" [title]="store.title" [typeLabel]="store.subtitle" [breadcrumbs]="breadcrumbs">
+  <sidebar class="usa-fsd-sidebar" *ngIf="states.sidebar">
+    <div>
+      <!--=================-->
+      <!-- Sidebar Heading -->
+      <!--=================-->
+      <h1 [innerText]="store.heading"></h1>
+      <h2 [innerText]="store.caption"></h2>
+      <div class="usa-avatar">
+        <span class="fa fa-user"></span>
+      </div>
+      <!--====================-->
+      <!-- Sidebar Navigation -->
+      <!--====================-->
+      <sam-sidenav type="step" [model]="store.nav" [labelLookup]="states.active" (path)="onNavigate($event)"></sam-sidenav>
+    </div>
+    <!--=================-->
+    <!-- Sidebar Filters -->
+    <!--=================-->
+    <side-nav-filter></side-nav-filter>
+  </sidebar>
+  <section class="usa-fsd" [ngClass]="[activeRouteClass]">
+    <router-outlet></router-outlet>
+  </section>
+</page>

@@ -1,0 +1,104 @@
+<form-only class="grant-access" theme="inside">
+  <sam-breadcrumbs *ngIf="requestId" [crumbs]="crumbs"></sam-breadcrumbs>
+  <div style="margin-top: 1em;">
+    <sam-title-subtitle [titleText]="'Workspace'" [subtitle]="pageTitle()"></sam-title-subtitle>
+  </div>
+
+  <form  [formGroup]="form" (ngSubmit)="onSubmit()">
+    <hr>
+    <p>All fields are required</p>
+
+    <div class="sam-ui grid">
+      <div class="column eight wide">
+        <div style="margin-top: .5em;">
+          <span class="section-title-span" style="display: inline;">User:&nbsp;</span>
+          <a *ngIf="isGrant()" [routerLink]="'../access'">{{userFullName()}}</a>
+          <span *ngIf="isEdit()">{{userFullName()}}</span>
+        </div>
+        <!-- Orgs -->
+        <sam-agency-picker-v2
+          *ngIf="isGov; else nonFedPicker"
+          formControlName="org"
+          [label]="'Organization'"
+          [name]="'access-org-picker'"
+          type="multiple"
+          [searchMessage]="errors.org"
+          [defaultDept]="!isSuperAdmin"
+          class="clearfix"
+        ></sam-agency-picker-v2>
+
+        <ng-template #nonFedPicker>
+          <div class="relative" style="margin-top: .5em;" *ngIf="!isEditEntity && !isDefaultEntityPrepopulate">
+            <span class="section-title-span" style="display: inline;">Entity:&nbsp;</span>
+            <div class="sam-ui mini label" *ngFor="let org of entitySelections">{{org.name}}</div>
+            <a class="m_L-2x" style="display: inline;"  (click)="isEditEntity=true"><i class="fa fa-pencil"></i></a>
+          </div>
+
+          <sam-entity-picker
+            *ngIf="isEditEntity || isDefaultEntityPrepopulate"
+            formControlName="org"
+            [control]="form.controls['org']"
+            [label]="'Entity'"
+            [name]="isGrant()?'grant-access-entity-picker':'edit-access-entity-picker'"
+            [searchMessage]="errors.org"
+            [isDefaultOrg]="true"
+            [isAssignableOrg]="true"
+            [isDefaultOrgPrePopulated]="isDefaultEntityPrepopulate">
+
+          </sam-entity-picker>
+        </ng-template>
+        <!-- Role -->
+        <div style="margin-top: .5em">
+          <sam-label-wrapper [label]="'Role'" [name]="'role-selector'" [errorMessage]="errors.role" style="margin-top: 2em">
+            <select formControlName="role" (ngModelChange)="onRoleChange($event)" id="role-selector">
+              <option *ngFor="let role of roleOptions" [value]="role.value">{{role.label}}</option>
+            </select>
+          </sam-label-wrapper>
+        </div>
+
+        <!-- Domain -->
+        <div style="margin-top: .5em">
+          <sam-autocomplete-multiselect (ngModelChange)="onDomainChange($event)" formControlName="domains" [errorMessage]="errors.domains" name="domain" label="Domains" [options]="getDomainOptions()"></sam-autocomplete-multiselect>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions -->
+    <span class="section-title-span">Permissions</span>
+    <sam-tabs>
+      <sam-tab [tabTitle]="tab.name" *ngFor="let tab of domainTabs">
+        <ul class="column-wrappable">
+          <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
+            <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
+            <div *ngFor="let permission of func.permissions; let i = index" class="checkbox-group">
+              <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked">
+              <label [attr.for]="permission+'-cbx-'+i">{{permission.name}}</label>
+            </div>
+          </li>
+        </ul>
+      </sam-tab>
+    </sam-tabs>
+    <p style="margin-bottom: .5em" *ngIf="!domainTabs?.length"><i>Select a domain.</i></p>
+
+    <!-- Comments -->
+    <span class="section-title-span">Comments</span>
+    <div class="sam-ui grid" *ngIf="false">
+      <div row>
+        <div columns="10"><b>{{comment.userName}}</b> - {{comment.text}}</div>
+        <div columns="2">{{comment.date | timeago}}</div>
+      </div>
+    </div>
+    <sam-text-area label='' formControlName="comment" name="comment" [errorMessage]="errors.comment"></sam-text-area>
+
+    <sam-alert type="error" title="" [description]="errorMessage" *ngIf="errorMessage"></sam-alert>
+
+    <!-- Cancel / Confirm -->
+    <div class="pull-right clearfix m_T-4x m_B-4x">
+      <button (click)="location.back()" class="usa-button usa-button-transparent m_0" type="button">Cancel</button>
+      <button style="display: initial" id="done-button" class="usa-button usa-button-primary" type="submit" [disabled]="!submitEnabled">{{requestId ? 'Assign' : 'Done'}}</button>
+      <sam-spinner *ngIf="!submitEnabled"></sam-spinner>
+    </div>
+  </form>
+
+</form-only>
+

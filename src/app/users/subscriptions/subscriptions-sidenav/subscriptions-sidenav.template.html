@@ -1,0 +1,47 @@
+<div class="msg-feed-sidenav">
+  <div class="usa-width-one-whole m_B-4x">
+    <legend>Search Followings</legend>
+    <input placeholder="Find name or type of the record" (keyup.enter)="subscriptionFilterOptionChange()" [(ngModel)]="filterOption.keyword" aria-label="search record">
+  </div>
+
+  <div class="m_B-4x" *ngIf="cbxControl.frequency">
+    <sam-checkbox
+      [(model)]="filterOption.frequency"
+      [name]="frequencyCbxConfig.name"
+      [options]="frequencyCbxConfig.options"
+      [label]="frequencyCbxConfig.label"
+      [hasSelectAll]="frequencyCbxConfig.hasSelectAll"
+      (modelChange)="subscriptionFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <div class="m_B-4x" *ngIf="domainsCbxConfig.options">
+    <sam-checkbox
+      [(model)]="filterOption.domains"
+      [name]="domainsCbxConfig.name"
+      [options]="domainsCbxConfig.options"
+      [label]="domainsCbxConfig.label"
+      [hasSelectAll]="domainsCbxConfig.hasSelectAll"
+      (modelChange)="subscriptionFilterOptionChange()">
+    </sam-checkbox>
+  </div>
+
+  <!--div class="m_B-4x" *ngIf="cbxControl.feedType">
+      <sam-checkbox
+        [(model)]="filterOption.feedType"
+        [name]="feedTypeCbxConfig.name"
+        [options]="feedTypeCbxConfig.options"
+        [label]="feedTypeCbxConfig.label"
+        [hasSelectAll]="feedTypeCbxConfig.hasSelectAll"
+        (modelChange)="subscriptionFilterOptionChange()">
+      </sam-checkbox>
+  </div-->
+
+  <div class="usa-width-one-whole m_B-4x" style="text-align: center">
+    <a (click)="onClearAllClick()">Clear all</a>
+  </div>
+
+  <!--Side Navigation-->
+  <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
+
+</div>

@@ -1,0 +1,29 @@
+<div class="system-listing" *ngIf="account">
+  <div class="segment" grid>
+    <div class="sam-ui segment" row>
+      <div class="column right aligned">
+        <div class="sam-ui label bottom left attached text-center" [ngClass]="status.class" [innerText]="status.label" *ngIf="status"></div>
+        <sam-actions-dropdown [actions]="actions" *ngIf="status && status.label !== 'Approved'"></sam-actions-dropdown>
+      </div>
+    </div>
+    <div row>
+      <div class="column middle aligned">
+        <h4 class="sam-ui header">
+          <a [innerText]="account.name" [routerLink]="route" [queryParams]="queryParams" queryParamsHandling="merge"></a>
+        </h4>
+      </div>
+    </div>
+    <div row>
+      <div class="column middle aligned" [innerText]="account.description"></div>
+    </div>
+    <div row>
+      <div class="top aligned" columns="7">
+        <sam-label-wrapper [label]="account.gov ? 'Organization: ' : 'Business: '">{{ account.organization }}</sam-label-wrapper>
+      </div>
+      <div class="top aligned" columns="5">
+        <sam-label-wrapper label="Expires: ">{{ account.expires }}</sam-label-wrapper>
+        <sam-label-wrapper label="Domain: ">{{ domains }}</sam-label-wrapper>
+      </div>
+    </div>
+  </div>
+</div>

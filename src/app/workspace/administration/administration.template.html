@@ -1,0 +1,30 @@
+<div grid>
+
+  <div columns="6" *ngIf="toggleControl.system">
+    <workspace-widget title="System Accounts"
+      [shortcut]="{ text: 'Go to System Accounts', routerLink: ['system'] }">
+      <system-widget></system-widget>
+    </workspace-widget>
+  </div>
+
+  <div columns="6" *ngIf="toggleControl.fsd">
+    <workspace-widget title="Federal Service Desk"
+      [shortcut]="{ text: 'Go to Directory ', routerLink: ['fsd/users'] }">
+      <fsd-widget></fsd-widget>
+    </workspace-widget>
+  </div>
+
+  <div columns="6" *ngIf="toggleControl.fh">
+    <workspace-widget title="Federal Hierarchy"
+      [actions]="actions"
+      [shortcut]="{ text: 'Go to Federal Hierarchy', routerLink: ['/federal-hierarchy'] }">
+      <fh-widget></fh-widget>
+    </workspace-widget>
+  </div>
+
+  <div columns="6" *ngIf="toggleControl.rm">
+    <workspace-widget title="Role Management">
+      <rm-widget [widgetResult]="widgetResult"></rm-widget>
+    </workspace-widget>
+  </div>
+</div>

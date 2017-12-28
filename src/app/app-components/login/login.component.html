@@ -1,0 +1,108 @@
+<div class="usa-authentication usa-login" [ngClass]="{ 'standalone': standalone }">
+  <div class="usa-grid stage-1" *ngIf="isStage(1)">
+    <div class="usa-width-one-half" *ngIf="!standalone">
+      <h1>I have a PIV or CAC card</h1>
+      <span>Government Employees only: Please insert your card then click the button below</span>
+
+      <h2>Coming Soon</h2>
+
+      <div class="button_wrapper">
+        <button class="usa-button-gray">Sign in With Card</button>
+      </div>
+    </div>
+    <div [ngClass]="!standalone ? 'usa-width-one-half' : 'usa-width-one-whole'">
+      <h1 *ngIf="!standalone">Sign In</h1>
+
+      <form class="usa-form form-login" autocomplete="off" [formGroup]="form" (ngSubmit)="login()">
+        <fieldset formGroupName="1">
+          <div class="usa-input-error-message">{{ getError() }}</div>
+
+          <div [ngClass]="{ 'usa-input-error': hasError('username') }">
+            <label for="signin-username">Email</label>
+            <span class="usa-input-error-message" *ngIf="hasError('username')" role="alert">{{ getError('username') }}</span>
+            <input type="text" id="signin-username" autocomplete="off" formControlName="username" readonly="readonly" onfocus="this.removeAttribute('readonly');" #input />
+          </div>
+
+          <div [ngClass]="{ 'usa-input-error': hasError('password') }">
+            <label for="signin-password">Password</label>
+
+            <span class="usa-input-error-message" *ngIf="hasError('password')" role="alert">{{ getError('password') }}</span>
+            <input type="{{ states.password.type }}" id="signin-password" formControlName="password" readonly="readonly"  onfocus="this.removeAttribute('readonly');" />
+          </div>
+
+          <p class="usa-form-note">
+            <a title="Show password" href="javascript:void(0);" class="usa-show_password" (click)="togglePassword()">
+              {{ (states.password.type == 'password') ? 'Show' : 'Hide'  }} Password
+            </a>
+          </p>
+
+          <div class="usa-button-controls text-left">
+            <button type="submit" [disabled]="states.loading">Sign In</button>
+          </div>
+
+          <div class="usa-grid usa-links">
+            <div class="usa-width-one-half text-center">
+              <a title="Forgot Password?" routerLink="/forgot">Forgot Password?</a>
+            </div>
+            <div class="usa-width-one-half text-center" *ngIf="!standalone">
+              <a title="Sign Up" routerLink="/signup">Sign Up</a>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="usa-grid stage-2" *ngIf="isStage(2)">
+    <div class="usa-width-one-whole">
+      <form class="usa-form form-delivery" autocomplete="off" [formGroup]="form" (ngSubmit)="login()">
+        <fieldset formGroupName="2">
+          <sam-radio-button name="delivery-method"
+                            label="How do you want to receive your one time password?"
+                            formControlName="otppreference"
+                            [options]="options.radio"
+                            [errorMessage]="getError('otppreference')"></sam-radio-button>
+
+          <div class="usa-form-hint">
+            <em>* Standard Text Messaging Rates May Apply.</em>
+          </div>
+
+          <div class="text-right">
+            <a title="Return to Sign In"
+               href="javascript:void(0);"
+               class="usa-show_password"
+               (click)="reset()">Go Back</a>
+            <button type="submit" [disabled]="states.loading">Submit</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="usa-grid stage-3" *ngIf="isStage(3)">
+    <div class="usa-width-one-whole">
+      <form class="usa-form form-otp" autocomplete="off" [formGroup]="form" (ngSubmit)="login()">
+        <legend class="usa-title">One Time Password</legend>
+        <p>We take security seriously. We have sent you a one-time access code by {{ preference }}.</p>
+        <fieldset>
+          <div formGroupName="3" [ngClass]="{ 'usa-input-error': hasError('otp') }">
+            <label for="signin-otp">Enter your one-time access code</label>
+            <span class="usa-input-error-message" *ngIf="hasError('otp')">{{ getError('otp') }}</span>
+            <input type="password" id="signin-otp" formControlName="otp" />
+          </div>
+
+          <div>
+            <button type="submit" [disabled]="states.loading">Submit</button>
+          </div>
+
+          <p class="usa-form-note">
+            <a title="Return to Sign In"
+               href="javascript:void(0);"
+               class="usa-show_password"
+               (click)="reset()">Return to Sign In</a>
+          </p>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

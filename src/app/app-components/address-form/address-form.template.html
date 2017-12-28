@@ -1,0 +1,51 @@
+<div class="usa-width-one-whole">
+  <h3 class="m_T-3x relative" *ngIf="!isOrgTypeSelected()">
+    <sam-select class="usa-width-one-half" [(model)]="orgAddrModel.addrType" [name]="orgAddrSelectConfig.name" [options]="orgAddrSelectConfig.options" [label]="orgAddrSelectConfig.label" [disabled]="orgAddrSelectConfig.disabled" (modelChange)='onAddrTypeSelect($event)'></sam-select>
+    <i class="p_T-3x p_L-3x fa fa-times-circle org-address-icons" (click)="onCancelAddressFormClick()"></i>
+  </h3>
+  <h3 class="m_T-3x usa-width-one-whole relative" *ngIf="isOrgTypeSelected()">
+    <span class="usa-width-one-forth">{{orgAddrModel.addrType}}</span>
+    <i class="p_L-3x fa fa-plus-circle org-address-icons" *ngIf="showAddIcon" (click)="onAdditionalAddressFormClick()" (mousedown)="onAdditionalAddressFormClick()"></i>
+    <i class="p_L-3x fa fa-times-circle org-address-icons" *ngIf="!isBasicAddressType() && showCloseIcon" (click)="onCancelAddressFormClick()" (mousedown)="onCancelAddressFormClick()"></i>
+  </h3>
+
+  <div class="usa-width-one-whole" *ngIf="!hideAddrForm">
+
+    <sam-location-component #locationGroup
+                            [(location)]="locationObj"
+                            [cityConfig]="{name: 'city'}"
+                            [stateConfig]="{name: 'state'}"
+                            [countryConfig]="{name: 'country'}"
+                            [zipConfig]="{name: 'zip'}">
+    </sam-location-component>
+
+    <!--<div class="usa-width-one-whole">-->
+    <!--<sam-label-wrapper #countryWrapper class="usa-width-one-whole p_T-3x org-create-label" [label]="'Country'" [name]="'Country'">-->
+    <!--<sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="false" [(ngModel)]="country" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig" (enterEvent)="updateCountryField($event)"></sam-autocomplete>-->
+    <!--</sam-label-wrapper>-->
+    <!--</div>-->
+
+    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr1 [(ngModel)]="streetAddr1" [name]="'street-1-input'" [label]="'Street address 1'"></sam-text>
+    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr2 [(ngModel)]="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></sam-text>
+    <!--<div class="usa-width-one-whole">-->
+
+    <!--<div class="usa-width-one-half">-->
+    <!--<sam-label-wrapper #cityWrapper class="p_T-1x org-create-label" [label]="'City'" [name]="'City'">-->
+    <!--<sam-autocomplete #MailAddrCity city [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="false" (ngModelChange)="updateCityField($event)"></sam-autocomplete>-->
+    <!--</sam-label-wrapper>-->
+    <!--</div>-->
+
+    <!--<sam-text class="usa-width-one-half p_L-2x m_R-0" #MailAddrPostalCode [control]="addressForm.get('postalCode')" formControlName="postalCode" [name]="'zip-input'" [label]="'Postal Code'" (onBlur)="onZipCodeBlur($event)"></sam-text>-->
+
+    <!--</div>-->
+
+    <!--<div class="usa-width-one-whole">-->
+
+    <!--<div class="usa-width-one-half m_R-0 p_R-2x">-->
+    <!--<sam-label-wrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'">-->
+    <!--<sam-autocomplete #MailAddrState [disabled]="isStateDisabled" state [ngModelOptions]="{standalone: true}" [(ngModel)]="state" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="cityLocationConfig"  [allowAny]="false" (ngModelChange)="updateStateField($event)"></sam-autocomplete>-->
+    <!--</sam-label-wrapper>-->
+    <!--</div>-->
+    <!--</div>-->
+  </div>
+</div>

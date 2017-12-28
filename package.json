@@ -2,21 +2,19 @@
   "name": "sam-client",
   "version": "5.0.5",
   "description": "SAM Client Side Implementation",
-  "keywords": [
-    "angular2",
-    "webpack",
-    "typescript"
-  ],
+  "keywords": ["angular2", "webpack", "typescript"],
   "scripts": {
     "rimraf": "rimraf",
     "tslint": "tslint",
     "typedoc": "typedoc",
     "webpack": "webpack",
-    "webpack-bundle-analyzer": "webpack --config config/webpack.bundle-analyzer.js  --progress --profile --bail",
+    "webpack-bundle-analyzer":
+      "webpack --config config/webpack.bundle-analyzer.js  --progress --profile --bail",
     "webpack-dev-server": "webpack-dev-server",
     "webdriver-manager": "webdriver-manager",
     "protractor": "protractor",
-    "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist",
+    "clean":
+      "npm cache clean && npm run rimraf -- node_modules doc coverage dist",
     "clean:dist": "npm run rimraf -- dist",
     "preclean:install": "npm run clean",
     "clean:install": "npm set progress=false && npm install",
@@ -31,10 +29,13 @@
     "prebuild:dev": "npm run clean:dist",
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",
     "prebuild:prod": "npm run clean:dist",
-    "build:prod": "webpack --config config/webpack.prod.js  --progress --profile --bail",
+    "build:prod":
+      "webpack --config config/webpack.prod.js  --progress --profile --bail",
     "server": "npm run server:dev",
-    "server:dev": "webpack-dev-server --config config/webpack.dev.js --progress --profile --watch --content-base src/",
-    "server:local": "webpack-dev-server --config config/webpack.local.js --progress --profile --watch --content-base src/",
+    "server:dev":
+      "webpack-dev-server --config config/webpack.dev.js --progress --profile --watch --content-base src/",
+    "server:local":
+      "webpack-dev-server --config config/webpack.local.js --progress --profile --watch --content-base src/",
     "server:dev:hmr": "npm run server:dev -- --inline --hot",
     "server:prod": "nginx -g 'daemon off;'",
     "prod": "npm run build:prod && npm run server:prod",
@@ -47,11 +48,16 @@
     "test": "karma start --no-lint",
     "test:chrome": "karma start --no-lint --chrome",
     "test:no-lint": "karma start --no-lint",
-    "test:sam-ui-elements": "karma start config/karma.sam-ui-elements.conf.js --no-lint",
-    "test:assistance-listing": "karma start --no-lint -- --focus=src/app/assistance-listing",
+    "test:sam-ui-elements":
+      "karma start config/karma.sam-ui-elements.conf.js --no-lint",
+    "test:assistance-listing":
+      "karma start --no-lint -- --focus=src/app/assistance-listing",
     "test:opportunity": "karma start --no-lint -- --focus=src/app/opportunity",
+    "test:rm":
+      "karma start --no-lint -- --focus=src/app/role-management --chrome",
     "ci": "npm run lint && npm test && npm run e2e",
-    "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
+    "docs":
+      "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./src/",
     "start": "npm run server:dev",
     "start:hmr": "npm run server:dev:hmr"
   },

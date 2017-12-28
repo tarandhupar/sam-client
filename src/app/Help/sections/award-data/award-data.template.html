@@ -1,0 +1,309 @@
+
+<div class="sam-ui hidden divider"></div>
+
+<!-- Edit menu -->
+<div *ngIf="isEdit || isAdmin" class="sam-ui small blue inverted menu">
+  <a *ngIf="!isEdit && isAdmin" (click)="onEditPageClick()" class="item">
+    <i class="icon fa fa-edit"></i>
+    Edit
+  </a>
+  <a *ngIf="isEdit" (click)="onSaveEditPageClick()" class="item">
+    <i class="icon fa fa-save"></i>
+    Save
+  </a>
+  <a *ngIf="isEdit" (click)="onCancelEditPageClick()" class="item">
+    <i class="icon fa fa-times"></i>
+    Cancel
+  </a>
+</div>
+
+<div class="flex-container">
+  <div class="title-area">
+    <h1 class="sam-ui header">
+      <div class="sup header">Help Center</div>
+      {{curConfig.heading}}
+    </h1>
+  </div>
+  <div class="badge-area" *ngIf="curConfig.legacyLogo">
+    Legacy website
+    <img style="height:40px;"
+      [src]="curConfig.legacyLogo"
+      [alt]="curConfig.legacyWebsiteContent">
+  </div>
+</div>
+
+<div class="sam-ui hidden divider"></div>
+
+<!-- Hide until we have video -->
+<ng-container *ngIf="false">
+  <div class="flex-container">
+    <div class="video-area">
+      <div>
+        <span>Transitioning from {{curConfig.legacyInitials}}</span>
+      </div>
+    </div>
+    <div class="menu-area">
+      <div class="sam-ui segments">
+        <div class="sam-ui lightest blue segment">
+          <div class="sam-ui relaxed list">
+            <a [href]="curConfig.publicStartGuide"
+              [target]="curConfig.legacyInitials"
+              class="item">
+              <i class="icon fa fa-book" aria-hidden="true"></i>
+              Public Quick Start Guide
+            </a>
+            <a class="disabled item">
+              <i class="icon fa fa-book" aria-hidden="true"></i>
+              Federal Quick Start Guide
+            </a>
+            <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }"
+              class="item">
+              <i class="icon fa fa-search" aria-hidden="true"></i>
+              Search {{curConfig.heading}}
+            </a>
+          </div>
+        </div>
+        <div *ngIf="curConfig.workspaceRoute" class="sam-ui secondary segment">
+          <div class="sam-ui relaxed list">
+            <a [routerLink]="[curConfig.workspaceRoute]" class="item">
+              <div class="header">Manage {{curConfig.heading}}?</div>
+              Sign in to your Workspace
+            </a>
+          </div>
+        </div>
+        <div *ngIf="curConfig.secondaryMenuLink" class="sam-ui secondary segment">
+          <div class="sam-ui relaxed list">
+            <a [routerLink]="[curConfig.secondaryMenuLink]" class="item">
+              <div class="header">e98 Form</div>
+              e98(request official SCA WD from DOL)
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sam-ui hidden divider"></div>
+</ng-container>
+
+<ng-container *ngIf="curConfig.heading === 'Wage Determinations' || curConfig.heading === 'Assistance Listings'">
+  <div class="menu-area" style="float: right; padding: 0 0 3rem 3rem;">
+    <div class="sam-ui segments">
+      <div class="sam-ui lightest blue segment">
+        <div class="sam-ui relaxed list">
+          <a [href]="curConfig.publicStartGuide"
+            [target]="curConfig.legacyInitials"
+            class="item">
+            <i class="icon fa fa-book" aria-hidden="true"></i>
+            Public Quick Start Guide
+          </a>
+          <a [routerLink]="['/search/']" [queryParams]="{ index: curConfig.searchIndex }"
+            class="item">
+            <i class="icon fa fa-search" aria-hidden="true"></i>
+            Search {{curConfig.heading}}
+          </a>
+        </div>
+      </div>
+      <div *ngIf="curConfig.workspaceRoute" class="sam-ui secondary segment">
+        <div class="sam-ui relaxed list">
+          <a [routerLink]="[curConfig.workspaceRoute]" class="item">
+            <div class="header">Manage {{curConfig.heading}}?</div>
+            Sign in to your Workspace
+          </a>
+        </div>
+      </div>
+      <div *ngIf="curConfig.secondaryMenuLink" class="sam-ui secondary segment">
+        <div class="sam-ui relaxed list">
+          <a [routerLink]="[curConfig.secondaryMenuLink]" class="item">
+            <div class="header">e98 Form</div>
+            e98(request official SCA WD from DOL)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="curConfig.heading === 'Wage Determinations'"
+  class="sam-ui tabular menu">
+  <a (click)="onWDOLResourceClick('Wage Determinations Help')"
+    class="item" [class.active]="!showLaborAgency()">
+    Wage Determinations Help
+  </a>
+  <a (click)="onWDOLResourceClick('Labor Advisors')"
+    class="item" [class.active]="showLaborAgency()">
+    Labor Advisors
+  </a>
+</div>
+
+<ng-container *ngIf="!showLaborAgency()">
+  <!-- Splash Content -->
+  <h2 style="display: none;" class="sam-ui lighter header" *ngIf="!isEdit || curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </h2>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Splash Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
+    {{curConfig.splashContent}}
+  </textarea>
+
+  <!-- Subcontent -->
+  <div *ngIf="!isEdit" [innerHTML]="curConfig.subContent"></div>
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Sub Content
+  </h3>
+  <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
+    {{curConfig.subContent}}
+  </textarea>
+</ng-container>
+
+<div class="sam-ui hidden divider"></div>
+
+<ng-container *ngIf="showLaborAgency()">
+
+  <div>
+    <h3 class="sam-ui dividing header">Department of Defense Agencies
+      <span class="pull-right" *ngIf="!dodIsEdit" (click)="editDODAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveDODAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="dodIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editDODAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+
+  <div class="labor-agency-item" *ngFor="let item of defenceAgencies; let i = index;">
+    <h4 class="sam-ui header">{{item.agency}}</h4>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index;">
+      <div *ngIf="!dodIsEdit">
+        <strong>{{advisor.name}}</strong><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''"><em>{{advisor.location}}</em><br/></span>
+        <span class="labor-agency-contact-label">Email:</span><a>{{advisor.email}}</a><br/>
+        <span class="labor-agency-contact-label">Phone:</span><span>{{advisor.phone}}</span><br/>
+      </div>
+
+      <div *ngIf="dodIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="defenceAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <h3 class="sam-ui dividing header">Civilian Contracting Agencies
+      <span class="pull-right" *ngIf="!contractIsEdit" (click)="editContractAgency(true)"><i class="fa fa-pencil"></i></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="saveContractAgency()">Save</button></span>
+      <span class="pull-right" *ngIf="contractIsEdit"><button class="usa-button-outline usa-button-active m_T-0 p_T-1x p_B-1x" (click)="editContractAgency(false)">Cancel</button></span>
+    </h3>
+  </div>
+
+  <div class="labor-agency-item" *ngFor="let item of contractAgencies; let i = index">
+    <h4 class="sam-ui header">{{item.agency}}</h4>
+    <span *ngIf="item.advisors.length === 0 && !item.email">This position is currently vacant.<br/></span>
+    <span *ngIf="item.advisorTitle !== '' && !contractIsEdit">{{item.advisorTitle}}<br/></span>
+    <span *ngIf="item.email !== '' && !contractIsEdit">Email: <a>{{item.email}}</a><br/></span>
+    <div *ngIf="contractIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+      <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisorTitle"></div>
+      <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="contractAgenciesEdit[i].email"></div>
+    </div>
+    <div class="labor-agency-contact-item" *ngFor="let advisor of item.advisors; let j = index">
+      <div *ngIf="!contractIsEdit">
+        <strong>{{advisor.name}}</strong><br/>
+        <span class="labor-agency-contact-region" *ngIf="advisor.location !== ''"><em>{{advisor.location}}</em><br/></span>
+        <span>Email: <a>{{advisor.email}}</a></span><br/>
+        <span *ngIf="advisor.phone">Phone: {{advisor.phone}}<br/></span>
+      </div>
+
+      <div *ngIf="contractIsEdit" class="usa-grid-full labor-agency-contact-form p_L-0x">
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Name:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].name"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Area:</span><input class="labor-agency-contact-input labor-agency-contact-region" [(ngModel)]="contractAgenciesEdit[i].advisors[j].location"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Email:</span><input class="labor-agency-contact-input labor-agency-contact-email" [(ngModel)]="contractAgenciesEdit[i].advisors[j].email"></div>
+        <div class="usa-width-one-whole"><span class="labor-agency-contact-label">Phone:</span><input class="labor-agency-contact-input" [(ngModel)]="contractAgenciesEdit[i].advisors[j].phone"></div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div class="sam-ui hidden divider"></div>
+
+<div *ngIf="false" class="sam-ui segment intersecting-header">
+  <h3 class="sam-ui center aligned header">
+    Learning Center: {{curConfig.heading}}
+  </h3>
+  <div class="sam-ui four item secondary menu">
+    <a class="item">
+      <i class="fa fa-video-camera icon" aria-hidden="true"></i>
+      Video
+    </a>
+    <a class="item">
+      <i class="fa fa-commenting-o icon" aria-hidden="true"></i>
+      FAQs
+    </a>
+    <a class="item">
+      <i class="fa fa-file-text-o icon" aria-hidden="true"></i>
+      Articles
+    </a>
+    <a class="item">
+      <i class="fa fa-book icon" aria-hidden="true"></i>
+      Definitions
+    </a>
+  </div>
+</div>
+
+<div class="sam-ui hidden divider"></div>
+
+<!-- Features -->
+<ng-container *ngIf="false">
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Features
+  </h3>
+  <sam-multiselect-dropdown *ngIf="isEdit"
+                          [(model)]="curFeatures[0]"
+                          [label]="curTypes.label"
+                          [options]="curTypes.options"
+                          [name]="'features'"
+                          (modelChange)="onParamChanged()">
+  </sam-multiselect-dropdown>
+
+
+  <table class="sam-ui definition table">
+    <thead>
+      <tr>
+        <th scope="col">Features</th>
+        <th scope="col">Need Login?</th>
+        <th scope="col">Who may be interested?</th>
+        <th *ngIf="isEdit" scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let featureItem of curFeatures[0]; let i = index">
+        <td>{{ featureItem }}</td>
+        <td>{{ curFeatures[1][i].login }}</td>
+        <td>{{ curFeatures[1][i].interested }}</td>
+        <td class="selectable center aligned" *ngIf="isEdit">
+          <a (click)="onRemoveFeatureClick(featureItem)">
+            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
+
+<ng-container *ngIf="curConfig.heading === 'Wage Determinations'" >
+  <h2 class="sam-ui header">Resources</h2>
+  <ul class="sam-ui bulleted list">
+    <li>
+      <a [routerLink]="['/help/reference']">
+        External Resources
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/alerts']" [queryParams]="{'status':'Active','type':'WageDetermination'}">
+        Latest Updates
+      </a>
+    </li>
+  </ul>
+</ng-container>
+
+<div class="sam-ui hidden section divider"></div>

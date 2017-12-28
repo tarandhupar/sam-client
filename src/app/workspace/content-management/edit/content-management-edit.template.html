@@ -1,0 +1,171 @@
+<page [breadcrumbs]="crumbs">
+  <form-only class="help-content-management-edit relative" [section]="title.toUpperCase()" [title]="contentObj.title" *ngIf="dataLoaded">
+
+    <span class="status-tag">{{cmsMapping.getStatusName(contentObj.status).toUpperCase()}}</span>
+
+    <div class="relative m_T-2x">
+      <div class="draft-btn-group">
+        <sam-button [buttonId]="'question-delete'" buttonType="tertiary" buttonText="Delete Draft" *ngIf="cmsMapping.getStatusName(contentObj.status).toUpperCase() === 'DRAFT'" (click)="onDeleteDraftClick()"></sam-button>
+        <sam-button [buttonId]="'question-publish'" buttonText="Publish" (click)="onPublishClick()"></sam-button>
+      </div>
+
+      <sam-tabs (currentSelectedTab)="onSwitchTabs($event)" [active]="activeTab">
+
+        <!--Edit Form / New Form Tab-->
+        <sam-tab [tabTitle]="'Edit'" #editTab>
+          <div class="section-border" *ngIf="!isCreateMode()">
+            <h4>Reference ID: {{originContentObj.refId}}</h4>
+          </div>
+
+          <div class="section-border">
+            <sam-text
+              [required]="true"
+              [label]="getPageConfig().sectionText[0]"
+              [name]="'title'"
+              [hint]="getPageConfig().title"
+              [errorMessage]="errors.title"
+              [(ngModel)]="contentObj.title">
+            </sam-text>
+          </div>
+
+          <div class="section-border">
+            <sam-text-area
+              [required]="true"
+              [label]="getPageConfig().sectionText[1]"
+              [name]="'title'"
+              [hint]="getPageConfig().description"
+              [errorMessage]="errors.description"
+              [(ngModel)]="contentObj.description">
+            </sam-text-area>
+          </div>
+
+          <div class="section-border relative" *ngIf="getPageConfig().sectionControl.video">
+            <sam-label-wrapper [errorMessage]="errors.video" [required]="true" [label]="'Select Video'" [name]="'input-file'" *ngIf="isCreateMode() || editVideo; else sourceVideoTag">
+              <!--<span *ngIf="contentObj.sourceVideoFile === ''; else fileName"><i class="fa fa-cloud-upload"></i> &nbsp;Drag and drop files here, or <a (click)="file.click()">browse</a></span>-->
+              <!--<ng-template #fileName>-->
+                <!--<div class="sam-ui mini label">-->
+                  <!--<div class="label">-->
+                    <!--<span class="selected-category">{{ contentObj.sourceVideoFile }} &nbsp;<i class="icon close fa fa-times" (click)="onDeselectFile()"></i></span>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</ng-template>-->
+              <!--<input type="file" accept="video/*" #file name="file" ngModel class="hide"  (change)="onFilesChange($event.target.files[0])">-->
+              <sam-upload ngModel (ngModelChange)="onFilesChange($event)"></sam-upload>
+              <video controls style="width: 100%; position:absolute; right: 10000px;" id="video-for-thumbnail" #thumbnailVideo></video>
+            </sam-label-wrapper>
+            <ng-template #sourceVideoTag>
+              <div class="sam-ui label sourceUrlDiv">
+                <span class="selected-category sourceUrl-span">{{originContentObj.sourceUrl}}</span>
+                <span class="usa-button usa-button-transparent m_0 edit-sourceUrl-span" (click)="onEditExistingVideoFile()"><i class="fa fa-edit"></i></span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="section-border relative" *ngIf="getPageConfig().sectionControl.source">
+            <sam-label-wrapper [label]="'Source'" [hint]="getPageConfig().source">
+              <input type="text" [(ngModel)] = 'contentObj.source'>
+            </sam-label-wrapper>
+          </div>
+
+          <div class="section-border relative">
+            <!--<span class="optional-text">Optional</span>-->
+            <!--<h4 class="m_T-0">Domains</h4>-->
+            <!--<p>{{pageConfig[curSection.toLowerCase()].domain}}</p>-->
+            <sam-autocomplete-multiselect [(ngModel)]="contentObj.domain"
+                                          name="domain"
+                                          label="Domains"
+                                          [hint]="getPageConfig().domain"
+                                          [options]="domainOptions" [keyValueConfig]="multiselectConfig">
+            </sam-autocomplete-multiselect>
+          </div>
+
+          <div class="section-border relative">
+            <!--<span class="optional-text">Optional</span>-->
+            <!--<h4 class="m_T-0">Keywords</h4>-->
+            <!--<p>{{pageConfig[curSection.toLowerCase()].keywords}}</p>-->
+            <sam-autocomplete-multiselect
+              [(ngModel)]="keywords"
+              name="keywords"
+              [hint]="getPageConfig().keywords"
+              label="Keywords"
+              [options]="tagOptions"
+              [keyValueConfig]="multiselectConfig"
+              [allowAny]="true"
+              (keyup.enter)="onEnterTagKey()"
+              (input)="getExistingTagOptions($event.target.value)">
+            </sam-autocomplete-multiselect>
+
+          </div>
+
+          <div class="pull-right">
+            <sam-button [buttonId]="'question-cancel'" buttonType="tertiary" buttonText="Cancel" (onClick)="cancelForm()"></sam-button>
+            <sam-button [buttonId]="'question-done'" buttonText="Done" (onClick)="submitForm()"></sam-button>
+          </div>
+
+        </sam-tab>
+
+
+        <!--Public View Tab-->
+        <sam-tab [tabTitle]="'Public View'" #publicViewTab>
+
+          <!--Public view tab for data definition and FAQ repository-->
+          <div class="relative" *ngIf="curSection !== 'video-library'; else videoLibraryView">
+            <span class="public-view-tag">{{getPageConfig().publicViewTag}}</span>
+            <div class="m_T-1x m_B-1x">
+              <span style="font-weight: bold">Domain<span *ngIf="contentObj.domain && contentObj.domain.length > 1">(s)</span>:</span>
+              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else domainNA">{{getDomainListStr()}}</span>
+              <ng-template #domainNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x" *ngIf="getPageConfig().sectionControl.source">
+              <span style="font-weight: bold">Source:</span>
+              <span *ngIf="contentObj.source && contentObj.source !== ''; else sourceNA">{{contentObj.source}}</span>
+              <ng-template #sourceNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">Keywords:</span>
+              <span *ngIf="keywords && keywords.length > 0; else keywordsNA">{{getKeywordsText()}}</span>
+              <ng-template #keywordsNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span style="font-weight: bold; display: inline-block;">Description:</span>
+              <span style="display:inline-block;" *ngIf="contentObj.description && contentObj.description !== ''; else descriptionNA">{{contentObj.description}}</span>
+              <ng-template #descriptionNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span style="font-weight: bold">Latest Update:</span>
+              <span>{{getUpdateDateStr()}}</span>
+            </div>
+          </div>
+
+          <!--Public view tab for all video library -->
+          <ng-template #videoLibraryView>
+            <div class="m_T-2x m_B-1x">
+              <video controls style="width: 100%" #previewVideo id="previewVideo"></video>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">{{contentObj.title}}</span><br/>
+              <span *ngIf="contentObj.description && contentObj.description !== ''; else videoDescriptionNA">{{contentObj.description}}</span>
+              <ng-template #videoDescriptionNA>Description Not Entered</ng-template>
+            </div>
+            <div class="m_T-1x m_B-1x">
+              <span class="bold">Domain<span *ngIf="contentObj.domain && contentObj.domain.length > 1">(s)</span>:</span>
+              <span *ngIf="contentObj.domain && contentObj.domain.length > 0; else videoDomainNA">{{getDomainListStr()}}</span>
+              <ng-template #videoDomainNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">Keywords:</span>
+              <span *ngIf="keywords && keywords.length > 0; else videoKeywordsNA">{{getKeywordsText()}}</span>
+              <ng-template #videoKeywordsNA>Not Entered</ng-template>
+            </div>
+            <div class="m_T-2x m_B-1x">
+              <span class="bold">Publish Update:</span>
+              <span>{{getUpdateDateStr()}}</span>
+            </div>
+          </ng-template>
+        </sam-tab>
+      </sam-tabs>
+    </div>
+
+
+  </form-only>
+</page>

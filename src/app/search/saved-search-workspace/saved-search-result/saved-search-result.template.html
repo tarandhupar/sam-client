@@ -1,0 +1,93 @@
+<div class="sam-ui small subtle menu">
+  <div class="right menu">
+    <sam-actions-dropdown [disabled]="false"
+                          [actions]="actions"
+                          (emitAction)="handleAction($event)">
+    </sam-actions-dropdown>
+  </div>
+</div>
+
+<div class="sam-ui grid ">
+  <div class="twelve wide column">
+    <h3 class="sam-ui header saved-search-title">
+      <a *ngIf="data.title" [routerLink]="['/savedsearches', id]" [queryParams]="qParams">
+        {{data.title}}
+      </a>
+      <ng-container *ngIf="!data.title">
+        Untitled
+      </ng-container>
+    </h3>
+  </div>
+</div>
+
+<div class="sam-ui equal width grid">
+
+  <div class="column">
+    <div class="sam-ui medium header">
+      Domain
+      <div *ngIf="!domain" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div class="sub header">{{domain}}</div>
+    </div>
+    <div class="sam-ui medium header">
+      Date Last Saved
+      <div *ngIf="data.modifiedOn==null" class="sub header">{{data.createdOn | date}}</div>
+      <div *ngIf="data.modifiedOn!=null" class="sub header">{{data.modifiedOn | date}}</div>
+    </div>
+    <div class="sam-ui medium header">
+      Date Last Run
+      <div *ngIf="data.lastUsageDate==null" class="sub header">
+        &#8212;&#8212;
+      </div>
+      <div *ngIf="data.lastUsageDate!=null" class="sub header">{{data.lastUsageDate | date}}</div>
+    </div>
+  </div>
+
+  <div class="column">
+    <ng-container *ngFor="let param of parameters; let i = index;">
+    <div class="sam-ui medium header" *ngIf="i % 2 == 0">
+        {{param.label}}
+        <div *ngIf="!param.value" class="sub header">
+          &#8212;&#8212;
+        </div>
+        <div class="sub header">{{param.value | filterValue: param.label: data.data}}</div>
+    </div>
+    </ng-container>
+  </div>
+
+  <div class="column">
+    <ng-container *ngFor="let param of parameters; let i = index;">
+    <div class="sam-ui medium header" *ngIf="i % 2 != 0">
+        {{param.label}}
+        <div *ngIf="!param.value" class="sub header">
+          &#8212;&#8212;
+        </div>
+        <div class="sub header">{{param.value | filterValue: param.label: data.data}}</div>
+      </div>
+    </ng-container>
+  </div>
+
+</div>
+
+<sam-modal #modal1
+           [id]="id"
+           [type]="'info'"
+           [title]="action=='edit' ? 'Edit Name' : (action=='duplicate' ? 'Duplicate Saved Search' : 'Delete Saved Search')"
+           [cancelButtonLabel]="'Cancel'"
+           [submitButtonLabel]="action=='delete' ? 'Delete' : 'Save'"
+           (onClose)="onModalClose($event)"
+           (onSubmit)="performAction($event)">
+  <h4 *ngIf="action=='delete'">Please confirm that you want to delete "{{newSearchName}}".</h4>
+  <p *ngIf="action=='duplicate'">Enter a new name for your duplicate saved search</p>
+  <sam-text *ngIf="action=='edit' || action=='duplicate'"
+    [(ngModel)]="newSearchName"
+    [name]="textConfig.name"
+    [label]="textConfig.label"
+    [errorMessage]="textConfig.errorMessage"
+    [disabled]="textConfig.disabled"
+    [required]="true">
+  </sam-text>
+</sam-modal>
+
+

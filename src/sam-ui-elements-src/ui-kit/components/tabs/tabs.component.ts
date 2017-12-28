@@ -23,20 +23,20 @@ import {
 })
 export class SamTabComponent {
   /**
-  * Set tab text
-  */
+   * Set tab text
+   */
   @Input('tabTitle') title: string;
   /**
-  * Set tab active class, defaults to false
-  */
+   * Set tab active class, defaults to false
+   */
   @Input() active: boolean = false;
   /**
-  * Set tab disabled class, defaults to false
-  */
+   * Set tab disabled class, defaults to false
+   */
   @Input() disabled: boolean = false;
   /**
-  * Set if tab is a floating action button
-  */
+   * Set if tab is a floating action button
+   */
   @Input() float: boolean = false;
 }
 
@@ -70,11 +70,6 @@ export class SamTabsComponent implements AfterContentInit {
   @ContentChildren(SamTabComponent) tabs: QueryList<SamTabComponent>;
 
   /**
-  * Event emitted on tab selection
-  */
-  @Output() currentSelectedTab = new EventEmitter();
-
-  /**
   * Set tabs size
   */
   @Input()
@@ -89,8 +84,8 @@ export class SamTabsComponent implements AfterContentInit {
   }
 
   /**
-  * Set tabs theme
-  */
+   * Set tabs theme
+   */
   @Input()
   set theme(key: string) {
     if (this.themes[key]) {
@@ -103,14 +98,22 @@ export class SamTabsComponent implements AfterContentInit {
   }
 
   /**
-  * Sets the active tab
-  */
+   * Sets the active tab
+   */
   @Input() active: number = -1;
 
   /**
    * Emits change on active tab index
    */
   @Output() activeChange: EventEmitter<number> = new EventEmitter();
+  /**
+   * (deprecated) Event emitted on tab selection
+   */
+  @Output() currentSelectedTab = new EventEmitter();
+  /**
+   * Event emitted on tab selection
+   */
+  @Output() tabChange = new EventEmitter();
 
   private _size = 'large';
   private _theme = 'default';
@@ -162,11 +165,12 @@ export class SamTabsComponent implements AfterContentInit {
   }
 
   selectTab(tab: SamTabComponent, index) {
-    this.tabs.forEach(tab => tab.active = false);
+    this.tabs.forEach(t => t.active = false);
     tab.active = true;
     this.active = index;
     this.cdr.detectChanges();
     this.activeChange.emit(this.active);
     this.currentSelectedTab.emit(tab);
+    this.tabChange.emit(tab);
   }
 }
