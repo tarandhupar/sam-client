@@ -47,7 +47,8 @@ export class ProfileComponent {
   };
 
   private breadcrumbs = [];
-
+  private isMyAccess: boolean = false;
+  private section: string = 'Profile';
   public activeRouteClass = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private api: IAMService, private toggleService: ToggleService) {}
@@ -75,7 +76,8 @@ export class ProfileComponent {
       });
 
     this.states.fsd = this.api.iam.user.isFSD();
-
+    this.isMyAccess = !!this.route.snapshot.data['isMyAccess'];
+    if (!this.isMyAccess) this.section = 'User Directory';
     this.checkRoute();
     this.verifyRouteData();
   }
@@ -121,7 +123,7 @@ export class ProfileComponent {
         case 'role-management':
           this.breadcrumbs = [
             { breadcrumb: 'Workspace', url: '/workspace' },
-            { breadcrumb: 'Roles Directory', url: '/role-management/roles-directory' },
+            { breadcrumb: 'User Directory', url: '/role-management/roles-directory' },
           ];
 
           this.breadcrumbs = this.breadcrumbs.concat(data['breadcrumbs']);

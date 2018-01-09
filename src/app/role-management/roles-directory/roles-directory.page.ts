@@ -18,7 +18,7 @@ import adminLevel from "../admin-level";
 export class RolesDirectoryPage {
   crumbs: Array<IBreadcrumb> = [
     { breadcrumb: 'Workspace', url: '/workspace' },
-    { breadcrumb: 'Roles Directory'}
+    { breadcrumb: 'User Directory'}
   ];
   actions: Array<SamActionInterface> = [
     { label: 'Bulk Update', name: 'bulk-update', callback: () => {} }

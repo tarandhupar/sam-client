@@ -10,6 +10,8 @@
   </h3>
 
   <div class="usa-width-one-whole" *ngIf="!hideAddrForm">
+    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr1 [(ngModel)]="streetAddr1" [name]="'street-1-input'" [label]="'Street address 1'"></sam-text>
+    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr2 [(ngModel)]="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></sam-text>
 
     <sam-location-component #locationGroup
                             [(location)]="locationObj"
@@ -25,8 +27,6 @@
     <!--</sam-label-wrapper>-->
     <!--</div>-->
 
-    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr1 [(ngModel)]="streetAddr1" [name]="'street-1-input'" [label]="'Street address 1'"></sam-text>
-    <sam-text class="usa-width-one-whole" #MailAddrStreetAddr2 [(ngModel)]="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></sam-text>
     <!--<div class="usa-width-one-whole">-->
 
     <!--<div class="usa-width-one-half">-->

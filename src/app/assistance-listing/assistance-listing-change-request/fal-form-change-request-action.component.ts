@@ -38,7 +38,10 @@ interface ChangeRequestActionModel {
 export class FALFormChangeRequestActionComponent implements OnInit {
   buttonDisabled: boolean = false;
   falChangeRequestActionForm: FormGroup;
-  buttonType: string = 'default';
+  backButtonType: string = 'tertiary';
+  rejectButtonType: string = 'negative';
+  approveButtonType: string = 'primary';
+  cancelButtonType: string = 'primary';
   pageReady: boolean = false;
   pageTitle: string;
   permissionType: ChangeRequestActionPermissionType;
@@ -67,6 +70,10 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     timer: 3000
   };
   crumbs: Array<IBreadcrumb> = [];
+
+  public options = {
+    badge: { attached: 'top right' },
+  };
 
   constructor(private fb: FormBuilder,
     private programService: ProgramService,
@@ -380,7 +387,6 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     if (this.falChangeRequestActionForm.valid) {
       this.buttonDisabled = true;
       //disable button's event
-      this.buttonType = 'disabled';
       this.changeRequestService.submitRequestAction(this.prepareChangeRequestActionData(actionType.action), this.cookieValue).subscribe(api => {
         this.notifyFooterAlertModel.description = actionType.success;
         this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
@@ -393,7 +399,6 @@ export class FALFormChangeRequestActionComponent implements OnInit {
           this.notifyFooterAlertModel.type = "error";
           this.notifyFooterAlertModel.description = "An error has occurred please contact your administrator.";
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
-          this.buttonType = 'default';
         });
     } else {
       for (let control in this.falChangeRequestActionForm.controls) {
@@ -447,6 +452,23 @@ export class FALFormChangeRequestActionComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  get requestStatusName() {
+    if(this.programRequest && this.isRequestStatus('pending')) {
+      return 'Request Pending';
+    }
+    if(this.programRequestAction && this.isRequestStatus('rejected')) {
+      return 'Rejected';
+    }
+    if(this.programRequestAction && this.isRequestStatus('approved')) {
+      return 'Approved';
+    }
+    if(this.programRequestAction && this.isRequestStatus('cancelled')) {
+      return 'Cancelled';
+    }
+
+    return null;
   }
 
   public toJSON(json: string) {

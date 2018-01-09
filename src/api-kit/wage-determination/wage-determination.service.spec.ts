@@ -99,11 +99,24 @@ describe('src/api-kit/wage-determination/wage-determination.service.spec.ts', ()
       expect(res).toBeDefined();
     });
   }));
-  
+
   it('Wage Determination Service: should return response when subscribed to getWageDeterminationHistoryByReferenceNumber', inject([WageDeterminationService], (testService: WageDeterminationService) => {
     testService.getWageDeterminationHistoryByReferenceNumber("8").subscribe((res: Response) => {
       expect(res).toBeDefined();
     });
   }));
+
+  it('Wage Determination Service: should return response when subscribed to getCBAByReferenceNumber', inject([WageDeterminationService], (testService: WageDeterminationService) => {
+    testService.getCBAByReferenceNumber("123").subscribe((res: Response) => {
+      expect(res).toBeDefined();
+    });
+  }));
+
+  it('Wage Determination Service: should return response when subscribed to getWageDeterminationToBeRevised', inject([WageDeterminationService], (testService: WageDeterminationService) => {
+    testService.getWageDeterminationToBeRevised().subscribe((res: Response) => {
+      expect(res).toBeDefined();
+    });
+  }));
+
 });
 

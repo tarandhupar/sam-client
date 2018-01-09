@@ -22,7 +22,7 @@ import * as moment from 'moment/moment';
             <strong>Awardee</strong><br>
             <span>{{data.award?.awardee?.name}} <span *ngIf="data.award?.awardee?.duns!=null && data.award?.awardee?.duns?.length > 0">({{data.award?.awardee?.duns}})</span></span>
             </li>
-            <li *ngIf="data.organizationHierarchy!=null">
+            <li *ngIf="data.organizationHierarchy!=null && data.organizationHierarchy[0]">
               <strong>Department/Ind. Agency</strong><br>
               <a *ngIf="data.isActive==true && data.organizationHierarchy[0]?.organizationId?.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
                 {{data.organizationHierarchy[0]?.name}}
@@ -31,7 +31,7 @@ import * as moment from 'moment/moment';
                 {{data.organizationHierarchy[0]?.name}}
               </span>
             </li>
-            <li *ngIf="data.organizationHierarchy!=null">
+            <li *ngIf="data.organizationHierarchy!=null && data.organizationHierarchy[1]">
               <strong>Sub-tier</strong><br>
               <a *ngIf="data.isActive==true && data.organizationHierarchy[1]?.organizationId?.length < 12" [routerLink]="['/organization', data.organizationHierarchy[1].organizationId]" [queryParams]="qParams">
                 {{data.organizationHierarchy[1]?.name}}
@@ -50,7 +50,7 @@ import * as moment from 'moment/moment';
           <ul class="sam-ui small list">
             <li *ngIf="data.isActive==false" class="item">
               <span class="sam-ui mini label">
-                Archived
+                Inactive
               </span>
             </li>
             <li class="item">

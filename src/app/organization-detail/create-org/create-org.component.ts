@@ -1,99 +1,98 @@
-import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
-import { ActivatedRoute, Router} from "@angular/router";
-import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
-import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
-import { LabelWrapper } from 'sam-ui-elements/src/ui-kit/wrappers/label-wrapper/label-wrapper.component';
-import { FHService } from "../../../api-kit/fh/fh.service";
-import { FlashMsgService } from "../flash-msg-service/flash-message.service";
-import { Observable } from 'rxjs';
-import { Location } from "@angular/common";
-import { IAMService } from "api-kit";
-import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FHTitleCasePipe } from '../../app-pipes/fhTitleCase.pipe';
+import { FHRoleModel } from '../../fh/fh-role-model/fh-role-model.model';
+import { IBreadcrumb } from 'sam-ui-elements/src/ui-kit/types';
 
-@Component ({
+@Component({
   templateUrl: 'create-org.template.html'
 })
 export class OrgCreatePage {
-
   orgFormConfig: any;
-  orgType: string = "";
-  orgParentId: string = "";
+  orgType: string = '';
+  orgParentId: string = '';
+  parentOrg: any;
   hierarchyPath: any = [];
   hierarchyPathMap: any = [];
+  crumbs: Array<IBreadcrumb> = [];
+  creataleOrgType: any = ['office', 'agency', 'department'];
 
   fhRoleModel: FHRoleModel;
   loadData: boolean = false;
+  title: string = 'Federal Hierarchy';
 
-  constructor(private builder: FormBuilder,
-              private _router: Router,
-              private route: ActivatedRoute,
-              private fhService: FHService,
-              public flashMsgService: FlashMsgService,
-              private location: Location,
-              private iamService: IAMService) {
-  }
+  constructor(
+    private _router: Router,
+    private route: ActivatedRoute,
+    private fhTitleCasePipe: FHTitleCasePipe
+  ) {}
 
   ngOnInit() {
-
     this.route.queryParams.subscribe(queryParams => {
-      this.orgType = queryParams["orgType"];
-      this.orgParentId = queryParams["parentID"];
-      this.orgFormConfig = {
-        mode: 'create',
-        parentId: this.orgParentId,
-        orgType: this.orgType,
-      };
-      this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
-    });
+      this.orgType = queryParams['orgType'];
+      this.orgParentId = queryParams['orgId'];
+      this.parentOrg = this.route.snapshot.data['parentOrg'];
 
-  }
+      if (this.checkOrgType()) {
+        this.orgFormConfig = {
+          mode: 'create',
+          parentId: this.orgParentId,
+          orgType: this.orgType,
+          parentOrg: this.parentOrg
+        };
 
-  checkAccess = (user) => {
-    let accessOrg = "";
-    if (this.orgType.toLowerCase() !== "department") accessOrg = this.orgParentId;
-    this.fhService.getAccess(accessOrg).subscribe(
-      (data) => {
-        if(accessOrg === ""){
-          this.loadData = true;
-        }else {
-          this.fhService.getOrganizationDetail(accessOrg).subscribe(
-            val => {
-              this.setupHierarchyPathMap(val._embedded[0].org.fullParentPath, val._embedded[0].org.fullParentPathName);
-              this.fhRoleModel = FHRoleModel.FromResponse(val);
-              let checkPermissionType = this.orgType.toLowerCase();
-              if(checkPermissionType === "majcommand" || checkPermissionType === "subcommand") checkPermissionType = "office";
-              if (!this.fhRoleModel.hasPermissionType("POST", checkPermissionType)) {
-                this.redirectToForbidden();
-              } else {
-                this.loadData = true;
-              }
-            });
-        }
-
-      },
-      (error) => {
-        if (error.status === 403) this.redirectToForbidden();
+        this.setupCrumbs(this.parentOrg);
+      }else {
+        this._router.navigateByUrl('/404');
       }
-    );
-  };
-
-  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
-  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
-
-  setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
-    this.hierarchyPath = fullParentPathName.split('.').map( e => {
-      return e.split('_').join(' ');
     });
-    let parentOrgIds = fullParentPath.split('.');
-    this.hierarchyPathMap = [];
-    parentOrgIds.forEach((elem,index) => {
-      this.hierarchyPathMap[this.hierarchyPath[index]] = elem;
-    });
-
   }
 
-  onChangeOrgDetail(hierarchyName){
-    this._router.navigate(['org/detail', this.hierarchyPathMap[hierarchyName],'profile'])
+  checkOrgType(): boolean {
+    return this.creataleOrgType.includes(this.orgType.toLowerCase());
+  }
+
+  setupCrumbs(parentOrg) {
+    if (parentOrg) {
+      this.crumbs.push({
+        url: '/org/detail/' + parentOrg.l1OrgKey,
+        breadcrumb: this.fhTitleCasePipe.transform(parentOrg.l1Name)
+      });
+      switch (this.orgType.toLowerCase()) {
+        case 'agency':
+          this.crumbs.push({ breadcrumb: 'Create Sub-Tier Agency' });
+          break;
+        case 'office':
+          this.crumbs.push({
+            url: '/org/detail/' + parentOrg.l2OrgKey,
+            breadcrumb: this.fhTitleCasePipe.transform(parentOrg.l2Name)
+          });
+          this.crumbs.push({ breadcrumb: 'Create Office' });
+          break;
+        default:
+          break;
+      }
+      return;
+    }
+    this.crumbs = [
+      { url: '/federal-hierarchy', breadcrumb: 'Search Federal Hiearchy' },
+      { breadcrumb: 'Create Department/Ind. Agency' }
+    ];
+  }
+
+  onCreateFormCancel() {
+    switch (this.orgType.toLowerCase()) {
+      case 'department':
+        this._router.navigateByUrl('/federal-hierarchy');
+        break;
+      case 'agency':
+        this._router.navigateByUrl('/org/detail/' + this.parentOrg.l1OrgKey);
+        break;
+      case 'office':
+        this._router.navigateByUrl('/org/detail/' + this.parentOrg.l2OrgKey);
+        break;
+      default:
+        break;
+    }
   }
 }

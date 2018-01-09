@@ -1,4 +1,4 @@
-import {AbstractControl, FormControl, AsyncValidatorFn, ValidatorFn, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, AsyncValidatorFn, ValidatorFn, Validators, FormGroup} from "@angular/forms";
 import * as _ from 'lodash';
 import { ValidationErrors } from "../../app-utils/types";
 import * as moment from 'moment/moment';
@@ -94,15 +94,29 @@ export class falCustomValidatorsComponent {
 
   static numberCheck(control){
     let flag = null;
+    let errorMsg = {message:"Provide a valid number using numerical values 001-999"};
     let regex = new RegExp("^\\d{0,9}$");
     if (!control.value && control.value.length == 0) {
       flag = {
         required: true
       };
-    }else if(!regex.test(control.value)){
-      flag = {numberCheck: true};
+    }else if(!regex.test(control.value) || Number(control.value) == 0){
+      flag = {numberCheck: errorMsg};
     }
     return flag;
+  }
+
+  static checkForDifferentRange(control) {
+    let flag = null;
+    let rangeError = {message:"Low Number cannot be greater than High Number"};
+    if(control.value.lowNumber == "" || control.value.highNumber == ""){
+      return null;
+    }
+    if(Number(control.value.lowNumber) > Number(control.value.highNumber)){
+        flag = {checkForDifferentRange: rangeError};
+    }
+    return flag;
+
   }
 
   static atLeastOneEntryCheck(control){
@@ -336,5 +350,6 @@ export class falCustomValidatorsComponent {
     }
     return null;
   }
+
 }
 

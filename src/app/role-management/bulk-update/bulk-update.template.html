@@ -175,9 +175,9 @@
           <sam-tab [active]="isTabActive(i)" [tabTitle]="tab.name" *ngFor="let tab of domainTabs; let i = index">
             <ul class="column-wrappable">
               <li *ngFor="let func of tab.functions" style="margin-bottom: 16px;">
-                <span style="font-weight: 600; font-size: 1.7rem;">{{func.name}}</span>
+                <span style="font-weight: 600; font-size: 1.7rem; padding-left: 30px">{{func.name}}</span>
                 <div *ngFor="let permission of func.permissions;let i=index" class="checkbox-group">
-                  <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="align-right" [(ngModel)]="permission.checked" (ngModelChange)="onPermissionChange(tab, func, permission)">
+                  <input [attr.id]="permission+'-cbx-'+i" [ngModelOptions]='{standalone: true}' [disabled]="permission.disabled" type="checkbox" class="permission" [(ngModel)]="permission.checked" (ngModelChange)="onPermissionChange(tab, func, permission)">
                   <label [attr.for]="permission+'-cbx-'+i">{{permission.name}}</label>
                 </div>
                 <!--<div *ngFor="let permission of func.permissions">-->

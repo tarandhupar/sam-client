@@ -1,0 +1,27 @@
+<form [formGroup]="datesForm">
+
+  <div class="sam-ui segment">
+    <sam-date-range
+      [label]="'Effective Dates of CBA'"
+      [required]="true"
+      [control]="datesForm.controls['effectiveDateRange']"
+      [formControl]="datesForm.controls['effectiveDateRange']"
+      name="effective-date-range">
+    </sam-date-range>
+    <sam-date
+      [label]="'Amended Date of CBA'"
+      [name]="'amended-date'"
+      [control]="datesForm.controls['amendedFrom']"
+      [formControl]="datesForm.controls['amendedFrom']"
+      [required]="false">
+    </sam-date>
+    <sam-text
+      [control]="datesForm.controls['solicitationNumber']"
+      [formControl]="datesForm.controls['solicitationNumber']"
+      [name]="'solicitation-number'"
+      [label]="'Solicitation/Contract Number'"
+      [required]="false">
+    </sam-text>
+  </div>
+
+</form>

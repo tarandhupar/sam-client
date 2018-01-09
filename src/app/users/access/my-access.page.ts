@@ -25,6 +25,7 @@ export class MyAccessPage implements OnInit {
   private selectedDomainIds: any = [];
   private roleOptions: Array<OptionsType> = [];
   private selectedRoleIds: any = [];
+  private selectedEntities: any = [];
   // pagination
   private totalPages: number = 0;
   private totalElements: number = 0;
@@ -39,6 +40,7 @@ export class MyAccessPage implements OnInit {
   private result: 'success'|'error'|'pending' = 'pending';
   private errorMessage: string = '';
   private isMyAccess: boolean = false;
+  private isGov: boolean = false;
 
   @ViewChild('picker') agencyPicker: AgencyPickerComponent;
   @ViewChild('deleteModal') deleteModal: SamModalComponent;
@@ -56,6 +58,10 @@ export class MyAccessPage implements OnInit {
     this.isMyAccess = !!this.route.snapshot.data['isMyAccess'];
     let cookieUser = this.userCookieService.getUser() && this.userCookieService.getUser().uid;
     this.userName = this.route.snapshot.params['id'] || cookieUser;
+    let user = this.userCookieService.getUser();
+    let orgID = (user.officeID || user.agencyID || user.departmentID || '').toString();
+    this.isGov = orgID.length ? true : false;
+    this.sortOptions[0].label = this.isGov ? 'Organization' : 'Entity Name';
     this.onSearchParamChange();
   }
 
@@ -91,6 +97,10 @@ export class MyAccessPage implements OnInit {
 
     if (this.selectedRoleIds && this.selectedRoleIds.length) {
       queryParams.roleKey = this.selectedRoleIds.join(',');
+    }
+
+    if (this.selectedEntities && this.selectedEntities.length) {
+      queryParams.orgKey = this.selectedEntities.map(e => e.key).join(',');
     }
 
     this.userAccessService.getAllUserRoles(this.userName, queryParams).subscribe(
@@ -212,6 +222,11 @@ export class MyAccessPage implements OnInit {
 
   onRoleChange() {
     this.currentPage = 1;
+    this.onSearchParamChange();
+  }
+
+  onEntityChange(val) {
+    this.selectedEntities = val;
     this.onSearchParamChange();
   }
 

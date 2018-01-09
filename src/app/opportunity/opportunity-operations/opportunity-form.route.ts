@@ -5,12 +5,12 @@ import { OpportunityAuthGuard } from "../components/authgaurd/authguard.service"
 
 export const routes: Routes = [
   {
-    path: 'opp/add',
+    path: 'add',
     component: OpportunityFormComponent,
     canActivate: [OpportunityAuthGuard]
   },
   {
-    path: 'opp/:id/edit',
+    path: ':id/edit',
     component: OpportunityFormComponent,
     resolve: {
       opp: OpportunityFormResolver

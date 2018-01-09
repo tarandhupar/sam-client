@@ -21,7 +21,7 @@
       <!--Side Navigation-->
       <sam-sidenav
         type="step"
-        (data)="navHandler($event)"
+        (selection)="navHandler($event)"
         [labelLookup]="sideNavSelection"
         [model]="sideNavModel">
       </sam-sidenav>
@@ -29,7 +29,7 @@
   </sidebar>
 
   <ng-container message>
-    <sam-status-banner
+    <sam-alert
       [type]="'warning'"
       [hidden]="!(checkForErrors() && reviewErrorList) || (opportunity?.status?.code == 'published' || opportunity?.status?.code == 'archived')">
       <div leading-content>{{statusBannerLeadingText}}</div>
@@ -38,7 +38,7 @@
                            (message)="updateBannerText($event)">
         </opp-error-display>
       </div>
-    </sam-status-banner>
+    </sam-alert>
   </ng-container>
 
 
@@ -294,7 +294,7 @@
               <strong>Update/Amendment Archive Date: </strong>
               {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
             </li>
-            <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
+            <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate) && showOriginalArchiveDate()">
               <strong>Original Archive Date: </strong>
               <ng-container *ngIf="(opportunity.parent | json) != '{}'">{{ parentArchiveDate() | dateFormat: 'MMM DD, YYYY' }}</ng-container>
               <ng-container *ngIf="(opportunity.parent | json) == '{}'">{{ archiveDate() | dateFormat: 'MMM DD, YYYY' }}</ng-container>
@@ -323,6 +323,18 @@
                   <div *ngIf ="flag.isSelected===false">None</div>
                 </ng-container>
               </ul>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AllowVendorAddRemoveIvl, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.AllowVendorAddRemoveIvl)">
+              <em class="icon fa fa-lock" aria-hidden="true"></em> <strong>Allow Vendors to Add/remove from IVL: </strong>
+              <ng-container *ngIf="opportunity?.data?.permissions?.ivl?.create != null && opportunity?.data?.permissions?.ivl?.delete != null && opportunity?.data?.permissions?.ivl?.update != null">
+                {{ (opportunity?.data?.permissions?.ivl?.create && opportunity?.data?.permissions?.ivl?.delete && opportunity?.data?.permissions?.ivl?.update) ? 'Yes' : 'No' }}
+              </ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AllowVendorViewIvl, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.AllowVendorViewIvl)">
+              <em class="icon fa fa-lock" aria-hidden="true"></em> <strong>Allow Vendors to View IVL: </strong>
+              <ng-container *ngIf="opportunity?.data?.permissions?.ivl?.read != null">
+                {{ (opportunity?.data?.permissions?.ivl?.read) ? 'Yes' : 'No' }}
+              </ng-container>
             </li>
           </ul>
         <div class="sam-ui hidden section divider"></div>
@@ -382,16 +394,32 @@
                 </ng-container>
               </li>
               <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
-                <strong>NAICS Code(s): </strong>
+                <strong>Primary NAICS Code: </strong>
                 <inline-error-message
                   [message]="getErrorMessage(getSectionId('CLASSIFICATION'), getFieldId('PRIMARY_NAICS_CODE'))">
                 </inline-error-message>
                 <ng-container *ngIf="opportunity.data?.naics && opportunity.data?.naics[0] != null && dictionariesUpdated === true">
                   <ul>
                     <ng-container *ngFor = "let naics of opportunity.data?.naics">
-                      <li *ngFor = "let element of naics.code | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
-                        <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
-                      </li>
+                      <ng-container *ngIf="naics.type == 'Primary' || naics.type == 'primary'">
+                        <li *ngFor = "let element of naics.code | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
+                          <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+                        </li>
+                      </ng-container>
+                    </ng-container>
+                  </ul>
+                </ng-container>
+              </li>
+              <li [attr.id]="generateID(opportunityFields.NAICSCodeAdditional, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCodeAdditional)">
+                <strong>Additional NAICS Code(s): </strong>
+                <ng-container *ngIf="opportunity.data?.naics && opportunity.data?.naics[0] != null && dictionariesUpdated === true">
+                  <ul>
+                    <ng-container *ngFor = "let naics of opportunity.data?.naics">
+                      <ng-container *ngIf="naics.type == 'Secondary' || naics.type == 'secondary'">
+                        <li *ngFor = "let element of naics.code | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
+                          <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+                        </li>
+                      </ng-container>
                     </ng-container>
                   </ul>
                 </ng-container>

@@ -6,7 +6,7 @@ import {
   config, utilities,
   getAuthHeaders, exceptionHandler, sanitizeRequest,
   transformMigrationAccount,
-  isDebug
+  isDebug, logger
 } from './helpers';
 
 export const $import = {
@@ -64,33 +64,27 @@ export const $import = {
         'claimedBy': 'doe.john@gmail.com',
         'claimed': true
       }
-    ];
+    ].map(account => transformMigrationAccount(account));
+
+    if(logger(mock)) {
+      $success(mock);
+      return;
+    }
 
     if(auth) {
       request
         .get(endpoint)
         .set(auth)
-        .end((err, response) => {
-          let accounts = [];
+        .then(response => {
+          let accounts = response.body || [];
 
-          if(!err) {
-            accounts = response.body || [];
-            accounts = accounts.map((account) => {
-              return transformMigrationAccount(account);
-            });
+          accounts = accounts.map((account) => {
+            return transformMigrationAccount(account);
+          });
 
-            $success(accounts);
-          } else {
-            if(isDebug()) {
-              let accounts = mock.map((account) => {
-                return transformMigrationAccount(account);
-              });
-
-              $success(accounts);
-            } else {
-              $error(exceptionHandler(response));
-            }
-          }
+          $success(accounts);
+        }, response => {
+          $error(exceptionHandler(response));
         });
     } else {
       $error({ message: 'Please sign in' });
@@ -109,6 +103,11 @@ export const $import = {
 
     $success = $success || (() => {});
     $error = $error || (() => {});
+
+    if(logger(params)) {
+      $error({ message: 'Migrations Error Testing' });
+      return;
+    }
 
     if(auth) {
       request

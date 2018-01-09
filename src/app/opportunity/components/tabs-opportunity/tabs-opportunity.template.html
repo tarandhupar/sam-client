@@ -55,8 +55,8 @@
 
     <!-- Currently showing only disabled view. It will be enabled once public view is implemented for modernized FBO. -->
 
-    <!--<a *ngIf="data.id && !data.archived"
-       (click)="tabClicked(tabItems.public)"
+    <a *ngIf="data.id && !data.archived"
+       (click)="onPublicClick()"
        class="item"
        [class.active]="currentRouteConfig == tabItems.public.routeConfig">
       Public
@@ -64,11 +64,11 @@
     <span *ngIf="!data.id || data.id && data.archived"
           class="item disabled">
       Public
-    </span>-->
-
-    <span class="item disabled">
-      Public
     </span>
+
+    <!-- <span class="item disabled">
+      Public
+    </span> -->
 
     <!-- ==================== Delete ==================== -->
     <a *ngIf="canDelete()"

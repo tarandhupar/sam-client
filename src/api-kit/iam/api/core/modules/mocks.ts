@@ -1,5 +1,6 @@
 import { merge } from 'lodash';
 import * as moment from 'moment';
+import { getParam, isDebug } from './helpers';
 import { User } from '../user';
 
 import {
@@ -36,7 +37,7 @@ export function getMockUser(): IUser {
     officeID: 100170334,
 
     kbaAnswerList: [
-      { questionId: 1, answer: answer },
+      { questionId: 4, answer: answer },
       { questionId: 3, answer: answer },
       { questionId: 5, answer: answer }
     ],
@@ -88,8 +89,9 @@ export function getMockUser(): IUser {
 };
 
 export function getMockCWSApplication(index: number|string = 1): CWSApplication {
-  const types = ['Gov','Non-Gov'];
-  const today = moment().valueOf();
+  const types = ['Gov','Non-Gov'],
+        today = moment().valueOf(),
+        status = (isDebug() ? getParam('status') : null) || 'Draft';
 
   return {
     uid: index,
@@ -126,7 +128,7 @@ export function getMockCWSApplication(index: number|string = 1): CWSApplication 
     dateOfRejection: '',
     rejectedBy: '',
     rejectionReason: '',
-    applicationStatus: 'Draft',
+    applicationStatus: status,
   };
 }
 

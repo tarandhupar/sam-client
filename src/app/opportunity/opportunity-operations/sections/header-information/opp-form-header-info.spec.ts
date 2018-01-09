@@ -13,6 +13,7 @@ import { IAMService } from '../../../../../api-kit/iam/iam.service';
 import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 import { OpportunitySideNavService } from '../../framework/service/sidenav/opportunity-form-sidenav.service';
 import { OpportunityFormErrorService } from '../../opportunity-form-error.service';
+import {OppRelatedNoticeAutoFillService} from "../../framework/service/related-notice-autofill/related-notice-autofill.service";
 
 let MockActivatedRoute = {
   snapshot: {
@@ -37,11 +38,13 @@ let MockActivatedRoute = {
 
 describe('Opportunity Header Info Form', () => {
   let comp: OpportunityHeaderInfoComponent;
+  let relatedNoticeAutoFillService;
   let fixture: ComponentFixture<OpportunityHeaderInfoComponent>;
-  let MockFormService = jasmine.createSpyObj('MockFormService', ['getOpportunityDictionary']);
+  let MockFormService = jasmine.createSpyObj('MockFormService', ['getOpportunityDictionary', 'getOpportunity']);
   let MockUserAccessService = jasmine.createSpyObj('MockUserAccessService', ['getAllUserRoles']);
   let MockUserService = jasmine.createSpyObj('MockUserService', ['getUser']);
   let MockOppNoticeTypeMapService = jasmine.createSpyObj('MockOppNoticeTypeMapService', ['toggleSectionsDisabledProperty']);
+  let MockOppRelatedNoticeAutoFillService = jasmine.createSpyObj('MockOppRelatedNoticeAutoFillService', ['autoFillHeaderViewModel', 'autoFillFormFields']);
   let MockErrorService = jasmine.createSpyObj('MockErrorService', ['validateHeaderTitle', 'validateFederalAgency', 'validateNoticeNumber', 'applicableErrors']);
   let originalTimeout;
   let _opportunityFormService: OpportunityFormService;
@@ -93,6 +96,7 @@ describe('Opportunity Header Info Form', () => {
         { provide: UserAccessService, useValue: MockUserAccessService },
         { provide: UserService, useValue: MockUserService },
         { provide: ActivatedRoute, useValue: MockActivatedRoute },
+        { provide: OppRelatedNoticeAutoFillService, useValue: MockOppRelatedNoticeAutoFillService },
       ],
       imports: [
         SamUIKitModule,
@@ -104,7 +108,7 @@ describe('Opportunity Header Info Form', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(OpportunityHeaderInfoComponent);
     comp = fixture.componentInstance;
-    //fixture.detectChanges();
+    relatedNoticeAutoFillService = new OppRelatedNoticeAutoFillService();
     comp.viewModel = new OpportunityFormViewModel({});
     comp.oppHeaderInfoViewModel = comp.viewModel.oppHeaderInfoViewModel;
   });
@@ -279,11 +283,14 @@ describe('Opportunity Header Info Form', () => {
     expect(disableSideNavSpy).toHaveBeenCalled();
   }));
 
-  xit('should save notice number', fakeAsync(() => {
+  it('should save notice number', fakeAsync(() => {
     fixture.detectChanges();
+    let errorSpy = spyOn(comp, 'updateNoticeNumberError');
     let id = 'testId';
     comp['saveNoticeNumber'](id);
     expect(comp.oppHeaderInfoViewModel.noticeNumber).toEqual(id);
+    fixture.detectChanges();
+    expect(errorSpy).toHaveBeenCalled();
   }));
 
   it('should save title', fakeAsync(() => {
@@ -316,4 +323,63 @@ describe('Opportunity Header Info Form', () => {
     expect(MockOppNoticeTypeMapService.toggleSectionsDisabledProperty).toHaveBeenCalled();
   }));
 
+  it('onChangeHandler calls if block', () => {
+    let obj = {
+     key:'1',
+      value:'test'
+    };
+    let spyData = spyOn(comp, 'getRelatedNoticeData');
+    comp.onChangeHandler(obj);
+    expect(spyData).toHaveBeenCalled();
+  });
+
+  it('should getRelatedNoticeData', () => {
+    MockFormService.getOpportunity.and.returnValue(Observable.of( {
+      "opportunityId": "213ji321hu3jk123",
+      "parent": {
+        "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
+      },
+      "data": {
+        "type": "l",
+        "solicitationNumber": "Solicitation Number goes here",
+        "title": "Title Goes here",
+        "organizationId": "100010393",
+        "organizationLocationId": "100010393",
+        "relatedOpportunityId": "Related Opportunity Id goes here",
+      },
+      "latest": true,
+      "packages": {
+        "content": [],
+        "resources": []
+      },
+      "postedDate": "2016-11-16 17:21:55",
+      "modifiedDate": "2016-11-16 17:21:55",
+      "_links": {
+        "self": {
+          "href": "http://10.98.29.81:122/v1/opportunity/123dqw"
+        }
+      }
+    }));
+    comp.viewModel = new OpportunityFormViewModel({});
+    comp.oppHeaderInfoViewModel.opportunityType = 'p';
+    let spyData = spyOn(comp, 'populateHeaderAutoFillFields');
+    comp['getRelatedNoticeData']('213ji321hu3jk123');
+    expect(MockOppRelatedNoticeAutoFillService.autoFillFormFields).toHaveBeenCalled();
+    expect(spyData).toHaveBeenCalled();
+  });
+
+  it('populateHeaderAutoFillFields set autofill fields', () => {
+    spyOn(comp, 'loadTypeOptions').and.stub();
+    fixture.detectChanges();
+    let viewModel = {
+      data: {
+        title: 'test'
+      }
+    };
+    let updateTitleErrorSpy = spyOn(comp, 'updateTitleError');
+    comp.viewModel = new OpportunityFormViewModel(viewModel);
+    comp['populateHeaderAutoFillFields']();
+    expect(comp.viewModel.title).toEqual('test');
+    expect(updateTitleErrorSpy).toHaveBeenCalled();
+  });
 });

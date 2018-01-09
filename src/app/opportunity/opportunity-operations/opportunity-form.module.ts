@@ -17,6 +17,7 @@ import { OpportunityGeneralInfoComponent } from './sections/general-information/
 import { OpportunityDescriptionComponent } from "./sections/description/description.component";
 import { OpportunityContactInfoComponent } from './sections/contact-information/opp-form-contact-info.component';
 import { OpportunityClassificationComponent } from "./sections/classification/opp-form-classification.component";
+import {OppRelatedNoticeAutoFillService} from "./framework/service/related-notice-autofill/related-notice-autofill.service";
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { OpportunityClassificationComponent } from "./sections/classification/op
     OpportunityFormService,
     OpportunityFormResolver,
     OpportunitySideNavService,
-    OppNoticeTypeMapService
+    OppNoticeTypeMapService,
+    OppRelatedNoticeAutoFillService
   ],
   exports: [
 

@@ -17,8 +17,8 @@ export class OpportunityFormService {
     return this.oppService.getPermissions(this.authCookie);
   }
 
-  getOpportunity(opportunityId: string): Observable<any> {
-    return this.oppService.getContractOpportunityById(opportunityId, this.authCookie);
+  getOpportunity(opportunityId: string, latest?: any): Observable<any> {
+    return this.oppService.getContractOpportunityById(opportunityId, this.authCookie, latest);
   }
 
   saveContractOpportunity(opportunityId: string, data: {}): Observable<any> {

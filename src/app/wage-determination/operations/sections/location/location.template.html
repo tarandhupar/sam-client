@@ -1,0 +1,40 @@
+<form [formGroup]="locationForm">
+  <div class="sam-ui segment">
+    <h3 class="sam-ui header">
+      Location
+    </h3>
+    <sam-autocomplete [control]="locationForm.controls['state']"
+                      [formControl]="locationForm.controls['state']"
+                      (ngModelChange)="stateChanged($event)"
+                      [name]="'location-state'"
+                      [required]="true"
+                      [labelText]="'State'"
+                      [options]="stateOptions"
+                      [disabled]="false">
+    </sam-autocomplete>
+    <sam-autocomplete [control]="locationForm.controls['county']"
+                      [formControl]="locationForm.controls['county']"
+                      (ngModelChange)="countyChanged($event)"
+                      [name]="'location-county'"
+                      [required]="true"
+                      [labelText]="'County/Independent City'"
+                      [options]="countyOptions">
+    </sam-autocomplete>
+    <sam-text
+      [control]="locationForm.controls['city']"
+      [formControl]="locationForm.controls['city']"
+      [name]="'location-city'"
+      [label]="'City'"
+      [required]="false"
+      [disabled]="!hasStateSelected || isStateWide">
+    </sam-text>
+    <sam-text
+      [control]="locationForm.controls['zip']"
+      [formControl]="locationForm.controls['zip']"
+      [name]="'location-zip'"
+      [label]="'Zip Code'"
+      [required]="false"
+      [disabled]="!hasStateSelected || isStateWide">
+    </sam-text>
+  </div>
+</form>

@@ -1,8 +1,7 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import {BaseRequestOptions, Http} from '@angular/http';
-import {MockBackend} from '@angular/http/testing';
+import { BaseRequestOptions, Http } from '@angular/http';
+import { MockBackend} from '@angular/http/testing';
 import { Observable } from 'rxjs';
 
 import { SearchPage } from './search.page';
@@ -20,23 +19,23 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../app-components/alert-footer';
-import {SearchMultiSelectFilter} from "./search-multi-select-filter/search-multi-select-filter.component";
-import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
+import { SearchMultiSelectFilter} from "./search-multi-select-filter/search-multi-select-filter.component";
+import { SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
-import {FormsModule} from "@angular/forms";
-import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import { FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import { SamEligibilityFilter } from "./eligibility-filter/eligibility-filter.component";
-import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
-import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
-import {ActivatedRoute} from "@angular/router";
+import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
+import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
+import { ActivatedRoute } from "@angular/router";
 //other library
 import * as Cookies from 'js-cookie';
-import {SavedSearchService} from "../../api-kit/search/saved-search.service";
-import {SearchModule} from "./search.module";
-import {SamModalComponent} from 'sam-ui-elements/src/ui-kit/components/modal/modal.component';
+import { SavedSearchService } from "../../api-kit/search/saved-search.service";
 import { SamComponentsModule } from 'sam-ui-elements/src/ui-kit/components';
-import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
-
+import { WageDeterminationRevisedDBAPage } from "../wage-determination/to-be-revised/revised-dba.page";
+import { UserService } from "../role-management/user.service";
+import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 let fixture;
 
@@ -189,10 +188,43 @@ let fhServiceStub = {
   }
 };
 
+let wageDeterminationServiceStub = {
+  getWageDeterminationToBeRevised: () => {
+    return Observable.of({
+      _embedded: {
+        dBAToBeRevisedList: [
+          {wdNo:'AK170001'},
+          {wdNo:'AK170002'},
+          {wdNo:'AK170003'},
+          {wdNo:'AK170004'}
+        ]
+      }
+    });
+  }
+};
+
+let MockUserService = {
+  getUser: () => {
+    return {
+      isGov: true,
+      lastName: "Administrator",
+      _id: "FBO_AA@gsa.gov",
+      email: "FBO_AA@gsa.gov",
+      _links: {
+        self: {
+          href: "/comp/iam/auth/v4/session/"
+        }
+      }
+    }
+  }
+};
+
 describe('src/app/search/search.spec.ts', () => {
+  let mockedWDServiceComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      schemas: [],
+      schemas: [ NO_ERRORS_SCHEMA ],
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
         EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
         SearchMultiSelectFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
@@ -219,6 +251,7 @@ describe('src/app/search/search.spec.ts', () => {
         SamAPIKitModule,
         AppComponentsModule,
         SamComponentsModule,
+        ReactiveFormsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ]),
@@ -231,11 +264,13 @@ describe('src/app/search/search.spec.ts', () => {
            {provide: SearchService, useValue: searchServiceStub},
            {provide: SavedSearchService, useValue: savedSearchServiceStub},
            {provide: FHService, useValue: fhServiceStub},
+           { provide: UserService, useValue: MockUserService },
            {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{'page': '1', 'index': 'cfda', 'keywords': 'education', 'assistance_type': '0001001', 'preference_id': 'abcde-12345'}])}}
-         ]
+           ]
       }
     }).compileComponents();
 
+    let mockedWDServiceComponent = new WageDeterminationRevisedDBAPage(<any>wageDeterminationServiceStub);
     fixture = TestBed.createComponent(SearchPage);
   });
 
@@ -267,7 +302,12 @@ describe('src/app/search/search.spec.ts', () => {
     fixture.componentInstance.appElSearchString = "applicant";
     fixture.componentInstance.assistanceTypeFilterModel = "assistance";
     fixture.componentInstance.dunsListString = "duns";
+    fixture.componentInstance.cbaNo = 'CBA-123-110';
+
+    let disableDateFilterSpy = spyOn(fixture.componentInstance, 'disableAllDateFilter');
+    let searchResultsRefreshSpy = spyOn(fixture.componentInstance, 'searchResultsRefresh');
     fixture.componentInstance.clearAllFilters();
+
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.isActive).toBe(true);
       expect(fixture.componentInstance.wdStateModel).toBe("");
@@ -280,15 +320,18 @@ describe('src/app/search/search.spec.ts', () => {
       expect(fixture.componentInstance.appElSearchString).toBe("");
       expect(fixture.componentInstance.assistanceTypeFilterModel).toBe("");
       expect(fixture.componentInstance.dunsListString).toBe("");
+      expect(fixture.componentInstance.cbaNo).toBe("");
+      expect(disableDateFilterSpy).toHaveBeenCalled();
+      expect(searchResultsRefreshSpy).toHaveBeenCalled();
     });
   });
 
   it('SearchPage: should "check" if the agency picker model variable is populated', () => {
     fixture.componentInstance.keywords = "test";
     fixture.componentInstance.pageNum = 0;
-    fixture.componentInstance.organizationId = "100111929,100111828"
+    fixture.componentInstance.organizationId = "100111929,100111828";
     fixture.agencyPickerModel = fixture.componentInstance.setupOrgsFromQS(fixture.componentInstance.organizationId);
-    
+
     expect(fixture.agencyPickerModel).toEqual(['100111929', '100111828']);
   });
 
@@ -340,7 +383,7 @@ describe('src/app/search/search.spec.ts', () => {
     Cookies.set('iPlanetDirectoryPro', 'anything');
     fixture.componentInstance.saveNewSearch(null);
 
-    spyOn(fixture.componentInstance, 'handleAction'); 
+    spyOn(fixture.componentInstance, 'handleAction');
     fixture.componentInstance.handleAction(event);
 
     fixture.whenStable().then(() => {
@@ -376,7 +419,7 @@ describe('src/app/search/search.spec.ts', () => {
     spyOn(fixture.componentInstance, 'saveSearch');
     fixture.componentInstance.getSavedSearch(id);
     fixture.componentInstance.handleAction({ name: 'save', label: 'Save Search', icon: 'fa fa-floppy-o', callback: this.actionsCallback });
-    
+
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.preferenceId).toBe("abcde-12345");
       expect(fixture.componentInstance.saveSearch).toHaveBeenCalled();
@@ -386,16 +429,16 @@ describe('src/app/search/search.spec.ts', () => {
     });
   });
 
-  it('SearchPage: should not run saved search due to null cookie', () => {    
+  it('SearchPage: should not run saved search due to null cookie', () => {
     expect(fixture.componentInstance.cookieValue).toBeFalsy();
     expect(fixture.componentInstance.showSavedSearches).toBe(false);
   });
 
   it('SearchPage: error checking SavedSearchService init call', () => {
-    Cookies.set('iPlanetDirectoryPro', 'anything');    
+    Cookies.set('iPlanetDirectoryPro', 'anything');
     const savedSearchService = fixture.debugElement.injector.get(SavedSearchService);
     const mockCall = spyOn(savedSearchService, 'getAllSavedSearches').and.returnValue(Observable.throw({status: 404}));
-    
+
     expect(fixture.componentInstance.showSavedSearches).toBe(false);
   });
 
@@ -408,8 +451,19 @@ describe('src/app/search/search.spec.ts', () => {
     expect(fixture.componentInstance.showSavedSearches).toBe(true);
   });
 
-  it('should initialize feedback to form service instance', () => {
-    expect(fixture.componentInstance.feedback).toEqual(fixture.componentInstance.formService.componentInstance);
+  it('SearchPage: submitCBANo should set cbaNo', () => {
+    let searchResultsRefreshSpy = spyOn(fixture.componentInstance, 'searchResultsRefresh');
+    fixture.componentInstance.createCBALookupForm();
+    fixture.componentInstance.cbaNo = 'CBA-129';
+    fixture.componentInstance.submitCBANo();
+    expect(fixture.componentInstance.searchCbaNoFlag).toBe(true);
+    expect(fixture.componentInstance.cbaNo).toBe('');
+    expect(searchResultsRefreshSpy).toHaveBeenCalled();
   });
 
+  it('SearchPage redirectUser navigates to correct page', () => {
+    let navigateSpy = spyOn((<any>fixture.componentInstance).router, 'navigate');
+    fixture.componentInstance.redirectUser();
+    expect(navigateSpy).toHaveBeenCalledWith(['workspace'] );
+  });
 });

@@ -166,10 +166,24 @@
                 (action)="handleAction($event,'kba')"
                 #kbaEditor>
       <div editor-display-view>
+        <div grid class="width relaxed">
+          <div class="column">
+            <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;"
+                 [innerText]="question(kbaAnswer.questionId)"
+                 class="kba"></div>
+          </div>
+          <div class="column">
+            <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;"
+                 [innerHTML]="getHashedAnswer(kbaAnswer.answer)"
+                 class="kba"></div>
+          </div>
+        </div>
+        <!--
         <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
           <label [innerText]="question(kbaAnswer.questionId)"></label>
           <div class="usa-form-control" [innerHtml]="getHashedAnswer(kbaAnswer.answer)"></div>
         </div>
+        -->
       </div>
       <div editor-input-view>
         <div *ngIf="questions.length">
@@ -185,19 +199,17 @@
     </sam-editor>
   </section>
   <section id="deactivate">
-    <h3>Deactivate Account</h3>
-    <div>
-      Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
-      be permanently inaccessible and you will need to re-register to access SAM.gov.
-    </div>
-    <div class="usa-button-controls">
-      <sam-alert [type]="alerts.deactivate.type"
-                 [title]="alerts.deactivate.message"
-                 [showClose]="true"
-                 [hidden]="!alerts.deactivate.show"
-                 (dismiss)="dismiss('deactivate')"></sam-alert>
-      <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
-    </div>
+    <sam-fieldset-wrapper [label]="store.labels.deactivate.label"
+                          [hint]="store.labels.deactivate.hint">
+      <div class="usa-button-controls">
+        <sam-alert [type]="alerts.deactivate.type"
+                   [title]="alerts.deactivate.message"
+                   [showClose]="true"
+                   [hidden]="!alerts.deactivate.show"
+                   (dismiss)="dismiss('deactivate')"></sam-alert>
+        <sam-button buttonType="negative" buttonText="Deactivate Account" [buttonDisabled]="states.loading" (onClick)="confirmDeactivation()"></sam-button>
+      </div>
+    </sam-fieldset-wrapper>
   </section>
 </div>
 

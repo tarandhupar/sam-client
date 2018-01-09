@@ -14,6 +14,7 @@
     entitypicker-autofill
     [name]="name"
     [id]="name"
+    [placeholder]="placeholder"
     [ngModel]="selections"
     (ngModelChange)="onSelection($event)"
     [keyValueConfig]="multipleACConfig"
@@ -22,6 +23,7 @@
     [itemTemplate]="myTemplate"
     [isDefaultOrg]="isDefaultOrg"
     [isAssignableOrg]="isAssignableOrg"
+    [userId]="userId"
     [required]="required">
   </sam-autocomplete-multiselect>
   </ng-container>
@@ -36,6 +38,7 @@
       [id]="name"
       [isDefaultOrg]="isDefaultOrg"
       [isAssignableOrg]="isAssignableOrg"
+      [userId]="userId"
       [itemTemplate]="myTemplate"
       [disabled]="_disabled">
     </sam-autocomplete>

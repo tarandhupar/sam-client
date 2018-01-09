@@ -1,0 +1,27 @@
+<form [formGroup]="contractorInfoForm">
+
+  <div class="sam-ui segment">
+    <sam-text
+      [control]="contractorInfoForm.controls['name']"
+      [formControl]="contractorInfoForm.controls['name']"
+      [name]="'contractor-name'"
+      [label]="'Prime or Subcontractor Name'"
+      [required]="true">
+    </sam-text>
+    <sam-text
+      [control]="contractorInfoForm.controls['union']"
+      [formControl]="contractorInfoForm.controls['union']"
+      [name]="'contractor-union'"
+      [label]="'Prime or Subcontractor Union'"
+      [required]="true">
+    </sam-text>
+    <sam-text
+      [control]="contractorInfoForm.controls['number']"
+      [formControl]="contractorInfoForm.controls['number']"
+      [name]="'contractor-number'"
+      [label]="'Local Union Number'"
+      [required]="false">
+    </sam-text>
+  </div>
+
+</form>

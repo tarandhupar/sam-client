@@ -26,11 +26,15 @@ export class OpportunityService {
     return this.oAPIService.call(apiParam);
   }
 
-  getContractOpportunityById(id: string, authToken: string = null) {
+  getContractOpportunityById(id: string, authToken: string = null, latest = '') {
+    let latestObj = {}
+    if (latest) {
+      latestObj['latest'] = true;
+    }
     let apiParam = {
       name: 'contractOpportunity',
       suffix: '/opportunities/' + id,
-      oParam: {},
+      oParam: latestObj,
       headers: {},
       method: 'GET'
     };

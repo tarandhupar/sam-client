@@ -243,7 +243,6 @@ xdescribe('src/app/wage-determination/wage-determination.spec.ts', () => {
     expect(comp.referenceNumber).toBeDefined();
     expect(comp.revisionNumber).toBeDefined();
     expect(comp.currentUrl).toBeDefined();
-    expect(comp.dictionaries).toBeDefined();
     expect(comp.services).toBeDefined();
     expect(comp.processedHistory).toBeDefined();
     expect(comp.processedHistory).toBeDefined();

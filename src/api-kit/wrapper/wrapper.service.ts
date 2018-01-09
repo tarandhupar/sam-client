@@ -36,7 +36,7 @@ export class WrapperService {
         'savedSearch': '/preferences/v1/search',
         'program': '/fac/v1/programs',
         'fh' : '/federalorganizations/v1',
-        'fhDetail': '/federalorganizations/v2',
+        'fh2': '/federalorganizations/v2',
         'federalHierarchy': '/federalorganizations/v1/organizations',
         'federalCreateOrg': '/federalorganizations/v1/organization',
         'federalHierarchyActive': '/federalorganizations/v1/activeorganizations',

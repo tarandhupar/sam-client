@@ -72,6 +72,10 @@ export class FALRegionalAssistanceFormComponent implements OnInit {
     { breadcrumb: 'Regional Assistance Locations', url: '/fal/myRegionalAssistanceLocations'}
   ];
 
+  public options = {
+    badge: { attached: 'top right' },
+  };
+
   constructor(
     private service: RAOFormService,
     private route: ActivatedRoute,

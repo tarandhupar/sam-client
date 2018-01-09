@@ -1,5 +1,5 @@
 import { clone, indexOf, isBoolean, merge } from 'lodash';
-import { config, isDebug } from './modules/helpers';
+import { config, isDebug, getParam } from './modules/helpers';
 
 import * as Cookies from 'js-cookie';
 import * as moment from 'moment';
@@ -59,6 +59,7 @@ export class User {
   public suffix = '';
   public workPhone = '';
   public personalPhone = '';
+  public businessName = '';
   public OTPPreference = 'email';
   public isGov;
   public _links = {};
@@ -197,12 +198,23 @@ export class User {
 
   get gov(): boolean {
     const orgID = (this['officeID'] || this['agencyID'] || this['departmentID'] || '').toString();
-    return isBoolean(this.isGov) ? this.isGov : orgID.length > 0;
+    let isGov = isBoolean(this.isGov) ? this.isGov : orgID.length > 0;
+
+    if(isDebug()) {
+      isGov = (getParam('federal') || getParam('gov')) ? true : false;
+    }
+
+    return isGov;
   }
 
   get entity(): boolean {
-    //TODO
-    return false;
+    let isEntity = !this.gov && this.businessName.length > 0;
+
+    if(isDebug()) {
+      isEntity = (getParam('entity') || !getParam('gov')) ? true : false;
+    }
+
+    return isEntity;
   }
 
   static getCache(): { [key: string]: number|boolean|string } {

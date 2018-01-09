@@ -1,12 +1,13 @@
-<page
-  *ngIf="pageReady"
-  theme="inside"
-  [attr.id]="'page-title'"
-  [breadcrumbs]="crumbs"
-  section="Workspace"
-  [title]="pageTitle">
+<div class="usa-grid-full" *ngIf="pageReady" [ngClass]="'assistance-listing-operations'">
+  <page
+    theme="inside"
+    [attr.id]="'page-title'"
+    [breadcrumbs]="crumbs"
+    section="Workspace"
+    [options]="options"
+    [badge]="'Draft'"
+    [title]="pageTitle">
 
-  <div class="sam-ui grid">
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
       <div class="sam-ui hidden divider"></div>
       <div id="page-data" class="sam-ui segment" *ngIf="program">
@@ -109,25 +110,27 @@
                          formControlName="comment">
           </sam-text-area>
         </div>
-        <sam-button [buttonType]="'secondary'"
-                    [attr.id]="'cancel-btn'"
-                    [buttonText]="'Cancel'"
-                    [buttonClass]="'usa-button-primary usa-search-submit'"
-                    [buttonDisabled]="buttonDisabled"
-                    (onClick)="cancelChangeRequest()">
-        </sam-button>
-        <sam-button [buttonType]="buttonType"
-                    [attr.id]="'submit-btn'"
-                    [buttonText]="submitButtonText"
-                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
-                    [buttonDisabled]="buttonDisabled"
-                    (onClick)="submitChangeRequest()">
-        </sam-button>
+
+        <div class="text-align-right">
+          <sam-button [buttonType]="'tertiary'"
+                      [attr.id]="'cancel-btn'"
+                      [buttonText]="'Cancel'"
+                      [buttonDisabled]="buttonDisabled"
+                      (onClick)="cancelChangeRequest()">
+          </sam-button>
+          <sam-button [buttonType]="buttonType"
+                      [attr.id]="'submit-btn'"
+                      [buttonText]="submitButtonText"
+                      [buttonDisabled]="buttonDisabled"
+                      (onClick)="submitChangeRequest()">
+          </sam-button>
+        </div>
+
         <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
       </form>
     </div>
-  </div>
 
-  <div class="sam-ui hidden section divider"></div>
+    <div class="sam-ui hidden section divider"></div>
 
-</page>
+  </page>
+</div>

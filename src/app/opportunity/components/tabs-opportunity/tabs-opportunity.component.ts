@@ -37,7 +37,7 @@ export class TabsOpportunityComponent implements OnInit {
   private tabItems: any = {
     review: {label: "Authenticated", routeConfig: "opp/:id/review"},
     edit: {label: "Edit", routeConfig: "opp/:id/edit"},
-    public: {label: "Public", routeConfig: "opp/:id"},
+    public: {label: "Public", routeConfig: "opp/:id/view"},
   };
 
   constructor(
@@ -65,6 +65,12 @@ export class TabsOpportunityComponent implements OnInit {
   public onReviewClick() {
     let id = this.data.id;
     let url = '/opp/' + id + '/review';
+    this.router.navigateByUrl(url);
+  }
+
+  public onPublicClick() {
+    let id = this.data.id;
+    let url = '/opp/' + id + '/view';
     this.router.navigateByUrl(url);
   }
 

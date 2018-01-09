@@ -38,7 +38,7 @@ export class AuthorizationPipe implements PipeTransform {
         title.push(this.getAuthorizationAct(authorization));
       }
 
-      if (authorization.executiveOrder != null && authorization.executiveOrder.description && authorization.authorizationTypes.executiveOrder) {
+      if (authorization.executiveOrder != null && authorization.authorizationTypes.executiveOrder) {
         title.push(this.getExecutiveOrder(authorization));
       }
 
@@ -81,7 +81,21 @@ export class AuthorizationPipe implements PipeTransform {
 
   private getExecutiveOrder(authorization)
   {
-    return this.executiveOrderString + ' - ' + authorization.executiveOrder.description;
+    var eoText = [];
+    if (authorization.executiveOrder.description) {
+      eoText.push(authorization.executiveOrder.description);
+    }
+    if (authorization.executiveOrder.title) {
+      eoText.push(this.titleString + ' ' + authorization.executiveOrder.title);
+    }
+    if (authorization.executiveOrder.part) {
+      eoText.push(this.partString + ' ' + authorization.executiveOrder.part);
+    }
+    if (authorization.executiveOrder.section) {
+      eoText.push(this.sectionString + ' ' + authorization.executiveOrder.section);
+    }
+    let actString = eoText.join(', ');
+    return actString;
   }
 
   private getPublicLaw(authorization)

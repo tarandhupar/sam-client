@@ -381,6 +381,7 @@ describe('src/app/opportunity/opportunity-operations/workflow/review/opportunity
     expect(comp.packages).toBeDefined();
     expect(comp.packagesWarning).toBeDefined();
     expect(comp.attachments).toBeDefined();
+    expect(comp.showOriginalArchiveDate()).toBe(true);
   });
 
   it('OpportunityPage: Should set display flag for fields for J&A type', () => {

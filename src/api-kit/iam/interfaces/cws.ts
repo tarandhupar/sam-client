@@ -32,6 +32,7 @@ export interface CWSApplication {
   rejectionReason: string;
   applicationStatus?: string;
   statuses?: string|(string|number)[];
+  password?: string;
 };
 
 export interface CWSFilter {

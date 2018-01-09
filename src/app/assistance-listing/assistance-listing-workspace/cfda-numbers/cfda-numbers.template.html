@@ -54,8 +54,8 @@
           <div class="eight wide column">
             <div><strong>{{ row.agencyName | capitalize }}</strong></div>
             <div><em>{{ row.agencyType | formatFederalHierarchyType}}</em></div>
-            <div> Low Number: {{ row.programNumberLow }}</div>
-            <div> High Number: {{ row.programNumberHigh }}</div>
+            <div> Low Number: {{ transFormNumbertoThreeDigits(row.programNumberLow) }}</div>
+            <div> High Number: {{ transFormNumbertoThreeDigits(row.programNumberHigh) }}</div>
           </div>
           <div class="four wide column">
             <sam-button [buttonType]="buttonType"

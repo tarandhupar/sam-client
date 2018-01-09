@@ -1,167 +1,135 @@
-import { Component } from "@angular/core";
-import { FHService } from "api-kit/fh/fh.service";
-import { ActivatedRoute, Router, NavigationCancel } from "@angular/router";
-import { IAMService } from "api-kit";
-import { FlashMsgService } from "./flash-msg-service/flash-message.service";
+import { Component } from '@angular/core';
+import { FHService } from 'api-kit/fh/fh.service';
+import { ActivatedRoute, Router, NavigationCancel } from '@angular/router';
+import { FlashMsgService } from './flash-msg-service/flash-message.service';
 import { Location } from '@angular/common';
-import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
-import { IBreadcrumb, OptionsType } from "sam-ui-elements/src/ui-kit/types";
+import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { IBreadcrumb } from 'sam-ui-elements/src/ui-kit/types';
+import * as moment from 'moment/moment';
 
-@Component ({
+@Component({
   templateUrl: 'organization-detail.template.html'
 })
 export class OrgDetailPage {
-
-  private crumbs: Array<IBreadcrumb> = [];
-
-  orgName: string = "";
-  orgId: string = "";
-  orgType: string = "";
-  orgHierarchyTypes: any = [];
-  deptLogo: any;
+  org: any;
+  orgName: string = '';
+  orgId: string = '';
+  orgType: string = '';
+  deptLogo: any = { href: 'src/assets/img/logo-not-found.png' };
   level;
-  hierarchyPath: any = [];
-  hierarchyPathMap: any = [];
-  currentSection: string = "Profile";
-  dataLoaded:boolean = false;
+  currentSection: string = 'Profile';
 
   orgStatusCbxModel: any = ['allactive'];
   orgStatusCbxConfig = {
     options: [
-      {value: 'allactive', label: 'Active', name: 'Active'},
-      {value: 'inactive', label: 'Inactive', name: 'Inactive'},
+      { value: 'allactive', label: 'Active', name: 'Active' },
+      { value: 'inactive', label: 'Inactive', name: 'Inactive' }
     ],
     name: 'organization status',
-    label: '',
+    label: ''
   };
 
-  currentUrl: string = "";
-  baseUrl: string = "/org/detail/";
+  currentUrl: string = '';
+  baseUrl: string = '/org/detail/';
   orgKeyLength = 9;
+  private crumbs: Array<IBreadcrumb> = [];
 
-  constructor(private fhService: FHService,
-              private route: ActivatedRoute,
-              private _router: Router,
-              private iamService: IAMService,
-              public flashMsgService: FlashMsgService,
-              private location:Location,
-              private capitalize: CapitalizePipe){}
+  constructor(
+    private fhService: FHService,
+    private route: ActivatedRoute,
+    private _router: Router,
+    public flashMsgService: FlashMsgService,
+    private location: Location,
+    private capitalize: CapitalizePipe
+  ) {}
 
-  ngOnInit(){
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      let val = { url: this.route.snapshot._routerState.url };
 
-    this.route.params.subscribe(
-      params => {
-        this.orgId = params['orgId'];
-        this.setupOrgName(this.orgId);
-        let val = {url: this.route.snapshot._routerState.url};
-        this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
-        this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
-        let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
-        section = section.length === 0? 'profile':section;
-        this.currentSection = section;
-      });
+      this.org = this.route.snapshot.data['org'];
+      //console.log(org);
 
-    // this._router.events.subscribe(
-    //   value => {
-    //     if(!(value instanceof  NavigationCancel)){
-    //       let val = <NavigationCancel>value;
-    //       this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
-    //       this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
-    //
-    //       let section = this.currentUrl.substr(this.baseUrl.length + this.orgKeyLength + 1);
-    //       section = section.length === 0? 'profile':section;
-    //       this.currentSection = section;
-    //     }else{
-    //       this.currentSection = this.location.path(false).substr(this.baseUrl.length);
-    //     }
-    //
-    //   });
+      this.orgId = params['orgId'];
+      this.orgName = this.org.name;
+      this.orgType = this.org.type;
+      this.level = this.org.level;
+      this.setupCrumbs(this.org.fullParentPath,this.org.fullParentPathName);
+      this.setDeptLogo();
+      this.setUrlSection(val);
+    });
   }
 
-
-  setupOrgName(orgId){
-    this.fhService.getOrganizationById(this.orgId,false,true).subscribe(
-      res => {
-        this.orgName = res._embedded[0].org.name;
-        this.orgType = res._embedded[0].org.type;
-        this.orgHierarchyTypes = res._embedded[0].orgTypes;
-        this.level = res._embedded[0].org.level;
-        this.setupHierarchyPathMap(res._embedded[0].org.fullParentPath, res._embedded[0].org.fullParentPathName);
-        this.setupCrumbs(res._embedded[0].org.fullParentPath, res._embedded[0].org.fullParentPathName);
-
-        this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
-        this.setDeptLogo();
-
-        this.dataLoaded = true;
-
-      });
+  setUrlSection(val) {
+    this.currentUrl =
+      val.url.indexOf('#') > 0
+        ? val.url.substr(0, val.url.indexOf('#'))
+        : val.url;
+    this.currentUrl =
+      this.currentUrl.indexOf('?') > 0
+        ? this.currentUrl.substr(0, this.currentUrl.indexOf('?'))
+        : this.currentUrl;
+    let section = this.currentUrl.substr(
+      this.baseUrl.length + this.orgKeyLength + 1
+    );
+    section = section.length === 0 ? 'profile' : section;
+    this.currentSection = section;
   }
 
-  getSectionClass(sectionValue){
-    return this.currentSection === sectionValue? "usa-current":"";
+  getSectionClass(sectionValue) {
+    return this.currentSection === sectionValue ? 'usa-current' : '';
   }
 
-  selectCurrentSection(sectionValue){
+  selectCurrentSection(sectionValue) {
     this.currentSection = sectionValue;
   }
 
-  setDeptLogo(){
-    this.fhService.getOrganizationLogo(this.fhService.getOrganizationById(this.orgId, false),
-      (res) => {
-        if (res != null) {
-          this.deptLogo = {href:res.logo};
-        } else {
-          this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
-        }
+  setDeptLogo() {
+    this.fhService.getOrganizationLogo(
+      this.fhService.getOrganizationById(this.orgId, false),
+      res => {
+        if (res != null) this.deptLogo = { href: res.logo };
       },
-      (err) => {this.deptLogo = {href:"src/assets/img/logo-not-found.png"};}
+      err => {}
     );
   }
 
-  updateNoLogoUrl(){
-    this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
+  updateNoLogoUrl() {
+    this.deptLogo = { href: 'src/assets/img/logo-not-found.png' };
   }
 
-  isMoveOffice(){
-    return this.level === 3 && this.orgType.toLowerCase() === "office";
+  isMoveOffice() {
+    let canMove = false;
+    if(this.org._links){
+      canMove =
+        Object.keys(this.org._links).filter(e => {
+          return e === 'TRANSFER';
+        }).length > 0;
+    }
+    
+    //console.log(moment(this.org.endDate).format('MM-DD-YYYY').isBefore(moment(moment().toDate()).format('MM-DD-YYYY')));
+    return canMove;
   }
 
-  setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
-    this.hierarchyPath = fullParentPathName.split('.').map( e => {
-      return this.capitalize.transform(e.split('_').join(' '));
-    });
-    let parentOrgIds = fullParentPath.split('.');
-    this.hierarchyPathMap = [];
-    parentOrgIds.forEach((elem,index) => {
-      this.hierarchyPathMap[this.hierarchyPath[index]] = elem;
-    });
-
-  }
-
-  setupCrumbs(fullParentPath:string, fullParentPathName:string){
+  setupCrumbs(fullParentPath: string, fullParentPathName: string) {
     this.crumbs = [];
-    let parentOrgNames = fullParentPathName.split('.').map( e => {
+    let parentOrgNames = fullParentPathName.split('.').map(e => {
       return this.capitalize.transform(e.split('_').join(' '));
     });
     let parentOrgIds = fullParentPath.split('.');
     parentOrgIds.forEach((e, i) => {
-      if(e != this.orgId){
-        this.crumbs.push({ url: '/org/detail/'+e, breadcrumb: parentOrgNames[i]} );
-      }else{
-        this.crumbs.push({ breadcrumb: parentOrgNames[i]} );
+      if (e !== this.orgId) {
+        this.crumbs.push({
+          url: '/org/detail/' + e,
+          breadcrumb: parentOrgNames[i]
+        });
+      } else {
+        this.crumbs.push({ breadcrumb: parentOrgNames[i] });
       }
     });
   }
 
-  onChangeOrgDetail(hierarchyName){
-    this._router.navigate(['org/detail', this.hierarchyPathMap[hierarchyName],'profile'])
-  }
-
-  getLastHierarchyClass(index){
-    return index === this.hierarchyPath.length-1? "current-hierarchy-link":"";
-  }
-
-  orgHierarchyStatusChange(val){
+  orgHierarchyStatusChange(val) {
     this.orgStatusCbxModel = val;
     this.flashMsgService.setHierarchyStatus(val);
   }

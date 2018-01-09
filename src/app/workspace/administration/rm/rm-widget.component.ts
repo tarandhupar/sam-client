@@ -52,6 +52,10 @@ export class RMWidgetComponent implements OnInit {
     private accessService: UserAccessService
   ) {}
 
+  ngOnChanges() {
+    if (this.widgetResult) this.setupWidget();
+  }
+
   ngOnInit() {
     this.request = this.autoComplete.keyEvents
       .switchMap(input => {
@@ -70,7 +74,10 @@ export class RMWidgetComponent implements OnInit {
           };
         });
       });
+    if (this.widgetResult) this.setupWidget();
+  }
 
+  setupWidget() {
     let res = this.widgetResult;
     if (res._links && res._links.domaindefinition) {
       this.shouldShowRoleDefinitions = true;

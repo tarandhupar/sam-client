@@ -291,6 +291,11 @@ const account = {
     $success = $success || (() => {});
     $error = $error || (() => {});
 
+    if(isDebug()) {
+      $success();
+      return;
+    }
+
     if(auth && id) {
       request
         .delete(endpoint)
@@ -303,9 +308,7 @@ const account = {
           }
         });
     } else {
-      if(isDebug()) {
-        $success();
-      } else if(!id) {
+      if(!id) {
         $error({ message: 'Please pass the id of the system account you are deactivating!' });
       } else {
         $error({ message: 'Please sign in' });

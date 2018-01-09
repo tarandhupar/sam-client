@@ -17,6 +17,7 @@ import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import {OpportunityFormErrorService} from "./opportunity-operations/opportunity-form-error.service";
 import {UserService} from "../role-management/user.service";
+import { OpportunityPublicPage } from 'app/opportunity/opportunity-operations/workflow/public/opportunity-public.page';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import {UserService} from "../role-management/user.service";
   ],
   exports: [
     OpportunityPage,
+    OpportunityPublicPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
     FixHTMLPipe,
@@ -45,7 +47,8 @@ import {UserService} from "../role-management/user.service";
     FilesizePipe,
     OPPWorkspacePage,
     OpportunityResult,
-    OpportunityReviewComponent
+    OpportunityReviewComponent,
+    OpportunityPublicPage
   ],
   providers: [
     OpportunityFormErrorService,

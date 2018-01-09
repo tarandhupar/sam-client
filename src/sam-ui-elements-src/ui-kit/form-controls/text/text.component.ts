@@ -58,9 +58,17 @@ export class SamTextComponent implements ControlValueAccessor {
   */
   @Input() useFormService: boolean;
   /**
-   * Lose focus event emit
+   * Optional text to be displayed when the text area is empty
+   */
+  @Input() placeholder: string;
+  /**
+   * (deprecated) Lose focus event emit
    */
   @Output() onBlur:EventEmitter<boolean> = new EventEmitter<boolean>();
+  /**
+   * Lose focus event emit
+   */
+  @Output() blur:EventEmitter<boolean> = new EventEmitter<boolean>();
 
   onChange: any = (c) => { };
   onTouched: any = () => { };
@@ -68,7 +76,8 @@ export class SamTextComponent implements ControlValueAccessor {
     if(this.value.trim()!=this.value){
       this.onInputChange(this.value.trim());
     }
-    this.onBlur.emit(true)
+    this.onBlur.emit(true);
+    this.blur.emit(true);
   };
 
   @ViewChild(LabelWrapper) wrapper: LabelWrapper;
@@ -142,6 +151,6 @@ export class SamTextComponent implements ControlValueAccessor {
   }
 
   writeValue(value) {
-    this.value = value || '';
+    this.value = value!=null ? "" + value: "";
   }
 }

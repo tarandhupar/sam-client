@@ -35,7 +35,7 @@ enum ChangeRequestPermissionType {
 export class FALFormChangeRequestComponent implements OnInit {
   buttonDisabled: boolean = false;
   falChangeRequestForm: FormGroup;
-  buttonType: string = 'default';
+  buttonType: string = 'primary';
   requestType: string;
   pageTitle: string;
   submitButtonText: string;
@@ -70,6 +70,10 @@ export class FALFormChangeRequestComponent implements OnInit {
     levelLimit: 3
   };
   qParams: any = {};
+
+  public options = {
+    badge: { attached: 'top right' },
+  };
 
   constructor(private fb: FormBuilder,
               private service: FALFormService,
@@ -251,7 +255,6 @@ export class FALFormChangeRequestComponent implements OnInit {
     if (this.falChangeRequestForm.valid) {
       this.buttonDisabled = true;
       //disable button's event
-      this.buttonType = 'disabled';
       let actionTypes: any = {
         archive_request: {
           success: 'Program Archived'
@@ -285,7 +288,6 @@ export class FALFormChangeRequestComponent implements OnInit {
           this.notifyFooterAlertModel.type = "error";
           this.notifyFooterAlertModel.description = "An error has occurred please contact your administrator.";
           this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
-          this.buttonType = 'default';
         });
     } else {
       for (let control in this.falChangeRequestForm.controls) {

@@ -3,7 +3,7 @@
   <!--fh search result/landing default result-->
   <div class="federal-hierarchy relative usa-width-one-whole">
     <div class="usa-width-one-whole m_B-3x m_T-3x">
-      <button *ngIf="selectConfig.options.length > 1" class="pull-right relative">
+      <!--<button *ngIf="selectConfig.options.length > 1" class="pull-right relative">
         Create &nbsp; <i class="fa fa-angle-down"></i>
         <sam-select class="org-type-select"
                     [name]="selectConfig.name"
@@ -12,8 +12,8 @@
                     [disabled]="selectConfig.disabled"
                     (modelChange)='onSelectCreateOrg($event)'>
         </sam-select>
-      </button>
-      <button *ngIf="selectConfig.options.length === 1" class="pull-right" (click)="createOrg()">Create {{selectConfig.options[0].label}}</button>
+      </button>-->
+      <button *ngIf="isCreate()" class="pull-right" (click)="createOrg()">Create {{btnName}}</button>
     </div>
     <h1 class="h2" align="center">Search Federal Hierarchy Administrative Pages</h1>
     <div class="usa-width-one-whole">
@@ -29,30 +29,37 @@
     </div>
 
     <div class="p_L-3x p_T-2x" [ngClass]="{'usa-width-one-whole':isDefaultResult(),'usa-width-three-fourths':!isDefaultResult()}">
-      <div class="usa-width-one-whole federal-hierarchy-org-admin-section" *ngIf="userRole !== 'superAdmin' && dataLoaded && isDefaultResult()">
-        <div class="usa-width-one-whole title-section">
-          <a class="federal-hierarchy-org-admin-title" [routerLink]="['/org/detail',deptOrg.orgKey]">{{deptOrg.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="userRole === 'deptAdmin'"></i>
-        </div>
+      <div class="usa-width-one-whole federal-hierarchy-org-admin-section" *ngIf="isFeaturedOrg() && isDefaultResult()">
+        <!--<div class="usa-width-one-whole title-section">
+          <a class="federal-hierarchy-org-admin-title" [routerLink]="['/org/detail',featuredOrg.orgKey]">{{featuredOrg.name}}&nbsp;</a> <i class="fa fa-user" *ngIf = "isFeaturedAdmin(featuredOrg)"></i>
+        </div>-->
         <div class="usa-width-one-whole">
           <div class="usa-width-one-sixth org-logo-container">
             <img class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
           </div>
-          <div class="usa-width-five-sixths p_T-3x">
-            <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{typeMap[deptOrg.type]}}</span>
-            <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{deptOrg.code}}</span>
-            <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
-              <span *ngIf="isOrgActive(deptOrg);else statusInactive">Active</span>
-              <ng-template #statusInactive>Inactive</ng-template>
+          <span class = "featured-banner pull-right"><i aria-hidden="true" class="fa fa-star"></i>&nbsp;&nbsp;My Department&nbsp;</span>
+          <div class="usa-width-five-sixths">
+            <span class="usa-width-one-whole"><a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',featuredOrg.orgKey]"><b>{{featuredOrg.name}}&nbsp;</b></a><i class="fa fa-user" *ngIf = "isFeaturedAdmin(featuredOrg)"></i></span>
+            <span class="usa-width-one-whole"><span>Also Known as:&nbsp;</span><span class="org-description"><i>{{altName}}</i></span></span>
+            <span class="usa-width-one-whole type-top-pd"><span class="org-description featured-right-pd"> {{typeMap[featuredOrg.type]}}</span><span class="org-description featured-left-pd">CGAC:&nbsp;</span><span>{{featuredOrg.cgac}}</span></span>
+            <span class="usa-width-one-whole status-top-pd"><span class="org-description">Status:&nbsp;</span>
+            <span class = "featured-right-pd status-right-pd" *ngIf="isOrgActive(featuredOrg);else statusInactive">Active</span>
+              <ng-template class = "featured-right-pd status-right-pd" #statusInactive>Inactive</ng-template>
+              <span class="org-description featured-left-pd">Start Date:&nbsp;</span><span class = "featured-right-pd start-right-pd">{{getFtStartDate(featuredOrg)}}</span>
+              <span class="org-description featured-left-pd">End Date:&nbsp;</span>{{getFtEndDate(featuredOrg)}}
             </span>
-            <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(deptOrg)}}</span>
+            <span class = "usa-width-one-whole">
+              <span class = "pull-right">
+              <input type="checkbox" id="my-org-cbx" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
+              <label class = "myorg-right-pd">Organizations that I administer</label></span>
+            </span> 
           </div>
-
         </div>
       </div>
-
+      <div *ngIf = "!showAdminOrg">
       <div class="usa-width-one-whole">
         <div class="pull-left p_T-3x">
-          Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
+          Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalCounts}}&nbsp; results
         </div>
 
         <div class="pull-right" *ngIf="isDefaultResult()">
@@ -60,7 +67,7 @@
         </div>
 
         <!--<div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">-->
-        <div class="pull-right m_R-2x my-org-cbx-block" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">
+        <!--<div class="pull-right m_R-2x my-org-cbx-block" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">
           <div class="usa-width-five-sixths p_T-4x">
             <span class="pull-right">My Organization</span>
           </div>
@@ -68,42 +75,90 @@
             <input type="checkbox" id="my-org-cbx" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
             <label class="p_T-4x m_0 relative" for="my-org-cbx">&nbsp;<span style="position: absolute;right: 10000px">my organization</span></label>
           </div>
-        </div>
+        </div>-->
       </div>
-      <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
+      <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of newOrgList">
         <div class="usa-width-one-whole">
-          <a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
+          <a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',orgItem.orgKey]">{{orgItem.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem)"></i>
         </div>
         <div class="usa-width-three-fourths">
 
-          <ng-container *ngIf="!isOrgDoD(orgItem.org); else DoDCode">
-            <span class="usa-width-one-whole" *ngIf="orgItem.org.level == 1 || orgItem.org.level == 2; else officeAAC"><span class="org-description">CGAC:&nbsp;</span> {{orgItem.org.cgac}}</span>
+          <ng-container *ngIf="!isOrgDoD(orgItem); else DoDCode">
+            <span class="usa-width-one-whole" *ngIf="orgItem.level == 1 || orgItem.level == 2; else officeAAC"><span class="org-description">CGAC:&nbsp;</span> {{orgItem.cgac}}</span>
 
             <ng-template #officeAAC>
-              <span class="usa-width-one-whole"><span class="org-description">Procurement AAC Code:&nbsp;</span> {{orgItem.org.procurementAACCode}}</span>
-              <span class="usa-width-one-whole"><span class="org-description">Non-procurement AAC Code:&nbsp;</span> {{orgItem.org.nonProcurementAACCode}}</span>
+              <span class="usa-width-one-whole"><span class="org-description">Procurement AAC Code:&nbsp;</span> {{orgItem.procurementAACCode}}</span>
+              <span class="usa-width-one-whole"><span class="org-description">Non-procurement AAC Code:&nbsp;</span> {{orgItem.nonProcurementAACCode}}</span>
             </ng-template>
 
           </ng-container>
 
           <ng-template #DoDCode>
-            <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+            <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.code}}</span>
           </ng-template>
 
-          <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem.org)}}</span>
+          <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{getOrgTypeText(orgItem)}}</span>
         </div>
         <div class="usa-width-one-fourth">
           <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
-            <span *ngIf="isOrgActive(orgItem.org); else orgInactive">Active</span>
+            <span *ngIf="isOrgActive(orgItem); else orgInactive">Active</span>
             <ng-template #orgInactive>Inactive</ng-template>
           </span>
-          <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
+          <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem)}}</span>
         </div>
       </div>
     </div>
 
-    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="curPageOrgs.length > 0">
-      <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
+    <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="totalPages > 1 && !showAdminOrg">
+      <sam-pagination (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></sam-pagination>
     </div>
   </div>
+  <div class="usa-width-one-whole p_L-3x pd-b-2" *ngIf = "showAdminOrg">
+    <div class = "usa-width-one-whole pd-t-2" *ngIf = "isDeptAdmin()">
+      <span class = "usa-width-one-whole ft-bold pd-b-1">Department Admin At</span>
+      <div class = "usa-width-one-whole bx-shadow pd-1" *ngFor = "let deptItem of deptList; let l = last;">
+        <span class = "usa-width-one-whole"><a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',deptItem.orgKey]"><b>{{deptItem.name}}&nbsp;</b></a><i class="fa fa-user" *ngIf="isAdminOrg(deptItem)"></i></span>
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">CGAC:&nbsp;&nbsp;</span><span>{{deptItem.cgac}}</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Status:&nbsp;&nbsp;</span><span>{{deptItem.modStatus}}</span></span>
+        </span> 
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">Organization Type:&nbsp;&nbsp;</span><span>{{typeMap[deptItem.type]}}</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Start Date:&nbsp;&nbsp;</span><span>{{getFtStartDate(deptItem)}}</span></span>
+        </span> 
+        <div *ngIf = "!l" class = "hr-pd"><hr></div>
+      </div>
+    </div>  
+    <div class = "usa-width-one-whole pd-t-2" *ngIf = "isAgencyAdmin()">
+      <span class = "usa-width-one-whole ft-bold pd-b-1">Sub-Tier Agency Admin At</span>
+      <div class = "usa-width-one-whole bx-shadow pd-1" *ngFor = "let agencyItem of agencyList; let l = last;">
+        <span class = "usa-width-one-whole"><a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',agencyItem.orgKey]"><b>{{agencyItem.name}}&nbsp;</b></a><i class="fa fa-user" *ngIf="isAdminOrg(agencyItem)"></i></span>
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">CGAC:&nbsp;&nbsp;</span><span>{{agencyItem.cgac}}</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Status:&nbsp;&nbsp;</span><span>{{agencyItem.modStatus}}</span></span>
+        </span> 
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">Organization Type:&nbsp;&nbsp;</span><span>{{typeMap[agencyItem.type]}}</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Start Date:&nbsp;&nbsp;</span><span>{{getFtStartDate(agencyItem)}}</span></span>
+        </span> 
+        <div *ngIf = "!l" class = "hr-pd"><hr></div>
+      </div>
+    </div> 
+    <div class = "usa-width-one-whole pd-t-2" *ngIf = "isOfficeAdmin()"> 
+      <span class = "usa-width-one-whole ft-bold pd-b-1">Office Admin At</span>
+      <div class = "usa-width-one-whole bx-shadow pd-1" *ngFor = "let officeItem of officeList; let l = last;">
+        <span class = "usa-width-one-whole"><a class="federal-hierarchy-org-item-title" [routerLink]="['/org/detail',officeItem.orgKey]"><b>{{officeItem.name}}&nbsp;</b></a><i class="fa fa-user" *ngIf="isAdminOrg(officeItem)"></i></span>
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">CGAC:&nbsp;&nbsp;</span><span>{{officeItem.cgac}}</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Status:&nbsp;&nbsp;</span><span>{{officeItem.modStatus}}</span></span>
+        </span> 
+        <span class = "usa-width-one-whole">
+          <span class = "usa-width-one-half"><span class = "org-description">Organization Type:&nbsp;&nbsp;</span><span>{{typeMap[officeItem.type]}} (L{{officeItem.level}})</span></span>
+          <span class = "usa-width-one-half"><span class = "org-description">Start Date:&nbsp;&nbsp;</span><span>{{getFtStartDate(officeItem)}}</span></span>
+        </span> 
+        <div *ngIf = "!l" class = "hr-pd"><hr></div>
+      </div>
+    </div>
+  </div>  
+ </div>
 </div>

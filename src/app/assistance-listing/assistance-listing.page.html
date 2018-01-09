@@ -11,7 +11,7 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="'Organization Logo'" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (selection)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
   </aside>
 

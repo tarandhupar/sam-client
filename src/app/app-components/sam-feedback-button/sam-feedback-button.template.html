@@ -1,6 +1,18 @@
-<div class="usa-width-one-whole p_T-2x"><button class="usa-button-primary-alt relative p_L-2x" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
-<span class="usa-width-one-whole p_T-1x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
-<div class="usa-width-one-whole text-align-center" *ngIf="feedback?.showunsubmittedWarning()">
-  <sam-alert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></sam-alert>
+
+<div class="usa-width-one-whole m_V-3x">
+  <p class="m_B-1x">
+    <i class="fa fa-comments" aria-hidden="true"></i>
+    &nbsp;What you think matters!
+  </p>
+  <button class="usa-button-primary-alt relative p_L-2x m_L-5x"
+    (click)="feedback.toggleFeedback()"
+    [disabled]="disabled">
+    Provide Feedback
+  </button>
+  <sam-alert *ngIf="feedback?.showunsubmittedWarning()"
+    class="feedback-warning-font-size"
+    [type]="'warning'"
+    [title]="''"
+    [description]="'You have feedback that has not been submitted!'">
+  </sam-alert>
 </div>
-  

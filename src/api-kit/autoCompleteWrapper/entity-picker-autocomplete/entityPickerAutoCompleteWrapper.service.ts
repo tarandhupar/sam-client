@@ -15,6 +15,7 @@ export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
 
   isDefaultOrg: boolean = false;
   isAssignableOrg: boolean = false;
+  userId: string = '';
 
   constructor(private accessService:UserAccessService) {}
 
@@ -28,7 +29,7 @@ export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
     // }
 
     this.existingVal = val;
-    return this.accessService.getEntityAutoComplete(val, false, this.pageNum, AUTOCOMPLETE_RECORD_PER_PAGE, this.isDefaultOrg, this.isAssignableOrg).map(res => {
+    return this.accessService.getEntityAutoComplete(val, false, this.pageNum, AUTOCOMPLETE_RECORD_PER_PAGE, this.isDefaultOrg, this.isAssignableOrg, this.userId).map(res => {
       if(res != null && res.length > 0) {
         const list = res.map((val)=>{
           let obj = val;
@@ -68,12 +69,14 @@ export class EntityPickerAutoCompleteWrapper implements AutocompleteService{
 export class EntityPickerAutoCompleteDirective {
   @Input() isDefaultOrg: boolean = false;
   @Input() isAssignableOrg: boolean = false;
+  @Input() userId: string = '';
 
   constructor(private autocompleteService: AutocompleteService){}
 
-  ngOnInit(){
+  ngOnInit() {
     this.autocompleteService['isDefaultOrg'] = this.isDefaultOrg;
     this.autocompleteService['isAssignableOrg'] = this.isAssignableOrg;
+    if (this.userId !== '') this.autocompleteService['userId'] = this.userId;
   }
 
 }

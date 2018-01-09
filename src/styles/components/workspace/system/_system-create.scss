@@ -15,6 +15,12 @@
     }
   }
 
+  sam-modal {
+    .modal-content {
+      width: 700px;
+    }
+  }
+
   sam-label-wrapper {
     > div {
       margin-bottom: 1em;
@@ -68,7 +74,7 @@
   .usa-toolbar {
     position: absolute;
     top: (51px - 37px) / 2;
-    left: 180px;
+    left: 176px;
   }
 
   .sam-actions {
@@ -164,6 +170,25 @@
     legend {
       margin-bottom: 1rem;
       font-size: 1.7rem;
+    }
+  }
+
+  sam-password {
+    .usa-form-large {
+      max-width: 100%;
+
+      > div {
+        max-width: 50%;
+      }
+
+      .usa-password-progress {
+        left: 50%;
+        margin-left: auto;
+
+        ul {
+          margin-left: 7rem;
+        }
+      }
     }
   }
 

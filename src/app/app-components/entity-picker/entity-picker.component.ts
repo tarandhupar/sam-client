@@ -74,6 +74,10 @@ export class EntityPickerComponent implements OnInit, ControlValueAccessor {
    * Sets the form control for checking validations and updating label messages
    */
   @Input() control: AbstractControl;
+  /**
+   * Sets the user id to get related entity autocomplete suggestions
+   */
+  @Input() userId: string = '';
 
   private _disabled: boolean = false;
 

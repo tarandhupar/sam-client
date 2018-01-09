@@ -19,10 +19,35 @@
     <form [formGroup]="form" *ngIf="user && form">
       <sam-actions-dropdown [actions]="store.actions" *ngIf="!isNew"></sam-actions-dropdown>
 
-      <div class="usa-toolbar" *ngIf="states.tab == 1">
-        <sam-button buttonType="secondary" buttonSize="small" *ngIf="user.systemAccount && !isNew" buttonText="Submit" (onClick)="submit()"></sam-button>
-        <sam-button buttonType="secondary" buttonSize="small" buttonText="Approve" *ngIf="user.systemApprover && isPending" (onClick)="approve()"></sam-button>
-        <sam-button buttonType="secondary" buttonSize="small" buttonText="Reject" class="last" *ngIf="user.systemApprover && isPending" (onClick)="reject()"></sam-button>
+      <div class="usa-toolbar">
+        <ng-container *ngIf="states.tab == 1">
+          <sam-button buttonId="button-submit"
+                      buttonType="secondary"
+                      buttonSize="small"
+                      buttonText="Submit"
+                      (onClick)="submit()"
+                      *ngIf="user.systemAccount && !isNew && !isComplete"></sam-button>
+          <sam-button buttonId="button-approve"
+                      buttonType="secondary"
+                      buttonSize="small"
+                      buttonText="Approve"
+                      (onClick)="approve()"
+                      *ngIf="user.systemApprover && isPending"></sam-button>
+          <sam-button buttonId="button-reject"
+                      buttonType="secondary"
+                      buttonSize="small"
+                      buttonText="Reject"
+                      class="last"
+                      (onClick)="reject()"
+                      *ngIf="user.systemApprover && isPending"></sam-button>
+        </ng-container>
+        <ng-container *ngIf="isAccount">
+          <sam-button buttonId="button-deactivate"
+                      buttonType="negative"
+                      buttonSize="small"
+                      buttonText="Deactivate"
+                      (onClick)="confirmDeactivation()"></sam-button>
+        </ng-container>
       </div>
 
       <sam-tabs theme="separate" size="default" [(active)]="states.tab">
@@ -36,10 +61,52 @@
     </form>
 
     <div class="usa-button-controls" *ngIf="states.tab == 0">
-      <sam-button buttonType="tertiary" buttonSize="small" buttonText="Cancel" class="button-cancel" (onClick)="cancel()"></sam-button>
-      <sam-button buttonType="secondary" buttonSize="small" buttonText="Previous" class="button-previous" (onClick)="previous()" *ngIf="states.section > 0"></sam-button>
-      <sam-button buttonType="secondary" buttonSize="small" buttonText="Review" class="button-review" (onClick)="review()" *ngIf="states.section == (store.nav.children.length - 1)"></sam-button>
-      <sam-button buttonType="primary" buttonSize="small" buttonText="Next" class="button-next" (onClick)="next()" *ngIf="states.section < (store.nav.children.length - 1)"></sam-button>
+      <sam-button buttonId="button-cancel"
+                  buttonType="tertiary"
+                  buttonSize="small"
+                  buttonText="Cancel"
+                  class="button-cancel"
+                  (onClick)="cancel()"></sam-button>
+      <sam-button buttonId="button-previous"
+                  buttonType="secondary"
+                  buttonSize="small"
+                  buttonText="Previous"
+                  class="button-previous"
+                  (onClick)="previous()"
+                  *ngIf="states.section > 0"></sam-button>
+      <sam-button buttonId="button-review"
+                  buttonType="secondary"
+                  buttonSize="small"
+                  buttonText="Review"
+                  class="button-review"
+                  (onClick)="review()"
+                  *ngIf="states.section == (store.nav.children.length - 1)"></sam-button>
+      <sam-button buttonId="button-next"
+                  buttonType="primary"
+                  buttonSize="small"
+                  buttonText="Next"
+                  class="button-next"
+                  (onClick)="next()"
+                  *ngIf="states.section < (store.nav.children.length - 1)"></sam-button>
     </div>
   </div>
 </page>
+
+<sam-modal type="warning"
+           title="Are you sure you want to deactivate your system account?"
+           showClose="true"
+           submitButtonLabel="Yes, deactivate my account"
+           cancelButtonLabel="No, cancel account deactivation"
+           (onSubmit)="reconfirmDeactivation()"
+           *ngIf="isAccount"
+           #confirmModal></sam-modal>
+
+<sam-modal type="warning"
+           title="Warning"
+           description="If you deactivate your system account it cannot be reactivated for future use and you will be immediately redirected to the system account creation page. Are you sure you want to deactivate your account?"
+           showClose="true"
+           submitButtonLabel="Yes, continue with deactivation"
+           cancelButtonLabel="No, cancel deactivation"
+           (onSubmit)="deactivate()"
+           *ngIf="isAccount"
+           #reconfirmModal></sam-modal>

@@ -35,14 +35,19 @@
       <div class="sam-ui hidden divider"></div>
 
       <!-- Tabs for logged in users -->
-      <div *ngIf="isGovUser" class="sam-ui tabular menu">
+      <div *ngIf="isGovUser" class="sam-ui tabular menu" id="tabs">
         <!-- Clicking this should go to the revise page in the future -->
-        <span class="item disabled">Revise</span>
-        <span class="item active">Public</span>
+        <span class="item disabled" id="revise-tab">Revise</span>
+        <span class="item active" id="public-tab">Public</span>
       </div>
 
       <!-- Intro Content -->
       <div class="sam-ui padded raised segment">
+
+        <div class="sam-ui top right attached mini label">
+          Wage Determination
+        </div>
+
         <div class="sam-ui attached grid">
           <div class="column">
             <div class="sam-ui relaxed divided list">
@@ -126,9 +131,8 @@
         <div class="column">
           <h2 class="sam-ui header">Agreement</h2>
         </div>
-        <!-- hiding this until printer friendly functionality is working -->
-        <div *ngIf="false" class="column">
-          <a target="blank" class="sam-ui right floated mini dark blue button" tabindex="0" [routerLink]="['']">
+        <div class="column">
+          <a target="_blank" class="sam-ui right floated mini dark blue button" tabindex="0" [routerLink]="['/agreement', referenceNumber, 'document']">
             <em class="icon fa fa-print" aria-hidden="true"></em>
             Printer Friendly
           </a>
@@ -154,58 +158,58 @@
                   <br><br>
                 </div>
               </div>
-              <div class="item" id="cba-revision-number2">
+              <div class="item" id="cba-agreement-location">
                 <div>
                   <ng-container *ngFor="let location of data.cbaLocation; let i = index; let isLast=last">
                     <div class="sam-ui two column grid">
                       <div class="column">
                         <b>State:</b>
-                        <span *ngIf="location.state && location.state.length > 0">{{location.state}}</span>
+                        <span *ngIf="location.state && location.state.length > 0" [attr.id]="'cba-agreement-state-' + i">{{location.state}}</span>
                         <br><br>
 
                         <b>County:</b>
-                        <span *ngIf="location.county && location.county.length > 0">{{location.county}}</span>
+                        <span *ngIf="location.county && location.county.length > 0" [attr.id]="'cba-agreement-county-' + i">{{location.county}}</span>
                         <br><br>
                       </div>
                       <div class="column">
                         <b>City:</b>
-                        <span *ngIf="location.city && location.city.length > 0">{{location.city}}</span>
+                        <span *ngIf="location.city && location.city.length > 0" [attr.id]="'cba-agreement-city-' + i">{{location.city}}</span>
                         <br><br>
 
                         <b>Zip Code:</b>
-                        <span *ngIf="location.zipCode && location.zipCode.length > 0">{{location.zipCode}}</span>
+                        <span *ngIf="location.zipCode && location.zipCode.length > 0" [attr.id]="'cba-agreement-zipCode-' + i">{{location.zipCode}}</span>
                         <br><br>
                       </div>
                   </div>
                   </ng-container>
                 </div>
               </div>
-              <div class="item" id="cba-revision-number2">
+              <div class="item" id="cba-agreement-employment">
                 <div>
                   <div>Employed on</div>
                   <br>
                   <b>Contracting Activity:</b>
-                  <span *ngIf="data.organizationName && data.organizationName.length > 0">{{data.organizationName}}</span>
+                  <span *ngIf="data.organizationName && data.organizationName.length > 0" id="cba-agreement-organization">{{data.organizationName}}</span>
                   <br><br>
                   <div>Contract for</div>
                   <br>
                   <b>Contract Services:</b>
-                  <span *ngIf="data.contractServices && data.contractServices.length > 0">{{data.contractServices}}</span>
+                  <span *ngIf="data.contractServices && data.contractServices.length > 0" id="cba-agreement-contract-services">{{data.contractServices}}</span>
                   <br>
                 </div>
               </div>
-              <div class="item" id="cba-revision-number2">
+              <div class="item" id="cba-bargaining-agreement">
                   <div class="content">
                     <div>Collective Bargaining Agreement between</div>
                     <br>
                     <b>Contractor:</b>
-                    <span *ngIf="data.contractorName && data.contractorName.length > 0">{{data.contractorName}}</span>
+                    <span *ngIf="data.contractorName && data.contractorName.length > 0" id="cba-agreement-contractorName">{{data.contractorName}}</span>
                     <b>and Union:</b>
-                    <span *ngIf="data.contractorUnion && data.contractorUnion.length > 0">{{data.contractorUnion}}</span>
-                    <span *ngIf="data.localUnionNumber && data.localUnionNumber.length > 0">(local {{data.localUnionNumber}})</span>
+                    <span *ngIf="data.contractorUnion && data.contractorUnion.length > 0" id="cba-agreement-contractorUnion">{{data.contractorUnion}}</span>
+                    <span *ngIf="data.localUnionNumber && data.localUnionNumber.length > 0" id="cba-agreement-unionNo">(local {{data.localUnionNumber}})</span>
                     <br><br>
-                    <div>
-                      effective  {{data.effectiveStartDate | date: 'shortDate'}} through {{data.effectiveEndDate | date: 'shortDate'}}
+                    <div id="cba-agreement-date-range">
+                      effective {{data.effectiveStartDate | date: 'shortDate'}} through {{data.effectiveEndDate | date: 'shortDate'}}
                     </div>
                     <br>
                     <div *ngIf="data.amendmentDate && data.amendmentDate.length > 0">

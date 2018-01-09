@@ -1,12 +1,13 @@
-<page
-  theme="inside"
-  [breadcrumbs]="crumbs"
-  section="Workspace"
-  [title]="isEditForm ? 'Edit Regional Assistance Location' : 'Add Regional Assistance Location'">
+<div class="usa-grid-full" [ngClass]="'assistance-listing-operations'">
+  <page
+    theme="inside"
+    [breadcrumbs]="crumbs"
+    [options]="options"
+    section="Workspace"
+    [title]="isEditForm ? 'Edit Regional Assistance Location' : 'Add Regional Assistance Location'">
 
-  <div class="sam-ui grid">
     <div class="twelve wide mobile eleven wide tablet seven wide computer column">
-
+      <div class="sam-ui hidden divider"></div>
       <div class="sam-ui segment">
         <form [formGroup]="raoFormGroup">
 
@@ -134,24 +135,26 @@
                  (onSubmit)="deleteRAO($event)">
       </sam-modal>
 
-      <sam-button buttonType="secondary"
-        buttonText="Cancel"
-        [buttonDisabled]="buttonDisabled"
-        (onClick)="onCancelClick($event)">
-      </sam-button>
-      <sam-button buttonType="secondary"
-        *ngIf="isEditForm"
-        [buttonDisabled]="buttonDisabled"
-        buttonText="Delete"
-        (onClick)="modal2.openModal()">
-      </sam-button>
-      <sam-button
-        [buttonDisabled]="buttonDisabled"
-        [attr.id] = "'submit-regional-assistance-location'"
-        buttonText="Submit"
-        (onClick)="onSubmit()"
-        [buttonType]="(!raoFormGroup.valid ? 'disabled' : 'default')">
-      </sam-button>
+      <div class="text-align-right">
+        <sam-button buttonType="tertiary"
+          buttonText="Cancel"
+          [buttonDisabled]="buttonDisabled"
+          (onClick)="onCancelClick($event)">
+        </sam-button>
+        <sam-button buttonType="negative"
+          *ngIf="isEditForm"
+          [buttonDisabled]="buttonDisabled"
+          buttonText="Delete"
+          (onClick)="modal2.openModal()">
+        </sam-button>
+        <sam-button
+          [buttonDisabled]="buttonDisabled || !raoFormGroup.valid"
+          [attr.id] = "'submit-regional-assistance-location'"
+          buttonText="Submit"
+          (onClick)="onSubmit()"
+          [buttonType]="'primary'">
+        </sam-button>
+      </div>
       <br>
       <br>
       <div *ngIf="isEditForm">
@@ -171,9 +174,8 @@
       <ng-container *ngIf="buttonDisabled === true">Processing Request...</ng-container>
 
     </div>
-  </div>
 
-  <div class="sam-ui hidden section divider"></div>
+    <div class="sam-ui hidden section divider"></div>
 
-</page>
-
+  </page>
+</div>

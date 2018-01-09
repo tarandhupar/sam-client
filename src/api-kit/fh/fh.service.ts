@@ -44,6 +44,22 @@ export class FHService {
     return this.callApi(apiOptions, toJson);
   }
 
+  getAccessV2(pageName: string, orgKey: string, toJson?: boolean) {
+    toJson = toJson || false;
+
+    let apiOptions: any = {
+      name: 'fh2',
+      suffix: '/admin/checkAccess',
+      method: 'GET',
+      oParam: {
+        pageName: pageName,
+        orgKey: orgKey
+      }
+    };
+
+    return this.callApi(apiOptions, toJson);
+  }
+
   //gets organization with heirarchy data
   getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false, status: string = 'all', pageSize: number = 10, pageNum: number = 1, orderBy: string = "asc", hasFPDS: boolean = false) {
     var oApiParam = {
@@ -144,8 +160,19 @@ export class FHService {
 
   getOrganizationDetail(id: string){
     var oApiParam = {
-      name: 'fhDetail',
+      name: 'fh2',
       suffix: '/organizations/'+id,
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.callApi(oApiParam, true);
+  }
+
+  getOrganizationView(id: string) {
+    let oApiParam = {
+      name: 'fh2',
+      suffix: '/organizations/view/' + id,
       oParam: {},
       method: 'GET'
     };
@@ -260,6 +287,33 @@ export class FHService {
     return this.callApi(apiOptions, false);
   }
 
+  updateOrganizationV2(org, isMove?:boolean, movingOrgId?:String, newParentOrgId?:String, endDate?:String){
+    let apiOptions: any = {
+      name: 'fh2',
+      suffix: '/org',
+      method: 'PUT',
+      oParam: {},
+      body: org
+    };
+    if(isMove) {
+      apiOptions.oParam['isMove'] = isMove;
+    }
+    
+    if(movingOrgId){
+      apiOptions.oParam['movingOrgId'] = movingOrgId;
+    }
+
+    if(newParentOrgId){
+      apiOptions.oParam['newParentOrgId'] = newParentOrgId;
+    }
+
+    if(endDate){
+      apiOptions.oParam['endDate'] = endDate;
+    }
+
+    return this.callApi(apiOptions, true);
+  }
+
   createOrganization(org, fullParentPath, fullParentPathName) {
     let apiOptions: any = {
       name: 'federalCreateOrg',
@@ -278,6 +332,56 @@ export class FHService {
 
   }
 
+getLandingPage(myOrg?:boolean,status?:String,orderBy?:String,sortBy?:String,pageNum?:number,limit?:number){
+  let apiOptions: any = {
+      name: 'fh2',
+      suffix: '/landingPage',
+      method: 'GET',
+      oParam: {}
+    };
+
+    if(myOrg){
+      apiOptions.oParam['myOrg'] = myOrg;
+    } 
+
+    if(status){
+      apiOptions.oParam['status'] = status;
+    } 
+
+    if(orderBy){
+      apiOptions.oParam['orderBy'] = orderBy;
+    }
+
+    if(sortBy){
+      apiOptions.oParam['sortBy'] = sortBy;
+    }
+
+    if(pageNum){
+      apiOptions.oParam['pageNum'] = pageNum;
+    }
+
+    if(limit){
+      apiOptions.oParam['limit'] = limit;
+    }
+    return this.callApi(apiOptions, true);
+}
+
+createOrganizationV2(org, fullParentPath, fullParentPathName) {
+    let apiOptions: any = {
+      name: 'fh2',
+      suffix: '/organization',
+      method: 'POST',
+      body: org,
+      oParam: {}
+    };
+    if (org.type !== 'Dept/Ind Agency') {
+      apiOptions.oParam = {
+        'fullParentPath': fullParentPath,
+        'fullParentPathName': fullParentPathName
+      };
+    }
+    return this.callApi(apiOptions, true);
+}
 
   fhSearch(q:string, pageNum, pageSize, status, levels, orgType, isCode = false, parent = null, isDefaultDept = false, depth=0, exclusive = null){
     let apiOptions: any = {
@@ -361,7 +465,7 @@ export class FHService {
 
   getFHWidgetInfo(type: 'completed'|'scheduled', day){
     let apiOptions: any = {
-      name: 'fhDetail',
+      name: 'fh2',
       suffix: '/FHWidget',
       method: 'GET',
       oParam: {
@@ -375,7 +479,7 @@ export class FHService {
 
   requestAAC(orgId, isProcure:boolean){
     let apiOptions: any = {
-      name: 'fhDetail',
+      name: 'fh2',
       suffix: '/aac',
       method: 'POST',
       oParam: {

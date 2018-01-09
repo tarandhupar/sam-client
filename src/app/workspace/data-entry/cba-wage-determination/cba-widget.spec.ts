@@ -3,22 +3,32 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { ActivatedRoute} from '@angular/router';
 import { RouterTestingModule } from "@angular/router/testing";
-
-import * as Cookies from 'js-cookie';
 import { SamUIKitModule } from "sam-ui-elements/src/ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { WorkspaceModule } from "../../workspace.module";
-
-import { IAMService } from '../../../../api-kit/iam/iam.service';
 import { CbaWidgetComponent } from './cba-widget.component';
+import { UserService } from "../../../role-management/user.service";
 
 let component: CbaWidgetComponent;
 let fixture: ComponentFixture<CbaWidgetComponent>;
 
-describe('Workspace Page: Contract Opportunity Widget', () => {
-  let api: IAMService;
+describe('Workspace Page: Cba Widget', () => {
+  let MockUserService = {
+    getUser: () => {
+      return {
+        isGov: true,
+        lastName: "Administrator",
+        _id: "FBO_AA@gsa.gov",
+        email: "FBO_AA@gsa.gov",
+        _links: {
+          self: {
+            href: "/comp/iam/auth/v4/session/"
+          }
+        }
+      }
+    }
+  };
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
@@ -31,15 +41,13 @@ describe('Workspace Page: Contract Opportunity Widget', () => {
         RouterTestingModule,
       ],
       providers: [
-        IAMService,
+        { provide: UserService, useValue: MockUserService },
         CbaWidgetComponent
       ]
     });
 
     fixture = TestBed.createComponent(CbaWidgetComponent);
     component = fixture.componentInstance;
-    api = TestBed.get(IAMService);
-    api.iam.user.gov = true;
     fixture.detectChanges();
   });
 

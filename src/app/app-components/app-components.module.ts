@@ -21,7 +21,6 @@ import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
 import { SamSoloAccordian } from "./solo-accordion/solo-accordian.component";
-import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.component";
 import { SamEditorComponent } from "./editor/editor.component";
 import { SamTitleSubtitleComponent } from "./title-subtitle/title-subtitle.component";
 import { SamCreatePageTemplateComponent } from "./create-page-template/create-page-template.component";
@@ -69,7 +68,6 @@ import { SamUploadComponent } from './sam-upload/upload.component';
     SamFeedbackButtonComponent,
     OrgAddrFormComponent,
     SamSoloAccordian,
-    SamStatusBannerComponent,
     SamEditorComponent,
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,
@@ -119,7 +117,6 @@ import { SamUploadComponent } from './sam-upload/upload.component';
     SamFeedbackButtonComponent,
     OrgAddrFormComponent,
     SamSoloAccordian,
-    SamStatusBannerComponent,
     SamEditorComponent,
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,

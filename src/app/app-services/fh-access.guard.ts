@@ -28,9 +28,9 @@ export class FHAccessGuard implements CanActivateChild, CanActivate {
   }
 
   canActivateChild(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
-
+    let pageName = route.data['pageName'];
     let orgId = route.parent.params['orgId'];
-    return this.accessService.getAccess(orgId, false)
+    return this.accessService.getAccessV2(pageName, orgId, false)
       .map(
         res => {
           return true;
@@ -42,8 +42,8 @@ export class FHAccessGuard implements CanActivateChild, CanActivate {
           if (status === 401) {
             this.router.navigate(['/signin'], {queryParams: {redirect: this.router.url}});
             this.alertFooter.registerFooterAlert({
-              title: "",
-              description: "You must be logged in to perform his action.",
+              title: '',
+              description: 'You must be logged in to perform his action.',
               type: 'error',
               timer: 3200
             });
@@ -53,8 +53,8 @@ export class FHAccessGuard implements CanActivateChild, CanActivate {
             return Observable.of(false);
           } else {
             this.alertFooter.registerFooterAlert({
-              title: "",
-              description: "You may not have the neccessary permission to perform this action.",
+              title: '',
+              description: 'You may not have the neccessary permission to perform this action.',
               type: 'error',
               timer: 3200
             });

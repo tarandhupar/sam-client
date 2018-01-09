@@ -616,7 +616,7 @@ export class FALReviewComponent implements OnInit, OnDestroy {
         return {
           "id": value.id,
           "index": value.index,
-          "date": value.fiscalYear,
+          "date": value.fiscalYear <=0 ? '-' : value.fiscalYear,
           "title": pipe.transform(value.actionType),
           "description": (value.actionType != 'archived' && value.actionType != 'unarchive') ? value.changeDescription : ''
         }

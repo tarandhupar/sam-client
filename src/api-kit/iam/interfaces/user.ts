@@ -46,6 +46,7 @@ export interface User {
   userPassword?: string;
   accountClaimed?: boolean;
   isGov?: boolean;
+  gov?: boolean;
   entity?: boolean;
   systemAccount?: boolean;
   systemApprover?: boolean;

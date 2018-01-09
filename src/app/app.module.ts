@@ -16,7 +16,6 @@ import { App } from './app.component';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
 import { PageNotFoundErrorPage } from './application-content/404';
-import { OpportunityModule } from './opportunity';
 import { WageDeterminationModule } from './wage-determination';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
@@ -70,7 +69,6 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES),
 
     // Page View Modules
-    OpportunityModule,
     OrganizationModule,
     HomeModule,
     SearchModule,

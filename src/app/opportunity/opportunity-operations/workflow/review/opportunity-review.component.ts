@@ -1094,12 +1094,19 @@ export class OpportunityReviewComponent implements OnInit {
     return state;
   }
   parentArchiveDate(){
-    if( this.originalOpportunity.data && this.originalOpportunity.data.archive && this.originalOpportunity.data.archive.date)
+    if( this.originalOpportunity && this.originalOpportunity.data && this.originalOpportunity.data.archive && this.originalOpportunity.data.archive.date)
       return this.originalOpportunity.data.archive.date.substr(0,this.originalOpportunity.data.archive.date.indexOf('T'));
   }
 
   archiveDate(){
     if( this.opportunity.data && this.opportunity.data.archive && this.opportunity.data.archive.date)
       return this.opportunity.data.archive.date.substr(0,this.opportunity.data.archive.date.indexOf('T'));
+  }
+
+  showOriginalArchiveDate() {
+    return ((this.originalOpportunity && this.originalOpportunity.data &&
+      this.originalOpportunity.data.archive && this.originalOpportunity.data.archive.type &&
+      this.originalOpportunity.data.archive.type != 'auto15') ||
+      (this.opportunity.data && this.opportunity.data.archive && this.opportunity.data.archive.type != 'auto15'));
   }
 }

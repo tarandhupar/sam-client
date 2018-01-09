@@ -1,4 +1,4 @@
-<page class="usa-grid-full usa-authentication usa-profile" section="Profile" [title]="store.title" [breadcrumbs]="breadcrumbs">
+<page class="usa-grid-full usa-authentication usa-profile" [section]="section" [title]="store.title" [breadcrumbs]="breadcrumbs">
   <sidebar>
     <sam-sidenav type="step" [model]="store.nav" [labelLookup]="states.active" (path)="onNavigate($event)" *ngIf="states.sidenav"></sam-sidenav>
     <side-nav-filter></side-nav-filter>

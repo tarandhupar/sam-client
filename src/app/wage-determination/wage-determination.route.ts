@@ -3,11 +3,12 @@ import { WageDeterminationPage } from './wage-determination.page';
 import { WageDeterminationDocumentPage } from "./wage-determination-document.page";
 import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
 import { CbaPage } from './cba/wd-cba.page';
+import {CBADocumentPage} from "./cba/wd-cba-document.page";
 
 export const routes: Routes = [
   {
     path: 'wage-determination/:referencenumber/:revisionnumber',
-    component: WageDeterminationPage, 
+    component: WageDeterminationPage,
     canDeactivate:[FeedbackFormService]
   },
   {
@@ -15,10 +16,14 @@ export const routes: Routes = [
     component: WageDeterminationDocumentPage
   },
   {
-    path: 'wd/cba/:referencenumber/view',
-    component: CbaPage, 
+    path: 'wage-determination/cba/:referencenumber/view',
+    component: CbaPage,
     canDeactivate:[FeedbackFormService]
   },
+  {
+    path: 'agreement/:cbanumber/document',
+    component: CBADocumentPage
+  }
 ];
 
 

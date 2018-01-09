@@ -6,7 +6,7 @@ import { OpportunityContactInfoComponent } from './opp-form-contact-info.compone
 import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 import { OpportunitySideNavService } from '../../framework/service/sidenav/opportunity-form-sidenav.service';
 
-fdescribe('Opportunity Contact Information Form', () => {
+describe('Opportunity Contact Information Form', () => {
   let comp: OpportunityContactInfoComponent;
   let fixture: ComponentFixture<OpportunityContactInfoComponent>;
 
@@ -32,7 +32,7 @@ fdescribe('Opportunity Contact Information Form', () => {
     comp = fixture.componentInstance;
     comp.viewModel = new OpportunityFormViewModel({});
 
-    fixture.detectChanges();    
+    fixture.detectChanges();
   });
 
   it('should exist', () => {
@@ -41,7 +41,7 @@ fdescribe('Opportunity Contact Information Form', () => {
     expect(comp.primaryPOCState).toEqual(comp.states.START);
     expect(comp.secondaryPOCState).toEqual(comp.states.START);
   });
-  
+
 //12-20-2017: Failing test, spyOn methods are not being called. Will address later
 
   // it('should load existing data', fakeAsync(() => {

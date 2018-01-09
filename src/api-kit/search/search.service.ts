@@ -186,6 +186,12 @@ export class SearchService {
       oApiParam.oParam['signed_date.to'] = obj['signed_date.to'];
     }
 
+    //Cba No filter
+    if(typeof obj['cba_no'] !== undefined && obj['cba_no'] !== null && obj['cba_no'] !== ''){
+      oApiParam.oParam['cba_no'] = obj['cba_no'];
+      delete oApiParam.oParam['is_standard'];
+    }
+
     //showRegionalOffices only when
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;

@@ -12,9 +12,11 @@ import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
 import * as Cookies from 'js-cookie';
 import * as _ from 'lodash';
 import {SavedSearchService} from "../../api-kit/search/saved-search.service";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 // Animation
 import { trigger, state, style, animate, transition } from '@angular/core';
+import {UserService} from "../role-management/user.service";
 
 @Component({
   moduleId: __filename,
@@ -197,7 +199,8 @@ export class SearchPage implements OnInit {
   wdTypeConfig = {
     options: [
       {value: 'sca', label: 'Service Contract Act (SCA)', name: 'radio-sca'},
-      {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'}
+      {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'},
+      {value: 'cba', label: 'Collective Bargaining Agreement (CBA)', name: 'radio-cba'},
     ],
     name: 'wageDeterminationRad',
     label: '',
@@ -318,6 +321,13 @@ export class SearchPage implements OnInit {
 
   // scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
   dismissWdAlert: boolean = false;
+
+  //CBA Lookup config
+  searchCbaNoFlag: boolean = false;
+  cbaNo = '';
+  cbaLookupForm: FormGroup;
+  private isGovUser: boolean = false;
+  private user: any;
 
   //Select Award Types
   awardIDVModel: string = '';
@@ -615,7 +625,9 @@ export class SearchPage implements OnInit {
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
               private changeDetectorRef: ChangeDetectorRef,
-              private dictionaryService: DictionaryService) {
+              private dictionaryService: DictionaryService,
+              private fb: FormBuilder,
+              private userService: UserService) {
   }
 
   ngOnInit() {
@@ -634,11 +646,23 @@ export class SearchPage implements OnInit {
       })
     }
 
+    // call userService to find if logged in user
+    try{
+      this.user = this.userService.getUser();
+      if(this.user.isGov)
+        this.isGovUser = true;
+      else
+        this.isGovUser = false;
+    }
+    catch(e){
+      this.isGovUser = false;
+    }
 
     if (window.location.pathname.localeCompare("/search/fal/regionalAssistanceLocations") === 0) {
       this.showRegionalOffices = true;
     } else {
       this.showRegionalOffices = false;
+      this.createCBALookupForm();
     }
 
     this.activatedRoute.queryParams.subscribe(
@@ -684,7 +708,7 @@ export class SearchPage implements OnInit {
         this.determineFilterDateDisable(this.determineTempModel());
         // reset date rad selection on appropriate config object (uses dateRadSelection above)
         this.resetRadSelection();
-        this.builtDateModel = data['']
+        this.builtDateModel = data[''];
         //To display saved search title
         this.preferenceId = data['preference_id'] && data['preference_id'] !== null ? decodeURI(data['preference_id']) : '';
         this.searchName = this.cookieValue != null && data['preference_id'] && data['preference_id'] !== null ? this.getSavedSearch(decodeURI(data['preference_id'])) : '';
@@ -695,12 +719,31 @@ export class SearchPage implements OnInit {
           this.dunsModelList = [];
         }
         this.isSearchComplete = false;
+        this.cbaNo = data['cba_no'];
         this.runSearch();
         this.blankSearch = this.keywordsModel.length === 0;
+
         this.setupSortOptions(this.blankSearch);
         this.loadParams();
       });
 
+      if(this.cbaNo !== '') {
+        this.updateCBALookupForm();
+      }
+  }
+
+  createCBALookupForm() {
+    this.cbaLookupForm = this.fb.group({
+      'cbaNo': '',
+    });
+  }
+
+  updateCBALookupForm() {
+    this.cbaLookupForm.patchValue({
+      cbaNo: this.cbaNo
+    }, {
+      emitEvent: false,
+    });
   }
 
   setupOrgsFromQS(orgsStr){
@@ -782,13 +825,19 @@ export class SearchPage implements OnInit {
     if(!blankSearch){
       if(this.index === 'ei'){
         this.sortOptions = queryEntSortOptions;
-      }else{
+      }else if(this.index === 'cfda'){
+        querySortOptions.push({label:'CFDA Number', name:'CFDA Number', value:'programNumber'});
+        this.sortOptions = querySortOptions;
+      } else {
         this.sortOptions = querySortOptions;
       }
     }else{
       if(this.index === 'ei'){
         this.sortOptions = blankEntSortOptions;
-      }else{
+      }else if(this.index === 'cfda'){
+        blankSortOptions.push({label:'CFDA Number', name:'CFDA Number', value:'programNumber'});
+        this.sortOptions = blankSortOptions;
+      } else {
         this.sortOptions = blankSortOptions;
       }
     }
@@ -857,6 +906,11 @@ export class SearchPage implements OnInit {
     //wd previously performed param
     if (this.wdPreviouslyPerformedModel.length > 0) {
       qsobj['prevP'] = this.wdPreviouslyPerformedModel;
+    }
+
+    //cba param
+    if(this.cbaNo !== '' && this.wdTypeModel === 'cba') {
+      qsobj['cba_no'] = this.cbaNo;
     }
 
     //awardType param
@@ -1081,6 +1135,7 @@ export class SearchPage implements OnInit {
       signed_date: this.dateFilterRequestSorter('signed', 'date'),
       ['signed_date.from']: this.dateFilterRequestSorter('signed', 'from'),
       ['signed_date.to']: this.dateFilterRequestSorter('signed', 'to'),
+      cba_no: this.cbaNo
     }).subscribe(
       data => {
         if (data._embedded && data._embedded.results) {
@@ -1256,7 +1311,6 @@ export class SearchPage implements OnInit {
 
   // event for wdFilter Change
   wdFilterChange(event) {
-
     // set the models equal to empty if the opposite wd type is selected
     if (this.wdTypeModel === 'sca') {
       this.wdConstructModel = '';
@@ -1275,6 +1329,8 @@ export class SearchPage implements OnInit {
     this.getWageDeterminationDictionaryData(filteredDictionaries);
 
     this.searchResultsRefresh();
+    this.updateCBALookupForm();
+    this.searchCbaNoFlag = false;
   }
 
   // event for construction type change
@@ -1547,7 +1603,6 @@ export class SearchPage implements OnInit {
       this.sortModel = this.defaultSortModel;
     }
 
-
     // call wd clear filters
     this.wdStateObject = null;
     this.wdStateModel = '';
@@ -1602,6 +1657,9 @@ export class SearchPage implements OnInit {
     this.wdDateFilterModel = {};
     this.fpdsDateFilterModel = {};
     this.dateFilterIndex = 0;
+
+    //clear cba filter
+    this.cbaNo = '';
 
     this.disableAllDateFilter();
 
@@ -1913,7 +1971,7 @@ export class SearchPage implements OnInit {
         return {type: sortBy, sort: 'asc'};
       }
     }
-  
+
   handleAction(event) {
     if(event.name === 'saveAs') {
       this.modal1.openModal();
@@ -1959,7 +2017,7 @@ export class SearchPage implements OnInit {
 
   saveSearch() {
     this.savedSearch['data']['parameters'] = this.getParametersToSave();
-    
+
     this.savedSearchService.updateSavedSearch(this.cookieValue, this.preferenceId, this.savedSearch).subscribe(res => {
       this.refreshAfterSave();
     }, error => {
@@ -2269,5 +2327,21 @@ export class SearchPage implements OnInit {
 
     // reset all radio button selections to date on tab change
     this.resetAllRadSelection();
+  }
+
+  onEnterClick(event){
+    if(event.keyCode == 13) {
+      this.submitCBANo();
+    }
+  }
+
+  submitCBANo() {
+    this.searchCbaNoFlag = true;
+    this.cbaNo = this.cbaLookupForm.get('cbaNo').value;
+    this.searchResultsRefresh();
+  }
+
+  redirectUser() {
+    this.router.navigate(['workspace'] );
   }
 }

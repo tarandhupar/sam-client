@@ -11,7 +11,7 @@ import { EntitiesResult } from '../entity/search-result/entities-result.componen
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { AwardsResult } from '../awards/search-result/awards-result.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './search.route';
 import { SamUIKitModule } from 'sam-ui-elements/src/ui-kit';
@@ -36,6 +36,7 @@ import {SearchAuthGuard} from "./authguard.service";
     routing,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     HttpModule,
     SamUIKitModule,

@@ -28,5 +28,6 @@ export let ROUTES: Routes = [
   { path: 'ui-kit', loadChildren: './application-content/ui-kit-demo/ui-kit-demo.module#UIKitDemoModule' },
   { path: 'workspace', loadChildren: './workspace/workspace.module#WorkspaceModule' },
   { path: 'fal', loadChildren: './assistance-listing/assistance-listing.module#ProgramModule'},
+  { path: 'opp', loadChildren: './opportunity/opportunity.module#OpportunityModule'},
   { path: '**', component: PageNotFoundErrorPage },
 ];

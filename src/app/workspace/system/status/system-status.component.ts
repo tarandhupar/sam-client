@@ -50,7 +50,7 @@ export class SystemStatusComponent {
   private statuses = {
     'draft': 'Draft',
     'pending approval': 'Pending Approval',
-    'approved': 'Approved',
+    'approved': 'Published',
     'rejected': 'Rejected',
   };
 

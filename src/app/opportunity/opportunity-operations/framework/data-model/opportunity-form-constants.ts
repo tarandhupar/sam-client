@@ -124,6 +124,7 @@ export const OpportunitySectionFieldsBiMap = (function() {
 export const OppNoticeTypeFieldsMap = {
   [OpportunityNoticeTypes.PRESOLICITATION]: {
     [OpportunityFieldNames.PRIMARY_NAICS_CODE]: {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.COMBINED_SYNOPSIS_SOLICITATION]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
@@ -133,10 +134,12 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: false},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.SOURCES_SOUGHT] : {
     [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
-    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true}
+    [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.SPECIAL_NOTICE] : {
     [OpportunityFieldNames.PRODUCT_SERVICE_CODE] : {required: false, display: true},
@@ -148,9 +151,11 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: true},
     [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: true},
     [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.SALE_OF_SURPLUS_PROPERTY] : {
     [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.SOLICITATION]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: false},
@@ -160,6 +165,7 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.DELIVERY_ORDER_NUMBER] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_DUNS] : {required: false, display: false},
     [OpportunityFieldNames.AWARDEE_NAME] : {required: false, display: false},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.AWARD_NOTICE]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: true, display: true},
@@ -173,6 +179,7 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.PRIMARY_NAICS_CODE] : {required: false, display: true},
     [OpportunityFieldNames.DESCRIPTION] : {required: false, display: true},
     [OpportunityFieldNames.PRIMARY_CONTACT] : {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.INTENT_TO_BUNDLE_REQUIREMENTS]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: true},
@@ -187,6 +194,7 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.SET_ASIDE_TYPE] : {required: false, display: false},
     [OpportunityFieldNames.SECONDARY_NAICS_CODE] : {required: false, display: false},
     [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: false},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   },
   [OpportunityNoticeTypes.JUSTIFICATION_AND_APPROVAL]: {
     [OpportunityFieldNames.AWARD_DATE] : {required: false, display: true},
@@ -202,6 +210,7 @@ export const OppNoticeTypeFieldsMap = {
     [OpportunityFieldNames.SECONDARY_NAICS_CODE] : {required: false, display: false},
     [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: false},
     [OpportunityFieldNames.PLACE_PERFORMNCE_LOCATION] : {required: false, display: true},
+    [OpportunityFieldNames.TITLE] : {display: true, autoFill: true},
   }
 };
 

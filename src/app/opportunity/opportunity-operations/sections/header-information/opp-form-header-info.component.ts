@@ -9,6 +9,7 @@ import { OpportunityFieldNames } from '../../framework/data-model/opportunity-fo
 import { OppNoticeTypeMapService } from '../../framework/service/notice-type-map/notice-type-map.service';
 import { OpportunitySectionNames } from "../../framework/data-model/opportunity-form-constants";
 import { OpportunityFormErrorService } from "../../opportunity-form-error.service";
+import {OppRelatedNoticeAutoFillService} from "../../framework/service/related-notice-autofill/related-notice-autofill.service";
 
 @Component({
   providers: [UserService],
@@ -68,7 +69,8 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private oppFormService: OpportunityFormService,
-    private oppNoticeTypeMapService: OppNoticeTypeMapService) {
+    private oppNoticeTypeMapService: OppNoticeTypeMapService,
+    private oppAutoFillService: OppRelatedNoticeAutoFillService) {
 
       Object.freeze(this.oppTypeConfig);
       Object.freeze(this.titleConfig);
@@ -217,7 +219,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   private saveNoticeNumber(id) {
     this.oppHeaderInfoViewModel.noticeNumber = id;
     this.cdr.detectChanges();
-    this.updateProcurementIdError();
+    this.updateNoticeNumberError();
   }
 
   private saveTitle(title) {
@@ -230,7 +232,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
     this.errorService.viewModel = this.viewModel;
     this.updateTitleError();
     this.updateFederalAgencyError();
-    this.updateProcurementIdError();
+    this.updateNoticeNumberError();
   }
 
   private updateTitleError() {
@@ -255,7 +257,7 @@ export class OpportunityHeaderInfoComponent implements OnInit {
   }
 
 
-  private updateProcurementIdError() {
+  private updateNoticeNumberError() {
     this.oppHeaderInfoForm.get('noticeNumber').clearValidators();
     this.oppHeaderInfoForm.get('noticeNumber').setValidators((control) => {
       return control.errors
@@ -279,5 +281,27 @@ export class OpportunityHeaderInfoComponent implements OnInit {
 
   private disableSideNavItem(type) {
     this.oppNoticeTypeMapService.toggleSectionsDisabledProperty(type);
+  }
+  onChangeHandler(event) {
+    if(event && event.key) {
+      this.getRelatedNoticeData(event.key);
+    }
+  }
+  getRelatedNoticeData(realtedNoticeId: any) {
+    this.oppFormService.getOpportunity(realtedNoticeId, true).subscribe(api => {
+      this.oppAutoFillService.autoFillFormFields(api, this.oppHeaderInfoViewModel.opportunityType, this.viewModel);
+      this.populateHeaderAutoFillFields();
+    }, error => {
+      console.log('error retrieving related Notice data', error);
+    });
+  }
+  populateHeaderAutoFillFields() {
+    this.oppHeaderInfoForm.patchValue({
+      title: this.viewModel.title,
+    }, {
+      emitEvent: false,
+    });
+    this.errorService.viewModel = this.viewModel;
+    this.updateTitleError();
   }
 }

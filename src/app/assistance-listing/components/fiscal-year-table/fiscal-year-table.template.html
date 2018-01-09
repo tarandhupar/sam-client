@@ -43,7 +43,7 @@
           <tr *ngIf="entry.year === null || (entry.year >= getCurrentFY() - 1 && entry.year <= getCurrentFY() + 1)">
             <td>
               {{ entry.year }}
-              <span *ngIf="!entry.year" [class]="'usa-input-error-message'">A fiscal year is required</span>
+              <span *ngIf="!entry.year" [class]="'usa-input-error-message'">Fiscal year is required</span>
             </td>
             <td>
               {{ entry.description }}

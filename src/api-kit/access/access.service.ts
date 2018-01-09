@@ -546,8 +546,8 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
-  getEntityAutoComplete(query : string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE,
-                      isDefaultOrg: boolean = false, isAssignableOrg: boolean = false){
+  getEntityAutoComplete(query: string, isGov: boolean = true, page: number = 1, limit = AUTOCOMPLETE_RECORD_PER_PAGE,
+                      isDefaultOrg: boolean = false, isAssignableOrg: boolean = false, userId: string = '') {
     let apiOptions: any = {
       name: 'rms',
       suffix: '/autocomplete/entity',
@@ -560,12 +560,17 @@ export class UserAccessService {
     apiOptions.oParam.isDefaultOrg = isDefaultOrg;
     apiOptions.oParam.isAssignedOrgs = isAssignableOrg;
 
-
-    if(!isGov) {
+    if (!isGov) {
       apiOptions.oParam.limit = +limit;
       apiOptions.oParam.page = page;
     }
-    return isDefaultOrg? this.callApi(apiOptions): this.apiService.call(apiOptions);
+
+    if (userId !== '') {
+      apiOptions.oParam.userId = userId;
+    }
+
+    return isDefaultOrg ? this.callApi(apiOptions, true, new EmailAddressQueryEncoder())
+     : this.apiService.call(apiOptions, true, new EmailAddressQueryEncoder());
   }
 
   getEntityById(entityId){

@@ -17,6 +17,12 @@
     }
   }
 
+  sam-fieldset-wrapper {
+    legend {
+      font-weight: bold;
+    }
+  }
+
   .sam-editor-wrapper {
     > sam-label-wrapper {
       > div {
@@ -68,19 +74,30 @@
       float: left;
     }
 
-    &.kba {
-      label {
-        font-weight: normal !important;
-      }
-    }
-
     .usa-form-control {
       display: inline-block;
     }
+  }
 
-    &.kba {
-      label {
-        width: 48%;
+  div.kba {
+    label {
+      font-weight: normal !important;
+    }
+  }
+
+  section.kba {
+    .column {
+      &:nth-child(1) {
+        width: auto;
+      }
+
+      &:nth-child(2) {
+        max-width: 100px;
+        overflow: hidden;
+
+        .kba {
+          overflow: hidden;
+        }
       }
     }
   }

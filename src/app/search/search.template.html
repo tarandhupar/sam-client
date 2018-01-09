@@ -191,7 +191,7 @@
       </ng-container>
 
       <!--Location Filter-->
-      <ng-container *ngIf="index === 'wd' && showRegionalOffices==false && wdTypeModel">
+      <ng-container *ngIf="index === 'wd' && showRegionalOffices==false && wdTypeModel && wdTypeModel !== 'cba'">
         <h4 class="sam-ui header">Location</h4>
         <!--state autocomplete-->
         <sam-autocomplete [ngModel]="wdStateObject"
@@ -251,6 +251,7 @@
         </sam-radio-button>
         <div class="sam-ui divider"></div>
       </ng-container>
+
       <ng-container *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
         <h4 class="sam-ui header">SCA: Subject to CBA</h4>
          Subject to CBA
@@ -303,6 +304,31 @@
         </sam-autocomplete>
         <div class="sam-ui divider"></div>
       </ng-container>
+
+      <!-- CBA Specific Filters -->
+      <div [hidden]="!(index === 'wd' && wdTypeModel === 'cba' && showRegionalOffices==false)">
+        <h4 class="sam-ui header">CBA Lookup</h4>
+        <form [formGroup]="cbaLookupForm">
+          <div>
+          <sam-text
+          [attr.id]="'cba-no'"
+          [name]="'cba-no-text'"
+          [placeholder]="'CBA-'"
+          [control]="cbaLookupForm.controls['cbaNo']"
+          [formControlName]="'cbaNo'"
+          [required]="true"
+          (keyup)="onEnterClick($event)"></sam-text>
+          </div>
+          <div>
+          <sam-button [buttonId]="'get-cba-no'" [buttonText]="'Get CBA'" [buttonType]="submit" (onClick)="submitCBANo()"></sam-button>
+          </div>
+        </form>
+        <div class="sam-ui divider"></div>
+        <ng-container *ngIf="isGovUser == true">
+          <h5 class="sam-ui header">Create/Revise a Collective Bargaining Agreement</h5>
+          <sam-button [buttonId]="'create-revise-cba-no'" [buttonText]="'Workspace'" [buttonType]="submit"  (onClick)="redirectUser()"></sam-button>
+        </ng-container>
+      </div>
 
       <!--Awards specific Filters-->
       <ng-container *ngIf="index==='fpds' && showRegionalOffices==false">
@@ -512,7 +538,7 @@
           <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
-          <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
+          <wage-determination-result *ngIf="row._type == 'wdSCA'|| row._type == 'wdDBRA' || row._type == 'wdCBA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
           <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
           <regional-office-listing-result *ngIf="showRegionalOffices" class="usa-grid-full" [data]="row" [qParams]="qParams" ></regional-office-listing-result>
           <div class="sam-ui section divider"></div>
@@ -526,12 +552,25 @@
         <p>Your search did not return any results for active records. Would you like to include inactive records in your search results? <a href= "javascript:void(0)" (click)="findInactiveResults()" >[Yes]</a></p>
       </div>
 
-      <div *ngIf="!initLoad && !data.results && index === 'wd'">
+      <div *ngIf="!initLoad && !data.results && index === 'wd' && wdTypeModel !== 'cba'">
         <h3>No Wage Determinations were found using the criteria you have selected.</h3>
         <h3>If you would like to request a SCA WDOL using an e98 form, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here.</a></h3>
         <div style="height:300px;"></div>
       </div>
+
+      <div *ngIf="!initLoad && !data.results && index === 'wd' && wdTypeModel === 'cba' && !searchCbaNoFlag">
+        <h3>Please enter a Collective Bargaining Agreement (CBA) number to obtain a result.</h3>
+        <h3>Please note that CBA lookup will not include any filters you have applied.</h3>
+        <div style="height:300px;"></div>
+      </div>
+
+      <div *ngIf="!initLoad && !data.results && index === 'wd' && wdTypeModel === 'cba' && searchCbaNoFlag">
+        <h3>No Results Found for {{cbaNo}}</h3>
+        <div style="height:300px;"></div>
+      </div>
+
     </div>
+
     <div *ngIf="data.results && isSearchComplete">
       <div class="usa-width-one-whole" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
         <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></sam-pagination>

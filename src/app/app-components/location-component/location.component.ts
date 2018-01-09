@@ -442,8 +442,8 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  locationValidation(val){
-   this.formatError(val);
+  locationValidation(){
+   this.formatError();
      if(this.zip ){
        return this.locationService.validateZipWIthLocation(this.zip , this.state!== undefined ? this.state : undefined, 
                      this.city !== undefined ? this.city : undefined,
@@ -452,11 +452,11 @@ export class SamLocationComponent implements OnChanges, OnInit, OnDestroy {
      return Observable.of({description:"INVALID"});
    }
 
-  formatError(val){
-    this.error.city = this.city?'':'City field cannot be empty';
-    this.error.state = this.state?'':'State field cannot be empty';
-    this.error.country = this.country?'':'Country field cannot be empty';
-    this.error.zip = this.zip?'':'Zip field cannot be empty';
+  formatError(){
+    this.error.city = this.city.key ? '' : 'City field cannot be empty';
+    this.error.state = this.state.key ? '' : 'State field cannot be empty';
+    this.error.country = this.country.key ? '' : 'Country field cannot be empty';
+    this.error.zip = this.zip ? '' : 'Zip field cannot be empty';
  }
 
   locationValidationZip(res){

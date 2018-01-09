@@ -36,7 +36,6 @@
 </div>
 
 <page theme="inside">
-
   <!--Welcome section for workspace-->
   <ng-container *ngIf="showWelcome">
     <h2 class="sam-ui header">Welcome to workspace!</h2>
@@ -59,11 +58,9 @@
       <div class="column center aligned">
         <a [routerLink]="['/workspace/myfeed/requests']"
           class="sam-ui medium" style="position: relative;">
-          <!-- <div class="floating sam-ui circular red label">
-            0
-          </div>   -->
+          <!-- <div class="floating sam-ui circular red label">0</div> -->
           <em class="fa fa-list-alt fa-4x"></em>
-          <br>
+          <br />
           Requests
         </a>
       </div>
@@ -71,7 +68,7 @@
         <a [routerLink]="['/workspace/myfeed/notifications']"
           class="sam-ui medium">
           <em class="fa fa-bell-o fa-4x"></em>
-          <br>
+          <br />
           Notifications
         </a>
       </div>
@@ -82,7 +79,7 @@
             <em class="fa fa-cloud fa-stack-2x"></em>
             <em class="fa fa-search fa-stack-1x fa-inverse"></em>
           </span>
-          <br>
+          <br />
           Saved Searches
         </a>
       </div>
@@ -98,20 +95,19 @@
   <div class="sam-ui hidden divider"></div>
 
   <!--Data Entry section for workspace-->
-  <h2 id="data-entry" class="sam-ui header" *ngIf="isDisplayDataEntry()">Data Entry</h2>
+  <h2 id="data-entry" class="sam-ui header" *ngIf="states.isDisplayDataEntry">Data Entry</h2>
   <workspace-data-entry
     [toggleControl]="dataEntryWidgetControl"
-    *ngIf="isDisplayDataEntry()">
+    *ngIf="states.isDisplayDataEntry">
   </workspace-data-entry>
 
   <div class="sam-ui hidden divider"></div>
 
   <!--Administration section for workspace-->
-  <h2 id="administration" class="sam-ui header" *ngIf="anyAdminWidget()">Administration</h2>
+  <h2 id="administration" class="sam-ui header" *ngIf="states.anyAdminWidget">Administration</h2>
   <workspace-administration
-    [toggleControl]="administrationWidgetControl">
+    [toggleControl]="administrationWidgetControl"
+    *ngIf="states.anyAdminWidget">
   </workspace-administration>
-
   <div class="sam-ui hidden divider"></div>
-
 </page>

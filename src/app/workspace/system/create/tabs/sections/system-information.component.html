@@ -21,4 +21,12 @@
                    formControlName="systemDescriptionAndFunction"
                    maxlength="1000"></sam-text-area>
   </div>
+
+  <div class="sam-ui segment" *ngIf="form.get('password').enabled">
+    <sam-fieldset-wrapper label="Password">
+      <sam-password [currentPassword]="password"
+                    [password]="form.get('password')"
+                    passwordLabel="New Password"></sam-password>
+    </sam-fieldset-wrapper>
+  </div>
 </div>

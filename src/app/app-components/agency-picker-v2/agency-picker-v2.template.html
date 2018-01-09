@@ -1,4 +1,4 @@
-<sam-label-wrapper [name]="labelName" [attr.class]="organization-container" [errorMessage]="searchMessage" [label]="label" [hint]="hint" [required]="required">
+<sam-label-wrapper [name]="labelName" [attr.class]="'organization-container'" [errorMessage]="searchMessage" [label]="label" [hint]="hint" [required]="required">
     <div class="sam-ui secondary pointing large menu" *ngIf="!advancedMode">
         <a class="item active" (click)="showAdvanced = false" [ngClass]="{'active': !showAdvanced}" (keyup.enter)="showAdvanced = false" tabindex="0">
         Simple
@@ -22,6 +22,7 @@
             agencypicker-autofill
             [name]="name+'picker'"
             [ngModel]="selections"
+            [hideTextareaLabel]="true"
             (ngModelChange)="addSelection($event)"
             [keyValueConfig]="multipleACConfig"
             [serviceOptions]="serviceOptions"

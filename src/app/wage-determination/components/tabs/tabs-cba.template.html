@@ -1,0 +1,20 @@
+<ng-container>
+  <div class="sam-ui tabular menu">
+    <span *ngIf="isCreate" class="item active">
+      Create
+    </span>
+    <a *ngIf="canEdit && !isEdit" class="item">
+      Revise
+    </a>
+    <span *ngIf="isEdit" class="item active">
+      {{isRevise ? 'Revise' : 'Edit'}}
+    </span>
+    <a *ngIf="!isPublic" [ngClass]="{'item': true, 'disabled': !canPublic}">
+      Public
+    </a>
+    <span *ngIf="isPublic" class="item active">
+      Public
+    </span>
+  </div>
+  <div class="sam-ui divider hidden"></div>
+</ng-container>

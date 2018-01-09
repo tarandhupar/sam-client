@@ -225,7 +225,7 @@ export const user = {
     auth: isDebug(),
     fsd: isDebug(),
     system: isDebug(),
-    security: isDebug(),
+    security: false,
   },
 
   get($success, $error) {

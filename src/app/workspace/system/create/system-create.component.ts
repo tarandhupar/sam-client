@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { extend, isArray, merge, mergeWith } from 'lodash';
+import { extend, isArray, merge, mergeWith, omit } from 'lodash';
 
 import { SamActionsDropdownComponent } from 'sam-ui-elements/src/ui-kit/components/actions';
 import { SamTabsComponent, SamTabComponent } from 'sam-ui-elements/src/ui-kit/components/tabs';
@@ -18,6 +18,8 @@ import { PageConfig } from 'sam-ui-elements/src/ui-kit/layout/types';
 export class SystemCreateComponent {
   @ViewChild(SamActionsDropdownComponent) actions: SamActionsDropdownComponent;
   @ViewChild(SamTabsComponent) tabs: SamTabsComponent;
+  @ViewChild('confirmModal') confirmModal;
+  @ViewChild('reconfirmModal') reconfirmModal;
 
   private subscriptions = {};
   public store = {
@@ -95,6 +97,7 @@ export class SystemCreateComponent {
     rejectedBy: '',
     rejectionReason: '',
     statuses: [0,0,0,0,0],
+    password: '',
   };
 
   public form: FormGroup;
@@ -148,8 +151,8 @@ export class SystemCreateComponent {
         }
       }
 
-      if(!user.gov) {
-        this.router.navigate(['/workspace/system']);
+      if(!user.gov && !this.api.iam.isDebug()) {
+        this.router.navigate(['/workspace/system'], { queryParamsHandling: 'merge' });
       } else {
         this.application.authorizingOfficialName = user.fullName;
       }
@@ -173,6 +176,7 @@ export class SystemCreateComponent {
         systemAccountName: [application.systemAccountName, [Validators.required]],
         interfacingSystemVersion: [application.interfacingSystemVersion, [Validators.required]],
         systemDescriptionAndFunction: [application.systemDescriptionAndFunction, [Validators.required]],
+        password: [{ value: application.password, disabled: !this.isAccount }],
       }),
 
       'organization': this.builder.group({
@@ -205,6 +209,15 @@ export class SystemCreateComponent {
         authorizationDate: [application.authorizationDate],
       }),
     });
+
+    // Update Account View States
+    if(this.isAccount) {
+      this.store.actions.splice(-1, 1);
+      this.states.tab = 1;
+
+      this.form.get('permissions').disable();
+      this.form.get('security').disable();
+    }
   }
 
   updateStatus() {
@@ -248,6 +261,10 @@ export class SystemCreateComponent {
     return status.match(/(approved|rejected)/i) ? true : false;
   }
 
+  get isAccount(): boolean {
+    return (this.application.applicationStatus.toLowerCase() == 'approved');
+  }
+
   get seed(): number {
     return Math.floor(Math.random() * 5);
   }
@@ -261,7 +278,15 @@ export class SystemCreateComponent {
   }
 
   get status(): string {
-    return this.titleize(this.application.applicationStatus);
+    let status = this.application.applicationStatus;
+
+    switch(this.application.applicationStatus.toLowerCase()) {
+      case 'approved':
+        status = 'published';
+        break;
+    }
+
+    return this.titleize(status);
   }
 
   get active(): string {
@@ -298,6 +323,10 @@ export class SystemCreateComponent {
         return source;
       }
     });
+
+    if(!this.isAccount) {
+      delete data['password'];
+    }
 
     return data;
   }
@@ -387,11 +416,61 @@ export class SystemCreateComponent {
 
   save(cb: Function = () => {}, section: string = this.store.nav.children[this.states.section].route) {
     const fn = this.isNew ? this.api.iam.cws.application.create : this.api.iam.cws.application.update;
-    let args: (string|number|Function|CWSApplication)[] = this.isNew ? [] : [this.application.uid];
+    let args: (string|number|Function|CWSApplication)[] = this.isNew ? [] : [this.application.uid],
+        formGroup = this.form.get(section);
+
+    // Prevent saving when section is disabled
+    if(formGroup.disabled) {
+      return;
+    }
+
+    // If account, allow re-submission if any fields has been updated
+    if(this.isAccount) {
+      switch(section) {
+        case 'system-information':
+          let $password = this.form.get(['system-information', 'password']),
+              controls = omit((<FormGroup>formGroup).controls, 'password'),
+              control,
+              key;
+
+          if($password.value.length > 0) {
+            if($password.valid) {
+              this.api.iam.system.account.reset(this.application.systemAccountName, $password.value, () => {
+                // No success callback action needed
+              }, error => {
+                this.setError(error.message);
+              });
+            } else {
+              return;
+            }
+          }
+
+          // Prevent saving when controls are pristine (excluding password section)
+          for(key in controls) {
+            control = controls[key];
+            if(control.dirty) {
+              this.application.applicationStatus = 'Draft';
+              break;
+            }
+          }
+
+          break;
+
+          default:
+            // Prevent saving when controls are pristine
+            if(formGroup.dirty) {
+              this.application.applicationStatus = 'Draft';
+            }
+
+            break;
+      }
+    }
 
     args.push(this.data, application => {
       this.form.get(section).patchValue(application);
       this.application = extend({}, this.application, application);
+
+      this.form.markAsPristine();
 
       if(this.isNew) {
         this.router.navigate(['/workspace/system/new', application.uid], {
@@ -468,5 +547,33 @@ export class SystemCreateComponent {
     }, error => {
       this.store.errors = error.message;
     });
+  }
+
+  /**
+   * Account Deactivation
+   */
+  confirmDeactivation() {
+    if(this.confirmModal) {
+      this.confirmModal.openModal();
+    }
+  }
+
+  reconfirmDeactivation() {
+    if(this.confirmModal)
+      this.confirmModal.closeModal();
+    if(this.reconfirmModal)
+      this.reconfirmModal.openModal();
+  }
+
+  deactivate() {
+    if(this.isAccount) {
+      this.api.iam.system.account.deactivate(this.application.systemAccountName, () => {
+        this.reconfirmModal.closeModal();
+        this.router.navigate(['/workspace/system'], { queryParamsHandling: 'merge' });
+      }, error => {
+        this.store.errors = error.message;
+        this.reconfirmModal.closeModal();
+      });
+    }
   }
 }

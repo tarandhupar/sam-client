@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {ProgramService} from "../../../../api-kit/program/program.service";
 import {FALFormService} from "../../assistance-listing-operations/fal-form.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -9,6 +9,8 @@ import {Location} from "@angular/common";
 import * as Cookies from 'js-cookie';
 import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
 import {IBreadcrumb} from "../../../../sam-ui-elements/src/ui-kit/types";
+
+
 
 interface CFDANumberConfigChangeModel {
   startValue: string,
@@ -24,11 +26,14 @@ interface CFDANumberConfigChangeModel {
 })
 
 export class CFDANumberManagementComponent implements OnInit{
+  @ViewChild('validationNumber')
+  public validationNumber:any;
   buttonDisabled: boolean = false;
+  isSubmitClicked: boolean = false;
   cfdaNumberConfigForm: FormGroup;
   organization: any;
   pageReady: boolean = false;
-  buttonType: string = 'default';
+  buttonType: string = 'primary';
   cookieValue:string;
   numberAlertShow:boolean = false;
   notifyFooterAlertModel = {
@@ -50,6 +55,10 @@ export class CFDANumberManagementComponent implements OnInit{
   ];
 
   public assignmentModel: any;
+
+  public options = {
+    badge: { attached: 'top right' },
+  };
 
   constructor(private fb: FormBuilder,
               private location: Location,
@@ -73,11 +82,11 @@ export class CFDANumberManagementComponent implements OnInit{
           this.organization = res['_embedded'][0]['org'];
           this.programService.getFederalHierarchyConfiguration(this.activatedRoute.snapshot.params['id'], this.cookieValue).subscribe(res => {
             let programNumberAuto = res.programNumberAuto != null ? res.programNumberAuto : true;
-            let programNumberLow = res.programNumberLow != null ? res.programNumberLow : 0;
+            let programNumberLow = res.programNumberLow != null ? res.programNumberLow : 1;
             let programNumberHigh = res.programNumberHigh != null ? res.programNumberHigh : 999;
             this.initCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh);
           }, err => {
-            this.initCFDANumberConfigForm(true, 0, 999);
+            this.initCFDANumberConfigForm(true, 1, 999);
             console.log("Error getting federal hierarchy configuration: ", err);
           });
         }, err => {
@@ -87,6 +96,7 @@ export class CFDANumberManagementComponent implements OnInit{
     }, err => {
       this.router.navigate(['/403']);
     });
+
   }
 
   initCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh){
@@ -99,13 +109,49 @@ export class CFDANumberManagementComponent implements OnInit{
     });
   }
 
+  checkControlsValidity(){
+      this.buttonDisabled = true;
+      for (let control in this.cfdaNumberConfigForm.controls) {
+        this.cfdaNumberConfigForm.controls[control].markAsDirty();
+        this.cfdaNumberConfigForm.controls[control].updateValueAndValidity();
+      }
+    }
+
+  displayThreeDigitCFDANumber(number){
+    if(number< 10)
+      return "00"+number;
+    else if(number>=10 && number < 100)
+      return  "0"+number;
+    else if(number >= 100)
+      return number;
+  }
+
   createCFDANumberConfigForm(programNumberAuto, programNumberLow, programNumberHigh, disabled: boolean = true){
       this.pageReady = true;
+      let threeDigitLowNumber = this.displayThreeDigitCFDANumber(Number(programNumberLow));
+      let threeDigitHighNumber = this.displayThreeDigitCFDANumber(Number(programNumberHigh));
+
       this.cfdaNumberConfigForm = this.fb.group({
-        lowNumber:[programNumberLow, falCustomValidatorsComponent.numberCheck],
-        highNumber: [programNumberHigh, falCustomValidatorsComponent.numberCheck],
+        lowNumber:[threeDigitLowNumber,falCustomValidatorsComponent.numberCheck],
+        highNumber: [threeDigitHighNumber,falCustomValidatorsComponent.numberCheck],
         assignment: (!programNumberAuto).toString()
+      }, {
+        validator: falCustomValidatorsComponent.checkForDifferentRange
       });
+
+    if(!this.cfdaNumberConfigForm.valid) {
+      this.checkControlsValidity();
+    }
+
+    this.cfdaNumberConfigForm.valueChanges.debounceTime(10)
+      .distinctUntilChanged().subscribe(data => {
+        this.validationNumber.formatErrors(this.cfdaNumberConfigForm);
+        if(!this.cfdaNumberConfigForm.valid) {
+          this.checkControlsValidity();
+        }else{
+          this.buttonDisabled = false;
+        }
+    })
 
       if (disabled) {
         this.cfdaNumberConfigForm.controls['lowNumber'].disable();
@@ -131,9 +177,9 @@ export class CFDANumberManagementComponent implements OnInit{
   public submitCFDANumberConfigChange() {
     if (this.cfdaNumberConfigForm.valid) {
       this.buttonDisabled = true;
+      this.isSubmitClicked = true;
       //disable button's event
-      this.buttonType = 'disabled';
-      if(parseInt(this.cfdaNumberConfigForm.get('highNumber').value) > parseInt(this.cfdaNumberConfigForm.get('lowNumber').value)) {
+      if(parseInt(this.cfdaNumberConfigForm.get('highNumber').value) >= parseInt(this.cfdaNumberConfigForm.get('lowNumber').value)) {
         this.numberAlertShow = false;
         this.programService.saveCFDAConfiguration(this.activatedRoute.snapshot.params['id'], this.prepareCFDANumberChangeData(), this.cookieValue)
           .subscribe(api => {
@@ -143,6 +189,7 @@ export class CFDANumberManagementComponent implements OnInit{
           },
           (error: Response) => {
             this.buttonDisabled = false;
+            this.isSubmitClicked = false;
             console.error('error changing configuration', error);
             this.notifyFooterAlertModel.title = "Error";
             this.notifyFooterAlertModel.type = "error";
@@ -155,15 +202,7 @@ export class CFDANumberManagementComponent implements OnInit{
             }
 
             this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.notifyFooterAlertModel)));
-            this.buttonType = 'default';
           });
-      }else{
-        this.numberAlertShow = true;
-        this.buttonType = 'default';
-        for (let control in this.cfdaNumberConfigForm.controls) {
-          this.cfdaNumberConfigForm.controls[control].markAsDirty();
-          this.cfdaNumberConfigForm.controls[control].updateValueAndValidity();
-        }
       }
     } else {
       for (let control in this.cfdaNumberConfigForm.controls) {

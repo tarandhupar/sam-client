@@ -21,15 +21,14 @@
         <sam-label-wrapper name="legacy-password" label="Password" required="true" [errorMessage]="errors('password')">
           <input type="password" id="legacy-password" formControlName="password" readonly="readonly" autocomplete="off" onfocus="this.removeAttribute('readonly');" />
         </sam-label-wrapper>
-        <div class="button-controls">
+        <div class="usa-button-controls">
           <button type="submit" class="usa-primary-button" [disabled]="states.loading">Migrate</button>
+          <sam-alert [type]="states.confirm.type"
+                     [title]="states.confirm.message"
+                     [showClose]="true"
+                     (dismiss)="alert()"
+                     *ngIf="states.confirm.show"></sam-alert>
         </div>
-
-        <sam-alert [type]="states.confirm.type"
-                   [title]="states.confirm.message"
-                   [hidden]="!states.confirm.show"
-                   [showClose]="true"
-                   (dismiss)="alert()"></sam-alert>
       </div>
     </div>
   </form>

@@ -168,7 +168,7 @@ export class OpportunityPage implements OnInit {
 
     route.queryParams.subscribe(data => {
       this.qParams = data;
-      this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
+      this.pageNum = typeof data['awardsPage'] === "string" && parseInt(data['awardsPage'])-1 >= 0 ? parseInt(data['awardsPage'])-1 : this.pageNum;
     });
   }
 
@@ -404,10 +404,17 @@ export class OpportunityPage implements OnInit {
         this.ivls['_embedded']['ivl'].forEach((ivl, idx) => {
           if(ivl.hasOwnProperty('contractorDuns') && ivl['contractorDuns'] != null) {
             _.forEach(naicsList, item => {
-              if(item != null && item.hasOwnProperty('entityInfo') && item['entityInfo'].hasOwnProperty('coreData') &&
-              item['entityInfo']['coreData'].hasOwnProperty('generalInfo') && item['entityInfo']['coreData']['generalInfo'].hasOwnProperty('duns') &&
-              item['entityInfo']['coreData']['generalInfo']['duns'] == ivl['contractorDuns'] && item['entityInfo'].hasOwnProperty('assertions')) {
-                this.ivls['_embedded']['ivl'][idx]['naics'] = item['entityInfo']['assertions'];
+              if(item!=null) {
+                if (item.hasOwnProperty('entityInfo') && item['entityInfo']!= null) {
+                  if (item['entityInfo'].hasOwnProperty('coreData') && item['entityInfo']['coreData'] != null) {
+                    if (item['entityInfo']['coreData'].hasOwnProperty('generalInfo') && item['entityInfo']['coreData']['generalInfo'] != null) {
+                      if (item['entityInfo']['coreData']['generalInfo'].hasOwnProperty('duns') &&
+                        item['entityInfo']['coreData']['generalInfo']['duns'] == ivl['contractorDuns'] && item['entityInfo'].hasOwnProperty('assertions')) {
+                        this.ivls['_embedded']['ivl'][idx]['naics'] = item['entityInfo']['assertions'];
+                      }
+                    }
+                  }
+                }
               }
             });
           }
@@ -730,10 +737,10 @@ export class OpportunityPage implements OnInit {
     var pcobj = {};
 
     if(!newpagechange && this.pageNum>=0){
-      pcobj['page'] = this.pageNum+1;
+      pcobj['awardsPage'] = this.pageNum+1;
     }
     else{
-      pcobj['page'] = 1;
+      pcobj['awardsPage'] = 1;
     }
     return pcobj;
   }

@@ -1,0 +1,28 @@
+<form [formGroup]="contractInfoForm">
+
+  <div class="sam-ui segment">
+    <sam-text-area
+      [control]="contractInfoForm.controls['services']"
+      [formControl]="contractInfoForm.controls['services']"
+      [name]="'contract-services'"
+      [label]="'Contract Services'"
+      [hint]="'Note: The Contracting Office must prepare a separate CBA WD for each covered CBA applicable to a contract action (including separate CBA WDs for prime and subcontractors)'"
+      [requiredFlag]="true">
+    </sam-text-area>
+
+    <div class="sam-ui divider"></div>
+
+    <sam-agency-picker-v2
+      *ngIf="(orgRoots && orgRoots.length>0)"
+      [orgRoots]="orgRoots"
+      [control]="contractInfoForm.controls['activity']"
+      [formControl]="contractInfoForm.controls['activity']"
+      [label]="'Contracting Activity'"
+      [hint]="'Please select one organization'"
+      [limit]="3"
+      [required]="true"
+      [type]="'single'">
+    </sam-agency-picker-v2>
+  </div>
+
+</form>

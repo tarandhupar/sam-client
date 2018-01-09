@@ -66,10 +66,6 @@ export class SystemListingComponent {
     this.api.iam = _iam.iam;
   }
 
-  ngOnInit() {
-
-  }
-
   ngOnDestroy() {
     this.unsubscribe();
   }

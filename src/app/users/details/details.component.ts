@@ -50,22 +50,30 @@ export class DetailsComponent {
         `,
         placeholder: 'Search by CAGE code or DUNS or legal business name',
       },
+
+      deactivate: {
+        label: 'Deactivate Account',
+        hint: `
+          Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
+          be permanently inaccessible and you will need to re-register to access SAM.gov.
+        `,
+      }
     },
 
     levels: ['department', 'agency', 'office'],
     questions: [
-      { 'id': 1,  'question': 'What was the make and model of your first car?' },
-      { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
-      { 'id': 3,  'question': 'What was your high school mascot?' },
-      { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
-      { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
-      { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
-      { 'id': 7,  'question': 'Who was your childhood hero?' },
-      { 'id': 8,  'question': 'What is your favorite vacation spot?' },
-      { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
-      { 'id': 10, 'question': 'What is your dream job?' },
-      { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
-      { 'id': 12, 'question': 'What is the title of your favorite book?' }
+      { 'id': 1,  'question': 'What was the make and model of your first car?',                 disabled: false },
+      { 'id': 2,  'question': 'Who is your favorite Actor/Actress?',                            disabled: false },
+      { 'id': 3,  'question': 'What was your high school mascot?',                              disabled: false },
+      { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?', disabled: false },
+      { 'id': 5,  'question': 'Where were you when you first heard about 9/11?',                disabled: false },
+      { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?',                        disabled: false },
+      { 'id': 7,  'question': 'Who was your childhood hero?',                                   disabled: false },
+      { 'id': 8,  'question': 'What is your favorite vacation spot?',                           disabled: false },
+      { 'id': 9,  'question': 'What is the last name of your first grade teacher?',             disabled: false },
+      { 'id': 10, 'question': 'What is your dream job?',                                        disabled: false },
+      { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?',    disabled: false },
+      { 'id': 12, 'question': 'What is the title of your favorite book?',                       disabled: false }
     ],
 
     indexes: {}
@@ -644,7 +652,7 @@ export class DetailsComponent {
   }
 
   changeQuestion(questionID, $index) {
-    let  items = cloneDeep(this.store.questions),
+    let items = cloneDeep(this.store.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
@@ -845,7 +853,7 @@ export class DetailsComponent {
         this.syncCache();
 
         // Trick Header to Update State
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/profile'], { queryParamsHandling: 'merge' });
       }, (error) => {
         this.states.edit[groupKey] = true;
         this.states.loading = false;

@@ -9,7 +9,7 @@
         <sam-button [buttonId]="'question-publish'" buttonText="Publish" (click)="onPublishClick()"></sam-button>
       </div>
 
-      <sam-tabs (currentSelectedTab)="onSwitchTabs($event)" [active]="activeTab">
+      <sam-tabs (tabChange)="onSwitchTabs($event)" [active]="activeTab">
 
         <!--Edit Form / New Form Tab-->
         <sam-tab [tabTitle]="'Edit'" #editTab>

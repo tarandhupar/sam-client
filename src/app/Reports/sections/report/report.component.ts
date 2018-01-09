@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit, ViewChild, AfterViewChecked } from '@angular
 import { Http } from '@angular/http';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-import { IAMService } from 'api-kit';
+import { IAMService,FHService } from 'api-kit';
 import { globals } from '../../app/globals';
 import { Cookie } from 'ng2-cookies';
 import all = protractor.promise.all;
@@ -178,14 +178,14 @@ export class ReportComponent implements OnInit {
   }
 
   constructor(
-    private route: ActivatedRoute, private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer, private reportsService: ReportsService, private http: Http) {
-    this.zone.runOutsideAngular(() => {
-      this.checkSession(() => {
-        this.zone.run(() => {
-          // Callback
-        });
-      });
-    });
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private zone: NgZone, 
+    private api: IAMService, 
+    private sanitizer: DomSanitizer, 
+    private reportsService: ReportsService, 
+    private http: Http, 
+    private fhService: FHService) {
 
     http.get('src/assets/report-configs/'+REPORT_MICRO_STRATEGY_ENV+'-reports.json')
       .map(res => res.json())
@@ -257,6 +257,7 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkSession(()=>{});
     this.id = this.route.snapshot.params['id'];
     this.route.queryParams.subscribe(
       data => {
@@ -307,6 +308,13 @@ export class ReportComponent implements OnInit {
         vm.userOrg.push(vm.user.departmentID);
         if (vm.user.agencyID) {
           vm.userOrg.push(vm.user.agencyID);
+          vm.fhService.getOrganizationById(vm.user.agencyID,false,false,"all",1,1,null,true).subscribe(data=>{
+            let org = data["_embedded"][0]["org"];
+            if(org["name"] && org['fpdsCode']){
+              org["name"] += " [A] ["+org['fpdsCode']+"]";
+            }
+            vm.agOnlySelection = org;
+          });
         }
         vm.agencyPicker = vm.userOrg;
       }
@@ -627,7 +635,7 @@ export class ReportComponent implements OnInit {
         pscFrom = this.rangePscFrom['key'];
       }
       if (this.rangePscTo && this.rangePscTo.key) {
-        pscFrom = this.rangePscTo['key'];
+        pscTo = this.rangePscTo['key'];
       }
       rangePscFromXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"51A89B7F478F4B6AFD6A258A641DD4C2",tp:"10"},elements:[{type:"text",text: pscFrom}]}
       rangePscToXml = {type:"element",name:"pa",attributes:{pt:"3",pin:"0",did:"20FBACF348698BABB6BEBD8AAF49983E",tp:"10"},elements:[{type:"text",text: pscTo}]}

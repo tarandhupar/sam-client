@@ -1,19 +1,17 @@
 <ng-container *ngIf="user">
-  
   <div grid class="equal width relaxed">
-  
     <ng-container *ngIf="states.public">
       <div class="column">
         <h4 class="sam-ui header">My Profile</h4>
         <div class="sam-ui vertical basic labeled icon fluid buttons">
-          <a class="sam-ui button" 
-            [routerLink]="['/profile']" 
+          <a class="sam-ui button"
+            [routerLink]="['/profile']"
             [queryParams]="{ edit: 'business' }" href="#business" pageScroll>
             <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
             Associate myself to an organization
           </a>
-          <a class="sam-ui button" 
-            [routerLink]="['/profile']" 
+          <a class="sam-ui button"
+            [routerLink]="['/profile']"
             [queryParams]="{ edit: 'kba' }" href="#kba" pageScroll>
             <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
             Update Security Questions
@@ -21,7 +19,7 @@
         </div>
       </div>
     </ng-container>
-    
+
     <ng-container *ngIf="!states.public">
       <div class="column">
         <h4 class="sam-ui header">My Roles</h4>
@@ -51,25 +49,24 @@
             <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
             Update Security Questions
           </a>
-          <a class="item" *ngIf="enableManageSubscrition"  [routerLink]="['/profile/subscriptions']">
+          <a class="item" *ngIf="states.subscriptions"  [routerLink]="['/profile/subscriptions']">
             <i class="icon fa fa-chevron-right" aria-hidden="true"></i>
             Followings
           </a>
         </div>
       </div>
     </ng-container>
-    
+
     <ng-container *ngIf="states.entity">
       <div class="column">
         <h4 class="sam-ui header">Role</h4>
-        <sam-checkbox 
-          name="entity-roles" 
-          [options]="store.roles" 
+        <sam-checkbox
+          name="entity-roles"
+          [options]="store.roles"
+          [disabled]="true"
           (modelChange)="onChangeRole($event)">
         </sam-checkbox>
       </div>
     </ng-container>
-  
   </div>
-    
 </ng-container>

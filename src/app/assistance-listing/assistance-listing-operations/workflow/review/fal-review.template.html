@@ -48,7 +48,7 @@
       <!--Side Navigation-->
       <sam-sidenav
         type="step"
-        (data)="navHandler($event)"
+        (selection)="navHandler($event)"
         [labelLookup]="sideNavSelection"
         [model]="sideNavModel">
       </sam-sidenav>
@@ -70,7 +70,8 @@
 
   <ng-container message>
 
-    <sam-status-banner
+    <sam-alert
+      [showMoreToggle]="false"
       [type]="'warning'"
       [hidden]="!(checkForErrors() && reviewErrorList) || (program?.status?.code == 'published' || program?.status?.code == 'archived' || program?.status?.code == 'pending')">
       <div leading-content>{{statusBannerLeadingText}}</div>
@@ -79,7 +80,7 @@
           (message)="updateBannerText($event)">
         </fal-error-display>
       </div>
-    </sam-status-banner>
+    </sam-alert>
 
     <!-- Alerts -->
     <ng-container
@@ -1292,7 +1293,7 @@
                   {{program.data?.compliance?.audit?.description}}
               </p>
           </ng-container>
-          
+
           <div class="sam-ui hidden divider"></div>
 
           <!-- Records -->

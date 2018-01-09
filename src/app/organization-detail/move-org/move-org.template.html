@@ -1,4 +1,4 @@
-<div class="org-move-page usa-width-one-whole relative" *ngIf="dataLoaded">
+<div class="org-move-page usa-width-one-whole relative">
   <div class="usa-width-three-fourths m_L-5x p_T-6x" *ngIf="!reviewDetail">
     <h2 class="p_T-3x">Move {{org.name}}</h2>
     <p class="p_T-3x">
@@ -8,9 +8,10 @@
   </div>
   <div class="usa-width-three-fourths m_L-5x p_T-6x" *ngIf="reviewDetail">
     <h2 class="p_T-3x">Review Move - {{org.name}}</h2>
-    <p class="p_T-3x">
-      Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur.
-    </p>
+   <!-- <p class="p_T-3x">
+      Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean
+      gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur.
+    </p>-->
   </div>
   <div class="org-move-div usa-width-three-fourths m_L-5x p_B-6x" *ngIf="!updateDetail">
     <h3 class="org-move-title">{{org.name}}</h3>
@@ -18,24 +19,22 @@
       <sam-date (valueChange)="setOrgEndDate($event)" [label]="''" name='end-date' [value]="endDate"></sam-date>
     </sam-label-wrapper>
     <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-whole" [label]="'Start Date'" [name]="'start-date'">
-      <sam-date [label]="''" name='start-date' [value]="startDate" [disabled]="true"></sam-date>
+      <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date' [value]="startDate"></sam-date>
     </sam-label-wrapper>
     <p class="usa-width-one-whole p_T-2x hint-text m_B-3x">Start date of the new office must be same as the end date of the original office.</p>
     <div class="usa-width-one-whole m_B-6x">
-      <sam-agency-picker (organization)="getFederalOrgName($event)"
-                         [label]="'New parent Sub-tier'"
-                         [multimode]="false"
-                         [hint]="'Please select one sub-tier organization'"
-                         [searchMessage]="agencyPickerMsg"
-                         [levelLimit]="2"></sam-agency-picker>
+      <sam-agency-picker-v2 (ngModelChange)="getFederalOrgName($event)" [ngModel] = "selectedOrg" [label]="'New parent Sub-tier'" [hint]="'Please select one sub-tier organization'"
+        [searchMessage]="agencyPickerMsg" [type] = "'single'" [orgRoots] = "defaultDept"></sam-agency-picker-v2>
     </div>
 
 
-    <sam-text-area [label]="'Message'" [name]="'move-org-message'" [placeholder]="'An optional message providing a reason to move this office'" [value]="message"></sam-text-area>
+    <sam-text-area [label]="'Message'" [name]="'move-org-message'" [placeholder]="'An optional message providing a reason to move this office'"
+      [value]="message"></sam-text-area>
     <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onUpdateDetailClick()">Update Detail <i class="fa fa-arrow-right"></i></button>
   </div>
 
   <div class="org-move-update-detail-div usa-width-three-fourths m_L-5x p_B-6x" *ngIf="updateDetail">
-    <create-org-form class="p_L-0x" [orgFormConfig]="orgFormConfig" (onCancelClick)="updateDetail = false" (onReviewClick)="reviewDetail = true" (onEditClick)="reviewDetail = false"></create-org-form>
+    <create-org-form class="p_L-0x" [orgFormConfig]="orgFormConfig" (onCancelClick)="updateDetail = false" (onReviewClick)="reviewDetail = true"
+      (onEditClick)="reviewDetail = false"></create-org-form>
   </div>
 </div>

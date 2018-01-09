@@ -7,6 +7,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 
+
 //KITs
 import {SamErrorService} from '../../../api-kit/error-service';
 import {SavedSearchService, SamAPIKitModule, FHService, DictionaryService} from 'api-kit';
@@ -26,6 +27,7 @@ import {AlertFooterService} from "../../app-components/alert-footer/alert-footer
 import * as Cookies from 'js-cookie';
 import {SearchDictionariesService} from "../../../api-kit/search/search-dictionaries.service";
 import { FeedbackFormService } from 'app/app-components/feedback-form/feedback-form.service';
+import {WageDeterminationRevisedDBAPage} from "../../wage-determination/to-be-revised/revised-dba.page";
 
 let component;
 let fixture;
@@ -176,11 +178,27 @@ let MockSearchDictionaryService = {
   }
 };
 
+let wageDeterminationServiceStub = {
+  getWageDeterminationToBeRevised: () => {
+    return Observable.of({
+      _embedded: {
+        dBAToBeRevisedList: [
+          {wdNo:'AK170001'},
+          {wdNo:'AK170002'},
+          {wdNo:'AK170003'},
+          {wdNo:'AK170004'}
+        ]
+      }
+    });
+  }
+};
+
 describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       schemas: [ NO_ERRORS_SCHEMA ],
       declarations: [
+        WageDeterminationRevisedDBAPage
       ],
       providers: [
         DictionaryService,
@@ -224,6 +242,7 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
     })
       .compileComponents();
 
+    let mockedWDServiceComponent = new WageDeterminationRevisedDBAPage(<any>wageDeterminationServiceStub);
     fixture = TestBed.createComponent(SavedSearchWorkspacePage);
     component = fixture.componentInstance;
     Cookies.set('iPlanetDirectoryPro', 'anything');
@@ -239,9 +258,6 @@ describe('src/app/search/saved-search-workspace/saved-search-workspace.spec.ts',
       expect(component.data[0].data.parameters['organization_id']).toBe("FISH AND WILDLIFE SERVICE");
       expect(component.data[2].data.parameters['duns']).toBe("DUNS NAME");
     });
-  });
-  it('should initialize feedback to form service instance', () => {
-    expect(component.feedback).toEqual(component.formService.componentInstance);
   });
 
 });

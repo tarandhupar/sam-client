@@ -12,3 +12,19 @@
 @import "roles-directory";
 @import "bulk-update";
 @import "view-request-page";
+
+[type="checkbox"]:disabled:checked.permission + label::before {
+    background-color: #d6d7d9 !important;
+    box-shadow: 0 0 0 1px #aeb0b5 !important;
+    cursor: not-allowed;
+}
+
+[type="checkbox"]:checked.permission + label::before {
+    background-color: #0071bc;
+    box-shadow: 0 0 0 1px #0071bc;
+}
+
+[type="checkbox"].permission + label::before, 
+[type="checkbox"]:focus.permission + label::before {
+    box-shadow: 0 0 0 2px #0071bc;
+}

@@ -31,7 +31,8 @@
       <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
         <form #reportForm="ngForm">
           <div class="display-block">
-            <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [hint]="dateRangeLabel" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
+            <ng-container *ngIf="dateRangeLabel"><p [innerHTML]="dateRangeLabel"></p></ng-container>
+            <sam-date-range *ngIf="usedPrompts && usedPrompts.dateRange" [hint]="" [(ngModel)]='dateRangeModel' #dateRange="ngModel"
               [control]="dateRange?.control" [required]="'Required'" name='dateRange'>
             </sam-date-range>
             <p *ngIf="dateValidator" style="color: #cd2026; font-size: 1.7rem; font-weight: 600">{{dateValidatorMsg}}</p>

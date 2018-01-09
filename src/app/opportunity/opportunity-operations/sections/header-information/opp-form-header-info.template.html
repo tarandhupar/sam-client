@@ -20,7 +20,8 @@
   <div class="sam-ui segment">
     <opp-related-notice
       [baseType]="oppHeaderInfoForm.get('opportunityType').value"
-      [formControl]="oppHeaderInfoForm.get('relatedNotice')">
+      [formControl]="oppHeaderInfoForm.get('relatedNotice')"
+      (onChange)="onChangeHandler($event)">
     </opp-related-notice>
   </div>
 

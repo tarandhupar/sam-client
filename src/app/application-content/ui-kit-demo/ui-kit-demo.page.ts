@@ -13,44 +13,71 @@ import { CommentsDemoService, CommentsService } from './comments-demo.service';
 import { Observable } from 'rxjs';
 
 export class ACTestService implements AutocompleteService {
-  private values = [
-    'Colin',
-    'Carlos',
-    'Diego',
-    'Christy',
-    'Lorrin',
-    'Maureen',
-    'Josh',
-    'Brian',
-    'Justin',
-    'Nathan',
-    'Christine',
-    'Kevin',
-    'Pam',
-    'Tim',
-    'Minh'
+  private values: any = [
+    { key: 'Random', value: 'Random'},
+    { key: 'Just some data', value: 'Just some data'},
+    { key: 'This has no category', value: 'This has no category'},
+    { key: 'I have no parent', value: 'I have no parent'},
+    { key: 'Christy', value: 'Christy'},
+    { key: 'Carlos', value: 'Carlos'},
+    { key: 'Colin', value: 'Colin'},
+    { key: 'Diego', value: 'Diego'},
+    { key: 'Delaware', value: 'Delaware'},
+    { key: 'Maryland', value: 'Maryland'},
+    { key: 'Virginia', value: 'Virginia'},
+    { key: 'Washington, DC', value: 'Washington, DC'},
+    { key: 'Onitama', value: 'Onitama'},
+    { key: 'Power Grid', value: 'Power Grid' },
+    { key: 'Splendor', value: 'Splendor'},
+    { key: 'Ticket To Ride', value: 'Ticket to Ride'}
   ];
-
+  
   private offset: number = 1;
   private limit: number = 0;
 
   private start: number = 0;
   private end: number = 2;
+  private lastSearch: string;
 
   setFetchMethod(_: any) {}
 
+  filter (val) {
+    return this.values.filter(
+      (value) => {
+        if (value.key.toLowerCase().includes(val.toLowerCase())
+          || value.value.toLowerCase().includes(val.toLowerCase())) {
+          return value;
+        }
+      }
+    );
+  }
+
+  resetPagination() {
+    this.start = 0;
+    this.end = 2;
+  }
+
   fetch(val: string, pageEnd: boolean, serviceOptions: any) {
-    if (pageEnd) {
+
+    if (val !== this.lastSearch) {
+      this.resetPagination();
+    }
+
+
+    if (pageEnd && val === this.lastSearch) {
       this.start = this.end;
       this.end = this.end + 2;
       if (this.end > this.values.length) return Observable.of([]);
     };
-    return Observable.of(this.values.slice(this.start, this.end));
+
+    this.lastSearch = val;
+
+    return Observable.of(this.filter(val).slice(this.start, this.end));
   }
 }
 
 @Directive({
-  selector: 'sam-autocomplete-refactor[test]',
+  selector: 'sam-autocomplete-multiselect[test], sam-autcomplete-refactor[test]',
   providers: [
     { provide: AutocompleteService, useClass: ACTestService }
   ]

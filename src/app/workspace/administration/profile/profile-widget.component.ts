@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { FHService, IAMService } from 'api-kit';
+import { IAMService, ToggleService } from 'api-kit';
 
 import { User } from 'api-kit/iam/interfaces';
 import { OptionsType } from 'sam-ui-elements/src/ui-kit/types'
@@ -13,26 +13,19 @@ import { OptionsType } from 'sam-ui-elements/src/ui-kit/types'
 export class ProfileWidgetComponent implements OnChanges {
   @Input() user: User;
 
-  private api = {
-    fh: null,
-    iam: null,
-  };
-
   private store = {
-    primary: '',
-    secondary: 'Sub-tier Agency',
-    roles: [
-      <OptionsType>{
+    roles: <OptionsType[]>[
+      {
         label: 'Grants Only',
         name: 'roles-grants',
         value: 'grants-only',
       },
-      <OptionsType>{
+      {
         label: 'Intergovernmental Transactions',
         name: 'roles-transactions',
         value: 'intergovernmental-transactions',
       },
-      <OptionsType>{
+      {
         label: 'All Awards',
         name: 'roles-awards',
         value: 'all-awards',
@@ -44,12 +37,10 @@ export class ProfileWidgetComponent implements OnChanges {
     public: false,
     federal: false,
     entity: true,
+    subscriptions: true,
   };
 
-  constructor(private router: Router, private _fh: FHService, private _iam: IAMService) {
-    this.api.iam = _iam.iam;
-    this.api.fh = _fh;
-  }
+  constructor(private router: Router, private api: IAMService, private toggleService: ToggleService) {}
 
   ngOnInit() {
     if(!this.user) {
@@ -58,6 +49,10 @@ export class ProfileWidgetComponent implements OnChanges {
         this.initRoles();
       });
     }
+
+    this.toggleService.getToggleStatus('enablemanagesubscription','/wl').subscribe(isEnabled => {
+      this.states.subscriptions = isEnabled;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,27 +65,6 @@ export class ProfileWidgetComponent implements OnChanges {
     this.states.public = !(this.user.gov || this.user.entity);
     this.states.federal = this.user.gov;
     this.states.entity = this.user.entity;
-
-    // Remove After Demo
-    if(this.user.email.match(/@(bah|governmentcio).com/g)) {
-      this.states.public = false;
-      this.states.federal = false;
-      this.states.entity = true;
-      this.store.primary = 'Booz Allen Hamilton';
-    }
-
-    if(this.states.federal) {
-      const orgID = (this.user.agencyID || this.user.departmentID).toString();
-
-      if(orgID.length) {
-        this.api.fh
-         .getOrganizationById(orgID)
-         .subscribe(data => {
-           const organization = data['_embedded'][0]['org'];
-           this.store.primary = (organization.l2Name || organization.l1Name || '');
-         });
-      }
-    }
   }
 
   onChangeRole($event) {

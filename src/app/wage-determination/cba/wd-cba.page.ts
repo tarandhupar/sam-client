@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { WageDeterminationService } from "api-kit";
-import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "app/role-management/user.service";
 
 @Component({
@@ -51,12 +51,12 @@ import { UserService } from "app/role-management/user.service";
     navHandler(navType){
       switch(navType){
         case 'overview':
-          this.router.navigate(['wd/cba/' + this.referenceNumber + '/view'], {
+          this.router.navigate(['wage-determination/cba/' + this.referenceNumber + '/view'], {
             fragment: "overview"
           });
           break;
         case 'agreement':
-        this.router.navigate(['wd/cba/' + this.referenceNumber + '/view'], {
+        this.router.navigate(['wage-determination/cba/' + this.referenceNumber + '/view'], {
           fragment: "agreement"
         });
           break;

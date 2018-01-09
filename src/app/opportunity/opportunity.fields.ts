@@ -44,6 +44,8 @@ export enum OpportunityFields {
   OrderNumber = <any>'order-number',
   ModificationNumber = <any>'modification-number',
   SpecialLegislation = <any>'special-legislation',
+  AllowVendorAddRemoveIvl = <any>'ivl-vendor-add-remove',
+  AllowVendorViewIvl = <any>'ivl-vendor-view',
 
     // Classification code section
   Classification = <any>'classification',
@@ -51,6 +53,7 @@ export enum OpportunityFields {
   OriginalSetAside = <any>'original-set-aside',
   ClassificationCode = <any>'classification-code',
   NAICSCode = <any>'naics-code',
+  NAICSCodeAdditional = <any>'naics-code-additional',
   POP = <any>'pop', // POP sub-section
   POPLocation = <any>'pop-location',
   POPCity = <any>'pop-city',

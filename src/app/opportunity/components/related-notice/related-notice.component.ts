@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { OpportunityFormService } from '../../opportunity-operations/framework/service/opportunity-form/opportunity-form.service';
@@ -17,6 +17,7 @@ import { OpportunityTypeLabelPipe } from '../../pipes/opportunity-type-label.pip
 })
 export class RelatedNoticeComponent implements ControlValueAccessor{
   @Input() baseType: string;
+  @Output() public onChange: EventEmitter<any> = new EventEmitter();
 
   public readonly autocompleteId = 'opp-related-notice';
   public readonly autocompleteAllowAny = false;
@@ -59,6 +60,7 @@ export class RelatedNoticeComponent implements ControlValueAccessor{
       } else {
         this.onChangeCallback(this.model);
       }
+      this.onChange.emit(value);
     });
   }
 

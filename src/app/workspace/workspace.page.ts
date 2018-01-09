@@ -1,31 +1,48 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FHService, IAMService } from 'api-kit';
+import { EntityService, FHService, IAMService } from 'api-kit';
 
-import { some } from 'lodash'
+import { some } from 'lodash';
 
 @Component ( {
   templateUrl: 'workspace.template.html'
 })
 export class WorkspacePage  {
+  public showWelcome: boolean = true;
+  public dataEntryWidgetControl: { [key: string]: boolean } =  {
+    entity: true,
+    exclusions: true,
+    award: true,
+    opportunities: true,
+    assistanceListings: true,
+    subAward: true,
+    cba: true
+  };
 
-  public showWelcome:boolean = true;
-  public dataEntryWidgetControl:any =  {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
-  public administrationWidgetControl: any =  {
+  public administrationWidgetControl: { [key: string]: boolean } =  {
     fsd: false,
-    fh: false,
-    rm: false,
+    fh: true,
+    rm: true,
     system: false,
   };
 
   public userProfile = 'r-IAE-ad';
-  public userMapping:any =  {1:'f-ng-na',2:'f-g-na',3:'r-ng-na',4:'r-g-na',5:'r-g-ad',6:'r-IAE-ad'};
-  public userAccessTokens:any = [];
+  public userMapping: { [key: string]: string } = {
+    1: 'f-ng-na',
+    2: 'f-g-na',
+    3: 'r-ng-na',
+    4: 'r-g-na',
+    5: 'r-g-ad',
+    6: 'r-IAE-ad'
+  };
+
+  public userAccessTokens: Array<string> = [];
 
   public user = null;
 
   private subscriptions = {};
   private api = {
+    entity: null,
     fh: null,
     iam: null,
   };
@@ -48,37 +65,43 @@ export class WorkspacePage  {
 
   public states = {
     public: false,
-    federal: false
+    federal: false,
+    anyAdminWidget: false,
+    isDisplayDataEntry: false,
   };
 
-  actions: Array<any> = [
+  public actions: Array<{ [key: string]: string|Function }> = [
     {
       label: 'Help',
       icon: 'fa fa-question-circle',
-      callback: () => { this.router.navigate(['/help/accounts']);}
+      callback: () => { this.router.navigate(['/help/accounts']); }
     }
   ];
 
   constructor(private router: Router,
               private route: ActivatedRoute,
+              private _entity: EntityService,
               private _fh: FHService,
               private _iam: IAMService) {
-                this.api.iam = _iam.iam;
-                this.api.fh = _fh;
+    this.api.entity = _entity;
+    this.api.fh = _fh;
+    this.api.iam = _iam.iam;
   }
 
   ngOnInit() {
-    this.initSession();
-    this.subscriptions['queryParams'] = this.route.queryParams.subscribe(queryParams => {
-      if(queryParams['user'] !== undefined && queryParams['user'] !== null) {
-        this.userProfile = this.userMapping[queryParams['user']];
-      }
+    this.initSession(() => {
+      this.subscriptions['queryParams'] = this.route.queryParams.subscribe(queryParams => {
+        if(queryParams['user'] !== undefined && queryParams['user'] !== null) {
+          this.userProfile = this.userMapping[queryParams['user']];
+        }
 
-      this.userAccessTokens = this.userProfile.split('-');
-      this.showWelcome =  this.userAccessTokens[0] === 'f';
-      this.setDataEntryWidgetControl();
-      this.setAdministrationWidgetControl();
+        this.userAccessTokens = this.userProfile.split('-');
+        this.showWelcome =  this.userAccessTokens[0] === 'f';
+        this.setDataEntryWidgetControl();
+        this.setAdministrationWidgetControl();
+      });
     });
+
   }
 
   ngOnDestroy() {
@@ -90,7 +113,7 @@ export class WorkspacePage  {
     });
   }
 
-  initSession() {
+  initSession(cb: Function = () => {}) {
     this.api.iam.checkSession((user) => {
       this.user = user;
       this.states.public = !(this.user.gov || this.user.entity);
@@ -100,15 +123,22 @@ export class WorkspacePage  {
         const orgID = (this.user.agencyID || this.user.departmentID).toString();
 
         if(orgID.length) {
-          this.api.fh
+          this.subscriptions['fh'] = this.api.fh
            .getOrganizationById(orgID)
            .subscribe(data => {
              const organization = data['_embedded'][0]['org'];
              this.store.primary = (organization.l2Name || organization.l1Name || '');
            });
         }
+      } else if(this.user.entity) {
+        this.subscriptions['entity'] = this.api.entity
+          .findByCageCode(this.user.businessName)
+          .subscribe(entity => {
+            this.store.primary = entity.legalBusinessName
+          });
       }
 
+      cb();
     });
   }
 
@@ -120,10 +150,12 @@ export class WorkspacePage  {
       this.dataEntryWidgetControl.award = false;
       this.dataEntryWidgetControl.subAward = false;
       this.dataEntryWidgetControl.opportunities = false;
+      this.dataEntryWidgetControl.cba = false;
     }
 
     if(this.userAccessTokens[1] === 'IAE') {
       this.dataEntryWidgetControl.award = false;
+      this.dataEntryWidgetControl.cba = true;
     }
 
     if(this.userProfile === 'r-ng-na') {
@@ -133,6 +165,8 @@ export class WorkspacePage  {
     if(this.userProfile === 'r-g-na') {
       this.dataEntryWidgetControl.opportunities = true;
     }
+
+    this.states.isDisplayDataEntry = some(this.dataEntryWidgetControl);
   }
 
   setAdministrationWidgetControl() {
@@ -149,19 +183,14 @@ export class WorkspacePage  {
       this.administrationWidgetControl.alerts = false;
       this.administrationWidgetControl.analytics = false;
     }
+
+    this.administrationWidgetControl.fsd = this.user.fsd;
+    this.administrationWidgetControl.system = this.user.system;
+
+    this.states.anyAdminWidget = some(this.administrationWidgetControl);
   }
 
   closeWelcomeSection() {
     this.showWelcome = false;
-  }
-
-  isDisplayDataEntry(): boolean {
-    // Check if any value is truthy
-    return some(this.dataEntryWidgetControl);
-  }
-
-  anyAdminWidget() {
-    // Check if any value is truthy
-    return some(this.administrationWidgetControl);
   }
 }

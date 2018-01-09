@@ -379,7 +379,7 @@ export class OPPWorkspacePage implements OnInit, OnDestroy {
 
     let dateTab = this.dateTypeOptions[this.dateFilterIndex]
     //Response date format expects time stamp from back end
-    let appendTime = dateTab === this.RESPONSE && this.internalDateModel && !_.isEmpty(this.internalDateModel);
+    let appendTime = this.internalDateModel && !_.isEmpty(this.internalDateModel);
     let dateObj = this.formatDateWrapper(appendTime);
 
     // make api call

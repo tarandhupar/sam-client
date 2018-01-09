@@ -389,6 +389,7 @@
         type="multiple"
         label="Agency Picker (multiple)"
         required="true"
+        name="508-test"
         [(ngModel)]="agv2_selections2"
         hint="Pick multiple agencies">
       </sam-agency-picker-v2>
@@ -436,16 +437,6 @@
     <div class="usa-width-one-half">
       {{ samDateRangeAdvModel | json }}<br/>
       {{ samDateRangeAdvModel2 | json }}
-    </div>
-  </div>
-
-  <div class="usa-grid">
-    <div class="usa-width-one-whole">
-      <h2>SAM status banner &lt;sam-status-banner&gt;</h2>
-      <sam-status-banner type="error">
-        <div leading-content>This is the leading text...</div>
-        <div main-content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of <a [routerLink]="['/help']">Lorem Ipsum.</a></div>
-      </sam-status-banner>
     </div>
   </div>
 
@@ -970,24 +961,26 @@
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Autocomplete Multiselect (Selectable Categories)</h2>
-    <sam-autocomplete-multiselect class="usa-width-one-half"
-                                  label="Team Members" required="true" hint="Look at my cool hint"
-                                  [keyValueConfig]="multiselectConfigSelectable"
-                                  [options]="multiselectOptions"
-                                  [categoryIsSelectable]="true"
-                                  [categories]="autocompleteCategoryObjects"
-                                  [(ngModel)]="modellz1">
+    <sam-autocomplete-multiselect
+      class="usa-width-one-half"
+      label="Team Members" required="true" hint="Look at my cool hint"
+      [keyValueConfig]="multiselectConfigSelectable"
+      [options]="multiselectOptions"
+      [categoryIsSelectable]="true"
+      [categories]="autocompleteCategoryObjects"
+      [(ngModel)]="modellz1">
       </sam-autocomplete-multiselect>
     <div class="usa-width-one-half">{{modellz1 | json}}</div>
   </div>
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Autocomplete Multiselect (Not Selectable Categories)</h2>
-    <sam-autocomplete-multiselect class="usa-width-one-half"
-                                  label="Team Members" required="true"
-                                  [keyValueConfig]="multiselectConfig"
-                                  [options]="multiselectOptions"
-                                  [(ngModel)]="modellz2">
+    <sam-autocomplete-multiselect
+      test
+      class="usa-width-one-half"
+      label="Team Members" required="true"
+      [keyValueConfig]="multiselectConfig"
+      [(ngModel)]="modellz2">
       </sam-autocomplete-multiselect>
     <div class="usa-width-one-half">{{modellz2 | json}}</div>
   </div>
@@ -1093,14 +1086,14 @@
     </div>
     <br />
     <div class="usa-width-one">
-      <sam-autocomplete-refactor
+      <!-- <sam-autocomplete-refactor
         test
         [(ngModel)]="howdydody"
         class="usa-width-one"
         [label]="'Service with Pagination'"
         [name]="'service-pagination'"
         [id]="'service-pagination'">
-      </sam-autocomplete-refactor>
+      </sam-autocomplete-refactor> -->
       {{ howdydody | json }}
     </div>
   </div>

@@ -124,14 +124,14 @@ export class MigrationsComponent {
   }
 
   fetchHistory() {
-    this.api.iam.import.history(this.email, (accounts) => {
+    this.api.iam.import.history(this.email, accounts => {
       this.store.migrations = accounts;
 
       if(this.store.migrations.length) {
-        this.alert('Account Successfully Migrated', 'success');
+        this.alert('Account Successfully Migrated');
       }
-    }, (response) => {
-      console.warn('Endpoint Unavailable')
+    }, error => {
+      this.alert(error.message, 'error');
     });
   }
 
@@ -157,16 +157,14 @@ export class MigrationsComponent {
     window.open(target);
   }
 
-  alert(message: string, type: string) {
-    type = type || 'success';
-    message = message || '';
+  alert(message: string = '', type: string = 'success') {
+    this.states.confirm.type = type;
+    this.states.confirm.message = message;
+    this.states.confirm.show = false;
 
+    // Delay for *ngIf timing to kick in
     if(message.length) {
-      this.states.confirm.type = type;
-      this.states.confirm.message = message;
-      this.states.confirm.show = true;
-    } else {
-      this.states.confirm.show = false;
+      setTimeout(() => this.states.confirm.show = true, 100);
     }
   }
 
@@ -174,7 +172,7 @@ export class MigrationsComponent {
     this.migrationForm.markAsTouched();
     this.migrationForm.markAsDirty();
 
-    this.states.confirm.show = false;
+    this.alert();
     this.states.submitted = true;
 
     if(this.migrationForm.valid) {
@@ -182,11 +180,11 @@ export class MigrationsComponent {
 
       this.states.loading = true;
 
-      this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
+      this.api.iam.import.create(this.email, data.system, data.username, data.password, account => {
         this.store.migrations.push(account);
         this.alert('Account Successfully Migrated', 'success');
         this.states.loading = false;
-      }, (error) => {
+      }, error => {
         this.alert(error.message, 'error');
         this.states.loading = false;
       });

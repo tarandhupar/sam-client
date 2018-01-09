@@ -2,38 +2,39 @@ import { Routes, RouterModule } from '@angular/router';
 import { OrgDetailPage } from './organization-detail.page';
 import { OrgDetailProfilePage } from './profile/profile.component';
 import { OrgCreatePage } from './create-org/create-org.component';
-import { AACRequestPage } from "./AAC-request/AAC-request.component";
-import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
-import { AACRequestGuard } from "./AAC-request/AAC-request.guard.ts";
-import { OrgMovePage } from "./move-org/move-org.component";
-import { OrgHierarchyPage } from "./hierarchy/hierarchy.component";
-import { FHAccessGuard } from "../app-services/fh-access.guard";
-import { IsLoggedInGuard } from "../app-services/is-logged-in.guard";
-import { FeatureToggleGuard } from "../app-services/feature-toggle.guard";
+import { OrgMovePage } from './move-org/move-org.component';
+import { OrgHierarchyPage } from './hierarchy/hierarchy.component';
+import { FHAccessGuard } from '../app-services/fh-access.guard';
+import { IsLoggedInGuard } from '../app-services/is-logged-in.guard';
+import { FeatureToggleGuard } from '../app-services/feature-toggle.guard';
+import { CreateOrgResolve } from  './create-org/create-org.resolve';
+import { OrgDetailResolve } from './organization-detail.resolve';
 
 export const routes: Routes = [
   {
-    path:'',
-    children:[
+    path: '',
+    children: [
       {
         path: 'detail/:orgId',
         component: OrgDetailPage,
-        canActivateChild:[FHAccessGuard, FeatureToggleGuard],
-        data: { pageName:'FH/org-detail', featureToggleKey:'fh' },
+        canActivateChild: [FHAccessGuard, FeatureToggleGuard],
+        resolve: { org: OrgDetailResolve },
+        data: { featureToggleKey: 'fh' },
         children: [
-          { path:'', redirectTo:'profile', pathMatch:'full'},
-          { path: 'profile',  component: OrgDetailProfilePage },
-          { path: 'hierarchy',  component: OrgHierarchyPage },
-          { path: 'move',  component: OrgMovePage  }
+          { path: '', redirectTo: 'profile', pathMatch: 'full'},
+          { path: 'profile',  component: OrgDetailProfilePage, data: { pageName: 'profile'} },
+          { path: 'hierarchy',  component: OrgHierarchyPage, data: { pageName: 'hierarchy'} },
+          { path: 'move',  component: OrgMovePage, data: { pageName: 'move'}  }
         ]
       }
     ]
   },
   {
-    path:'create',
+    path: 'create',
     component: OrgCreatePage,
-    canActivate:[FeatureToggleGuard],
-    data: { pageName:'FH/create-org', featureToggleKey:'fh' }
+    canActivate: [FeatureToggleGuard, FHAccessGuard],
+    resolve: { parentOrg: CreateOrgResolve },
+    data: { pageName: 'create', featureToggleKey: 'fh' }
   }
 
   // {

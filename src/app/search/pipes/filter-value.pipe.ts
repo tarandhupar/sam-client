@@ -49,6 +49,10 @@ export class FilterParamValue implements PipeTransform {
         break;
       case "relevance": return "Relevance(Asc)";
         break;
+      case "-programNumber": return "CFDA Number(Desc)";
+        break;
+      case "programNumber": return "CFDA Number(Asc)";
+        break;
       case "prevPerfYesLocality": return "Yes, in the same Locality";
         break;
       case "prevPerfYesDifferentLocality": return "Yes, but in different Locality";
